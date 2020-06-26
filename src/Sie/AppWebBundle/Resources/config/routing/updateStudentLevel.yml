@@ -10,9 +10,21 @@ updateSudentLevel_look_student_data:
     options:
        expose: true
 
+updateSudentLevel_setGrado:
+    path:     /setGrado
+    defaults: { _controller: SieAppWebBundle:UpdateSudentLevel:setGrado }
+    options:
+       expose: true 
+
 updateSudentLevel_setTurno:
     path:     /setTurno
     defaults: { _controller: SieAppWebBundle:UpdateSudentLevel:setTurno }
+    options:
+       expose: true 
+              
+updateSudentLevel_setParalelo:
+    path:     /setParalelo
+    defaults: { _controller: SieAppWebBundle:UpdateSudentLevel:setParalelo }
     options:
        expose: true 
                

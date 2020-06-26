@@ -45,16 +45,43 @@
                 </div>
                 <div class="modal-body">
 
+                  <div style="text-align:right;" v-if="swUpdateLevelGradoIniPri">
+                    <button @click="isShowing ^= true" class="btn btn-xs btn-info" >Habilitar Inicial(1,2)/Primaria(1)</button>
+                  </div>
+
                   <table class="table table ">
                     <tr>
                       <tH>NIVEL</tH>
-                      <td>GRADO</td>
-                      <td>PARALELO</td>
-                      <td>TURNO</td>
+                      <th>GRADO</th>
+                      <th>PARALELO</th>
+                      <th>TURNO</th>
                     </tr>
                     <tr  class="readData">
-                      <td>${DBNextLevel.nivel} </td>
-                      <td>${DBNextLevel.grado} </td>
+                      <td>
+                        <div v-if="!swUpdateLevelGradoIniPri" >${DBNextLevel.nivel}</div>
+                        <div else>
+                          <div v-show="isShowing"> 
+                            <select name="arrLevel" id="idlevel" v-model="DBNextLevel.nivelId" class="custom-select form-control" v-on:change="setGrado();">
+                              <option value="">Seleccionar...</option>
+                              <option v-for="item in DBLevel"  :value="item.id">${ item.level }</option>       
+                            </select>
+                            
+                          </div>
+                        </div>
+                        
+                      </td>
+                      <td>
+                        <div v-if="!swUpdateLevelGradoIniPri" >${DBNextLevel.grado}</div>
+                        <div else>
+                          <div v-show="isShowing">
+                              <select name="arrGrado" id="idgrado" v-model="DBNextLevel.gradoId" class="custom-select form-control" v-on:change="setParalelo();">  
+                                <option value="">Seleccionar...</option>
+                                <option v-for="item in DBGrado"  :value="item.id">${ item.grado }</option>
+                              </select>
+                          </div>
+                        </div>
+                        
+                      </td>
                       <td>
                         <!--  -->
                          <select name="arrParalelo" id="idparalelo" v-model="DBNextLevel.paraleloId" class="custom-select form-control"  v-on:change="setTurno(this);"  >  
@@ -182,11 +209,14 @@
 
                     <div v-if="swObservation">
                        <!-- v-on:click="showhistory(oldStudent.rude)" -->
-                        <a class="btn btn-warning" data-toggle="modal" href='#modalEstudianteTwo'> <i class="fa fa-eye"></i> ${ messageObservaation } </a>
+                        <a class="btn btn-warning" data-toggle="modal" href='#modalEstudianteTwo' > <i class="fa fa-eye"></i> ${ messageObservaation } </a>
                     </div>
-                    <div v-else class="alert alert-success" role="alert">
-                      ${ messageObservaation }
-                    </div>
+                    <div v-else >
+                      <div class="alert alert-success" role="alert">${ messageObservaation } </div>                     
+
+                          <div class="col-sm" v-if='swUpdateLevelGradoIniPri' style=" text-align: right; ">
+                            <a class="btn btn-info" data-toggle="modal" href='#modalEstudianteTwo' @click="clearIniPriVars"> <i class="fa fa-eye"></i>Modificar Inicial(1,2)/Primaria(1) </a>
+                          </div>
                     
                     </div>
                   </div>                    
@@ -222,19 +252,25 @@
             el: '#app',
 
             data: {
-
-              student:{codigoRude:''},
-              objStudent:{},
-              currenteInscription:{},
-              DBParalelos:{},
+              
               DBTurno:{},
+              DBLevel:{},
+              DBGrado:{},
               objErrors:[],
-              buscando:false,
-              existStudentData:false,
-              swObservation:false,
-              messageObservaation:'',
               DBhistory:{},
+              objStudent:{},
+              DBParalelos:{},
+              currenteInscription:{},
+              messageObservaation:'',
+              student:{codigoRude:''},
+              buscando:false,
+              isShowing:false,
+              swObservation:false,
+              existStudentData:false,
+              swUpdateLevelGradoIniPri:false,
               DBNextLevel:{'paraleloId':'','turnoId':''}
+              
+              
  
             },
             methods: {
@@ -247,20 +283,22 @@
                 this.currenteInscription={};
                 this.DBParalelos={};
                 this.DBNextLevel={};
+                this.DBLevel={};
+                this.DBGrado={};
                 axios.post(Routing.generate('updateSudentLevel_look_student_data', this.student))
                 .then(response => {
                   
                   if (response.status == 200) {
-
-                    this.existStudentData = response.data.existStudentData;
+                    this.DBParalelos = response.data.arrParalelos;
+                    this.DBNextLevel = response.data.arrNextLevel;
                     this.DBhistory = response.data.dataInscriptionR;
                     this.objStudent = response.data.arrStudentExist;
                     this.swObservation = response.data.swObservation;
+                    this.existStudentData = response.data.existStudentData;
                     this.messageObservaation = response.data.messageObservaation;
                     this.currenteInscription = response.data.arrCurrenteInscription;
-                    this.DBParalelos = response.data.arrParalelos;
-                    this.DBNextLevel = response.data.arrNextLevel;
-                   
+                    this.swUpdateLevelGradoIniPri = response.data.swUpdateLevelGradoIniPri;
+                    this.DBLevel = response.data.arrLevel;
 
                   }
                  this.buscando=false;
@@ -275,6 +313,45 @@
                 });                
         
               },
+              clearIniPriVars: function(){
+                console.log('krlos');
+                this.isShowing= false;
+              },
+              setGrado: function(){
+              
+                  axios.post(Routing.generate('updateSudentLevel_setGrado', this.DBNextLevel ))
+                      .then(response => {
+                          if (response.status == 200) {
+                              this.DBGrado = response.data.arrGrado;
+                              $('[data-toggle="tooltip"]').tooltip();
+                          }
+                         
+                          this.buscandoue = false;
+                      })
+                      .catch(e => {
+                          console.log(e);
+                          // this.buscando = false;
+                      });
+
+            
+              }, 
+              setParalelo: function(){
+                  axios.post(Routing.generate('updateSudentLevel_setParalelo', this.DBNextLevel ))
+                      .then(response => {
+                          if (response.status == 200) {
+                              this.DBParalelos = response.data.arrParalelo;
+                              $('[data-toggle="tooltip"]').tooltip();
+                          }
+                         
+                          this.buscandoue = false;
+                      })
+                      .catch(e => {
+                          console.log(e);
+                          // this.buscando = false;
+                      });
+
+            
+              },                               
               setTurno: function(newobject){
               
                 
