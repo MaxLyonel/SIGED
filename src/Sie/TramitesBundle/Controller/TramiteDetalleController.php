@@ -79,13 +79,13 @@ class TramiteDetalleController extends Controller {
     // PARAMETROS: request
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function setProcesaTramite($tramiteId,$flujoProcesoId,$usuarioId,$obs){
+    public function setProcesaTramite($tramiteId,$flujoProcesoId,$usuarioId,$obs,$em){
         /*
          * Define la zona horaria y halla la fecha actual
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d H:i:s'));
-        $em = $this->getDoctrine()->getManager();
+        //$em = $this->getDoctrine()->getManager();
 
         /*
          * Actualiza el ultimo proceso del tramite
@@ -136,6 +136,37 @@ class TramiteDetalleController extends Controller {
             $return = "Trámite no encontrado, intente nuevamente";
         }
         return $return;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // funcion que modifica el estado del ultimo proceso realizado en un tramite
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function setEstadoUltimoProcesoTramite($tramiteId,$tramiteEstadoId,$usuarioId,$fecha,$em){
+        /*
+         * Actualiza el ultimo proceso del tramite
+         */
+        $entityTramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle');
+        $query = $entityTramiteDetalle->createQueryBuilder('td')
+                ->where('td.tramite = :codTramite')
+                ->orderBy('td.id','desc')
+                ->setParameter('codTramite', $tramiteId)
+                ->setMaxResults('1');
+        $entityTramiteDetalle = $query->getQuery()->getResult();
+        if (count($entityTramiteDetalle) > 0) {
+            $entityTramiteEstado = $em->getRepository('SieAppWebBundle:TramiteEstado')->findOneBy(array('id' => $tramiteEstadoId));
+            $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $usuarioId));
+            $entityTramiteDetalle[0]->setTramiteEstado($entityTramiteEstado);
+            $entityTramiteDetalle[0]->setUsuarioDestinatario($entityUsuario);
+            $entityTramiteDetalle[0]->setFechaModificacion($fecha);
+            $em->persist($entityTramiteDetalle[0]);
+            $em->flush();
+            return "";
+        } else {
+            return "Error al modificar el estado del proceso";
+        }
     }
 
     //****************************************************************************************************
@@ -2284,9 +2315,9 @@ class TramiteDetalleController extends Controller {
                         if ($flujoSeleccionado == 'Atras'){
                             $tramiteDetalleId = $this->setProcesaTramiteAnterior($tramiteId, $id_usuario, $obs, $em);
 
-                            $entidadDocumento = $documentoController->getDocumentoTramite($tramiteId, $documentoTipoId);
+                            $entidadDocumento = $documentoController->getDocumentoTramiteTipo($tramiteId, $documentoTipoId);
                             if($entidadDocumento){
-                                $documentoId = $documentoController->setDocumentoEstado($entidadDocumento->getId(), 2);
+                                $documentoId = $documentoController->setDocumentoEstado($entidadDocumento->getId(), 2, $em);
                             }
                         }
 
@@ -2626,9 +2657,9 @@ class TramiteDetalleController extends Controller {
                             $documentoController = new documentoController();
                             $documentoController->setContainer($this->container);
 
-                            $entidadDocumento = $documentoController->getDocumentoTramite($tramiteId, $documentoTipoId);
+                            $entidadDocumento = $documentoController->getDocumentoTramiteTipo($tramiteId, $documentoTipoId);
                             if($entidadDocumento){
-                                $documentoId = $documentoController->setDocumentoEstado($entidadDocumento->getId(), 2);
+                                $documentoId = $documentoController->setDocumentoEstado($entidadDocumento->getId(), 2, $em);
                             }
                         }
 
@@ -2724,6 +2755,31 @@ class TramiteDetalleController extends Controller {
                 ->orderBy('fp.orden', 'DESC')
                 ->setParameter('codFlujo', $flujoId)
                 ->setParameter('codProceso', 5)
+                ->setMaxResults('1');
+        $entityFlujoProceso = $query->getQuery()->getResult();
+        return $entityFlujoProceso[0];
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista el proceso donde debe anularse el documento y tramite según el tipo de flujo
+    // PARAMETROS: flujoId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getAnuladoProcesoFlujo($flujoId){
+        /*
+         * Proceso inicial del tramite seleccionado
+         */
+        $em = $this->getDoctrine()->getManager();
+        $entityFlujoProceso = $em->getRepository('SieAppWebBundle:FlujoProceso');
+        $query = $entityFlujoProceso->createQueryBuilder('fp')
+                ->innerJoin('SieAppWebBundle:FlujoProcesoDetalle', 'fpd', 'WITH', 'fpd.id = fp.id')
+                ->innerJoin('SieAppWebBundle:ProcesoTipo', 'pt', 'WITH', 'pt.id = fp.proceso')
+                ->where('fp.flujoTipo = :codFlujo')
+                ->andWhere('pt.id = :codProceso')
+                ->orderBy('fp.orden', 'DESC')
+                ->setParameter('codFlujo', $flujoId)
+                ->setParameter('codProceso', 1)
                 ->setMaxResults('1');
         $entityFlujoProceso = $query->getQuery()->getResult();
         return $entityFlujoProceso[0];
@@ -4496,9 +4552,9 @@ class TramiteDetalleController extends Controller {
                         }
 
                         if ($flujoSeleccionado == 'Atras' or $flujoSeleccionado == 'Anular'){
-                            $entityDocumento = $documentoController->getDocumentoTramite($tramiteId,1);
+                            $entityDocumento = $documentoController->getDocumentoTramiteTipo($tramiteId,1);
                             if (count($entityDocumento) > 0){
-                              $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2);
+                              $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2, $em);
                             }
                         }
 
@@ -4762,9 +4818,9 @@ class TramiteDetalleController extends Controller {
                         if ($flujoSeleccionado == 'Atras' or $flujoSeleccionado == 'Anular'){
                             $documentoController = new documentoController();
                             $documentoController->setContainer($this->container);
-                            $entityDocumento = $documentoController->getDocumentoTramite($tramiteId,1);
+                            $entityDocumento = $documentoController->getDocumentoTramiteTipo($tramiteId,1);
                             if (count($entityDocumento) > 0){
-                              $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2);
+                              $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2, $em);
                             }
                         }
 
