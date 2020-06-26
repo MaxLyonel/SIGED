@@ -235,7 +235,7 @@
                                     {# APODERADO BONO FAMILIA #}
                                     {# {% if (gestion == 2020 or wenakeyBono) and data.estadomatriculaId in [4] and false %} #}
                                     {# PARA UES PRIVADAS #}
-                                    {% if gestion == 2020 and data.estadomatriculaId in [4] and true %}
+                                    {% if (gestion == 2020 or wenakeyBono) and data.estadomatriculaId in [4] and true %}
                                         {% if data.emitId == 19 %}
                                             <span class="badge badge-warning">Estudiante extranjero <br /> no habilitado</span>
                                         {% else %}
