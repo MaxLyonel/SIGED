@@ -1333,7 +1333,11 @@ class ApoderadoBonoFamiliaController extends Controller {
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
         $apoderadoInscripcion = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($idApoderado);
-        if (is_object($apoderadoInscripcion)) {
+        $inscripcion = $apoderadoInscripcion->getEstudianteInscripcion();
+        
+        $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion'=>$inscripcion, 'esValidado'=>1));
+
+        if (is_array($apoderados)) {
             // $apoderadoDatos = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findOneBy(array('apoderadoInscripcion'=>$apoderadoInscripcion->getId()));
             // if (is_object($apoderadoDatos)) {
             //     $em->remove($apoderadoDatos);
@@ -1342,9 +1346,11 @@ class ApoderadoBonoFamiliaController extends Controller {
             // $em->remove($apoderadoInscripcion);
             // $em->flush();
             
-            $apoderadoInscripcion->setEsValidado(0);
-            $apoderadoInscripcion->setFechaModificacion(new \DateTime('now'));
-            $em->flush();
+            foreach($apoderados as $apoderado){
+                $apoderado->setEsValidado(0);
+                $apoderado->setFechaModificacion(new \DateTime('now'));
+                $em->flush();
+            }
 
             return $response->setData([
                 'status'=>'success',
