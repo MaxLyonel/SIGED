@@ -28,6 +28,25 @@
         </div>
     </div>
 
+    <div class="modal modal-flex fade" id="modalBf" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Seguimiento Bono Familia</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idBf"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="page-title">
@@ -168,13 +187,37 @@
                 },
                 statusCode: {
                     500: function () {
-
+                        $("#idNotas").html('<div class="text-center text-danger">Ocurrió un error inesperado.</div>');
                     },
                     404: function () {
-
+                        $("#idNotas").html('<div class="text-center text-info">No se encontraron resultados.</div>');
                     }
                 }
             });
-        }
+        };
+
+        var pagoBf = function (inscripcionid) {
+            $('#modalBf').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('apoderado_bono_familia_detalle_pago', {'inscripcionid': inscripcionid}),
+                beforeSend: function () {
+                    $("#idBf").empty();
+                    $("#idBf").html('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" /></div>');
+                },
+                success: function (data) {
+                    $("#idBf").empty();
+                    $("#idBf").html(data);
+                },
+                statusCode: {
+                    500: function () {
+                        $("#idBf").html('<div class="text-center text-danger">Ocurrió un error inesperado.</div>');
+                    },
+                    404: function () {
+                        $("#idBf").html('<div class="text-center text-info">No se encontraron resultados.</div>');
+                    }
+                }
+            });
+        };
     </script>
 {% endblock %}

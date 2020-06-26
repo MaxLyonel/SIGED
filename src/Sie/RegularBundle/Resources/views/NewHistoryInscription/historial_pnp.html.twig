@@ -37,12 +37,16 @@
             <td>{{data.paralelo_raep}} </td>
             <td>{{data.turno_raep}} </td>
             <td>{{data.estadomatricula_p}}</td>
-            {% if visible is defined and visible == true %}
-              <td class="text-center">
+            <td class="text-center">
+              {% if visible is defined and visible == true %}
                 {#<a href="#" onclick="seeNotaNew('{{data.eiid}}', '{{data.eid}}', '{{data.nivel_tipo_id}}', '{{data.grado_tipo_id}}', '{{data.pid}}', '{{data.turno_tipo_id}}', '{{data.gestion_tipo_id}}', '{{data.institucioneducativa_id}}','{{data.estadomatricula_tipo_id}}')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>#}
                 Calificaciones
-              </td>
-            {% endif %}
+              {% endif %}
+              <span class="clearfix"></span>
+              {% if data.gestion_tipo_id_raep == 2020 %}
+                <a href="#" onclick="pagoBf('{{data.estudiante_inscripcion_id_raep}}')" ><span class="fa fa-list"></span> Bono familia</a>
+              {% endif %}
+            </td>
           </tr>
         {% endfor %}
       </tbody>
