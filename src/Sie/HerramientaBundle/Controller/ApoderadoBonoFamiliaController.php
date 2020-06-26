@@ -1357,4 +1357,40 @@ class ApoderadoBonoFamiliaController extends Controller {
             'msg'=>'No se pudo eliminar el apoderado'
         ]);
     }
+
+    public function seguimientoAction(Request $request){
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:seguimiento_index.html.twig');
+    }
+
+    public function seguimientoCargarDatos(){
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+
+        $departamentos = $em->createQueryBuilder()
+            ->select('dt.id, dt.sigla')
+            ->from('SieAppWebBundle:DepartamentoTipo','dt')
+            ->where('dt.id > 0')
+            ->addOrderBy('dt.id','asc')
+            ->getQuery()
+            ->getResult();
+
+        return $response->setData([
+            'departamentos'=>$departamentos
+        ]);
+    }
+
+    public function detallePagoAction($inscripcionid){
+        $em = $this->getDoctrine()->getManager();
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcionid);
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($inscripcion->getEstudiante());
+        $pagoBf = $em->getRepository('SieAppWebBundle:BfEstudiantePago')->findOneBy(array('codigoRude' => $estudiante->getCodigoRude()));
+        $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $inscripcion));
+
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:detalle.html.twig', array(
+            'inscripcion'=>$inscripcion,
+            'pagoBf'=>$pagoBf,
+            'apoderados'=>$apoderados,
+            'estudiante'=>$estudiante
+        ));
+    }
 }
