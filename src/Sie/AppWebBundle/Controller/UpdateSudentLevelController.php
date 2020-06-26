@@ -116,8 +116,7 @@ class UpdateSudentLevelController extends Controller{
                     'gestion'=>$this->currentyear,
                 );
             $arrCurrenteInscription = $this->get('funciones')->getCurrentInscriptionByRudeAndGestionAndMatricula($arrayConditionInscription);
-            
-            
+
             if(sizeof($arrCurrenteInscription)>0){
                 $arrCurrenteInscription = $arrCurrenteInscription[0];
                 $arrNextLevel['studenInscriptionId']=$arrCurrenteInscription['studenInscriptionId'];
@@ -137,12 +136,15 @@ class UpdateSudentLevelController extends Controller{
                     'matriculaId'=>4,
                     'gestion'=>$this->currentyear,
                 );
-                $arrCurrenteInscription = $this->get('funciones')->getCurrentInscriptionByRudeAndGestionAndMatricula($arrayConditionInscription);
+                // $arrCurrenteInscription = $this->get('funciones')->getCurrentInscriptionByRudeAndGestionAndMatricula($arrayConditionInscription);
+
                 if(sizeof($arrCurrenteInscription)>0){
+                    // $arrCurrenteInscription = $arrCurrenteInscription[0];
 
-                    $arrCurrenteInscription = $arrCurrenteInscription[0];
-
-                    $arrNextLevel = $this->getInfoInscriptionStudent($arrLastInscription['nivelId'].$arrLastInscription['cicloId'].$arrLastInscription['gradoId'],$arrLastInscription['estadoMatriculaId']);
+                    $arrNextLevelNow = $this->getInfoInscriptionStudent($arrLastInscription['nivelId'].$arrLastInscription['cicloId'].$arrLastInscription['gradoId'],$arrLastInscription['estadoMatriculaId']);
+                    $arrNextLevel['nivelId'] = $arrNextLevelNow['nivelId'];
+                    $arrNextLevel['cicloId'] = $arrNextLevelNow['cicloId'];
+                    $arrNextLevel['gradoId'] = $arrNextLevelNow['gradoId'];
 
                     if( $arrCurrenteInscription['nivelId']==$arrNextLevel['nivelId'] && $arrCurrenteInscription['cicloId']==$arrNextLevel['cicloId'] && $arrCurrenteInscription['gradoId']==$arrNextLevel['gradoId']){
                         $swObservation = false;
@@ -178,7 +180,6 @@ class UpdateSudentLevelController extends Controller{
                     $existStudentData = true; 
 
                 }
-                
 
             }else{
                 
@@ -196,8 +197,6 @@ class UpdateSudentLevelController extends Controller{
                 $existStudentData = true; 
 
             }
-
-
                 
         }else{
             // the studnet no exist
@@ -251,7 +250,7 @@ class UpdateSudentLevelController extends Controller{
         $nivel = $request->get('nivelId');
         $grado = $request->get('gradoId');
         $paralelo = $request->get('paraleloId');
-        $gestion = $request->get('gestion');
+        $gestion = $this->currentyear;
         //get turno
         $aturnos = array();
 
@@ -272,6 +271,7 @@ class UpdateSudentLevelController extends Controller{
                 ->orderBy('iec.turnoTipo', 'ASC')
                 ->getQuery();
         $aTurnos = $query->getResult();
+
         foreach ($aTurnos as $turno) {
             $aturnos[] =array('id'=>$turno[1], 'turno'=> $em->getRepository('SieAppWebBundle:TurnoTipo')->find($turno[1])->getTurno());
         }
