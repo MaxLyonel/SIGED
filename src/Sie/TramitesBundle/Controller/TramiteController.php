@@ -3363,6 +3363,7 @@ class TramiteController extends Controller {
             $obs = $request->get('obs');
             $formBusqueda = array('serie'=>$serie,'obs'=>$obs);
             if ($serie != "" and $obs != ""){
+                $em = $this->getDoctrine()->getManager();
                 try {
                     $documentoController = new documentoController();
                     $documentoController->setContainer($this->container);
@@ -3380,23 +3381,21 @@ class TramiteController extends Controller {
                     $tramiteId = $entityDocumento['tramite'];
                     $documentoId = $entityDocumento['documento'];
 
-                    $entityDocumentoTramite = $documentoController->getDocumentoTramite($tramiteId,9);
+                    $entityDocumentoTramite = $documentoController->getDocumentoTramiteTipo($tramiteId,9);
 
                     if(count($entityDocumentoTramite)>0){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El documento '.$serie.' cuenta con un Documento Supletorio activo, no es posible reactivar el trámite'));
                         // return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
                         return $this->redirectToRoute('tramite_reactiva_lista', ['form' => $formBusqueda], 307);
                     }
-
-                    $em = $this->getDoctrine()->getManager();
                     $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
 
                     $entityFlujoProceso = $tramiteProcesoController->getImpresionProcesoFlujo($entityTramite->getFlujoTipo()->getId());
                     $entityFlujoProcesoDetalle = $em->getRepository('SieAppWebBundle:FlujoProcesoDetalle')->findOneBy(array('id' => $entityFlujoProceso->getId()));
 
-                    $valProcesaTramite = $tramiteProcesoController->setProcesaTramite($tramiteId,$entityFlujoProcesoDetalle->getFlujoProcesoAnt()->getId(),$id_usuario,$obs);
+                    $valProcesaTramite = $tramiteProcesoController->setProcesaTramite($tramiteId,$entityFlujoProcesoDetalle->getFlujoProcesoAnt()->getId(),$id_usuario,$obs,$em);
 
-                    // $documentoId = $documentoController->setDocumentoEstado($documentoId, 2);
+                    // $documentoId = $documentoController->setDocumentoEstado($documentoId, 2, $em);
                     $msg = $documentoController->setTramiteDocumentoEstado($tramiteId, 2);
 
                     if($msg != ""){
@@ -3463,9 +3462,9 @@ class TramiteController extends Controller {
                         $tramiteDetalleId =  $tramiteProcesoController->setProcesaTramiteAnula($tramiteId, $id_usuario, $obs, $em);
                         $documentoController = new documentoController();
                         $documentoController->setContainer($this->container);
-                        $entityDocumento = $documentoController->getDocumentoTramite($tramiteId,1);
+                        $entityDocumento = $documentoController->getDocumentoTramiteTipo($tramiteId,1);
                         if (count($entityDocumento) > 0){
-                            $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2);
+                            $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2, $em);
                         }                    
                         $em->getConnection()->commit();
                         return $response->setData(array('estado' => true, 'obs' => 'Trámite '.$tramiteId.' anulado de forma correcta'));
