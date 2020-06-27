@@ -330,16 +330,19 @@ class RudeUnificationController extends Controller{
         }
 
         // this is the new by krlos to do the new action when the level is INI 1,2 & PRI 1
-        $arrLevelsAllows = array(111,112,121,122);
+        /*$arrLevelsAllows = array(111,112,121,122);*/
+        $arrLevelsAllows = array(11,12,13);
         $insriptinoStudentA = $this->getCurrentInscriptionsByGestoinValida($rudea, $this->session->get('currentyear'));
         $insriptinoStudentB = $this->getCurrentInscriptionsByGestoinValida($rudeb, $this->session->get('currentyear'));
-
-
+        // get student history on Regular
+         $inscriptionsA =$this->get('funciones')->getAllInscriptionRegular($rudea);
+         $inscriptionsB =$this->get('funciones')->getAllInscriptionRegular($rudeb);
         // validation to INI 1,2 & PRI 1
+
         if(
-            in_array($insriptinoStudentA['nivelId'].$insriptinoStudentA['gradoId'], $arrLevelsAllows) &&
-            in_array($insriptinoStudentB['nivelId'].$insriptinoStudentB['gradoId'], $arrLevelsAllows) &&
-            $insriptinoStudentA['nivelId'].$insriptinoStudentA['gradoId'] == $insriptinoStudentB['nivelId'].$insriptinoStudentB['gradoId'] 
+            in_array($insriptinoStudentA['nivelId'], $arrLevelsAllows) &&
+            in_array($insriptinoStudentB['nivelId'], $arrLevelsAllows) &&
+            $insriptinoStudentA['nivelId'].$insriptinoStudentA['gradoId'] == $insriptinoStudentB['nivelId'].$insriptinoStudentB['gradoId'] && (sizeof($inscriptionsA)==1 || sizeof($inscriptionsB)==1)
         ){
             if($insriptinoStudentA['sie'] ==  $insriptinoStudentB['sie']){
                 $this->inicialPrimaria = true;
