@@ -708,62 +708,66 @@ class RudeUnificationController extends Controller{
                         'institucioneducativaCursoId'=>$inscrip->getInstitucioneducativaCurso()->getId(),
                     );
                     if($unificationIniPri){
-                        $objApoderadoInscripcion = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findOneBy(array(
+                        $objApoderadoInscripcions = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array(
                              'estudianteInscripcion' => $inscrip->getId()
                         ));
                         $arrApoderadoInscripcion = array();
-                        if(sizeof($objApoderadoInscripcion)>0){
-                            // get backup fot ApoderadoInscripcion
-                            $arrApoderadoInscripcion = array(
-                                'idApoInsc'=>$objApoderadoInscripcion->getId(),
-                                'obs'=>$objApoderadoInscripcion->getObs(),
-                                'esValidado'=>$objApoderadoInscripcion->getEsValidado(),
-                                'personaId'=>$objApoderadoInscripcion->getPersona()->getId(),
-                                'apoderadoTipoId'=>$objApoderadoInscripcion->getApoderadoTipo()->getId(),
-                                'estudianteInscripcion'=>$objApoderadoInscripcion->getEstudianteInscripcion()->getId(),
-                                'fechaRegistro'=>$objApoderadoInscripcion->getFechaRegistro(),
-                                'fechaModificacion'=>$objApoderadoInscripcion->getFechaModificacion(),
-                            );
+                        if(sizeof($objApoderadoInscripcions)>0){
 
-                            if($objApoderadoInscripcion->getEsValidado()){
-                                // look for the current inscription correct rude
-                                $arrayConditionInscription = array(
-                                    'codigoRude'=>$rudeCorrect,
-                                    'matriculaId'=>4,
-                                    'gestion'=>$this->currentyear,
+                            foreach ($objApoderadoInscripcions as $objApoderadoInscripcion) {
+                                  
+                                // get backup fot ApoderadoInscripcion
+                                $arrApoderadoInscripcion[] = array(
+                                    'idApoInsc'=>$objApoderadoInscripcion->getId(),
+                                    'obs'=>$objApoderadoInscripcion->getObs(),
+                                    'esValidado'=>$objApoderadoInscripcion->getEsValidado(),
+                                    'personaId'=>$objApoderadoInscripcion->getPersona()->getId(),
+                                    'apoderadoTipoId'=>$objApoderadoInscripcion->getApoderadoTipo()->getId(),
+                                    'estudianteInscripcion'=>$objApoderadoInscripcion->getEstudianteInscripcion()->getId(),
+                                    'fechaRegistro'=>$objApoderadoInscripcion->getFechaRegistro(),
+                                    'fechaModificacion'=>$objApoderadoInscripcion->getFechaModificacion(),
                                 );
-                                $arrCurrenteInscription = $this->get('funciones')->getCurrentInscriptionByRudeAndGestionAndMatricula($arrayConditionInscription);
 
-                                $objApoderadoInscripcionCorrect = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findOneBy(array(
-                                    'estudianteInscripcion' => $arrCurrenteInscription[0]['studenInscriptionId']
-                                ));
+                                if($objApoderadoInscripcion->getEsValidado()){
+                                    // look for the current inscription correct rude
+                                    $arrayConditionInscription = array(
+                                        'codigoRude'=>$rudeCorrect,
+                                        'matriculaId'=>4,
+                                        'gestion'=>$this->currentyear,
+                                    );
+                                    $arrCurrenteInscription = $this->get('funciones')->getCurrentInscriptionByRudeAndGestionAndMatricula($arrayConditionInscription);
 
-                                if(sizeof($objApoderadoInscripcionCorrect)>0){
-                                    if(!$objApoderadoInscripcionCorrect->getEsValidado()){
-                                        // do update on apoderadoInscripcion
-                                        $objApoderadoInscripcionCorrect->setEsValidado($objApoderadoInscripcion->getEsValidado());
-                                        $objApoderadoInscripcionCorrect->setPersona($objApoderadoInscripcion->getPersona() );
+                                    $objApoderadoInscripcionCorrect = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findOneBy(array(
+                                        'estudianteInscripcion' => $arrCurrenteInscription[0]['studenInscriptionId']
+                                    ));
 
-                                        $em->persist($objApoderadoInscripcionCorrect);
-                                        $em->flush();
+                                    if(sizeof($objApoderadoInscripcionCorrect)>0){
+                                        if(!$objApoderadoInscripcionCorrect->getEsValidado()){
+                                            // do update on apoderadoInscripcion
+                                            $objApoderadoInscripcionCorrect->setEsValidado($objApoderadoInscripcion->getEsValidado());
+                                            $objApoderadoInscripcionCorrect->setPersona($objApoderadoInscripcion->getPersona() );
+
+                                            $em->persist($objApoderadoInscripcionCorrect);
+                                            $em->flush();
+                                        }
+
+                                    }else{
+                                        // do insert on the apo;deradoInscripcion table
+                                        $nuevoApoderado = new ApoderadoInscripcion();
+                                        $nuevoApoderado->setApoderadoTipo($objApoderadoInscripcion->getApoderadoTipo());
+                                        $nuevoApoderado->setPersona($objApoderadoInscripcion->getPersona() );
+                                        $nuevoApoderado->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrCurrenteInscription[0]['studenInscriptionId']));
+                                        $nuevoApoderado->setObs('');
+                                        $nuevoApoderado->setEsValidado($objApoderadoInscripcion->getEsValidado());
+                                        $nuevoApoderado->setFechaRegistro(new \DateTime('now'));
+                                        $em->persist($nuevoApoderado);
+                                        $em->flush(); 
                                     }
 
-                                }else{
-                                    // do insert on the apo;deradoInscripcion table
-                                    $nuevoApoderado = new ApoderadoInscripcion();
-                                    $nuevoApoderado->setApoderadoTipo($objApoderadoInscripcion->getApoderadoTipo());
-                                    $nuevoApoderado->setPersona($objApoderadoInscripcion->getPersona() );
-                                    $nuevoApoderado->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrCurrenteInscription[0]['studenInscriptionId']));
-                                    $nuevoApoderado->setObs('');
-                                    $nuevoApoderado->setEsValidado($objApoderadoInscripcion->getEsValidado());
-                                    $nuevoApoderado->setFechaRegistro(new \DateTime('now'));
-                                    $em->persist($nuevoApoderado);
-                                    $em->flush(); 
                                 }
-
+                                
+                                $em->remove($objApoderadoInscripcion);
                             }
-                            
-                            $em->remove($objApoderadoInscripcion);
                         }
 
                         //***********to estudiante_inscripcion_extranjero
