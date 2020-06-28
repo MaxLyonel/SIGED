@@ -308,7 +308,16 @@ class ApoderadoBonoFamiliaController extends Controller {
             ]);
         }
 
-        $apoderados_aux = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('persona'=>$apoderadoInscripcion->getPersona(), 'esValidado'=>1));
+        $apoderados_aux = $em->createQueryBuilder()
+                        ->select('ai')
+                        ->from('SieAppWebBundle:ApoderadoInscripcion','ai')
+                        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','ai.estudianteInscripcion = ei.id')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                        ->where('ei.estudiante = :idEstudiante')
+                        ->andWhere('ai.esValidado = 1')
+                        ->setParameter('idEstudiante', $apoderadoInscripcion->getEstudianteInscripcion()->getEstudiante()->getId())
+                        ->getQuery()
+                        ->getResult();
 
         if (is_array($apoderados_aux)) {
             foreach($apoderados_aux as $apoderado){
