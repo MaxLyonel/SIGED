@@ -308,6 +308,16 @@ class ApoderadoBonoFamiliaController extends Controller {
             ]);
         }
 
+        $apoderados_aux = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('persona'=>$apoderadoInscripcion->getPersona(), 'esValidado'=>1));
+
+        if (is_array($apoderados_aux)) {
+            foreach($apoderados_aux as $apoderado){
+                $apoderado->setEsValidado(0);
+                $apoderado->setFechaModificacion(new \DateTime('now'));
+                $em->flush();
+            }
+        }
+
         $verificamosRegistroParecido = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findOneBy(array(
             'apoderadoTipo'=>$apoderadoInscripcion->getApoderadoTipo()->getId(),
             'persona'=>$apoderadoInscripcion->getPersona()->getId(),
@@ -316,6 +326,7 @@ class ApoderadoBonoFamiliaController extends Controller {
 
         if (is_object($verificamosRegistroParecido)) {
             $verificamosRegistroParecido->setEsValidado(1);
+            $verificamosRegistroParecido->setFechaModificacion(new \DateTime('now'));
             $em->flush();
         }else{
             $nuevoApoderado = new ApoderadoInscripcion();
@@ -325,7 +336,6 @@ class ApoderadoBonoFamiliaController extends Controller {
             $nuevoApoderado->setObs('');
             $nuevoApoderado->setEsValidado(1);
             $nuevoApoderado->setFechaRegistro(new \DateTime('now'));
-            // $nuevoApoderado->setFechaModificacion(new \DateTime('now'));
             $em->persist($nuevoApoderado);
             $em->flush();
         }
@@ -1338,14 +1348,6 @@ class ApoderadoBonoFamiliaController extends Controller {
         $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion'=>$inscripcion, 'esValidado'=>1));
 
         if (is_array($apoderados)) {
-            // $apoderadoDatos = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findOneBy(array('apoderadoInscripcion'=>$apoderadoInscripcion->getId()));
-            // if (is_object($apoderadoDatos)) {
-            //     $em->remove($apoderadoDatos);
-            //     $em->flush();
-            // }
-            // $em->remove($apoderadoInscripcion);
-            // $em->flush();
-            
             foreach($apoderados as $apoderado){
                 $apoderado->setEsValidado(0);
                 $apoderado->setFechaModificacion(new \DateTime('now'));
