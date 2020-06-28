@@ -674,7 +674,7 @@ class RudeUnificationController extends Controller{
                      $em->remove($value);     
                 }   
                 $em->flush();                   
-            }
+            }           
 
             //***********ELIMINAMOS ESTUDIANTE_HISTORIAL_MODIFICACION*******////
             // $objStudentHistoryModification = $em->getRepository('SieAppWebBundle:EstudianteHistorialModificacion')->find(array('estudiante' =>  $studentinc->getId()));
@@ -765,6 +765,25 @@ class RudeUnificationController extends Controller{
                             
                             $em->remove($objApoderadoInscripcion);
                         }
+
+                        //***********to estudiante_inscripcion_extranjero
+                        $objEstudianteInscripcionExtranjero = $em->getRepository('SieAppWebBundle:EstudianteInscripcionExtranjero')->findOneBy(array('estudianteInscripcion' => $inscrip->getId() ));
+                           
+                        $arrEstudianteInscripcionExtranjero=array();
+                        if(sizeof($objEstudianteInscripcionExtranjero)>0){
+                            $arrEstudianteInscripcionExtranjero = array(
+                                'InstitucioneducativaOrigen'=>$objEstudianteInscripcionExtranjero->getInstitucioneducativaOrigen(),
+                                'CursoVencido'=>$objEstudianteInscripcionExtranjero->getCursoVencido(),
+                                'CursoVencido'=>$objEstudianteInscripcionExtranjero->getCursoVencido(),
+                                'RutaImagen'=>$objEstudianteInscripcionExtranjero->getRutaImagen(),
+                                'EstudianteInscripcion'=>$objEstudianteInscripcionExtranjero->getEstudianteInscripcion(),
+                                'PaisTipo'=>$objEstudianteInscripcionExtranjero->getPaisTipo(),
+
+                            );
+                          
+                            $em->remove($objEstudianteInscripcionExtranjero);     
+                            
+                        }                        
                         
                         $em->remove($inscrip);  
                     }else{
