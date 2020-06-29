@@ -577,6 +577,7 @@ class RudeUnificationController extends Controller{
         $response = new JsonResponse();
         $arrDataUnification = array();
         $arrInscriptionsWrong = array();
+        $arrApoderadoInscripcion = array();
 
 
         // get the student info
