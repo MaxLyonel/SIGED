@@ -598,7 +598,7 @@ class RudeUnificationController extends Controller{
             'folio'=> $studentinc->getFolio(),
             'pais'=> $studentinc->getgeneroTipo()?$studentinc->getgeneroTipo()->getId():null,
             'lugarNacTipo'=> $studentinc->getLugarNacTipo()?$studentinc->getLugarNacTipo()->getId():null,
-            'lugarProvNacTipo'=> $studentinc->getLugarProvNacTipo():$studentinc->getLugarProvNacTipo()->getId():null,
+            'lugarProvNacTipo'=> $studentinc->getLugarProvNacTipo()?$studentinc->getLugarProvNacTipo()->getId():null,
             'localidadNac'=> $studentinc->getLocalidadNac(),
         );
         /*end get info about wrong student*/
