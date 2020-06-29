@@ -475,13 +475,13 @@ class RudeUnificationController extends Controller{
         foreach ($dataInscription as $key => $inscription) {
             switch ($inscription['institucioneducativa_tipo_id_raep']) {
                 case '1':
-                    $dataInscriptionR[$key] = $inscription;
+                    $dataInscriptionR[] = $inscription;
                     break;
                 case '2':
-                    $dataInscriptionA[$key] = $inscription;
+                    $dataInscriptionA[] = $inscription;
                     break;
                 case '4':
-                    $dataInscriptionE[$key] = $inscription;
+                    $dataInscriptionE[] = $inscription;
                     break;
                 case '5':
                     if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 14)$bloquep ='Segundo';
