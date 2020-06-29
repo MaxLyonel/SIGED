@@ -334,6 +334,7 @@ class RudeUnificationController extends Controller{
         $arrLevelsAllows = array(11,12,13);
         $insriptinoStudentA = $this->getCurrentInscriptionsByGestoinValida($rudea, $this->session->get('currentyear'));
         $insriptinoStudentB = $this->getCurrentInscriptionsByGestoinValida($rudeb, $this->session->get('currentyear'));
+        
         // get student history on Regular
          $inscriptionsA =$this->get('funciones')->getAllInscriptionRegular($rudea);
          $inscriptionsB =$this->get('funciones')->getAllInscriptionRegular($rudeb);
@@ -441,14 +442,22 @@ class RudeUnificationController extends Controller{
                 ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $gestion)
-                ->setParameter('mat', array( 4 ))
+                ->setParameter('mat', array( 4,6 ))
                 ->orderBy('iec.gestionTipo', 'DESC')
                 ->getQuery();
 
             $objInfoInscription = $query->getResult();
-            if(sizeof($objInfoInscription)>0)
+            if(sizeof($objInfoInscription)>0){
+                // validate to status 6 = no incorporado check if it has only one register like history
+                if($objInfoInscription[0]['estadoMatriculaId']!=4){
+                    if(( $objInfoInscription[0]['estadoMatriculaId']==6 && (sizeof($this->get('funciones')->getAllInscriptionRegular($id)) )==1 )){
+                        return $objInfoInscription[0];
+                    }else{
+                        return false;
+                    }
+                }                
               return $objInfoInscription[0];
-            else
+            }else
               return false;
 
       }     
