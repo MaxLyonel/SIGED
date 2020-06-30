@@ -51,7 +51,7 @@ apoderado_bono_familia_seguimiento_cargar_datos:
         expose: true
 
 apoderado_bono_familia_seguimiento_detalle:
-    path:     /seguimiento/detalle/{idApoderado}
+    path:     /seguimiento/detalle/{idDpto}
     defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:seguimientoCargarDetalle }
     options:
         expose: true

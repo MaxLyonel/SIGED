@@ -120,9 +120,8 @@
 					});
 			},
             detalle(idDpto) {
-                axios.get(Routing.generate('apoderado_bono_familia_seguimiento_detalle', {idDpto: idDpto}))
+                axios.get(Routing.generate('apoderado_bono_familia_seguimiento_detalle', {'idDpto': idDpto}))
 					.then(response => {
-                        alert("llega");
 						this.arrayDepartamentos = response.data.departamentos;
                         this.arrayLista = response.data.lista;
 						this.rol = response.data.rol;
