@@ -1,0 +1,100 @@
+Sie\AppWebBundle\Entity\BfObservacionValidacion:
+    type: entity
+    table: bf_observacion_validacion
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codigoRude:
+            type: string
+            nullable: false
+            length: 18
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        estudianteInscripcionId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estudiante_inscripcion_id
+        bfObservacionTipoId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: bf_observacion_tipo_id
+        esValidado:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_validado
+        documento:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        justificacion:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        idDepartamento:
+            type: string
+            nullable: false
+            length: 2
+            fixed: false
+            comment: ''
+            column: id_departamento
+        descDepartamento:
+            type: string
+            nullable: false
+            length: 20
+            fixed: false
+            comment: ''
+            column: desc_departamento
+        codDistrito:
+            type: string
+            nullable: false
+            length: 5
+            fixed: false
+            comment: ''
+            column: cod_distrito
+        distrito:
+            type: string
+            nullable: false
+            length: 120
+            fixed: false
+            comment: ''
+        codUeId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: cod_ue_id
+        descUe:
+            type: string
+            nullable: false
+            length: 170
+            fixed: false
+            comment: ''
+            column: desc_ue
+    lifecycleCallbacks: {  }
