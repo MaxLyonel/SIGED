@@ -61,3 +61,13 @@ apoderado_bono_familia_detalle_pago:
     defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:detallePago }
     options:
         expose: true
+
+apoderado_bono_familia_observados_index:
+    path:     /observados/lista
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observados }
+
+apoderado_bono_familia_observados_cargar_ues:
+    path:     /observados/cargar
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observadosCargarUes }
+    options:
+        expose: true

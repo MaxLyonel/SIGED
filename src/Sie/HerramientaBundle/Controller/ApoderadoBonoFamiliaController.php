@@ -1476,4 +1476,57 @@ class ApoderadoBonoFamiliaController extends Controller {
             'estudiante'=>$estudiante
         ));
     }
+
+    public function observadosAction(Request $request){
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:observados_index.html.twig');
+    }
+
+    public function observadosCargarUesAction(){
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $roluserlugarid = $this->session->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $lista = $em->createQueryBuilder()
+            ->select('distinct bov.idDepartamento, bov.descDepartamento, bov.codDistrito, bov.distrito, bov.codUeId, bov.descUe')
+            ->from('SieAppWebBundle:BfObservacionValidacion','bov')
+            ->where('bov.codDistrito = :codDistrito')
+            ->setParameter('codDistrito', $lugar->getCodigo())
+            ->addOrderBy('bov.codUeId')
+            ->getQuery()
+            ->getResult();
+        
+        return $response->setData([
+            'lista'=>$lista,
+            'ues'=>true,
+            'est'=>false
+        ]);
+    }
+
+    public function observadosCargarEstudiantesAction(Request $request){
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $roluserlugarid = $this->session->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $lista = $em->createQueryBuilder()
+            ->select('distinct bov.codUeId, bov.descUe')
+            ->from('SieAppWebBundle:BfObservacionValidacion','bov')
+            // ->innerJoin('SieAppWebBundle:BfObservacionValidacion','bov')
+            ->where('bov.codDistrito = :codDistrito')
+            ->setParameter('codDistrito', $lugar->getCodigo())
+            ->addOrderBy('bov.codUeId')
+            ->getQuery()
+            ->getResult();
+        
+        return $response->setData([
+            'lista'=>$lista,
+            'ues'=>false,
+            'est'=>true
+        ]);
+    }
 }
