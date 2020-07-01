@@ -1,0 +1,6 @@
+
+plataforma_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:UnidadEducativaPlataforma:index }
+    options:
+       expose: true    
