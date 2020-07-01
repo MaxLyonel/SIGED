@@ -795,7 +795,7 @@ class TramiteRueController extends Controller
         }
         $form = $form            
             ->add('conveniotipo','entity',array('label'=>'Tipo de Convenio:','required'=>false,'multiple' => false,'attr' => array('class' => 'form-control dato54'),'empty_value'=>'Seleccione convenio','class'=>'SieAppWebBundle:ConvenioTipo','query_builder'=>function(EntityRepository $ct){
-                return $ct->createQueryBuilder('ct')->where('ct.id <>99')->orderBy('ct.convenio','ASC');},'property'=>'convenio'))
+                return $ct->createQueryBuilder('ct')->where('ct.id <>99')->andWhere("ct.id <> 50")->orderBy('ct.convenio','ASC');},'property'=>'convenio'))
             ->add('constitucion','entity',array('label'=>'Constitución de la Unidad Educativa:','required'=>false,'multiple' => false,'attr' => array('class' => 'form-control dato54'),'empty_value'=>'Seleccione constitución','class'=>'SieAppWebBundle:ConvenioTipo','query_builder'=>function(EntityRepository $c){
                 return $c->createQueryBuilder('c')->where('c.codDependenciaId =3')->andWhere("c.tipoConvenio ='Constitucion'")->orderBy('c.convenio','ASC');},'property'=>'convenio'))
             ->add('niveltipo','entity',array('label'=>'Ampliacion','required'=>false,'multiple' => true,'expanded' => true,'class'=>'SieAppWebBundle:NivelTipo','query_builder'=>function(EntityRepository $nt){

@@ -1,14 +1,14 @@
 var map;
 var myLatLng;
 var marker;
-var image = L.icon({
-    iconUrl: '/../../images/marker23.png',
-    iconSize: [40, 40]
-});
+// var image = L.icon({
+//     iconUrl: '/../../images/marker23.png',
+//     iconSize: [40, 40]
+// });
 var latitud = -16.50626;
 var longitud = -68.12794;
 
-function initMap() {
+function initMap(image) {
     $('#map').empty();
     $('#form_latitud').val(latitud);
     $('#form_longitud').val(longitud);
