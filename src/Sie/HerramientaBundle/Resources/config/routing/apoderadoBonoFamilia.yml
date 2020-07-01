@@ -44,6 +44,18 @@ apoderado_bono_familia_seguimiento_index:
     path:     /seguimiento/lista
     defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:seguimiento }
 
+apoderado_bono_familia_seguimiento_cargar_datos:
+    path:     /seguimiento/cargar
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:seguimientoCargarDatos }
+    options:
+        expose: true
+
+apoderado_bono_familia_seguimiento_detalle:
+    path:     /seguimiento/detalle/{idDpto}
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:seguimientoCargarDetalle }
+    options:
+        expose: true
+
 apoderado_bono_familia_detalle_pago:
     path:     /pago/detalle/{inscripcionid}
     defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:detallePago }

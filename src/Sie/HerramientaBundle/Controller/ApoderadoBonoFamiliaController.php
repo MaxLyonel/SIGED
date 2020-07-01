@@ -1379,20 +1379,86 @@ class ApoderadoBonoFamiliaController extends Controller {
         return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:seguimiento_index.html.twig');
     }
 
-    public function seguimientoCargarDatos(){
+    public function seguimientoCargarDatosAction(){
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
+        $roluser = $this->session->get('roluser');
+        $roluserlugarid = $this->session->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
 
-        $departamentos = $em->createQueryBuilder()
-            ->select('dt.id, dt.sigla')
-            ->from('SieAppWebBundle:DepartamentoTipo','dt')
-            ->where('dt.id > 0')
-            ->addOrderBy('dt.id','asc')
-            ->getQuery()
-            ->getResult();
+        $departamentos = [];
+        $lista = [];
+        $dpto_id = '';
+        $dto_id = '';
+        $sie = '';
+        $vista = true;
+
+
+        if($roluser == 8) {
+            $departamentos = $em->createQueryBuilder()
+                ->select('dt.id, dt.departamento')
+                ->from('SieAppWebBundle:DepartamentoTipo','dt')
+                ->where('dt.id > 0')
+                ->addOrderBy('dt.id','asc')
+                ->getQuery()
+                ->getResult();
+        } else {
+            switch($roluser) {
+                case 7:
+                    $dpto_id = $lugar->getCodigo();
+                break;
+
+                case 10:
+                    case 10:
+                        $dto_id = $lugar->getCodigo();
+                break;
+
+                case 9:
+                    $sie = $this->session->get('ie_id');
+                break;
+
+            }
+
+            $vista = false;
+            $query = $em->getConnection()->prepare('select * from sp_reporte_ue_bonofamilia(:dpto_id, :dto_id, :sie)');
+            $query->bindValue(':dpto_id', $dpto_id);
+            $query->bindValue(':dto_id', $dto_id);
+            $query->bindValue(':sie', $sie);
+            $query->execute();
+            $lista = $query->fetchAll();
+        }
 
         return $response->setData([
-            'departamentos'=>$departamentos
+            'departamentos'=>$departamentos,
+            'lista'=>$lista,
+            'rol'=>$roluser,
+            'vista'=>$vista
+        ]);
+    }
+
+    public function seguimientoCargarDetalleAction($idDpto){
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $roluser = 7;
+        $departamentos = [];
+        $lista = [];
+        $dpto_id = $idDpto;
+        $dto_id = '';
+        $sie = '';
+        $vista = false;
+
+        $query = $em->getConnection()->prepare('select * from sp_reporte_ue_bonofamilia(:dpto_id, :dto_id, :sie)');
+        $query->bindValue(':dpto_id', $dpto_id);
+        $query->bindValue(':dto_id', $dto_id);
+        $query->bindValue(':sie', $sie);
+        $query->execute();
+        $lista = $query->fetchAll();
+
+        return $response->setData([
+            'departamentos'=>$departamentos,
+            'lista'=>$lista,
+            'rol'=>$roluser,
+            'vista'=>$vista
         ]);
     }
 
@@ -1401,7 +1467,7 @@ class ApoderadoBonoFamiliaController extends Controller {
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcionid);
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($inscripcion->getEstudiante());
         $pagoBf = $em->getRepository('SieAppWebBundle:BfEstudiantePago')->findOneBy(array('codigoRude' => $estudiante->getCodigoRude()));
-        $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $inscripcion));
+        $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $inscripcion, 'esValidado' => 1));
 
         return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:detalle.html.twig', array(
             'inscripcion'=>$inscripcion,
