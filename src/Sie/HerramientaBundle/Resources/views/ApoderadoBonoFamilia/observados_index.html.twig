@@ -1,12 +1,15 @@
 {% extends 'layoutHerramienta.html.twig' %}
 
-{% block contentoption %}
+{% block stylesheets %}
+    {{parent()}}
     <style>
         [v-cloak]{
             display: none;
         }
     </style>
+{% endblock %}
 
+{% block contentoption %}
     <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Bono Familia <span>Observados</span></h2>
@@ -29,7 +32,7 @@
         <div v-cloak>
             <div class="row" v-if="ues">
                 <div class="col-md-12 table-responsive" v-if="arrayListaUes.length>0">
-                    <table class="table table-bordered table-striped">
+                    <table id="tabla" class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th style="min-width:15px">#</th>
@@ -59,7 +62,7 @@
                                 <td>${registro.descUe}</td>
                                 <td>
                                     <button @click.prevent="estudiantes(registro.codUeId)" class="btn btn-sm btn-primary">
-                                        <i class="fa fa-fw fa-eye"></i> Estudiantes
+                                        <i class="fa fa-fw fa-eye"></i> Ver estudiantes
                                     </button>
                                 </td>
                             </tr>
@@ -78,31 +81,60 @@
                         <thead>
                             <tr>
                                 <th style="min-width:15px">#</th>
-                                <th>Departamento</th>
-                                <th>Distrito</th>
                                 <th>SIE</th>
                                 <th>Unidad Educativa</th>
                                 <th>Código RUDE</th>
+                                <th>Paterno</th>
+                                <th>Materno</th>
+                                <th>Nombre(s)</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
                                 <th>#</th>
-                                <th>Departamento</th>
-                                <th>Distrito</th>
                                 <th>SIE</th>
                                 <th>Unidad Educativa</th>
                                 <th>Código RUDE</th>
+                                <th>Paterno</th>
+                                <th>Materno</th>
+                                <th>Nombre(s)</th>
+                                <th>Acciones</th>
                             </tr>
                         </tfoot>
                         <tbody>
                             <tr v-for="(registro, key) in arrayListaEst" :key="key">
                                 <td class="text-center">${key + 1}</td>
-                                <td>${registro.desc_departamento}</td>
-                                <td>${registro.distrito}</td>
-                                <td>${registro.cod_ue_id}</td>
-                                <td>${registro.desc_ue}</td>
-                                <td>${registro.codigo_rude}</td>
+                                <td>${registro.codUeId}</td>
+                                <td>${registro.descUe}</td>
+                                <td>${registro.codigoRude}</td>
+                                <td>${registro.paterno}</td>
+                                <td>${registro.materno}</td>
+                                <td>${registro.nombre}</td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" @click.prevent="formulario(registro.codigoRude)">
+                                        Validar
+                                    </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="myModalLabel">Validar: Apoderado registrado</h5>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div v-if="esObservado">
+                                                        Hola mundo
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                                    <button type="button" class="btn btn-primary">Confirmar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -111,6 +143,10 @@
                     <div class="alert alert-success" role="alert">
                         <i class="fa fa-fw fa-check-circle"></i> No tiene observaciones
                     </div>
+                </div>
+                <br />
+                <div class="col-md-4 col-md-offset-4">
+                    <a href="{{path('apoderado_bono_familia_observados_index')}}" class="btn btn-block btn-primary"><i class="fa fa-fw fa-arrow-left"></i> Atrás</a>
                 </div>
             </div>
         </div>
@@ -123,31 +159,56 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
 
     <script>
-    var app = new Vue({
-        delimiters: ['${', '}'],
-        el: '#app',
-        data: {
-			arrayListaUes: [],
-            arrayListaEst: [],
-            ues: false,
-            est: false
-        },
-		mounted(){
-			this.cargar();
-		},
-        methods: {
-            cargar() {
-				axios.get(Routing.generate('apoderado_bono_familia_observados_cargar_ues'))
-					.then(response => {
-                        this.arrayListaUes = response.data.lista;
-                        this.ues = response.data.ues;
-                        this.est = response.data.est;
-					})
-					.catch(e => {
-						console.log(e);
-					});
-			}
-        }
-    });
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                arrayListaUes: [],
+                arrayListaEst: [],
+                ues: false,
+                est: false,
+                observacion: 0,
+                esObservado: false
+            },
+            mounted(){
+                this.cargar();
+            },
+            methods: {
+                cargar() {
+                    axios.get(Routing.generate('apoderado_bono_familia_observados_cargar_ues'))
+                        .then(response => {
+                            this.arrayListaUes = response.data.lista;
+                            this.ues = response.data.ues;
+                            this.est = response.data.est;
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                },
+                estudiantes(codUeId) {
+                    axios.get(Routing.generate('apoderado_bono_familia_observados_cargar_est', {'codUeId': codUeId}))
+                        .then(response => {
+                            this.arrayListaEst = response.data.lista;
+                            this.ues = response.data.ues;
+                            this.est = response.data.est;
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                },
+                formulario(codigoRude) {
+                    this.observacion = 0;
+                    this.esObservado = false;
+                    axios.get(Routing.generate('apoderado_bono_familia_observados_cargar_form', {'codigoRude': codigoRude}))
+                        .then(response => {
+                            this.observacion = response.data.observacion;
+                            this.esObservado = response.data.esObservado;
+                        })
+                        .catch(e => {
+                            console.log(e);
+                        });
+                }
+            }
+        });
     </script>
 {% endblock %}

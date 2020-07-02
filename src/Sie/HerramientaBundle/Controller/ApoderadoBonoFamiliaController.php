@@ -1486,8 +1486,6 @@ class ApoderadoBonoFamiliaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $roluserlugarid = $this->session->get('roluserlugarid');
         $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
-        
-        $em = $this->getDoctrine()->getManager();
 
         $lista = $em->createQueryBuilder()
             ->select('distinct bov.idDepartamento, bov.descDepartamento, bov.codDistrito, bov.distrito, bov.codUeId, bov.descUe')
@@ -1508,18 +1506,15 @@ class ApoderadoBonoFamiliaController extends Controller {
     public function observadosCargarEstudiantesAction(Request $request){
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
-        $roluserlugarid = $this->session->get('roluserlugarid');
-        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+        $codUeId = $request->get('codUeId');
         
-        $em = $this->getDoctrine()->getManager();
-
         $lista = $em->createQueryBuilder()
-            ->select('distinct bov.codUeId, bov.descUe')
+            ->select('bov.codUeId, bov.descUe, est.codigoRude, est.paterno, est.materno, est.nombre')
             ->from('SieAppWebBundle:BfObservacionValidacion','bov')
-            // ->innerJoin('SieAppWebBundle:BfObservacionValidacion','bov')
-            ->where('bov.codDistrito = :codDistrito')
-            ->setParameter('codDistrito', $lugar->getCodigo())
-            ->addOrderBy('bov.codUeId')
+            ->innerJoin('SieAppWebBundle:Estudiante', 'est', 'WITH', 'bov.codigoRude=est.codigoRude')
+            ->where('bov.codUeId = :codUeId')
+            ->setParameter('codUeId', $codUeId)
+            ->addOrderBy('est.codigoRude')
             ->getQuery()
             ->getResult();
         
@@ -1527,6 +1522,25 @@ class ApoderadoBonoFamiliaController extends Controller {
             'lista'=>$lista,
             'ues'=>false,
             'est'=>true
+        ]);
+    }
+
+    public function observadosCargarFormularioAction(Request $request){
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $codigoRude = $request->get('codigoRude');
+        $bov = $em->getRepository('SieAppWebBundle:BfObservacionValidacion')->findOneBy(array('codigoRude' => $codigoRude));
+        $esObservado = false;
+        $observacion = 0;
+
+        if(is_object($bov)) {
+            $esObservado = true;
+            $observacion = $bov->getId();
+        }
+        
+        return $response->setData([
+            'observacion'=>$observacion,
+            'esObservado'=>$esObservado
         ]);
     }
 }

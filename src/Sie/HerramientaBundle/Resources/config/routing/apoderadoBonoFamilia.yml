@@ -67,7 +67,19 @@ apoderado_bono_familia_observados_index:
     defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observados }
 
 apoderado_bono_familia_observados_cargar_ues:
-    path:     /observados/cargar
+    path:     /observados/cargarUes
     defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observadosCargarUes }
+    options:
+        expose: true
+
+apoderado_bono_familia_observados_cargar_est:
+    path:     /observados/cargarEst
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observadosCargarEstudiantes }
+    options:
+        expose: true
+
+apoderado_bono_familia_observados_cargar_form:
+    path:     /observados/cargarForm
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observadosCargarFormulario }
     options:
         expose: true
