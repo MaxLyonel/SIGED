@@ -1525,7 +1525,7 @@ class ApoderadoBonoFamiliaController extends Controller {
 
         if(is_object($bov)) {
             $esObservado = true;
-            $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => 164190945, 'esValidado' => 1));//$bov->getEstudianteInscripcionId()
+            $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $bov->getEstudianteInscripcionId(), 'esValidado' => 1));//
         }
         
         return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:observados_form.html.twig', array(

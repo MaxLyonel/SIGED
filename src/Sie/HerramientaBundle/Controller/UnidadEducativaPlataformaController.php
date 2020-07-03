@@ -348,199 +348,171 @@ class UnidadEducativaPlataformaController extends Controller{
 		die;
 	}
 
-    public function generateRequestDominioPDFAction(Request $request){
+  public function generateRequestDominioPDFAction(Request $request)
+  {
+	    // get the send values
+	    $sie = $request->get('sie');
 
-    	
-    	// get the send values
-    	$sie = $request->get('sie');
-    	
-    	$em = $this->getDoctrine()->getManager();
-    	$objPlataforma = $em->getRepository('SieAppWebBundle:InstitucioneducativaPlataforma')->findOneBy(array(
-    		'institucioneducativa' => $sie
-    	));
+	    $em = $this->getDoctrine()->getManager();
+	    $objPlataforma = $em->getRepository('SieAppWebBundle:InstitucioneducativaPlataforma')->findOneBy(array(
+	      'institucioneducativa' => $sie
+	    ));
+	// dump($objPlataforma);die;
+	    $objPersonaDirector = $em->getRepository('SieAppWebBundle:Persona')->find($objPlataforma->getDirectorPersona());
+	    $objPersonaResponsable = $em->getRepository('SieAppWebBundle:Persona')->find($objPlataforma->getResponsablePersona());
 
-    	$objPersonaDirector = $em->getRepository('SieAppWebBundle:Persona')->find($objPlataforma->getDirectorPersona());
-    	$objPersonaResponsable = $em->getRepository('SieAppWebBundle:Persona')->find($objPlataforma->getResponsablePersona());
+	    $html = '<div>
+	      <div style="text-align: left;">
+	        <p>La Paz, 20 de julio de 2020</p>
+	      </div>
+	      
+	      <div style="text-align: left;">
+	        <p>Señor Lic. José Luis Machicado Moya<br />
+	        <strong>DIRECTOR EJECUTIVO DE LA ADSIB a.i.</strong><br />
+	        <u>Presente.-</u></p>
+	      </div>
 
-    
-        $pdf = $this->container->get("white_october.tcpdf")->create(
-            'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
-        );
-        // $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
-        $pdf->SetAuthor('krlos');
-        $pdf->SetTitle('krlos test');
-        $pdf->SetSubject('Report PDF');
-        $pdf->SetPrintHeader(false);
-        $pdf->SetPrintFooter(true, -10);
-        // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 058', PDF_HEADER_STRING, array(10,10,0), array(255,255,255));
-        $pdf->SetKeywords('TCPDF, PDF, krlos world');
-        $pdf->setFontSubsetting(true);
-        $pdf->SetMargins(10, 10, 10, true);
-        $pdf->SetAutoPageBreak(true, 8);
+	      <div style="text-align: right;">
+	        <p><strong><u>Ref. : Solicitud de registro de nombre de dominio con extensión .edu.bo</u></strong></p>
+	      </div>
 
-        $pdf->SetFont('helvetica', '', 9, '', true);
-        $pdf->startPageGroup();
-        $pdf->AddPage('P', array(215.9, 274.4));//'P', 'LETTER'
+	      <div style="text-align: justify;">
+	        <p>De mi consideración:</p>
 
+	        <p>Mediante la presente, solicito a su autoridad el registro de nombre de dominio de la institución educativa <strong>' . $objPlataforma->getInstitucioneducativa()->getInstitucioneducativa() . '</strong>.</p>
 
+	        <p>Mi persona Juan Carlos Pacheco con C.I. N°…….. en calidad de Director o Director encargado, se compromete a que el uso de dicho  domino por parte de la institución educativa  Juan Perez     Cantuta, se realizará de acuerdo a protocolos establecidos.</p>
 
-        $solicitudHtml = '
+	        <p>Sin otro particular, saludo a usted con las correspondientes consideraciones.</p>
+	      </div>
+	    </div>';
 
-
-<!DOCTYPE html><html><head><title>Carta_Solicitud_de_Admision</title><link rel="shortcut icon" href="https://ssl.gstatic.com/docs/documents/images/kix-favicon7.ico"><meta name="referrer" content="strict-origin-when-cross-origin"><style type="text/css" nonce="wp9nnTWldFccI6ZgdEP77Q">
-      @import url("https://fonts.googleapis.com/css?family=Google+Sans");
-      @import url("https://fonts.googleapis.com/css?family=Roboto");
-
-      body {
-        font-family: Roboto, arial, sans, sans-serif;
-        margin: 0;
-      }
-
-      
-      #header {
-        align-items: center;
-        background: white;
-        border-bottom: 1px #ccc solid;
-        display: flex;
-        height: 60px;
-        justify-content: space-between;
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 100;
-      }
-
-      #header #title {
-        font-family: "Google Sans";
-        font-size: large;
-        margin: auto 0 auto 20px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 70%;
-      }
-
-      #header #interval {
-        margin: auto 25px auto 0;
-        font-family: Roboto;
-        font-size: small;;
-      }
-
-      #footer {
-        background: #f0f0f0;
-        border-bottom: 1px #ccc solid;
-        bottom: 0;
-        font-family: Roboto;
-        font-size: small;
-        padding: 10px 10px;
-        position: fixed;
-        text-align: center;
-        width: 100%;
-      }
-
-      #contents {
-        padding: 100px 20% 50px 20%;
-      }
-
-      @media only screen and (max-device-width: 800px) {
-        #header {
-          border-bottom-width: 5px;
-          height: auto;
-          display: block;
-        }
-
-        #header #title {
-          font-size: 3em;
-          margin: auto 0 auto 20px;
-          width: 90%;
-        }
-
-        #header #interval {
-          font-size: 1.5em;
-          margin: 10px 0 auto 25px;
-        }
-
-        #contents {
-          padding: 150px 5% 80px;
-        }
-
-        #footer {
-          font-size: 2em;
-        }
-      }
-
-      .dash {
-        padding: 0 6px;
-      }
-    </style></head><body><div id="header">
-    
-    </div><div id="contents">
-    <style type="text/css">@import url(https://themes.googleusercontent.com/fonts/css?kit=fpjTOVmNbO4Lz34iLyptLUXza5VhXqVC6o75Eld_V98);ol{margin:0;padding:0}table td,table th{padding:0}.c1{color:#000000;font-weight:400;text-decoration:none;vertical-align:baseline;font-size:11pt;font-family:"Calibri";font-style:normal}.c8{padding-top:0pt;padding-bottom:10pt;line-height:1.1500000000000001;orphans:2;widows:2;text-align:center}.c0{padding-top:0pt;padding-bottom:0pt;line-height:1.1500000000000001;orphans:2;widows:2;text-align:left}.c2{padding-top:0pt;padding-bottom:10pt;line-height:1.1500000000000001;orphans:2;widows:2;text-align:left}.c7{padding-top:0pt;padding-bottom:10pt;line-height:1.1500000000000001;orphans:2;widows:2;text-align:right}.c3{padding-top:0pt;padding-bottom:10pt;line-height:1.1500000000000001;orphans:2;widows:2;text-align:justify}.c11{text-decoration:none;font-size:11pt;font-family:"Calibri";font-style:normal}.c12{background-color:#ffffff;max-width:441.9pt;padding:70.8pt 85pt 70.8pt 85pt}.c6{height:11pt}.c4{vertical-align:baseline}.c5{color:#ff0000}.c10{font-weight:700}.c9{color:#000000}.title{padding-top:24pt;color:#000000;font-weight:700;font-size:36pt;padding-bottom:6pt;font-family:"Calibri";line-height:1.1500000000000001;page-break-after:avoid;orphans:2;widows:2;text-align:left}.subtitle{padding-top:18pt;color:#666666;font-size:24pt;padding-bottom:4pt;font-family:"Georgia";line-height:1.1500000000000001;page-break-after:avoid;font-style:italic;orphans:2;widows:2;text-align:left}li{color:#000000;font-size:11pt;font-family:"Calibri"}p{margin:0;color:#000000;font-size:11pt;font-family:"Calibri"}h1{padding-top:24pt;color:#000000;font-weight:700;font-size:24pt;padding-bottom:6pt;font-family:"Calibri";line-height:1.1500000000000001;page-break-after:avoid;orphans:2;widows:2;text-align:left}h2{padding-top:18pt;color:#000000;font-weight:700;font-size:18pt;padding-bottom:4pt;font-family:"Calibri";line-height:1.1500000000000001;page-break-after:avoid;orphans:2;widows:2;text-align:left}h3{padding-top:14pt;color:#000000;font-weight:700;font-size:14pt;padding-bottom:4pt;font-family:"Calibri";line-height:1.1500000000000001;page-break-after:avoid;orphans:2;widows:2;text-align:left}h4{padding-top:12pt;color:#000000;font-weight:700;font-size:12pt;padding-bottom:2pt;font-family:"Calibri";line-height:1.1500000000000001;page-break-after:avoid;orphans:2;widows:2;text-align:left}h5{padding-top:11pt;color:#000000;font-weight:700;font-size:11pt;padding-bottom:2pt;font-family:"Calibri";line-height:1.1500000000000001;page-break-after:avoid;orphans:2;widows:2;text-align:left}h6{padding-top:10pt;color:#000000;font-weight:700;font-size:10pt;padding-bottom:2pt;font-family:"Calibri";line-height:1.1500000000000001;page-break-after:avoid;orphans:2;widows:2;text-align:left}</style>
-    <p class="c8">
-    	<span class="c4 c10">Carta solicitud de Plataforma</span>
-    	</p><p class="c2 c6"><span class="c4 c10 c9 c11"></span></p><p class="c7"><span class="c1">31/10/2018                         </span></p><p class="c2 c6"><span class="c1"></span></p><p class="c0"><span class="c4">Coordinador DOMINIOS </span><span>Educativos</span></p><p class="c0"><span class="c4">Ministerio </span><span>de Educación, Cultura y Deporte </span><span class="c1">, A.C.</span></p><p class="c0"><span class="c1">Presente:</span></p><p class="c0 c6"><span class="c1"></span></p><p class="c2 c6"><span class="c1"></span></p><p class="c3">
-    		<span class="c4">Por medio de la presente me dirijo a ustedes para expresar mi interés en la solicitud de la habilitación </span>
-    		<span class="c4">de la Plataforma Educativa.</p>
-    		<p class="c2"><span class="c1">Desarrollo de  interés y razones:</span></p>
-    		<p class="c2">
-    		<span>
-    		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Dapibus ultrices in iaculis nunc sed augue lacus. Quam nulla porttitor massa id neque aliquam. Ultrices mi tempus imperdiet nulla malesuada. Eros in cursus turpis massa tincidunt dui ut ornare lectus. Egestas sed sed risus pretium. Lorem dolor sed viverra ipsum. Gravida rutrum quisque non tellus. Rutrum tellus pellentesque eu tincidunt tortor. Sed blandit libero volutpat sed cras ornare. Et netus et malesuada fames ac. Ultrices eros in cursus turpis massa tincidunt dui ut ornare. Lacus sed viverra tellus in. Sollicitudin ac orci phasellus egestas. Purus in mollis nunc sed. Sollicitudin ac orci phasellus egestas tellus rutrum tellus pellentesque. Interdum consectetur libero id faucibus nisl tincidunt eget.
-    		</span>
-    		<p class="c3"><span class="c1">Así mismo me comprometo a dedicarme de tiempo completo a la correcta gestión de la Herramienta ...</span></p>
-    		<p class="c2"><span class="c1">Atentamente</span></p><p class="c2 c6"><span class="c1"></span></p><p class="c2 c6"><span class="c1"></span></p>
-    		<p class="c2 c6"><span class="c1"></span></p><p class="c8">
-    		<span class="c1">'.$objPersonaDirector->getNombre().' '.$objPersonaDirector->getPaterno().' '.$objPersonaDirector->getMaterno().'</span></p>
-    		<p class="c8"><span class="c1">CI: '.$objPersonaDirector->getCarnet().'</span></p><p class="c2"><span class="c1"> </span></p></div>
-
-    	</body></html>
-
-        ';  
-        $pdf->writeHTML($solicitudHtml, false, false, true, false, '');      
-
-
-
-        $pdf->Output("krlossss_".date('YmdHis').".pdf", 'I');
-
-    }	
+	    $pdf = $this->get("white_october.tcpdf")->create('vertical', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true);
+	    $pdf->SetAuthor('Ministerio de Educación, Deportes y Culturas');
+	    $pdf->SetTitle(('Solicitud de Dominio'));
+	    $pdf->SetSubject('Solicitud de Dominio');
+	    $pdf ->SetPrintHeader(false);
+	    $pdf ->SetPrintFooter(false);
+	    $pdf->setFontSubsetting(true);
+	    $pdf->SetFont('helvetica', '', 11, '', true);
+	    $pdf->SetMargins(25,20,20, true);
+	    $pdf->AddPage();
+	    
+	    $filename = 'solicitud_dominio_' . $sie . '_' . date('YmdHis');
+	    
+	    $pdf->writeHTML($html, true, false, true, false, '');
+	    // $pdf->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $html, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = '', $autopadding = true);
+	    $pdf->Output($filename.".pdf",'I');    
+  	}
 	
 	public function sendRequestAction(Request $request){
+
+
 
  		// ini vars
         $response = new JsonResponse();		
 
-		$dataDirector = $request->get('dataDirector');
+		$allData = json_decode($request->get('datos'), true);
+		$dataDirector=$allData['dataDirector'];
+		// dump($dataDirector);
+		// die;
+		$documentocartaSolicitud = $_FILES['documentocartaSolicitud'];
+		$documentoidoneidad      = $_FILES['documentoidoneidad'];
+		$documentocarnet = $_FILES['documentocarnet'];
+		$documentofotcopiaRM = $_FILES['documentofotcopiaRM'];
 		$em = $this->getDoctrine()->getManager();
-    	$objPlataforma = $em->getRepository('SieAppWebBundle:InstitucioneducativaPlataforma')->findOneBy(array(
-    		'institucioneducativa' => $dataDirector['sie']
-    	));
-    	$objPlataforma->setEstado(1);
-    	$em->persist($objPlataforma);
-    	$em->flush();
+
+		// move all files to the server
+		$pathdocumentocartaSolicitud = $this->saveDocument($documentocartaSolicitud, $dataDirector['sie']);
+		$pathdocumentoidoneidad = $this->saveDocument($documentoidoneidad, $dataDirector['sie']);
+		$pathdocumentocarnet = $this->saveDocument($documentocarnet, $dataDirector['sie']);
+		$pathdocumentofotcopiaRM = $this->saveDocument($documentofotcopiaRM, $dataDirector['sie']);
+
+		// get all files to save
+		$arrPathsDocs = array(
+			'cartasolicitud'=>$pathdocumentocartaSolicitud,
+			'documentoidoneidad'=>$pathdocumentoidoneidad,
+			'documentocarnet'=>$pathdocumentocarnet,
+			'documentofotcopiaRM'=>$pathdocumentofotcopiaRM,
+		);
+
+		try {
 
 
+			$objPlataforma = $em->getRepository('SieAppWebBundle:InstitucioneducativaPlataforma')->findOneBy(array(
+		    		'institucioneducativa' => $dataDirector['sie']
+		    	));
+		    	$objPlataforma->setEstado(1);
+		    	$objPlataforma->setJson(json_encode($arrPathsDocs));
+		    	$em->persist($objPlataforma);
+		    	$em->flush();
 
- 		$swCompleteRequest=true;
-        $status='success';
-        $code = 200;
-        $message = 'this is a test';
+		 		$swCompleteRequest=true;
+		        $status='success';
+		        $code = 200;
+		        $message = 'this is a test';
+		      
+			
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
 
-        $arrResponse = array(
-            'status'            => $status,
-            'code'              => $code,
-            'message'           => $message,
-            'swCompleteRequest' => $swCompleteRequest,
-                      
-        );
+		
 
-        // dump($arrResponse);die;
+	    $arrResponse = array(
+	        'status'            => $status,
+	        'code'              => $code,
+	        'message'           => $message,
+	        'swCompleteRequest' => $swCompleteRequest,
+	                  
+	    );
 
-      
-      $response->setStatusCode(200);
-      $response->setData($arrResponse);
+	    $response->setStatusCode(200);
+		$response->setData($arrResponse);	
 
       return $response;			
 		
 
-	}    	   	
+	}
+
+	private function saveDocument($document, $id){
+
+                // check if the file exists
+    	if(isset($document)){
+            $file = $document;
+            $type = $file['type'];
+            $size = $file['size'];
+            $tmp_name = $file['tmp_name'];
+            $name = $file['name'];
+            $extension = explode('.', $name);
+            $extension = $extension[count($extension)-1];
+            $new_name = $id.'_'.$name.'_'.date('YmdHis').'.'.$extension;
+            // GUARDAMOS EL ARCHIVO
+            $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/solicitudDominio/' .date('Y');
+
+            if (!file_exists($directorio)) {
+                mkdir($directorio, 0775, true);
+            }
+            $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/solicitudDominio/' .date('Y').'/'.$id;
+            if (!file_exists($directoriomove)) {
+                mkdir($directoriomove, 0775, true);
+            }
+
+            $archivador = $directoriomove.'/'.$new_name;
+            //unlink($archivador);
+            if(!move_uploaded_file($tmp_name, $archivador)){
+    			echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+    			return false;
+    			die;
+            }
+              
+        }else{
+            $informe = null;
+            $archivador = 'empty';
+            return false;
+        }
+    	return $new_name;
+	}
 
 }
