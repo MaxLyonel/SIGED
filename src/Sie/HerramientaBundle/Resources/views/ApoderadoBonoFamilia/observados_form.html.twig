@@ -1,0 +1,29 @@
+{% if esObservado %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="justificacion">
+                    <i class="fa fa-fw fa-edit"></i> <b>Justificación</b>
+                </label>
+                <textarea class="form-control" rows="4" id="justificacion" placeholder="Escriba la justificacion..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="adjdocumento">
+                    <i class="fa fa-fw fa-cloud-upload"></i> <b>Adjuntar Informe</b>
+                </label>
+                <input type="file" id="adjdocumento" title="Adjuntar Informe" accept="application/pdf,.doc,.docx"  required />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-success" title="Guardar" onclick="guardar('{{codigoRude}}')"><i class="fa fa-fw fa-save"></i> Guardar</button>
+        </div>
+    </div>
+{% else %}
+    <div class="col-md-12">
+        <div class="alert alert-success" role="alert">
+            <i class="fa fa-fw fa-check-circle"></i> El registro ya se encuentra validado
+        </div>
+    </div>
+{% endif %}

@@ -1478,16 +1478,11 @@ class ApoderadoBonoFamiliaController extends Controller {
     }
 
     public function observadosAction(Request $request){
-        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:observados_index.html.twig');
-    }
-
-    public function observadosCargarUesAction(){
-        $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
         $roluserlugarid = $this->session->get('roluserlugarid');
         $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
 
-        $lista = $em->createQueryBuilder()
+        $listaUes = $em->createQueryBuilder()
             ->select('distinct bov.idDepartamento, bov.descDepartamento, bov.codDistrito, bov.distrito, bov.codUeId, bov.descUe')
             ->from('SieAppWebBundle:BfObservacionValidacion','bov')
             ->where('bov.codDistrito = :codDistrito')
@@ -1495,21 +1490,18 @@ class ApoderadoBonoFamiliaController extends Controller {
             ->addOrderBy('bov.codUeId')
             ->getQuery()
             ->getResult();
-        
-        return $response->setData([
-            'lista'=>$lista,
-            'ues'=>true,
-            'est'=>false
-        ]);
+
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:observados_index.html.twig', array(
+            'listaUes' => $listaUes
+        ));
     }
 
     public function observadosCargarEstudiantesAction(Request $request){
-        $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
-        $codUeId = $request->get('codUeId');
+        $codUeId = $request->get('sie');
         
-        $lista = $em->createQueryBuilder()
-            ->select('bov.codUeId, bov.descUe, est.codigoRude, est.paterno, est.materno, est.nombre')
+        $listaEst = $em->createQueryBuilder()
+            ->select('bov.codUeId, bov.descUe, bov.esValidado, est.codigoRude, est.paterno, est.materno, est.nombre')
             ->from('SieAppWebBundle:BfObservacionValidacion','bov')
             ->innerJoin('SieAppWebBundle:Estudiante', 'est', 'WITH', 'bov.codigoRude=est.codigoRude')
             ->where('bov.codUeId = :codUeId')
@@ -1518,29 +1510,61 @@ class ApoderadoBonoFamiliaController extends Controller {
             ->getQuery()
             ->getResult();
         
-        return $response->setData([
-            'lista'=>$lista,
-            'ues'=>false,
-            'est'=>true
-        ]);
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:observados_est.html.twig', array(
+            'listaEst' => $listaEst
+        ));
     }
 
-    public function observadosCargarFormularioAction(Request $request){
-        $response = new JsonResponse();
+    public function observadosCargarFormularioAction(Request $request){        
         $em = $this->getDoctrine()->getManager();
         $codigoRude = $request->get('codigoRude');
-        $bov = $em->getRepository('SieAppWebBundle:BfObservacionValidacion')->findOneBy(array('codigoRude' => $codigoRude));
+        $bov = $em->getRepository('SieAppWebBundle:BfObservacionValidacion')->findOneBy(array('codigoRude' => $codigoRude, 'esValidado' => false));
         $esObservado = false;
-        $observacion = 0;
 
         if(is_object($bov)) {
             $esObservado = true;
-            $observacion = $bov->getId();
         }
         
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:observados_form.html.twig', array(
+            'codigoRude' => $codigoRude,
+            'esObservado' => $esObservado
+        ));
+    }
+
+    public function observadosGuardarFormularioAction(Request $request){     
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $documento = $request->files->get('adjdocumento');
+        $codigoRude = $request->get('codigoRude');
+        $justificacion = $request->get('justificacion');
+        $estado = 200;
+        $mensaje = "Información registrada correctamente";
+        $bov = $em->getRepository('SieAppWebBundle:BfObservacionValidacion')->findOneBy(array('codigoRude' => $codigoRude, 'esValidado' => false));
+        
+        if(is_object($bov)) {
+            if(!empty($documento) && $justificacion != '') {
+                $destination_path = 'uploads/archivos/bf/';
+                if (!file_exists($destination_path)) {
+                    mkdir($destination_path, 0777, true);
+                }
+                $archivo = $codigoRude . '_' . date('YmdHis') . '.' . $documento->getClientOriginalExtension();
+                $documento->move($destination_path, $archivo);
+
+                $bov->setEsValidado(true);
+                $bov->setJustificacion($justificacion);
+                $bov->setDocumento($destination_path . $archivo);
+                $bov->setFechaRegistro(new \DateTime('now'));
+                $em->flush();
+            } else {
+                $mensaje = "Información no registrada: Debe detallar una justificación y cargar un archivo adjunto";
+            }
+        } else {
+            $mensaje = "Información no registrada";
+        }
+
         return $response->setData([
-            'observacion'=>$observacion,
-            'esObservado'=>$esObservado
+            'estado'=>$estado,
+            'mensaje'=>$mensaje
         ]);
     }
 }
