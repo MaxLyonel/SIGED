@@ -43,7 +43,7 @@ class ApoderadoBonoFamiliaController extends Controller {
         $apoderado = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $inscripcion));
         $pathSystem = $this->session->get('pathSystem', null);
         $dependencia = 0;
-        $vista = 1;
+        $vista = 0;
         $pagado = 0;
         
         if($pathSystem == 'SieHerramientaBundle') {
