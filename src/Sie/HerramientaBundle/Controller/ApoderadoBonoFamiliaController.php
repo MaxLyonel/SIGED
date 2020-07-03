@@ -43,7 +43,7 @@ class ApoderadoBonoFamiliaController extends Controller {
         $apoderado = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $inscripcion));
         $pathSystem = $this->session->get('pathSystem', null);
         $dependencia = 0;
-        $vista = 1;
+        $vista = 0;
         $pagado = 0;
         
         if($pathSystem == 'SieHerramientaBundle') {
@@ -1475,5 +1475,72 @@ class ApoderadoBonoFamiliaController extends Controller {
             'apoderados'=>$apoderados,
             'estudiante'=>$estudiante
         ));
+    }
+
+    public function observadosAction(Request $request){
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:observados_index.html.twig');
+    }
+
+    public function observadosCargarUesAction(){
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $roluserlugarid = $this->session->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+
+        $lista = $em->createQueryBuilder()
+            ->select('distinct bov.idDepartamento, bov.descDepartamento, bov.codDistrito, bov.distrito, bov.codUeId, bov.descUe')
+            ->from('SieAppWebBundle:BfObservacionValidacion','bov')
+            ->where('bov.codDistrito = :codDistrito')
+            ->setParameter('codDistrito', $lugar->getCodigo())
+            ->addOrderBy('bov.codUeId')
+            ->getQuery()
+            ->getResult();
+        
+        return $response->setData([
+            'lista'=>$lista,
+            'ues'=>true,
+            'est'=>false
+        ]);
+    }
+
+    public function observadosCargarEstudiantesAction(Request $request){
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $codUeId = $request->get('codUeId');
+        
+        $lista = $em->createQueryBuilder()
+            ->select('bov.codUeId, bov.descUe, est.codigoRude, est.paterno, est.materno, est.nombre')
+            ->from('SieAppWebBundle:BfObservacionValidacion','bov')
+            ->innerJoin('SieAppWebBundle:Estudiante', 'est', 'WITH', 'bov.codigoRude=est.codigoRude')
+            ->where('bov.codUeId = :codUeId')
+            ->setParameter('codUeId', $codUeId)
+            ->addOrderBy('est.codigoRude')
+            ->getQuery()
+            ->getResult();
+        
+        return $response->setData([
+            'lista'=>$lista,
+            'ues'=>false,
+            'est'=>true
+        ]);
+    }
+
+    public function observadosCargarFormularioAction(Request $request){
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $codigoRude = $request->get('codigoRude');
+        $bov = $em->getRepository('SieAppWebBundle:BfObservacionValidacion')->findOneBy(array('codigoRude' => $codigoRude));
+        $esObservado = false;
+        $observacion = 0;
+
+        if(is_object($bov)) {
+            $esObservado = true;
+            $observacion = $bov->getId();
+        }
+        
+        return $response->setData([
+            'observacion'=>$observacion,
+            'esObservado'=>$esObservado
+        ]);
     }
 }
