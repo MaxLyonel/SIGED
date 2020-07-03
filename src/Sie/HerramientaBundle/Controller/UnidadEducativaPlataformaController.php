@@ -505,42 +505,112 @@ class UnidadEducativaPlataformaController extends Controller{
 	
 	public function sendRequestAction(Request $request){
 
+
+
  		// ini vars
         $response = new JsonResponse();		
 
-		$dataDirector = $request->get('dataDirector');
+		$allData = json_decode($request->get('datos'), true);
+		$dataDirector=$allData['dataDirector'];
+		// dump($dataDirector);
+		// die;
+		$documentocartaSolicitud = $_FILES['documentocartaSolicitud'];
+		$documentoidoneidad      = $_FILES['documentoidoneidad'];
+		$documentocarnet = $_FILES['documentocarnet'];
+		$documentofotcopiaRM = $_FILES['documentofotcopiaRM'];
 		$em = $this->getDoctrine()->getManager();
-    	$objPlataforma = $em->getRepository('SieAppWebBundle:InstitucioneducativaPlataforma')->findOneBy(array(
-    		'institucioneducativa' => $dataDirector['sie']
-    	));
-    	$objPlataforma->setEstado(1);
-    	$em->persist($objPlataforma);
-    	$em->flush();
+
+		// move all files to the server
+		$pathdocumentocartaSolicitud = $this->saveDocument($documentocartaSolicitud, $dataDirector['sie']);
+		$pathdocumentoidoneidad = $this->saveDocument($documentoidoneidad, $dataDirector['sie']);
+		$pathdocumentocarnet = $this->saveDocument($documentocarnet, $dataDirector['sie']);
+		$pathdocumentofotcopiaRM = $this->saveDocument($documentofotcopiaRM, $dataDirector['sie']);
+
+		// get all files to save
+		$arrPathsDocs = array(
+			'cartasolicitud'=>$pathdocumentocartaSolicitud,
+			'documentoidoneidad'=>$pathdocumentoidoneidad,
+			'documentocarnet'=>$pathdocumentocarnet,
+			'documentofotcopiaRM'=>$pathdocumentofotcopiaRM,
+		);
+
+		try {
 
 
+			$objPlataforma = $em->getRepository('SieAppWebBundle:InstitucioneducativaPlataforma')->findOneBy(array(
+		    		'institucioneducativa' => $dataDirector['sie']
+		    	));
+		    	$objPlataforma->setEstado(1);
+		    	$objPlataforma->setJson(json_encode($arrPathsDocs));
+		    	$em->persist($objPlataforma);
+		    	$em->flush();
 
- 		$swCompleteRequest=true;
-        $status='success';
-        $code = 200;
-        $message = 'this is a test';
+		 		$swCompleteRequest=true;
+		        $status='success';
+		        $code = 200;
+		        $message = 'this is a test';
+		      
+			
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
 
-        $arrResponse = array(
-            'status'            => $status,
-            'code'              => $code,
-            'message'           => $message,
-            'swCompleteRequest' => $swCompleteRequest,
-                      
-        );
+		
 
-        // dump($arrResponse);die;
+	    $arrResponse = array(
+	        'status'            => $status,
+	        'code'              => $code,
+	        'message'           => $message,
+	        'swCompleteRequest' => $swCompleteRequest,
+	                  
+	    );
 
-      
-      $response->setStatusCode(200);
-      $response->setData($arrResponse);
+	    $response->setStatusCode(200);
+		$response->setData($arrResponse);	
 
       return $response;			
 		
 
-	}    	   	
+	}
+
+	private function saveDocument($document, $id){
+
+                // check if the file exists
+    	if(isset($document)){
+            $file = $document;
+            $type = $file['type'];
+            $size = $file['size'];
+            $tmp_name = $file['tmp_name'];
+            $name = $file['name'];
+            $extension = explode('.', $name);
+            $extension = $extension[count($extension)-1];
+            $new_name = $id.'_'.$name.'_'.date('YmdHis').'.'.$extension;
+            // GUARDAMOS EL ARCHIVO
+            $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/solicitudDominio/' .date('Y');
+
+            if (!file_exists($directorio)) {
+                mkdir($directorio, 0775, true);
+            }
+            $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/solicitudDominio/' .date('Y').'/'.$id;
+            if (!file_exists($directoriomove)) {
+                mkdir($directoriomove, 0775, true);
+            }
+
+            $archivador = $directoriomove.'/'.$new_name;
+            //unlink($archivador);
+            if(!move_uploaded_file($tmp_name, $archivador)){
+    			echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+    			return false;
+    			die;
+            }
+              
+        }else{
+            $informe = null;
+            $archivador = 'empty';
+            return false;
+        }
+    	return $new_name;
+	}
 
 }
