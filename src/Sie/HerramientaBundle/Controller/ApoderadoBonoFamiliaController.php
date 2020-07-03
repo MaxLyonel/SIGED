@@ -1518,16 +1518,21 @@ class ApoderadoBonoFamiliaController extends Controller {
     public function observadosCargarFormularioAction(Request $request){        
         $em = $this->getDoctrine()->getManager();
         $codigoRude = $request->get('codigoRude');
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $codigoRude));
         $bov = $em->getRepository('SieAppWebBundle:BfObservacionValidacion')->findOneBy(array('codigoRude' => $codigoRude, 'esValidado' => false));
         $esObservado = false;
+        $apoderados = null;
 
         if(is_object($bov)) {
             $esObservado = true;
+            $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => 164190945, 'esValidado' => 1));//$bov->getEstudianteInscripcionId()
         }
         
         return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:observados_form.html.twig', array(
             'codigoRude' => $codigoRude,
-            'esObservado' => $esObservado
+            'esObservado' => $esObservado,
+            'estudiante' => $estudiante,
+            'apoderados' => $apoderados
         ));
     }
 

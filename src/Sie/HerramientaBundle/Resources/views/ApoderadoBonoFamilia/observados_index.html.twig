@@ -20,53 +20,66 @@
     <!--/ End page header -->
 
     <div class="body-content">
-        {% if listaUes %}
-            <div class="col-md-12 table-responsive">
-                <table id="tabla" class="table table-bordered table-striped dataTable">
-                    <thead>
-                        <tr>
-                            <th style="min-width:15px">#</th>
-                            <th>Departamento</th>
-                            <th>Distrito</th>
-                            <th>SIE</th>
-                            <th>Unidad Educativa</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>#</th>
-                            <th>Departamento</th>
-                            <th>Distrito</th>
-                            <th>SIE</th>
-                            <th>Unidad Educativa</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        {% for ue in listaUes %}
-                            <tr>
-                                <td class="text-center">{{loop.index}}</td>
-                                <td>{{ue.descDepartamento}}</td>
-                                <td>{{ue.distrito}}</td>
-                                <td>{{ue.codUeId}}</td>
-                                <td>{{ue.descUe}}</td>
-                                <td>
-                                    <a href="{{path('apoderado_bono_familia_observados_cargar_est', {'sie': ue.codUeId})}}" class="btn btn-sm btn-primary">
-                                        <i class="fa fa-fw fa-eye"></i> Ver estudiantes
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
+        <div class="row">
             <div class="col-md-12">
-                <div class="alert alert-success" role="alert">
-                    <i class="fa fa-fw fa-check-circle"></i> No tiene observaciones
+                <div class="callout callout-info">
+                    <strong>Apoderados registrados para más de cinco (5) estudiantes:</strong><br />
+                    - Es obligatorio el detalle de la justificación del registro del Apoderado.<br />
+                    - Es obligatorio cargar el informe adjunto <span class="text-danger text-strong">(.pdf,.doc,.docx / Máximo 3Mb)</span>.<br />
+                    - Es responsabilidad del Técnico que ratifica al apoderado registrado.
                 </div>
             </div>
-        {% endif %}
-    </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+            {% if listaUes %}
+                <div class="col-md-12 table-responsive">
+                    <table id="tabla" class="table table-bordered table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th style="min-width:15px">#</th>
+                                <th>Departamento</th>
+                                <th>Distrito</th>
+                                <th>SIE</th>
+                                <th>Unidad Educativa</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Departamento</th>
+                                <th>Distrito</th>
+                                <th>SIE</th>
+                                <th>Unidad Educativa</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for ue in listaUes %}
+                                <tr>
+                                    <td class="text-center">{{loop.index}}</td>
+                                    <td>{{ue.descDepartamento}}</td>
+                                    <td>{{ue.distrito}}</td>
+                                    <td>{{ue.codUeId}}</td>
+                                    <td>{{ue.descUe}}</td>
+                                    <td>
+                                        <a href="{{path('apoderado_bono_familia_observados_cargar_est', {'sie': ue.codUeId})}}" class="btn btn-sm btn-primary">
+                                            <i class="fa fa-fw fa-eye"></i> Ver estudiantes
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="col-md-12">
+                    <div class="alert alert-success" role="alert">
+                        <i class="fa fa-fw fa-check-circle"></i> No tiene observaciones
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </>
 {% endblock %}
