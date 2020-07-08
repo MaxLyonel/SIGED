@@ -352,14 +352,25 @@ class UnidadEducativaPlataformaController extends Controller{
   {
 	    // get the send values
 	    $sie = $request->get('sie');
-
-	    $em = $this->getDoctrine()->getManager();
+		$em = $this->getDoctrine()->getManager();
+		$objGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById(2020);
 	    $objPlataforma = $em->getRepository('SieAppWebBundle:InstitucioneducativaPlataforma')->findOneBy(array(
 	      'institucioneducativa' => $sie
 	    ));
-	// dump($objPlataforma);die;
+		$objInstitucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($sie);
 	    $objPersonaDirector = $em->getRepository('SieAppWebBundle:Persona')->find($objPlataforma->getDirectorPersona());
 	    $objPersonaResponsable = $em->getRepository('SieAppWebBundle:Persona')->find($objPlataforma->getResponsablePersona());
+		
+		
+		$objMaestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array(
+			'persona' => $objPlataforma->getDirectorPersona(),
+			'gestionTipo' => $objGestionTipo,
+			'institucioneducativa' => $objInstitucioneducativa,
+			'esVigenteAdministrativo' => true
+		));
+		
+		$nombreCompleto =  $objPersonaDirector->getNombre() . " " . $objPersonaDirector->getMaterno() . " " . $objPersonaDirector->getPaterno();
+		$carnet = $objPersonaDirector->getCarnet();
 
 	    $html = '<div>
 	      <div style="text-align: left;">
@@ -379,11 +390,23 @@ class UnidadEducativaPlataformaController extends Controller{
 	      <div style="text-align: justify;">
 	        <p>De mi consideración:</p>
 
-	        <p>Mediante la presente, solicito a su autoridad el registro de nombre de dominio de la institución educativa <strong>' . $objPlataforma->getInstitucioneducativa()->getInstitucioneducativa() . '</strong>.</p>
+	        <p>Mediante la presente, solicito a su autoridad el registro de nombre de dominio de la Institución Educativa <strong>' . $objPlataforma->getInstitucioneducativa()->getInstitucioneducativa() . '</strong>.</p>
 
-	        <p>Mi persona Juan Carlos Pacheco con C.I. N°…….. en calidad de Director o Director encargado, se compromete a que el uso de dicho  domino por parte de la institución educativa  Juan Perez     Cantuta, se realizará de acuerdo a protocolos establecidos.</p>
+	        <p>Mi persona <strong>' . $nombreCompleto . '</strong> con C.I. N° <strong>' . $carnet . '</strong> en calidad de <strong>' . $objMaestroInscripcion->getCargoTipo()->getCargo() . '</strong>, se compromete a que el uso de dicho  domino por parte de la Institución Educativa <strong>' . $objPlataforma->getInstitucioneducativa()->getInstitucioneducativa() . '</strong>, se realizará de acuerdo a protocolos establecidos.</p>
 
 	        <p>Sin otro particular, saludo a usted con las correspondientes consideraciones.</p>
+		  </div>
+		  
+		  <div style="text-align: center;">
+			<p><strong>
+				FIRMA<br />
+				' . $nombreCompleto . '<br />
+				C.I. N° ' . $carnet . '<br />
+			</strong></p>
+		  </div>
+		  
+		  <div style="text-align: left;">
+			<p><small><i>c.c.Archivo/Personal</i></small></p>
 	      </div>
 	    </div>';
 
