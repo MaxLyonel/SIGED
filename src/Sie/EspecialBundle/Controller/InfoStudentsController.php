@@ -314,6 +314,8 @@ class InfoStudentsController extends Controller {
     $paralelo = $aInfoUeducativa['ueducativaInfoId']['paraleloId'];
     $gradoname = $aInfoUeducativa['ueducativaInfo']['grado'];
     $paraleloname = $aInfoUeducativa['ueducativaInfo']['paralelo'];
+    $nivelname = $aInfoUeducativa['ueducativaInfo']['nivel'];
+    $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
   //set the validate year
 
     try {
@@ -358,6 +360,7 @@ class InfoStudentsController extends Controller {
 
       $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourseSpecial($aInfoUeducativa['requestUser']['sie'], $aInfoUeducativa['requestUser']['gestion'],$aInfoUeducativa['ueducativaInfoId']['ieceId']);
       $dataUe=(unserialize($form['data']));
+      $objArea = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($aInfoUeducativa['ueducativaInfoId']['areaEspecialId']);
 
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
                   'objStudents' => $objStudents,
@@ -371,12 +374,14 @@ class InfoStudentsController extends Controller {
                   'aData' => $form['data'],
                   'gradoname' => $gradoname,
                   'paraleloname' => $paraleloname,
-                  // 'nivelname' => $nivelname,
+                  'nivelname' => $nivelname,
+                  'turnoname' => $turnoname,
                   'form' => $this->createFormStudentInscription($form['data'])->createView(),
                   'exist' => $exist,
                   'itemsUe'=>$itemsUe,
                   'ciclo'=>$ciclo,
                   'operativo'=>$operativo,
+                  'areaEspecial' => $objArea->getAreaEspecial()
                   // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
 

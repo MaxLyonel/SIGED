@@ -47,7 +47,7 @@
                                 <th>Dependencia</th>
                                 <th>Estudiantes</th>
                                 <th>Apoderados registrados</th>
-                                <th>Sin registro de apoderados</th>
+                                <th>Observación</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -60,7 +60,7 @@
                                 <th>Dependencia</th>
                                 <th>Estudiantes</th>
                                 <th>Apoderados registrados</th>
-                                <th>Sin registro de apoderados</th>
+                                <th>Observación</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -73,7 +73,10 @@
                                 <td>${registro.dependencia}</td>
                                 <td>${registro.efectivos}</td>
                                 <td>${registro.apoderado}</td>
-                                <td class="text-danger">${registro.efectivos - registro.apoderado}</td>
+                                <td>
+                                    <span class="text-danger" v-if="(registro.efectivos - registro.apoderado) > 0">Debe registrar: <b>${registro.efectivos - registro.apoderado}</b> apoderado(s)</span>
+                                    <span class="text-success" v-else>Sin observación</span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
