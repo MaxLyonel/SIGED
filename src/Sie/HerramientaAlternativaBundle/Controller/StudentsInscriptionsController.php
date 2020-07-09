@@ -734,17 +734,18 @@ class StudentsInscriptionsController extends Controller {
         }else{
 
           $arrRudesStudent = array();
+          
           foreach ($objRudesStudent as $value) {
             $arrRudesStudent[]=array(
-                                  'idstudent'=>$value->getId(),
-                                  'ci'=>$value->getCarnetIdentidad(),
-                                  'complemento'=>$value->getComplemento(),
-                                  'codigorude'=>$value->getCodigoRude(),
-                                  'paterno'=>$value->getPaterno(),
-                                  'materno'=>$value->getMaterno(),
-                                  'nombre'=>$value->getNombre(),
-                                  'fnac'=>$value->getFechaNacimiento()->format('d-m-Y'),
-                                  );
+              'idstudent'=>$value->getId(),
+              'ci'=>$value->getCarnetIdentidad(),
+              'complemento'=>$value->getComplemento(),
+              'codigorude'=>$value->getCodigoRude(),
+              'paterno'=>$value->getPaterno(),
+              'materno'=>$value->getMaterno(),
+              'nombre'=>$value->getNombre(),
+              'fnac'=>$value->getFechaNacimiento() ? $value->getFechaNacimiento()->format('d-m-Y') : ""
+            );
           }
 
           $status = 'error';
