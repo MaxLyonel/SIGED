@@ -265,6 +265,7 @@
 	                    </tr>
 	                    <tr v-if="!swCompleteRequest">
 	                    	<td colspan="2">
+	                    	{#
 	                    		<fieldset>
 									<div class="checkbox" id = "selector">
 								        <label><input type="checkbox" v-model="checked">Tiene Plataforma?</label>
@@ -275,15 +276,67 @@
 			                          
 			                            <div class="col-md-6">
 			                            	  <span class="col-md-1 col-md-offset-2 text-center">Dominio</span>
-			                                <input id="dominio" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.dominio">
 			                            </div>
 			                             
 			                             <div class="col-md-6">
 			                             	<span class="col-md-1 col-md-offset-2 text-center">IP</span>
-			                                <input id="ip" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.ip">
+			                               
 			                            </div>
 			                        </div>
-	                    		</fieldset>	                    		
+	                    		</fieldset>
+
+							#}
+								<div class="row">
+									<div class="col-md-12">
+										<div role="tabpanel">
+											<!-- Nav tabs -->
+											<ul class="nav nav-tabs" role="tablist">
+												<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
+													<a role="tab" data-toggle="tab">La Institución Educativa Requiere Plataforma</a>
+												</li>
+												<li :class="{active: opcion == 2}" @click="opcion = 2">
+													<a aria-controls="tabcarnet" role="tab" data-toggle="tab">La Institución Educativa Requiere Classroom</a>
+												</li>
+												<li :class="{active: opcion == 3}" @click="opcion = 3">
+													<a aria-controls="tabcarnet" role="tab" data-toggle="tab">La Institución Educativa Requiere Moodle</a>
+												</li>
+											</ul>
+											<!-- Tab panes -->
+											<div class="tab-content">
+												<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+													<div class="row">
+														<div class="form-group col-md-8">
+															<label>Dominio <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="Registre su dominio web" data-trigger="hover"></i> <span class="requerido">*</span> </label>
+															<input id="dominio" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.dominio">
+														</div>
+														<div class="form-group col-md-4">
+															<label>IP <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="" data-trigger="hover"></i> </label>
+															<input id="ip" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.ip">
+														</div>														
+													</div>
+												</div>
+												<div role="tabpanel" :class="['tab-pane', {active: opcion == 2}]">
+													<div class="row">
+														<div class="form-group col-md-8">
+															<label>Subdominio Classroom<span class="requerido">*</span></label>
+															<input id="complemento" name="complemento" type="text" placeholder="complemento" class="form-control" v-model="dataPlataforma.dataDominio.requestSite" readonly="true">
+														</div>
+													</div>
+												</div>
+												<div role="tabpanel" :class="['tab-pane', {active: opcion == 3}]">
+													<div class="row">
+														<div class="form-group col-md-8">
+															<label>Subdominio Moodle<span class="requerido">*</span></label>
+															<input id="complemento" name="complemento" type="text" placeholder="complemento" class="form-control" v-model="dataPlataforma.dataDominio.requestSite" readonly="true">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
 	                    	</td>
 	                    </tr>
 
@@ -400,6 +453,7 @@
             data: {
 
               	checked:false,
+              	opcion: 1,
               	swattach:false,
               	dataPlataforma:{
               		dataDirector:{
@@ -430,6 +484,8 @@
               			'dominio':'',
               			'ip':'',
               			'plataforma':'',
+              			'requestSite':'{{dataDir.requestSite}}',
+              			'opcion':0,
               		}            		
 
               	},
@@ -480,10 +536,10 @@
               enterDataRequest: function(){
               	this.swattach=false;
               	this.buscando = true;
-              	
+             
                 if(this.swresponse ){
 
-	              	if(this.checked){
+	              	if(this.opcion == 1){
 	              		
 	              		if(this.dataPlataforma.dataDominio.dominio==''){
 	              			Swal.fire(
@@ -513,6 +569,7 @@
                       if (result.value) {  	              	
 
 		              	this.dataPlataforma.dataDominio.plataforma = this.checked;
+		              	this.dataPlataforma.dataDominio.opcion = this.opcion;
 		                axios.post(Routing.generate('plataforma_enterDataRequest', this.dataPlataforma))
 		                .then(response => {
 		                  
