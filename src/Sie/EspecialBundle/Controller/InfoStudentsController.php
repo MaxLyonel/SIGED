@@ -743,8 +743,15 @@ public function checksegipstudentAction(Request $request){
                 $yearStudent = $arrYearStudent['age'];
                 // check if the student is on 5 - 8 years old
                  $arrValidationYearOld = in_array($this->session->get('roluser'), array(7,8,10))?array(4,5,6,7,8,9,10,11,12,13,14,15,16,17,18):array(4,5,6);
+                 $dataGenderAndCountry = $this->getGenderAndCountry();
+                          $arrGenero = $dataGenderAndCountry['gender'];
+                          $arrPais   = $dataGenderAndCountry['country'];
+                          $status = 'success';
+                          $code = 200;
+                          $message = "Estudiante cumple con los requerimientos!!!";
+                          $swcreatestudent = true; 
                  //if($yearStudent<=8 && $yearStudent>=4){
-                 if(in_array( $yearStudent, $arrValidationYearOld )){
+                 /*if(in_array( $yearStudent, $arrValidationYearOld )){
                           
                           $dataGenderAndCountry = $this->getGenderAndCountry();
                           $arrGenero = $dataGenderAndCountry['gender'];
@@ -760,7 +767,7 @@ public function checksegipstudentAction(Request $request){
                   $code = 400;
                   $message = "Estudiante no cumple con la edad requerida";
                   $swcreatestudent = false; 
-                      }
+                      }*/
               }else{
             $status = 'error';
             $code = 400;
