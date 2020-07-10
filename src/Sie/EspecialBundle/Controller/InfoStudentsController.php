@@ -676,6 +676,7 @@ class InfoStudentsController extends Controller {
   }
 
 public function checksegipstudentAction(Request $request){
+  //dumP($request);die;
       //ini vars
       $response = new JsonResponse();
       $em = $this->getDoctrine()->getManager();
@@ -910,7 +911,7 @@ public function checksegipstudentAction(Request $request){
      *
      */
     public function doInscriptionAction(Request $request) {
-
+      //dump($request);die;
       $arrDatos = json_decode($request->get('datos'), true);
       //dump($arrDatos);die;
        // ini vars
@@ -934,7 +935,7 @@ public function checksegipstudentAction(Request $request){
         $ieceId = $request->get('ieceId');
         $areaEspecialId = $request->get('areaEspecialId');
 
-        $withoutcifind = ($request->get('withoutcifind')==false)?false:true;
+        $withoutcifind = ($request->get('withoutcifind')=='false')?false:true;
 
         $swinscription=true;
             $arrStudent=array();
