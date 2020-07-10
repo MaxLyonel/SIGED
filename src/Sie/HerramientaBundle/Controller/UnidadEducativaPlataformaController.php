@@ -440,15 +440,14 @@ class UnidadEducativaPlataformaController extends Controller{
 	
 	public function sendRequestAction(Request $request){
 
-
-
  		// ini vars
         $response = new JsonResponse();		
-
+        $em = $this->getDoctrine()->getManager();
 		$allData = json_decode($request->get('datos'), true);
-		$dataDirector=$allData['dataDirector'];
-		// dump($dataDirector);
-		// die;
+		//$dataDirector=$allData['dataDirector'];
+        $dataDirector=$request->get('dataDirector');
+	
+        /*
 		$documentocartaSolicitud = $_FILES['documentocartaSolicitud'];
 		$documentoidoneidad      = $_FILES['documentoidoneidad'];
 		$documentocarnet = $_FILES['documentocarnet'];
@@ -468,7 +467,8 @@ class UnidadEducativaPlataformaController extends Controller{
 			'documentocarnet'=>$pathdocumentocarnet,
 			'documentofotcopiaRM'=>$pathdocumentofotcopiaRM,
 		);
-
+        */
+        $arrPathsDocs = array();
 		try {
 
 
