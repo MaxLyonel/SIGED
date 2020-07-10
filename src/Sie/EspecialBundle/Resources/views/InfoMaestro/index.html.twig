@@ -138,8 +138,8 @@
                                                 <th>Fecha Registro</th>
                                                 <th>Fecha Modificación</th>
                                                 <th>Observación</th>
-                                                {# <th>Acciones</th>
-                                                <th>Es Vigente</th> #}
+                                                <th>Acciones</th>
+                                                <th>Es Vigente</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -157,7 +157,7 @@
                                                         {% if maestro.perId in maestro_no_idioma|keys %}<i class="fa fa-fw fa-warning" aria-hidden="true"></i>No tiene idiomas{% else %}<i class="fa fa-fw fa-check" aria-hidden="true"></i>(Idiomas) Correcto{% endif %}<br />
                                                         {% if maestro.perId in maestro_no_genero|keys %}<i class="fa fa-fw fa-warning" aria-hidden="true"></i>Corrija el género{% else %}<i class="fa fa-fw fa-check" aria-hidden="true"></i>(Género) Correcto{% endif %}
                                                     </td>
-                                                    {# <td data-title="Acciones">
+                                                    <td data-title="Acciones">
                                                         {% if activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false) %}
                                                             <form action="{{path('herramienta_especial_info_maestro_edit')}}" method="post" style="display:inline-block">
                                                                 <input type="hidden" name="idPersona" value="{{maestro.perId}}">
@@ -178,7 +178,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                      {% if activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false) %}
+                                                        {% if activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false) %}
                                                         <form action="{{path('herramienta_especial_info_maestro_es_vigente_maestro')}}" method="post" style="display: inline-block">
                                                             <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                                             <input type="hidden" name="gestion" value="{{gestion}}">
@@ -201,7 +201,7 @@
                                                                 </span>
                                                             {% endif %}
                                                         {% endif %}
-                                                    </td> #}
+                                                    </td>
                                                 </tr>
                                             {% endfor %}
                                         </tbody>
@@ -210,7 +210,6 @@
                             {% else %}
                                 No hay Maestros Registrados
                             {% endif %}
-
                         </div>
                         <div>
                         </div>
