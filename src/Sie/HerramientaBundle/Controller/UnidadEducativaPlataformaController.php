@@ -92,6 +92,9 @@ class UnidadEducativaPlataformaController extends Controller{
     	
         
         $objInstitucionEducativa =  $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id'));
+        $objJurisdiccionGeografica =  $em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->find($objInstitucionEducativa->getLeJuridicciongeografica());
+        //dump($objJurisdiccionGeografica->getDistritoTipo()->getId());
+
         // $arrInstitucionEducativa = array(
         // 	'sie'=>$objInstitucionEducativa->getId(),
         // 	'institucioneducativa'=>$objInstitucionEducativa->getInstitucioneducativa(),
@@ -103,7 +106,8 @@ class UnidadEducativaPlataformaController extends Controller{
 
         );
         $dataDir =  $this->getDirector($dataUe);
-        // dump($dataDir);die;
+        $dataDir[0]['requestSite'] = mb_strtolower(substr(str_replace(' ', '', $objInstitucionEducativa->getInstitucioneducativa()), 0,8),'UTF-8').'.'.$objJurisdiccionGeografica->getDistritoTipo()->getId().'.edu.bo';
+      
 
         // dump($objInstitucionEducativa);die;
 
@@ -298,13 +302,19 @@ class UnidadEducativaPlataformaController extends Controller{
             	$objPlataforma = new InstitucioneducativaPlataforma();
             }			
 			
-			$objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['plataforma']=='false'?0:1);
+			//$objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['plataforma']=='false'?0:1);
+            $objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['opcion']);
 			
 			$objPlataforma->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
 			$objPlataforma->setDirectorPersona($em->getRepository('SieAppWebBundle:Persona')->find($this->arrDataRequestPlataforma['dataDirector']['personId']));
 			$objPlataforma->setResponsablePersona($em->getRepository('SieAppWebBundle:Persona')->find($newpersona->getId()));
-			$objPlataforma->setDominio($this->arrDataRequestPlataforma['dataDominio']['dominio']);
-			$objPlataforma->setIP($this->arrDataRequestPlataforma['dataDominio']['ip']);
+            if($this->arrDataRequestPlataforma['dataDominio']['opcion']==1){
+                $objPlataforma->setDominio($this->arrDataRequestPlataforma['dataDominio']['dominio']);
+                $objPlataforma->setIP($this->arrDataRequestPlataforma['dataDominio']['ip']);
+            }else{
+                 $objPlataforma->setDominio($this->arrDataRequestPlataforma['dataDominio']['requestSite']);
+            }
+			
 			$objPlataforma->setCelDirector($this->arrDataRequestPlataforma['dataDirector']['celular']);
 			$objPlataforma->setCelResponsable($this->arrDataRequestPlataforma['dataResponsable']['celular']);
 			$objPlataforma->setDocumento('.');
