@@ -120,10 +120,12 @@ class InfoPersonalAdmController extends Controller {
                         'SELECT count(mi.id) FROM SieAppWebBundle:MaestroInscripcion mi
                     WHERE mi.institucioneducativa = :idInstitucion
                     AND mi.gestionTipo = :gestion
-                    AND mi.cargoTipo IN (:cargos)')
+                    AND mi.cargoTipo IN (:cargos)
+                    AND mi.esVigenteAdministrativo = :vigente')
                 ->setParameter('idInstitucion', $institucion)
                 ->setParameter('gestion', $gestion)
-                ->setParameter('cargos', array(1,12));
+                ->setParameter('cargos', array(1,12))
+                ->setParameter('vigente', true);
         $contador = $query->getResult();
 
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
