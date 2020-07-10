@@ -367,18 +367,19 @@ class UnidadEducativaPlataformaController extends Controller{
 	    $objPlataforma = $em->getRepository('SieAppWebBundle:InstitucioneducativaPlataforma')->findOneBy(array(
 	      'institucioneducativa' => $sie
 	    ));
+
 		$objInstitucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($sie);
 	    $objPersonaDirector = $em->getRepository('SieAppWebBundle:Persona')->find($objPlataforma->getDirectorPersona());
 	    $objPersonaResponsable = $em->getRepository('SieAppWebBundle:Persona')->find($objPlataforma->getResponsablePersona());
 		
-		
+
 		$objMaestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array(
 			'persona' => $objPlataforma->getDirectorPersona(),
 			'gestionTipo' => $objGestionTipo,
 			'institucioneducativa' => $objInstitucioneducativa,
 			'esVigenteAdministrativo' => true
 		));
-		
+
 		$nombreCompleto =  $objPersonaDirector->getNombre() . " " . $objPersonaDirector->getMaterno() . " " . $objPersonaDirector->getPaterno();
 		$carnet = $objPersonaDirector->getCarnet();
 
@@ -439,15 +440,12 @@ class UnidadEducativaPlataformaController extends Controller{
   	}
 	
 	public function sendRequestAction(Request $request){
-
  		// ini vars
         $response = new JsonResponse();		
-        $em = $this->getDoctrine()->getManager();
+
 		$allData = json_decode($request->get('datos'), true);
-		//$dataDirector=$allData['dataDirector'];
-        $dataDirector=$request->get('dataDirector');
-	
-        /*
+		$dataDirector=$allData['dataDirector'];
+
 		$documentocartaSolicitud = $_FILES['documentocartaSolicitud'];
 		$documentoidoneidad      = $_FILES['documentoidoneidad'];
 		$documentocarnet = $_FILES['documentocarnet'];
@@ -467,8 +465,7 @@ class UnidadEducativaPlataformaController extends Controller{
 			'documentocarnet'=>$pathdocumentocarnet,
 			'documentofotcopiaRM'=>$pathdocumentofotcopiaRM,
 		);
-        */
-        $arrPathsDocs = array();
+
 		try {
 
 

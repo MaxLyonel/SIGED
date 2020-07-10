@@ -371,22 +371,22 @@
 			                            <div class="col-md-6">
 
                                          <label for="genero">Adjuntar Documumento: CARTA DE SOLICITUD </label>
-                                         <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId1">
+                                         <input type="file" name="image" @change="getDocSolictud" accept="file/*" class="form-control" id="archivoAdjuntoId1">
                                        
 			                            </div>
 			                            <div class="col-md-6">
                                          <label for="genero">Adjuntar Documumento: ACREDITACION IDONEIDAD </label>
-                                         <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId2">
+                                         <input type="file" name="image" @change="getAcreditacionIdoneidad" accept="file/*" class="form-control" id="archivoAdjuntoId2">
 			                            </div>
 			                        </div>
 			                        <div class="form-group">
 			                            <div class="col-md-6">
                                          <label for="genero">Adjuntar Documumento: FOTOCOPIA CEDULA DE IDENTIDAD </label>
-                                         <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId3">
+                                         <input type="file" name="image" @change="getCarnet" accept="file/*" class="form-control" id="archivoAdjuntoId3">
 			                            </div>
 			                            <div class="col-md-6">
                                          <label for="genero">Adjuntar Documumento: FOTOCOPIA R.M. </label>
-                                         <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId4">
+                                         <input type="file" name="image" @change="getfotocopiarm" accept="file/*" class="form-control" id="archivoAdjuntoId4">
 			                            </div>
 			                        </div>
 			                    </br>
@@ -494,6 +494,10 @@
               	swresponse:{{swresponse}},
               	swCompleteRequest:{{swCompleteRequest}},
               	buscando:false,
+              	documentocartaSolicitud:'',
+              	documentocarnet:'',
+              	documentoidoneidad:'',
+              	documentofotcopiaRM:'',              	
             
             },
             methods: {
@@ -538,7 +542,12 @@
               enterDataRequest: function(){
               	this.swattach=false;
               	this.buscando = true;
-             
+
+              	this.documentocartaSolicitud='',
+              	this.documentocarnet='',
+              	this.documentoidoneidad='';
+              	this.documentofotcopiaRM='';
+
                 if(this.swresponse ){
 
 	              	if(this.opcion == 1){
@@ -616,6 +625,39 @@
               },
             sendRequest: function(){
 
+            	if(typeof this.documentocartaSolicitud != 'object'){
+            		Swal.fire(
+                        'Adjuntar CARTA SOLICITUD',
+                        'Debe adjuntar el documento CARTA SOLICITUD para ralizar la solicitud, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+            	}
+            	if(typeof this.documentoidoneidad != 'object'){
+            		Swal.fire(
+                        'Adjuntar documento: ACREDITACION IDONEIDAD',
+                        'Debe adjuntar el documento ACREDITACION IDONEIDAD para ralizar la solicitud, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+            	}
+            	if(typeof this.documentocarnet != 'object'){
+            		Swal.fire(
+                        'Adjuntar FOTOCOPIA CEDULA DE IDENTIDAD',
+                        'Debe adjuntar el documento FOTOCOPIA CEDULA DE IDENTIDAD para ralizar la solicitud, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+            	}
+            	if(typeof this.documentofotcopiaRM != 'object'){
+            		Swal.fire(
+                        'Adjuntar FOTOCOPIA R.M.',
+                        'Debe adjuntar el documento FOTOCOPIA R.M. para ralizar la solicitud, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+            	}            	
+
                     Swal.fire({
                         title: 'Realizar Solicitud?',
                         text: "esta seguro de realizar la SOLICITUD",
@@ -626,10 +668,18 @@
                         confirmButtonText: 'Si, proceder',
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
-                      if (result.value) {  	              	
+                      if (result.value) {  
+
+                      	  var data = new FormData();
+                          data.append('datos', JSON.stringify(this.dataPlataforma));
+                          data.append('documentocartaSolicitud', this.documentocartaSolicitud);
+                          data.append('documentoidoneidad', this.documentoidoneidad);
+                          data.append('documentocarnet', this.documentocarnet);
+                          data.append('documentofotcopiaRM', this.documentofotcopiaRM);
+
 
 		              	this.dataPlataforma.dataDominio.plataforma = this.checked;
-		                axios.post(Routing.generate('plataforma_sendRequest', this.dataPlataforma))
+		                axios.post(Routing.generate('plataforma_sendRequest'), data)
 		                .then(response => {
 		                  
 		                  if (response.status == 200) {
@@ -654,7 +704,19 @@
                     })	            	
 
             },
-            getImage: function(event){
+            getDocSolictud: function(event){
+            	this.documentocartaSolicitud = this.getDocument(event);
+            },
+            getAcreditacionIdoneidad: function(){
+            	this.documentoidoneidad = this.getDocument(event);
+            },
+            getCarnet: function(){
+            	this.documentocarnet = this.getDocument(event);
+            },
+            getfotocopiarm: function(){
+            	this.documentofotcopiaRM = this.getDocument(event);
+            },            
+            getDocument: function(event){
                 var informe = event.target.files[0];
                 var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
                 if(!allowedExtensions.exec(event.target.value)){
@@ -679,7 +741,7 @@
                         return false;
                     }
                 }
-                this.informe = event.target.files[0];
+                return event.target.files[0];
             }, 
 	    	numerico: function(event){
 	    	    var k = event.charCode || event.keyCode;
