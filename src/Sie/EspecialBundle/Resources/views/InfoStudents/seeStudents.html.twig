@@ -39,6 +39,15 @@
                         </button>
                         <hr />
                         {% endif %}
+                        {# commented by krlos
+                           {% if onlyview == false and gestion >= app.session.get('currentyear') and (app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10) %}
+                            <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}');" >
+
+                                <i class="fa fa-user"></i> Inscripción sin RUDE
+                            </button>
+                            {% endif %}
+                        #}
+                        <hr />                          
                     </div>
                 </div>
                 <div class="row">
