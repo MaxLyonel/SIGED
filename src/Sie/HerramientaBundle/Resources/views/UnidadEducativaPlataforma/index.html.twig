@@ -132,23 +132,26 @@
 
 					<table class="table table ">
 	                    <tr>
+	                    	<td colspan="2">
+			                      <fieldset>
+				                        <legend class="text-center ">Datos Institucion Educativa </legend>
+				                        <div class="form-group">
+				                          
+				                            <div class="col-md-6">
+				                            	  <strong>SIE:</strong> 
+				                            	  {{DataInstitucioneducativa.id}}
+				                                
+				                            </div>
+				                             
+				                             <div class="col-md-6">
+				                             	<strong>INSTITUCION EDUCATIVA:</strong> 
+				                                {{DataInstitucioneducativa.institucioneducativa}}
+				                            </div>
+				                        </div>
+				                   </fieldset>
+
+	                    	</td>
 	                     
-	                      <fieldset>
-		                        <legend class="text-center ">Datos Institucion Educativa </legend>
-		                        <div class="form-group">
-		                          
-		                            <div class="col-md-6">
-		                            	  <strong>SIE:</strong> 
-		                            	  {{DataInstitucioneducativa.id}}
-		                                
-		                            </div>
-		                             
-		                             <div class="col-md-6">
-		                             	<strong>INSTITUCION EDUCATIVA:</strong> 
-		                                {{DataInstitucioneducativa.institucioneducativa}}
-		                            </div>
-		                        </div>
-		                   </fieldset>
 		                   </br>
 		                   </br>
 	                    </tr>
@@ -162,7 +165,6 @@
 		                        {#
 		                        <a v-if="!swCompleteRequest" class="" data-toggle="modal" href='#modalEstudianteTwo' > <i class="fa fa-eye"></i> Registrar Información </a>
 								#}
-								<a  class="" data-toggle="modal" href='#' > <i class=""></i> Datos Generales del Director </a>
 		                        <div class="form-group">
 		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
 		                            <div class="col-md-4">
@@ -217,8 +219,10 @@
 
 	                      	<form class="form-horizontal" method="post">
 		                    <fieldset>
-		                        <legend class="text-center header">Datos Responsable</legend>
-								<a v-if="!swCompleteRequest" class="" data-toggle="modal" href='#modalEstudianteTwo' > <i class="fa fa-eye"></i> Registrar Responsable </a>
+		                        <legend class="text-center header">Datos Responsable
+		                        	<a v-if="!swCompleteRequest" class="" data-toggle="modal" href='#modalEstudianteTwo' > <i class="fa fa-child" data-toggle="popover" data-placement="top" data-content="Registre datos personales del Responsable de la administración de la Plataforma" data-trigger="hover"></i> </a>
+		                        </legend>
+								
 		                        <div class="form-group">
 		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
 		                            <div class="col-md-4">
@@ -265,6 +269,10 @@
 	                      	
 	                      </td>
 	                    </tr>
+	                    <tr v-if="!swCompleteRequest" >
+	                    	<td><label><input type="radio" id="swInscriptionA" value="swInscriptionA" name="swInscription" :class="{active: opcion == 1}" @click="opcion = 1" checked="true"> La Institución Educativa tiene PLATAFORMA</label>										
+	                    	<td><label><input type="radio" id="swInscriptionB" value="swInscriptionB" name="swInscription" :class="{active: opcion == 2}" @click="opcion = 2"> La Institución Educativa requiere PLATAFORMA</label></td>
+	                    </tr>
 	                    <tr v-if="!swCompleteRequest">
 	                    	<td colspan="2">
 	                    	{#
@@ -286,45 +294,56 @@
 			                            </div>
 			                        </div>
 	                    		</fieldset>
-
 							#}
 								<div class="row">
 									<div class="col-md-12">
+										
 										<div role="tabpanel">
 											<!-- Nav tabs -->
+											{#
 											<ul class="nav nav-tabs" role="tablist">
 												<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
-													<a role="tab" data-toggle="tab">La Institución Educativa Requiere Plataforma</a>
+													<a role="tab" data-toggle="tab">La Institución Educativa tiene PLATAFORMA</a>
 												</li>
 												<li :class="{active: opcion == 2}" @click="opcion = 2">
-													<a aria-controls="tabcarnet" role="tab" data-toggle="tab">La Institución Educativa Requiere Classroom</a>
+													<a aria-controls="tabcarnet" role="tab" data-toggle="tab">La Institución Educativa Requiere PLATAFORMA</a>
 												</li>
+												
 												<li :class="{active: opcion == 3}" @click="opcion = 3">
 													<a aria-controls="tabcarnet" role="tab" data-toggle="tab">La Institución Educativa Requiere Moodle</a>
 												</li>
-											</ul>
+												
+											</ul>#}
 											<!-- Tab panes -->
 											<div class="tab-content">
 												<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
 													<div class="row">
+														<p>Registre la siguiente información solicitada:</p>
 														<div class="form-group col-md-8">
-															<label>Dominio <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="Registre su dominio web" data-trigger="hover"></i> <span class="requerido">*</span> </label>
+															<label>Dominio <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="Registre nombre del dominio web" data-trigger="hover"></i> <span class="requerido">*</span> </label>
 															<input id="dominio" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.dominio">
 														</div>
 														<div class="form-group col-md-4">
-															<label>IP <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="" data-trigger="hover"></i> </label>
+															<label>IP <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="registre dirección de IP" data-trigger="hover"></i> </label>
 															<input id="ip" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.ip">
 														</div>														
 													</div>
 												</div>
 												<div role="tabpanel" :class="['tab-pane', {active: opcion == 2}]">
 													<div class="row">
+														<div class="form-group col-md-4">
+															<label>Plataforma<span class="requerido">*</span></label></br>
+															<label><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 2" > CLASSROOM</label></br>	
+															<label><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 3" > MOODLE</label></br>	
+															<label><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 4" > M.S. TEAM</label>																
+														</div>
 														<div class="form-group col-md-8">
-															<label>Subdominio Classroom<span class="requerido">*</span></label>
+														<label>Subdominio Institución Educativa<span class="requerido"></span></label>
 															<input id="complemento" name="complemento" type="text" placeholder="complemento" class="form-control" v-model="dataPlataforma.dataDominio.requestSite" readonly="true">
 														</div>
 													</div>
 												</div>
+												{#
 												<div role="tabpanel" :class="['tab-pane', {active: opcion == 3}]">
 													<div class="row">
 														<div class="form-group col-md-8">
@@ -333,6 +352,7 @@
 														</div>
 													</div>
 												</div>
+												#}
 											</div>
 										</div>
 									</div>
@@ -346,7 +366,7 @@
 	                    <tr v-else> 
 	                    	<td> 
 	                    		<div class="alert alert-success" role="alert">
-								  La unidad Educativa ya realizo su solicitud ...
+								  Solicitud realizada con exito...
 								</div>
 	                    	</td>
 	                    </tr>
@@ -370,12 +390,12 @@
 			                        <div class="form-group">
 			                            <div class="col-md-6">
 
-                                         <label for="genero">Adjuntar Documumento: CARTA DE SOLICITUD </label>
+                                         <label for="genero">Adjuntar Documumento: CARTA DE SOLICITUD FIRMADA</label>
                                          <input type="file" name="image" @change="getDocSolictud" accept="file/*" class="form-control" id="archivoAdjuntoId1">
                                        
 			                            </div>
 			                            <div class="col-md-6">
-                                         <label for="genero">Adjuntar Documumento: ACREDITACION IDONEIDAD </label>
+                                         <label for="genero">Adjuntar Documumento: ACREDITACIÓN DE IDONEIDAD </label>
                                          <input type="file" name="image" @change="getAcreditacionIdoneidad" accept="file/*" class="form-control" id="archivoAdjuntoId2">
 			                            </div>
 			                        </div>
@@ -391,12 +411,11 @@
 			                        </div>
 			                    </br>
 
-			                         <div class="form-group">
-			                           
-			                            <div class="col-md-6">
-			                                <button type="button" @click="sendRequest" class="btn btn-primary">Enviar Solicitud</button>
-			                            </div>
-			                        </div>	
+		                        <div class="form-group">		                           
+		                            <div class="col-md-6">
+		                                <button type="button" @click="sendRequest" class="btn btn-primary">Enviar Solicitud</button>
+		                            </div>
+		                        </div>
 
 	  								
 	                    		</fieldset>	 	                     	
@@ -456,6 +475,7 @@
 
               	checked:false,
               	opcion: 1,
+              	opcionreqdomi: 0,
               	swattach:false,
               	dataPlataforma:{
               		dataDirector:{
@@ -488,6 +508,7 @@
               			'plataforma':'',
               			'requestSite':'{{dataDir.requestSite}}',
               			'opcion':0,
+              			'opcionreqdomi':0,
               		}            		
 
               	},
@@ -560,10 +581,21 @@
 		                  	)
 		                  	this.swattach =false; 
 	              			this.buscando =false;
-	              			
-	              			
 		                  	return;
 
+	              		}
+	              	}
+	              	if(this.opcion == 2){
+	              		
+	              		if(this.opcionreqdomi==0){
+	              			Swal.fire(
+		                      'Aviso',
+		                      'Debe seleccionar la plataforma',
+		                      'error'
+		                  	)
+		                  	this.swattach =false; 
+	              			this.buscando =false;
+		                  	return;
 	              		}
 	              	}
 
@@ -581,11 +613,18 @@
 
 		              	this.dataPlataforma.dataDominio.plataforma = this.checked;
 		              	this.dataPlataforma.dataDominio.opcion = this.opcion;
+		              	this.dataPlataforma.dataDominio.opcionreqdomi = this.opcionreqdomi;
+						Swal.fire({
+		    		  		title:'Procesando',
+		    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-refresh fa-spin"></i> Espere un momento</div> ',
+		    		  		type:'info',
+		    		  		showConfirmButton: false,
+	    				});		              	
 		                axios.post(Routing.generate('plataforma_enterDataRequest', this.dataPlataforma))
 		                .then(response => {
 		                  
 		                  if (response.status == 200) {
-
+		                  	Swal.close();
 		                  	this.swattach = response.data.swattach;
 				            this.buscando =false; 
 
@@ -679,11 +718,17 @@
 
 
 		              	this.dataPlataforma.dataDominio.plataforma = this.checked;
+		              	Swal.fire({
+		    		  		title:'Enviando Solicitud',
+		    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-refresh fa-spin"></i> Espere un momento</div> ',
+		    		  		type:'info',
+		    		  		showConfirmButton: false,
+	    				});	
 		                axios.post(Routing.generate('plataforma_sendRequest'), data)
 		                .then(response => {
 		                  
 		                  if (response.status == 200) {
-
+		                  	Swal.close();
 		                  	this.swattach = response.data.swattach;
 				            this.buscando =false; 
 				            this.swCompleteRequest = response.data.swCompleteRequest;

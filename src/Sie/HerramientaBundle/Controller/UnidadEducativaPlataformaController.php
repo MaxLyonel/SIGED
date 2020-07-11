@@ -106,7 +106,7 @@ class UnidadEducativaPlataformaController extends Controller{
 
         );
         $dataDir =  $this->getDirector($dataUe);
-        $dataDir[0]['requestSite'] = mb_strtolower(substr(str_replace(' ', '', $objInstitucionEducativa->getInstitucioneducativa()), 0,8),'UTF-8').'.'.$objJurisdiccionGeografica->getDistritoTipo()->getId().'.edu.bo';
+        $dataDir[0]['requestSite'] = mb_strtolower(substr(str_replace(' ', '', $objInstitucionEducativa->getInstitucioneducativa()), 0,8),'UTF-8').''.$objJurisdiccionGeografica->getDistritoTipo()->getId().'.edu.bo';
       
 
         // dump($objInstitucionEducativa);die;
@@ -253,8 +253,7 @@ class UnidadEducativaPlataformaController extends Controller{
 			'dataResponsable'=>$request->get('dataResponsable'),
 			'dataDominio'=>$request->get('dataDominio')
 		);
-		// dump($this->arrDataRequestPlataforma); die;
-
+		 //dump($this->arrDataRequestPlataforma); die;
 		try {
 		
 
@@ -303,7 +302,11 @@ class UnidadEducativaPlataformaController extends Controller{
             }			
 			
 			//$objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['plataforma']=='false'?0:1);
-            $objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['opcion']);
+            if($this->arrDataRequestPlataforma['dataDominio']['opcion']==1){
+                $objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['opcion']);
+            }else{
+                $objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['opcionreqdomi']);
+            }
 			
 			$objPlataforma->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
 			$objPlataforma->setDirectorPersona($em->getRepository('SieAppWebBundle:Persona')->find($this->arrDataRequestPlataforma['dataDirector']['personId']));
@@ -313,6 +316,7 @@ class UnidadEducativaPlataformaController extends Controller{
                 $objPlataforma->setIP($this->arrDataRequestPlataforma['dataDominio']['ip']);
             }else{
                  $objPlataforma->setDominio($this->arrDataRequestPlataforma['dataDominio']['requestSite']);
+                 $objPlataforma->setIP('');
             }
 			
 			$objPlataforma->setCelDirector($this->arrDataRequestPlataforma['dataDirector']['celular']);
