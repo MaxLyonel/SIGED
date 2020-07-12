@@ -26,6 +26,7 @@ class UnidadEducativaPlataformaController extends Controller{
     public $currentyear;
     public $userlogged;
     public $arrDataRequestPlataforma;
+    public $arrPlataforma;
     /**
      * the class constructor
      */
@@ -34,6 +35,12 @@ class UnidadEducativaPlataformaController extends Controller{
         $this->currentyear = $this->session->get('currentyear');
         $this->userlogged = $this->session->get('userId');
         $this->arrDataRequestPlataforma = array();
+        $this->arrPlataforma = array(
+            1 => 'Dominio',
+            2 => 'Moodle',
+            3 => 'ClassRoom',
+            4 => 'Microsoft Teams',
+        );    
     }   	
     
     public function indexAction(Request $request){
@@ -45,13 +52,21 @@ class UnidadEducativaPlataformaController extends Controller{
         // db conexion
         $em = $this->getDoctrine()->getManager();
         $swCompleteRequest = 0;  	
-        $swresponse = 0;  	
+        $swresponse = 0; 
+        $endRequest = 0; 
+        $arrRequestDominioInfo = array(
+                    'requestPlataforma'=> '',            
+                    'requestDominio'=> '',            
+                    'requestIp'=> '',
+        );
 
         // get info about UE
         
     	$objPlataforma = $em->getRepository('SieAppWebBundle:InstitucioneducativaPlataforma')->findOneBy(array(
     		'institucioneducativa' => $this->session->get('ie_id')
     	));
+     
+
     	$arrPersonaDirector=array();
     	$arrPersonaResponsable=array(
     		'carnet'=>'',
@@ -86,7 +101,24 @@ class UnidadEducativaPlataformaController extends Controller{
     			'personId'=>$objPersonaResponsable->getId(),
     			'fecnac'=>$objPersonaResponsable->getFechaNacimiento()->format('m-d-Y'),
     		);
+
     		$swCompleteRequest = $objPlataforma->getEstado();
+
+             if($objPlataforma->getPlataforma()==1){
+                        $requestPlataforma = '';
+                        $ip = $objPlataforma->getIp();
+                    }else{
+                        $requestPlataforma = $this->arrPlataforma[$objPlataforma->getPlataforma()];    
+                        $ip = '';
+                    }
+                    $endRequest = ($objPlataforma->getEstado()==1)?1:0;
+                    $dominio = $objPlataforma->getDominio();
+                    $arrRequestDominioInfo = array(
+                        'requestPlataforma'=> $requestPlataforma,            
+                        'requestDominio'=> $dominio,            
+                        'requestIp'=> $ip,
+                    );
+                    
     		$swresponse = true;
     	}
     	
@@ -107,7 +139,6 @@ class UnidadEducativaPlataformaController extends Controller{
         );
         $dataDir =  $this->getDirector($dataUe);
         $dataDir[0]['requestSite'] = mb_strtolower(substr(str_replace(' ', '', $objInstitucionEducativa->getInstitucioneducativa()), 0,8),'UTF-8').''.$objJurisdiccionGeografica->getDistritoTipo()->getId().'.edu.bo';
-      
 
         // dump($objInstitucionEducativa);die;
 
@@ -119,6 +150,8 @@ class UnidadEducativaPlataformaController extends Controller{
                 'arrPersonaResponsable' => $arrPersonaResponsable,
                 'swresponse' => $swresponse,
                 'swCompleteRequest' => $swCompleteRequest,
+                'arrRequestDominioInfo' => $arrRequestDominioInfo,
+                'endRequest' => $endRequest,
             ));    
     }
 
@@ -473,9 +506,26 @@ class UnidadEducativaPlataformaController extends Controller{
 		try {
 
 
-			$objPlataforma = $em->getRepository('SieAppWebBundle:InstitucioneducativaPlataforma')->findOneBy(array(
+			     $objPlataforma = $em->getRepository('SieAppWebBundle:InstitucioneducativaPlataforma')->findOneBy(array(
 		    		'institucioneducativa' => $dataDirector['sie']
 		    	));
+
+                  if($objPlataforma->getPlataforma()==1){
+                        $requestPlataforma = '';
+                        $ip = $objPlataforma->getIp();
+                    }else{
+                        $requestPlataforma = $this->arrPlataforma[$objPlataforma->getPlataforma()];    
+                        $ip = '';
+                    }
+                    $endRequest = ($objPlataforma->getEstado()==1)?1:0;
+                    $dominio = $objPlataforma->getDominio();
+                    $arrRequestDominioInfo = array(
+                        'requestPlataforma'=> $requestPlataforma,            
+                        'requestDominio'=> $dominio,            
+                        'requestIp'=> $ip,
+                    );
+
+
 		    	$objPlataforma->setEstado(1);
 		    	$objPlataforma->setJson(json_encode($arrPathsDocs));
 		    	$em->persist($objPlataforma);
@@ -499,6 +549,7 @@ class UnidadEducativaPlataformaController extends Controller{
 	        'code'              => $code,
 	        'message'           => $message,
 	        'swCompleteRequest' => $swCompleteRequest,
+            'arrRequestDominioInfo' => $arrRequestDominioInfo,
 	                  
 	    );
 

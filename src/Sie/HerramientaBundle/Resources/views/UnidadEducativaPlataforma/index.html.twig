@@ -270,6 +270,29 @@
 	                      	
 	                      </td>
 	                    </tr>
+
+	                     <tr v-if="swCompleteRequest" >
+	                     	<td colspan="2">
+									<fieldset>
+				                        <legend class="text-center ">Datos de Solicitud de Plataforma </legend>
+				                        <div class="form-group">
+				                          
+				                            <div class="col-md-4">
+				                            	<strong>DOMINIO:</strong> 
+				                            	${arrRequestDominioInfo.requestDominio}
+				                            </div>
+				                             <div class="col-md-4">
+				                             	<strong>IP:</strong> 
+				                                ${arrRequestDominioInfo.requestIp}
+				                            </div>
+				                             <div class="col-md-4">
+				                             	<strong>PLATAFORMA:</strong> 
+				                                ${arrRequestDominioInfo.requestPlataforma}
+				                            </div>
+				                        </div>
+				                    </fieldset>	                     		
+	                     	</td>
+	                     </tr>
 	                    <tr v-if="!swCompleteRequest" >
 	                    	<td><label><input type="radio" id="swInscriptionA" value="swInscriptionA" name="swInscription" :class="{active: opcion == 1}" @click="opcion = 1" checked="true"> La Institución Educativa tiene PLATAFORMA</label>										
 	                    	<td><label><input type="radio" id="swInscriptionB" value="swInscriptionB" name="swInscription" :class="{active: opcion == 2}" @click="opcion = 2"> La Institución Educativa requiere PLATAFORMA</label></td>
@@ -391,22 +414,22 @@
 			                        <div class="form-group">
 			                            <div class="col-md-6">
 
-                                         <label for="genero">Adjuntar Documumento: CARTA DE SOLICITUD FIRMADA</label>
+                                         <label for="genero">Adjuntar Documento: CARTA DE SOLICITUD FIRMADA</label>
                                          <input type="file" name="image" @change="getDocSolictud" accept="file/*" class="form-control" id="archivoAdjuntoId1">
                                        
 			                            </div>
 			                            <div class="col-md-6">
-                                         <label for="genero">Adjuntar Documumento: ACREDITACIÓN DE IDONEIDAD </label>
+                                         <label for="genero">Adjuntar Documento: ACREDITACIÓN DE IDONEIDAD </label>
                                          <input type="file" name="image" @change="getAcreditacionIdoneidad" accept="file/*" class="form-control" id="archivoAdjuntoId2">
 			                            </div>
 			                        </div>
 			                        <div class="form-group">
 			                            <div class="col-md-6">
-                                         <label for="genero">Adjuntar Documumento: FOTOCOPIA CEDULA DE IDENTIDAD </label>
+                                         <label for="genero">Adjuntar Documento: FOTOCOPIA CEDULA DE IDENTIDAD </label>
                                          <input type="file" name="image" @change="getCarnet" accept="file/*" class="form-control" id="archivoAdjuntoId3">
 			                            </div>
 			                            <div class="col-md-6">
-                                         <label for="genero">Adjuntar Documumento: FOTOCOPIA R.M. </label>
+                                         <label for="genero">Adjuntar Documento: FOTOCOPIA R.M. </label>
                                          <input type="file" name="image" @change="getfotocopiarm" accept="file/*" class="form-control" id="archivoAdjuntoId4">
 			                            </div>
 			                        </div>
@@ -515,6 +538,11 @@
               	},
               	swresponse:{{swresponse}},
               	swCompleteRequest:{{swCompleteRequest}},
+				arrRequestDominioInfo:{
+					'requestPlataforma':'{{arrRequestDominioInfo.requestPlataforma}}',
+					'requestDominio':'{{arrRequestDominioInfo.requestDominio}}',
+					'requestIp':'{{arrRequestDominioInfo.requestIp}}'
+				},             	
               	buscando:false,
               	documentocartaSolicitud:'',
               	documentocarnet:'',
@@ -733,6 +761,7 @@
 		                  	this.swattach = response.data.swattach;
 				            this.buscando =false; 
 				            this.swCompleteRequest = response.data.swCompleteRequest;
+				            this.arrRequestDominioInfo = response.data.arrRequestDominioInfo;
 
 		                  }
 		                 this.buscando=false;
