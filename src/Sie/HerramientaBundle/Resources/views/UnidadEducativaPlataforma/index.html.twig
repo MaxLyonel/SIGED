@@ -135,6 +135,7 @@
 	                    	<td colspan="2">
 			                      <fieldset>
 				                        <legend class="text-center ">Datos Institucion Educativa </legend>
+				                        <div style="font-size:15px; text-align: right;"><a >Descargar guía de Solicitud de Plataforma <i class="fa fa-file-pdf-o"></i></a></div>
 				                        <div class="form-group">
 				                          
 				                            <div class="col-md-6">
@@ -333,12 +334,12 @@
 													<div class="row">
 														<div class="form-group col-md-4">
 															<label>Plataforma<span class="requerido">*</span></label></br>
-															<label><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 2" > CLASSROOM</label></br>	
-															<label><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 3" > MOODLE</label></br>	
-															<label><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 4" > M.S. TEAM</label>																
+															<label style="color:#D2691E"> <input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 2" ><img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/moodle.png') }}"> Moodle </label></br>	
+															<label style="color:#228B22"><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 3" > <img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/classroom.png') }}"> classRooms</label></br>	
+															<label style="color:#00008B"><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 4" > <img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/msteams.png') }}">  Microsoft Teams</label>																
 														</div>
 														<div class="form-group col-md-8">
-														<label>Subdominio Institución Educativa<span class="requerido"></span></label>
+														<label>Su dirección Web de la Plataforma solicitada es:<span class="requerido"></span></label>
 															<input id="complemento" name="complemento" type="text" placeholder="complemento" class="form-control" v-model="dataPlataforma.dataDominio.requestSite" readonly="true">
 														</div>
 													</div>
@@ -366,7 +367,7 @@
 	                    <tr v-else> 
 	                    	<td> 
 	                    		<div class="alert alert-success" role="alert">
-								  Solicitud realizada con exito...
+								  Solicitud realizada con exito, en proceso de atención
 								</div>
 	                    	</td>
 	                    </tr>
@@ -376,10 +377,10 @@
 
 	                    		<fieldset>
 
-			                        <div class="form-group">
+			                        <div class="form-group" style="font-size:15px; text-align: center;">
 			                        	
 
-			                        	<a target="_blank" class="btn btn-primary" href="{{path('plataforma_generateRequestDominioPDF', {'sie':app.session.get('ie_id')})}}" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt" ></span>Generar/Descargar Carta de Solicitud</a>
+			                        	<a  target="_blank" class="btn btn-inverse btn-stroke" href="{{path('plataforma_generateRequestDominioPDF', {'sie':app.session.get('ie_id')})}}" style=""><span class="glyphicon glyphicon-list-alt" ></span>Generar/Descargar Carta de Solicitud</a>
 			                        	{#
 	                                    <form action="{{path('plataforma_generateRequestDominioPDF')}}" method="post" style="display:inline-block">
 	                                       <input type="hidden" name="requestdata" id="requestdata" value="">
