@@ -38,7 +38,7 @@ class UnidadEducativaPlataformaController extends Controller{
         $this->arrPlataforma = array(
             1 => 'Dominio',
             2 => 'Moodle',
-            3 => 'ClassRoom',
+            3 => 'Classroom',
             4 => 'Microsoft Teams',
         );    
     }   	
