@@ -756,14 +756,17 @@ var app = new Vue({
           this.dataStudent.localidad = this.newStudent.localidad;
           this.dataStudent.iecId = this.iecId;
           
-          
         }else{
+          this.newStudent.casespecial = this.dataStudent.casespecial;
+          this.newStudent.excepcional = this.dataStudent.excepcional;
+          this.newStudent.infocomplementaria = this.dataStudent.infocomplementaria;
           this.newStudent.carnet = this.cival;
           this.newStudent.complementoval = this.complementoval;
           this.newStudent.iecId = this.iecId;
           this.dataStudent = this.newStudent;
           this.dataStudent.expedidoId2 = this.newStudent.expedidoId; 
         }
+
 
         if((this.dataStudent.nombre == null)){
            Swal.fire(
