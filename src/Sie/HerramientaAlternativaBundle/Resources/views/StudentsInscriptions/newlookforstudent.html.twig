@@ -169,7 +169,7 @@
                               </div>
                               <div class="col-sm-2">
                               <label for="fechanac">Fec. Nacimiento</label>
-                                  <input type="text" class="form-control" placeholder="dd-mm-aaaa" v-model="newStudent.fecNac">
+                                  <input type="text" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="dd-mm-aaaa" v-model="newStudent.fecNac">
                               </div>
                               <div class="col-sm-3">
                               <label for="genero">G&eacute;nero</label>
@@ -557,7 +557,6 @@
     </div>
   </div>
 </div><!-- /.modal-dialog -->
-
 <script>
 
 
@@ -960,7 +959,8 @@ var app = new Vue({
       axios.post(Routing.generate('alter_inscriptionstudent_studentsInscriptionlist', {
         iecId: this.iecId, idstudent: idstudent,
         casespecial:this.dataStudent.casespecial,
-        fecNac:fnac
+        fecNac:fnac,excepcional:this.dataStudent.excepcional
+
       } ))
       .then(response => {
           if (response.status == 200) {
@@ -1046,7 +1046,8 @@ var app = new Vue({
   },
    
     mounted(){
-        
+              var selector = document.getElementById("form_idfecnac");
+              Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "mm-yyyy-dd", inputEventOnly: true}).mask(selector);       
     }
 });
 
