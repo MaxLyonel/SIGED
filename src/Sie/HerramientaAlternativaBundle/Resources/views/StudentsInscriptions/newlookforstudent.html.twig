@@ -305,12 +305,17 @@
               </div>
               </br>
               </br>
-
+              
               <div v-if="swperson">
                 <button v-on:click="validateandregisterNewStudent(1)" type="button" class="btn btn-warning">Verificar - Inscribir</button>
               </div>
               <div v-if="swnewperson">
-                <button v-on:click="validateandregisterNewStudent(0)" type="button" class="btn btn-warning">Verificar - Inscribir </button>
+                <div v-if="swWithoutSegip" >
+                  <label for="form_withoutsegip" class="required">SIN SEGIP :</label>
+                  <input type="checkbox" v-model="dataStudent.withoutsegip" id="form_withoutsegip" name="form[caseespecial]" class="form-check-input">
+                    </br>
+                </div>
+                <button v-on:click="validateandregisterNewStudent(0)" type="button" class="btn btn-warning">Verificar - Inscribir</button>
               </div>
               <div v-if="swstudent">
                 <div class="row">
@@ -579,8 +584,9 @@ var app = new Vue({
         seen:false,
         showCaseSpecialOption:false,
         userAllowedOnCasespecial:false,
+        swWithoutSegip:false,
         message:'',
-        dataStudent:{},
+        dataStudent:{withoutsegip:false, casespecial:false, excepcional:false},
         newStudent:{},
         DBGenero:{},
         DBExpedido:{},
@@ -605,6 +611,7 @@ var app = new Vue({
         this.seen = false;
         this.showCaseSpecialOption = false;
         this.userAllowedOnCasespecial = false;
+        this.swWithoutSegip = false;
 
         this.historyReg = false;
         this.historyAlt = false;
@@ -637,6 +644,7 @@ var app = new Vue({
                 this.newStudent  = response.data.arrNewStudent;
                 this.showCaseSpecialOption = response.data.showCaseSpecialOption;
                 this.userAllowedOnCasespecial = response.data.userAllowedOnCasespecial;
+                this.swWithoutSegip = response.data.swWithoutSegip;
 
               }
                 //console.log(this.dataStudent);
@@ -747,6 +755,7 @@ var app = new Vue({
       this.swproceso = true;
       this.DBRudesStudent = false;
       this.message = false;
+
       /*this.dataStudent.expedidoId2 = 0;*/
       if(newperson){
           this.dataStudent.paisId = this.newStudent.paisId;
@@ -762,6 +771,7 @@ var app = new Vue({
           this.newStudent.carnet = this.cival;
           this.newStudent.complementoval = this.complementoval;
           this.newStudent.iecId = this.iecId;
+          this.newStudent.withoutsegip = this.dataStudent.withoutsegip;
           this.dataStudent = this.newStudent;
           this.dataStudent.expedidoId2 = this.newStudent.expedidoId; 
         }
@@ -835,7 +845,14 @@ var app = new Vue({
            return;
           }            
          }
-      }  
+      }
+
+      if(typeof this.dataStudent.casespecial  == 'undefined'){  
+          this.dataStudent.casespecial=false;
+      }
+      if(typeof this.dataStudent.excepcional  == 'undefined'){  
+          this.dataStudent.excepcional=false;
+      }
       
 
       Swal.fire({
@@ -937,8 +954,6 @@ var app = new Vue({
 
     studentsInscriptionbylist: function(idstudent, fnac){
     
- 
-       
 
           Swal.fire({
             title: '¿Realizar incripción?',
@@ -1011,7 +1026,8 @@ var app = new Vue({
             this.swproceso = true;
             this.DBRudesStudent = false;
             this.message = false;    
-
+            //this.dataStudent.excepcional=false;
+            //this.dataStudent.casespecial=false;
       axios.post(Routing.generate('alter_inscriptionstudent_studentsInscriptionNEW', this.dataStudent ))
       .then(response => {
           if (response.status == 200) {
