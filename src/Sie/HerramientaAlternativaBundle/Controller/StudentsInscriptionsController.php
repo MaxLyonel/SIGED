@@ -479,7 +479,7 @@ class StudentsInscriptionsController extends Controller {
       // user allowed to show the special inscription option
       $userAllowedOnCasespecial = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
 
-      $swWithoutSegip = $this->session->get('userName')=='4119848'?true:false;
+      $swWithoutSegip = $this->session->get('userName')=='a0001'?true:false;
 
 
       // get all data about EstudianteInscripcionAlternativaExcepcionalTipo
