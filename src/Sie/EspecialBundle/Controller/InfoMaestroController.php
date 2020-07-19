@@ -693,7 +693,7 @@ class InfoMaestroController extends Controller {
             $maestroinscripcion->setRolTipo($em->getRepository('SieAppWebBundle:RolTipo')->findOneById(2));
             $maestroinscripcion->setItem($form['item']);
             $maestroinscripcion->setFechaRegistro(new \DateTime('now'));
-            $maestroinscripcion->setEsVigenteAdministrativo(0);
+            $maestroinscripcion->setEsVigenteAdministrativo(1);
             $em->persist($maestroinscripcion);
             $em->flush();
 

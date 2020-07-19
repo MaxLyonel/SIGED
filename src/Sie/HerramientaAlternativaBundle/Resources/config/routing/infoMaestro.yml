@@ -81,3 +81,13 @@ herramientalt_info_maestro_modifdatos:
     path:     /maestroModifDatos/
     defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:maestroModifDatos" }
     methods:  [POST, PUT]
+
+herramientalt_info_maestro_segip_verificar_persona:
+    path:     /verificarPersona
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:verificarPersona" }
+    options:
+        expose: true
+
+herramientalt_info_maestro_persona_datos:
+    path:     /registrarPersona
+    defaults: { _controller: "SieHerramientaAlternativaBundle:InfoMaestro:registrarPersona" }
