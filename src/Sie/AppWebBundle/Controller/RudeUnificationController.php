@@ -33,6 +33,9 @@ class RudeUnificationController extends Controller{
         $this->session = new Session();
         $this->inicialPrimaria = false;
         $this->inicialPrimariaCase2 = false;
+        $this->unificationNormal = false;
+        $this->unificationForeign = false;
+        $this->unificationForeignCase2 = false;        
         $this->currentyear = $this->session->get('currentyear');
         $this->userlogged = $this->session->get('userId');
     }    
@@ -110,7 +113,7 @@ class RudeUnificationController extends Controller{
          $status='success';
          $code = 200;
          $student = array();
-
+         $arrMessage = array();
         // validate the cod RUDE
         $rudea = trim($rudea);
         $rudeb = trim($rudeb);
@@ -204,6 +207,7 @@ class RudeUnificationController extends Controller{
             'dataHistoryB' => array(),
             );
 
+
             $response->setStatusCode(200);
             $response->setData($arrResponse);
             return $response;
@@ -265,10 +269,12 @@ class RudeUnificationController extends Controller{
             'dataHistoryA' => array(),
             'dataHistoryB' => array(),
             );
+            $swresponse = false;
+            $arrMessage[]='Estudiante cuenta con registro en JUEGOS';
 
-            $response->setStatusCode(200);
-            $response->setData($arrResponse);
-            return $response;
+            // $response->setStatusCode(200);
+            // $response->setData($arrResponse);
+            // return $response;
         }
 
         // validate OLIMPIADAS
@@ -284,10 +290,12 @@ class RudeUnificationController extends Controller{
             'dataHistoryA' => array(),
             'dataHistoryB' => array(),
             );
+            $swresponse = false;
+            $arrMessage[]='Estudiante cuenta con registro en OLIMPIADAS';
 
-            $response->setStatusCode(200);
-            $response->setData($arrResponse);
-            return $response;
+            // $response->setStatusCode(200);
+            // $response->setData($arrResponse);
+            // return $response;
         }
         // validate BACHILLER DESTACADO
         $bdestacadoa=$this->get('seguimiento')->getBachillerDestacado($rudea);
@@ -302,10 +310,12 @@ class RudeUnificationController extends Controller{
             'dataHistoryA' => array(),
             'dataHistoryB' => array(),
             );
+            $swresponse = false;
+            $arrMessage[]='Estudiante cuenta con registro en BACHILLER DESTACADO';
 
-            $response->setStatusCode(200);
-            $response->setData($arrResponse);
-            return $response;
+            // $response->setStatusCode(200);
+            // $response->setData($arrResponse);
+            // return $response;
         }
 
         if(($studenta->getSegipId() == 1 || $studentb->getSegipId() == 1)){
@@ -367,9 +377,12 @@ class RudeUnificationController extends Controller{
                 'dataHistoryB' => array(),
                 );
 
-                $response->setStatusCode(200);
-                $response->setData($arrResponse);
-                return $response;
+                $swresponse = false;
+                $arrMessage[]="Se ha detectado inconsistencia de datos :".$validaEstadosRegular[0]['subsistema']." ".$validaEstadosRegular[0]['observacion']." ".$validaEstadosRegular[0]['gestion'];
+
+                // $response->setStatusCode(200);
+                // $response->setData($arrResponse);
+                // return $response;
                 
             }
 
@@ -387,10 +400,26 @@ class RudeUnificationController extends Controller{
                 'dataHistoryB' => array(),
                 );
 
-                $response->setStatusCode(200);
-                $response->setData($arrResponse);
-                return $response;
+                $swresponse = false;
+                $arrMessage[]="Se ha detectado inconsistencia de datos :".$validaDobleInscripcionRegular[0]['subsistema']." ".$validaDobleInscripcionRegular[0]['observacion']." en la gestión: ".$validaDobleInscripcionRegular[0]['gestion']." SIE:". $validaDobleInscripcionRegular[0]['institucioneducativa_id'];
+
+                // $response->setStatusCode(200);
+                // $response->setData($arrResponse);
+                // return $response;
                 
+            }
+            // dump($insriptinoStudentA);
+            // dump($insriptinoStudentB);die;
+            $arrMatricula = array(1,7);
+            // dump($insriptinoStudentA['matriculaInicio']);
+            // dump($insriptinoStudentB['matriculaInicio']);
+            // die;
+            if(in_array($insriptinoStudentA['matriculaInicio'] , $arrMatricula ) && in_array($insriptinoStudentB['matriculaInicio'] , $arrMatricula ) 
+                // && ($insriptinoStudentA['sie'] ==  $insriptinoStudentB['sie'] && $insriptinoStudentA['gestion'] ==  $insriptinoStudentB['gestion'])
+        ) {
+                $this->unificationNormal = true;
+          }else{
+                $this->unificationForeign = true;
             }
 
         }
@@ -408,9 +437,13 @@ class RudeUnificationController extends Controller{
             'studentB' => $arrStudentb,
             'unificationIniPri' => $this->inicialPrimaria,
             'unificationIniPriCase2' => $this->inicialPrimariaCase2,
+            'unificationNormal' => $this->unificationNormal,
+            'unificationForeign' => $this->unificationForeign,
+            'unificationForeignCase2' => $this->unificationForeignCase2,
             'rudea' => $rudea,
             'rudeb' => $rudeb,           
             'currentyear' => $this->currentyear,           
+            'arrMessage' => $arrMessage,           
         );
 
         // dump($arrResponse);die;
@@ -428,7 +461,7 @@ class RudeUnificationController extends Controller{
 
         $entity = $em->getRepository('SieAppWebBundle:Estudiante');
         $query = $entity->createQueryBuilder('e')
-                ->select('ei.id as studentInscriptionId','n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa')
+                ->select('ei.id as studentInscriptionId','n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(ei.estadomatriculaInicioTipo) as matriculaInicio')
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
@@ -578,6 +611,8 @@ class RudeUnificationController extends Controller{
         $rudeWrong = $request->get('rudeWrong');
         $unificationIniPri = ($request->get('unificationIniPri')=='true')?true:false;
         $unificationIniPriCase2 = ($request->get('unificationIniPriCase2')=='true')?true:false;
+        $unificationNormal = ($request->get('unificationNormal')=='true')?true:false;
+        $unificationForeign = ($request->get('unificationForeign')=='true')?true:false;
         $swChanteStatusCorrectInscription = ($request->get('swChanteStatusCorrectInscription')=='true')?true:false;
 
         // set the ini var
@@ -588,7 +623,45 @@ class RudeUnificationController extends Controller{
         $arrInscriptionsWrong = array();
         $arrApoderadoInscripcion = array();
 
+        //check about the history and status and levels
+        $validaDobleInscripcionRegular = $this->getVerificaDobleInscripcion($rudeCorrect,$rudeWrong);
+        if(sizeof($validaDobleInscripcionRegular) > 0 && $validaDobleInscripcionRegular[0]['gestion']!=$this->currentyear ){
+            $status='error';
+            $code = 400;            
+            $swDoneUnification = false;
+            $message="Se ha detectado inconsistencia de datos :".$validaDobleInscripcionRegular[0]['subsistema']." ".$validaDobleInscripcionRegular[0]['observacion']." en la gestión: ".$validaDobleInscripcionRegular[0]['gestion']." SIE:". $validaDobleInscripcionRegular[0]['institucioneducativa_id'];
 
+            $arrResponse = array(
+                    'status'          => $status,
+                    'code'            => $code,
+                    'messageDoneUnification' => $message,
+                    'swDoneUnification' => $swDoneUnification,                    
+            );
+
+            $response->setStatusCode(200);
+            $response->setData($arrResponse);
+
+            return $response;
+        }
+        $validaEstadosRegular = $this->getVerificaEstadosGestion($rudeCorrect,$rudeWrong);
+        if(sizeof($validaEstadosRegular) > 0 && $validaEstadosRegular[0]['gestion']!=$this->currentyear ){
+            $status='error';
+            $code = 400;            
+            $swDoneUnification = false;
+            $message="Se ha detectado inconsistencia de datos :".$validaEstadosRegular[0]['subsistema']." ".$validaEstadosRegular[0]['observacion']." ".$validaEstadosRegular[0]['gestion'];
+
+            $arrResponse = array(
+                    'status'          => $status,
+                    'code'            => $code,
+                    'messageDoneUnification' => $message,
+                    'swDoneUnification' => $swDoneUnification,                    
+            );
+
+            $response->setStatusCode(200);
+            $response->setData($arrResponse);
+
+            return $response;
+        }        
         // get the student info
         $studentinc = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rudeWrong));
         $studentcor = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rudeCorrect));
@@ -703,7 +776,7 @@ class RudeUnificationController extends Controller{
                 ->setParameter('id', $studentinc->getId())
                 ->getQuery()
                 ->execute();*/
-
+            $inscriptionCorrect = $this->getCurrentInscriptionsByGestoinValida($rudeCorrect, $this->session->get('currentyear')); 
 
             // check the inscription info todo the remove or update ON UNIFICATION
             if($unificationIniPriCase2 && $swChanteStatusCorrectInscription){
@@ -711,14 +784,15 @@ class RudeUnificationController extends Controller{
                 $updateCurrenteInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($objInscriptionCorrect['studentInscriptionId']);
                  $updateCurrenteInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));
                  $em->flush();
-            }                
+            }   
+
             if(($inscripinco) && ($studentcor)){
                 foreach ($inscripinco as $inscrip) {
                     $arrInscriptionsWrong[] = array(
                         'institucioneducativaCursoId'=>$inscrip->getInstitucioneducativaCurso()->getId(),
                     );
-                    if($unificationIniPri){
-                        $objApoderadoInscripcions = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array(
+
+                     $objApoderadoInscripcions = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array(
                              'estudianteInscripcion' => $inscrip->getId()
                         ));
                         $arrApoderadoInscripcion = array();
@@ -797,19 +871,58 @@ class RudeUnificationController extends Controller{
                           
                             $em->remove($objEstudianteInscripcionExtranjero);     
                             
-                        }                        
-                        
+                        } 
+
+                    if($unificationIniPri){ 
                         $em->remove($inscrip);  
                     }else{
-                        if($unificationIniPriCase2 && $inscrip->getEstadomatriculaTipo()->getId() == 4 && !$swChanteStatusCorrectInscription){
-                            // to change the matricula student
-                            $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));                            
+
+                        $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscrip->getInstitucioneducativaCurso());                        
+
+                        if($unificationNormal || $unificationForeign || $unificationIniPriCase2){
+                            if($unificationIniPriCase2 && $inscrip->getEstadomatriculaTipo()->getId() == 4 && !$swChanteStatusCorrectInscription){
+                                // to change the matricula student
+                                $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));                         
+                            }  
+                                                          
+                            if($unificationNormal){
+                                if(!$inscriptionCorrect ){
+
+                                    if(
+                                        // $inscriptionCorrect['nivelId'].$inscriptionCorrect['gradoId'] == $objCurso->getNivelTipo()->getId().$objCurso->getGradoTipo()->getId() &&
+                                        $inscriptionCorrect['gestion'] == $objCurso->getGestionTipo()->getId() &&
+                                         $inscriptionCorrect['sie'] ==  $objCurso->getInstitucioneducativa()->getId()
+                                    ){
+                                       $em->remove($inscrip);    
+                                   }
+                                }
+
+                            }
+                            
+                            if($unificationForeign){
+                                // check the foreign inscription to the update
+                              if(!$inscriptionCorrect ){
+                                    if( $inscriptionCorrect['gestion'] == $objCurso->getGestionTipo()->getId() && $inscriptionCorrect['nivelId'].$inscriptionCorrect['gradoId']>=$objCurso->getNivelTipo()->getId().$objCurso->getGradoTipo()->getId() ){
+                                        $em->remove($inscrip);
+                                    }
+                                    if($objCurso->getGestionTipo()->getGestion()== $objCurso->getGestionTipo()->getId() &&  $objCurso->getNivelTipo()->getId().$objCurso->getGradoTipo()->getId()>$inscriptionCorrect['nivelId'].$inscriptionCorrect['gradoId']){
+                                         $inscripincoCorrect = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscriptionCorrect['studentInscriptionId']);
+                                        $em->remove($inscripincoCorrect);
+                                        $inscrip->setEstudiante($studentcor);
+                                    }  
+                                }
+                            }
                         }
-                        $inscrip->setEstudiante($studentcor);
+
+                        if($this->session->get('currentyear') != $objCurso->getGestionTipo()->getId() )
+                            $inscrip->setEstudiante($studentcor);
                     }
                     $em->flush();
                 }
+                //die;
             } 
+            
+            
           
             
             //***********REGISTRANDO CAMBIO DE ESTADO EN CONTROL DE CALIDAD       
