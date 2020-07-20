@@ -315,14 +315,17 @@
 
                     {% if app.session.get('roluser') in [7,8,9,10] %}
                     <li class="submenu">
-                      <a href="javascript:void(0);">
-                        <span class="icon"><i class="fa fa-diamond"></i></span>
-                        <span class="text">Bono Familia</span>
-                        <span class="arrow"></span>
-                      </a>
-                      <ul>
-                        <li><a href="{{ path('apoderado_bono_familia_seguimiento_index')}}">Seguimiento</a></li>
-                      </ul>
+                        <a href="javascript:void(0);">
+                            <span class="icon"><i class="fa fa-diamond"></i></span>
+                            <span class="text">Bono Familia</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul>
+                            <li><a href="{{ path('apoderado_bono_familia_seguimiento_index')}}">Seguimiento</a></li>
+                            {% if app.session.get('roluser') == 10 %}
+                                <li><a href="{{ path('apoderado_bono_familia_observados_index')}}">Observados</a></li>
+                            {% endif %}
+                        </ul>
                     </li>
                     {% endif %}
 
@@ -586,7 +589,20 @@
                             </ul>
                         </li>
                     {% endif %}
-                    
+                    {#
+                    {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><img style='height: 21%; width: 21%; object-fit: contain' src="{{asset('img/requestPlataforma/new2.gif') }}"></i></span>
+                                <span class="text">Plataforma Educativa</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('plataforma_index')}}">Solicitud</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}                    
+                    #}
 
                     {#
                         <li class="submenu">

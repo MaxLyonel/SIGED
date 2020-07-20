@@ -83,3 +83,9 @@ apoderado_bono_familia_observados_cargar_form:
     defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observadosCargarFormulario }
     options:
         expose: true
+
+apoderado_bono_familia_observados_guardar_form:
+    path:     /observados/guardarForm
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observadosGuardarFormulario }
+    options:
+        expose: true

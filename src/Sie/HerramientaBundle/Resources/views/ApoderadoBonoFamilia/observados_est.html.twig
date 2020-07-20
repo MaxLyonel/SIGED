@@ -1,0 +1,181 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Bono Familia <span>Observados</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('apoderado_bono_familia_observados_index')}}">Bono Familia</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Observados</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="callout callout-info">
+                    <strong>Apoderados registrados para más de cuatro (4) estudiantes:</strong><br />
+                    - Es obligatorio el detalle de la justificación del registro del Apoderado.<br />
+                    - Es obligatorio cargar el informe adjunto <span class="text-danger text-strong">(.pdf,.doc,.docx / Máximo 3Mb)</span>.<br />
+                    - Es responsabilidad del Técnico que ratifica al apoderado registrado.
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            {% if listaEst %}
+                <div class="col-md-12 table-responsive">
+                    <table id="tabla" class="table table-bordered table-striped dataTable">
+                        <thead>
+                            <tr>
+                                <th style="min-width:15px">#</th>
+                                <th>SIE</th>
+                                <th>Unidad Educativa</th>
+                                <th>Código RUDE</th>
+                                <th>Paterno</th>
+                                <th>Materno</th>
+                                <th>Nombre(s)</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>SIE</th>
+                                <th>Unidad Educativa</th>
+                                <th>Código RUDE</th>
+                                <th>Paterno</th>
+                                <th>Materno</th>
+                                <th>Nombre(s)</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for est in listaEst %}
+                                <tr>
+                                    <td class="text-center">{{loop.index}}</td>
+                                    <td>{{est.codUeId}}</td>
+                                    <td>{{est.descUe}}</td>
+                                    <td>{{est.codigoRude}}</td>
+                                    <td>{{est.paterno}}</td>
+                                    <td>{{est.materno}}</td>
+                                    <td>{{est.nombre}}</td>
+                                    <td>
+                                        {% if est.esValidado %}
+                                            <span class="label label-success">Validado</span>
+                                        {% else %}
+                                            <button type="button" onclick="cargarForm('{{est.codigoRude}}')" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#myModal">
+                                                <i class="fa fa-fw fa-edit"></i> Validar
+                                            </button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="col-md-12">
+                    <div class="alert alert-success" role="alert">
+                        <i class="fa fa-fw fa-check-circle"></i> No tiene observaciones
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <a href="{{path('apoderado_bono_familia_observados_index')}}" class="btn btn-block btn-facebook"><i class="fa fa-fw fa-arrow-left"></i> Atrás</a>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Validar: Apoderado registrado</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="idForm"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts%}
+    {{parent()}}
+
+    <script>
+        function cargarForm(codigoRude) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('apoderado_bono_familia_observados_cargar_form', {'codigoRude': codigoRude}),
+                beforeSend: function () {
+                    $("#idForm").empty();
+                    $("#idForm").html('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" /></div>');
+                },
+                success: function (data) {
+                    $("#idForm").empty();
+                    $("#idForm").html(data);
+                },
+                statusCode: {
+                    500: function () {
+                        $("#idForm").html('<div class="text-center text-danger">Ocurrió un error inesperado.</div>');
+                    },
+                    404: function () {
+                        $("#idForm").html('<div class="text-center text-info">No se encontraron resultados.</div>');
+                    }
+                }
+            });
+        }
+
+        function guardar(codigoRude) {
+            var fd = new FormData();
+            var justificacion=$('#justificacion').val();
+            var adjdocumento = document.getElementById('adjdocumento');
+            fd.append('codigoRude', codigoRude);
+            fd.append('justificacion', justificacion);
+            fd.append('adjdocumento', adjdocumento.files[0]);
+
+            $.ajax({
+                type: 'post',
+                url: "{{ path('apoderado_bono_familia_observados_guardar_form') }}",
+                data: fd,
+                mimeType:"multipart/form-data",
+                contentType: false,
+                cache: false,
+                processData:false,
+                dataType : 'json',
+                beforeSend: function () {
+                    $("#idForm").empty();
+                    $("#idForm").html('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" /></div>');
+                },
+                success: function (data) {
+                    $("#idForm").empty();
+                    $("#idForm").html('<div class="alert alert-info" role="alert"><i class="fa fa-fw fa-info"></i>' + data.mensaje + '</div>');
+                },
+                statusCode: {
+                    500: function () {
+                        $("#idForm").html('<div class="text-center text-danger">Ocurrió un error inesperado.</div>');
+                    },
+                    404: function () {
+                        $("#idForm").html('<div class="text-center text-info">No se encontraron resultados.</div>');
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}

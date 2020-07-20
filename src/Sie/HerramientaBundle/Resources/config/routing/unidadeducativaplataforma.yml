@@ -3,4 +3,27 @@ plataforma_index:
     path:     /
     defaults: { _controller: SieHerramientaBundle:UnidadEducativaPlataforma:index }
     options:
-       expose: true    
+       expose: true
+
+plataforma_checkSegipResponsable:
+    path:     /checkSegipResponsable
+    defaults: { _controller: SieHerramientaBundle:UnidadEducativaPlataforma:checkSegipResponsable }
+    options:
+       expose: true
+
+plataforma_enterDataRequest:
+    path:     /enterDataRequest
+    defaults: { _controller: SieHerramientaBundle:UnidadEducativaPlataforma:enterDataRequest }
+    options:
+       expose: true
+
+plataforma_sendRequest:
+    path:     /sendRequest
+    defaults: { _controller: SieHerramientaBundle:UnidadEducativaPlataforma:sendRequest }
+    options:
+       expose: true       
+
+plataforma_generateRequestDominioPDF:
+    path:     /generateRequestDominioPDF/{sie}
+    defaults: { _controller: SieHerramientaBundle:UnidadEducativaPlataforma:generateRequestDominioPDF }
+   

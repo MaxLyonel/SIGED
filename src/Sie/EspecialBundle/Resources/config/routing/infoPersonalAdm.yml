@@ -85,3 +85,13 @@ herramienta_especial_info_personal_adm_ratificar_currentyear:
 herramienta_especial_info_personal_adm_habilitar_ddjj:
     path:     /admhabilitarDDJJ/
     defaults: { _controller: "SieEspecialBundle:InfoPersonalAdm:admHabilitarDDJJ" }
+
+herramienta_especial_info_personal_adm_segip_verificar_persona:
+    path:     /verificarPersona
+    defaults: { _controller: "SieEspecialBundle:InfoPersonalAdm:verificarPersona" }
+    options:
+        expose: true
+
+herramienta_especial_info_personal_adm_persona_datos:
+    path:     /registrarPersona
+    defaults: { _controller: "SieEspecialBundle:InfoPersonalAdm:registrarPersona" }

@@ -32,58 +32,23 @@
             </div>
             <div class="panel-body">
                 <div class="row">
-                    {#<div class="col-md-4">
-                            <a class="btn btn-block btn-primary" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}">
-                            <i class="fa fa-download"></i> Listado de Estudiantes del Curso
-                            </a>
-                    </div>
-                    <div class="col-md-4">
-                            <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
-                            <i class="fa fa-download"></i> Boletin Centralizador
-                            </a>
-                    </div>#}
-                    {# <div class="col-md-12 text-center">
-                        {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
+                    <div class="col-md-12 text-center">
+                        {% if onlyview == false and gestion >= app.session.get('currentyear') and app.session.get('roluser') == 9 %}
                         <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
                             <i class="fa fa-user"></i> Inscripción
                         </button>
+                        <hr />
                         {% endif %}
-                    </div> #}
-                    <!--div class="col-md-3" >
-                        {% if app.session.get('ue_modular') and nivel >= 13 %}
-                        {% else %}
-                        <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{{infoUe}}');" >
-                        <i class="fa fa-user-plus"></i> Inscrip. sin Rude
-                        </button>
-                        {% endif %}
-                    </div-->
-                </div>
-                <div class="row">
-                    {#<div class="col-md-4">
-                            <a class="btn btn-block btn-primary" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}">
-                            <i class="fa fa-download"></i> Listado de Estudiantes del Curso
-                            </a>
+                        {# commented by krlos #}
+                           {% if onlyview == false and gestion >= app.session.get('currentyear') and (app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10) %}
+                            <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}');" >
+
+                                <i class="fa fa-user"></i> Inscripción sin RUDE
+                            </button>
+                            {% endif %}
+                        
+                        <hr />                          
                     </div>
-                    <div class="col-md-4">
-                            <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
-                            <i class="fa fa-download"></i> Boletin Centralizador
-                            </a>
-                    </div>#}
-                    {# <div class="col-md-12 text-center">
-                        {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
-                        <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
-                            <i class="fa fa-user"></i> Inscripción
-                        </button>
-                        {% endif %}
-                    </div> #}
-                    <!--div class="col-md-3" >
-                        {% if app.session.get('ue_modular') and nivel >= 13 %}
-                        {% else %}
-                        <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{{infoUe}}');" >
-                        <i class="fa fa-user-plus"></i> Inscrip. sin Rude
-                        </button>
-                        {% endif %}
-                    </div-->
                 </div>
                 <div class="row">
                     <div id="no-more-tables" class="col-md-12 table-responsive">
