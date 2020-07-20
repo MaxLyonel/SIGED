@@ -427,6 +427,8 @@
     {{ parent() }}
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin=""></script>
     <script src="{{asset('webprocesos/js/mapa.js')}}"></script>
+
+
     <script>
         $( document ).ready(function() {
             $.fn.datepicker.dates['es'] = {
@@ -896,7 +898,6 @@
         });
         
         function buscarTramite(id,tipo){
-            //alert($('#tabla tr').length);
             if(id){
                 if(($('#tabla tr').length - 1)==0){
                     $('#form_tr').val('');
@@ -968,6 +969,7 @@
                             '</td></tr>';
                         $('#tabla').append(tr);
                         $('#requisitos').append('<div class="modal fade borrar"  role="dialog" aria-hidden="true" id="modal_'+idtramite+'" data-backdrop="false" style="z-index:2147483646 !important; background-color: rgba(0, 0, 0, 0.5);"></div>');
+                        
                         if ($('#form_tr').val() == "" && id != 39 && id != 40) {
                             trArray = [Number(idtramite)];
                             $('#form_tr').val(JSON.stringify(trArray));
@@ -1052,7 +1054,7 @@
                 return false;
             }
 
-            if(id != 54 && id != 46){
+            if(id != 54 && id != 55 && id != 46){
                 var formData = {id: id,ie:'{{institucioneducativa.id}}'};
             }else{
                 if(id == 54 && ($('#form_dependencia').length == 0 || $('#form_dependencia').val() == '')){
@@ -1405,6 +1407,7 @@
                         $('#msg'+id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="glyphicon glyphicon-ok"></i>Requisitos validados con éxtio.</div>');
                     }
                     break;
+                case 55: //Regularización RUE
                 case 46: //Regularización RUE
                 case 54: //apertura
                     if($('#form_i_solicitud_apertura').val()==''){
@@ -1569,7 +1572,6 @@
         }
 
         function apertura(id){
-            
             var formData = {id: id,desglose:1,ie:'{{institucioneducativa.id}}'};
             if ( $("#modal_apertura_datos").length ) {
                 return false;
@@ -1587,6 +1589,40 @@
                     //console.log(data);
                     $('#modal_apertura').empty();
                     $('#modal_apertura').append(data);
+                     $('.date').datepicker({
+                        orientation: "auto left",
+                        forceParse: false,
+                        autoclose: true,
+                        todayHighlight: true,
+                        language: 'es'
+                    });
+                    $('[data-toggle="tooltip"]').tooltip();
+                    var image = L.icon({
+                        iconUrl: "{{asset('images/marker23.png')}}",
+                        iconSize: [40, 40]
+                    });
+                    initMap(image);
+                },
+            });
+        }
+
+        function actualizacion(id){
+            var formData = {id: id,ie:'{{institucioneducativa.id}}'};
+            if ( $("#modal_apertura_datos").length ) {
+                return false;
+            }
+            $.ajax({
+                type: 'GET',
+                url: "{{path('tramite_rue_actualizacion')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#modal_actualizacion').empty();
+                    $("#modal_actualizacion").append('<div style="text-align:center">Cargango datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    //console.log(data);
+                    $('#modal_actualizacion').empty();
+                    $('#modal_actualizacion').append(data);
                      $('.date').datepicker({
                         orientation: "auto left",
                         forceParse: false,

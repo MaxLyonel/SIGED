@@ -133,3 +133,7 @@ tramite_rue_apertura:
 tramite_rue_recepcion_distrito_apertura_guardar:
     path:     /recepcion/distrito/apertura/guardar
     defaults: { _controller: "SieProcesosBundle:TramiteRue:recepcionDistritoAperturaGuardar" }
+
+tramite_rue_actualizacion:
+    path:     /actualizacion
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:actualizacion" }

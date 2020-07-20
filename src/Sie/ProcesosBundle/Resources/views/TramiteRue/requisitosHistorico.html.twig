@@ -1169,7 +1169,8 @@
                 </div>
             </div><!-- /.modal-dialog -->
         </div>
-    {% elseif t.id in [46,54] %}{# apertura #}
+    {% elseif t.id in [46,54,55] %}{# apertura, atualizacion #}
+
         {% if t.id == 54 %}
             <style>
                 #maph{
@@ -1603,12 +1604,16 @@
                                                                 </h4>
                                                                 <div id="map"></div>
                                                                 <div class="form-group col-md-3 form-inline">
-                                                                    <strong>Latitud:</strong> {{ datos['Apertura de Unidad Educativa'].latitud }}
-                                                                    <input type="hidden" id="latitud" value="{{ datos['Apertura de Unidad Educativa'].latitud }}">
+                                                                    {% if t.id == 54 %}
+                                                                        <strong>Latitud:</strong> {{ datos['Apertura de Unidad Educativa'].latitud }}
+                                                                        <input type="hidden" id="latitud" value="{{ datos['Apertura de Unidad Educativa'].latitud }}">
+                                                                    {% endif %}
                                                                 </div>
                                                                 <div class="form-group col-md-3 form-inline">
-                                                                    <strong>Longitud:</strong> {{ datos['Apertura de Unidad Educativa'].longitud }}
-                                                                    <input type="hidden" id="longitud" value="{{ datos['Apertura de Unidad Educativa'].longitud }}">
+                                                                    {% if t.id == 54 %}
+                                                                        <strong>Longitud:</strong> {{ datos['Apertura de Unidad Educativa'].longitud }}
+                                                                        <input type="hidden" id="longitud" value="{{ datos['Apertura de Unidad Educativa'].longitud }}">
+                                                                    {% endif %}
                                                                 </div>
                                                             </div>
                                                         </div>
