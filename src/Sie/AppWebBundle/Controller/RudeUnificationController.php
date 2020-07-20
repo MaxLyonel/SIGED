@@ -240,6 +240,9 @@ class RudeUnificationController extends Controller{
         // valdiate DIPLOMAS
         $tramitea=$this->get('seguimiento')->getDiploma($rudea);
         $tramiteb=$this->get('seguimiento')->getDiploma($rudeb);
+        dump($tramitea);
+        dump($tramiteb);
+        die;
         if($tramitea || $tramiteb){
             $arrResponse = array(
             'status'          => 'error',
@@ -250,10 +253,11 @@ class RudeUnificationController extends Controller{
             'dataHistoryA' => array(),
             'dataHistoryB' => array(),
             );
-
-            $response->setStatusCode(200);
+            $swresponse = false;
+            $arrMessage[]='Estudiante cuenta con registro de DIPLOMAS';
+            /*$response->setStatusCode(200);
             $response->setData($arrResponse);
-            return $response;
+            return $response;*/
         }
 
         // validate JUEGOS
@@ -788,90 +792,91 @@ class RudeUnificationController extends Controller{
 
             if(($inscripinco) && ($studentcor)){
                 foreach ($inscripinco as $inscrip) {
+
                     $arrInscriptionsWrong[] = array(
                         'institucioneducativaCursoId'=>$inscrip->getInstitucioneducativaCurso()->getId(),
                     );
 
-                     $objApoderadoInscripcions = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array(
+                    $objApoderadoInscripcions = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array(
                              'estudianteInscripcion' => $inscrip->getId()
-                        ));
-                        $arrApoderadoInscripcion = array();
-                        if(sizeof($objApoderadoInscripcions)>0){
+                    ));
+                    $arrApoderadoInscripcion = array();
+                    if(sizeof($objApoderadoInscripcions)>0){
 
-                            foreach ($objApoderadoInscripcions as $objApoderadoInscripcion) {
-                                  
-                                // get backup fot ApoderadoInscripcion
-                                $arrApoderadoInscripcion[] = array(
-                                    'idApoInsc'=>$objApoderadoInscripcion->getId(),
-                                    'obs'=>$objApoderadoInscripcion->getObs(),
-                                    'esValidado'=>$objApoderadoInscripcion->getEsValidado(),
-                                    'personaId'=>$objApoderadoInscripcion->getPersona()->getId(),
-                                    'apoderadoTipoId'=>$objApoderadoInscripcion->getApoderadoTipo()->getId(),
-                                    'estudianteInscripcion'=>$objApoderadoInscripcion->getEstudianteInscripcion()->getId(),
-                                    'fechaRegistro'=>$objApoderadoInscripcion->getFechaRegistro(),
-                                    'fechaModificacion'=>$objApoderadoInscripcion->getFechaModificacion(),
+                        foreach ($objApoderadoInscripcions as $objApoderadoInscripcion) {
+                              
+                            // get backup fot ApoderadoInscripcion
+                            $arrApoderadoInscripcion[] = array(
+                                'idApoInsc'=>$objApoderadoInscripcion->getId(),
+                                'obs'=>$objApoderadoInscripcion->getObs(),
+                                'esValidado'=>$objApoderadoInscripcion->getEsValidado(),
+                                'personaId'=>$objApoderadoInscripcion->getPersona()->getId(),
+                                'apoderadoTipoId'=>$objApoderadoInscripcion->getApoderadoTipo()->getId(),
+                                'estudianteInscripcion'=>$objApoderadoInscripcion->getEstudianteInscripcion()->getId(),
+                                'fechaRegistro'=>$objApoderadoInscripcion->getFechaRegistro(),
+                                'fechaModificacion'=>$objApoderadoInscripcion->getFechaModificacion(),
+                            );
+
+                            if($objApoderadoInscripcion->getEsValidado()){
+                                // look for the current inscription correct rude
+                                $arrayConditionInscription = array(
+                                    'codigoRude'=>$rudeCorrect,
+                                    'matriculaId'=>4,
+                                    'gestion'=>$this->currentyear,
                                 );
+                                $arrCurrenteInscription = $this->get('funciones')->getCurrentInscriptionByRudeAndGestionAndMatricula($arrayConditionInscription);
 
-                                if($objApoderadoInscripcion->getEsValidado()){
-                                    // look for the current inscription correct rude
-                                    $arrayConditionInscription = array(
-                                        'codigoRude'=>$rudeCorrect,
-                                        'matriculaId'=>4,
-                                        'gestion'=>$this->currentyear,
-                                    );
-                                    $arrCurrenteInscription = $this->get('funciones')->getCurrentInscriptionByRudeAndGestionAndMatricula($arrayConditionInscription);
+                                $objApoderadoInscripcionCorrect = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findOneBy(array(
+                                    'estudianteInscripcion' => $arrCurrenteInscription[0]['studenInscriptionId']
+                                ));
 
-                                    $objApoderadoInscripcionCorrect = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findOneBy(array(
-                                        'estudianteInscripcion' => $arrCurrenteInscription[0]['studenInscriptionId']
-                                    ));
+                                if(sizeof($objApoderadoInscripcionCorrect)>0){
+                                    if(!$objApoderadoInscripcionCorrect->getEsValidado()){
+                                        // do update on apoderadoInscripcion
+                                        $objApoderadoInscripcionCorrect->setEsValidado($objApoderadoInscripcion->getEsValidado());
+                                        $objApoderadoInscripcionCorrect->setPersona($objApoderadoInscripcion->getPersona() );
 
-                                    if(sizeof($objApoderadoInscripcionCorrect)>0){
-                                        if(!$objApoderadoInscripcionCorrect->getEsValidado()){
-                                            // do update on apoderadoInscripcion
-                                            $objApoderadoInscripcionCorrect->setEsValidado($objApoderadoInscripcion->getEsValidado());
-                                            $objApoderadoInscripcionCorrect->setPersona($objApoderadoInscripcion->getPersona() );
-
-                                            $em->persist($objApoderadoInscripcionCorrect);
-                                            $em->flush();
-                                        }
-
-                                    }else{
-                                        // do insert on the apo;deradoInscripcion table
-                                        $nuevoApoderado = new ApoderadoInscripcion();
-                                        $nuevoApoderado->setApoderadoTipo($objApoderadoInscripcion->getApoderadoTipo());
-                                        $nuevoApoderado->setPersona($objApoderadoInscripcion->getPersona() );
-                                        $nuevoApoderado->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrCurrenteInscription[0]['studenInscriptionId']));
-                                        $nuevoApoderado->setObs('');
-                                        $nuevoApoderado->setEsValidado($objApoderadoInscripcion->getEsValidado());
-                                        $nuevoApoderado->setFechaRegistro(new \DateTime('now'));
-                                        $em->persist($nuevoApoderado);
-                                        $em->flush(); 
+                                        $em->persist($objApoderadoInscripcionCorrect);
+                                        $em->flush();
                                     }
 
+                                }else{
+                                    // do insert on the apo;deradoInscripcion table
+                                    $nuevoApoderado = new ApoderadoInscripcion();
+                                    $nuevoApoderado->setApoderadoTipo($objApoderadoInscripcion->getApoderadoTipo());
+                                    $nuevoApoderado->setPersona($objApoderadoInscripcion->getPersona() );
+                                    $nuevoApoderado->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrCurrenteInscription[0]['studenInscriptionId']));
+                                    $nuevoApoderado->setObs('');
+                                    $nuevoApoderado->setEsValidado($objApoderadoInscripcion->getEsValidado());
+                                    $nuevoApoderado->setFechaRegistro(new \DateTime('now'));
+                                    $em->persist($nuevoApoderado);
+                                    $em->flush(); 
                                 }
-                                
-                                $em->remove($objApoderadoInscripcion);
+
                             }
-                        }
-
-                        //***********to estudiante_inscripcion_extranjero
-                        $objEstudianteInscripcionExtranjero = $em->getRepository('SieAppWebBundle:EstudianteInscripcionExtranjero')->findOneBy(array('estudianteInscripcion' => $inscrip->getId() ));
-                           
-                        $arrEstudianteInscripcionExtranjero=array();
-                        if(sizeof($objEstudianteInscripcionExtranjero)>0){
-                            $arrEstudianteInscripcionExtranjero = array(
-                                'InstitucioneducativaOrigen'=>$objEstudianteInscripcionExtranjero->getInstitucioneducativaOrigen(),
-                                'CursoVencido'=>$objEstudianteInscripcionExtranjero->getCursoVencido(),
-                                'CursoVencido'=>$objEstudianteInscripcionExtranjero->getCursoVencido(),
-                                'RutaImagen'=>$objEstudianteInscripcionExtranjero->getRutaImagen(),
-                                'EstudianteInscripcion'=>$objEstudianteInscripcionExtranjero->getEstudianteInscripcion(),
-                                'PaisTipo'=>$objEstudianteInscripcionExtranjero->getPaisTipo(),
-
-                            );
-                          
-                            $em->remove($objEstudianteInscripcionExtranjero);     
                             
-                        } 
+                            $em->remove($objApoderadoInscripcion);
+                        }
+                    }
+
+                    //***********to estudiante_inscripcion_extranjero
+                    $objEstudianteInscripcionExtranjero = $em->getRepository('SieAppWebBundle:EstudianteInscripcionExtranjero')->findOneBy(array('estudianteInscripcion' => $inscrip->getId() ));
+                       
+                    $arrEstudianteInscripcionExtranjero=array();
+                    if(sizeof($objEstudianteInscripcionExtranjero)>0){
+                        $arrEstudianteInscripcionExtranjero = array(
+                            'InstitucioneducativaOrigen'=>$objEstudianteInscripcionExtranjero->getInstitucioneducativaOrigen(),
+                            'CursoVencido'=>$objEstudianteInscripcionExtranjero->getCursoVencido(),
+                            'CursoVencido'=>$objEstudianteInscripcionExtranjero->getCursoVencido(),
+                            'RutaImagen'=>$objEstudianteInscripcionExtranjero->getRutaImagen(),
+                            'EstudianteInscripcion'=>$objEstudianteInscripcionExtranjero->getEstudianteInscripcion(),
+                            'PaisTipo'=>$objEstudianteInscripcionExtranjero->getPaisTipo(),
+
+                        );
+                      
+                        $em->remove($objEstudianteInscripcionExtranjero);     
+                        
+                    } 
 
                     if($unificationIniPri){ 
                         $em->remove($inscrip);  
@@ -901,15 +906,15 @@ class RudeUnificationController extends Controller{
                             
                             if($unificationForeign){
                                 // check the foreign inscription to the update
-                              if(!$inscriptionCorrect ){
-                                    if( $inscriptionCorrect['gestion'] == $objCurso->getGestionTipo()->getId() && $inscriptionCorrect['nivelId'].$inscriptionCorrect['gradoId']>=$objCurso->getNivelTipo()->getId().$objCurso->getGradoTipo()->getId() ){
-                                        $em->remove($inscrip);
-                                    }
-                                    if($objCurso->getGestionTipo()->getGestion()== $objCurso->getGestionTipo()->getId() &&  $objCurso->getNivelTipo()->getId().$objCurso->getGradoTipo()->getId()>$inscriptionCorrect['nivelId'].$inscriptionCorrect['gradoId']){
-                                         $inscripincoCorrect = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscriptionCorrect['studentInscriptionId']);
-                                        $em->remove($inscripincoCorrect);
-                                        $inscrip->setEstudiante($studentcor);
-                                    }  
+                                if($inscriptionCorrect){
+                                        if( $inscriptionCorrect['gestion'] == $objCurso->getGestionTipo()->getId() && $inscriptionCorrect['nivelId'].$inscriptionCorrect['gradoId']>=$objCurso->getNivelTipo()->getId().$objCurso->getGradoTipo()->getId() ){
+                                            $em->remove($inscrip);
+                                        }
+                                        if( $inscriptionCorrect['gestion']== $objCurso->getGestionTipo()->getId() &&  $objCurso->getNivelTipo()->getId().$objCurso->getGradoTipo()->getId()>$inscriptionCorrect['nivelId'].$inscriptionCorrect['gradoId']){
+                                             $inscripincoCorrect = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscriptionCorrect['studentInscriptionId']);
+                                            $em->remove($inscripincoCorrect);
+                                            $inscrip->setEstudiante($studentcor);
+                                        }  
                                 }
                             }
                         }
