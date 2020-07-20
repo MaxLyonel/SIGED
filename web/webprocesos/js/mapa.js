@@ -84,4 +84,49 @@ function initMap2(lt,lg,div) {
 
 }
 
+
+
+function initMapLeaflet(image) {
+    $('#map').empty();
+    $('#form_latitud').val(latitud);
+    $('#form_longitud').val(longitud);
+
+    // CARGAMOS LAS CAPAS - opcion https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png
+    var openstreet = L.TileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png');
+
+    var satelital = L.TileLayer('https://api.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}.jpg90?access_token=pk.eyJ1Ijoic2lnZWUiLCJhIjoiY2p5ZnZsODM3MGFrMjNtbmpmdHpnOW9xbiJ9.p4csjOmfBTl1Yun4PCeXNg');
+    // arcgis = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+
+    var mapOptions = {
+        center: [latitud, longitud],
+        zoom: 13,
+        minZoom: 3
+    }
+
+    map = L.map('map', mapOptions);
+
+
+    var baseMaps = {
+        "Mapa": openstreet,
+        "Satélite": satelital
+        // "Satélite-2": arcgis
+    };
+
+    L.control.layers(baseMaps).addTo(map);
+
+    coordenadas = L.latLng(latitud, longitud);
+    marker = L.marker(coordenadas, {
+        title: 'Edificio educativo',
+        draggable: true,
+        icon: image
+    });
+    map.addLayer(marker);
+    map.setView(coordenadas);
+
+    marker.on('drag', function(){
+        $('#form_latitud').val(marker.getLatLng().lat);
+        $('#form_longitud').val(marker.getLatLng().lng);
+    });
+}
+
 //initMap();
