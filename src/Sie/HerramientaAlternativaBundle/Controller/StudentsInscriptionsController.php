@@ -580,9 +580,9 @@ class StudentsInscriptionsController extends Controller {
     }
     // to do the check and inscription about the student
     public function checkDataStudentAction(Request $request){
- dump($request);
- dump($_FILES);
- die;
+ // dump($request);
+ // dump($_FILES);
+ // die;
       //ini json var
       $response = new JsonResponse();
       // create db conexion
