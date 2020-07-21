@@ -240,9 +240,7 @@ class RudeUnificationController extends Controller{
         // valdiate DIPLOMAS
         $tramitea=$this->get('seguimiento')->getDiploma($rudea);
         $tramiteb=$this->get('seguimiento')->getDiploma($rudeb);
-        dump($tramitea);
-        dump($tramiteb);
-        die;
+        
         if($tramitea || $tramiteb){
             $arrResponse = array(
             'status'          => 'error',
