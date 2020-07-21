@@ -479,7 +479,8 @@ class StudentsInscriptionsController extends Controller {
       // user allowed to show the special inscription option
       $userAllowedOnCasespecial = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
 
-      $swWithoutSegip = $this->session->get('userName')=='a0001'?true:false;
+      $arrWithoutsegip = array(4880808,4926577);
+      $swWithoutSegip = in_array($this->session->get('userName'), $arrWithoutsegip)?true:false;
 
 
       // get all data about EstudianteInscripcionAlternativaExcepcionalTipo
@@ -579,8 +580,9 @@ class StudentsInscriptionsController extends Controller {
     }
     // to do the check and inscription about the student
     public function checkDataStudentAction(Request $request){
- //dump($request);
- //die;
+ dump($request);
+ dump($_FILES);
+ die;
       //ini json var
       $response = new JsonResponse();
       // create db conexion
