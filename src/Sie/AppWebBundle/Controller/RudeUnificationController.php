@@ -762,7 +762,7 @@ class RudeUnificationController extends Controller{
             }           
 
             //***********ELIMINAMOS ESTUDIANTE_HISTORIAL_MODIFICACION*******////
-            $objStudentHistoryModification = $em->getRepository('SieAppWebBundle:EstudianteHistorialModificacion')->find(array('estudiante' =>  $studentinc->getId()));
+            $objStudentHistoryModification = $em->getRepository('SieAppWebBundle:EstudianteHistorialModificacion')->findBy(array('estudiante' =>  $studentinc->getId()));
             
             $arrStudentHistoryModification = array();
             if(sizeof($objStudentHistoryModification)>0){
