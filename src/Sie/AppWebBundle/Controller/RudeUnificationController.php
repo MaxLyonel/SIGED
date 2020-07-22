@@ -762,16 +762,16 @@ class RudeUnificationController extends Controller{
             }           
 
             //***********ELIMINAMOS ESTUDIANTE_HISTORIAL_MODIFICACION*******////
-            // $objStudentHistoryModification = $em->getRepository('SieAppWebBundle:EstudianteHistorialModificacion')->find(array('estudiante' =>  $studentinc->getId()));
+            $objStudentHistoryModification = $em->getRepository('SieAppWebBundle:EstudianteHistorialModificacion')->find(array('estudiante' =>  $studentinc->getId()));
             
             $arrStudentHistoryModification = array();
-            // if(sizeof($objStudentHistoryModification)>0){
-            //     foreach ($objStudentHistoryModification as $valueHistory) {
-            //         # code...
-            //         $arrStudentHistoryModification[] = $valueHistory;
-            //         $em->remove($valueHistory);
-            //     }                
-            // }
+            if(sizeof($objStudentHistoryModification)>0){
+                foreach ($objStudentHistoryModification as $valueHistory) {
+                    # code...
+                    $arrStudentHistoryModification[] = $valueHistory;
+                    $em->remove($valueHistory);
+                }                
+            }
             /*$students = $em->createQueryBuilder()
                 ->delete('SieAppWebBundle:EstudianteHistorialModificacion','ehm')
                 ->where('ehm.estudiante = :id')
