@@ -823,32 +823,33 @@ class RudeUnificationController extends Controller{
                                     'gestion'=>$this->currentyear,
                                 );
                                 $arrCurrenteInscription = $this->get('funciones')->getCurrentInscriptionByRudeAndGestionAndMatricula($arrayConditionInscription);
+                                if(sizeof($arrCurrenteInscription)>0){
+                                    $objApoderadoInscripcionCorrect = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findOneBy(array(
+                                        'estudianteInscripcion' => $arrCurrenteInscription[0]['studenInscriptionId']
+                                    ));
 
-                                $objApoderadoInscripcionCorrect = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findOneBy(array(
-                                    'estudianteInscripcion' => $arrCurrenteInscription[0]['studenInscriptionId']
-                                ));
+                                    if(sizeof($objApoderadoInscripcionCorrect)>0){
+                                        if(!$objApoderadoInscripcionCorrect->getEsValidado()){
+                                            // do update on apoderadoInscripcion
+                                            $objApoderadoInscripcionCorrect->setEsValidado($objApoderadoInscripcion->getEsValidado());
+                                            $objApoderadoInscripcionCorrect->setPersona($objApoderadoInscripcion->getPersona() );
 
-                                if(sizeof($objApoderadoInscripcionCorrect)>0){
-                                    if(!$objApoderadoInscripcionCorrect->getEsValidado()){
-                                        // do update on apoderadoInscripcion
-                                        $objApoderadoInscripcionCorrect->setEsValidado($objApoderadoInscripcion->getEsValidado());
-                                        $objApoderadoInscripcionCorrect->setPersona($objApoderadoInscripcion->getPersona() );
+                                            $em->persist($objApoderadoInscripcionCorrect);
+                                            $em->flush();
+                                        }
 
-                                        $em->persist($objApoderadoInscripcionCorrect);
-                                        $em->flush();
-                                    }
-
-                                }else{
-                                    // do insert on the apo;deradoInscripcion table
-                                    $nuevoApoderado = new ApoderadoInscripcion();
-                                    $nuevoApoderado->setApoderadoTipo($objApoderadoInscripcion->getApoderadoTipo());
-                                    $nuevoApoderado->setPersona($objApoderadoInscripcion->getPersona() );
-                                    $nuevoApoderado->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrCurrenteInscription[0]['studenInscriptionId']));
-                                    $nuevoApoderado->setObs('');
-                                    $nuevoApoderado->setEsValidado($objApoderadoInscripcion->getEsValidado());
-                                    $nuevoApoderado->setFechaRegistro(new \DateTime('now'));
-                                    $em->persist($nuevoApoderado);
-                                    $em->flush(); 
+                                    }else{
+                                        // do insert on the apo;deradoInscripcion table
+                                        $nuevoApoderado = new ApoderadoInscripcion();
+                                        $nuevoApoderado->setApoderadoTipo($objApoderadoInscripcion->getApoderadoTipo());
+                                        $nuevoApoderado->setPersona($objApoderadoInscripcion->getPersona() );
+                                        $nuevoApoderado->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($arrCurrenteInscription[0]['studenInscriptionId']));
+                                        $nuevoApoderado->setObs('');
+                                        $nuevoApoderado->setEsValidado($objApoderadoInscripcion->getEsValidado());
+                                        $nuevoApoderado->setFechaRegistro(new \DateTime('now'));
+                                        $em->persist($nuevoApoderado);
+                                        $em->flush(); 
+                                    }                                    
                                 }
 
                             }
@@ -885,7 +886,9 @@ class RudeUnificationController extends Controller{
                         if($unificationNormal || $unificationForeign || $unificationIniPriCase2){
                             if($unificationIniPriCase2 && $inscrip->getEstadomatriculaTipo()->getId() == 4 && !$swChanteStatusCorrectInscription){
                                 // to change the matricula student
-                                $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));                         
+                                $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));
+                                $em->remove($inscrip);
+
                             }  
                                                           
                             if($unificationNormal){
