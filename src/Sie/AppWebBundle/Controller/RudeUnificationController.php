@@ -889,7 +889,9 @@ class RudeUnificationController extends Controller{
                                 $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));
                                 $em->remove($inscrip);
 
-                            }  
+                            }else{
+                                $inscrip->setEstudiante($studentcor);
+                            } 
                                                           
                             if($unificationNormal){
                                 if(!$inscriptionCorrect ){
