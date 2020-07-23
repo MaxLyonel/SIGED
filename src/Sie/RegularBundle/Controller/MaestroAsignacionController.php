@@ -327,7 +327,6 @@ class MaestroAsignacionController extends Controller {
         $query->execute();
         $entity = $query->fetchAll();
         $array = array();
-        //dump($entity);die;
 
         foreach($entity as $key => $value){            
             $arrayVal = json_decode($value['sp_genera_maestro_asignacion_asignatura'],true);
@@ -472,33 +471,38 @@ class MaestroAsignacionController extends Controller {
     public function asignarMaestroMateriaFormularioAction(Request $request) {
         $info = json_decode(base64_decode($request->get('info')), true);
         $val = json_decode(base64_decode($request->get('val')), true);
+        
         $maestroInscripcionId = 0;
         $listaMaestros = $this->getMaestrosInstitucionEducativaCursoOferta($val['institucioneducativa_curso_oferta_id'], $val['nota_tipo_id']);
         $detalleCursoOferta = $this->getInstitucionEducativaCursoOferta($val['institucioneducativa_curso_oferta_id']);
         if(count($detalleCursoOferta )>0){
             $detalleCursoOferta = $detalleCursoOferta[0];
         }
-        dump($info);dump($listaMaestros);dump($detalleCursoOferta);
         $institucionEducativaId = $info["sie"];
         $gestionId = $info["gestion"];
         $validacionProcesoId = $info["vp_id"];  
-        dump($info);
         $em = $this->getDoctrine()->getManager();
         $notaTipoEntity = $em->getRepository('SieAppWebBundle:NotaTipo')->find($val['nota_tipo_id']);
         $validacionProcesoEntity = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($validacionProcesoId);
         if(count($validacionProcesoEntity)>0){
-            $maestroInscripcionId = $validacionProcesoEntity->getLlave();
+            if($validacionProcesoEntity->getValidacionReglaTipo()->getId() == 57){
+                $llave = explode("|",$validacionProcesoEntity->getLlave());
+                $maestroInscripcionId = 0;
+                if (count($llave) == 2){
+                    $maestroInscripcionId = $llave[0];
+                } 
+            } else {
+                $maestroInscripcionId = $validacionProcesoEntity->getLlave();
+            }
         }
         $maestroInscripcioEntity = $this->getMaestroInscripcion($maestroInscripcionId);
         if(count($maestroInscripcioEntity)>0){
             $maestroInscripcioEntity = $maestroInscripcioEntity[0];
             $maestroInscripcioEntity['institucioneducativaCursoOfertaId'] = $val['institucioneducativa_curso_oferta_id'];
         }
-        dump($maestroInscripcioEntity);
         $notaTipo = $notaTipoEntity->getNotaTipo();
         $val['maestro_inscripcion_id'] = $maestroInscripcionId;
 
-        dump($val);
         $institucioneducativaCursoOfertaMaestroEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findOneBy(array('maestroInscripcion' => $maestroInscripcionId, 'institucioneducativaCursoOferta' => $val['institucioneducativa_curso_oferta_id'], 'notaTipo' => $val['nota_tipo_id']));
         //dump($institucioneducativaCursoOfertaMaestroEntity);die;
         if(count($institucioneducativaCursoOfertaMaestroEntity)>0){
@@ -774,16 +778,13 @@ class MaestroAsignacionController extends Controller {
         $info = json_decode(base64_decode($request->get('info')), true);
         $validacionProcesoId = $info["vp_id"];  
         $gestionId = $info["gestion"];  
-        dump($info);
         $em = $this->getDoctrine()->getManager();
         $validacionProcesoEntity = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($validacionProcesoId);
         if(count($validacionProcesoEntity)>0){
             $maestroInscripcionId = $validacionProcesoEntity->getLlave();
         }
-        dump($maestroInscripcionId);dump($gestionId);
         $listaAsignacionesMaestro = $this->getInstitucionEducativaCursoOfertaMaestroGestion($maestroInscripcionId, $gestionId);
         
-        dump($maestroInscripcionId);dump($listaAsignacionesMaestro);
         $response = new JsonResponse();
 
         if(count($listaAsignacionesMaestro) > 0){
@@ -817,16 +818,13 @@ class MaestroAsignacionController extends Controller {
         $info = json_decode(base64_decode($request->get('info')), true);
         $validacionProcesoId = $info["vp_id"];  
         $gestionId = $info["gestion"];  
-        dump($info);
         $em = $this->getDoctrine()->getManager();
         $validacionProcesoEntity = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($validacionProcesoId);
         if(count($validacionProcesoEntity)>0){
             $maestroInscripcionId = $validacionProcesoEntity->getLlave();
         }
-        dump($maestroInscripcionId);dump($gestionId);
         $listaAsignacionesMaestro = $this->getInstitucionEducativaCursoOfertaMaestroGestion($maestroInscripcionId, $gestionId);
         
-        dump($maestroInscripcionId);dump($listaAsignacionesMaestro);
         $response = new JsonResponse();
 
         if(count($listaAsignacionesMaestro) > 0){      
@@ -871,16 +869,13 @@ class MaestroAsignacionController extends Controller {
         $info = json_decode(base64_decode($request->get('info')), true);
         $validacionProcesoId = $info["vp_id"];  
         $gestionId = $info["gestion"];  
-        dump($info);
         $em = $this->getDoctrine()->getManager();
         $validacionProcesoEntity = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($validacionProcesoId);
         if(count($validacionProcesoEntity)>0){
             $maestroInscripcionId = $validacionProcesoEntity->getLlave();
         }
-        dump($maestroInscripcionId);dump($gestionId);
         $listaAsignacionesMaestro = $this->getInstitucionEducativaCursoOfertaMaestroGestion($maestroInscripcionId, $gestionId);
         
-        dump($maestroInscripcionId);dump($listaAsignacionesMaestro);
         $response = new JsonResponse();
 
         if(count($listaAsignacionesMaestro) > 0){
@@ -967,23 +962,17 @@ class MaestroAsignacionController extends Controller {
             return $response->setData(array('estado'=>false, 'msg'=>$msg));
         }
         $gestionId = $institucioneducativaCursoOfertaMaestroEntity->getinstitucioneducativaCursoOferta()->getInsitucioneducativaCurso()->getGestionTipo()->getId();
-        // dump($institucioneducativaCursoOfertaMaestroEntity);
 
         $institucioneducativaCursoOfertaId = $institucioneducativaCursoOfertaMaestroEntity->getInstitucioneducativaCursoOferta()->getId();
         $notaTipoId = $institucioneducativaCursoOfertaMaestroEntity->getNotaTipo()->getId();
         
         $listaMaestros = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta' => $institucioneducativaCursoOfertaId, 'notaTipo' => $notaTipoId), array('asignacionFechaInicio'=>'asc'));
         
-        // dump($listaMaestros);
-
         $validacionFechaSecuencial = $this->getValidacionFechaSecuencial($listaMaestros, $gestionId, $fechaInicio, $fechaFin, $institucioneducativaCursoOfertaMaestroId);
         if(!$validacionFechaSecuencial['estado']){
             return $response->setData(array('estado'=>$validacionFechaSecuencial['estado'], 'msg'=>$validacionFechaSecuencial['msg']));
         }
         //$horasMes = $institucioneducativaCursoOfertaMaestroEntity->getInstitucioneducativaCursoOferta()->getHorasmes();
-
-        //dump($financiamientoTipoEntity);dump($institucioneducativaCursoOfertaMaestroEntity);die;
-
         $em->getConnection()->beginTransaction();
         try {     
             if(isset($form['maestro'])){
@@ -1127,7 +1116,6 @@ class MaestroAsignacionController extends Controller {
         if(count($detalleCursoOferta )>0){
             $detalleCursoOferta = $detalleCursoOferta[0];
         }
-        dump($info);dump($listaMaestros);dump($detalleCursoOferta);
    
         // $em = $this->getDoctrine()->getManager();
         $notaTipoEntity = $em->getRepository('SieAppWebBundle:NotaTipo')->find($notaTipoId);
@@ -1228,7 +1216,6 @@ class MaestroAsignacionController extends Controller {
         $institucioneducativaCursoOfertaId = $info["institucioneducativa_curso_oferta_id"];  
         $notaTipoId = $info["nota_tipo_id"];  
         $validacionProcesoId = $info["vp_id"];  
-        dump($info);
         $em = $this->getDoctrine()->getManager();
         $validacionProcesoEntity = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($validacionProcesoId);
         if(count($validacionProcesoEntity)<=0){
@@ -1238,7 +1225,6 @@ class MaestroAsignacionController extends Controller {
         
         $listaAsignacionesMaestro = $this->getInstitucionEducativaCursoOfertaNotaTipoGestion($institucioneducativaCursoOfertaId, $notaTipoId);
         
-        dump(count($listaAsignacionesMaestro));
         $response = new JsonResponse();
 
         if(count($listaAsignacionesMaestro) > 0){
@@ -1272,6 +1258,128 @@ class MaestroAsignacionController extends Controller {
                 ->setParameter('notaTipoId', $notaTipoId);
         $entity = $query->getQuery()->getResult();
         return $entity;
+    }
+
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que despliega el fomulario para registrar o modificar la fuente de financiamiento de un maestro
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    
+    //modulo imcompleto
+    
+    public function asignarFuenteFinanciamientoAction(Request $request) {
+        $validacionProcesoId = $request->get('vp_id');
+        $maestroInscripcionId = $request->get('id');
+        $gestion = $request->get('gestion');
+          
+        $em = $this->getDoctrine()->getManager();
+        $maestroInscripcionEntidad = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroInscripcionId);
+     
+        $validacionProcesoEntidad = arra();
+        if($validacionProcesoId > 0){
+            $validacionProcesoEntidad = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($validacionProcesoId);
+        } 
+        
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select("distinct tt.id, tt.turno")
+                ->innerJoin('SieAppWebBundle:TurnoTipo', 'tt', 'WITH', 'tt.id = iec.turnoTipo')
+                ->where('iec.gestionTipo = :gestionTipoId')
+                ->andWhere('iec.institucioneducativa = :institucioneducativaId')
+                ->andWhere('iec.nivelTipo in (11,12,13)')
+                ->setParameter('gestionTipoId', $gestionId)
+                ->setParameter('institucioneducativaId', $institucionEducativaId)
+                ->orderBy('tt.id', 'ASC');
+        $institucioneducativaCursoOfertaMaestroEntidad = $this->get('maestroAsignacion')->listar($idCursoOferta);
+
+
+
+        $institucionEducativaId = $maestroInscripcionEntidad->getInstitucioneducativa()->getId();
+        $gestionId = $maestroInscripcionEntidad->getGestionTipo()->getId();
+        $maestroInscripcionEntidad = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroInscripcionId);
+        $turnoTipoEntidad = $this->getTurnoInstitucionEducativaCurso($institucionEducativaId,$gestionId);
+
+        $turnoTipoArray = array();
+        foreach ($turnoTipoEntidad as $data) {
+            $turnoTipoArray[$data['id']] = $data['turno'];
+        }
+
+        $info = base64_encode(json_encode(array('sie'=>$institucionEducativaId, 'gestion'=>$gestionId, 'vp_id'=>$validacionProcesoId)));
+
+        $form = $this->createFormBuilder()
+                ->add('info', 'hidden', array('label' => 'Info', 'attr' => array('value' => $info)))
+                ->add('turno', 'choice', array('label' => 'Turno', 'empty_value' => 'Seleccione Turno', 'choices' => $turnoTipoArray, 'data' => $turnoId, 'attr' => array('class' => 'form-control', 'onchange' => 'listar_nivel()', 'required' => true)))
+                ->add('nivel', 'choice', array('label' => 'Nivel', 'empty_value' => 'Seleccione Nivel', 'choices' => $nivelTipoEntidad, 'data' => $nivelId, 'attr' => array('class' => 'form-control', 'style' => 'display: none;', 'required' => true, 'onchange' => 'listar_grado_asignatura()')))
+                ->add('grado', 'choice', array('label' => 'Grado', 'empty_value' => 'Seleccione Grado', 'choices' => $gradoTipoEntidad, 'data' => $gradoId, 'attr' => array('class' => 'form-control', 'style' => 'display: none;', 'required' => true, 'onchange' => 'listar_paralelo()')))
+                ->add('paralelo', 'choice', array('label' => 'Paralelo', 'empty_value' => 'Seleccione Paralelo', 'choices' => $paraleloTipoEntidad, 'data' => $paraleloId, 'attr' => array('class' => 'form-control', 'style' => 'display: none;', 'required' => true, 'onchange' => 'listar_asignatura_curso()')))
+                ->add('asignatura', 'choice', array('label' => 'Asignatura', 'empty_value' => 'Seleccione Asignatura', 'choices' => $asignaturaTipoEntidad, 'data' => $asignaturaId, 'attr' => array('class' => 'form-control', 'style' => 'display: none;', 'required' => true, 'onchange' => 'listar_curso_asignatura()')))
+                ->add('buscar', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue', 'style' => 'display: none;')))
+                ->getForm()->createView();
+        
+        return $this->render('SieRegularBundle:MaestroAsignacion:fuenteFinanciamientoFormulario.html.twig',array(
+            'form' => $form
+        ));
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que despliega las asignaciones de un maestro
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function asignarMaestroListaAction(Request $request) {
+        $validacionProcesoId = $request->get('vp_id');
+        $llave = explode("|",$request->get('id'));
+
+        $maestroInscripcionId = 0;
+        if (count($llave) == 2){
+            $maestroInscripcionId = $llave[0];
+        }               
+          
+        $institucioneducativaCursoOfertaMaestro = array();
+        if ($maestroInscripcionId != 0){
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro');
+            $query = $entity->createQueryBuilder('iecom')
+                    ->select("iecom.id, tt.turno, nt.nivel, gt.grado, pt.paralelo, at.asignatura, ntt.abrev as nota, ntt.id as notaId, ieco.id as institucioneducativaCursoOfertaId")
+                    ->innerJoin('SieAppWebBundle:MaestroInscripcion', 'mi', 'WITH', 'mi.id = iecom.maestroInscripcion')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ieco', 'WITH', 'ieco.id = iecom.institucioneducativaCursoOferta')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ieco.insitucioneducativaCurso')
+                    ->innerJoin('SieAppWebBundle:AsignaturaTipo', 'at', 'WITH', 'at.id = ieco.asignaturaTipo')
+                    ->innerJoin('SieAppWebBundle:TurnoTipo', 'tt', 'WITH', 'tt.id = iec.turnoTipo')
+                    ->innerJoin('SieAppWebBundle:NivelTipo', 'nt', 'WITH', 'nt.id = iec.nivelTipo')
+                    ->innerJoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'gt.id = iec.gradoTipo')
+                    ->innerJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'pt.id = iec.paraleloTipo')
+                    ->innerJoin('SieAppWebBundle:NotaTipo', 'ntt', 'WITH', 'ntt.id = iecom.notaTipo')
+                    ->where('mi.id = :maestroInscripcionId')
+                    ->setParameter('maestroInscripcionId', $maestroInscripcionId)
+                    ->orderBy('tt.id, nt.id, gt.id, pt.id, ntt.id, at.id', 'ASC');
+            $institucioneducativaCursoOfertaMaestro = $query->getQuery()->getResult();
+        }
+
+        $maestroInscripcionEntidad = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroInscripcionId);
+        $sie = $maestroInscripcionEntidad->getInstitucioneducativa()->getId();
+        $gestion = $maestroInscripcionEntidad->getGestionTipo()->getId();
+        $lista = array();
+        $cabecera = array('Turno', 'Nivel', 'Año de Escolaridad', 'Paralelo', 'Asignatura');
+        $contenido = array();
+        foreach ($institucioneducativaCursoOfertaMaestro as $data) {
+            $contenido[$data['turno']][$data['nivel']][$data['grado']][$data['paralelo']][$data['asignatura']][$data['nota']] = base64_encode(json_encode(array('institucioneducativa_curso_oferta_id'=>$data['institucioneducativaCursoOfertaId'], 'nota_tipo_id'=>$data['notaId'], 'institucioneducativa_curso_oferta_maestro_id'=>$data['id'])));
+            array_push($cabecera,$data['nota']);
+        }
+        $cabecera = array_unique($cabecera);
+        $lista = array('cabecera'=>$cabecera,'contenido'=>$contenido);
+        $info = base64_encode(json_encode(array('sie'=>$sie,'gestion'=>$gestion,'vp_id'=>$validacionProcesoId)));
+                
+        return $this->render('SieRegularBundle:MaestroAsignacion:asignacionMaestroLista.html.twig',array(
+            'lista' => $lista,
+            'info' => $info
+        ));
     }
 
 }

@@ -1,0 +1,192 @@
+
+    
+	<div class="row">
+        <div class="col-lg-12">
+            <div class="panel">
+                <div class="panel-body"  id="solucionContent">
+                    <div id="no-more-tables" class="table-responsive">
+                        <input type="hidden" value="{{info}}" id="form_info" />
+                        <table class="table table-bordered table-hover cf dataTable">
+                            <thead  class="cf">
+                                <tr>
+                                    {% for key, data in lista.cabecera %}
+                                        <th class="text-center" id="{{data}}">{{data}}</th>                                                            
+                                    {% endfor %}  
+                                </tr>
+                            </thead>
+                            <tbody>    
+                                {% set index = 0 %}
+                                {% for keyt, turno in lista.contenido %}
+                                    {% for keyn, nivel in turno %}
+                                        {% for keyg, grado in nivel %}
+                                            {% for keyp, paralelo in grado %}
+                                                {% for keya, asignatura in paralelo %}
+                                                <tr>
+                                                    {% set index = index + 1 %}
+                                                    {% if loop.first %}
+                                                        <td rowspan="{{paralelo|length}}">{{keyt}}</td>
+                                                        <td rowspan="{{paralelo|length}}">{{keyn}}</td>
+                                                        <td rowspan="{{paralelo|length}}">{{keyg}}</td>
+                                                        <td rowspan="{{paralelo|length}}">{{keyp}}</td>
+                                                    {% endif %}
+                                                        <td>{{keya}}</td>
+                                                    {% for keype, periodo in asignatura %}
+                                                        {% if periodo != "" %}
+                                                            {% set botonColorClase = "btn-green" %}
+                                                            {% set botonNombre = "SI" %}
+                                                        {% else %}
+                                                            {% set botonColorClase = "btn-default" %}
+                                                            {% set botonNombre = "NO" %}
+                                                        {% endif %}
+                                                        <td class="text-center">
+                                                            <button type="button" class="btn {{ botonColorClase }} btn-block" onclick='formulario("{{ periodo }}", this)' data-toggle="modal" data-target="#popup">
+                                                                {{ botonNombre }}
+                                                            </button>
+                                                        </td>
+                                                    {% endfor %}
+                                                </tr>
+                                                {% endfor %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endfor %}
+                                {% endfor %}                     
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <br>
+                <div class="panel-footer"  id="solucionFooter">
+                    <div class="btn-group btn-group-justified">
+                        <a class="btn btn-default" role="button" onclick="finalizar()">Finalizar inconsistencia</a>
+                        <a class="btn btn-warning" role="button" onclick="modificarCargo()">Definir como Comisionado - Organizacion Social y finalizar</a>
+                        <a class="btn btn-danger" role="button" onclick="eliminar()">Eliminar maestro y finalizar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>       
+	<script>
+        var finalizar = function(){
+            var r = confirm("¿Desea finalizar la insconsistencia del maestro?");
+            if (r == false) {
+                return false;
+            }
+            var info = document.getElementById('form_info').value;
+            var content = $('#solucionContent').html();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_finalizar', {'info': info}),
+                beforeSend: function () {
+                    $('#solucionContent').empty();
+                    $("#solucionContent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    if (data.estado) {
+                        alert("Correcto, "+data.msg);
+                        botonListDetalle.remove();
+                        $("#collapseThreeTitle").empty();
+                        $("#collapseThreeBody").empty();
+                        $('#solution').removeClass('visible').addClass('invisible');
+                        $('#collapseTwo').removeClass('collapse').addClass('in');
+                    } else {
+                        alert("Error, "+data.msg);
+                        $('#solucionContent').html(content);
+                    }                    
+                },
+                error: function(error){     
+                    $('#solucionContent').html(content);
+                    alert("Error, no fue posible realizar el registro, intente nuevamente");  
+                },
+            });    
+        }
+
+        var eliminar = function(){
+            var r = confirm("¿Desea eliminar la inscripción del maestro y finalizar la incosistencia?");
+            if (r == false) {
+                return false;
+            }
+            var info = document.getElementById('form_info').value;
+            var content = $('#solucionContent').html();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_eliminar', {'info': info}),
+                beforeSend: function () {
+                    $('#solucionContent').empty();
+                    $("#solucionContent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    if (data.estado) {
+                        alert("Correcto, "+data.msg);
+                        botonListDetalle.remove();
+                        $("#collapseThreeTitle").empty();
+                        $("#collapseThreeBody").empty();
+                        $('#solution').removeClass('visible').addClass('invisible');
+                        $('#collapseTwo').removeClass('collapse').addClass('in');
+                    } else {
+                        alert("Error, "+data.msg);
+                        $('#solucionContent').html(content);
+                    }                    
+                },
+                error: function(error){     
+                    $('#solucionContent').html(content);
+                    alert("Error, no fue posible realizar el registro, intente nuevamente");  
+                },
+            });    
+        }
+
+        var modificarCargo = function(){
+            var r = confirm("¿Está segura(o) de modificar el cargo del maestro a COMISIONADO ORGANIZACIÓN SOCIAL y finalizar la incosistencia?");
+            if (r == false) {
+                return false;
+            }
+            var info = document.getElementById('form_info').value;
+            var content = $('#solucionContent').html();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_modificar_cargo_comisionado_organizacion_social', {'info': info}),
+                beforeSend: function () {
+                    $('#solucionContent').empty();
+                    $("#solucionContent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    if (data.estado) {
+                        alert("Correcto, "+data.msg);
+                        botonListDetalle.remove();
+                        $("#collapseThreeTitle").empty();
+                        $("#collapseThreeBody").empty();
+                        $('#solution').removeClass('visible').addClass('invisible');
+                        $('#collapseTwo').removeClass('collapse').addClass('in');
+                    } else {
+                        alert("Error, "+data.msg);
+                        $('#solucionContent').html(content);
+                    }                    
+                },
+                error: function(error){     
+                    $('#solucionContent').html(content);
+                    alert("Error, no fue posible realizar el registro, intente nuevamente");  
+                },
+            });    
+        }
+
+        var botonForm = null;
+        var formulario = function(val, bot){
+            botonForm = $(bot); 
+            var info = document.getElementById('form_info').value;
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_formulario', {'val': val, 'info': info}),
+                beforeSend: function () {
+                    $("#popupBody").empty();
+                    $("#popupBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    $("#popupBody").empty();  
+                    $("#popupBody").html(data);                  
+                },
+                error: function(error){          
+                    $("#popupBody").empty();           
+                    $("#popupBody").append('<div class="text-center">Error</div>');   
+                },
+            });          
+        }  
+	</script>

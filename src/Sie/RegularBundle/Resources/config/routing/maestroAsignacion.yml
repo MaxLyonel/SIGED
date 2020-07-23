@@ -98,3 +98,15 @@ maestroAsignacion_asignar_maestro_finalizar:
     defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroFinalizar }
     options:
         expose: true
+
+maestroAsignacion_asignar_fuente_financiamiento:
+    path:     /asignar/fuente/financiamiento
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarFuenteFinanciamiento }
+    options:
+        expose: true
+
+maestroAsignacion_lista:
+    path:     /asignar/maestro/lista
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroLista }
+    options:
+        expose: true
