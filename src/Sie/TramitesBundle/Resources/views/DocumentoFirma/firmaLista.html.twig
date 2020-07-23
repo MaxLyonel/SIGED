@@ -23,7 +23,10 @@
         <div class="col-lg-12 col-md-12 col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table class="table table-issue-tracker table-middle table-info">
+                    <button type="button" class="btn btn-lilac col-lg-12 col-md-12 col-sm-12 mb-10" data-toggle="modal" data-target=".bs-example-modal-form" onclick="nuevo();">
+                        <i class="fa fa-plus-square-o"></i> Nueva Firma
+                    </button>
+                    <table id="tablaParticipantes" name="tablaParticipantes" class="table table-issue-tracker table-middle table-info" cellspacing="0" width="100%">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -32,9 +35,22 @@
                                 <th>Persona</th>
                                 <th>Firma</th>
                                 <th>Fecha registro</th>
-                                <th>Editar</th>
+                                <th>Estado</th>
+                                <th>Opciones</th>
                             </tr>
                         </thead>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Departamento</th>
+                                <th>Tipo</th>
+                                <th>Persona</th>
+                                <th>Firma</th>
+                                <th>Fecha registro</th>
+                                <th>Estado</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </tfoot>
                         <tbody>
                             {% if firmas is defined  %}
                                 {% for detalle in firmas %}  
@@ -60,8 +76,17 @@
                                             {{ detalle.fecha_registro|date('d/m/Y h:i') }}
                                         </td>
                                         <td>
-                                            <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-form" onclick="firma('{{detalle.id|base64_encode}}','{{ loop.index }}');" >
+                                            <div class="ckbox ckbox-primary">
+                                                <input id="estado{{ loop.index }}" {% if detalle.esactivo %} checked="checked"  {% endif %} type="checkbox" onchange="modificaEstado(this, '{{ detalle.id|base64_encode }}');">
+                                                <label for="estado{{ loop.index }}"></label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-form" onclick="modifica('{{detalle.id|base64_encode}}','{{ loop.index }}');" >
                                                 <i class="fa fa-edit"></i> Cambiar Firma
+                                            </button>
+                                            <button type="button" class="btn btn-danger" onclick="eliminar('{{detalle.id|base64_encode}}','{{ loop.index }}',this);" >
+                                                <i class="fa fa-trash"></i> Eliminar
                                             </button>
                                         </td>
                                     </tr>
@@ -73,13 +98,90 @@
             </div>
         </div>
     </div><!-- /.row -->
-    <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true" id="modal">        
+    <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true" id="modal" data-keyboard="false" data-backdrop="static">  
+              
     </div>
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
     <script>
-        var firma = function(firma, id){
+
+        // Setup - add a text input to each footer cell
+        $('#tablaParticipantes tfoot th').each( function () {
+            var title = $(this).text();
+            if(title.trim() === "" || title === "#"){
+                $(this).html('');
+            } else {
+                $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+            }
+        } );
+
+        // DataTable
+        var table = $('#tablaParticipantes').DataTable( {
+                "order": [[ 0, "asc" ]],
+                "columnDefs": [
+                    { "orderable": false, "targets": 7 }
+                ],
+            }
+        );
+
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+
+        var nuevo = function(){
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('tramite_documento_firma_nuevo'),
+                data: {},
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                    success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+    
+                },
+            });        
+        };
+
+        var eliminar = function(firma, filaId, boton){
+            var r = confirm("¿ Está seguro de eliminar la firma ?");
+            if (r == true) {
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('tramite_documento_firma_elimina'),
+                    data: {'firma':firma},
+                    beforeSend: function () {
+                        $(boton).hide();
+                    },
+                    success: function (data) {
+                        if(data.estado){ 
+                            table.row($(boton).parents('tr')).remove().draw();
+                            alert(data.msg);
+                        } else {
+                            $(boton).show();
+                            alert(data.msg);
+                        }
+                    },
+                    error: function(error){ 
+                        $(boton).show();
+                        alert("Error al procesar la solicitud, intente nuevamente");
+                    },
+                });    
+            }     
+        };
+
+        var modifica = function(firma, id){
             $.ajax({
                 type: 'post',
                 url: Routing.generate('tramite_documento_firma_modifica'),
@@ -94,6 +196,38 @@
                 },
             });        
         };
+
+
+
+        var modificaEstado = function(check, firma){
+            var estado = null;
+            if ($(check).is(':checked')){
+                estado = true;
+            } else {
+                estado = false;
+            }
+            var r = confirm("¿ Está seguro de modificar el estado de la firma ?");
+            if (r == true) {
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('tramite_documento_firma_modifica_estado'),
+                    data: {'firma':firma, 'estado':estado},
+                    beforeSend: function () {
+                        $(check).hide();
+                    },
+                    success: function (data) {
+                        $(check).attr('checked',data.estadoFirma);
+                        alert(data.msg);
+                        $(check).show();
+                    },
+                    error: function(error){ 
+                        $(check).show();
+                        alert("Error al procesar la solicitud, intente nuevamente");
+                    },
+                });    
+            }     
+        };
+
         $(window).load(function(){
         });
     </script>

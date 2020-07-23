@@ -1374,7 +1374,6 @@
 			today: "Today",
 			clear: "Clear"
 		},
-
 		es: {
 			days: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sábado", "Domingo"],
 			daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],

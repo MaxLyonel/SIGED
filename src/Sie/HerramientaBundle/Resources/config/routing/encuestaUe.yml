@@ -1,0 +1,14 @@
+encuestaUe_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:EncuestaUe:index }
+
+encuestaUe_guarda:
+    path:     /encuentaguarda
+    defaults: { _controller: SieHerramientaBundle:EncuestaUe:guardarRespuesta }   
+
+
+
+
+
+
+

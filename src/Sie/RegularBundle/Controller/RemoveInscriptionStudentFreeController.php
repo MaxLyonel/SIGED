@@ -35,7 +35,13 @@ class RemoveInscriptionStudentFreeController extends Controller {
      * index action build the form to search
      *
      */
-    public function indexAction() {
+    public function indexAction(Request $request) {
+        # SERVICIO QUE CONTROLA EL ACCESO A LAS OPCIONES POR URL
+        # VALIDA SI EL ROL DEL USUARIO TIENE PERMISO SOBRE LA URL
+        if(!$this->get('funciones')->validarRuta($request->attributes->get('_route'))){
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
+
 //die('krlos');
         $em = $this->getDoctrine()->getManager();
         $this->session->set('removeinscription', false);
@@ -90,7 +96,8 @@ class RemoveInscriptionStudentFreeController extends Controller {
          */
         $objObservation = $this->get('seguimiento')->getStudentObservationQA($form);
         // dump($objObservation);die;
-        if($objObservation){
+        if(false){
+        // if($objObservation){
   
             $message = "Estudiante observado - rude " . $form['codigoRude'] . " :";
             $this->addFlash('notiremovest', $message);

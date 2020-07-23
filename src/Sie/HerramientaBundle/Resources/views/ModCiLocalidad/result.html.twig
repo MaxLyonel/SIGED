@@ -1,0 +1,116 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
+{% block contentoption %}
+
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Incorporación de datos <span>Estudiantes</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li class="active">Index</li>
+            </ol>
+        </div>
+    </div>
+    
+    <div class="body-content animated fadeIn">
+        <div class="row">
+
+            {% for flashMessage in app.session.flashbag.get('successcilocalidad') %}
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>¡Bien!</strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-teal">
+                    <div class="panel-heading">
+                        <div class="panel-title">
+                            <h4>Información  Estudiante - {{codigoRude}}</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div id="omitidos" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            {{form_start(form, { 'attr':{'data-toggle':'validator','role':'form', 'class':'form' } } )}}
+                            <div class="row">
+                                <div class="col-md-3">
+                                    {{form_label(form.paterno)}}
+                                    {{form_widget(form.paterno)}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form_label(form.materno)}}
+                                    {{form_widget(form.materno)}}
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    {{form_label(form.nombre)}}
+                                    {{form_widget(form.nombre)}}
+                                    <div class="help-block with-errors "></div>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    {{form_label(form.genero)}}
+                                    {{form_widget(form.genero)}}
+                                    <div class="help-block with-errors "></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    {{form_label(form.pais)}}
+                                    {{form_widget(form.pais)}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form_label(form.departamento)}}
+                                    {{form_widget(form.departamento)}}
+                                </div>
+                                <div class="col-md-3">
+                                    {{form_label(form.provincia)}}
+                                    {{form_widget(form.provincia)}}
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    {{form_label(form.localidad)}}
+                                    {{form_widget(form.localidad)}}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-md-3 form-group">
+                                    {{form_label(form.ci)}}
+                                    {{form_widget(form.ci)}}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    {{form_label(form.complemento)}}
+                                    {{form_widget(form.complemento)}}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-md-3 form-group">
+                                    {{form_label(form.fechaNacimiento)}}
+                                    {{form_widget(form.fechaNacimiento)}}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            {{form_widget(form.save, {'attr':{'class':'btn btn-success', 'onclick':"return confirm('Está a punto de validar con SEGIP y actualizar la información. ¿Desea continuar?');"} }) }}
+                            {{form_end(form)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <a href="{{path('modificar_ci_localidad_index')}}" class="btn btn-link"><i class="glyphicon glyphicon-circle-arrow-left"></i>&nbsp;Volver</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

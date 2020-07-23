@@ -5,8 +5,8 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="page-title">
-                <h1>Agregar Ci y Localidad
-                    <small></small>
+                <h1>Incorporación de Datos
+                    <small>Estudiantes</small>
                 </h1>
                 <ol class="breadcrumb">
                     <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar</a></li>
@@ -23,13 +23,13 @@
             {% for flashMessage in app.session.flashbag.get('noticilocalidad') %}
                 <div class="alert alert-warning alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Warning!</strong> {{ flashMessage }}
+                    <strong>¡Advertencia!</strong> {{ flashMessage }}
                 </div>
             {% endfor %}
             {% for flashMessage in app.session.flashbag.get('goodcilocalidad') %}
                 <div class="alert alert-success alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <strong>Bien!</strong> {{ flashMessage }}
+                    <strong>¡Bien!</strong> {{ flashMessage }}
                 </div>
             {% endfor %}
             <!-- Website Stats  Widget -->

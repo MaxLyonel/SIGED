@@ -31,6 +31,7 @@ class DownloadFileSieController extends Controller {
      * @return type
      */
     public function indexAction(Request $request) {
+       return $this->redirect($this->generateUrl('principal_web'));
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         /* this is for try with this users
@@ -686,11 +687,10 @@ class DownloadFileSieController extends Controller {
       $em = $this->getDoctrine()->getManager();
       $swcompleteOperativo = true;
       $operativo = $this->get('funciones')->obtenerOperativoDown($data['sie'], $data['gestion']);
-
         if($operativo == 5){//if 4 everything is done
           $swcompleteOperativo = true;
         }else{
-          if($operativo == 0){
+          if($operativo == 0 || $operativo == 1){
             // is probably ue new creation
             $objUE = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($data['sie']);
             $currentyear = $this->session->get('currentyear');
@@ -800,18 +800,19 @@ class DownloadFileSieController extends Controller {
 
           $swcompleteOperativo = $this->validateThePrevOperativo(array('sie'=>$sie, 'gestion'=>$gestionVal));
           
+          if(!$swcompleteOperativo){
+            //need to validate the QA actions
+            // validte the QA actions
+            $dataVal['reglas'] = '1,2,3,10,12,13,16,27,48';
+            $dataVal['gestion'] = $gestionVal;
+            $dataVal['bimestre'] = 4;
 
-          //need to validate the QA actions
-          // validte the QA actions
-          $dataVal['reglas'] = '1,2,3,10,12,13,16,27,48';
-          $dataVal['gestion'] = $gestionVal;
-          $dataVal['bimestre'] = 4;
+            $arrObservationQA =  $this->getAllObservationUE($dataVal);
 
-          $arrObservationQA =  $this->getAllObservationUE($dataVal);
-
-          // $arrObservationQA['observaciones_incosistencia'] = (sizeof($objInconsistencia)>0)?$objInconsistencia:array();
-          if(sizeof($arrObservationQA)>0){
-            $swquality = true;
+            // $arrObservationQA['observaciones_incosistencia'] = (sizeof($objInconsistencia)>0)?$objInconsistencia:array();
+            if(sizeof($arrObservationQA)>0){
+              $swquality = true;
+            }
           }
           
         }

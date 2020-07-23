@@ -27,8 +27,38 @@ tramite_documento_firma_modifica:
     options:
          expose: true 
 
+tramite_documento_firma_modifica_estado:
+    path:     /modifica/estado
+    defaults: { _controller: SieTramitesBundle:DocumentoFirma:modificaEstado }
+    options:
+         expose: true 
+
+tramite_documento_firma_elimina:
+    path:     /elimina
+    defaults: { _controller: SieTramitesBundle:DocumentoFirma:elimina }
+    options:
+         expose: true 
+
 tramite_documento_firma_modifica_guarda:
     path:     /modifica/guarda
     defaults: { _controller: SieTramitesBundle:DocumentoFirma:modificaGuarda }
+    options:
+         expose: true 
+
+tramite_documento_firma_nuevo:
+    path:     /nuevo
+    defaults: { _controller: SieTramitesBundle:DocumentoFirma:nuevo }
+    options:
+         expose: true 
+
+tramite_documento_firma_nuevo_guarda:
+    path:     /nuevo/guarda
+    defaults: { _controller: SieTramitesBundle:DocumentoFirma:nuevoGuarda }
+    options:
+         expose: true 
+
+tramite_documento_firma_nuevo_busca_persona:
+    path:     /nuevo/busca/persona
+    defaults: { _controller: SieTramitesBundle:DocumentoFirma:nuevoBuscaPersona }
     options:
          expose: true 

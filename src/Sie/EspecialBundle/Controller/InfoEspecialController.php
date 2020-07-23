@@ -185,7 +185,7 @@ class InfoEspecialController extends Controller{
                       ->setAction($this->generateUrl($goToPath))
                       ->add('gestion', 'hidden', array('data' => $data['gestion']))
                       ->add('sie', 'hidden', array('data' => $this->unidadEducativa))//81880091
-                      ->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'cbp-singlePage cbp-l-caption-buttonLeft', 'onclick'=>'closeOperativo()')))
+                      ->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')))
                       ->getForm()
       ;
   }
@@ -201,7 +201,7 @@ class InfoEspecialController extends Controller{
                       ->setAction($this->generateUrl($goToPath))
                       ->add('gestion', 'hidden', array('data' => $data['gestion']))
                       ->add('sie', 'hidden', array('data' => $data['idInstitucion']))//81880091
-                      ->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'cbp-singlePage cbp-l-caption-buttonLeft')))
+                      ->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
                       ->getForm()
       ;
   }

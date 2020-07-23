@@ -80,7 +80,7 @@ class InstitucioneducativaCursoRepository extends EntityRepository
         $qb = $this->getEntityMAnager()->createQueryBuilder();
         $qb
 
-                ->select('emt.estadomatricula, emt.id as estadomatriculaId, j.id, j.carnetIdentidad, j.complemento, j.codigoRude, j.paterno, j.materno, j.nombre, j.fechaNacimiento, i.id as eInsId, a.codigo as nivelId, b.codigo as cicloId, d.codigo as gradoId')
+                ->select('emt.estadomatricula, emt.id as estadomatriculaId, j.id, j.carnetIdentidad, j.complemento, j.segipId, j.codigoRude, j.paterno, j.materno, j.nombre, j.fechaNacimiento, i.id as eInsId, a.codigo as nivelId, b.codigo as cicloId, d.codigo as gradoId')
                 ->from('SieAppWebBundle:SuperiorFacultadAreaTipo', 'a')
                 ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'b', 'WITH', 'a.id = b.superiorFacultadAreaTipo')
                 ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
@@ -95,10 +95,24 @@ class InstitucioneducativaCursoRepository extends EntityRepository
                 ->orderBy('j.paterno, j.materno, j.nombre')
                 ->setParameter('ie_curso_id', $ie_curso_id)
         ;
-        return $qb->getQuery()->getResult();
+
+        $objStudents = $qb->getQuery()->getResult();
+
+        for($i=0; $i<count($objStudents);$i++) {
+            // $objStudents[$i]['edad'] = $this->calcularEdad($objStudents[$i]['fechaNacimiento']->format('Y-m-d'));
+
+            $query = $this->getEntityMAnager()->getConnection()->prepare('SELECT sp_calcula_edadanio (:rude::VARCHAR)');
+            $query->bindValue(':rude', $objStudents[$i]['codigoRude']);
+            $query->execute();
+            $edad = $query->fetchAll();
+            
+            $objStudents[$i]['edad'] = $edad[0]['sp_calcula_edadanio'];
+        }
+
+        return $objStudents;
     }
 
-    public function getStudentCourseAlterPerStudentId($studentId,$gestionId) {
+    public function getStudentCourseAlterPerStudentId($studentId,$gestionId,$per_id_cod) {
         $qb = $this->getEntityMAnager()->createQueryBuilder();
         $qb
 
@@ -108,6 +122,7 @@ class InstitucioneducativaCursoRepository extends EntityRepository
                 ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
                 ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'd', 'WITH', 'c.superiorAcreditacionTipo=d.id')
                 ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'e', 'WITH', 'e.acreditacionEspecialidad=c.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'f', 'WITH', 'e.institucioneducativaSucursal = f.id')                
                 ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g', 'WITH', 'g.superiorInstitucioneducativaAcreditacion=e.id')
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo=g.id')
                 ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'i', 'WITH', 'h.id=i.institucioneducativaCurso')
@@ -115,9 +130,11 @@ class InstitucioneducativaCursoRepository extends EntityRepository
                 ->innerJoin('SieAppWebBundle:EstadomatriculaTipo', 'emt', 'WITH', 'i.estadomatriculaTipo = emt.id')
                 ->where('j.id = :studentId')
                 ->andwhere('h.gestionTipo = :gestionId')
+                ->andwhere('f.periodoTipoId = :periodo')
                 ->orderBy('h.gestionTipo, a.codigo,b.codigo ,d.codigo')
                 ->setParameter('studentId', $studentId)
                 ->setParameter('gestionId', $gestionId)
+                ->setParameter('periodo', $per_id_cod)
         ;
         return $qb->getQuery()->getResult();
     }    

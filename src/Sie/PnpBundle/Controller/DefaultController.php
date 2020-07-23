@@ -6412,8 +6412,8 @@ public function buscar_facilitadorAction($ci,$complemento,$extranjero,$plan,Requ
     $db = $em->getConnection();
     $servicioPersona = $this->get('sie_app_web.persona');
     $persona = $servicioPersona->buscarPersona($ci,$complemento,$extranjero);
-    //dump($persona);die;
-    if($persona->type_msg === "success"){   
+    
+    if($persona->type_msg === "success"){
         $persona_id = $persona->result[0]->id; 
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($persona_id);
         $userId = $this->session->get('userId');
@@ -6421,7 +6421,7 @@ public function buscar_facilitadorAction($ci,$complemento,$extranjero,$plan,Requ
                SELECT lt.lugar as lugar
                FROM lugar_tipo lt,
                usuario_rol ur 
-               WHERE ur.lugar_tipo_id=lt.id and ur.esactivo=true and ur.usuario_id=$userId";
+               WHERE ur.rol_tipo_id in (21,29) and ur.lugar_tipo_id=lt.id and ur.esactivo=true and ur.usuario_id=$userId";
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
@@ -6432,6 +6432,7 @@ public function buscar_facilitadorAction($ci,$complemento,$extranjero,$plan,Requ
             $lugar_usuario = $p["lugar"];
         }
         $lugar_usuario=strtoupper($lugar_usuario);
+
         switch ($lugar_usuario) {
             case 'CHUQUISACA':{$nombre="CHUQUISACA";$lugar_tipo_id=31654;$ie=80480300;}break;
             case 'LA PAZ':{$nombre="LA PAZ";$lugar_tipo_id=31655;$ie=80730794;}break;
@@ -6450,6 +6451,7 @@ public function buscar_facilitadorAction($ci,$complemento,$extranjero,$plan,Requ
         ///////////////TODOS LOS CURSOS DEL FACILITADOR DESDE EL 2015 MENOS P2B2
         $filas = array();
         $filas=$this->retornar_archivos_personaAction($persona_id,$ie);
+
         $form = $this->createForm(new RegistrarCursoType(array('lugar_tipo_id'=>$lugar_tipo_id,'nombre'=>$nombre,'plan'=>$plan)), null, array('action' => $this->generateUrl('sie_pnp_registrar_curso'), 'method' => 'POST',));
     //return $this->render('SiePnpBundle:Default:municipiofiltro.html.twig', array('form' => $form->createView()));
 

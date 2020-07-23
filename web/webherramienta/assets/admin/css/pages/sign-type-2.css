@@ -33,7 +33,7 @@ body.page-boxed #sign-wrapper form {
 #sign-wrapper {
   width: 350px;
   margin: 0px auto;
-  padding-top: 5%;
+  padding-top: 0%;
   height: 100%;
   position: relative;
 }
@@ -126,7 +126,7 @@ body.page-boxed #sign-wrapper form {
 }
 .sign-header {
   color: white;
-  padding: 20px 15px;
+  padding: 1px 1px;
   margin-bottom: 0px;
 }
 .sign-header p,
@@ -135,7 +135,7 @@ body.page-boxed #sign-wrapper form {
 }
 .sign-body {
   margin: 0px;
-  padding: 15px 0px;
+  padding: 10px 0px;
 }
 .sign-body .form-group .error {
   position: absolute;
@@ -165,7 +165,7 @@ body.page-boxed #sign-wrapper form {
   top: 0px;
 }
 .sign-footer {
-  padding: 15px 0px;
+  padding: 1px 0px;
 }
 .lock .sign-text:before {
   top: 40%;

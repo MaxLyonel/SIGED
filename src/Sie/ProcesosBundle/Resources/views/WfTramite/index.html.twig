@@ -37,6 +37,9 @@
                                         <a href="javascript:void(0);" onclick="enviados()"><i class="fa fa-certificate"></i> Enviados</a>
                                     </li>
                                     <li>
+                                        <a href="javascript:void(0);" onclick="pendientes()"><i class="glyphicon glyphicon-tasks"></i> Pendientes</a>
+                                    </li>
+                                    <li>
                                         <a href="javascript:void(0);" onclick="concluidos()"><i class="fa fa-file-text-o"></i> Concluidos</a>
                                     </li>
                                     <li>
@@ -221,6 +224,27 @@
                 },
             });
         }
+
+        function pendientes(){
+            formData = {tipo: 6};
+            $.ajax({
+                type: 'GET',
+                url: "{{path('wf_tramite_lista')}}",
+                data: formData,
+                beforeSend: function () {
+                    $('#titulo').text('Trámites pendientes');
+                    $('#contenido').empty();
+                    $('#contenido').append('<div style="text-align:center">Cargando datos...<img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $('#contenido').empty();
+                    $('#contenido').append(data);
+                    cargatablas();
+                    $(".tooltips").tooltip();
+                },
+            });
+        }
+
         function seguimiento(){
             $.ajax({
                 type: 'GET',

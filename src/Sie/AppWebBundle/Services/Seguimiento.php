@@ -595,7 +595,6 @@ class Seguimiento {
   }
 
   public function getDiploma($rude) {
-    //dump($rude);die;
     $query = $this->em->createQueryBuilder('t')
         ->select('t')
         ->from('SieAppWebBundle:Tramite','t')
@@ -615,7 +614,6 @@ class Seguimiento {
   }
 
   public function getJuegos($rude) {
-    //dump($rude);die;
     $query = $this->em->createQueryBuilder('j')
         ->select('j')
         ->from('SieAppWebBundle:EstudianteInscripcionJuegos','j')
@@ -632,8 +630,26 @@ class Seguimiento {
     }
   }
 
+  public function getJuegosGestion($rude, $gestion) {
+    $query = $this->em->createQueryBuilder('j')
+        ->select('j')
+        ->from('SieAppWebBundle:EstudianteInscripcionJuegos','j')
+        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei', 'WITH', 'ei.id= j.estudianteInscripcion')
+        ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ei.estudiante= e.id')
+        ->where('e.codigoRude = :rude')
+        ->andWhere('j.gestionTipo = :gestion')
+        ->setParameter('rude', $rude)
+        ->setParameter('gestion', $gestion)
+        ->getQuery()
+        ->getResult();
+    if($query){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   public function getOlimpiadas($rude) {
-    //dump($rude);die;
     $query = $this->em->createQueryBuilder('o')
         ->select('o')
         ->from('SieAppWebBundle:OlimEstudianteInscripcion','o')
@@ -641,6 +657,25 @@ class Seguimiento {
         ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ei.estudiante= e.id')
         ->where('e.codigoRude = :rude')
         ->setParameter('rude', $rude)
+        ->getQuery()
+        ->getResult();
+    if($query){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  public function getOlimpiadasGestion($rude, $gestion) {
+    $query = $this->em->createQueryBuilder('o')
+        ->select('o')
+        ->from('SieAppWebBundle:OlimEstudianteInscripcion','o')
+        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei', 'WITH', 'ei.id= o.estudianteInscripcion')
+        ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'WITH', 'ei.estudiante= e.id')
+        ->where('e.codigoRude = :rude')
+        ->andWhere('o.gestionTipoId = :gestion')
+        ->setParameter('rude', $rude)
+        ->setParameter('gestion', $gestion)
         ->getQuery()
         ->getResult();
     if($query){

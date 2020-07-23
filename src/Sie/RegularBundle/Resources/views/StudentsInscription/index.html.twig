@@ -110,7 +110,7 @@
                         $("#form_gestion").empty();
                         $("#form_gestion").append('<option value="">Seleccionar</option>');
                         $.each(data.arryearsofue, function (i, value) {
-                            $("#form_gestion").append('<option value="' + i + '">' + value + '</option>');
+                            $("#form_gestion").prepend('<option value="' + i + '">' + value + '</option>');
                         });
                     }
                 }); 

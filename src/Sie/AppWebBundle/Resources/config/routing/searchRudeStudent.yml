@@ -1,0 +1,15 @@
+searchRudeStudent_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:SearchRudeStudent:index }
+
+searchRudeStudent_search_student:
+    path:     /searchStudent
+    defaults: { _controller: SieAppWebBundle:SearchRudeStudent:searchStudent }
+    options:
+         expose: true    
+
+searchRudeStudent_show_historial:
+    path:     /showHistorial
+    defaults: { _controller: SieAppWebBundle:SearchRudeStudent:showHistorial }
+    options:
+         expose: true    

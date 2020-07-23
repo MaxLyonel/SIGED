@@ -4,4 +4,5 @@ consultalibreta:
 
 consultalibreta_buscar:
     path:     /buscar
-    defaults: { _controller: "SieAppWebBundle:ConsultaLibreta:buscar" }    
+    defaults: { _controller: "SieAppWebBundle:ConsultaLibreta:buscar" }
+    methods: POST

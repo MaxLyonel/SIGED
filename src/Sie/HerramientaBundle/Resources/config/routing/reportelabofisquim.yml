@@ -17,3 +17,7 @@ herramienta_reportelabofisquim_detalle:
     defaults: { _controller: SieHerramientaBundle:ReporteLaboFisQuim:detalle}
     options:
         expose: true
+
+herramienta_info_encuesta_internet:
+    path:     /encuestainternet/
+    defaults: { _controller: SieAppWebBundle:Reporte:reporteEncuestaInternet }

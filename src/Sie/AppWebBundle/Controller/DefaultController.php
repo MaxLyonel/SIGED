@@ -102,6 +102,7 @@ class DefaultController extends Controller {
                 $this->session->set('sistemaid', 2);
                 break;
             case 'eduper.sie.gob.bo':
+            case 'permanente.local':
             case '172.20.196.7':
                 $sysname = 'Sistema Académico Educación Permanente';
                 $sysporlet = 'green';
@@ -281,6 +282,13 @@ class DefaultController extends Controller {
                 $layout = 'layoutOlimpiadas.html.twig';
                 $this->session->set('pathSystem', "SieOlimpiadasBundle");
                 break;
+            case 'procesos.interno.sie.gob.bo':
+                $sysname = 'PROCESOS';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutProcesos.html.twig';
+                $this->session->set('pathSystem', "SieProcesosBundle");
+                break;
             default :
                 // $sysname = 'REGULAR';
                 // $sysporlet = 'blue';
@@ -307,7 +315,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieRegularBundle");
                 $this->session->set('sistemaid', 1);
                 $this->session->set('color', 'blue');
-                break;
+                break;                
             case 'pnp.sie.gob.bo':
                 $sysname = 'PNP';
                 $sysporlet = 'blue';

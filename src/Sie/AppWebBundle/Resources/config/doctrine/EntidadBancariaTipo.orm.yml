@@ -1,0 +1,31 @@
+Sie\AppWebBundle\Entity\EntidadBancariaTipo:
+    type: entity
+    table: entidad_bancaria_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        entidad:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+        sigla:
+            type: string
+            nullable: true
+            length: 10
+            fixed: false
+            comment: ''
+        esVigente:
+            type: boolean
+            nullable: false
+            comment: ''
+            column: es_vigente
+    lifecycleCallbacks: {  }

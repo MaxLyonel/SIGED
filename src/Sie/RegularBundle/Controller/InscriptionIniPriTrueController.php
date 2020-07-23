@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 use Sie\AppWebBundle\Entity\EstudianteNota;
 use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
+use Sie\AppWebBundle\Entity\EstudianteInscripcionCambioestado;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 /**
  * InscriptionIniPriTrue controller.
@@ -40,7 +41,14 @@ class InscriptionIniPriTrueController extends Controller {
      *
      */
     public function indexAction() {
-//die('krlos');
+
+      $arrUser = array('6478217','7861595','3558624');
+
+      if(!in_array($this->session->get('userName'), $arrUser) ){
+        return $this->redirect($this->generateUrl('principal_web'));
+      }
+        
+        // die('krlos');
         $em = $this->getDoctrine()->getManager();
         // return $this->redirectToRoute('principal_web');
         $id_usuario = $this->session->get('userId');
@@ -134,51 +142,54 @@ class InscriptionIniPriTrueController extends Controller {
             $form['codigoRude'] = $request->get('codigoRude');
         }
 
-        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => strtoupper($form['codigoRude'])));
+        //get data student
+         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => strtoupper($form['codigoRude'])));
 
         //check if the student exists
         if ($student) {
-            //check the tuicion
-           //get Current Inscriptions By Gestoin
-
-            $inscriptions = $this->getCurrentInscriptionsStudent($student->getCodigoRude());
-            //dump($inscriptions);
-            reset($inscriptions);
-            $sw = true;
-            $infoInscription=array();
-            //look for the next level inscrption if it has
-            while($sw &&  ($inscription = current($inscriptions))){
-                if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='56' /*|| $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58'*/ ){
-                  $infoInscription = $inscription;
-                  $sw=false;
-                }
-              next($inscriptions);
-            }
-            //get the last inscription
-            if(!sizeof($infoInscription)>0){
-              $cc=0;
-              while ($cc <= 7 && $sw) {
-                # code...
-                reset($inscriptions);
-                while($sw &&  ($inscription = current($inscriptions))){
-                    if($inscription['gestion']==$this->session->get('currentyear')-$cc){
-                      $infoInscription = $inscription;
-                      $sw=false;
-                    }
-                  next($inscriptions);
-                }
-                $cc++;
-              }
-            }
-
-// dump($infoInscription);die;
-            $inscriptionsGestionSelected = $this->getCurrentInscriptionsByGestoin($student->getCodigoRude(), $form['gestion']);
-
+           
+          //get current inscription
+          $inscriptionsGestionSelected = $em->createQueryBuilder()
+                      ->select('ei.id as idInscripcion', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.cicloTipo) as cicloId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'IDENTITY(iec.institucioneducativa) as sie, e.segipId, e.carnetIdentidad')
+                      ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                      ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
+                      ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                      ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                      ->where('e.id = :idEstudiante')
+                      ->andWhere('ei.estadomatriculaTipo = 4')
+                      ->andWhere('iec.gestionTipo = :gestion')
+                      ->andWhere('i.institucioneducativaTipo = :tipoue')
+                      ->setParameter('idEstudiante', $student->getId())
+                      ->setParameter('gestion', $this->session->get('currentyear'))
+                      ->setParameter('tipoue', 1)
+                      ->getQuery()
+                      ->getResult();
+            // dump($inscriptionsGestionSelected);die;
+            // $inscriptionsGestionSelected = $this->getCurrentInscriptionsByGestoin($student->getCodigoRude(), $form['gestion']);
             //check if the student was Approved on the gestion selected
-            if ($inscriptionsGestionSelected) {
-                $message = "El estudiante cuenta con inscripción en la gestion seleccionada";
-                $this->addFlash('notiext', $message);
-                return $this->redirectToRoute('inscription_ini_pri_rue_index');
+            if (sizeof($inscriptionsGestionSelected)>0) {
+
+               $inscriptions = $this->getCurrentInscriptionsStudent($student->getCodigoRude());
+                // $message = "El estudiante cuenta con inscripción en la gestion seleccionada";
+                // $this->addFlash('notiext', $message);
+                
+                // return $this->redirectToRoute('inscription_ini_pri_rue_index');
+                $idOtraInscripcion = $inscriptionsGestionSelected[0]['idInscripcion'];
+                // $idOtraInscripcion = 465042769;
+                 $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => strtoupper($form['codigoRude'])));
+                $formInsc = $this->createFormInsc1($student->getId(), $sw, $inscriptionsGestionSelected[0], $form['gestion'], $form['codigoRude'], $idOtraInscripcion);
+                //everything is ok build the info
+                return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:result1.html.twig', array(
+                            'datastudent' => $student,
+                            'currentInscription' => $inscriptions,
+                            'formInscription' => $formInsc->createView()
+                ));
+            }else{
+              //if the student does not have a current inscription return on the main page so far
+              $message = "El estudiante NO cuenta con inscripción en la gestion seleccionada";
+              $this->addFlash('notiext', $message);
+              return $this->redirect($this->generateUrl('inscription_ini_pri_rue_index'));
+              
             }
 
             $formInsc = $this->createFormInsc($student->getId(), $sw, $infoInscription, $form['gestion'], $form['codigoRude']);
@@ -189,7 +200,8 @@ class InscriptionIniPriTrueController extends Controller {
                         'formInscription' => $formInsc->createView()
             ));
         } else {
-            $message = "Estudiante con rude " . $form['codigoRude'] . " no se encuentra registrado";
+            //$message = "Estudiante con rude " . $form['codigoRude'] . " no se encuentra registrado";
+            $message = "Estudiante no se encuentra registrado";
             $this->addFlash('notiext', $message);
             return $this->redirectToRoute('inscription_ini_pri_rue_index');
         }
@@ -221,7 +233,7 @@ class InscriptionIniPriTrueController extends Controller {
                  if($this->session->get('roluser')==9){
                         $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($codigoRude,$gestionIns-1);
 
-                        dump($objCurrentInscriptionStudent);
+                        // dump($objCurrentInscriptionStudent);
                         if($this->session->get('ie_id')!=$objCurrentInscriptionStudent[0]['sie']){
 
                            $formOmitido = $formOmitido ->add('messageomitidos', 'hidden', array('label'=>'...','attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control' )));
@@ -245,6 +257,139 @@ class InscriptionIniPriTrueController extends Controller {
 
                 return $formOmitido;
     }
+
+    private function createFormInsc1($idStudent, $sw, $data, $gestionIns, $codigoRude, $idOtraInscripcion) {
+      
+        $em = $this->getDoctrine()->getManager();
+        $arrQuestion = array(
+                    0 => "...",
+                    1 => "Nunca asistio a clases",
+                    2 => "Asistio algunos dias a clases"
+                );
+        $arrDias = [];
+        for ($i=1; $i <= 50; $i++) { 
+            $arrDias[] = $i;
+        }
+
+       
+        $nivel = $em->getRepository('SieAppWebBundle:NivelTipo')->find($data['nivelId'])->getNivel();
+        $grado = $em->getRepository('SieAppWebBundle:GradoTipo')->find($data['gradoId'])->getGrado();
+        if($this->session->get('ie_id') > 0 ){
+          $paralelos = $this->findparaleloTraslado($data['gradoId'], $this->session->get('ie_id'), $data['nivelId'], $data['gestion']);
+          
+
+        }
+        $formOmitido = $this->createFormBuilder()
+                ->setAction($this->generateUrl('inscription_ini_pri_rue_save'))
+
+                /*->add('questionStatus', 'choice', array('choices'=>$arrQuestion, 'attr'=>array('class'=>'form-control','onchange'=>'myFunctionSH(this.value)')))
+                ->add('observation', 'textarea', array('attr'=>array('class'=>'form-control')))
+                ->add('classdays', 'choice', array('choices'=>$arrDias, 'attr'=>array('class'=>'form-control')))*/
+                ->add('dateRequest', 'text', array('attr'=>array('class'=>'form-control')))
+               
+                ->add('nivelId', 'hidden', array('data'=>$data['nivelId'],'attr' => array('class' => 'form-control')))
+                ->add('cicloId', 'hidden', array('data'=>$data['cicloId'],'attr' => array('class' => 'form-control')))
+                ->add('gradoId', 'hidden', array('data'=>$data['gradoId'],'attr' => array('class' => 'form-control')))
+                ->add('nivel', 'text', array('data'=>$nivel,'attr' => array('readonly' => true,'class' => 'form-control')))
+                ->add('grado', 'text', array('data'=>$grado,'attr' => array('readonly' => true,'class' => 'form-control')))
+                ->add('idStudent', 'hidden', array('mapped' => false, 'data' => $idStudent))
+                ->add('segipId', 'hidden', array('mapped' => false, 'data' => $data['segipId']))
+                ->add('carnetIdentidad', 'hidden', array('mapped' => false, 'data' => $data['carnetIdentidad']))
+                
+                ->add('turno', 'choice', array('empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control', 'required' => false)))
+                ->add('sw', 'hidden', array('data' => $sw))
+                
+                ->add('newdata', 'hidden', array('data' => serialize($data)))
+                ->add('gestionIns', 'hidden', array('data' => $gestionIns))
+                ->add('codigoRude', 'hidden', array('data'=>$codigoRude))
+                ->add('idOtraInscripcion', 'hidden', array('data'=>$idOtraInscripcion))
+                ->add('observacionOmitido', 'textarea', array('label' => 'Registre una breve justificación de la inscripción del estudiante', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )));
+        if($this->session->get('ie_id') > 0 ){
+           $formOmitido = $formOmitido 
+                ->add('institucionEducativa', 'text', array('data'=>$this->session->get('ie_id'), 'label' => 'SIE', 'attr' => array('readonly' => true,'maxlength' => 8, 'class' => 'form-control')))
+                ->add('institucionEducativaName', 'text', array('data'=>$this->session->get('ie_nombre'),'label' => 'Institución Educativa', 'disabled' => true, 'attr' => array('readonly' => true,'class' => 'form-control')))
+                ->add('paralelo', 'choice', array('choices'=>$paralelos, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control', 'required' => true)))
+                ;
+
+        }else{
+          $formOmitido = $formOmitido 
+                  ->add('institucionEducativa', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control')))
+                  ->add('institucionEducativaName', 'text', array('label' => 'Institución Educativa', 'disabled' => true, 'attr' => array('class' => 'form-control')))
+                  ->add('paralelo', 'choice', array('attr' => array('class' => 'form-control', 'required' => true)))
+                  ->add('lastue', 'hidden', array('data' => $data['sie']))
+                  ;
+        }           
+
+
+
+              $formOmitido = $formOmitido   ->add('save', 'button', array('label' => 'Verificar y Registrar', 'attr'=> array('class' => 'btn btn-success' , 'onclick'=>'checkInscription()')))
+                ->getForm();
+
+                return $formOmitido;
+    }
+
+    /**
+     * get the paralelto, turno and sie name
+     * @param type $id like sie
+     * @param type $n like nivel
+     * @param type $g like grado
+     * @return type
+     */
+    public function findIEAction($id, $nivel, $grado, $lastue) {
+        $em = $this->getDoctrine()->getManager();
+        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
+        $paralelo = array();
+        $turno = array();
+        if ($institucion) {
+            $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "No existe Unidad Educativa";
+            //get the tuicion
+            $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
+            $query->bindValue(':user_id', $this->session->get('userId'));
+            $query->bindValue(':sie', $id);
+            $query->bindValue(':roluser', $this->session->get('roluser'));
+            $query->execute();
+            $aTuicion = $query->fetchAll();
+
+            if ($aTuicion[0]['get_ue_tuicion']) {
+                if ($lastue != $id) {
+
+                    $objTraslado = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+                    $query = $objTraslado->createQueryBuilder('iec')
+                            ->select('IDENTITY(iec.paraleloTipo) as paraleloTipo', 'pt.paralelo as paralelo')
+                            ->leftjoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'iec.paraleloTipo = pt.id')
+                            ->where('iec.institucioneducativa = :id')
+                            ->andwhere('iec.nivelTipo = :nivel')
+                            ->andwhere('iec.gradoTipo = :grado')
+                            ->andwhere('iec.gestionTipo = :gestion')
+                            ->setParameter('id', $id)
+                            ->setParameter('nivel', $nivel)
+                            ->setParameter('grado', $grado)
+                            ->setParameter('gestion', $this->session->get('currentyear'))
+                            ->distinct()
+                            ->orderBy('iec.paraleloTipo', 'ASC')
+                            ->getQuery();
+                    $infoTraslado = $query->getResult();
+
+                    foreach ($infoTraslado as $info) {
+                        $paralelo[$info['paraleloTipo']] = $info['paralelo'];
+                        //$paralelo[$info->getParaleloTipo()->getId()] = $info->getParaleloTipo()->getParalelo();
+                        //$turno[$info->getTurnoTipo()->getId()] = $info->getTurnoTipo()->getTurno();
+                    }
+                } else {
+                    $nombreIE = 'No se puede realizar el traslado porque ya tiene una inscripcion en esa unidad educativa';
+                }
+            } else {
+                $nombreIE = 'No tiene Tuición sobre la Unidad Educativa';
+            }
+        } else {
+            $nombreIE = "No existe Unidad Educativa";
+        }
+
+
+        $response = new JsonResponse();
+
+        return $response->setData(array('nombre' => $nombreIE, 'paralelo' => $paralelo, 'turno' => $turno));
+    }    
 
     private function getCurrentInscriptionsByGestoinValida($id, $gestion) {
     //$session = new Session();
@@ -283,9 +428,9 @@ class InscriptionIniPriTrueController extends Controller {
       //create DB conexion
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
+      $form = $request->get('form');
 
       //get values all data
-      $form = $request->get('form');
       $setNotasInscription=false;
 
       //validtation abuut if the ue close SEXTO
@@ -318,7 +463,7 @@ class InscriptionIniPriTrueController extends Controller {
 
       //dato actual de inscription
       $dataCurrentInscription = unserialize($form['newdata']);
-      // dump($request);
+      // dump($dataCurrentInscription);die;
       //validate allow access
       $arrAllowAccessOption = array(7,8);
       if(!in_array($this->session->get('roluser'),$arrAllowAccessOption)){
@@ -339,140 +484,144 @@ class InscriptionIniPriTrueController extends Controller {
       $swCorrectInscription = true;
 
       $currentLevelStudent = $dataCurrentInscription['nivelId'].'-'.$dataCurrentInscription['cicloId'].'-'. $dataCurrentInscription['gradoId'];
-
       if (!($dataCurrentInscription['nivelId']>10)) {
         // getCourseOld
         $newInfInscription = $this->getCourseOld($dataCurrentInscription['nivelId'],$dataCurrentInscription['cicloId'],$dataCurrentInscription['gradoId'],$dataCurrentInscription['estadoMatriculaId']);
-        $currentLevelStudent = $this->aCursos[$newInfInscription-1];
-        // dump($this->aCursos[$newInfInscription-1]);
-        // dump($newInfInscription);
+        // $currentLevelStudent = $this->aCursos[$newInfInscription-1];
       }
-      // dump($currentLevelStudent);die;
-      $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];
-     
-//dump(((str_replace('-','',$newLevelStudent)) ));
-//dump(str_replace('-','',$currentLevelStudent) );die;
+
+      $newLevelStudent = $form['nivelId'].$form['cicloId'].$form['gradoId'];
+
+
     //if doesnt have next curso info is new or extranjero do the inscription
-      
-    if( (str_replace('-','',$currentLevelStudent) )!=''){
-      if(($currentLevelStudent == '11-1-1') || ($currentLevelStudent == '11-1-2')){
-        //|| ($currentLevelStudent == '12-1-1')
-         //do the inscription
 
-         $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
- 
-         if($keyNextLevelStudent >= 0){
-           if((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent) ){
-             $message = 'Estudiante No Inscrito, no le puede bajar de curso';
-             $this->addFlash('idNoInscription', $message);
-             $swCorrectInscription = false;
-           }else{
-              if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
-               //do the inscriptin
-             }else{//dump($newInfInscription);die;
-               $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
-               $this->addFlash('idNoInscription', $message);
-               $swCorrectInscription = false;
-             }
-           }
-         }else{
-           $message = 'Estudiante ya cuenta con inscripción';
-           $this->addFlash('idNoInscription', $message);
-           $swCorrectInscription = false;
-         }
+      //get current inscription
+      $objInfoInscriptionEfectivo = $em->createQueryBuilder()
+                      ->select('iec')
+                      ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                      ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
+                      ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')  
+                      ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')                          
+                      ->where('e.id = :idEstudiante')
+                      ->andWhere('ei.estadomatriculaTipo = 4')
+                      ->andWhere('iec.gestionTipo = :gestion')
+                      ->andWhere('i.institucioneducativaTipo = :tipoue')
+                      ->setParameter('idEstudiante', $form['idStudent'])
+                      ->setParameter('gestion', $this->session->get('currentyear'))
+                      ->setParameter('tipoue', 1)
+                      ->getQuery()
+                      ->getResult();
+  
+     $currentDataInscription = $objInfoInscriptionEfectivo[0]->getNivelTipo()->getId().$objInfoInscriptionEfectivo[0]->getCicloTipo()->getId().$objInfoInscriptionEfectivo[0]->getGradoTipo()->getId();
+      $message = false;
 
+       if( (str_replace('-','',$currentLevelStudent) )!=''){
+            if(str_replace('-','',$newLevelStudent)==$currentDataInscription){
+              }else{
+                $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde 2020';
+                $this->addFlash('idNoInscription', $message);
+                $swCorrectInscription = false;
+              }
        }else{
-         //get the current level inscription to do the validation
-         $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
-        //  dump($keyNextLevelStudent);die;
-         //validate the next level
-         if($keyNextLevelStudent>0){
-           if($keyNextLevelStudent == sizeof($this->aCursos)){
-             $message = 'Estudiante bachiller';
-             $this->addFlash('idNoInscription', $message);
-             $swCorrectInscription = false;
-           }else{
-             //validate the level selected
-             if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
-               //do the inscriptin
-             }else{//dump($newInfInscription);die;
-               $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
-               $this->addFlash('idNoInscription', $message);
-               $swCorrectInscription = false;
-             }
-           }
-           //dump(sizeof($this->aCursos));
-           //dump('krlos');
-
-         }else{
-           $message = 'Estudiante ya cuenta con inscripción';
-           $this->addFlash('idNoInscription', $message);
-           $swCorrectInscription = false;
-         }
-       }
-    }else{
-      //do inscription inicial/ primaria or extranjero
-      //get the year of student
-
-      $dataStudent = unserialize($form['newdata']);
-      $arrStudentFecnac = array();
-      $arrStudentFecnac = (explode(' ',$dataStudent['fechaNacimiento']->date));
-      list($year, $month, $day) = (explode('-',$arrStudentFecnac[0]));
-      $tiempo = $this->tiempo_transcurrido($day.'-'.$month.'-'.$year, '30-6-'.date('Y'));
-
-      //new student validation
-        if ($tiempo[0]<=6){
-          switch ($tiempo[0]) {
-            case 4:
-            # check level
-            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1111')?true:false;
-            break;
-            case 5:
-            # check level
-            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1112')?true:false;
-            break;
-            case 6:
-            # check level
-            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1211')?true:false;
-            break;
-            default:
-              # code...
-              break;
-          }
-
-        }else{
-          //do inscription
-          $swCorrectInscription =(str_replace('-','',$newLevelStudent)>='1212')?true:false;
-        }//end new student validation
-        $message='';
-        if(!$swCorrectInscription){
-          $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';
+         $message = 'Estudiante No inscrito, el curso seleccionado no existe';
           $this->addFlash('idNoInscription', $message);
           $swCorrectInscription = false;
+       }        
+
+    // }///end validation
+    // get the last inscription
+    // $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($form['codigoRude'],$form['gestionIns']-1);
+    // // validata inscription to the same UE
+    // if($form['institucionEducativa']!=$objCurrentInscriptionStudent[0]['sie']){
+    //   // $estadomatriculaTipo = 1;
+    //   $obsvalue = 'TRANSFERENCIA';
+    // }else{
+    //   // $estadomatriculaTipo = 7;
+    //   $obsvalue = $form['observacionOmitido'];
+    // }
+    $estadomatriculaTipo = 15;
+    $form['observacionOmitido'] = preg_replace("/[\r\n|\n|\r]+/", " ", $form['observacionOmitido']);
+    //check if the student has inscription like RT (9)
+      $objInfoInscriptionRetiroTraslado = $em->createQueryBuilder()
+                      ->select('ei.codUeProcedenciaId, IDENTITY(iec.institucioneducativa) as sie')
+                      ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                      ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
+                      ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                      ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                      ->where('e.id = :idEstudiante')
+                      ->andWhere('ei.estadomatriculaTipo = 9')
+                      ->andWhere('iec.gestionTipo = :gestion')
+                      ->andWhere('i.institucioneducativaTipo = :tipoue')
+                      ->setParameter('idEstudiante', $form['idStudent'])
+                      ->setParameter('gestion', $this->session->get('currentyear'))
+                      ->setParameter('tipoue', 1)
+                      ->getQuery()
+                      ->getResult();
+
+
+        $swtraslado = true;
+        while (($trasladoData = current($objInfoInscriptionRetiroTraslado)) !== FALSE && $swtraslado) {
+
+            if($form['institucionEducativa']==$trasladoData['sie'] || $form['institucionEducativa']==$trasladoData['codUeProcedenciaId']){
+              $message = 'El/la estudiante ya tiene un registro en la misma Unidad Educativa';
+              // $this->addFlash('idNoInscription', $message);
+              $swCorrectInscription = false;
+              $swtraslado = false;
+            }
+            next($objInfoInscriptionRetiroTraslado);
         }
 
-    }///end validation
-    // get the last inscription
-    $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($form['codigoRude'],$form['gestionIns']-1);
-    // validata inscription to the same UE
-    if($form['institucionEducativa']!=$objCurrentInscriptionStudent[0]['sie']){
-      $estadomatriculaTipo = 1;
-      $obsvalue = 'TRANSFERENCIA';
-    }else{
-      $estadomatriculaTipo = 7;
-      $obsvalue = $form['observacionOmitido'];
-    }
+
     //check the inscription
        if($swCorrectInscription){
+
+        // add validation segip if the student has CI
+        if(false){
+        //if(!$dataCurrentInscription['segipId'] && $dataCurrentInscription['carnetIdentidad']){
+          $answerSegip = false;
+          // to do the segip validation
+          $arrParametros = array(
+              'complemento'=> $dataCurrentInscription['complemento'],
+              'primer_apellido'=>$dataCurrentInscription['paterno'],
+              'segundo_apellido'=>$dataCurrentInscription['materno'],
+              'nombre'=>$dataCurrentInscription['nombre'],
+              'fecha_nacimiento'=>$dataCurrentInscription['fechaNacimiento']->format('d-m-Y')
+            );            
+            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $dataCurrentInscription['carnetIdentidad'],$arrParametros,'prod', 'academico');
+            if($answerSegip){
+              $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']);
+              $objStudent->setSegipId(1);
+              $em->persist($objStudent);
+              $em->flush();
+              
+              $arrayNEW = json_encode(array('segipId'=>1));
+              $arrayOLD = json_encode(array('segipId'=>0));
+
+             $this->get('funciones')->setLogTransaccion(
+               $form['idStudent'],
+               'estudiante',
+               'U',
+               'omitido/TRANSFERENCIA',
+               $arrayNEW,
+               $arrayOLD,
+               'SIGED',
+               json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+              );
+
+            }
+
+        }
+        
          //get the id of course
          $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
-             'nivelTipo' => $form['nivel'],
-             'gradoTipo' => $form['grado'],
+             'nivelTipo' => $form['nivelId'],
+             'gradoTipo' => $form['gradoId'],
              'paraleloTipo' => $form['paralelo'],
              'turnoTipo' => $form['turno'],
              'institucioneducativa' => $form['institucionEducativa'],
              'gestionTipo' => $this->session->get('currentyear')
          ));
+
          //$student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['codigoRude']));
           //Recupero el CodUE de procedencia $form['codigoRude']
            $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude'] ));
@@ -492,16 +641,84 @@ class InscriptionIniPriTrueController extends Controller {
          $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
          $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
          $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']));
-         $studentInscription->setObservacion($obsvalue);
+         
          $studentInscription->setObservacionId(6);
-         $studentInscription->setFechaInscripcion(new \DateTime('now'));
+         if (isset($form['dateRequest']) and $form['dateRequest'] != ''){
+          $studentInscription->setFechaInscripcion(new \DateTime($form['dateRequest']));
+          $studentInscription->setObservacion($form['observacionOmitido']);
+         }else{
+          $studentInscription->setFechaInscripcion(new \DateTime('now'));
+          $studentInscription->setObservacion($obsvalue);
+         }
          $studentInscription->setFechaRegistro(new \DateTime('now'));
          $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
          $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($estadomatriculaTipo));
-         $studentInscription->setCodUeProcedenciaId($ue_procedencia['cod_ue_procedencia_id']);
+         // $studentInscription->setCodUeProcedenciaId($ue_procedencia['cod_ue_procedencia_id']);
+         $studentInscription->setCodUeProcedenciaId( $objInfoInscriptionEfectivo[0]->getInstitucioneducativa()->getId());
          $studentInscription->setNumMatricula(0);
          $em->persist($studentInscription);
          $em->flush();
+
+        /*=============================================================
+        =            ACTUALIZACION DEL ESTADO DE MATRICULA            =
+        =============================================================*/
+
+        if (isset($form['dateRequest']) and $form['dateRequest'] != '') {
+           
+            $nuevoEstado = 9; // RETIRADO TRASLADO
+            
+            //find to update
+            $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['idOtraInscripcion']);         
+            $oldInscriptionStudent = clone $currentInscrip;
+            $currentInscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
+            $em->persist($currentInscrip);
+            $em->flush();
+            $message = 'Cambio de estado realizado';  
+            $this->addFlash('goodinscription',$message);
+
+            // REGISTRO DEL CAMBIO DE ESTADO
+            $datos = array(
+                'unidadOrigen' => array(
+                    'eInsId'=>$oldInscriptionStudent->getId(),
+                    'sie'=>$oldInscriptionStudent->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId(),
+                    'estadoAnterior'=>$oldInscriptionStudent->getEstadomatriculaTipo()->getId(),
+                    'nuevoEstado'=>$nuevoEstado
+                ),
+                'unidadActual' => array(
+                    'eInsId'=>$studentInscription->getId(),
+                    'sie'=>$studentInscription->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId()
+                ),
+                'dataRequest' => array(
+                  'dateRequest' => $form['dateRequest']
+
+                )
+            );
+            $objEstudianteInscripcionCambioestado = new EstudianteInscripcionCambioestado();
+            $objEstudianteInscripcionCambioestado->setJustificacion($form['observacionOmitido']);
+            $objEstudianteInscripcionCambioestado->setJson(json_encode($datos));
+            $objEstudianteInscripcionCambioestado->setFechaRegistro(new \DateTime('now'));
+            $objEstudianteInscripcionCambioestado->setUsuarioId($this->session->get('userId'));
+            $objEstudianteInscripcionCambioestado->setEstudianteInscripcion( $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['idOtraInscripcion']) );
+            $objEstudianteInscripcionCambioestado->setInstitucioneducativaAnt( $em->getRepository('SieAppWebBundle:Institucioneducativa')->find( $oldInscriptionStudent->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() ) );
+             $em->persist($objEstudianteInscripcionCambioestado);
+
+
+            // added set log info data
+            $this->get('funciones')->setLogTransaccion(
+                                  $form['idOtraInscripcion'],
+                                  'estudian $oldInscriptionStudent->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() te_inscripcion',
+                                  'U',
+                                  '',
+                                  $currentInscrip,
+                                  $oldInscriptionStudent,
+                                  'SIGED',
+                                  json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );   
+        }
+          
+        /*=====  End of ACTUALIZACION DEL ESTADO DE MATRICULA  ======*/
+
+
 
          //add the areas to the student
          // $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
@@ -537,6 +754,7 @@ class InscriptionIniPriTrueController extends Controller {
          ));*/
          //notas
        }else{
+          $this->addFlash('idNoInscription', $message);
          //no notas
          return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array(
            'setNotasInscription'=> $setNotasInscription,
@@ -1096,7 +1314,7 @@ class InscriptionIniPriTrueController extends Controller {
         $query = $entity->createQueryBuilder('e')
                 ->select('n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
                  'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
-                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento')
+                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento, e.paterno, e.materno, e.nombre, e.carnetIdentidad, e.complemento, e.segipId')
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
@@ -1132,7 +1350,7 @@ class InscriptionIniPriTrueController extends Controller {
 
         $entity = $em->getRepository('SieAppWebBundle:Estudiante');
         $query = $entity->createQueryBuilder('e')
-                ->select('n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa')
+                ->select('ei.id as idInscripcion, n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa')
                 ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                 ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
@@ -1177,8 +1395,10 @@ class InscriptionIniPriTrueController extends Controller {
 
                 }
               }
+            }else{
+              $objLastInscription['idInscripcion'] = false;
             }
-            return $swInscription;;
+            return array('valor'=>$swInscription, 'idInscripcion'=>$objLastInscription['idInscripcion']);
         } catch (Exception $ex) {
             return $ex;
         }
@@ -1192,50 +1412,50 @@ class InscriptionIniPriTrueController extends Controller {
      * @param type $g like grado
      * @return type
      */
-    public function findIEAction($id, $gestionselected) {
-        $em = $this->getDoctrine()->getManager();
-        //get the tuicion
-        //select * from get_ue_tuicion(137746,82480002)
-        /*
-          $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT)');
-          $query->bindValue(':user_id', $this->session->get('userId'));
-          $query->bindValue(':sie', $id);
-          $query->execute();
-          $aTuicion = $query->fetchAll();
-         */
-        $aniveles = array();
-        // if ($aTuicion[0]['get_ue_tuicion']) {
-        //get the IE
-        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
-        $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";
-        $em = $this->getDoctrine()->getManager();
-        //get the Niveles
+    // public function findIEAction($id, $gestionselected) {
+    //     $em = $this->getDoctrine()->getManager();
+    //     //get the tuicion
+    //     //select * from get_ue_tuicion(137746,82480002)
+    //     /*
+    //       $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT)');
+    //       $query->bindValue(':user_id', $this->session->get('userId'));
+    //       $query->bindValue(':sie', $id);
+    //       $query->execute();
+    //       $aTuicion = $query->fetchAll();
+    //      */
+    //     $aniveles = array();
+    //     // if ($aTuicion[0]['get_ue_tuicion']) {
+    //     //get the IE
+    //     $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
+    //     $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";
+    //     $em = $this->getDoctrine()->getManager();
+    //     //get the Niveles
 
-        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
-        $query = $entity->createQueryBuilder('iec')
-                ->select('(iec.nivelTipo)')
-                //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
-                ->where('iec.institucioneducativa = :sie')
-                ->andwhere('iec.gestionTipo = :gestion')
-                ->andwhere('iec.nivelTipo != :nivel')
-                ->setParameter('sie', $id)
-                ->setParameter('gestion', $gestionselected)
-                ->setParameter('nivel', '13')
-                ->distinct()
-                ->getQuery();
-        $aNiveles = $query->getResult();
-        foreach ($aNiveles as $nivel) {
-            $aniveles[$nivel[1]] = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel();
-        }
+    //     $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+    //     $query = $entity->createQueryBuilder('iec')
+    //             ->select('(iec.nivelTipo)')
+    //             //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+    //             ->where('iec.institucioneducativa = :sie')
+    //             ->andwhere('iec.gestionTipo = :gestion')
+    //             ->andwhere('iec.nivelTipo != :nivel')
+    //             ->setParameter('sie', $id)
+    //             ->setParameter('gestion', $gestionselected)
+    //             ->setParameter('nivel', '13')
+    //             ->distinct()
+    //             ->getQuery();
+    //     $aNiveles = $query->getResult();
+    //     foreach ($aNiveles as $nivel) {
+    //         $aniveles[$nivel[1]] = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel();
+    //     }
 
-        /*     } else {
-          $nombreIE = 'No tiene Tuición';
-          } */
+    //     /*     } else {
+    //       $nombreIE = 'No tiene Tuición';
+    //       } */
 
-        $response = new JsonResponse();
+    //     $response = new JsonResponse();
 
-        return $response->setData(array('nombre' => $nombreIE, 'aniveles' => $aniveles));
-    }
+    //     return $response->setData(array('nombre' => $nombreIE, 'aniveles' => $aniveles));
+    // }
 
     /**
      * get grado
@@ -1277,7 +1497,7 @@ class InscriptionIniPriTrueController extends Controller {
      */
     public function findparaleloAction($grado, $sie, $nivel, $gestionselected) {
         $em = $this->getDoctrine()->getManager();
-//get grado
+
         $aparalelos = array();
         $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
         $query = $entity->createQueryBuilder('iec')
@@ -1302,6 +1522,39 @@ class InscriptionIniPriTrueController extends Controller {
         $response = new JsonResponse();
         return $response->setData(array('aparalelos' => $aparalelos));
     }
+    /**
+     * get the paralelos
+     * @param type $idnivel
+     * @param type $sie
+     * @return type
+     */
+    private function findparaleloTraslado($grado, $sie, $nivel, $gestionselected) {
+        $em = $this->getDoctrine()->getManager();
+
+        $aparalelos = array();
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select('(iec.paraleloTipo)')
+                //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->where('iec.institucioneducativa = :sie')
+                ->andWhere('iec.nivelTipo = :nivel')
+                ->andwhere('iec.gradoTipo = :grado')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->setParameter('sie', $sie)
+                ->setParameter('nivel', $nivel)
+                ->setParameter('grado', $grado)
+                ->setParameter('gestion', $gestionselected)
+                ->distinct()
+                ->orderBy('iec.paraleloTipo', 'ASC')
+                ->getQuery();
+        $aParalelos = $query->getResult();
+       
+        foreach ($aParalelos as $paralelo) {
+            $aparalelos[$paralelo[1]] = $em->getRepository('SieAppWebBundle:ParaleloTipo')->find($paralelo[1])->getParalelo();
+        }
+
+         return ($aparalelos);
+    }    
 
     /**
      * get the turnos

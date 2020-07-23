@@ -136,7 +136,7 @@ sie_app_web_usuario:
 
 sie_app_web_consultalibreta:
     resource: "@SieAppWebBundle/Resources/config/routing/consultalibreta.yml"
-    prefix:   /acceso/consultaLibreta    
+    prefix:   /acceso/readCalifications    
 
 sie_app_web_principal:
     resource: "@SieAppWebBundle/Resources/config/routing/principal.yml"
@@ -263,5 +263,16 @@ sie_app_web_segip:
 #modulo de tramites con flujos
 # sie_app_web_wf_tramite:
 #     resource: "@SieAppWebBundle/Resources/config/routing/wftramite.yml"
-#     prefix:   /sie/tramite
+#     prefix:   /sie/so
 
+sie_app_web_solicitudrue:
+    resource: "@SieAppWebBundle/Resources/config/routing/solicitud.yml"
+    prefix:   /acceso/solicitudrue
+    
+sie_app_web_rudeunification:
+    resource: "@SieAppWebBundle/Resources/config/routing/rudeUnification.yml"
+    prefix:   /sie/newunification
+
+sie_app_web_updateStudentLevel:
+    resource: "@SieAppWebBundle/Resources/config/routing/updateStudentLevel.yml"
+    prefix:   /sie/updatestudentlevel

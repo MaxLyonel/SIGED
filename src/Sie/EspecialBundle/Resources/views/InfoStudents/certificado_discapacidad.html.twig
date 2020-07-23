@@ -1,0 +1,83 @@
+
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    <div class="modal-header bg-teal">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">Certificado(s) de Discapacidad</h4>
+    </div>
+    <div class="modal-body">
+        {% if mensaje %}
+            <div class="callout callout-danger">
+                <strong>Alerta:</strong><br />
+                {{mensaje}}
+            </div>
+        {% else %}
+            <h4 class="text-info">Datos de la/el Estudiante</h5>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered">
+                    <tr>
+                        <th>Código RUDE</th><td style="color:#0086DD">{{estudiante.codigoRude}}</td>
+                    </tr>
+                    <tr>
+                        <th>Estudiante</th><td><strong>{{estudiante.nombre}} {{estudiante.paterno}} {{estudiante.materno}}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Carnet de Identidad</th><td>{{estudiante.carnetIdentidad}}{% if estudiante.complemento %} - {{estudiante.complemento}}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th>Género</th><td>{{estudiante.generoTipo}}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de Nacimiento</th><td>{{estudiante.fechaNacimiento|date('d-m-Y')}}</td>
+                    </tr>
+                </table>
+            </div>
+            <h4 class="text-info">Certificado(s)</h5>
+            {% if tieneCertificado %}
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                        <tr>
+                            <th>Departamento de Registro</th><td>{{estudianteDiscapacidadCertificado.departamentoRegistro}}</td>
+                        </tr>
+                        <tr>
+                            <th>Dirección</th><td>{{estudianteDiscapacidadCertificado.direccion}}</td>
+                        </tr>
+                        {% if estudianteDiscapacidadCertificado.celular %}
+                            <tr>
+                                <th>Celular</th><td>{{estudianteDiscapacidadCertificado.celular}}</td>
+                            </tr>
+                        {% endif %}
+                    </table>
+                </div>
+                {% for certificado in certificados %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered">
+                            <tr>
+                                <th>Fecha del Certificado</th><td>{{certificado.fechaCertificado}}</td>
+                                <th>Fecha de Vigencia</th><td>{{certificado.fechaVigencia}}</td>
+                            </tr>
+                            <tr>
+                                <th>Tipo de Discapacidad</th><td>{{certificado.tipoDiscapacidad}}</td>
+                                <th>Grado de Discapacidad</th><td>{{certificado.gradoDiscapacidad}}</td>
+                            </tr>
+                            <tr>
+                                <th>Porcentaje</th><td>{{certificado.porcentaje}}</td>
+                                <th>Observaciones</th><td>{{certificado.observacion}}; {{certificado.observacion2}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                {% endfor %}
+                <div class="row">
+                    <div class="col-md-12 text-right text-primary">
+                        <strong>Fuente: </strong>Ministerio de Salud - Unidad de Discapacidad</p>
+                    </div>
+                </div>
+            {% else %}
+                <div class="callout callout-info">
+                    <strong>Información:</strong><br />
+                    No se encontraron certificados asociados a la/el estudiante.
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>

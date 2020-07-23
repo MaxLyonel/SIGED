@@ -611,7 +611,6 @@ class InfoEstudianteController extends Controller {
     }
 
     public function seeStudentsAction(Request $request) {
-
         //get the info ue
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
@@ -668,6 +667,53 @@ class InfoEstudianteController extends Controller {
 
             $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourse($sie, $gestion, $nivel, $grado, $paralelo, $turno);
             $aData = serialize(array('sie' => $sie, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno, 'gestion' => $gestion, 'iecId' => $iecId, 'ciclo' => $ciclo, 'iecNextLevl' => $objNextCurso->getId()));
+            
+            
+            /*========================================================
+            =            VALIDACION PARA CAMBIO DE ESTADO            =
+            ========================================================*/
+            // SE COMENTO PARA MEJORAR EL RENDIMIENTO
+            // if ($gestion == 2020) {
+            //     for ($i=0; $i < count($objStudents); $i++) {
+            //         // OBTENEMOS LA INSCRIPCION ACTUAL
+            //         $inscripcionActual = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($objStudents[0]['eInsId']);
+            //         $gestionActual = $inscripcionActual->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+            //         $nivelActual = $inscripcionActual->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+            //         $gradoActual = $inscripcionActual->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+            //         $estudianteId = $inscripcionActual->getEstudiante()->getId();
+
+            //         $inscripcionesSimilares = $em->createQueryBuilder()
+            //                             ->select('ei')
+            //                             ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+            //                             ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+            //                             ->where('ei.estadomatriculaTipo = 4')
+            //                             ->andWhere('ei.estudiante = :estudiante')
+            //                             ->andWhere('iec.gestionTipo = :gestion')
+            //                             ->andWhere('iec.nivelTipo = :nivel')
+            //                             ->andWhere('iec.gradoTipo = :grado')
+            //                             ->setParameter('estudiante', $estudianteId)
+            //                             ->setParameter('gestion', $gestionActual)
+            //                             ->setParameter('nivel',  $nivelActual)
+            //                             ->setParameter('grado',  $gradoActual)
+            //                             ->getQuery()
+            //                             ->getResult();
+
+            //         // PREGUNTAMOS SI TIEN MAS DE UNA INSCRIPCION
+            //         if (count($inscripcionesSimilares) > 1) {
+            //             $objStudents[$i]['cambioEstadoMatricula'] = false;   
+            //         }else{
+            //             // VERIFICAMOS SI EL ESTUDIANTE TIENE ESTADO EFECTIVO
+            //             if ($objStudents[$i]['estadomatriculaId'] == 4) {
+            //                 $objStudents[$i]['cambioEstadoMatricula'] = true;    
+            //             }else{
+            //                 $objStudents[$i]['cambioEstadoMatricula'] = false;
+            //             }
+            //         }
+            //     }
+            // }
+            
+            /*=====  End of VALIDACION PARA CAMBIO DE ESTADO  ======*/
+
         } else {
             $message = 'No existen estudiantes inscritos...';
             $this->addFlash('warninsueall', $message);
@@ -820,6 +866,12 @@ class InfoEstudianteController extends Controller {
   if(in_array($this->session->get('ie_id'),$aRemovesUeAllowed))
     $this->session->set('removeInscriptionAllowed',true);
 
+        $uesWenayek = [61710087,61710043,61710089,61710083,61710063,61710028,61710014,61710093,61710031,61710068,61710091,61710076,61710021,61710084,61710092,61710038,61710085,61710004,61710086,61710041,61710062,61710077,61710042,61710090,61710036,61710088,61710022];
+        $wenayekBono = in_array($sie, $uesWenayek)? true: false;
+
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
+        $dependencia = $institucioneducativa->getDependenciaTipo()->getId(); // 3 privada
+
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
                     'iecId'=>$iecId,
@@ -843,7 +895,9 @@ class InfoEstudianteController extends Controller {
                     'imprimirLibreta'=>$imprimirLibreta,
                     'estadosPermitidosImprimir'=>$estadosPermitidosImprimir,
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
-                    'sextoCerrado'=>$this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion)
+                    'sextoCerrado'=>$this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion),
+                    'wenakeyBono'=>$wenayekBono,
+                    'dependencia'=>$dependencia
         ));
     }
 
@@ -1922,4 +1976,39 @@ class InfoEstudianteController extends Controller {
         ));
     }
 
+    public function validarEstudianteSegipAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $codigoRude = $request->get('codigoRude');
+        $persona = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $codigoRude));
+        $estado = false;
+        $mensaje = "";
+        if($persona){
+            $datos = array(
+                'complemento'=>$persona->getComplemento(),
+                'primer_apellido'=>$persona->getPaterno(),
+                'segundo_apellido'=>$persona->getMaterno(),
+                'nombre'=>$persona->getNombre(),
+                'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y')
+            );
+            if($persona->getCarnetIdentidad()){
+                $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona->getCarnetIdentidad(),$datos,'prod','academico');
+
+                if($resultadoPersona){
+                    $persona->setSegipId(1);
+                    $em->persist($persona);
+                    $em->flush();
+                    $mensaje = "Válido SEGIP";
+                    $estado = true;
+                } else {
+                    $mensaje = "No se realizó la validación con SEGIP. Debe actualizar la información a través del módulo: Modificación de Datos.";
+                }                
+            } else {
+                $mensaje = "No se realizó la validación con SEGIP. Actualice el C.I. de la/el estudiante.";
+            }
+        } else {
+            $mensaje = "No se realizó la validación con SEGIP. No existe información de la/el estudiante.";
+        }
+
+        return new JsonResponse(array('estado' => $estado, 'mensaje' => $mensaje));
+    }
 }

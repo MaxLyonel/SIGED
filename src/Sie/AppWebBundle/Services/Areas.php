@@ -239,7 +239,10 @@ class Areas {
                                 }else{
                                     $idsAsignaturas = $matsece;
                                     if($gestion == 2018){
-                                        $idsAsignaturas = $matsece2018;
+                                        $idsAsignaturas = $matsecg2018;
+                                        if (($tipoUEId == 1 or $tipoUEId == 7) and ($grado <= $gradoUEId)) {
+                                            $idsAsignaturas = $matsece2018;
+                                        }
                                     }
                                     if($gestion == 2019){
                                         $idsAsignaturas = $matsece2019;

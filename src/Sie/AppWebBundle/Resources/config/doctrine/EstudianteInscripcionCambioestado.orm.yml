@@ -1,0 +1,80 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionCambioestado:
+    type: entity
+    table: estudiante_inscripcion_cambioestado
+    indexes:
+        IDX_E5D73F34A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_E5D73F34ED003C9F:
+            columns:
+                - institucioneducativa_ant_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        justificacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        json:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        observacion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        archivo:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        usuarioId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_id
+    manyToOne:
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaAnt:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_ant_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

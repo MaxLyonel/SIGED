@@ -92,6 +92,9 @@ class WfTramiteController extends Controller
             case 5:
                 $data = $this->listaReactivadosBth($roluserlugarid);
                 break;
+            case 6:
+                $data = $this->listaPendientes($rol,$roluserlugarid);
+                break;
             default:
                 $data = $this->listaNuevos($pathSystem);
                 break;
@@ -448,7 +451,8 @@ class WfTramiteController extends Controller
      * Listado de los tipo de flujos para iniciar un tramite
      */
     public function listaNuevos($pathSystem){
-
+        
+        $rol = $this->session->get('roluser');
         $em = $this->getDoctrine()->getManager();
         $iet = 0;
         switch ($pathSystem){
@@ -478,8 +482,11 @@ class WfTramiteController extends Controller
         $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
                 ->select('ft')
                 ->innerJoin('SieAppWebBundle:WfFlujoInstitucioneducativaTipo','wf','with','wf.flujoTipo=ft.id')
+                ->innerJoin('SieAppWebBundle:FlujoProceso','fp','with','fp.flujoTipo=ft.id')
                 ->where('wf.institucioneducativaTipo =' . $iet)
                 ->andWhere("ft.obs like '%ACTIVO%'")
+                ->andWhere("fp.orden = 1")
+                ->andWhere("fp.rolTipo = ".$rol)
                 ->getQuery()
                 ->getResult();
 
@@ -675,7 +682,7 @@ class WfTramiteController extends Controller
     }
 
     /**
-     * Listado de trámites concluidos
+     * Listado de trámites reactivados BTH
      */
     public function listaReactivadosBTh($roluserlugarid)
     {
@@ -696,6 +703,133 @@ class WfTramiteController extends Controller
         $data['entities'] = $query->fetchAll();;
         $data['titulo'] = "Listado de trámites reactivados para BTH";
         $data['tipo'] = 5;
+        return $data;
+    }
+
+    /**
+     * Listado de trámites pendientes
+     */
+    public function listaPendientes($rol,$roluserlugarid)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $lugarNivelid = $em->getRepository('SieAppWebBundle:LugarTipo')->find($roluserlugarid)->getLugarNivel()->getId();
+        //dump($roluserlugarid,$lugarNivelid);die;
+        
+        $id_usuario = $this->session->get('userId');
+        $query = $em->getConnection()->prepare("select t.id,ft.id as idflujo,ft.flujo,tt.id as tramite_tipo_id,tt.tramite_tipo,pt.proceso_tipo,td.obs,td.tramite_estado_id,te.tramite_estado,pr.nombre||' '||pr.paterno||' '||pr.materno as usuario_remitente,td.fecha_recepcion,pd.nombre||' '||pd.paterno||' '||pd.materno as usuario_destinatario,td.fecha_envio,'SIE:'||ie.id as codigo_tabla,
+        'Institucion Educativa: '||ie.institucioneducativa as nombre,'PENDIENTE' as estado
+        from tramite t
+        join tramite_detalle td on t.tramite::int=td.id
+        join tramite_estado te on te.id=td.tramite_estado_id
+        join flujo_proceso fp on fp.id=td.flujo_proceso_id
+        join proceso_tipo pt on pt.id=fp.proceso_id
+        join usuario ur on ur.id=td.usuario_remitente_id
+        join persona pr on ur.persona_id=pr.id
+        join usuario ud on ud.id=td.usuario_destinatario_id
+        join persona pd on ud.persona_id=pd.id
+        join tramite_tipo tt on t.tramite_tipo=tt.id and t.flujo_tipo_id >5 and t.fecha_fin isnull
+        join flujo_tipo ft on t.flujo_tipo_id = ft.id
+        join institucioneducativa ie on t.institucioneducativa_id=ie.id
+        join jurisdiccion_geografica le on (ie.le_juridicciongeografica_id=le.id)
+        join lugar_tipo lt on lt.id=le.lugar_tipo_id_distrito
+        and ". $rol ." in(select rol_tipo_id from flujo_proceso where flujo_tipo_id=ft.id)
+        where case when ". $rol ."=9 then ie.id= ". $this->session->get('ie_id') ." when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
+        
+        union all
+        select t.id,ft.id as idflujo,ft.flujo,tt.id as tramite_tipo_id,tt.tramite_tipo,pt.proceso_tipo,td.obs,td.tramite_estado_id,te.tramite_estado,pr.nombre||' '||pr.paterno||' '||pr.materno as usuario_remitente,td.fecha_recepcion,pd.nombre||' '||pd.paterno||' '||pd.materno as usuario_destinatario,td.fecha_envio,'RUDE: '|| e.codigo_rude as codigo_tabla,
+        'Estudiante: '||e.nombre||' '||e.paterno||' '||e.materno as nombre,'PENDIENTE' as estado
+        from tramite t
+        join tramite_detalle td on t.tramite::int=td.id
+        join tramite_estado te on te.id=td.tramite_estado_id
+        join flujo_proceso fp on fp.id=td.flujo_proceso_id
+        join proceso_tipo pt on pt.id=fp.proceso_id
+        join usuario ur on ur.id=td.usuario_remitente_id
+        join persona pr on ur.persona_id=pr.id
+        join usuario ud on ud.id=td.usuario_destinatario_id
+        join persona pd on ud.persona_id=pd.id        
+        join tramite_tipo tt on t.tramite_tipo=tt.id and t.flujo_tipo_id >5 and t.fecha_fin isnull
+        join flujo_tipo ft on t.flujo_tipo_id = ft.id
+        join estudiante_inscripcion ei on t.estudiante_inscripcion_id=ei.id
+        join estudiante e on ei.estudiante_id=e.id
+        join institucioneducativa_curso iec on iec.id=ei.institucioneducativa_curso_id
+        join institucioneducativa ie on iec.institucioneducativa_id=ie.id
+        join jurisdiccion_geografica le on (ie.le_juridicciongeografica_id=le.id)
+        join lugar_tipo lt on lt.id=le.lugar_tipo_id_distrito
+        and ". $rol ." in(select rol_tipo_id from flujo_proceso where flujo_tipo_id=ft.id)
+        where case when ". $rol ."=9 then ie.id= ". $this->session->get('ie_id') ." when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
+        
+        union all
+        select t.id,ft.id as idflujo,ft.flujo,tt.id as tramite_tipo_id,tt.tramite_tipo,pt.proceso_tipo,td.obs,td.tramite_estado_id,te.tramite_estado,pr.nombre||' '||pr.paterno||' '||pr.materno as usuario_remitente,td.fecha_recepcion,pd.nombre||' '||pd.paterno||' '||pd.materno as usuario_destinatario,td.fecha_envio,'CI: '||p.carnet as codigo_tabla,
+        'Maestro: '||p.nombre||' '||p.paterno||' '||p.materno as nombre,'PENDIENTE' as estado
+        from tramite t
+        join tramite_detalle td on t.tramite::int=td.id
+        join tramite_estado te on te.id=td.tramite_estado_id
+        join flujo_proceso fp on fp.id=td.flujo_proceso_id
+        join proceso_tipo pt on pt.id=fp.proceso_id
+        join usuario ur on ur.id=td.usuario_remitente_id
+        join persona pr on ur.persona_id=pr.id
+        join usuario ud on ud.id=td.usuario_destinatario_id
+        join persona pd on ud.persona_id=pd.id
+        join tramite_tipo tt on t.tramite_tipo=tt.id and t.flujo_tipo_id >5 and t.fecha_fin isnull
+        join flujo_tipo ft on t.flujo_tipo_id = ft.id
+        join maestro_inscripcion mi on t.maestro_inscripcion_id=mi.id
+        join persona p on mi.persona_id=p.id
+        join institucioneducativa ie on mi.institucioneducativa_id=ie.id
+        join jurisdiccion_geografica le on (ie.le_juridicciongeografica_id=le.id)
+        join lugar_tipo lt on lt.id=le.lugar_tipo_id_distrito
+        and ". $rol ." in(select rol_tipo_id from flujo_proceso where flujo_tipo_id=ft.id)
+        where case when ". $rol ."=9 then ie.id= ". $this->session->get('ie_id') ." when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
+        
+        union all
+        select t.id,ft.id as idflujo,ft.flujo,tt.id as tramite_tipo_id,tt.tramite_tipo,pt.proceso_tipo,td.obs,td.tramite_estado_id,te.tramite_estado,pr.nombre||' '||pr.paterno||' '||pr.materno as usuario_remitente,td.fecha_recepcion,pd.nombre||' '||pd.paterno||' '||pd.materno as usuario_destinatario,td.fecha_envio,'CI: '||pa.carnet as codigo_tabla,
+        'Apoderado: '||pa.nombre||' '||pa.paterno||' '||pa.materno as nombre,'PENDIENTE' as estado
+        from tramite t
+        join tramite_detalle td on t.tramite::int=td.id
+        join tramite_estado te on te.id=td.tramite_estado_id
+        join flujo_proceso fp on fp.id=td.flujo_proceso_id
+        join proceso_tipo pt on pt.id=fp.proceso_id
+        join usuario ur on ur.id=td.usuario_remitente_id
+        join persona pr on ur.persona_id=pr.id
+        join usuario ud on ud.id=td.usuario_destinatario_id
+        join persona pd on ud.persona_id=pd.id
+        join tramite_tipo tt on t.tramite_tipo=tt.id and t.flujo_tipo_id >5 and t.fecha_fin isnull
+        join flujo_tipo ft on t.flujo_tipo_id = ft.id
+        join apoderado_inscripcion ai on t.apoderado_inscripcion_id=ai.id
+        join persona pa on ai.persona_id=pa.id
+        join estudiante_inscripcion ei on ai.estudiante_inscripcion_id=ei.id
+        join institucioneducativa_curso iec on iec.id=ei.institucioneducativa_curso_id
+        join institucioneducativa ie on iec.institucioneducativa_id=ie.id
+        join jurisdiccion_geografica le on (ie.le_juridicciongeografica_id=le.id)
+        join lugar_tipo lt on lt.id=le.lugar_tipo_id_distrito
+        and ". $rol ." in(select rol_tipo_id from flujo_proceso where flujo_tipo_id=ft.id)
+        where case when ". $rol ."=9 then ie.id= ". $this->session->get('ie_id') ." when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
+
+        union all
+        select t.id,ft.id as idflujo,ft.flujo,tt.id as tramite_tipo_id,tt.tramite_tipo,pt.proceso_tipo,td.obs,td.tramite_estado_id,te.tramite_estado,pr.nombre||' '||pr.paterno||' '||pr.materno as usuario_remitente,td.fecha_recepcion,pd.nombre||' '||pd.paterno||' '||pd.materno as usuario_destinatario,td.fecha_envio,'SIE:' as codigo_tabla,
+        'Institucion Educativa: '||(wf.datos::json->>'institucionEducativa')::VARCHAR as nombre,'PENDIENTE' as estado
+        from tramite t
+        join tramite_detalle td on t.tramite::int=td.id
+        join tramite_estado te on te.id=td.tramite_estado_id
+        join flujo_proceso fp on fp.id=td.flujo_proceso_id
+        join proceso_tipo pt on pt.id=fp.proceso_id
+        join usuario ur on ur.id=td.usuario_remitente_id
+        join persona pr on ur.persona_id=pr.id
+        join usuario ud on ud.id=td.usuario_destinatario_id
+        join persona pd on ud.persona_id=pd.id
+        join tramite_tipo tt on t.tramite_tipo=tt.id and t.flujo_tipo_id >5 and t.fecha_fin is not null
+        join flujo_tipo ft on t.flujo_tipo_id = ft.id
+        join tramite_detalle td1 on td1.tramite_id=t.id
+        join flujo_proceso fp1 on fp1.id=td1.flujo_proceso_id and fp1.orden=1
+        join wf_solicitud_tramite wf on wf.tramite_detalle_id=td1.id and wf.es_valido is true
+        join lugar_tipo lt on lt.id=wf.lugar_tipo_distrito_id
+        and ". $rol ." in(select rol_tipo_id from flujo_proceso where flujo_tipo_id=ft.id)
+        where case when ". $rol ."=9 then t.institucioneducativa_id NOTNULL when ". $lugarNivelid ." in (1,6,8) then lt.lugar_tipo_id=". $roluserlugarid ." when ". $lugarNivelid ." = 7 then lt.id=". $roluserlugarid ." when ". $lugarNivelid ."=0 then 1=1 end 
+        and t.estudiante_inscripcion_id ISNULL and t.maestro_inscripcion_id ISNULL and t.apoderado_inscripcion_id ISNULL and t.institucioneducativa_id ISNULL
+        ;");
+        $query->execute();
+        $data['entities'] = $query->fetchAll();;
+        $data['titulo'] = "Listado de trámites pendientes";
+        $data['tipo'] = 6;
         return $data;
     }
 
@@ -752,7 +886,7 @@ class WfTramiteController extends Controller
             * TRAMITE PARA UNIDADES EDUCATIVAS
             */
             $data['tipo'] = "UNIDAD EDUCATIVA: ";
-            $data['codsie'] = $tramite->getInstitucioneducativa()->getId();
+            $data['codsie'] = $tramite->getInstitucioneducativa()?$tramite->getInstitucioneducativa()->getId():'';
             if($tramite->getInstitucioneducativa()){
                 $data['nombre'] = $tramite->getInstitucioneducativa()->getInstitucioneducativa();
             }else{
@@ -768,7 +902,7 @@ class WfTramiteController extends Controller
     
                 $datos = json_decode($wfdatos[0]->getDatos(),true);
                 //dump($datos);die;
-                $data['nombre'] = $datos['institucionEducativa'];
+                $data['nombre'] = $datos['Apertura de Unidad Educativa']['institucioneducativa'];
             }
 
             $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id, d.flujo_proceso_id,d.fecha_recepcion,d.fecha_envio,d.usuario_remitente,d.usuario_destinatario,d.obs,d.tramite_estado,d.fecha_envio-d.fecha_recepcion as duracion

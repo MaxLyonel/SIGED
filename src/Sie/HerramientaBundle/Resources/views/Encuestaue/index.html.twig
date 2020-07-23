@@ -1,0 +1,676 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+<style>
+    input.estilo {display: block; margin: auto; 
+     width: 100px; font-family: sans-serif; font-weight: bold; 
+     font-size: 110%; outline: 0; border: 1px solid #444; background: #f4f4f4; color: black;
+      border-radius: 1px; text-align: center; box-shadow: 0 2px 8px #bbb, inset 0 0 0 1px white;}      
+      
+</style>   
+<div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Encuesta</h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-file-text-o"></i>
+                    <a href="{{ path('herramienta_nnats_index')}}">Encuesta</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <div class="pull-left ">
+                            <h3> ENCUESTA PISO TECNOLOGICO  </h3>
+                        </div>
+                        <div class="pull-right">
+                        <h3>  CODIGO SIE: {{ie_id}}  GESTION : {{gestion}} </h3>
+                        </div>
+                       
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    {% if estado == 0%}
+                    <div class="panel-body">
+                        <h4><i class="fa fa-home"></i> <b>Su Unidad Educativa:</b></h4>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-3">
+                                ¿Tiene Sala/Salas de Computación?
+                            </div>                            
+                            <div class="col-md-3">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="sisala" type="radio" name="radiotype" value="si" onclick="ocultarSala(1)" checked >
+                                    <label for="sisala"><b>Si</b></label>
+                                </div>                                
+                            </div>
+                            <div class="col-md-3">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="nosala" type="radio" name="radiotype" value="no" onclick="ocultarSala(1)"  >
+                                    <label for="nosala"><b>No</b></label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="nsrsala" type="radio" name="radiotype" value="nsr" onclick="ocultarSala(1)"  >
+                                    <label for="nsrsala"><b>Ns/Nr</b></label>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div id="respuestasSala" >                            
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        Si su respuesta fue <strong>SI</strong> debe llenar la siguiente información.
+                                    </div>   
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-1">                                       
+                                    </div>
+                                    <div class="col-md-4">
+                                        ¿Cuántas salas de computación?
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="number"  min = "1" max = "10" onchange="validaNumeroSalas()" oninput="maxLengthCheck(this)" id="cantSalas"  class="estilo" title="Cantidad de salas">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-md-1">                                       
+                                    </div>
+                                    <div class="col-md-4">
+                                        ¿Cuántas computadoras tiene en la sala de computación?
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input  id="cantComputadoras" onchange="validaNumeroComputadoras()" oninput="maxLengthCheck(this)"
+                                        type = "number" min = "1" max = "10"  class="estilo" title="Cantidad de computadoras">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row" id='anio' style="display: none;">
+                                    <div class="col-md-1">                                       
+                                    </div>
+                                    <div class="col-md-4">
+                                        ¿Año de Adquisicion de la(s) computadoras?
+                                    </div>
+                                    <div class="col-md-3">                                        
+                                        <select data-placeholder="Seleccionar"  id="anioAdqui" name="select_gestiom[]" title="Año en la que se adquirio las computadoras" class="chosen-select"  tabindex="-1" style="display: none;">
+                                            {% for gestionTipo in gestionTipo %}
+                                                <option value="{{ gestionTipo.id }}">{{ gestionTipo.gestion }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>                        
+                        </div>
+                        <hr>
+                        <br>
+                        <div class="row">                            
+                            <div class="col-md-3">
+                                ¿Tiene Piso Tecnologico Implementado?
+                            </div>                            
+                            <div class="col-md-3">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="sipiso" type="radio" name="radiotype4" value="si" onclick="ocultarSala(1)" checked >
+                                    <label for="sipiso"><b>Si</b></label>
+                                </div>                                
+                            </div>
+                            <div class="col-md-3">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="nopiso" type="radio" name="radiotype4" value="no" onclick="ocultarSala(1)" >
+                                    <label for="nopiso"><b>No</b></label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="nsrpiso" type="radio" name="radiotype4" value="nsr" onclick="ocultarSala(1)"  >
+                                    <label for="nsrpiso"><b>Ns/Nr</b></label>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    
+                        <br>
+                        <div class="row">                            
+                            <div class="col-md-3">
+                                ¿Tiene Internet?
+                            </div>                            
+                            <div class="col-md-3">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="siinternet" type="radio" name="radiotype2" value="si" onclick="ocultarSala(2)" checked >
+                                    <label for="siinternet"><b>Si</b></label>
+                                </div>                                
+                            </div>
+                            <div class="col-md-3">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="nointernet" type="radio" name="radiotype2" value="no" onclick="ocultarSala(2)" >
+                                    <label for="nointernet"><b>No</b></label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="nsrinternet" type="radio" name="radiotype2" value="nsr" onclick="ocultarSala(2)"  >
+                                    <label for="nsrinternet"><b>Ns/Nr</b></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="respuestaInternet">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    Si su respuesta fue <strong>SI</strong> debe llenar la siguiente información.
+                                </div>   
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-1                                                                                                                                                                                  -1">                                       
+                                </div>
+                                <div class="col-md-4">
+                                    ¿Costo mensual del Internet?                               
+                                </div>
+                                <div class="col-md-3">
+                                <input type="number" id="costo" onchange="validaCosto()" oninput="maxLengthCheck(this)" min = "1" max = "9999" class="estilo" 
+                                     title="Costo aproximado del Internet (Bs.)"> 
+                                </div>
+                                <div class="col-md-3">
+                                    <span style="color:brown;">
+                                        (Agregar un costo redondeado Exp. Bs.)</span>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-1">                                       
+                                </div>
+                                <div class="col-md-3">
+                                    ¿Quien es su proveedor?
+                                </div>
+                                
+                                <div class="col-md-3" title="Cantidad de computadoras" >
+                                    <select data-placeholder="Seleccionar"  id="proveedoresUe" name="select_proveedores[]" onchange="otroProveedor()" class="chosen-select"  tabindex="-1" style="display: none;">
+                                        {% for proveedores in proveedores %}
+                                            <option value="{{ proveedores.id }}">{{ proveedores.proveedor }}</option>
+                                        {% endfor %}
+                                    </select>                                                                  
+                                </div>
+                                <div class="col-md-3" id="otroProveedor" style="display: none;">
+                                    Especifique:<input type="text" id="otroProveedorTexto" maxlength="50"  title="Otro Proveedor">
+                                </div>
+                            </div>                            
+                            <br>
+                            <div class="row">
+                                <div class="col-md-1">                                       
+                                </div>
+                                <div class="col-md-3">
+                                    ¿Quien realiza el pago?
+                                </div>
+                                <div class="col-md-3">
+                                    <select data-placeholder="Seleccionar"  id="realizaPago" name="select_realizaPago[]" onchange="otroRealizaPago()"  class="chosen-select"  tabindex="-1" style="display: none;">
+                                        {% for realizaPago in realizaPago %}
+                                            <option value="{{ realizaPago.id }}">{{ realizaPago.entidad }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3" id="otroRealizaPago" style="display: none;">
+                                    Especifique:<input type="text" id="otroRealizapagoTexto" maxlength="50"  title="Otro Realiza Pago">
+                                </div>                                
+                            </div>                            
+                        </div>
+                        <hr>
+                    
+                        <br>                       
+                        <h4><i class="fa fa-industry"></i> <b>En la zona/comunidad o cercania:</b></h4>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-3">
+                                ¿Llega la Señal de Internet?
+                            </div>                            
+                            <div class="col-md-3">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="sisenial" type="radio" name="radiotype3" value="si" onclick="ocultarSala(3)" checked >
+                                    <label for="sisenial"><b>Si</b></label>
+                                </div>                                
+                            </div>
+                            <div class="col-md-3">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="nosenial" type="radio" name="radiotype3" value="no" onclick="ocultarSala(3)" >
+                                    <label for="nosenial"><b>No</b></label>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="nsrsenial" type="radio" name="radiotype3" value="nsr" onclick="ocultarSala(3)"  >
+                                    <label for="nsrsenial"><b>Ns/Nr</b></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="respuestaProveedor">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    Si su respuesta fue <strong>SI</strong> debe llenar la siguiente información.
+                                </div>   
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-1">                                       
+                                </div>
+                                <div class="col-md-3">
+                                    ¿De que proveedor?
+                                </div>
+                                <div class="col-md-3">
+                                    <select data-placeholder="Seleccionar"  id="proveedoresZona" name="select_proveedores[]" onchange="otroProveedorZona()" class="chosen-select"  tabindex="-1" style="display: none;">
+                                        {% for proveedores in proveedores %}
+                                            <option value="{{ proveedores.id }}">{{ proveedores.proveedor }}</option>
+                                        {% endfor %}
+                                    </select>                               
+                                </div>
+                                <div class="col-md-3" id="otroProveedorZona" style="display: none;" >
+                                    Especifique: <input type="text" id="otroProveedorZonaTexto" maxlength="50"  title="Otro Proveedor">
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <br>                      
+                        <h4><i class="fa fa-upload"></i> <b>Subir 2 fotografias una general panoramica representativa, y una de la computadora o un acercamiento.</b></h4>                         
+                        
+                        <br>                        
+                        <div class="row">
+                            
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="foto1">
+                                    Fotografia 1: <input type="file" id="foto1" title="Adjuntar Fotografia" onchange="selectFoto1(this)" accept="application/jpeg,.jpg,.png">
+                                    </label>
+                                    <label for="foto2">
+                                    Fotografia 2: <input type="file" id="foto2" title="Adjuntar Fotografia" onchange="selectFoto2(this)" accept="application/jpeg,.jpg,.png">
+                                    </label>
+                                </div>  
+                            </div> 
+                        </div>
+                           <br>
+                           <hr>                          
+                          <h4><i class="fa fa-eye"></i> <b>Observaciones/sugerencias de la encuesta. <span class="text-danger"> (No mayor a 200 caractéres)</span></b></h4>                         
+                         <br> 
+                         <div class="row">
+                            <div class="col-md-12">
+                             <textarea type="text" id="observacion" cols="100" rows="3" title="Observación adicional (No mayor a 200 caractéres)"></textarea>
+                            </div>
+                         </div>                      
+                        <div class="row">
+                            <div class="text-center">
+                                <button class="btn btn-success btn-lg"  title="Sus respuestas serán registradas" onclick="registarRespuesta()"> Registrar Encuesta</button>
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
+                    {% else %}
+                    <div class="row">                        
+                        <div class="col-md-12">
+                            <div class="panel rounded shadow">
+                                <div class="alert alert-warning ">
+                                    <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                                    <div class="notification-info">
+                                        <p>
+                                            <strong>  Usted no puede realizar la encuesta debido a que: </strong> 
+                                            <br>
+                                            <ol>
+                                            <li>  Su encuesta ya fue realizada.</li>
+                                            <li>Solo el Director de la Unidad Educativa puede relizar la encuesta.</li>
+                                            <li>Su Unidad Educativa no esta habilitada para realizar la encuesta.</li>
+                                            </ol>
+                                            
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+{% endblock %}
+{% block javascripts%}
+{{ parent() }}
+<script>
+    var foto1 = foto2 = '';
+    function ocultarSala(valor){
+         if(valor == 1) {
+            var respuesta=$('input:radio[name=radiotype]:checked').val();        
+            if(respuesta=='si'){
+                $('#respuestasSala').show(1000);
+            }else {
+                $('#respuestasSala').hide(1000);
+                $('#cantComputadoras').val('');
+                $('#cantSalas').val('');
+                $('#anioAdqui').val('');
+                $('#foto1').val('');
+                $('#foto2').val('');
+                
+            }
+         }  else if(valor == 2){
+            var respuesta=$('input:radio[name=radiotype2]:checked').val();        
+            if(respuesta=='si'){
+                $('#respuestaInternet').show(1000);
+            }else {
+                $('#respuestaInternet').hide(1000);
+               
+                $('#costo').val('');
+                $('#otroProveedorTexto').val('');
+                $('#foto1').val('');
+                $('#foto2').val('');                
+                
+            }
+         } else{
+            var respuesta=$('input:radio[name=radiotype3]:checked').val();        
+            if(respuesta=='si'){
+                $('#respuestaProveedor').show(1000);
+            }else {
+                $('#respuestaProveedor').hide(1000);
+                $('#otroProveedorZonaTexto').val('');
+                $('#foto1').val('');
+                $('#foto2').val('');
+            }
+         }
+        
+    }
+    function otroProveedor(){ 
+        var cod = document.getElementById("proveedoresUe").value;
+        if(cod == 5) {
+            $('#otroProveedor').show();
+        } else {
+            $('#otroProveedor').hide();
+        }       
+    }
+    function otroProveedorZona(){         
+        var proveedoresZona = document.getElementById("proveedoresZona").value;
+        if(proveedoresZona == 5) {
+            $('#otroProveedorZona').show();
+        }  else {
+            $('#otroProveedorZona').hide();
+        }   
+    }
+    function otroRealizaPago(){        
+        var realizaPago = document.getElementById("realizaPago").value;        
+        if(realizaPago == 6) {
+            $('#otroRealizaPago').show(2000);
+        } 
+    }
+    function selectFoto1(evt) {
+        var reader = new FileReader();
+        reader.readAsDataURL(evt.files[0]);
+        reader.onload = function(e) {
+            foto1 = e.target.result;
+        };
+    }
+    function selectFoto2(evt) {
+        var reader = new FileReader();
+        reader.readAsDataURL(evt.files[0]);
+        reader.onload = function(e) {
+            foto2 = e.target.result;
+        };
+    }
+    
+    function validaNumeroSalas() {        
+        if($('#cantSalas').val() < 1) {
+            swal("El valor introducido no puede ser 0, debe introducir otro valor");
+            $('#cantSalas').val('');
+            document.getElementById("cantSalas").focus();
+        }        
+    }
+
+    function validaCosto() {
+        if($('#costo').val() < 1) {
+            swal("El valor introducido no puede ser 0, debe introducir otro valor");
+            $('#costo').val('');
+            document.getElementById("costo").focus();
+        }  
+          
+    }
+    function validaNumeroComputadoras() {        
+        if($('#cantComputadoras').val() < 1) {
+            swal("El valor introducido no puede ser 0, debe introducir otro valor");
+            $('#cantComputadoras').val('');
+            document.getElementById("cantComputadoras").focus();
+        } else{
+            $('#anio').show();            
+        }  
+
+    }
+    function registarRespuesta(){
+        swal({
+            title: "¿Está Segura/o de enviar la encuesta?",
+            text: "La información llenada será registrada.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Continuar"],
+        })
+            .then(function(willDelete)  {
+                if (willDelete) {
+                    var ip = {
+                                tieneSala: 0,
+                                cantSalas: 0,
+                                cantComputadoras: 0,
+                                anioAdqui: 0,
+
+                                respuestaPiso: '',
+
+                                tieneInternet: '',
+                                costo: 0,
+
+                                proveedores: '',
+                                otroProveedor: '',
+
+                                pago: '',
+                                realizaPagoOtro: '',
+
+                                tieneInternetZona: '',
+                                proveedorZona: '',
+                                otroProveedorZona: '',
+                                
+                                foto1: '',
+                                foto2: '',
+                                observacion:''
+                             };
+        var respuesta=$('input:radio[name=radiotype]:checked').val();        
+        if(respuesta=='si'){
+            if($('#cantSalas').val()) {
+                ip.tieneSala =  1;
+                ip.cantSalas = $('#cantSalas').val();
+            } else {
+                swal("Debe introducir cantidad de salas.");
+                return false;
+            }
+            if($('#cantComputadoras').val()) {
+                ip.cantComputadoras = $('#cantComputadoras').val();
+            } else {
+                swal("Debe introducir cantidad de computadoras.");
+                return false;
+            }
+            if($('#anioAdqui').val()) {
+                ip.anioAdqui = $('#anioAdqui').val();
+            } else {
+                swal("Debe introducir el Año de adquisicion.");
+                return false;
+            }
+        }else if(respuesta=='no'){
+            ip.tieneSala = 2;
+        } else {
+            ip.tieneSala = 3;
+        }
+
+        var respuestaInternet=$('input:radio[name=radiotype2]:checked').val();        
+            if(respuestaInternet=='si'){
+                if($('#costo').val()) {
+                    ip.tieneInternet = 1;
+                    ip.costo = $('#costo').val();
+                } else {
+                    swal("Debe introducir el costo aprox. de Internet (Valor redondeado)");
+                    return false;
+                }
+                //console.log($('#proveedoresUe').val());
+                if($('#proveedoresUe').val()) {
+                    ip.proveedores = $('#proveedoresUe').val();
+                    var cod = document.getElementById("proveedoresUe").value;
+                    if(cod == 5) {
+                        if($('#otroProveedorTexto').val()) {
+                            ip.otroProveedor = $('#otroProveedorTexto').val();
+                        } else {
+                            swal("Debe introducior otro proveedor.");
+                            return false;
+                        }                    
+                    } 
+                } else {
+                    swal("Debe seleccionar el tipo de proveedor del servicio de Internet.");
+                    return false;
+                }  
+
+                if($('#realizaPago').val()) {
+                    ip.pago = $('#realizaPago').val();
+                    var cod = document.getElementById("realizaPago").value;
+                    if(cod == 6) {
+                        if($('#otroRealizapagoTexto').val()) {
+                            ip.realizaPagoOtro = $('#otroRealizapagoTexto').val();
+                        } else {
+                            swal("Debe introducior el dato para otro que realiza el pago.");
+                            return false;
+                        }                    
+                    } 
+                } else {
+                    swal("Debe seleccionar quien realiza el pago del servicio de Internet.");
+                    return false;
+                }
+            } else if(respuestaInternet=='no'){
+                ip.tieneInternet = 2;
+                ip.proveedores =0;
+            } else {
+                ip.tieneInternet = 3;
+                ip.proveedores =0;
+            }
+            var respuestaInternetZona=$('input:radio[name=radiotype3]:checked').val(); 
+            if(respuestaInternetZona=='si'){
+                if($('#proveedoresZona').val()) {
+                    ip.tieneInternetZona = 1;
+                    ip.proveedorZona = $('#proveedoresZona').val();
+                    var cod = document.getElementById("proveedoresZona").value;
+                    if(cod == 5) {
+                        if($('#otroProveedorZonaTexto').val()) {
+                            ip.otroProveedorZona = $('#otroProveedorZonaTexto').val();                        
+                        } else {
+                            swal("Debe introducior otro proveedor para la Zona.");
+                            return false;
+                        }                    
+                    } 
+                } else {
+                    swal("Debe seleccionar el tipo de proveedor del servicio de Internet.");
+                    return false;
+                }               
+                
+            } else if(respuestaInternet=='no'){
+                    ip.tieneInternetZona = 2;
+            }else {
+                    ip.tieneInternetZona = 3;
+            }
+            var respuestaPiso=$('input:radio[name=radiotype4]:checked').val(); 
+            if(respuestaPiso=='si'){
+                ip.respuestaPiso = 1; 
+            } else if(respuestaPiso=='no'){
+                    ip.respuestaPiso = 2;
+            }else {
+                    ip.respuestaPiso = 3;
+            }
+
+            if($('#observacion').val()) {
+                if($('#observacion').val().length>=200){
+                    swal("La longitud de la observación no debe superar 200 caractéres.");
+                }else{
+                    ip.observacion = $('#observacion').val();                        
+                }
+                
+            }
+
+            //console.log(respuesta,respuestaInternet,respuestaInternetZona);
+            if(respuesta=='si' || respuestaInternet=='si'|| respuestaInternetZona=='si' ) {
+                if($('#foto1').val()==''|| $('#foto2').val()=='') {
+                    swal("Debe seleccionar una imagen.");
+                    return false;  
+                } else {
+                    ip.foto1 = foto1;
+                    ip.foto2 = foto2;
+                }
+            }else {
+                $('#foto1').val()=='';
+                $('#foto2').val()=='';
+            }
+            
+
+            var fd = new FormData();
+            fd.append('tieneSala', ip.tieneSala);
+            fd.append('cantSalas', ip.cantSalas);
+            fd.append('cantComputadoras', ip.cantComputadoras);
+            fd.append('anioAdqui', ip.anioAdqui);
+            fd.append('respuestaPiso', ip.respuestaPiso);
+            fd.append('tieneInternet', ip.tieneInternet);
+            fd.append('costo', ip.costo);
+            fd.append('proveedores', ip.proveedores);
+            fd.append('otroProveedor', ip.otroProveedor);
+            fd.append('pago', ip.pago);
+            fd.append('realizaPagoOtro', ip.realizaPagoOtro);
+            fd.append('tieneInternetZona', ip.tieneInternetZona);
+            fd.append('proveedorZona', ip.proveedorZona);
+            fd.append('otroProveedorZona', ip.otroProveedorZona);
+            fd.append('foto1', ip.foto1);
+            fd.append('foto2', ip.foto2);
+            fd.append('observacion', ip.observacion);
+            fd.append('ie_id', {{ie_id}} );                      
+            fd.append('gestion', {{gestion}});
+             
+            $.ajax({
+                type: 'post',
+                url: "{{ path('encuestaUe_guarda') }}",
+                data: fd,
+                mimeType:"multipart/form-data",
+                contentType: false,
+                cache: false,
+                processData:false,
+                dataType : 'json',                
+                beforeSend: function () {
+                    swal({
+                        title: "Enviando...",
+                        text: "Espere un momento por favor",                      
+                        buttons: false
+                    });
+                },
+                success: function (data) {
+                    if (data.estado==1 ){
+                        swal("Sus respuestas fueron registradas con éxito.");
+                        location.href = "{{ path('encuestaUe_index') }}";
+                    } else {
+                        swal('Su formulario no se envío correctamente');
+                    }
+                },
+                
+                complete: function () {
+                    swal.stopLoading();
+                    swal.close();
+                }
+            }); 
+        //console.log(ip);
+        }
+    });
+}
+function maxLengthCheck(object) {
+    if (object.value.length > object.max.length)
+      object.value = object.value.slice(0, object.max.length)
+  }  
+    
+</script>
+
+
+
+{% endblock %}

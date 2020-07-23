@@ -52,3 +52,7 @@ tramite_modificacion_calificaciones_recepcion_verifica_departamento:
 tramite_modificacion_calificaciones_deriva_departamento:
     path:     /derivaDepartamento
     defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:derivaDepartamento }
+
+tramite_modificacion_calificaciones_acta_imprimir:
+    path:     /actaImprimir
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificaciones:actaImprimir }

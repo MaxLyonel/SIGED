@@ -26,6 +26,43 @@ class Funciones {
         $this->session = new Session();
 	}
 
+    /**
+     * SERVICIO DE VALIDACION DE RUTA POR ROL DE USUARIO
+     * PARA QUE EL USUARIO NO PUEDA INGRESAR POR LA URL A UNA RUTA NO AUTORIZADA
+     * @param  [type] $ruta [description]
+     * @return [type]       [description]
+     * By JHONNY
+     */
+    public function validarRuta($ruta){
+
+        $sistemaId = $this->session->get('sistemaid');
+        $rolId = $this->session->get('roluser');
+        $datosRuta = $this->em->createQueryBuilder()
+                ->select('msr')
+                ->from('SieAppWebBundle:SistemaRol','sr')
+                ->innerJoin('SieAppWebBundle:MenuSistemaRol','msr','with','msr.sistemaRol = sr.id')
+                ->innerJoin('SieAppWebBundle:MenuSistema','ms','with','msr.menuSistema = ms.id')
+                ->innerJoin('SieAppWebBundle:MenuTipo','mt','with','ms.menuTipo = mt.id')
+                ->where('sr.rolTipo = :rol')
+                ->andWhere('sr.sistemaTipo = :sistema')
+                ->andWhere('mt.ruta = :ruta')
+                ->setParameter('rol',$rolId)
+                ->setParameter('sistema',$sistemaId)
+                ->setParameter('ruta',$ruta)
+                ->getQuery()
+                ->getResult();
+
+        $permitido = false;
+
+        if (count($datosRuta) > 0) {
+            if ($datosRuta[0]->getEsactivo()) {
+                $permitido = true;
+            }
+        }
+
+        return $permitido;
+    }
+
 	/*
      * verificamos si tiene tuicion
      */
@@ -102,21 +139,25 @@ class Funciones {
             // Si no existe es operativo inicio de gestion
             $operativo = 0;
         }else{
-            //dump($objRegistroConsolidado);die;
-            if($objRegistroConsolidado[0]['bim1'] == 0 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
-                $operativo = 1; // Primer Bimestre
-            }
-            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
-                $operativo = 2; // segundo Bimestre
-            }
-            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
-                $operativo = 3; // tercero Bimestre
-            }
-            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] == 0){
-                $operativo = 4; // cuarto Bimestre
-            }
-            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] >= 1){
-                $operativo = 5; // Fin de gestion o cerrado
+            if($objRegistroConsolidado[0]['bim1'] == 3){
+                $operativo = 0;
+            }else{
+                //dump($objRegistroConsolidado);die;
+                if($objRegistroConsolidado[0]['bim1'] == 0 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
+                    $operativo = 1; // Primer Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
+                    $operativo = 2; // segundo Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
+                    $operativo = 3; // tercero Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] == 0){
+                    $operativo = 4; // cuarto Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] >= 1){
+                    $operativo = 5; // Fin de gestion o cerrado
+                }
             }
         }
 
@@ -1803,4 +1844,60 @@ class Funciones {
         return $entities;
         
     }
+
+    public function getAllInscriptionRegular($codigoRude){
+        
+        $query = $this->em->createQueryBuilder('e')
+                ->select('ei.id as studenInscriptionId,n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
+                 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
+                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento')
+                ->from('SieAppWebBundle:Estudiante','e')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+                ->leftjoin('SieAppWebBundle:NivelTipo', 'n', 'WITH', 'iec.nivelTipo = n.id')
+                ->leftjoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'iec.gradoTipo = g.id')
+                ->leftjoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'iec.paraleloTipo = p.id')
+                ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
+                ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
+                ->where('e.codigoRude = :id')
+                ->andWhere('it = :idTipo')
+                ->setParameter('id', $codigoRude)
+                ->setParameter('idTipo',1)
+                ->orderBy('iec.gestionTipo', 'DESC')
+                ->addorderBy('ei.fechaInscripcion', 'DESC')
+                ->getQuery();
+        $entities = $query->getResult();
+
+        return $entities;                
+    }
+
+    public function getCurrentInscriptionByRudeAndGestionAndMatricula($data){
+        
+        $query = $this->em->createQueryBuilder('e')
+                ->select('ei.id as studenInscriptionId', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
+                 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
+                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento')
+                ->from('SieAppWebBundle:Estudiante','e')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+                ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
+                ->where('e.codigoRude = :id')
+                ->andWhere('iec.gestionTipo = :gestion')                
+                ->andWhere('ei.estadomatriculaTipo = :matricula')                
+                ->andWhere('it = :idTipo')
+                ->setParameter('id', $data['codigoRude'])
+                ->setParameter('gestion', $data['gestion'])
+                ->setParameter('matricula', $data['matriculaId'])
+                ->setParameter('idTipo',1)
+                ->orderBy('iec.gestionTipo', 'DESC')
+                ->addorderBy('ei.fechaInscripcion', 'DESC')
+                ->getQuery();
+        $entities = $query->getResult();
+
+        return $entities;                
+    }    
 }

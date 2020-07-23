@@ -21,7 +21,27 @@
     <div class="body-content animated fadeIn">
         <div class="row">
             <div class="col-md-6">
-                <!-- Start input fields - basic form -->
+
+                <div class="p
+                anel rounded shadow">
+                    <div class="panel panel-warning shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"> ESTUDIANTES RETIRADOS POR TRASLADO</h3>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body">
+
+                            {{ render(controller('SieHerramientaBundle:TransferStudents:index')) }}
+
+                        </div>
+                    </div>
+                </div>
+                
+
+               
+                <!-- Start input fields - basic form -->{#
                 <div class="panel rounded shadow">
                     <div class="panel panel-warning shadow">
                         <div class="panel-heading">
@@ -51,81 +71,20 @@
                                 <a class="btn btn-lilac btn-xs btn-facebook" href="{{asset('uploads/archivos/Consideraciones_CUT.pdf' )}}" target="_blank" download>
                                   <i class="fa fa-file-pdf-o fa-2x" ></i> Descargar consideraciones para el Certificado Único de Trámites CUT-TTM
                                  </a>
-                             </div>
+                             </div>#}
                                 {# <div class="col-md-6 col-md-offset-3">
                                   <button type="button" class="btn btn-facebook btn-md" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' >
                                             <i class="fa fa-group" ></i>  Habilitar el Certificado Único de Trámites CUT-TTM
                                   </button>
                                 </div> #}
-                            </div>
+                           {# </div>
                         </div>
                     </div>
                 </div>
+#}
             </div>
-            {% if app.session.get('ie_id') > 0 %}
-                <div class="col-md-3">
-                    <!-- Start input fields - basic form -->
-                    <div class="panel rounded shadow">
-                        <div class="panel panel-primary shadow">
-                            <div class="panel-heading">
-                                <div class="pull-left">
-                                    <h3 class="panel-title">Descarga Archivo Rude</h3>
-                                </div>
-                                <div class="pull-right">
-                                    {# <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button> #}
-                                </div>
-                                <div class="clearfix"></div>
-                            </div><!-- /.panel-heading -->
-                            <div class="panel-body">
-                            
-                                {{form_start(formOperativoRude, { 'attr':{'id':'downOperativoRudeId'} })}}
-                                {{form_widget(formOperativoRude.downOperativoRude)}}
-                                {{form_end(formOperativoRude)}}
-                            
-                                
-                                <div id="downoperativoId">
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-
-            <div class="col-md-3">
-                <!-- Start input fields - basic form -->
-                <div class="panel rounded shadow">
-                    <div class="panel panel-primary shadow">
-                        <div class="panel-heading">
-                            <div class="pull-left">
-                                <h3 class="panel-title">Seguimiento Bono Juancito Pinto</h3>
-                            </div>
-                            <div class="pull-right">
-                                {# <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button> #}
-                            </div>
-                            <div class="clearfix"></div>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body">
-                            {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } ) }}
-                            <div class="row">
-                                <div class="form-group col-md-3">
-                                    {{ form_label(form.dpto) }}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    {{ form_widget(form.dpto) }}
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 col-md-offset-3">
-                                    {{ form_widget(form.getReporte ) }}
-                                </div>
-                            </div>
-                            {{ form_end(form) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
+           
+           
             <div class="col-md-6">
                 <!-- Start input fields - basic form -->
                 <div class="panel rounded shadow">
@@ -168,6 +127,42 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-6">
+                <!-- Start input fields - basic form -->
+                <div class="panel rounded shadow">
+                    <div class="panel panel-primary shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">Seguimiento Bono Juancito Pinto</h3>
+                            </div>
+                            <div class="pull-right">
+                                {# <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button> #}
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body">
+                            {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': 'form'} } ) }}
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    {{ form_label(form.dpto) }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ form_widget(form.dpto) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-3">
+                                    {{ form_widget(form.getReporte ) }}
+                                </div>
+                            </div>
+                            {{ form_end(form) }}
+                        </div>
+                    </div>
+                </div>
+            </div>             
+            
+            
 
         </div>
         <div class="row">
@@ -219,6 +214,111 @@
                     </div>
                 </div>
             {% endif %}
+            {#
+            <div class="col-md-6">
+                <div class="panel panel-danger shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Encuesta Internet - pisos tecnológicos</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        La siguiente encuesta debe ser llenada 
+                        por los directores de cada Unidad Educativa.
+                        <br>
+                        <br>
+                        <div class='text-center'>
+                            <a href="{{ path('encuestaUe_index')}} " class="btn btn-success btn-lg" title="ir a la encuesta" >LLenar Encuesta</a>
+                        </div> <br>
+                    {% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 10) %} 
+                         {{ form_start(form2, { 'attr': {'data-toggle': 'validator','role': 'form'} } ) }}
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    {{ form_label(form2.dpto) }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ form_widget(form2.dpto) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-3">
+                                    {{ form_widget(form2.getReporte ) }}
+                                </div>
+                            </div>
+                        {{ form_end(form2) }}
+                      
+                        
+                    {% endif %}
+                      
+                        <br>
+                         {% if existe %}
+                            <div id="listaencuesta">
+                                <div class="table-responsive col-md-12" >
+                                    <table class="table table-bordered table-striped" id="encuestados" >
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center border-right" style="width:50px; min-width: 50px;">N°</th>
+                                                    <th class="text-center border-right">Departamento</th>
+                                                    <th class="text-center border-right">Distrito</th>
+                                                    <th class="text-center border-right">SIE</th>
+                                                    <th class="text-center border-right">Unidad Educativa</th>
+                                                </tr>
+                                            </thead>
+                                     
+                                            <tbody>
+                                            {% for dataEncuesta in dataEncuesta %}
+                                                <tr >
+                                                    <td data-title="N°" class="text-center">{{ loop.index }}</td>
+                                                    <td data-title="Departamento" >{{ dataEncuesta.departamento }}</td>
+                                                    <td data-title="Distrito" class="text-center">{{ dataEncuesta.distrito}}</td>
+                                                    <td data-title="Departamento" >{{ dataEncuesta.sie }}</td>
+                                                    <td data-title="Distrito" class="text-center">{{ dataEncuesta.ue }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+
+                                    </table>
+                                </div> 
+                                </div>
+                        {% else %}
+                                <p> NINUGNA UNIDAD EDUCATIVA REALIZO LA ENCUESTA.</p>
+                        {% endif %}
+                        
+                    </div>
+                </div>                
+            </div>
+           
+            {% if app.session.get('ie_id') > 0 %}
+                <div class="col-md-3">
+                    <!-- Start input fields - basic form -->
+                    <div class="panel rounded shadow">
+                        <div class="panel panel-primary shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Descarga Archivo Rude</h3>
+                                </div>
+                                <div class="pull-right">
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                            
+                                {{form_start(formOperativoRude, { 'attr':{'id':'downOperativoRudeId'} })}}
+                                {{form_widget(formOperativoRude.downOperativoRude)}}
+                                {{form_end(formOperativoRude)}}
+                            
+                                
+                                <div id="downoperativoId">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+ #}
+ 
         </div>
     </div>
 {% endblock %}
@@ -226,7 +326,22 @@
     {{parent()}}
 
 <script>
+   $(document).ready(function(){
+            cargatablas();
+        });
 
+        var cargatablas = function (identif){
+
+
+            // DataTable
+            var table = $('#encuestados').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                }
+            );
+
+            // Apply the search
+           
+        };
     var downOperativoRudeup = function(){
     var formData = $('#downOperativoRudeId').serialize();
 
@@ -248,6 +363,6 @@
             }
         });
     };
-
+ 
 </script>
 {% endblock %}

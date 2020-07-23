@@ -2,6 +2,12 @@ Sie\AppWebBundle\Entity\Persona:
     type: entity
     table: persona
     indexes:
+        fk__persona32:
+            columns:
+                - paterno
+                - materno
+                - nombre
+                - carnet
         fk__persona31:
             columns:
                 - paterno
@@ -9,40 +15,33 @@ Sie\AppWebBundle\Entity\Persona:
                 - nombre
                 - fecha_nacimiento
                 - carnet
-        fk__persona32:
-            columns:
-                - paterno
-                - materno
-                - nombre
-                - carnet
         fk__persona30:
             columns:
                 - paterno
                 - materno
                 - nombre
-        IDX_51E5B69B1C73F6E:
-            columns:
-                - expedido_id
-        IDX_51E5B69BCD9F4106:
-            columns:
-                - idioma_materno_id
-        IDX_51E5B69B2BCFBA7:
-            columns:
-                - genero_tipo_id
-        IDX_51E5B69B70591119:
-            columns:
-                - sangre_tipo_id
         IDX_51E5B69B1C30CFD:
             columns:
                 - estadocivil_tipo_id
+        IDX_51E5B69B1C73F6E:
+            columns:
+                - expedido_id
+        IDX_51E5B69B2BCFBA7:
+            columns:
+                - genero_tipo_id
+        IDX_51E5B69BCD9F4106:
+            columns:
+                - idioma_materno_id
+        IDX_51E5B69B70591119:
+            columns:
+                - sangre_tipo_id
+        IDX_51E5B69B92548EB1:
+            columns:
+                - pais_tipo_id
     uniqueConstraints:
         uniq_carnet_idx:
             columns:
                 - carnet
-        uniq_carnet:
-            columns:
-                - carnet
-                - complemento
     id:
         id:
             type: integer
@@ -174,7 +173,23 @@ Sie\AppWebBundle\Entity\Persona:
             comment: ''
             default: false
             column: es_extranjero
+        localidadNac:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: localidad_nac
     manyToOne:
+        estadocivilTipo:
+            targetEntity: EstadoCivilTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadocivil_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         expedido:
             targetEntity: DepartamentoTipo
             cascade: {  }
@@ -182,15 +197,6 @@ Sie\AppWebBundle\Entity\Persona:
             inversedBy: null
             joinColumns:
                 expedido_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        idiomaMaterno:
-            targetEntity: IdiomaMaterno
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                idioma_materno_id:
                     referencedColumnName: id
             orphanRemoval: false
         generoTipo:
@@ -202,6 +208,15 @@ Sie\AppWebBundle\Entity\Persona:
                 genero_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
+        idiomaMaterno:
+            targetEntity: IdiomaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                idioma_materno_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         sangreTipo:
             targetEntity: SangreTipo
             cascade: {  }
@@ -211,13 +226,13 @@ Sie\AppWebBundle\Entity\Persona:
                 sangre_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        estadocivilTipo:
-            targetEntity: EstadoCivilTipo
+        paisTipo:
+            targetEntity: PaisTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                estadocivil_tipo_id:
+                pais_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

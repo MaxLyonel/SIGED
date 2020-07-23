@@ -84,12 +84,13 @@
                       {% if  cursolargo[0].esabierto ==true %}
  
                                 <div class="row">
+                                  {#
                                     <div class="col-sm-4">
                                         <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptionsCL('{{infoUe}}');" >
                                             <i class="fa fa-user"></i> Inscripci&oacute;n con CI
                                         </button>
                                     </div>
-
+                                  #}
                                     <div class="col-sm-4">
                                         <button type="button" class="btn btn-inverse btn-stroke"  data-dismiss="modal" onclick="saveModuloLote('{{ infoUe }}');" > 
                                             <i class="fa fa-edit"></i>Asignar modulos
@@ -363,6 +364,14 @@
                                                                   <span class="sr-only">Toggle Dropdown</span>
                                                               </button>
                                                               <ul class="dropdown-menu" role="menu">
+                                                                  
+                                                                  {# APODERADO BONO FAMILIA #}
+                                                                  {% if false %}
+                                                                      <li><a href="#"  type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderadoBonoFamilia({{objStudents.idestins}});">Registro apoderado</a></li>
+                                                                  {% endif %}
+                                                                  {# FIN APODERADO BONO FAMILIA #}
+
+
                                                                   <li><a href="#"  type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudent('{{infoUe}}', '{{jsnInfoStudent}}');">Modulos</a></li>
                                                                   <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasCL('{{infoUe}}', '{{jsnInfoStudent}}');">Notas</a> </li>
                                                                   <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeal('{{objStudents.idestins}}');">Rudeal</a> </li>
@@ -454,6 +463,38 @@
         });
 
     });
+
+    var apoderadoBonoFamilia = function (idInscripcion) {
+
+        $.ajax({
+            type: 'post',
+            data: ({idInscripcion: idInscripcion}),
+            url: "{{ path('apoderado_bono_familia_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-content text-center" style="padding:20px;"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
 
     var saveModuloLote = function (infoUe) {
         $.ajax({

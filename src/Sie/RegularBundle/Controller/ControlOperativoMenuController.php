@@ -35,7 +35,7 @@ class ControlOperativoMenuController extends Controller {
             if(in_array($this->session->get('roluser'), array(7,8,10))){
                 $operativo++;
             }
-            $tipoUE = $this->get('funciones')->getTipoUE($sie,$this->session->get('currentyear'));
+            $tipoUE = $this->get('funciones')->getTipoUE($sie,$gestion);
 
             $mensaje = "";
 
@@ -43,8 +43,8 @@ class ControlOperativoMenuController extends Controller {
             $tuicion = $this->get('funciones')->verificaTuicion($sie,$this->session->get('userId'),$this->session->get('roluser'));
 
             if ($tuicion) {
-                // Verificamos si es ue humanistica, nocturan o en transformacion
-                if(in_array($tipoUE['id'], array(5,6,7))){
+                // Verificamos si es ue humanistica, nocturan o en transformacion, y GAM
+                if(in_array($tipoUE['id'], array(5,6,7,11))){
                     $registro = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa'=>$sie,'gestionTipoId'=>$gestion,'notaTipo'=>$operativo));
                     if(!$registro){
                         $registro = null;

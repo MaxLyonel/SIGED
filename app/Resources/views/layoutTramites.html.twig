@@ -313,9 +313,6 @@
                                 <ul>
                                     <li><a href="{{ path('tramite_homologacion_certificacion_index') }}">Gestiones anteriores</a></li>
                                     <li><a href="{{ path('tramite_documento_serie_disponible') }}">Series Disponibles</a></li>
-                                    {% if (rol16 or rol8) and 1 == 2%}
-                                        <li><a href="#">Generar número de serie</a></li>
-                                    {% endif %}
                                 </ul>
                             </li>
                         {% endif %}
@@ -349,7 +346,7 @@
                                         <li><a href="{{path('tramite_detalle_certificado_tecnico_entrega_busca')}}">Entrega</a></li>
                                     {% endif %}
                                     {% if rol16 or rol8 %}
-                                        <li><a href="{{path('tramite_reactiva_busca')}}">Reactivar</a></li>
+                                        <li><a href="{{path('tramite_reactiva_busca')}}">Reactivar Trámite</a></li>
                                     {% endif %}
                                     {% if rol17 or rol8 %}
                                         <!--<li><a href="#">Legalización</a></li>-->
@@ -444,8 +441,12 @@
                                 </a>
                                 <ul class="collapse nav">
                                     <li><a href="{{ path('tramite_documento_supletorio') }}">Supletorio</a></li>
-                                    <li><a href="{{ path('tramite_reactiva_busca') }}">Reactiva</a></li>
-                                    <li><a href="{{ path('tramite_documento_serie_disponible') }}">Series Disponibles</a></li>
+                                    <li><a href="{{ path('tramite_reactiva_busca') }}">Reactivar Trámite</a></li>
+                                    <li><a href="{{ path('tramite_documento_reactiva_busca') }}">Reactivar Documento</a></li>
+                                    <li><a href="{{ path('tramite_documento_serie_disponible') }}">Series Disponibles</a></li>                                    
+                                    {% if (rol8)%}
+                                        <li><a href="{{ path('tramite_documento_serie') }}">Numeros y series</a></li>
+                                    {% endif %}
                                 </ul>
                             </li>  
                         {% endif %}
