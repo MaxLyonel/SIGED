@@ -304,8 +304,8 @@
                 </div>
               </div>
               
-              <div v-if="(swperson || swnewperson || swstudent) && (userAllowedOnCasespecial && showCaseSpecialOption)" class="row">
-                <div v-if="swWithoutSegip && swnewperson" class="col-md-10 col-md-offset-1">
+              <div >
+                <div v-if="swWithoutSegip " class="col-md-10 col-md-offset-1">
                   <div>
                     <label for="form_withoutsegip" class="required">SIN SEGIP :</label>
                     <input type="checkbox" v-model="dataStudent.withoutsegip" id="form_withoutsegip" name="form[caseespecial]" class="form-check-input" v-on:click="showupfile = !showupfile">
