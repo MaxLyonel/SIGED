@@ -49,37 +49,37 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoOfertaMaestro:
             nullable: true
             comment: ''
             column: es_vigente_maestro
-        item:
-            type: string
-            nullable: true
-            length: 7
-            fixed: false
-            comment: ''
-        esVigenteAdministrativo:
-            type: boolean
-            nullable: true
-            comment: ''
-            column: es_vigente_administrativo
-        asignacionFechaInicio:
-            type: date
-            nullable: true
-            comment: ''
-            column: asignacion_fecha_inicio
-        asignacionFechaFin:
-            type: date
-            nullable: true
-            comment: ''
-            column: asignacion_fecha_fin
-    manyToOne:
-        financiamientoTipo:
-            targetEntity: FinanciamientoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                financiamiento_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
+#        item:
+#            type: string
+#            nullable: true
+#            length: 7
+#            fixed: false
+#            comment: ''
+#        esVigenteAdministrativo:
+#            type: boolean
+#            nullable: true
+#            comment: ''
+#            column: es_vigente_administrativo
+#        asignacionFechaInicio:
+#            type: date
+#            nullable: true
+#            comment: ''
+#            column: asignacion_fecha_inicio
+#        asignacionFechaFin:
+#            type: date
+#            nullable: true
+#            comment: ''
+#            column: asignacion_fecha_fin
+#    manyToOne:
+#        financiamientoTipo:
+#            targetEntity: FinanciamientoTipo
+#            cascade: {  }
+#            mappedBy: null
+#            inversedBy: null
+#            joinColumns:
+#                financiamiento_tipo_id:
+#                    referencedColumnName: id
+#            orphanRemoval: false
         notaTipo:
             targetEntity: NotaTipo
             cascade: {  }
