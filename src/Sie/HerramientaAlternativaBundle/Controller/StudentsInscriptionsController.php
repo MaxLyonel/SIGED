@@ -479,7 +479,7 @@ class StudentsInscriptionsController extends Controller {
       // user allowed to show the special inscription option
       $userAllowedOnCasespecial = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
 
-      $arrWithoutsegip = array(4880808,4926577);
+      $arrWithoutsegip = array(6126941);
       $swWithoutSegip = in_array($this->session->get('userName'), $arrWithoutsegip)?true:false;
 
 

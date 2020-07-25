@@ -311,6 +311,7 @@
                     <input type="checkbox" v-model="dataStudent.withoutsegip" id="form_withoutsegip" name="form[caseespecial]" class="form-check-input" v-on:click="showupfile = !showupfile">
                       </br>
                   </div>
+                  {#
                    <div v-if="showupfile">                  
                      <div class="form-group">
                       <label for="doc">Adjuntar Documento Informe de Respaldo</label>
@@ -318,6 +319,7 @@
                        </textarea>
                      </div>
                    </div>
+                   #}
                 </div>
               </div>
               
@@ -816,7 +818,7 @@ var app = new Vue({
           this.dataStudent.expedidoId2 = this.newStudent.expedidoId; 
         }
 
-                /*validate the file attached*/
+                /*validate the file attached
         if(this.showupfile){
             if (typeof this.informe != 'object') {
                 Swal.fire(
@@ -828,7 +830,7 @@ var app = new Vue({
                 this.message = false;
                 return;
             }
-        }
+        }*/
 
 
         if((this.dataStudent.nombre == null)){
