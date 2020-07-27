@@ -371,7 +371,6 @@ class TramiteRueController extends Controller
 
     public function buscarRequisitosAction(Request $request){
         $id = $request->get('id');
-        //dump($id);
         //dump($id);die;
         $em = $this->getDoctrine()->getManager();
         if($id != 54 and $id != 46 and $id != 55){
@@ -380,7 +379,7 @@ class TramiteRueController extends Controller
         }else{
             $dependencia = $request->get('dependencia');
             $constitucion = $request->get('constitucion');
-            //dump($request);die;
+            // dump($constitucion,$dependencia);die;
         }        
         $tramitetipo = $em->getRepository('SieAppWebBundle:TramiteTipo')->find($id);
         $requisitos = array();
@@ -609,13 +608,13 @@ class TramiteRueController extends Controller
             case 54://apertura
                 $requisitos = array('legal'=>true,'infra'=>true,'admi'=>true);
                 $labelSolicitud = '';
-                if($id = 46){
+                if($id == 46){
                     $labelSolicitud = 'regularización';
                 }
-                if($id = 54){
+                if($id == 54){
                     $labelSolicitud = 'apertura';
                 }
-                if($id = 55){
+                if($id == 55){
                     $labelSolicitud = 'actualización';
                 }
                 if($dependencia == 1){                    
