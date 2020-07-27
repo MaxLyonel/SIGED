@@ -2,22 +2,21 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoOfertaMaestro:
     type: entity
     table: institucioneducativa_curso_oferta_maestro
     indexes:
-        maestro_inscripcion_id_fk:
-            columns:
-                - maestro_inscripcion_id
         institucioneducativa_curso_oferta_id_fk:
             columns:
                 - institucioneducativa_curso_oferta_id
-        IDX_5CC3C439CEDB60B7:
+        IDX_5CC3C439A4B6FF2:
             columns:
-                - financiamiento_tipo_id
+                - maestro_inscripcion_id
         IDX_5CC3C439756DFBFA:
             columns:
                 - nota_tipo_id
     uniqueConstraints:
-        institucioneducativa_curso_oferta_maestro_pk:
+        uq_institucioneducativa_curso_oferta_maestro:
             columns:
-                - id
+                - institucioneducativa_curso_oferta_id
+                - maestro_inscripcion_id
+                - nota_tipo_id
     id:
         id:
             type: integer
@@ -49,35 +48,14 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoOfertaMaestro:
             nullable: true
             comment: ''
             column: es_vigente_maestro
-        item:
-            type: string
-            nullable: true
-            length: 7
-            fixed: false
-            comment: ''
-        esVigenteAdministrativo:
-            type: boolean
-            nullable: true
-            comment: ''
-            column: es_vigente_administrativo
-        asignacionFechaInicio:
-            type: date
-            nullable: true
-            comment: ''
-            column: asignacion_fecha_inicio
-        asignacionFechaFin:
-            type: date
-            nullable: true
-            comment: ''
-            column: asignacion_fecha_fin
     manyToOne:
-        financiamientoTipo:
-            targetEntity: FinanciamientoTipo
+        maestroInscripcion:
+            targetEntity: MaestroInscripcion
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                financiamiento_tipo_id:
+                maestro_inscripcion_id:
                     referencedColumnName: id
             orphanRemoval: false
         notaTipo:
@@ -87,15 +65,6 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoOfertaMaestro:
             inversedBy: null
             joinColumns:
                 nota_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        maestroInscripcion:
-            targetEntity: MaestroInscripcion
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                maestro_inscripcion_id:
                     referencedColumnName: id
             orphanRemoval: false
         institucioneducativaCursoOferta:
