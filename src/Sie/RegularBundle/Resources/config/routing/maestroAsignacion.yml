@@ -110,3 +110,13 @@ maestroAsignacion_lista:
     defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroLista }
     options:
         expose: true
+
+maestroAsignacion_index:
+    path:     /asignar/maestro/materia/index
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaIndex }
+
+maestroAsignacion_asignar_materia_maestro_dato:
+    path:     /asignar/materia/maestro/dato
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaMaestroDato }
+    options:
+        expose: true
