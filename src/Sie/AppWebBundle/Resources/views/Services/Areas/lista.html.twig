@@ -16,10 +16,12 @@
                     <td>{{co.idAsignatura}}</td>
                     <td>{{co.asignatura}}</td>
                     <td>
+                        {% if 1>1 %}
                         <button class="btn" onclick="addpop({{co.id}})"><i class="fa fa-users text-lilac"></i></button>
                         <div class="arrow-before" style="display:none; margin-left:10px;" id="before{{co.id}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="after{{co.id}}"></div>
                         <div id="{{co.id}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-350px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divMaestros">
                         </div>
+                        {% endif %}
                     </td>
                     <td>
                         {% if co.idAsignatura in areas.posiblesEliminar %}
