@@ -84,7 +84,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            <div class="pull-right">
+            {# <div class="pull-right">
                 {% if onlyview == false and app.session.get('roluser') == 9 %}
                     <form action="{{path('creacioncursos_especial_new')}}" style="display: inline-block" method="post">
                         <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
@@ -92,7 +92,7 @@
                         <button type="submit" class="btn btn-md btn-teal"><i class="fa fa-save"></i> Nuevo Curso</button>
                     </form>
                 {% endif %}
-            </div>
+            </div> #}
             <div class="callout callout-warning">
                 <strong>Recuerde que:</strong><br />
                 - Es obligatorio el registro de todos los cursos existentes en el Centro de Educación Especial.<br />

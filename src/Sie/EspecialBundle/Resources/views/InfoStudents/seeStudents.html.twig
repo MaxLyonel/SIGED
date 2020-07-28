@@ -31,7 +31,7 @@
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body">
-                <div class="row">
+                {# <div class="row">
                     <div class="col-md-12 text-center">
                         {% if onlyview == false and gestion >= app.session.get('currentyear') and app.session.get('roluser') == 9 %}
                         <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
@@ -39,7 +39,6 @@
                         </button>
                         <hr />
                         {% endif %}
-                        {# commented by krlos #}
                            {% if onlyview == false and gestion >= app.session.get('currentyear') and (app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10) %}
                             <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}');" >
 
@@ -49,7 +48,7 @@
                         
                         <hr />                          
                     </div>
-                </div>
+                </div> #}
                 <div class="row">
                     <div id="no-more-tables" class="col-md-12 table-responsive">
                         <table class="table table-bordered table-hover cf">
