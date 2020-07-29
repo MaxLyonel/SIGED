@@ -1,11 +1,19 @@
   
-	<div id="no-more-tables" class="table-responsive">{{periodos}}
+	<div id="no-more-tables" class="table-responsive">
         <table class="table table-bordered table-hover cf dataTable">
             {% if listaAsignatura is defined %}  
-                {% set lista = listaAsignatura[0] %}
+                {% if listaAsignatura|length > 0 %}  
+                    {% set lista = listaAsignatura[0] %}
+                {% else %}
+                    {% set lista = listaAsignatura %}
+                {% endif %}
             {% endif %}
             {% if listaCurso is defined %}  
-                {% set lista = listaCurso[0] %}
+                {% if listaCurso|length > 0 %}  
+                    {% set lista = listaCurso[0] %}
+                {% else %}
+                    {% set lista = listaCurso %}
+                {% endif %}
             {% endif %}
             <thead  class="cf">
                 <tr>

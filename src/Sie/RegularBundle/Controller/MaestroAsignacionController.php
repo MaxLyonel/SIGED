@@ -310,8 +310,8 @@ class MaestroAsignacionController extends Controller {
 
         $listaAsignatura = $this->getCursoInstitucionEducativaCursoTurnoNivelAsignatura($institucionEducativaId, $gestionId, $turnoId, $nivelId, $asignaturaId);
         
+        $countPeriodo = 0;
         if(count($listaAsignatura)>0){
-            $countPeriodo = 0;
             foreach($listaAsignatura[0] as $key => $value){  
                 if(isset($value['estado'])){
                     if($value['estado'] == "t"){
@@ -419,8 +419,9 @@ class MaestroAsignacionController extends Controller {
         $gestionId = $info["gestion"];
         // $validacionProcesoId = $info["vp_id"];
         $listaCurso = $this->getAsignaturaInstitucionEducativaCursoTurnoNivelGradoParalelo($institucionEducativaId, $gestionId, $turnoId, $nivelId, $gradoId, $paraleloId);
+        
+        $countPeriodo = 0;
         if(count($listaCurso)>0){
-            $countPeriodo = 0;
             foreach($listaCurso[0] as $key => $value){  
                 if(isset($value['estado'])){
                     if($value['estado'] == "t"){
