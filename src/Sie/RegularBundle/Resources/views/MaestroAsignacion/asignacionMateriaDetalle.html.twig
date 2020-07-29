@@ -44,7 +44,7 @@
                     {% endfor %}
                 {% else %}    
                     {% for key, curso in listaCurso %}
-                        {% set countPeriodos = 0 %}
+                        {% set countPeriodos = 1 %}
                         <tr>
                             {% for name, dato in curso %}
                                 <td data-title="{{name}}">
