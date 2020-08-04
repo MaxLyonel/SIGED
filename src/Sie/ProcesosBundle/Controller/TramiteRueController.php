@@ -2232,7 +2232,7 @@ class TramiteRueController extends Controller
                                     }else{
                                         $institucioneducativa->setEstadoinstitucionTipo($estado);
                                         $institucioneducativa->setFechaModificacion(new \DateTime('now'));
-                                        $institucioneducativa->setFechaCierre(new \DateTime('now'));
+                                        $institucioneducativa->setFechaCierre((new \DateTime('now'))->format('Y-m-d'));
                                         $institucioneducativa->setObsRue($observacion);
                                         $vAnterior['estado']['id'] = $tareasDatos[0]['datos']['institucioneducativa']['estadoinstitucion_tipo_id'];
                                         $vAnterior['estado']['estado'] = $tareasDatos[0]['datos']['institucioneducativa']['estadoinstitucion'];                                        
