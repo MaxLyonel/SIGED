@@ -41,13 +41,13 @@ class InscriptionIniPriTrueController extends Controller {
      *
      */
     public function indexAction() {
-
+      /*
       $arrUser = array('6478217','7861595','3558624');
 
       if(!in_array($this->session->get('userName'), $arrUser) ){
         return $this->redirect($this->generateUrl('principal_web'));
       }
-        
+       */ 
         // die('krlos');
         $em = $this->getDoctrine()->getManager();
         // return $this->redirectToRoute('principal_web');
