@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Sie\AppWebBundle\Entity\DocumentoFirmaAutorizada;
+use Sie\AppWebBundle\Entity\DocumentoFirma;
 
 use Sie\TramitesBundle\Controller\DefaultController as defaultTramiteController;
 use Sie\TramitesBundle\Controller\TramiteDetalleController as tramiteProcesoController;
@@ -253,12 +254,12 @@ class DocumentoFirmaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
             select df.id, lt.lugar, pt.persona as tipo, p.nombre, p.paterno, p.materno, p.nombre || ' ' || p.paterno || ' ' || p.materno as persona
-            , encode(df.firma,'escape') as firma, df.fecha_registro 
+            , encode(df.firma,'escape') as firma, df.fecha_registro , df.esactivo
             from documento_firma as df
             inner join persona as p on p.id = df.persona_id
             inner join lugar_tipo as lt on lt.id = df.lugar_tipo_id
             inner join persona_tipo as pt on pt.id = df.persona_tipo_id
-            where df.esactivo = true
+            
             order by pt.persona, lt.lugar, p.nombre, p.paterno, p.materno, df.id
         ");
         $query->execute();
@@ -269,6 +270,58 @@ class DocumentoFirmaController extends Controller {
             'subtitulo' => 'Lista',
             'firmas' => $entity
         ));
+    }
+
+    public function nuevoAction(Request $request){
+        // get the send values
+    	return $this->render($this->session->get('pathSystem') . ':DocumentoFirma:firmaNuevoBusca.html.twig',array(
+    		'form'=>$this->creaFormularioBuscaPersonaCI(null, '')->createView(),
+    	));
+    }
+
+    public function nuevoBuscaPersonaAction(Request $request){
+        // get the send values
+        $form = $request->get('form');
+        $carnet = $form['carnet'];
+        $complemento = $form['complemento'];
+        $em = $this->getDoctrine()->getManager();
+        $entityPersona = $em->getRepository('SieAppWebBundle:Persona')->findBy(array('carnet'=>$carnet, 'complemento'=>$complemento));
+        //dump($entityPersona);die;
+        $arrayPersona = array();
+        $personaId = 0;
+        $msg = "";
+        $estado = true;
+
+        if(count($entityPersona) <= 0){
+            $msg = "No existe la persona con el número y complemento de cédula de identidad ingresado.";
+            $estado = false;
+        }
+
+        $countPersonaValidada = 0;
+        foreach ($entityPersona as $dato)
+        {
+            if($dato->getSegipId() == 1){
+                $countPersonaValidada = $countPersonaValidada + 1;
+                $personaId = base64_encode($dato->getId());
+                $arrayPersona = array('id'=>$personaId, 'carnet'=>$dato->getCarnet(), 'complemento'=>$dato->getComplemento(), 'nombre'=>$dato->getNombre(), 'paterno'=>$dato->getPaterno(), 'materno'=>$dato->getMaterno());
+            }
+        }
+        if(count($arrayPersona) <= 0){
+            $msg = "La cédula de indentidad ingresada no esta validad por SEGIP, comuniquese con el tecnico respectivo";
+            $estado = false;
+        }
+
+        if($countPersonaValidada > 1){
+            $msg = "Existen ".$countPersonaValidada." personas con el número y complemento de cédula de identidad ingresado.";
+            $estado = false;
+        }
+
+    	return $this->render($this->session->get('pathSystem') . ':DocumentoFirma:firmaNuevo.html.twig',array(
+            'form'=>$this->creaFormularioNuevaFirma(null, null, $personaId)->createView(),
+            'persona' => $arrayPersona,
+            'estado' => $estado,
+            'msg' => $msg
+    	));
     }
 
     public function modificaAction(Request $request){
@@ -282,6 +335,128 @@ class DocumentoFirmaController extends Controller {
     	return $this->render($this->session->get('pathSystem') . ':DocumentoFirma:firmaModifica.html.twig',array(
     		'form'=>$this->creaFormularioFirma($firma, $id)->createView(),
     	));
+    }
+    
+    public function eliminaAction(Request $request){
+        // get the send values
+    	$documentoFirmaId = base64_decode($request->get('firma'));
+
+        $msg = "";
+        $estado = true;
+
+        $em = $this->getDoctrine()->getManager();
+        $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->find($documentoFirmaId);
+        if(count($entidadDocumentoFirma) > 0){
+            $entidadDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('documentoFirma'=>$documentoFirmaId));
+            if(count($entidadDocumento) > 0){
+                $msg = "La firma ya fue asignada a un documento, no puede eliminarse";
+                $estado = false;
+            } else {
+                $em->getConnection()->beginTransaction();
+                try{         
+                    $em->remove($entidadDocumentoFirma);
+                    $em->flush();
+                    $em->getConnection()->commit();
+                    $msg = "Firma eliminada";
+                    $estado = true;
+                } catch (Exception $ex) {
+                    $em->getConnection()->rollback();
+                    $msg = "Error al realizar la eliminación, intente nuevamente";
+                    $estado = false;
+                }
+            }
+        } else {
+            $msg = "No existe la firma solicitada, intente nuevamente";
+            $estado = false;
+        }
+
+    	$response = new JsonResponse();
+        return $response->setData(
+            array( 
+                'estado' => $estado, 
+                'msg' => $msg
+            )
+        );
+    }
+
+
+
+    
+    public function modificaEstadoAction(Request $request){
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d h:i:s'));
+        // get the send values
+        $documentoFirmaId = base64_decode($request->get('firma'));
+        $estadoFirma = $request->get('estado');
+
+        $msg = "";
+        $estado = true;
+
+        $em = $this->getDoctrine()->getManager();
+        $entidadDocumentoFirma = $em->getRepository('SieAppWebBundle:DocumentoFirma')->find($documentoFirmaId);
+        if(count($entidadDocumentoFirma) > 0){
+            $em->getConnection()->beginTransaction();
+            try{         
+                $entidadDocumentoFirma->setObs("Modificación del estado en fecha ".$fechaActual->format("d/m/Y h:i"));
+                $entidadDocumentoFirma->setEsactivo($estadoFirma);
+                $em->flush();
+                $em->getConnection()->commit();
+                $msg = "Modificación de estado realizado";
+                $estado = true;
+            } catch (Exception $ex) {
+                $em->getConnection()->rollback();
+                $msg = "Error al realizar la modificación del estado, intente nuevamente";
+                $estado = false;
+            }
+        } else {
+            $msg = "No existe la firma solicitada, intente nuevamente";
+            $estado = false;
+        }
+
+    	$response = new JsonResponse();
+        return $response->setData(
+            array( 
+                'estadoFirma' => $estadoFirma, 
+                'estado' => $estado, 
+                'msg' => $msg
+            )
+        );
+    }
+    
+
+    private function creaFormularioNuevaFirma($entidadPersonaTipo, $entidadLugarTipo, $personaId)
+    { 
+        $form = $this->createFormBuilder()   
+            ->add('persona', 'hidden', array('attr' => array('value' => $personaId)))   
+            ->add('tipo', 'entity', array('data' => $entidadPersonaTipo, 'empty_value' => 'Seleccione Cargo', 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\PersonaTipo',
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('pt')
+                                ->where('pt.id in (1,2)')
+                                ->orderBy('pt.id', 'ASC');
+                    },
+            ))
+            ->add('departamento', 'entity', array('data' => $entidadLugarTipo, 'empty_value' => 'Seleccione Departamento', 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\LugarTipo',
+                    'query_builder' => function(EntityRepository $er) {
+                        return $er->createQueryBuilder('lt')
+                                ->where('lt.lugarNivel = 6')
+                                ->andWhere('lt.id != 31352')
+                                ->orderBy('lt.lugar', 'ASC');
+                    },
+            ))
+            ->add('foto', 'file', array('label' => 'Fotografía (.png)', 'required' => true, 'attr' => array())) 
+            ->add('guardar', 'button', array('label' => 'Guardar', 'attr' => array('onclick'=>'guardar()')))
+            ->getForm();
+        return $form;        
+    }
+
+    private function creaFormularioBuscaPersonaCI($ci, $complemento)
+    { 
+        $form = $this->createFormBuilder()     
+            ->add('carnet', 'number', array('label' => 'Ingrese el número de C.I.', 'attr' => array('value' => $ci, 'class' => 'form-control', 'pattern' => '[0-9]{1,6}', 'maxlength' => '9', 'autocomplete' => 'on', 'placeholder' => 'Número de C.I.')))      
+            ->add('complemento', 'text', array('label' => 'Ingrese el complemento', 'attr' => array('value' => $complemento, 'class' => 'form-control', 'pattern' => '[0-9]{1,6}', 'maxlength' => '2', 'autocomplete' => 'on', 'placeholder' => 'Complemento de C.I.')))
+            ->add('buscar', 'button', array('label' => 'Buscar', 'attr' => array('onclick'=>'buscarPersona()')))
+            ->getForm();
+        return $form;        
     }
 
     private function creaFormularioFirma($firmaId, $id)
@@ -333,5 +508,69 @@ class DocumentoFirmaController extends Controller {
                 'msg_incorrecto' => $msg_incorrecto
             )
         );
+    }
+
+
+
+    public function nuevoGuardaAction(Request $request){        
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+        // get the send values
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+               
+        $form = $request->get('form');
+        $file = $request->files->get('form');
+
+        $msg = "";
+        $estado = true;
+        $info = array();
+
+        if($form and $file){
+            $foto = $file['foto'];
+            $personaId = base64_decode($form['persona']);
+            $personaTipoId = $form['tipo'];
+            $lugarTipoId = $form['departamento'];
+            $strm = fopen($foto->getRealPath(),'rb');
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            try{        
+                $entityPersona = $em->getRepository('SieAppWebBundle:Persona')->find($personaId);
+                $entityPersonaTipo = $em->getRepository('SieAppWebBundle:PersonaTipo')->find($personaTipoId);
+                $entityLugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarTipoId);
+                $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
+                $entityDocumentoFirma = new DocumentoFirma();
+                $entityDocumentoFirma->setPersona($entityPersona);
+                $entityDocumentoFirma->setPersonaTipo($entityPersonaTipo);
+                $entityDocumentoFirma->setLugarTipo($entityLugarTipo);
+                $entityDocumentoFirma->setUsuario($entityUsuario);
+                $entityDocumentoFirma->setEsactivo(true);
+                $entityDocumentoFirma->setFechaRegistro($fechaActual);
+                $entityDocumentoFirma->setTokenFirma("");
+                $entityDocumentoFirma->setFirma(base64_encode(stream_get_contents($strm)));
+                $entityDocumentoFirma->setObs('Nuevo Registro');
+                $em->persist($entityDocumentoFirma);
+                $em->flush(); 
+                $em->getConnection()->commit();
+                $msg = "Firma registrada";
+                $estado = true;
+                $personaNombre = $entityPersona->getNombre()." ".$entityPersona->getPaterno()." ".$entityPersona->getMaterno();
+                $personaTipo = $entityPersonaTipo->getPersona();
+                $departamento = $entityLugarTipo->getLugar();
+                $firma = $entityDocumentoFirma->getFirma();
+                $fechaRegistro = $entityDocumentoFirma->getFechaRegistro()->format('d/m/Y h:i');
+                $documentoFirmaId = base64_encode($entityDocumentoFirma->getId());
+                $info = array('persona'=>$personaNombre, 'departamento'=>$departamento, 'tipo'=>$personaTipo, 'firma'=>$firma, 'fecha'=>$fechaRegistro, 'id'=>$documentoFirmaId);
+            } catch (Exception $ex) {
+                $em->getConnection()->rollback();
+                $msg = "Error al realizar el registro, intente nuevamente";
+                $estado = false;
+            }
+        } else {
+            $msg = "Error al procesar el formulario, intente nuevamente";
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('msg' => $msg, 'estado' => $estado, 'info' => $info));
     }
 }

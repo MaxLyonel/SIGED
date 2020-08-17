@@ -45,3 +45,31 @@ tramite_documento_supletorio_pdf:
 tramite_documento_serie_disponible:
     path:     /serie/disponible
     defaults: { _controller: SieTramitesBundle:Documento:serieDisponible }
+
+tramite_documento_serie:
+    path:     /serie
+    defaults: { _controller: SieTramitesBundle:Documento:serie }
+
+tramite_documento_serie_nuevo:
+    path:     /serie/nuevo
+    defaults: { _controller: SieTramitesBundle:Documento:serieNuevo }
+    options:
+         expose: true 
+
+tramite_documento_serie_nuevo_guarda:
+    path:     /serie/nuevo/guarda
+    defaults: { _controller: SieTramitesBundle:Documento:serieNuevoGuarda }
+    options:
+         expose: true 
+
+tramite_documento_reactiva_busca:
+    path:     /reactiva/busca
+    defaults: { _controller: SieTramitesBundle:Documento:reactivaBusca }
+
+tramite_documento_reactiva_lista:
+    path:     /reactiva/lista
+    defaults: { _controller: SieTramitesBundle:Documento:reactivaLista }
+
+tramite_documento_reactiva_guarda:
+    path:     /reactiva/guarda
+    defaults: { _controller: SieTramitesBundle:Documento:reactivaGuarda }

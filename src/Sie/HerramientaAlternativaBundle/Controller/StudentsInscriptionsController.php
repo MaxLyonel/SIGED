@@ -479,6 +479,9 @@ class StudentsInscriptionsController extends Controller {
       // user allowed to show the special inscription option
       $userAllowedOnCasespecial = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
 
+      $arrWithoutsegip = array(6126941);
+      $swWithoutSegip = in_array($this->session->get('userName'), $arrWithoutsegip)?true:false;
+
 
       // get all data about EstudianteInscripcionAlternativaExcepcionalTipo
       // $objExcepcional = $em->getRepository('SieAppWebBundle:EstudianteInscripcionAlternativaExcepcionalTipo')->findAll();
@@ -515,6 +518,7 @@ class StudentsInscriptionsController extends Controller {
             'arrPais'                  => $arrPais,
             'arrNewStudent'            => $arrNewStudent,
             'arrExcepcional'           => $arrExcepcional,
+            'swWithoutSegip'           => $swWithoutSegip,
       );
       // dump($arrResponse);die;
       $response->setStatusCode(200);
@@ -576,8 +580,9 @@ class StudentsInscriptionsController extends Controller {
     }
     // to do the check and inscription about the student
     public function checkDataStudentAction(Request $request){
-// dump($request);
-// die;
+ // dump($request);
+ // dump($_FILES);
+ // die;
       //ini json var
       $response = new JsonResponse();
       // create db conexion
@@ -597,6 +602,8 @@ class StudentsInscriptionsController extends Controller {
       $complemento = mb_strtoupper($request->get('complementoval'), 'utf-8');
       $iecId = $request->get('iecId');
       $expedidoId = $request->get('expedidoId');
+      $expedidoId = $request->get('expedidoId');
+      $withoutsegip = ($request->get('withoutsegip')=='true')?true:false;
 
       $casespecial = ($request->get('casespecial')=='false')?false:true;;
       $excepcional = $request->get('excepcional');
@@ -611,8 +618,12 @@ class StudentsInscriptionsController extends Controller {
         'fecha_nacimiento'=>$fecNac
       );
       
-      // get info segip
-      $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
+      if(!$withoutsegip){
+        // get info segip
+        $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');        
+      }else{
+        $answerSegip = true;
+      }
 
       // check if the data person is true
       if($answerSegip){
@@ -673,7 +684,11 @@ class StudentsInscriptionsController extends Controller {
                     $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
                     $estudiante->setLocalidadNac('');
                 }
-                $estudiante->setSegipId(1);
+                if($withoutsegip){
+                  $estudiante->setSegipId(0);
+                }else{
+                  $estudiante->setSegipId(1);
+                }
                 $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
                 $em->persist($estudiante);
 
@@ -734,17 +749,18 @@ class StudentsInscriptionsController extends Controller {
         }else{
 
           $arrRudesStudent = array();
+          
           foreach ($objRudesStudent as $value) {
             $arrRudesStudent[]=array(
-                                  'idstudent'=>$value->getId(),
-                                  'ci'=>$value->getCarnetIdentidad(),
-                                  'complemento'=>$value->getComplemento(),
-                                  'codigorude'=>$value->getCodigoRude(),
-                                  'paterno'=>$value->getPaterno(),
-                                  'materno'=>$value->getMaterno(),
-                                  'nombre'=>$value->getNombre(),
-                                  'fnac'=>$value->getFechaNacimiento()->format('d-m-Y'),
-                                  );
+              'idstudent'=>$value->getId(),
+              'ci'=>$value->getCarnetIdentidad(),
+              'complemento'=>$value->getComplemento(),
+              'codigorude'=>$value->getCodigoRude(),
+              'paterno'=>$value->getPaterno(),
+              'materno'=>$value->getMaterno(),
+              'nombre'=>$value->getNombre(),
+              'fnac'=>$value->getFechaNacimiento() ? $value->getFechaNacimiento()->format('d-m-Y') : ""
+            );
           }
 
           $status = 'error';

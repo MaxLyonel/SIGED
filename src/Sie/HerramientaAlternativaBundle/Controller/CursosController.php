@@ -115,16 +115,7 @@ class CursosController extends Controller {
         
         if (count($objStudents) > 0){
             $existins = true;
-            for($i=0; $i<count($objStudents);$i++) {
-                // $objStudents[$i]['edad'] = $this->calcularEdad($objStudents[$i]['fechaNacimiento']->format('Y-m-d'));
-
-                $query = $em->getConnection()->prepare('SELECT sp_calcula_edadanio (:rude::VARCHAR)');
-                $query->bindValue(':rude', $objStudents[$i]['codigoRude']);
-                $query->execute();
-                $edad = $query->fetchAll();
-                
-                $objStudents[$i]['edad'] = $edad[0]['sp_calcula_edadanio'];
-            }
+            
         }
         else {
             $existins = false;

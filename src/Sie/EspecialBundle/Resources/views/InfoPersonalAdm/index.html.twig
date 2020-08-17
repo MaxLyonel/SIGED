@@ -211,7 +211,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                      {% if (app.session.get('lastOperativo') != 5 and onlyview == false and gestion == 2020) %}
+                                                        {% if (app.session.get('lastOperativo') != 5 and onlyview == false and gestion == 2020) %}
                                                         <form action="{{path('herramienta_especial_info_personal_adm_es_vigente_administrativo')}}" method="post" style="display: inline-block">
                                                             <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                                             <input type="hidden" name="gestion" value="{{gestion}}">
@@ -223,7 +223,7 @@
                                                                 <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está segura/o de continuar?');">Definir como Vigente</button>
                                                             {% endif %}
                                                         </form>
-                                                      {% else %}
+                                                        {% else %}
                                                         {% if personal.esVigenteAdministrativo %}
                                                             <span class="text-success">
                                                                 Vigente
@@ -250,7 +250,6 @@
         </div>
     </div>
 {% endblock %}
-
 {% block javascripts %}
     {{parent()}}
     <script>

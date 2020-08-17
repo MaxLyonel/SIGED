@@ -1,0 +1,255 @@
+{% extends "::layoutTramites.html.twig"%}
+   
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('tramite_homepage')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        {% block contentSearchBread %}
+        {% endblock %}
+    </ol>
+{% endblock %}
+
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="pull-left">
+                        <h3 class="panel-title">
+                            <i class="glyphicon glyphicon-edit"></i> Números y Series
+                        </h3>
+                    </div>
+                    <div class="pull-right">
+                    {% if gestiones is defined  %}
+                        <form name="form" role="form" action="{{ path('tramite_documento_serie') }}" action="" method="POST" >
+                            <select class="form-control input-lg" name="gestion" id="gestion" onchange="this.form.submit();">
+                                {% for ges in gestiones %}
+                                    {% if ges.id == gestion %}
+                                        <option value="{{ ges.id }}" selected>{{ ges.id }}</option>
+                                    {% else %}
+                                        <option value="{{ ges.id }}">{{ ges.id }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </form>
+                    {% endif %}
+                    </div>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+
+                <div class="panel-body">
+                    <button type="button" class="btn btn-lilac col-lg-12 col-md-12 col-sm-12 mb-10" data-toggle="modal" data-target=".bs-example-modal-form" onclick="nuevo();">
+                        <i class="fa fa-plus-square-o"></i> Nuevo registro
+                    </button>
+                    <table id="tablaParticipantes" name="tablaParticipantes" class="table table-issue-tracker table-middle table-info" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Departamento</th>
+                                <th>Tipo</th>
+                                <th>Serie</th>
+                                <th>Rango</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Departamento</th>
+                                <th>Tipo</th>
+                                <th>Serie</th>
+                                <th>Rango</th>
+                                <th>Cantidad</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% if series is defined  %}
+                                {% for detalle in series %}  
+                                    <tr>
+                                        <td>
+                                            {{ loop.index }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.departamento }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.documento_tipo }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.serie }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.primer }} al {{ detalle.ultimo }}
+                                        </td>
+                                        <td>
+                                            {{ detalle.count }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div><!-- /.panel-body -->
+            </div>
+        </div>
+    </div><!-- /.row -->
+    <div class="modal fade bs-example-modal-form" tabindex="-1" role="dialog" aria-hidden="true" id="modal" data-keyboard="false" data-backdrop="static">  
+              
+    </div>
+       
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script>
+
+            // Setup - add a text input to each footer cell
+            $('#tablaParticipantes tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "#"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#tablaParticipantes').DataTable( {
+                    "order": [[ 0, "asc" ]],
+                    "columnDefs": [
+                        
+                    ],
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+
+            var nuevo = function(){
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('tramite_documento_serie_nuevo'),
+                    data: {},
+                    beforeSend: function () {
+                        $('#modal').empty();
+                    },
+                        success: function (data) {
+                        $('#modal').empty();
+                        $('#modal').append(data);
+        
+                    },
+                });        
+            };
+
+        var guardar = function(){
+            if($('#form_departamento').val() == "" || $('#form_departamento').val() == "0"){
+                alert("Debe seleccionar el departamento");
+                $('#form_departamento').focus();
+                return false;
+            }
+            if($('#form_gestion').val() == "" || $('#form_gestion').val() == "0"){
+                alert("Debe seleccionar la gestión");
+                $('#form_gestion').focus();
+                return false;
+            }
+            if($('#form_documentoTipo').val() == "" || $('#form_documentoTipo').val() == "0"){
+                alert("Debe seleccionar el tipo de documento");
+                $('#form_documentoTipo').focus();
+                return false;
+            }
+            if($('#form_numInicial').val() == ""){
+                alert("Debe ingresar el número inicial");
+                $('#form_numInicial').focus();
+                return false;
+            }
+
+            var regexNum= /^\d*$/;
+            if(!regexNum.test($('#form_numInicial').val())){
+                alert("La descripción del número inicial solamente debe contar con números");
+                $('#form_numInicial').focus();
+                return false;
+            }
+            if($('#form_numFinal').val() == ""){
+                alert("Debe ingresar el número final");
+                $('#form_numFinal').focus();
+                return false;
+            }
+            if(!regexNum.test($('#form_numFinal').val())){
+                alert("La descripción del número final solamente debe contar con números");
+                $('#form_numFinal').focus();
+                return false;
+            }
+            if($('#form_serie').val() == ""){
+                alert("Debe ingresar la serie");
+                $('#form_serie').focus();
+                return false;
+            }
+            var regexText = /^[a-zA-Z]+$/;
+            if(!regexText.test($('#form_serie').val())){
+                alert("La serie solo debe contar con letras entre A y Z");
+                $('#form_serie').focus();
+                return false;
+            }
+            var r = confirm("¿ Está seguro de realizar la asignación de los cartones ?");
+            if (r == true) {
+                var botonGuardar = $('#form_guardar');
+                var formulario = $('#form')[0];
+                var formData = new FormData(formulario);
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('tramite_documento_serie_nuevo_guarda'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $('#form').append('<div style="text-align:center" id="load"><img src="{{asset('img/loading.gif')}}" /></div>');
+                        botonGuardar.hide();
+                    },
+                    success: function (data) {
+                        alert(data.msg);   
+                        if(data.estado){   
+                            if($('#gestion').val() == $('#form_gestion').val()){
+                                table.row.add([(table.rows().count()+1), data.info.departamento, data.info.tipo, data.info.serie, data.info.rango, data.info.cantidad]);
+                                table.draw();
+                            }
+                            $('#load').remove();   
+                            $('#modal').empty();   
+                            $('#modal').modal('hide');
+                        } else {    
+                            $('#load').remove();
+                            botonGuardar.show();
+                        }                 
+                    }, 
+                    error: function(error){
+                        $('#load').remove();
+                        alert("Error, no fue posible enviar el formulario, intente nuevamente");  
+                        botonGuardar.show();
+                    },
+                }); 
+                return true;
+            } else {
+                return false;
+            }
+        } 
+
+
+
+       $(window).load(function(){
+
+
+        });
+    </script>
+{% endblock %}

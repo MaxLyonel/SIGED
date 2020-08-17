@@ -24,6 +24,10 @@ class PersonaTipo
      */
     private $obs;
 
+    public function __toString() {
+        return $this->persona;
+    }
+
 
     /**
      * Get id

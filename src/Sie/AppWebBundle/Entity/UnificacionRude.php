@@ -304,4 +304,32 @@ class UnificacionRude
     {
         return $this->gestionTipoCorr;
     }
+    /**
+     * @var string
+     */
+    private $jsontxt;
+
+
+    /**
+     * Set jsontxt
+     *
+     * @param string $jsontxt
+     * @return UnificacionRude
+     */
+    public function setJsontxt($jsontxt)
+    {
+        $this->jsontxt = $jsontxt;
+    
+        return $this;
+    }
+
+    /**
+     * Get jsontxt
+     *
+     * @return string 
+     */
+    public function getJsontxt()
+    {
+        return $this->jsontxt;
+    }
 }

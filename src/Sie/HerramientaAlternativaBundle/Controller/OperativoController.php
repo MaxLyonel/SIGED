@@ -342,7 +342,7 @@ class OperativoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $form = $this->createFormBuilder()
         ->add('operativo','entity',array('label'=>'Operativo:','required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
-            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 ");},'property'=>'operaTivo','empty_value' => 'Seleccione operativo','attr'=>array('class'=>'form-control')))
+            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.id=1 ");},'property'=>'operaTivo','empty_value' => 'Seleccione operativo','attr'=>array('class'=>'form-control')))
         ->add('fechainicio','text',array('label'=>'Fecha inicio: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
         ->add('fechafin','text',array('label'=>'Fecha fin: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
         ->add('gestion','entity',array('label'=>'Gestión:','required'=>true,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
@@ -998,13 +998,22 @@ class OperativoController extends Controller {
         $rolusuario = $this->session->get('roluser');
         $this->gestion = date('Y');
         $em = $this->getDoctrine()->getManager();
-        $form = $this->createFormBuilder()
-        ->add('codsie','text',array('label'=>'Cod. SIE:', 'required'=>true, 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
+        $form = $this->createFormBuilder();
+        if($this->session->get('userName')=='4926577'){
+
+            $form =$form->add('codsie','text',array('label'=>'Cod. SIE:', 'required'=>true, 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
+            ->add('operativo','entity',array('label'=>'Operativo:','required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
+                return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true ");},'property'=>'operaTivo','empty_value' => false,'attr'=>array('class'=>'form-control')))
+            ->add('gestion','entity',array('label'=>'Gestión:','required'=>true,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+                return $g->createQueryBuilder('g')->where('g.id>=2009')->andWhere('g.id<=2019')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => false,'attr'=>array('class'=>'form-control')));
+        }else{
+            $form =$form->add('codsie','text',array('label'=>'Cod. SIE:', 'required'=>true, 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
         ->add('operativo','entity',array('label'=>'Operativo:','required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
             return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true and o.id in (2,4)");},'property'=>'operaTivo','empty_value' => false,'attr'=>array('class'=>'form-control')))
         ->add('gestion','entity',array('label'=>'Gestión:','required'=>true,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
-            return $g->createQueryBuilder('g')->where('g.id>=2009')->andWhere('g.id<=2018')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => false,'attr'=>array('class'=>'form-control')))
-        ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'form-control btn btn-success','onclick'=>'buscarCeaGestionPasada()')))
+            return $g->createQueryBuilder('g')->where('g.id>=2009')->andWhere('g.id<=2018')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => false,'attr'=>array('class'=>'form-control')));
+        }
+        $form =$form->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'form-control btn btn-success','onclick'=>'buscarCeaGestionPasada()')))
         ->getForm();
         return $form;
     }
@@ -1018,7 +1027,7 @@ class OperativoController extends Controller {
         $form = $this->createFormBuilder()
         ->add('codsie','text',array('label'=>'Cod. SIE:', 'required'=>true, 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
         ->add('operativo','entity',array('label'=>'Operativo:','required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
-            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true");},'property'=>'operaTivo','empty_value' => false,'attr'=>array('class'=>'form-control')));
+            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true and o.id=1");},'property'=>'operaTivo','empty_value' => false,'attr'=>array('class'=>'form-control')));
         if($rolusuario == 8){
             $form = $form
             ->add('gestion','entity',array('label'=>'Gestión:','required'=>true,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
@@ -1126,7 +1135,7 @@ class OperativoController extends Controller {
         ->setAction($this->generateUrl('alternativa_operativo_nuevo_reapertura_guardar'))
         ->add('codsie','text',array('label'=>'Cod. SIE:', 'required'=>true, 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
         ->add('operativo','entity',array('label'=>'Operativo:','required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
-            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true and o.id in (1,3)");},'property'=>'operaTivo','empty_value' => false,'attr'=>array('class'=>'form-control')))
+            return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true and o.id in (1)");},'property'=>'operaTivo','empty_value' => false,'attr'=>array('class'=>'form-control')))
         ->add('fechainicio','text',array('label'=>'Fecha inicio: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
         ->add('fechafin','text',array('label'=>'Fecha fin: (dia-mes-año)','required'=>true,'data'=>date('d-m-Y'), 'attr'=>array('class'=>'form-control datepicker','placeholder'=>'dd-mm-AAAA','maxlength'=>10,'minlength'=>10,'autocomplete'=>'off')))
         ->add('habilitar', 'submit', array('label'=> 'Habilitar', 'attr'=>array('class'=>'form-control btn btn-success')))

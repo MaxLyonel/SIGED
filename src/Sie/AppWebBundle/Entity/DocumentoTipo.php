@@ -24,6 +24,13 @@ class DocumentoTipo
      */
     private $obs;
 
+    
+
+    public function __toString() {
+        return $this->documentoTipo;
+    }
+
+
 
     /**
      * Get id

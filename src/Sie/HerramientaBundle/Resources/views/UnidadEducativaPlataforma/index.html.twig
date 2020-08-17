@@ -1,0 +1,878 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+
+        [v-cloak]{
+            display: none;
+        }
+        .readData{
+            background-color: lightblue;
+            color:  #000;
+            opacity: 0.8;
+         
+
+        }
+		.jupper{
+			text-transform: uppercase;
+		}        
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Plataforma Educativa - Solicitud <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Solicitud</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active"></li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <!-- /.row -->
+<div id="app" v-cloak>
+    <div class="modal fade" id="modalEstudianteTwo" data-backdrop="static">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Registrar Responsable</h4>
+                </div>
+                <div class="modal-body">
+
+
+                	<form class="form-horizontal" method="post">
+		                    <fieldset>
+								
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="ciresp" name="name" type="text" placeholder="Carnet" class="form-control" v-model="dataPlataforma.dataResponsable.carnet">
+		                            </div>
+		                        </div>
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="complementoresp" name="name" type="text" placeholder="complemento" class="form-control jupper" v-model="dataPlataforma.dataResponsable.complemento">
+		                            </div>
+		                        </div>		                        		                        
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="patresp" name="patresp" type="text" placeholder="Paterno" class="form-control jupper" v-model="dataPlataforma.dataResponsable.paterno">
+		                            </div>
+		                        </div>	                        
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="matresp" name="matresp" type="text" placeholder="Materno" class="form-control jupper" v-model="dataPlataforma.dataResponsable.materno">
+		                            </div>
+		                        </div>
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="nombreresp" name="name" type="text" placeholder="Nombre" class="form-control jupper" v-model="dataPlataforma.dataResponsable.nombre">
+		                            </div>
+		                        </div>
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="fecnac" name="name" type="text" placeholder="Feha Nacimiento" class="form-control" v-model="dataPlataforma.dataResponsable.fecnac">
+		                            </div>
+		                        </div>		                        
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="emailresp" name="email" type="text" placeholder="Email Address" class="form-control" v-model="dataPlataforma.dataResponsable.correo">
+		                            </div>
+		                        </div>
+
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-phone-square bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="phoneresp" name="phone" type="text" placeholder="Phone" class="form-control" v-model="dataPlataforma.dataResponsable.celular" v-on:keypress="numerico">
+		                            </div>
+		                        </div>
+			                    </br>
+
+			                         <div class="form-group">
+			                           
+			                            <div class="col-md-6">
+			                                <button type="button"  @click="checkSegipResponsable" class="btn btn-primary">Registrar y Validar</button>
+			                            </div>
+			                        </div>	
+
+
+		                    </fieldset>
+		                </form>	             
+             
+
+                </div>
+            </div>
+        </div>
+    </div> 
+
+      <div class="body-content animated fadeIn">
+            <div class="row">
+              <div class="col-xs-12 col-lg-12">
+
+
+                <div class="panel panel-default">
+                  <div class="panel-body">
+
+					<table class="table table ">
+	                    <tr>
+	                    	<td colspan="2">
+			                      <fieldset>
+				                        <legend class="text-center ">Datos Institucion Educativa </legend>
+				                        <div style="font-size:15px; text-align: right;">
+				                        	 <div style="font-size:15px; text-align: right;"><a target="_blank" href="{{asset('img/AyudaPlataforma.pdf')}}">Descargar guía de Solicitud de Plataforma <i class="fa fa-file-pdf-o"></i></a></div>		                        	 
+				                        <div class="form-group">
+				                          
+				                            <div class="col-md-6">
+				                            	  <strong>SIE:</strong> 
+				                            	  {{DataInstitucioneducativa.id}}
+				                                
+				                            </div>
+				                             
+				                             <div class="col-md-6">
+				                             	<strong>INSTITUCION EDUCATIVA:</strong> 
+				                                {{DataInstitucioneducativa.institucioneducativa}}
+				                            </div>
+				                        </div>
+				                   </fieldset>
+
+	                    	</td>
+	                     
+		                   </br>
+		                   </br>
+	                    </tr>
+
+	                   
+	                    <tr  class="readData">
+	                      <td>
+							<form class="form-horizontal" method="post">
+		                    <fieldset>
+		                        <legend class="text-center header">Datos Director</legend>
+		                        {#
+		                        <a v-if="!swCompleteRequest" class="" data-toggle="modal" href='#modalEstudianteTwo' > <i class="fa fa-eye"></i> Registrar Información </a>
+								#}
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-4">
+		                                <input id="ci" name="ci" type="text" placeholder="CI" class="form-control" v-model="dataPlataforma.dataDirector.carnet" readonly="true">
+		                            </div>
+		                             <div class="col-md-4">
+		                                <input id="complemento" name="complemento" type="text" placeholder="complemento" class="form-control" v-model="dataPlataforma.dataDirector.complemento" readonly="true">
+		                            </div>
+		                        </div>
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-8">
+
+		                            	
+		                                <input id="patdir" name="name" type="text" placeholder="Paterno" class="form-control" v-model=" dataPlataforma.dataDirector.paterno " readonly="true">
+		                            </div>
+		                        </div>	                        
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="matdir" name="name" type="text" placeholder="Materno" class="form-control" v-model="dataPlataforma.dataDirector.materno" readonly="true" >
+		                                 
+		                            </div>
+		                        </div>
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="nombredir" name="name" type="text" placeholder="Nombre" class="form-control" v-model="dataPlataforma.dataDirector.nombre" readonly="true">
+		                               
+		                            </div>
+		                        </div>
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="emaildir" name="email" type="text" placeholder="Email Address" class="form-control" v-model="dataPlataforma.dataDirector.correo" readonly="true">
+		                              
+		                            </div>
+		                        </div>
+
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-phone-square bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="phonedir" name="phone" type="text" placeholder="Phone" class="form-control" v-model="dataPlataforma.dataDirector.celular" readonly="true">
+		                                
+		                            </div>
+		                        </div>
+
+		                    </fieldset>
+		                </form>	
+	                      </td>
+	                      <td>
+
+	                      	<form class="form-horizontal" method="post">
+		                    <fieldset>
+		                        <legend class="text-center header">Datos Responsable
+		                        	<a v-if="!swCompleteRequest" class="" data-toggle="modal" href='#modalEstudianteTwo' > <i class="fa fa-child" data-toggle="popover" data-placement="top" data-content="Registre datos personales del Responsable de la administración de la Plataforma" data-trigger="hover"></i> </a>
+		                        </legend>
+								
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-4">
+		                                <input id="ciresp1" name="ciresp" type="text" placeholder="CI" class="form-control" :value="swresponse ? dataPlataforma.dataResponsable.carnet: ''" readonly="true">
+		                            </div>
+		                             <div class="col-md-4">
+		                                <input id="complementoresp1" name="name" type="text" placeholder="complemento" class="form-control jupper" :value="swresponse ? dataPlataforma.dataResponsable.complemento: ''" readonly="true">
+		                            </div>
+		                        </div>
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="patresp1" name="name" type="text" placeholder="Paterno" class="form-control jupper" :value="swresponse ? dataPlataforma.dataResponsable.paterno: ''" readonly="true">
+		                            </div>
+		                        </div>	                        
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="matresp1" name="name" type="text" placeholder="Materno" class="form-control jupper" :value="swresponse ? dataPlataforma.dataResponsable.materno: ''" readonly="true">
+		                            </div>
+		                        </div>
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-user bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="nombreresp1" name="name" type="text" placeholder="Nombre" class="form-control jupper" :value="swresponse ? dataPlataforma.dataResponsable.nombre: ''" readonly="true">
+		                            </div>
+		                        </div>
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-envelope-o bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="emailresp1" name="email" type="text" placeholder="Email Address" class="form-control " :value="swresponse ? dataPlataforma.dataResponsable.correo: ''" readonly="true">
+		                            </div>
+		                        </div>
+
+		                        <div class="form-group">
+		                            <span class="col-md-1 col-md-offset-2 text-center"><i class="fa fa-phone-square bigicon"></i></span>
+		                            <div class="col-md-8">
+		                                <input id="phoneresp1" name="phone" type="text" placeholder="Phone" class="form-control" :value="swresponse ? dataPlataforma.dataResponsable.celular: ''" readonly="true">
+		                            </div>
+		                        </div>
+
+		                    </fieldset>
+		                </form>	
+	                      	
+	                      </td>
+	                    </tr>
+
+	                     <tr v-if="swCompleteRequest" >
+	                     	<td colspan="2">
+									<fieldset>
+				                        <legend class="text-center ">Datos de Solicitud de Plataforma </legend>
+				                        <div class="form-group">
+				                          
+				                            <div class="col-md-4">
+				                            	<strong>DOMINIO:</strong> 
+				                            	${arrRequestDominioInfo.requestDominio}
+				                            </div>
+				                             <div class="col-md-4">
+				                             	<strong>IP:</strong> 
+				                                ${arrRequestDominioInfo.requestIp}
+				                            </div>
+				                             <div class="col-md-4">
+				                             	<strong>PLATAFORMA:</strong> 
+				                                ${arrRequestDominioInfo.requestPlataforma}
+				                            </div>
+				                        </div>
+				                    </fieldset>	                     		
+	                     	</td>
+	                     </tr>
+	                    <tr v-if="!swCompleteRequest" >
+	                    	<td><label><input type="radio" id="swInscriptionA" value="swInscriptionA" name="swInscription" :class="{active: opcion == 1}" @click="opcion = 1" checked="true"> La Institución Educativa tiene PLATAFORMA</label>										
+	                    	<td><label><input type="radio" id="swInscriptionB" value="swInscriptionB" name="swInscription" :class="{active: opcion == 2}" @click="opcion = 2"> La Institución Educativa requiere PLATAFORMA</label></td>
+	                    </tr>
+	                    <tr v-if="!swCompleteRequest">
+	                    	<td colspan="2">
+	                    	{#
+	                    		<fieldset>
+									<div class="checkbox" id = "selector">
+								        <label><input type="checkbox" v-model="checked">Tiene Plataforma?</label>
+								    </div>
+	                    		</fieldset>
+	                    		<fieldset v-if="checked">	                    		
+	  								<div class="form-group">
+			                          
+			                            <div class="col-md-6">
+			                            	  <span class="col-md-1 col-md-offset-2 text-center">Dominio</span>
+			                            </div>
+			                             
+			                             <div class="col-md-6">
+			                             	<span class="col-md-1 col-md-offset-2 text-center">IP</span>
+			                               
+			                            </div>
+			                        </div>
+	                    		</fieldset>
+							#}
+								<div class="row">
+									<div class="col-md-12">
+										
+										<div role="tabpanel">
+											<!-- Nav tabs -->
+											{#
+											<ul class="nav nav-tabs" role="tablist">
+												<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
+													<a role="tab" data-toggle="tab">La Institución Educativa tiene PLATAFORMA</a>
+												</li>
+												<li :class="{active: opcion == 2}" @click="opcion = 2">
+													<a aria-controls="tabcarnet" role="tab" data-toggle="tab">La Institución Educativa Requiere PLATAFORMA</a>
+												</li>
+												
+												<li :class="{active: opcion == 3}" @click="opcion = 3">
+													<a aria-controls="tabcarnet" role="tab" data-toggle="tab">La Institución Educativa Requiere Moodle</a>
+												</li>
+												
+											</ul>#}
+											<!-- Tab panes -->
+											<div class="tab-content">
+												<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+													<div class="row">
+														<p>Registre la siguiente información solicitada:</p>
+														<div class="form-group col-md-8">
+															<label>Dominio <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="Registre nombre del dominio web" data-trigger="hover"></i> <span class="requerido">*</span> </label>
+															<input id="dominio" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.dominio">
+														</div>
+														<div class="form-group col-md-4">
+															<label>IP <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="registre dirección de IP" data-trigger="hover"></i> </label>
+															<input id="ip" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.ip">
+														</div>														
+													</div>
+												</div>
+												<div role="tabpanel" :class="['tab-pane', {active: opcion == 2}]">
+													<div class="row">
+														<div class="form-group col-md-4">
+															<label>Plataforma<span class="requerido">*</span></label></br>
+															<label style="color:#D2691E"> <input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 2" ><img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/moodle.png') }}"> Moodle </label></br>	
+															<label style="color:#228B22"><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 3" > <img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/classroom.png') }}"> classroom</label></br>	
+															<label style="color:#00008B"><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 4" > <img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/msteams.png') }}">  Microsoft Teams</label>																
+														</div>
+														<div class="form-group col-md-8">
+														<label>Su Plataforma Web solicitada es:<span class="requerido"></span></label>
+															<input id="complemento" name="complemento" type="text" placeholder="complemento" class="form-control" v-model="dataPlataforma.dataDominio.requestSite" readonly="true">
+														</div>
+													</div>
+												</div>
+												{#
+												<div role="tabpanel" :class="['tab-pane', {active: opcion == 3}]">
+													<div class="row">
+														<div class="form-group col-md-8">
+															<label>Subdominio Moodle<span class="requerido">*</span></label>
+															<input id="complemento" name="complemento" type="text" placeholder="complemento" class="form-control" v-model="dataPlataforma.dataDominio.requestSite" readonly="true">
+														</div>
+													</div>
+												</div>
+												#}
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+	                    	</td>
+	                    </tr>
+
+	                    <tr v-if="!swCompleteRequest"><td><button v-if="!swattach" type="button" @click="enterDataRequest" class="btn btn-primary">Registrar Información de Solicitud</button></td></tr>
+	                    <tr v-else> 
+	                    	<td> 
+	                    		<div class="alert alert-success" role="alert">
+								  Solicitud realizada con exito, en proceso de atención
+								</div>
+	                    	</td>
+	                    </tr>
+
+	                    <tr v-if="swattach">
+	                     	<td colspan="2">
+
+	                    		<fieldset>
+
+			                        <div class="form-group" style="font-size:15px; text-align: center;">
+			                        	
+
+			                        	<a  target="_blank" class="btn btn-inverse btn-stroke" href="{{path('plataforma_generateRequestDominioPDF', {'sie':app.session.get('ie_id')})}}" style=""><span class="glyphicon glyphicon-list-alt" ></span>Generar/Descargar Carta de Solicitud</a>
+			                        	{#
+	                                    <form action="{{path('plataforma_generateRequestDominioPDF')}}" method="post" style="display:inline-block">
+	                                       <input type="hidden" name="requestdata" id="requestdata" value="">
+	                                       <button type="submit" class="btn-link"><i class="fa fa-edit"></i>Generar/Descargar Carta de Solicitud</button>
+	                                    </form>	#}		                        				                           
+
+			                        </div>
+			                        <div class="form-group">
+			                            <div class="col-md-6">
+
+                                         <label for="genero">Adjuntar Documento: CARTA DE SOLICITUD FIRMADA</label>
+                                         <input type="file" name="image" @change="getDocSolictud" accept="file/*" class="form-control" id="archivoAdjuntoId1">
+                                       
+			                            </div>
+			                            <div class="col-md-6">
+                                         <label for="genero">Adjuntar Documento: ACREDITACIÓN DE IDONEIDAD </label>
+                                         <input type="file" name="image" @change="getAcreditacionIdoneidad" accept="file/*" class="form-control" id="archivoAdjuntoId2">
+			                            </div>
+			                        </div>
+			                        <div class="form-group">
+			                            <div class="col-md-6">
+                                         <label for="genero">Adjuntar Documento: FOTOCOPIA CEDULA DE IDENTIDAD </label>
+                                         <input type="file" name="image" @change="getCarnet" accept="file/*" class="form-control" id="archivoAdjuntoId3">
+			                            </div>
+			                            <div class="col-md-6">
+                                         <label for="genero">Adjuntar Documento: FOTOCOPIA R.M. </label>
+                                         <input type="file" name="image" @change="getfotocopiarm" accept="file/*" class="form-control" id="archivoAdjuntoId4">
+			                            </div>
+			                        </div>
+			                    </br>
+
+		                        <div class="form-group">		                           
+		                            <div class="col-md-6">
+		                                <button type="button" @click="sendRequest" class="btn btn-primary">Enviar Solicitud</button>
+		                            </div>
+		                        </div>
+
+	  								
+	                    		</fieldset>	 	                     	
+
+	                    	</td>
+	                 	</tr>
+
+	                </table>
+
+
+                  </div>
+                </div>
+
+                            
+              </div>
+            </div>
+          
+
+            <div class="row">
+                <div class="col-xs-12 col-lg-12">
+                    <div v-if="buscando" class="text-center">
+                        <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                    </div>
+                  <!--   <div v-if="!swresponse">
+                                        <strong>${message}</strong>
+                                    </div>   -->                  
+                </div>
+            </div>
+
+      </div>
+  </div>
+
+
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript">
+    // $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+  </script>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+    <script src="{{asset('js/inputmask.js')}}"></script>
+    <script type="text/javascript">
+// $("#fecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+    
+
+
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+
+            data: {
+
+              	checked:false,
+              	opcion: 1,
+              	opcionreqdomi: 0,
+              	swattach:false,
+              	dataPlataforma:{
+              		dataDirector:{
+              			'paterno':'{{dataDir.paterno}}',
+              			'materno':'{{dataDir.materno}}',
+              			'nombre':'{{dataDir.nombre}}',
+              			'carnet':'{{dataDir.carnet}}',
+              			'complemento':'{{dataDir.complemento}}',
+              			'correo':'{{dataDir.correo}}',
+              			'celular':'{{dataDir.celular}}',
+              			'personId':'{{dataDir.personId}}',
+              			'sie':'{{dataDir.sie}}',
+              		},
+              		dataResponsable:{
+              			'paterno':'{{arrPersonaResponsable.paterno}}',
+              			'materno':'{{arrPersonaResponsable.materno}}',
+              			'nombre':'{{arrPersonaResponsable.nombre}}',
+              			'carnet':'{{arrPersonaResponsable.carnet}}',
+              			'complemento':'{{arrPersonaResponsable.complemento}}',
+              			'correo':'{{arrPersonaResponsable.correo}}',
+              			'celular':'{{arrPersonaResponsable.celular}}',
+              			'personId':'{{arrPersonaResponsable.personId}}',
+              			'fecnac':'{{arrPersonaResponsable.fecnac}}',
+              			'swUpdateSegip':0,
+              			'newpersona':0,
+              		},
+              		dataDominio:{
+              			'dominio':'',
+              			'ip':'',
+              			'plataforma':'',
+              			'requestSite':'{{dataDir.requestSite}}',
+              			'opcion':0,
+              			'opcionreqdomi':0,
+              		}            		
+
+              	},
+              	swresponse:{{swresponse}},
+              	swCompleteRequest:{{swCompleteRequest}},
+				arrRequestDominioInfo:{
+					'requestPlataforma':'{{arrRequestDominioInfo.requestPlataforma}}',
+					'requestDominio':'{{arrRequestDominioInfo.requestDominio}}',
+					'requestIp':'{{arrRequestDominioInfo.requestIp}}'
+				},             	
+              	buscando:false,
+              	documentocartaSolicitud:'',
+              	documentocarnet:'',
+              	documentoidoneidad:'',
+              	documentofotcopiaRM:'',              	
+            
+            },
+            methods: {
+
+              checkSegipResponsable: function(){
+                this.swresponse = false;
+                this.dataPlataforma.dataResponsable.swUpdateSegip = 0;
+                this.dataPlataforma.dataResponsable.newpersona = 0;
+                axios.post(Routing.generate('plataforma_checkSegipResponsable', this.dataPlataforma.dataResponsable))
+                .then(response => {
+                  
+                  if (response.status == 200) {
+
+                  	this.swresponse = response.data.swresponse;
+                  	if(this.swresponse){
+                  		this.dataPlataforma.dataResponsable.swUpdateSegip = response.data.swUpdateSegip;
+                  		this.dataPlataforma.dataResponsable.newpersona = response.data.newpersona;
+                  		this.dataPlataforma.dataResponsable.personId = response.data.responsablePersonaId;
+                  		$('#modalEstudianteTwo').modal('hide');
+                  	}else{
+	 					Swal.fire(
+	                      'Aviso',
+	                      'No se pudo realizar la validación con segip, Favor verificar la informacion introducida',
+	                      'error'
+	                  	)
+	                  	return;                  		
+
+                  	}
+                  }
+                 this.buscando=false;
+                })
+                .catch(e => {
+                  Swal.fire(
+                      'Aviso',
+                      'No se pudo realizar la Busqueda',
+                      'error'
+                  )
+                  
+                });                
+        
+              },
+              enterDataRequest: function(){
+              	this.swattach=false;
+              	this.buscando = true;
+
+              	this.documentocartaSolicitud='',
+              	this.documentocarnet='',
+              	this.documentoidoneidad='';
+              	this.documentofotcopiaRM='';
+
+                if(this.swresponse ){
+
+	              	if(this.opcion == 1){
+	              		
+	              		if(this.dataPlataforma.dataDominio.dominio==''){
+	              			Swal.fire(
+		                      'Aviso',
+		                      'Debe registrar el dominio',
+		                      'error'
+		                  	)
+		                  	this.swattach =false; 
+	              			this.buscando =false;
+		                  	return;
+
+	              		}
+	              	}
+	              	if(this.opcion == 2){
+	              		
+	              		if(this.opcionreqdomi==0){
+	              			Swal.fire(
+		                      'Aviso',
+		                      'Debe seleccionar la plataforma',
+		                      'error'
+		                  	)
+		                  	this.swattach =false; 
+	              			this.buscando =false;
+		                  	return;
+	              		}
+	              	}
+
+                    Swal.fire({
+                        title: 'Realizar Actualización?',
+                        text: "esta seguro de realizar el REGISTRO",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                      if (result.value) {  	              	
+
+		              	this.dataPlataforma.dataDominio.plataforma = this.checked;
+		              	this.dataPlataforma.dataDominio.opcion = this.opcion;
+		              	this.dataPlataforma.dataDominio.opcionreqdomi = this.opcionreqdomi;
+						Swal.fire({
+		    		  		title:'Procesando',
+		    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-refresh fa-spin"></i> Espere un momento</div> ',
+		    		  		type:'info',
+		    		  		showConfirmButton: false,
+	    				});		              	
+		                axios.post(Routing.generate('plataforma_enterDataRequest', this.dataPlataforma))
+		                .then(response => {
+		                  
+		                  if (response.status == 200) {
+		                  	Swal.close();
+		                  	this.swattach = response.data.swattach;
+				            this.buscando =false; 
+
+		                  }
+		                 this.buscando=false;
+		                })
+		                .catch(e => {
+		                  Swal.fire(
+		                      'Aviso',
+		                      'No se pudo realizar la Busqueda',
+		                      'error'
+		                  )
+		                  
+		                }); 
+
+						}
+                    })	
+                    this.buscando= false;	                		              	
+
+            	
+
+             	
+
+                }else{
+                	 Swal.fire(
+	                      'Aviso',
+	                      'No se pudo realizar el Registro, por favor podria completar la Información solicitada',
+	                      'error'
+	                  )
+                	 this.buscando = false;
+                	 return;
+
+
+                }
+               
+        
+              },
+            sendRequest: function(){
+
+            	if(typeof this.documentocartaSolicitud != 'object'){
+            		Swal.fire(
+                        'Adjuntar CARTA SOLICITUD',
+                        'Debe adjuntar el documento CARTA SOLICITUD para ralizar la solicitud, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+            	}
+            	if(typeof this.documentoidoneidad != 'object'){
+            		Swal.fire(
+                        'Adjuntar documento: ACREDITACION IDONEIDAD',
+                        'Debe adjuntar el documento ACREDITACION IDONEIDAD para ralizar la solicitud, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+            	}
+            	if(typeof this.documentocarnet != 'object'){
+            		Swal.fire(
+                        'Adjuntar FOTOCOPIA CEDULA DE IDENTIDAD',
+                        'Debe adjuntar el documento FOTOCOPIA CEDULA DE IDENTIDAD para ralizar la solicitud, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+            	}
+            	if(typeof this.documentofotcopiaRM != 'object'){
+            		Swal.fire(
+                        'Adjuntar FOTOCOPIA R.M.',
+                        'Debe adjuntar el documento FOTOCOPIA R.M. para ralizar la solicitud, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+            	}            	
+
+                    Swal.fire({
+                        title: 'Realizar Solicitud?',
+                        text: "esta seguro de realizar la SOLICITUD",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                      if (result.value) {  
+
+                      	  var data = new FormData();
+                          data.append('datos', JSON.stringify(this.dataPlataforma));
+                          data.append('documentocartaSolicitud', this.documentocartaSolicitud);
+                          data.append('documentoidoneidad', this.documentoidoneidad);
+                          data.append('documentocarnet', this.documentocarnet);
+                          data.append('documentofotcopiaRM', this.documentofotcopiaRM);
+
+
+		              	this.dataPlataforma.dataDominio.plataforma = this.checked;
+		              	Swal.fire({
+		    		  		title:'Enviando Solicitud',
+		    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-refresh fa-spin"></i> Espere un momento</div> ',
+		    		  		type:'info',
+		    		  		showConfirmButton: false,
+	    				});	
+		                axios.post(Routing.generate('plataforma_sendRequest'), data)
+		                .then(response => {
+		                  
+		                  if (response.status == 200) {
+		                  	Swal.close();
+		                  	this.swattach = response.data.swattach;
+				            this.buscando =false; 
+				            this.swCompleteRequest = response.data.swCompleteRequest;
+				            this.arrRequestDominioInfo = response.data.arrRequestDominioInfo;
+
+		                  }
+		                 this.buscando=false;
+		                })
+		                .catch(e => {
+		                  Swal.fire(
+		                      'Aviso',
+		                      'No se pudo realizar la Busqueda',
+		                      'error'
+		                  )
+		                  
+		                }); 
+
+						}
+                    })	            	
+
+            },
+            getDocSolictud: function(event){
+            	this.documentocartaSolicitud = this.getDocument(event);
+            },
+            getAcreditacionIdoneidad: function(){
+            	this.documentoidoneidad = this.getDocument(event);
+            },
+            getCarnet: function(){
+            	this.documentocarnet = this.getDocument(event);
+            },
+            getfotocopiarm: function(){
+            	this.documentofotcopiaRM = this.getDocument(event);
+            },            
+            getDocument: function(event){
+                var informe = event.target.files[0];
+                var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+                if(!allowedExtensions.exec(event.target.value)){
+                    event.target.value = '';
+                    Swal.fire(
+                          'Archivo incorrecto!',
+                          'El archivo adjunto debe ser una imagen o un archivo pdf',
+                          'warning'
+                        );
+                    this.informe = '';
+                    return false;
+                }else{
+                    var megas = (informe.size / 1024)/1024;
+                    if (megas > 2) {
+                        event.target.value = '';
+                        Swal.fire(
+                          'Tamaño no permitido!',
+                          'El archivo debe tener un tamaño menor a 2MB',
+                          'warning'
+                        );
+                        this.informe = '';
+                        return false;
+                    }
+                }
+                return event.target.files[0];
+            }, 
+	    	numerico: function(event){
+	    	    var k = event.charCode || event.keyCode;
+	    	    if ((k < 48 || k > 57) //NUmeros
+	    	        && (k != 13) //ENTER
+	    	        && (k != 8) //retroceso
+	    	        && (k != 9) //tab
+	    	    ){
+	    	        event.preventDefault();
+	    	        return false;
+	    	    }
+	    	},         
+              alfanumerico: function(event){
+                  var k = event.charCode || event.keyCode;
+                  if ((k < 97 || k > 122)//letras minusculas
+                      && (k < 65 || k > 90) //letras mayusculas
+                      && (k < 48 || k > 57) //NUmeros
+                      && (k != 13) //ENTER
+                      && (k != 8) //retroceso
+                      && (k != 9) //tab
+                      && (k != 241) //ñ
+                       && (k != 209) //Ñ
+                       && (k != 32) //espacio
+                       && (k != 225) //á
+                       && (k != 233) //é
+                       && (k != 237) //í
+                       && (k != 243) //ó
+                       && (k != 250) //ú
+                       && (k != 193) //Á
+                       && (k != 201) //É
+                       && (k != 205) //Í
+                       && (k != 211) //Ó
+                       && (k != 218) //Ú
+                       && (k != 44) //coma ,
+                       && (k != 46) //punto .
+                  ){
+                    event.preventDefault();
+                    return false;
+                  }
+              },              
+
+           
+
+            },
+            mounted(){
+                var selector = document.getElementById("fecnac");
+                Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "mm-yyyy-dd", inputEventOnly: true}).mask(selector);
+            }
+        });
+
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $("td").focus();
+        });        
+
+
+    </script>
+{%endblock%}

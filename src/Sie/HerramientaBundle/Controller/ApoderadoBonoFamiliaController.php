@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\ApoderadoInscripcion;
 use Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos;
 use Sie\AppWebBundle\Entity\Persona;
+use Sie\AppWebBundle\Entity\PersonaCuentabancaria;
 
 /**
  * Apoderado2020 Controller
@@ -37,14 +38,30 @@ class ApoderadoBonoFamiliaController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
-
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($inscripcion->getEstudiante());
+        $estudiante_pago = $em->getRepository('SieAppWebBundle:BfEstudiantePago')->findOneBy(array('codigoRude' => $estudiante->getCodigoRude()));
+        $apoderado = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $inscripcion));
         $pathSystem = $this->session->get('pathSystem', null);
+        $dependencia = 0;
+        $vista = 0;
+        $pagado = 0;
+        
+        if($pathSystem == 'SieHerramientaBundle') {
+            $dependencia = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getDependenciaTipo()->getId();
+        }
 
+        if(count($estudiante_pago) > 0) {
+            $vista = 0;
+            $pagado = 1;
+        }
 
         return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:index.html.twig', array(
             'idInscripcion'=>$idInscripcion,
             'inscripcion'=>$inscripcion,
-            'pathSystem'=>$pathSystem
+            'pathSystem'=>$pathSystem,
+            'dependencia'=>$dependencia,
+            'vista'=>$vista,
+            'pagado'=>$pagado
         ));
     }
 
@@ -60,7 +77,7 @@ class ApoderadoBonoFamiliaController extends Controller {
             ]);
         }
 
-        $apoderados = $this->obtenerApoderados($inscripcion->getEstudiante()->getId());
+        $apoderados = $this->obtenerApoderados($inscripcion->getEstudiante()->getId(), $idInscripcion);
         $apoderados2019 = $apoderados['apoderados2019'];
         $apoderados2020 = $apoderados['apoderados2020'];
 
@@ -149,6 +166,13 @@ class ApoderadoBonoFamiliaController extends Controller {
                             array('id'=>2,'extranjero'=>'SI')
                         );
 
+        $entidades = $em->createQueryBuilder()
+                        ->select('ebt.id, ebt.entidad')
+                        ->from('SieAppWebBundle:EntidadBancariaTipo','ebt')
+                        // ->where('ebt.id in (1,2,3,4,5,6,7,8)')
+                        ->addOrderBy('ebt.id','asc')
+                        ->getQuery()
+                        ->getResult();
 
 
         return $response->setData([
@@ -165,10 +189,11 @@ class ApoderadoBonoFamiliaController extends Controller {
             // 'parentescoMadre'=>$parentescoMadre,
             'parentescos'=>$parentescos,
             'extranjeros'=>$extranjeros,
+            'entidades'=>$entidades
         ]);
     }
 
-    private function obtenerApoderados($idEstudiante){
+    private function obtenerApoderados($idEstudiante, $idInscripcion){
         $em = $this->getDoctrine()->getManager();
 
         $apoderados = $em->createQueryBuilder()
@@ -198,7 +223,8 @@ class ApoderadoBonoFamiliaController extends Controller {
                             pt.id as pais,
                             pt.pais as paisText,
                             gest.id as gestion,
-                            p.id as idPersona
+                            p.id as idPersona,
+                            ei.id as idInscripcion
                         ')
                         ->from('SieAppWebBundle:ApoderadoInscripcion','ai')
                         ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','ai.estudianteInscripcion = ei.id')
@@ -212,6 +238,8 @@ class ApoderadoBonoFamiliaController extends Controller {
                         ->leftJoin('SieAppWebBundle:ApoderadoOcupacionTipo','aot','with','aid.ocupacionTipo = aot.id')
                         ->leftJoin('SieAppWebBundle:InstruccionTipo','it','with','aid.instruccionTipo = it.id')
                         ->leftJoin('SieAppWebBundle:PaisTipo','pt','with','p.paisTipo = pt.id')
+                        ->leftJoin('SieAppWebBundle:PersonaCuentabancaria','pcb','with','pcb.persona = p.id')
+                        ->leftJoin('SieAppWebBundle:EntidadBancariaTipo','ebt','with','pcb.entidadBancariaTipo = ebt.id')
                         ->where('ei.estudiante = :idEstudiante')
                         ->andWhere('ai.esValidado = 1')
                         ->andWhere('p.segipId = 1')
@@ -227,7 +255,27 @@ class ApoderadoBonoFamiliaController extends Controller {
             if (!in_array($ap['idPersona'], $arrayPersonas)) {
                 $ap['fechaNacimiento'] = $ap['fechaNacimiento']->format('d-m-Y');
                 $ap['extranjero'] = ($ap['extranjero'] == true)?2:1;
-                if ($ap['gestion'] == 2020) {
+
+                // OBTENEMOS LA ENTIDAD FINANCIERA
+                $personaCuentabancaria = $em->createQueryBuilder()
+                                            ->select('ebt.id, ebt.entidad')
+                                            ->from('SieAppWebBundle:PersonaCuentabancaria','pcb')
+                                            ->innerJoin('SieAppWebBundle:EntidadBancariaTipo','ebt','with','pcb.entidadBancariaTipo = ebt.id')
+                                            ->where('pcb.persona = :idPersona')
+                                            ->orderBy('pcb.id', 'DESC')
+                                            ->setParameter('idPersona', $ap['idPersona'])
+                                            ->getQuery()
+                                            ->getResult();
+                $idEntidad = '';
+                $entidad = '';
+                if (count($personaCuentabancaria) > 0) {
+                    $idEntidad = $personaCuentabancaria[0]['id'];
+                    $entidad = $personaCuentabancaria[0]['entidad'];
+                }
+                $ap['idEntidad'] = $idEntidad;
+                $ap['entidad'] = $entidad;
+
+                if ($ap['gestion'] == 2020 && $ap['idInscripcion'] == $idInscripcion) {
                     $arrayApoderados2020[] = $ap;
                 }else{
                     $arrayApoderados2019[] = $ap;
@@ -260,6 +308,25 @@ class ApoderadoBonoFamiliaController extends Controller {
             ]);
         }
 
+        $apoderados_aux = $em->createQueryBuilder()
+                        ->select('ai')
+                        ->from('SieAppWebBundle:ApoderadoInscripcion','ai')
+                        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','ai.estudianteInscripcion = ei.id')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                        ->where('ei.estudiante = :idEstudiante')
+                        ->andWhere('ai.esValidado = 1')
+                        ->setParameter('idEstudiante', $apoderadoInscripcion->getEstudianteInscripcion()->getEstudiante()->getId())
+                        ->getQuery()
+                        ->getResult();
+
+        if (is_array($apoderados_aux)) {
+            foreach($apoderados_aux as $apoderado){
+                $apoderado->setEsValidado(0);
+                $apoderado->setFechaModificacion(new \DateTime('now'));
+                $em->flush();
+            }
+        }
+
         $verificamosRegistroParecido = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findOneBy(array(
             'apoderadoTipo'=>$apoderadoInscripcion->getApoderadoTipo()->getId(),
             'persona'=>$apoderadoInscripcion->getPersona()->getId(),
@@ -268,6 +335,7 @@ class ApoderadoBonoFamiliaController extends Controller {
 
         if (is_object($verificamosRegistroParecido)) {
             $verificamosRegistroParecido->setEsValidado(1);
+            $verificamosRegistroParecido->setFechaModificacion(new \DateTime('now'));
             $em->flush();
         }else{
             $nuevoApoderado = new ApoderadoInscripcion();
@@ -277,7 +345,6 @@ class ApoderadoBonoFamiliaController extends Controller {
             $nuevoApoderado->setObs('');
             $nuevoApoderado->setEsValidado(1);
             $nuevoApoderado->setFechaRegistro(new \DateTime('now'));
-            // $nuevoApoderado->setFechaModificacion(new \DateTime('now'));
             $em->persist($nuevoApoderado);
             $em->flush();
         }
@@ -845,6 +912,22 @@ class ApoderadoBonoFamiliaController extends Controller {
             //     $em->persist($apoderadoInscripcionDatos);
             //     $em->flush();
             // }
+            
+            // REGSITARMOS LA ENTIDAD FINANCIERA
+            
+            if ($apoderado['tieneEntidad'] == 2) { // si tiene cuenta
+                $apoderadoEntidad = new PersonaCuentabancaria();
+                $apoderadoEntidad->setPersona($persona);
+                $apoderadoEntidad->setEntidadBancariaTipo($em->getRepository('SieAppWebBundle:EntidadBancariaTipo')->find($apoderado['entidad']));
+                $apoderadoEntidad->setCuenta('');
+                $apoderadoEntidad->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find(date('Y')));
+                $apoderadoEntidad->setEsVigente(true);
+                $apoderadoEntidad->setObs('');
+                $apoderadoEntidad->setFechaRegistro(new \DateTime('now'));
+                $em->persist($apoderadoEntidad);
+                $em->flush();
+            }
+            // $persona
 
             return $response->setData([
                 'status'=>'success',
@@ -1237,22 +1320,48 @@ class ApoderadoBonoFamiliaController extends Controller {
         ]);
     }
 
+    public function registrarEntidadAction(Request $request){
+        $response = new JsonResponse();
+        $apoderadoBono = $request->get('apoderadoBono', null);
+        if ($apoderadoBono == null) {
+            return $response->setData([
+                'status'=>'error',
+                'msg'=>'No se pudo registrar la Entidad Financiera'
+            ]);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $apoderadoEntidad = new PersonaCuentabancaria();
+        $apoderadoEntidad->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($apoderadoBono['idPersona']));
+        $apoderadoEntidad->setEntidadBancariaTipo($em->getRepository('SieAppWebBundle:EntidadBancariaTipo')->find($apoderadoBono['idEntidad']));
+        $apoderadoEntidad->setCuenta('');
+        $apoderadoEntidad->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find(date('Y')));
+        $apoderadoEntidad->setEsVigente(true);
+        $apoderadoEntidad->setObs('');
+        $apoderadoEntidad->setFechaRegistro(new \DateTime('now'));
+        $em->persist($apoderadoEntidad);
+        $em->flush();
+
+        return $response->setData([
+            'status'=>'success',
+            'msg'=>'NLa Entidad Financiera fue registrado correctamente'
+        ]);
+    }
+
     public function eliminarAction($idApoderado){
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
         $apoderadoInscripcion = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($idApoderado);
-        if (is_object($apoderadoInscripcion)) {
-            // $apoderadoDatos = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findOneBy(array('apoderadoInscripcion'=>$apoderadoInscripcion->getId()));
-            // if (is_object($apoderadoDatos)) {
-            //     $em->remove($apoderadoDatos);
-            //     $em->flush();
-            // }
-            // $em->remove($apoderadoInscripcion);
-            // $em->flush();
-            
-            $apoderadoInscripcion->setEsValidado(0);
-            $apoderadoInscripcion->setFechaModificacion(new \DateTime('now'));
-            $em->flush();
+        $inscripcion = $apoderadoInscripcion->getEstudianteInscripcion();
+        
+        $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion'=>$inscripcion, 'esValidado'=>1));
+
+        if (is_array($apoderados)) {
+            foreach($apoderados as $apoderado){
+                $apoderado->setEsValidado(0);
+                $apoderado->setFechaModificacion(new \DateTime('now'));
+                $em->flush();
+            }
 
             return $response->setData([
                 'status'=>'success',
@@ -1263,6 +1372,204 @@ class ApoderadoBonoFamiliaController extends Controller {
         return $response->setData([
             'status'=>'error',
             'msg'=>'No se pudo eliminar el apoderado'
+        ]);
+    }
+
+    public function seguimientoAction(Request $request){
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:seguimiento_index.html.twig');
+    }
+
+    public function seguimientoCargarDatosAction(){
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $roluser = $this->session->get('roluser');
+        $roluserlugarid = $this->session->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+
+        $departamentos = [];
+        $lista = [];
+        $dpto_id = '';
+        $dto_id = '';
+        $sie = '';
+        $vista = true;
+
+
+        if($roluser == 8) {
+            $departamentos = $em->createQueryBuilder()
+                ->select('dt.id, dt.departamento')
+                ->from('SieAppWebBundle:DepartamentoTipo','dt')
+                ->where('dt.id > 0')
+                ->addOrderBy('dt.id','asc')
+                ->getQuery()
+                ->getResult();
+        } else {
+            switch($roluser) {
+                case 7:
+                    $dpto_id = $lugar->getCodigo();
+                break;
+
+                case 10:
+                    case 10:
+                        $dto_id = $lugar->getCodigo();
+                break;
+
+                case 9:
+                    $sie = $this->session->get('ie_id');
+                break;
+
+            }
+
+            $vista = false;
+            $query = $em->getConnection()->prepare('select * from sp_reporte_ue_bonofamilia(:dpto_id, :dto_id, :sie)');
+            $query->bindValue(':dpto_id', $dpto_id);
+            $query->bindValue(':dto_id', $dto_id);
+            $query->bindValue(':sie', $sie);
+            $query->execute();
+            $lista = $query->fetchAll();
+        }
+
+        return $response->setData([
+            'departamentos'=>$departamentos,
+            'lista'=>$lista,
+            'rol'=>$roluser,
+            'vista'=>$vista
+        ]);
+    }
+
+    public function seguimientoCargarDetalleAction($idDpto){
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $roluser = 7;
+        $departamentos = [];
+        $lista = [];
+        $dpto_id = $idDpto;
+        $dto_id = '';
+        $sie = '';
+        $vista = false;
+
+        $query = $em->getConnection()->prepare('select * from sp_reporte_ue_bonofamilia(:dpto_id, :dto_id, :sie)');
+        $query->bindValue(':dpto_id', $dpto_id);
+        $query->bindValue(':dto_id', $dto_id);
+        $query->bindValue(':sie', $sie);
+        $query->execute();
+        $lista = $query->fetchAll();
+
+        return $response->setData([
+            'departamentos'=>$departamentos,
+            'lista'=>$lista,
+            'rol'=>$roluser,
+            'vista'=>$vista
+        ]);
+    }
+
+    public function detallePagoAction($inscripcionid){
+        $em = $this->getDoctrine()->getManager();
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcionid);
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($inscripcion->getEstudiante());
+        $pagoBf = $em->getRepository('SieAppWebBundle:BfEstudiantePago')->findOneBy(array('codigoRude' => $estudiante->getCodigoRude()));
+        $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $inscripcion, 'esValidado' => 1));
+
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:detalle.html.twig', array(
+            'inscripcion'=>$inscripcion,
+            'pagoBf'=>$pagoBf,
+            'apoderados'=>$apoderados,
+            'estudiante'=>$estudiante
+        ));
+    }
+
+    public function observadosAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $roluserlugarid = $this->session->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+
+        $listaUes = $em->createQueryBuilder()
+            ->select('distinct bov.idDepartamento, bov.descDepartamento, bov.codDistrito, bov.distrito, bov.codUeId, bov.descUe')
+            ->from('SieAppWebBundle:BfObservacionValidacion','bov')
+            ->where('bov.codDistrito = :codDistrito')
+            ->setParameter('codDistrito', $lugar->getCodigo())
+            ->addOrderBy('bov.codUeId')
+            ->getQuery()
+            ->getResult();
+
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:observados_index.html.twig', array(
+            'listaUes' => $listaUes
+        ));
+    }
+
+    public function observadosCargarEstudiantesAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $codUeId = $request->get('sie');
+        
+        $listaEst = $em->createQueryBuilder()
+            ->select('bov.codUeId, bov.descUe, bov.esValidado, est.codigoRude, est.paterno, est.materno, est.nombre')
+            ->from('SieAppWebBundle:BfObservacionValidacion','bov')
+            ->innerJoin('SieAppWebBundle:Estudiante', 'est', 'WITH', 'bov.codigoRude=est.codigoRude')
+            ->where('bov.codUeId = :codUeId')
+            ->setParameter('codUeId', $codUeId)
+            ->addOrderBy('est.codigoRude')
+            ->getQuery()
+            ->getResult();
+        
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:observados_est.html.twig', array(
+            'listaEst' => $listaEst
+        ));
+    }
+
+    public function observadosCargarFormularioAction(Request $request){        
+        $em = $this->getDoctrine()->getManager();
+        $codigoRude = $request->get('codigoRude');
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $codigoRude));
+        $bov = $em->getRepository('SieAppWebBundle:BfObservacionValidacion')->findOneBy(array('codigoRude' => $codigoRude, 'esValidado' => false));
+        $esObservado = false;
+        $apoderados = null;
+
+        if(is_object($bov)) {
+            $esObservado = true;
+            $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $bov->getEstudianteInscripcionId(), 'esValidado' => 1));//
+        }
+        
+        return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:observados_form.html.twig', array(
+            'codigoRude' => $codigoRude,
+            'esObservado' => $esObservado,
+            'estudiante' => $estudiante,
+            'apoderados' => $apoderados
+        ));
+    }
+
+    public function observadosGuardarFormularioAction(Request $request){     
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $documento = $request->files->get('adjdocumento');
+        $codigoRude = $request->get('codigoRude');
+        $justificacion = $request->get('justificacion');
+        $estado = 200;
+        $mensaje = "Información registrada correctamente";
+        $bov = $em->getRepository('SieAppWebBundle:BfObservacionValidacion')->findOneBy(array('codigoRude' => $codigoRude, 'esValidado' => false));
+        
+        if(is_object($bov)) {
+            if(!empty($documento) && $justificacion != '') {
+                $destination_path = 'uploads/archivos/bf/';
+                if (!file_exists($destination_path)) {
+                    mkdir($destination_path, 0777, true);
+                }
+                $archivo = $codigoRude . '_' . date('YmdHis') . '.' . $documento->getClientOriginalExtension();
+                $documento->move($destination_path, $archivo);
+
+                $bov->setEsValidado(true);
+                $bov->setJustificacion($justificacion);
+                $bov->setDocumento($destination_path . $archivo);
+                $bov->setFechaRegistro(new \DateTime('now'));
+                $em->flush();
+            } else {
+                $mensaje = "Información no registrada: Debe detallar una justificación y cargar un archivo adjunto";
+            }
+        } else {
+            $mensaje = "Información no registrada";
+        }
+
+        return $response->setData([
+            'estado'=>$estado,
+            'mensaje'=>$mensaje
         ]);
     }
 }

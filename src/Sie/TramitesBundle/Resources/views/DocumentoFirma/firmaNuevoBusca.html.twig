@@ -1,0 +1,124 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <!-- Start page header -->
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4><i class="fa fa-table"></i> Formulario <span>Nueva Firma Electrónica</span></h4>
+        </div><!-- /.header-content -->
+        <!--/ End page header -->
+        <div class="modal-body">
+            {% if form is defined  %}
+                {{form_start(form, { 'attr': {'id':'form', 'data-toggle': 'validator','role': "form", 'class': "form-horizontal form-bordered"} } )}}   
+                    <div class="form-group">
+                        <div class="col-sm-4">
+                            {{ form_widget(form.carnet, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-sm-4">
+                            {{ form_widget(form.complemento, { 'attr': {'class': 'form-control'} }) }}
+                        </div>  
+                        <div class="col-sm-4">
+                            {{ form_widget(form.buscar, { 'attr': {'class': 'form-control btn btn-primary col-lg-12 col-md-12 col-sm-12 col-sx-12'} }) }}
+                        </div>  
+                    </div>              
+                {{form_end(form)}}
+
+                    <div id="formulario">
+                        
+                    </div>    
+            {% endif %}
+        </div> 
+    </div>    
+</div>
+
+<script>          
+         
+
+    var buscarPersona = function(){
+        if($('#form_carnet').val() == ""){
+            alert("Debe ingresar el número de cédula de identidad");
+            $('#form_carnet').focus();
+            return false;
+        }
+        var formulario = $('#form')[0];
+        var formData = new FormData(formulario);
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('tramite_documento_firma_nuevo_busca_persona'),
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $('#formulario').empty();
+                $('#formulario').append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            },
+            success: function (data) {
+                $('#formulario').empty();
+                $('#formulario').html(data);
+            },
+            error: function(error){
+                $('#formulario').empty();
+                alert("Error, no fue posible realizar la operación, intente nuevamente");  
+            },
+        }); 
+        return true;
+    }     
+
+    var guardar = function(){
+        if($('#form_tipo').val() == "" || $('#form_tipo').val() == "0"){
+            alert("Debe seleccionar el cargo al cual representará la firma");
+            $('#form_tipo').focus();
+            return false;
+        }
+        if($('#form_departamento').val() == "" || $('#form_departamento').val() == "0"){
+            alert("Debe seleccionar el departamento al cual representará la firma");
+            $('#form_departamento').focus();
+            return false;
+        }
+        if($('#form_foto').val() == ""){
+            alert("Debe ingresar la imagen de la firma");
+            return false;
+        }
+        var r = confirm("¿ Está seguro de guardar la firma ?");
+        if (r == true) {
+            var botonGuardar = $('#form_guardar');
+            var formulario = $('#formNuevo')[0];
+            var formData = new FormData(formulario);
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('tramite_documento_firma_nuevo_guarda'),
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $('#formulario').append('<div style="text-align:center" id="load"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    botonGuardar.hide();
+                },
+                success: function (data) {
+                    if(data.estado){         
+                        $('#modal').modal('hide');
+                        table.row.add([(table.rows().count()+1), data.info.departamento, data.info.tipo, data.info.persona, `<div id="img`+(table.rows().count()+1)+`" ><img style="display: block; width: 150px; height:150px;" src="data:image/png;base64,`+data.info.firma+`" /></div>`, data.info.fecha, `<div class="ckbox ckbox-primary"><input id="estado`+(table.rows().count()+1)+`" checked="checked" type="checkbox" onchange="modificaEstado(this, '`+data.info.id+`');"><label for="estado`+(table.rows().count()+1)+`"></label></div>`, `<button type='button' class='btn btn-inverse btn-stroke' data-toggle='modal' data-target='.bs-example-modal-form' onclick="modifica('`+data.info.id+`', '`+(table.rows().count()+1)+`');"><i class="fa fa-edit"></i> Cambiar Firma</button><button type="button" class="btn btn-danger" onclick="eliminar('`+data.info.id+`', '`+(table.rows().count()+1)+`',this);" ><i class="fa fa-trash"></i> Eliminar</button>`]);
+                        table.draw();
+                        alert("Correcto, "+data.msg);
+                    } else {    
+                        $('#load').remove();
+                        $("#formulario").prepend('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');                 
+                        botonGuardar.show();
+                    }                    
+                }, 
+                error: function(error){
+                    $('#load').remove();
+                    alert("Error, no fue posible enviar el formulario, intente nuevamente");  
+                    botonGuardar.show();
+                },
+            }); 
+            return true;
+        } else {
+            return false;
+        }
+    }    
+
+    $(document).ready(function () { 
+        
+    });
+
+</script>

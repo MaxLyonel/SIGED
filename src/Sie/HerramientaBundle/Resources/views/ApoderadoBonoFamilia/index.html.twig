@@ -1,4 +1,5 @@
-{% if pathSystem != 'SieHerramientaBundle' %}
+{# {% if (pathSystem != 'SieHerramientaBundle' and pathSystem != 'SieHerramientaAlternativaBundle') or (pathSystem == 'SieHerramientaBundle' and dependencia == 3) and false %} #}
+{% if true %}
 <style>
 	[v-cloak]{
 		display: none;
@@ -151,8 +152,7 @@
 				<h4 class="modal-title">Habilitar apoderado para realizar el cobro del Bono Familia</h4>
 			</div>
 			<div class="modal-body">
-				
-        		<table class="table table-bordered table-condensed">
+				<table class="table table-bordered table-condensed">
 					<tbody>
 						<tr><th width="120px">Código RUDE</th><td>{{inscripcion.estudiante.codigoRude}}</td></tr>
 						<tr><th>Estudiante</th><td>{{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}} {{inscripcion.estudiante.nombre}}</td></tr>
@@ -164,18 +164,19 @@
 						{% endif %}
 					</tbody>
 				</table>
+				{% if vista != 0 %}
 				<div class="alert alert-warning" v-if="generos.length > 0 && apoderadoBonoFamilia == ''">
 					<h4><strong>Importante!</strong> &nbsp; Debe habilitar o registrar <b>un</b> solo apoderado. Esta será la única persona que podrá realizar el cobro del bono familia.</h4>
 					{# <i class="fa fa-info-circle"></i> No se tiene habilitado un apoderado para realizar el cobro. <br> #}
 				</div>
+				{% endif %}
 				<div v-show="!formulario">
 					<div v-if="generos.length == 0" class="text-center">
 						{# <i class="fa fa-refresh fa-2x fa-spin"></i> Cargando... #}
 						<img src="{{asset("img/loading.gif")}}"><br>Cargando...
 					</div>
-
 					<div v-if="generos.length > 0 && apoderadoBonoFamilia == ''">
-						
+						{% if vista != 0 %}
 						<div v-show="apoderados2019.length > 0" class="alert alert-info">
 							<b>Nota:</b> Se identificarón apoderados registrados, debe habilitar uno de ellos o registrar un nuevo apoderado
 						</div>
@@ -237,20 +238,33 @@
 								</div>
 							</div>
 							<div class="col-md-6">
+								{% if vista != 0 %}
 								<div class="tarjeta">
 									<button type="button" @click="abrirFormulario()" class="btn btn-primary btn-block">
 										<i class="fa fa-plus fa-3x"></i> <br>
 										Registrar nuevo apoderado
 									</button>
 								</div>
+								{% endif %}
 							</div>
 						</div>
+						{% else %}
+							{% if pagado == 1 %}
+								<div class="alert alert-info">
+									<h4><i class="fa fa-info-circle"></i> Ya realizó el cobro</h4>
+								</div>
+							{% else %}
+								<div class="alert alert-warning">
+									<i class="fa fa-info-circle"></i> ¡Apoderado no registrado!
+								</div>
+							{% endif %}
+						{% endif %}
 					</div>
 					<div v-if="generos.length > 0 && apoderadoBonoFamilia != ''">
 						<div class="row">
 							<div class="col-md-12">
 								<div class="alert alert-success">
-									<h4> <i class="fa fa-check-circle"></i> Apoderado habilitado para realizar el cobro del bono familia</h4>
+									<h4><i class="fa fa-check-circle"></i> Apoderado habilitado para realizar el cobro del bono familia</h4>
 								</div>
 							</div>
 							<div class="col-md-12">
@@ -300,11 +314,45 @@
 												<p>${apoderadoBonoFamilia.paisText}</p>
 											</div>
 										</div>
+										{# {% if vista != 0 %}
+										<div class="row" v-if="dependencia == 3">
+											<div class="col-md-12">
+												<label>Entidad financiera</label>
+												<p v-if="apoderadoBonoFamilia.entidad != ''">
+													${apoderadoBonoFamilia.entidad}
+													${apoderadoBonoFamilia.idPersonaCuentaBancaria}
+												</p>
+												<p v-else>
+													<button v-if="!registrarEntidad" type="" class="btn btn-primary" @click="registrarEntidad = true">Registrar entidad financiera</button>
+													<div v-if="registrarEntidad">
+														<div class="row">
+															<div class="col-md-8">
+																<select v-model="apoderadoBonoFamilia.idEntidad" class="form-control jupper">
+																	<option v-for="(entidad, key) in entidades" :key="key" :value="entidad.id" v-text="entidad.entidad"></option>
+																</select>
+															</div>
+															<div class="col-md-4">
+																<button type="button" class="btn btn-primary" @click="agregarEntidad()">Registrar</button>
+																<button type="button" class="btn btn-default" @click="registrarEntidad = false">Cancelar</button>
+															</div>
+														</div>
+													</div>
+												</p>
+											</div>
+										</div>
+										{% endif %} #}
 									</div>
 									<div class="tarjeta-footer">
-										<button type="button" class="btn btn-default btn-block" @click="eliminar(apoderadoBonoFamilia.id)">Eliminar</button>
+										{% if vista != 0 %}
+											<button type="button" class="btn btn-default btn-block" @click="eliminar(apoderadoBonoFamilia.id)">Eliminar</button>
+										{% endif %}
 									</div>
 								</div>
+								{% if pagado == 1 %}
+									<div class="alert alert-info">
+										<h4><i class="fa fa-info-circle"></i> Ya realizó el cobro</h4>
+									</div>
+								{% endif %}
 							</div>
 						</div>
 					</div>
@@ -424,6 +472,20 @@
 								</select>
 							</div>
 						</div>
+						{# <div class="row" v-if="dependencia == 3">
+							<div class="form-group col-md-4">
+								<label>¿Tiene Entidad Financiera?<span class="requerido">*</span></label>
+								<select v-model="apoderado.tieneEntidad" class="form-control jupper" @change="seleccionarTieneEntidad()">
+									<option v-for="(extranjero, key) in extranjeros" :key="key" :value="extranjero.id" v-text="extranjero.extranjero"></option>
+								</select>
+							</div>
+							<div class="form-group col-md-8" v-show="apoderado.tieneEntidad == '2'">
+								<label>Entidad Financiera</label>
+								<select v-model="apoderado.entidad" class="form-control jupper">
+									<option v-for="(entidad, key) in entidades" :key="key" :value="entidad.id" v-text="entidad.entidad"></option>
+								</select>
+							</div>
+						</div> #}
 					</div>
 
 					<div class="modal-footer">
@@ -461,69 +523,74 @@
     });
 
 	var app = new Vue({
-	    delimiters: ['${', '}'],
-	    el: '#app',
-	    data: {
-	    	formulario: false,
-	    	validado: false,
-	    	validando: false,
-	    	registrando: false,
-	    	idInscripcion: '{{idInscripcion}}',
-	    	apoderados2019: '',
-	    	apoderadoBonoFamilia: '',
-	    	errores: [],
-	    	gestion: '',
-	    	apoderado: {
-	    		carnet: '',
-	    		complemento: '',
-	    		expedido: '',
-	    		paterno: '',
-	    		materno: '',
-	    		nombres: '',
-	    		fechaNacimiento: '',
-	    		lugar: '',
-	    		genero: '',
-	    		pais: '',
-	    		correo: '',
-	    		celular: '',
-	    		telefono: '',
-	    		ocupacion: '',
-	    		ocupacionOtro: '',
-	    		instruccion: '',
-	    		parentesco: '',
-	    		extranjero: ''
-	    	},
-	    	apoderadoTipo: '',
-	    	expedidos: [],
-	    	generos: [],
-	    	paises: [],
-	    	ocupaciones: [],
-	    	instrucciones: [],
-	    	parentescos: [],
-	    	// parentescoPadre: [],
-	    	// parentescoMadre: [],
-	    	// parentescoTutor: [],
-	    	extranjeros: [],
-	    },
-	    mounted(){
-	    	this.cargar();
-	    	var selector = document.getElementById("fecha");
-	    	Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "dd-mm-yyyy", inputEventOnly: true}).mask(selector);
-	    	$('[data-toggle="popover"]').popover();
-	    },
-	    methods: {
-	    	numerico: function(event){
-	    	    var k = event.charCode || event.keyCode;
-	    	    if ((k < 48 || k > 57) //NUmeros
-	    	        && (k != 13) //ENTER
-	    	        && (k != 8) //retroceso
-	    	        && (k != 9) //tab
-	    	    ){
-	    	        event.preventDefault();
-	    	        return false;
-	    	    }
-	    	},
-	    	alfabetico: function(event){
+		delimiters: ['${', '}'],
+		el: '#app',
+		data: {
+			formulario: false,
+			validado: false,
+			validando: false,
+			registrando: false,
+			idInscripcion: '{{idInscripcion}}',
+			dependencia: '{{dependencia}}',
+			apoderados2019: '',
+			apoderadoBonoFamilia: '',
+			errores: [],
+			gestion: '',
+			apoderado: {
+				carnet: '',
+				complemento: '',
+				expedido: '',
+				paterno: '',
+				materno: '',
+				nombres: '',
+				fechaNacimiento: '',
+				lugar: '',
+				genero: '',
+				pais: '',
+				correo: '',
+				celular: '',
+				telefono: '',
+				ocupacion: '',
+				ocupacionOtro: '',
+				instruccion: '',
+				parentesco: '',
+				extranjero: '',
+				tieneEntidad: '',
+				entidad: '',
+			},
+			apoderadoTipo: '',
+			expedidos: [],
+			generos: [],
+			paises: [],
+			ocupaciones: [],
+			instrucciones: [],
+			parentescos: [],
+			// parentescoPadre: [],
+			// parentescoMadre: [],
+			// parentescoTutor: [],
+			extranjeros: [],
+			entidades: [],
+			registrarEntidad: false
+		},
+		mounted(){
+			this.cargar();
+			var selector = document.getElementById("fecha");
+			Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "dd-mm-yyyy", inputEventOnly: true}).mask(selector);
+			$('[data-toggle="popover"]').popover();
+		},
+		methods: {
+			numerico: function(event){
+				var k = event.charCode || event.keyCode;
+				if ((k < 48 || k > 57) //NUmeros
+					&& (k != 13) //ENTER
+					&& (k != 8) //retroceso
+					&& (k != 9) //tab
+				){
+					event.preventDefault();
+					return false;
+				}
+			},
+			alfabetico: function(event){
                 var k = event.charCode || event.keyCode;
                 if ((k < 97 || k > 122)//letras minusculas
                     && (k < 65 || k > 90) //letras mayusculas
@@ -546,11 +613,11 @@
                      && (k != 44) //coma ,
                      && (k != 46) //punto .
                 ){
-                	event.preventDefault();
-                	return false;
-                }
-            },
-	    	alfanumerico: function(event){
+					event.preventDefault();
+					return false;
+				}
+			},
+			alfanumerico: function(event){
                 var k = event.charCode || event.keyCode;
                 if ((k < 97 || k > 122)//letras minusculas
                     && (k < 65 || k > 90) //letras mayusculas
@@ -574,349 +641,411 @@
                      && (k != 44) //coma ,
                      && (k != 46) //punto .
                 ){
-                	event.preventDefault();
-                	return false;
-                }
-            },
-	    	cargar(){
-	    		axios.get(Routing.generate('apoderado_bono_familia_apoderados', {idInscripcion: this.idInscripcion}))
-	    			.then(response => {
-	    				console.log(response.data);
-	    				this.apoderados2019 = response.data.apoderados2019;
-	    				this.apoderadoBonoFamilia = response.data.apoderadoBonoFamilia;
-	    				this.expedidos = response.data.expedidos;
-	    				this.generos = response.data.generos;
-	    				this.paises = response.data.paises;
-	    				this.ocupaciones = response.data.ocupaciones;
-	    				this.instrucciones = response.data.instrucciones;
-	    				// this.parentescoPadre = response.data.parentescoPadre;
-	    				// this.parentescoMadre = response.data.parentescoMadre;
-	    				// this.parentescoTutor = response.data.parentescoTutor;
-	    				this.parentescos = response.data.parentescos;
-	    				this.extranjeros = response.data.extranjeros;
-	    			})
-	    			.catch(e => {
-	    				console.log(e);
-	    			});
-	    	},
-	    	habilitarApoderado(apoderado){
-	    		Swal.fire({
-	    		  	title: 'Habilitar apoderado',
-	    		  	html: 'Se habilitará a '+ apoderado.nombres + ' ' + apoderado.paterno + ' ' + apoderado.materno + ' para realizar el cobro del bono familia. Verifique bien la información del apoderado, la autenticidad del dato puede ser auditada. ¿Esta seguro de habilitar al apoderado?',
-	    		  	type: 'question',
-	    		  	showCancelButton: true,
-	    		  	confirmButtonColor: '#3085d6',
-	    		  	cancelButtonColor: '#d33',
-	    		  	confirmButtonText: 'Si, habilitar',
-	    		  	cancelButtonText: 'No, cancelar'
-	    		}).then((result) => {
-	    		  	if (result.value) {
-			    		this.validando = true;
-			    		this.registrando = true;
-			    		axios.post(Routing.generate('apoderado_bono_familia_habilitar', {idApoderado: apoderado.id, idInscripcion: this.idInscripcion}))
-			    			.then(response => {
-			    				this.validando = false;
-			    				if (response.data.status == 'success') {
-			    					Swal.fire(
-    		  					  		'Habilitado!',
-    		  					  		response.data.msg,
-    		  					  		'success'
-    		  						)
-			    					this.cargar();
-			    					this.registrando = false;
-			    				}
-			    				if (response.data.status == 'error') {
-		    						Swal.fire(
-		    					  		'Aviso!',
-		    					  		response.data.msg,
-		    					  		'warning'
-		    						)
-		    						this.registrando = false;
-			    				}
-			    			})
-			    			.catch(e => {
-			    				this.validando = false;
-			    				console.log(e);
-			    			});
-	    		  	}
-	    		});
-	    	},
-	    	limpiarFormulario(){
-	    		this.apoderado.carnet = '';
-	    		this.apoderado.complemento = '';
-	    		this.apoderado.expedido = '';
-	    		this.apoderado.paterno = '';
-	    		this.apoderado.materno = '';
-	    		this.apoderado.nombres = '';
-	    		this.apoderado.fechaNacimiento = '';
-	    		this.apoderado.lugar = '';
-	    		this.apoderado.genero = '';
-	    		this.apoderado.pais = '';
-	    		this.apoderado.correo = '';
-	    		this.apoderado.celular = '';
-	    		this.apoderado.telefono = '';
-	    		this.apoderado.ocupacion = '';
-	    		this.apoderado.ocupacionOtro = '';
-	    		this.apoderado.instruccion = '';
-	    		this.apoderado.parentesco = '';
-	    		this.apoderado.extranjero = '';
-	    	},
-	    	abrirFormulario(tipo){
+					event.preventDefault();
+					return false;
+				}
+			},
+			cargar(){
+				axios.get(Routing.generate('apoderado_bono_familia_apoderados', {idInscripcion: this.idInscripcion}))
+					.then(response => {
+						console.log(response.data);
+						this.apoderados2019 = response.data.apoderados2019;
+						this.apoderadoBonoFamilia = response.data.apoderadoBonoFamilia;
+						this.expedidos = response.data.expedidos;
+						this.generos = response.data.generos;
+						this.paises = response.data.paises;
+						this.ocupaciones = response.data.ocupaciones;
+						this.instrucciones = response.data.instrucciones;
+						// this.parentescoPadre = response.data.parentescoPadre;
+						// this.parentescoMadre = response.data.parentescoMadre;
+						// this.parentescoTutor = response.data.parentescoTutor;
+						this.parentescos = response.data.parentescos;
+						this.extranjeros = response.data.extranjeros;
+						this.entidades = response.data.entidades;
+					})
+					.catch(e => {
+						console.log(e);
+					});
+			},
+			habilitarApoderado(apoderado){
+				Swal.fire({
+					title: 'Habilitar apoderado',
+					html: 'Se habilitará a '+ apoderado.nombres + ' ' + apoderado.paterno + ' ' + apoderado.materno + ' para realizar el cobro del bono familia. Verifique bien la información del apoderado, la autenticidad del dato puede ser auditada. ¿Esta seguro de habilitar al apoderado?',
+					type: 'question',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'Si, habilitar',
+					cancelButtonText: 'No, cancelar'
+				}).then((result) => {
+					if (result.value) {
+						this.validando = true;
+						this.registrando = true;
+						axios.post(Routing.generate('apoderado_bono_familia_habilitar', {idApoderado: apoderado.id, idInscripcion: this.idInscripcion}))
+							.then(response => {
+								this.validando = false;
+								if (response.data.status == 'success') {
+									Swal.fire(
+										'Habilitado!',
+										response.data.msg,
+										'success'
+									)
+									this.cargar();
+									this.registrando = false;
+								}
+								if (response.data.status == 'error') {
+									Swal.fire(
+										'Aviso!',
+										response.data.msg,
+										'warning'
+									)
+									this.registrando = false;
+								}
+							})
+							.catch(e => {
+								this.validando = false;
+								console.log(e);
+							});
+					}
+				});
+			},
+			limpiarFormulario(){
+				this.apoderado.carnet = '';
+				this.apoderado.complemento = '';
+				this.apoderado.expedido = '';
+				this.apoderado.paterno = '';
+				this.apoderado.materno = '';
+				this.apoderado.nombres = '';
+				this.apoderado.fechaNacimiento = '';
+				this.apoderado.lugar = '';
+				this.apoderado.genero = '';
+				this.apoderado.pais = '';
+				this.apoderado.correo = '';
+				this.apoderado.celular = '';
+				this.apoderado.telefono = '';
+				this.apoderado.ocupacion = '';
+				this.apoderado.ocupacionOtro = '';
+				this.apoderado.instruccion = '';
+				this.apoderado.parentesco = '';
+				this.apoderado.extranjero = '';
+			},
+			abrirFormulario(tipo){
 
-	    		// this.apoderadoTipo = tipo;
-	    		// if (tipo == 1) {
-	    		// 	this.parentescos = this.parentescoPadre;
-	    		// 	this.apoderado.parentesco = tipo;
-	    		// }else{
-	    		// 	if (tipo == 2) {
-	    		// 		this.parentescos = this.parentescoMadre;
-	    		// 		this.apoderado.parentesco = tipo;
-	    		// 	}else{
-	    		// 		this.parentescos = this.parentescoTutor;
-	    		// 	}
-	    		// }
+				// this.apoderadoTipo = tipo;
+				// if (tipo == 1) {
+				// 	this.parentescos = this.parentescoPadre;
+				// 	this.apoderado.parentesco = tipo;
+				// }else{
+				// 	if (tipo == 2) {
+				// 		this.parentescos = this.parentescoMadre;
+				// 		this.apoderado.parentesco = tipo;
+				// 	}else{
+				// 		this.parentescos = this.parentescoTutor;
+				// 	}
+				// }
 
-	    		this.formulario = true;
-	    		this.validado = false;
-	    		this.verdatos = false;
-	    	},
-	    	cerrarFormulario(){
-	    		this.formulario = false;
-	    		this.validado = false;
-	    		this.verdatos = false;
-	    		this.limpiarFormulario();
-	    	},
-	    	validar(){
-	    		this.errores = [];
-	    		if (this.apoderado.carnet == '') {
-	    			this.errores.push('Carnet');
-	    		}
-	    		// if (this.apoderado.expedido == '') {
-	    		// 	this.errores.push('Expedido');
-	    		// }
-	    		if (this.apoderado.nombres == '') {
-	    			this.errores.push('Nombres');
-	    		}
-	    		if (this.apoderado.paterno == '' && this.apoderado.materno == '') {
-	    			this.errores.push('Apellidos Paterno y Materno (mínimo uno)');
-	    		}
+				this.formulario = true;
+				this.validado = false;
+				this.verdatos = false;
+			},
+			cerrarFormulario(){
+				this.formulario = false;
+				this.validado = false;
+				this.verdatos = false;
+				this.limpiarFormulario();
+			},
+			validar(){
+				this.errores = [];
+				if (this.apoderado.carnet == '') {
+					this.errores.push('Carnet');
+				}
+				// if (this.apoderado.expedido == '') {
+				// 	this.errores.push('Expedido');
+				// }
+				if (this.apoderado.nombres == '') {
+					this.errores.push('Nombres');
+				}
+				if (this.apoderado.paterno == '' && this.apoderado.materno == '') {
+					this.errores.push('Apellidos Paterno y Materno (mínimo uno)');
+				}
 
-	    		if (this.apoderado.fechaNacimiento == '') {
-	    			this.errores.push('Fecha de nacimiento');
-	    		}else{
-	    			if (!this.validarFormatoFecha(this.apoderado.fechaNacimiento)) {
-	    				this.errores.push('Formato de fecha no válido');
-	    			}
-	    		}
-	    		
-	    		
-	    		if (this.errores.length == 0) {
-		    		this.validando = true;
-		    		this.registrando = true;
-		    		axios.post(Routing.generate('apoderado_bono_familia_validar', {apoderado: this.apoderado}))
-		    			.then(response => {
-		    				this.validando = false;
-		    				this.registrando = false;
-		    				if (response.data.status == 'success') {
-		    					this.validado = true;
-		    				}
-		    				if (response.data.status == 'error') {
-	    						Swal.fire(
-	    					  		'Validación SEGIP!',
-	    					  		response.data.msg,
-	    					  		'warning'
-	    						)
-		    				}
-		    			})
-		    			.catch(e => {
-		    				this.validando = false;
-		    				this.registrando = false;
-		    				console.log(e);
-		    			});
-		    	}else{
-		    		let texto = '<div class="errores">';
-		    		$.each(this.errores, function (i, value) {
-                        texto = texto + '<li>' + value + '</li>';
-                    });
-                    texto = texto + '</div>';
-	    			Swal.fire({
-	    		  		title:'Debe completar la siguiente información',
-	    		  		html:texto,
-	    		  		type:'warning'
-	    			});
-		    	}
-	    	},
-	    	seleccionarPais(){
-	    		if (this.apoderado.extranjero == 1) {
-	    			this.apoderado.pais = 1;
-	    		}
-	    		if (this.apoderado.extranjero == 2) {
-	    			this.apoderado.pais = '';
-	    		}
-	    	},
-	    	registrar(){
-	    		this.errores = [];
-	    		if (this.apoderado.carnet == '') {
-	    			this.errores.push('Carnet');
-	    		}
-	    		// if (this.apoderado.expedido == '') {
-	    		// 	this.errores.push('Expedido');
-	    		// }
-	    		if (this.apoderado.nombres == '') {
-	    			this.errores.push('Nombres');
-	    		}
-	    		if (this.apoderado.paterno == '' && this.apoderado.materno == '') {
-	    			this.errores.push('Apellidos Paterno y Materno (mínimo uno)');
-	    		}
-	    		if (this.apoderado.fechaNacimiento == '') {
-	    			this.errores.push('Fecha de nacimiento');
-	    		}
-	    		if (this.apoderado.parentesco == '') {
-	    			this.errores.push('Parentesco');
-	    		}
-	    		// if (this.apoderado.lugar == '') {
-	    		// 	this.errores.push('Lugar de nacimiento');
-	    		// }
-	    		// if (this.apoderado.genero == '') {
-	    		// 	this.errores.push('Género');
-	    		// }
-	    		if (this.apoderado.celular == '') {
-	    			this.errores.push('Celular');
-	    		}else{
-		    		if (this.apoderado.celular.length < 8) {
-		    			this.errores.push('Celular - Número no válido');
-		    		}
-	    		}
-	    		// if (this.apoderado.ocupacion == '') {
-	    		// 	this.errores.push('Ocupación laboral actual');
-	    		// }
-	    		// if (this.apoderado.ocupacion == 10035) {
-	    		// 	if (this.apoderado.ocupacionOtro == '') {
-	    		// 		this.errores.push('Especificar otra ocupación');
-	    		// 	}
-	    		// }
-	    		// if (this.apoderado.instruccion == '') {
-	    		// 	this.errores.push('Mayor grado de instrucción alcanzado');
-	    		// }
-	    		if (this.apoderado.extranjero == '') {
-	    			this.errores.push('¿Es extranjero?');
-	    		}else{
-		    		if (this.apoderado.pais == '') {
-		    			this.errores.push('Pais de nacimiento');
-		    		}
-	    		}
+				if (this.apoderado.fechaNacimiento == '') {
+					this.errores.push('Fecha de nacimiento');
+				}else{
+					if (!this.validarFormatoFecha(this.apoderado.fechaNacimiento)) {
+						this.errores.push('Formato de fecha no válido');
+					}
+				}
+				
+				
+				if (this.errores.length == 0) {
+					this.validando = true;
+					this.registrando = true;
+					axios.post(Routing.generate('apoderado_bono_familia_validar', {apoderado: this.apoderado}))
+						.then(response => {
+							this.validando = false;
+							this.registrando = false;
+							if (response.data.status == 'success') {
+								this.validado = true;
+							}
+							if (response.data.status == 'error') {
+								Swal.fire(
+									'Validación SEGIP!',
+									response.data.msg,
+									'warning'
+								)
+							}
+						})
+						.catch(e => {
+							this.validando = false;
+							this.registrando = false;
+							console.log(e);
+						});
+				}else{
+					let texto = '<div class="errores">';
+					$.each(this.errores, function (i, value) {
+						texto = texto + '<li>' + value + '</li>';
+					});
+					texto = texto + '</div>';
+					Swal.fire({
+						title:'Debe completar la siguiente información',
+						html:texto,
+						type:'warning'
+					});
+				}
+			},
+			seleccionarPais(){
+				if (this.apoderado.extranjero == 1) {
+					this.apoderado.pais = 1;
+				}
+				if (this.apoderado.extranjero == 2) {
+					this.apoderado.pais = '';
+				}
+			},
+			/*seleccionarTieneEntidad(){
+				if (this.apoderado.tieneEntidad == 1) {
+					this.apoderado.entidad = '';
+				}
+			},*/
+			registrar(){
+				this.errores = [];
+				if (this.apoderado.carnet == '') {
+					this.errores.push('Carnet');
+				}
+				// if (this.apoderado.expedido == '') {
+				// 	this.errores.push('Expedido');
+				// }
+				if (this.apoderado.nombres == '') {
+					this.errores.push('Nombres');
+				}
+				if (this.apoderado.paterno == '' && this.apoderado.materno == '') {
+					this.errores.push('Apellidos Paterno y Materno (mínimo uno)');
+				}
+				if (this.apoderado.fechaNacimiento == '') {
+					this.errores.push('Fecha de nacimiento');
+				}
+				if (this.apoderado.parentesco == '') {
+					this.errores.push('Parentesco');
+				}
+				// if (this.apoderado.lugar == '') {
+				// 	this.errores.push('Lugar de nacimiento');
+				// }
+				// if (this.apoderado.genero == '') {
+				// 	this.errores.push('Género');
+				// }
+				if (this.apoderado.celular == '') {
+					this.errores.push('Celular');
+				}else{
+					if (this.apoderado.celular.length < 8) {
+						this.errores.push('Celular - Número no válido');
+					}
+				}
+				// if (this.apoderado.ocupacion == '') {
+				// 	this.errores.push('Ocupación laboral actual');
+				// }
+				// if (this.apoderado.ocupacion == 10035) {
+				// 	if (this.apoderado.ocupacionOtro == '') {
+				// 		this.errores.push('Especificar otra ocupación');
+				// 	}
+				// }
+				// if (this.apoderado.instruccion == '') {
+				// 	this.errores.push('Mayor grado de instrucción alcanzado');
+				// }
+				if (this.apoderado.extranjero == '') {
+					this.errores.push('¿Es extranjero?');
+				}else{
+					if (this.apoderado.pais == '') {
+						this.errores.push('Pais de nacimiento');
+					}
+				}
 
-	    		if (this.errores.length == 0) {
-		    		Swal.fire({
-		    		  	title: 'Registrar apoderado',
-		    		  	html: 'Se registrará a <span class="jupper">'+ this.apoderado.nombres + ' ' + this.apoderado.paterno + ' ' + this.apoderado.materno + '</span>. Verifique bien la información del apoderado, la autenticidad del dato puede ser auditada. ¿Esta seguro de registrar al apoderado?',
-		    		  	type: 'question',
-		    		  	showCancelButton: true,
-		    		  	confirmButtonColor: '#3085d6',
-		    		  	cancelButtonColor: '#d33',
-		    		  	confirmButtonText: 'Si, registrar',
-		    		  	cancelButtonText: 'No, cancelar'
-		    		}).then((result) => {
-		    		  	if (result.value) {
-				    		this.registrando = true;
-				    		axios.post(Routing.generate('apoderado_bono_familia_registrar', {apoderado: this.apoderado, idInscripcion: this.idInscripcion, validado: this.validado}))
-				    			.then(response => {
-				    				if (response.data.status == 'success') {
-				    					this.registrando = false;
-				    					this.cargar();
-				    					this.validado = false;
-				    					this.formulario = false;
-				    					Swal.fire(
-			    					  		'Registro realizado!',
-			    					  		response.data.msg,
-			    					  		'success'
-			    						)
-			    						this.limpiarFormulario();
-				    				}
-				    				if (response.data.status == 'error') {
-				    					this.registrando = false;
-				    					Swal.fire(
-			    					  		'Aviso',
-			    					  		response.data.msg,
-			    					  		'warning'
-			    						)
-				    				}
-				    			})
-				    			.catch(e => {
-				    				console.log(e);
-				    			});
-		    		  	}
-		    		});
-		    	}else{
-		    		let texto = '<div class="errores">';
-		    		$.each(this.errores, function (i, value) {
-                        texto = texto + '<li>' + value + '</li>';
-                    });
-                    texto = texto + '</div>';
-	    			Swal.fire({
-	    		  		title:'Debe completar la siguiente información',
-	    		  		html:texto,
-	    		  		type:'warning'
-	    			});
-		    	}
-	    	},
-	    	actualizar(apoderado){
-	    		console.log(this.apoderado);
-	    		console.log(apoderado);
-	    		this.apoderado = apoderado;
-	    		this.abrirFormulario();
-	    	},
-	    	eliminar(id){
-	    		Swal.fire({
-	    		  	title: 'Eliminar apoderado',
-	    		  	html: 'Se eliminará el apoderado actual. <b>Esta eliminación estará sujeta a auditoría</b>, en lo posible evite la eliminación de apoderados. Verifique bien al momento de habilitarlo o registrarlo. ¿Desea eliminar el apoderado?',
-	    		  	type: 'question',
-	    		  	showCancelButton: true,
-	    		  	confirmButtonColor: '#3085d6',
-	    		  	cancelButtonColor: '#d33',
-	    		  	confirmButtonText: 'Si, eliminar'
-	    		}).then((result) => {
-	    		  	if (result.value) {
-	    		  		this.registrando = true;
-	    		  		axios.post(Routing.generate('apoderado_bono_familia_eliminar', {idApoderado: id}))
-	    		  			.then(response => {
-	    		  				if (response.data.status == 'success') {
-	    		  					this.cargar();
-	    		  					this.validado = false;
-	    		  					this.formulario = false;
-	    		  					this.apoderadoDatos = '';
-	    		  					this.verdatos = false;
-	    		  					this.registrando = false;
-    		  						Swal.fire(	
-    		  					  		'Eliminado!',
-    		  					  		response.data.msg,
-    		  					  		'success'
-    		  						)
-	    		  				}
-	    		  				if (response.data.status == 'error') {
-	    		  					Swal.fire(
-    		  					  		'Eliminado!',
-    		  					  		response.data.msg,
-    		  					  		'error'
-    		  						)
-    		  						this.registrando = false;
-	    		  				}
-	    		  			})
-	    		  			.catch(e => {
-	    		  				console.log(e);
-	    		  			});
-	    		  	}
-	    		});
-	    	},
-	    	validarFormatoFecha(campo) {
-    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
-    	        if ((campo.match(RegExPattern)) && (campo!='')) {
-    	                return true;
-    	        } else {
-    	                return false;
-    	        }
-	    	}  
-	    }
+				/*if (this.dependencia == 3) {
+					if (this.apoderado.tieneEntidad == '') {
+						this.errores.push('Tiene Entidad Financiera?');
+					}else{
+						if (this.apoderado.tieneEntidad == 2 && this.apoderado.entidad == '') {
+							this.errores.push('Entidad Financiera');
+						}
+					}
+				}*/
+
+				if (this.errores.length == 0) {
+					Swal.fire({
+						title: 'Registrar apoderado',
+						html: 'Se registrará a <span class="jupper">'+ this.apoderado.nombres + ' ' + this.apoderado.paterno + ' ' + this.apoderado.materno + '</span>. Verifique bien la información del apoderado, la autenticidad del dato puede ser auditada. ¿Esta seguro de registrar al apoderado?',
+						type: 'question',
+						showCancelButton: true,
+						confirmButtonColor: '#3085d6',
+						cancelButtonColor: '#d33',
+						confirmButtonText: 'Si, registrar',
+						cancelButtonText: 'No, cancelar'
+					}).then((result) => {
+						if (result.value) {
+							this.registrando = true;
+							axios.post(Routing.generate('apoderado_bono_familia_registrar', {apoderado: this.apoderado, idInscripcion: this.idInscripcion, validado: this.validado}))
+								.then(response => {
+									if (response.data.status == 'success') {
+										this.registrando = false;
+										this.cargar();
+										this.validado = false;
+										this.formulario = false;
+										Swal.fire(
+											'Registro realizado!',
+											response.data.msg,
+											'success'
+										)
+										this.limpiarFormulario();
+									}
+									if (response.data.status == 'error') {
+										this.registrando = false;
+										Swal.fire(
+											'Aviso',
+											response.data.msg,
+											'warning'
+										)
+									}
+								})
+								.catch(e => {
+									console.log(e);
+								});
+						}
+					});
+				}else{
+					let texto = '<div class="errores">';
+					$.each(this.errores, function (i, value) {
+						texto = texto + '<li>' + value + '</li>';
+					});
+					texto = texto + '</div>';
+					Swal.fire({
+						title:'Debe completar la siguiente información',
+						html:texto,
+						type:'warning'
+					});
+				}
+			},
+			actualizar(apoderado){
+				console.log(this.apoderado);
+				console.log(apoderado);
+				this.apoderado = apoderado;
+				this.abrirFormulario();
+			},
+			eliminar(id){
+				Swal.fire({
+					title: 'Eliminar apoderado',
+					html: 'Se eliminará el apoderado actual. <b>Esta eliminación estará sujeta a auditoría</b>, en lo posible evite la eliminación de apoderados. Verifique bien al momento de habilitarlo o registrarlo. ¿Desea eliminar el apoderado?',
+					type: 'question',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: 'Si, eliminar'
+				}).then((result) => {
+					if (result.value) {
+						this.registrando = true;
+						axios.post(Routing.generate('apoderado_bono_familia_eliminar', {idApoderado: id}))
+							.then(response => {
+								if (response.data.status == 'success') {
+									this.cargar();
+									this.validado = false;
+									this.formulario = false;
+									this.apoderadoDatos = '';
+									this.verdatos = false;
+									this.registrando = false;
+									Swal.fire(	
+										'Eliminado!',
+										response.data.msg,
+										'success'
+									)
+								}
+								if (response.data.status == 'error') {
+									Swal.fire(
+										'Eliminado!',
+										response.data.msg,
+										'error'
+									)
+									this.registrando = false;
+								}
+							})
+							.catch(e => {
+								console.log(e);
+							});
+					}
+				});
+			},
+			/*agregarEntidad(){
+				if (this.apoderadoBonoFamilia.idEntidad == '') {
+					Swal.fire({
+						title:'Completar información',
+						html:'<p>Debe seleccionar la Entidad financiera</p>',
+						type:'warning'
+					});
+				}else{
+					Swal.fire({
+						title: 'Registrar',
+						html: 'Se registrará la entidad financiera',
+						type: 'question',
+						showCancelButton: true,
+						confirmButtonColor: '#3085d6',
+						cancelButtonColor: '#d33',
+						confirmButtonText: 'Si, registrar',
+						cancelButtonText: 'No, cancelar'
+					}).then((result) => {
+						if (result.value) {
+							axios.post(Routing.generate('apoderado_bono_familia_registrar_entidad', {apoderadoBono: this.apoderadoBonoFamilia}))
+								.then(response => {
+									if (response.data.status == 'success') {
+										this.cargar();
+										this.registrarEntidad = false;
+										Swal.fire(
+											'Registro realizado!',
+											response.data.msg,
+											'success'
+										)
+										this.limpiarFormulario();
+									}
+									if (response.data.status == 'error') {
+										Swal.fire(
+											'Aviso',
+											response.data.msg,
+											'warning'
+										)
+									}
+								})
+								.catch(e => {
+									console.log(e);
+								});
+						}
+					});
+				}
+			},*/
+			validarFormatoFecha(campo) {
+				var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+				if ((campo.match(RegExPattern)) && (campo!='')) {
+						return true;
+				} else {
+						return false;
+				}
+			}  
+		}
 	});
 
 </script>
@@ -926,8 +1055,7 @@
 		<div class="modal-content" style="height: 90%;">
 			<div class="modal-body">
 				<div class="alert alert-info">
-					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-					El módulo de registro de apoderados no esta disponible
+					<i class="fa fa-info-circle"></i> El módulo de registro de apoderados no esta disponible
 				</div>
 			</div>
 		</div>

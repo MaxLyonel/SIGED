@@ -58,6 +58,15 @@
                                                 </form>
                                             {% endif %}
                                         {% endif %}
+
+                                        {% if msgReactivaDocumento is defined  %}
+                                            {% if msgReactivaDocumento == ""  %}
+                                                {% if formBusqueda is defined  %}
+                                                    {{form_start(formBusqueda, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                                    {{form_end(formBusqueda)}}
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}
                                     </p>
                                 </div>
                             </div>

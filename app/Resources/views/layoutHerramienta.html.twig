@@ -65,7 +65,15 @@
             <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
             <link href="{{ asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
             <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
-            
+            <style>
+                .loading{
+                    background-image: url("{{asset('img/loading.gif')}}}");
+                }
+                .img-responsive{
+                    width: 50px;
+                    height: 50px;
+                }
+            </style>
             {% endblock %}
         </head>
     <!--/ END HEAD -->
@@ -262,11 +270,11 @@
                 <!-- Start left navigation - menu -->
 
                 <ul class="sidebar-menu">
-                    <li class="active">
+                    <li>
                         <a href="{{path('principal_web')}}">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Inicio</span>
-                            <span class="selected"></span>
+                            {# <span class="selected"></span> #}
                         </a>
                     </li>
 
@@ -311,6 +319,22 @@
                             </ul>
                             {% endif %}
                         </li>
+                    {% endif %}
+
+                    {% if app.session.get('roluser') in [7,8,9,10] %}
+                    <li class="submenu">
+                        <a href="javascript:void(0);">
+                            <span class="icon"><i class="fa fa-diamond"></i></span>
+                            <span class="text">Bono Familia</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <ul>
+                            <li><a href="{{ path('apoderado_bono_familia_seguimiento_index')}}">Seguimiento</a></li>
+                            {% if app.session.get('roluser') == 10 %}
+                                <li><a href="{{ path('apoderado_bono_familia_observados_index')}}">Observados</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
                     {% endif %}
 
                     {% if app.session.get('roluser') == 9 %}
@@ -373,7 +397,10 @@
                       </a>
                       <ul>
                         <li><a href="{{ path('herramienta_info_personal_adm_migrar_index')}}">Personal Administrativo</a></li>
-                        <li><a href="{{ path('herramienta_info_maestro_migrar_index')}}">Personal Docente</a></li>
+                        <li><a href="{{ path('herramienta_info_maestro_migrar_index')}}">Personal Docente</a></li>                        
+                        {% if app.session.get('roluser') == 9 %}
+                            <li><a href="{{ path('maestroAsignacion_index')}}">Asignación Docente</a></li>
+                        {% endif %}
                       </ul>
                     </li>
                         {#<li class="submenu">
@@ -476,7 +503,7 @@
                         <a href="{{path('wf_tramite_index')}}">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Trámites</span>
-                            <span class="selected"></span>
+                            {# <span class="selected"></span> #}
                         </a>
                     </li>
                     {# {% if app.session.get('roluser') != 20  %}
@@ -532,12 +559,12 @@
                                 <span class="text">Inscripciones</span>
                                 <span class="arrow"></span>
                             </a>
-                            <ul>
+                            <ul>{#
                                 <li><a href="{{ path('inscription_ini_pri_rue_index')}}">Traslado</a></li>
                                 <li><a href="{{ path('newinscriptionInipri_index')}}">Inicial/Primaria</a></li>
                                 <li><a href="{{ path('inscription_reza_omi_exten_index')}}">Omitidos/Extemporáneos</a></li>
                                 <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
-                                {#<li><a href="{{ path('inscription_extranjeros_index')}}">Extranjeros</a></li>
+                                <li><a href="{{ path('inscription_extranjeros_index')}}">Extranjeros</a></li>
                                 <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
                                 #}
                             </ul>
@@ -573,7 +600,20 @@
                             </ul>
                         </li>
                     {% endif %}
-                    
+                    {#
+                    {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><img style='height: 21%; width: 21%; object-fit: contain' src="{{asset('img/requestPlataforma/new2.gif') }}"></i></span>
+                                <span class="text">Plataforma Educativa</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('plataforma_index')}}">Solicitud</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}                    
+                    #}
 
                     {#
                         <li class="submenu">

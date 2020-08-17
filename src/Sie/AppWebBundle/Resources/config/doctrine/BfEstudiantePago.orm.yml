@@ -1,0 +1,125 @@
+Sie\AppWebBundle\Entity\BfEstudiantePago:
+    type: entity
+    table: bf_estudiante_pago
+    id:
+        estudianteId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            column: estudiante_id
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codigoRude:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        personaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: persona_id
+        carnet:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        complemento:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaNacimiento:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: fecha_nacimiento
+        controlCod:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: control_cod
+        pagoDepartamento:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: pago_departamento
+        pagoLocalidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: pago_localidad
+        entidadId:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: entidad_id
+        agenciaId:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: agencia_id
+        cajero:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaPago:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_pago
+        horaPago:
+            type: time
+            nullable: true
+            comment: ''
+            column: hora_pago
+        transaccion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaInformacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_informacion
+    lifecycleCallbacks: {  }
