@@ -211,10 +211,7 @@ class ReportesController extends Controller {
             // FUNCION PARA VERIFICAR SI EL CURSO DE PRIMARIA TRABAJA CON LA NUEVA CURRICULA
             // $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso);
             $primariaNuevo = $this->get('funciones')->verificarMateriasPrimariaAlternativa($idCurso);
-            if (
-                ($this->session->get('ie_gestion') == '2016') || ($this->session->get('ie_gestion') == '2017') ||
-                ($this->session->get('ie_gestion') == '2018') || ($this->session->get('ie_gestion') == '2019')
-            ) {
+            if($this->session->get('ie_gestion') >= 2016 ){
                 if ($this->session->get('ie_per_estado') == '0') {
                     //VALIDOS
                     if ($primariaNuevo ) { // VERIFICAMOS SI SE UTILIZARA EL NUEVO REPORTE 2018 
@@ -273,9 +270,7 @@ class ReportesController extends Controller {
             }    
         }
         else{//CENTRALIZADOR TECNICA
-            if (($this->session->get('ie_gestion') == '2016') || ($this->session->get('ie_gestion') == '2017') ||
-                ($this->session->get('ie_gestion') == '2018') || ($this->session->get('ie_gestion') == '2019')
-                ) {
+            if($this->session->get('ie_gestion') >= 2016 ){
                 if ($this->session->get('ie_per_estado') == '0'){
                     //VALIDOS
                     $ciclotxt = $aInfoUeducativa['ueducativaInfo']['ciclo'];
