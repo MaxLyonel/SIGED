@@ -799,6 +799,7 @@ class RudeUnificationController extends Controller{
                              'estudianteInscripcion' => $inscrip->getId()
                     ));
                     $arrApoderadoInscripcion = array();
+                    $arrApoderadoInscripcionDato = array();
                     if(sizeof($objApoderadoInscripcions)>0){
 
                         foreach ($objApoderadoInscripcions as $objApoderadoInscripcion) {
@@ -852,6 +853,21 @@ class RudeUnificationController extends Controller{
                                     }                                    
                                 }
 
+                            }
+                            $objApoderadoInscripcionDato = $em->getRepository('SieAppWebBundle:ApoderadoInscripcionDatos')->findOneBy(array(
+                             'apoderadoInscripcion' => $objApoderadoInscripcion->getId()
+                            ));
+                            if( sizeof( $objApoderadoInscripcionDato) > 0){
+
+                                $arrApoderadoInscripcionDato[] = array(
+                                    'id'=>$objApoderadoInscripcionDato->getId(),
+                                    'obs'=>$objApoderadoInscripcionDato->getObs(),
+                                    'empleo'=>$objApoderadoInscripcionDato->getEmpleo(),
+                                    'Tieneocupacion'=>$objApoderadoInscripcionDato->getTieneocupacion(),
+                                    'apoderadoInscripcion'=>$objApoderadoInscripcionDato->getApoderadoInscripcion()->getId(),
+                                    'telefono'=>$objApoderadoInscripcionDato->getTelefono(),
+                                );  
+                                $em->remove($objApoderadoInscripcionDato);                          
                             }
                             
                             $em->remove($objApoderadoInscripcion);
@@ -960,6 +976,8 @@ class RudeUnificationController extends Controller{
                 'arrStudentHistoryModification'=>$arrStudentHistoryModification,
                 'arrEstudianteDocumento'=>$arrEstudianteDocumento,
                 'arrApoderadoInscripcion'=>$arrApoderadoInscripcion,
+                'arrApoderadoInscripcionDato'=>$arrApoderadoInscripcionDato,
+                
             );            
             //guardado de log antiguo de datos de unificacion            
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscripcorr[0]->getInstitucioneducativaCurso()->getId());
