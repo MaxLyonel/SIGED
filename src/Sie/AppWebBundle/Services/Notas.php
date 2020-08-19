@@ -93,6 +93,7 @@ class Notas{
             if($tipoNota == 'Trimestre'){
 
                 if($gestion == 2020){
+                    $operativo = 2;
 
                     //the new ini
 
@@ -228,6 +229,105 @@ class Notas{
                                             // dump($inicio);
                                             // dump($fin);
                                             // die;
+
+                        // EN LA GESTION 2019 INICIAL NO SE REGISTRARAN LAS NOTAS POR MATERIA
+                        if (($gestion < 2019) or ($gestion >= 2019 and $nivel != 11) ) {
+                            for($i=$inicio;$i<=$fin;$i++){
+                                $existe = 'no';
+                                foreach ($asignaturasNotas as $an) {
+                                    if($i == $an['idNotaTipo']){
+                                        if($nivel != 11 and $nivel != 1 and $nivel != 403){
+                                            $valorNota = $an['notaCuantitativa'];
+                                            if($valorNota == 0 or $valorNota == "0"){
+                                                $cantidadFaltantes++;
+                                            }else{
+                                                $cantidadRegistrados++;
+                                            }
+                                        }else{
+                                            $valorNota = $an['notaCualitativa'];
+                                            if($valorNota == ""){
+                                                $cantidadFaltantes++;
+                                            }else{
+                                                $cantidadRegistrados++;
+                                            }
+                                        }
+                                        $notasArray[$cont]['notas'][] =   array(
+                                                                'id'=>$cont."-".$i,
+                                                                'idEstudianteNota'=>$an['idNota'],
+                                                                'nota'=>$valorNota,
+                                                                'notaNueva'=>'',
+                                                                'notaCualitativaNueva'=>'',
+                                                                'idNotaTipo'=>$an['idNotaTipo'],
+                                                                'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
+                                                                'bimestre'=>$an['notaTipo'],
+                                                                'idFila'=>$a['asignaturaId'].''.$i
+                                                            );
+                                        $existe = 'si';
+                                        break;
+                                    }
+
+                                }
+                                if($existe == 'no'){
+                                    $cantidadFaltantes++;
+                                    if($nivel != 11 and $nivel != 1 and $nivel != 403){
+                                        $valorNota = '';
+                                    }else{
+                                        $valorNota = '';
+                                    }
+                                    $notasArray[$cont]['notas'][] =   array(
+                                                                'id'=>$cont."-".$i,
+                                                                'idEstudianteNota'=>'nuevo',
+                                                                'nota'=>$valorNota,
+                                                                'notaNueva'=>'',
+                                                                'notaCualitativaNueva'=>'',
+                                                                'idNotaTipo'=>$i,
+                                                                'idEstudianteAsignatura'=>$a['estAsigId'],
+                                                                'bimestre'=>$this->literal($i)['titulo'],
+                                                                'idFila'=>$a['asignaturaId'].''.$i
+                                                            );
+                                }
+                            }
+
+                            /**
+                             * PROMEDIOS
+                             */
+
+                            if($nivel != 11 and $nivel != 1 and $nivel != 403 and $operativo >= 4){
+                                // Para el promedio
+                                foreach ($asignaturasNotas as $an) {
+                                    $existe = 'no';
+                                    if($an['idNotaTipo'] == 5){
+                                        $notasArray[$cont]['notas'][] =   array(
+                                                                    'id'=>$cont."-5",
+                                                                    'idEstudianteNota'=>$an['idNota'],
+                                                                    'nota'=>$an['notaCuantitativa'],
+                                                                    'notaNueva'=>'',
+                                                                    'notaCualitativaNueva'=>'',
+                                                                    'idNotaTipo'=>$an['idNotaTipo'],
+                                                                    'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
+                                                                    'bimestre'=>$an['notaTipo'],
+                                                                    'idFila'=>$a['asignaturaId'].'5'
+                                                                );
+                                        $existe = 'si';
+                                        break;
+                                    }
+                                }
+                                if($existe == 'no'){
+
+                                    $notasArray[$cont]['notas'][] =   array(
+                                                                'id'=>$cont."-5",
+                                                                'idEstudianteNota'=>'nuevo',
+                                                                'nota'=>'',
+                                                                'notaNueva'=>'',
+                                                                'notaCualitativaNueva'=>'',
+                                                                'idNotaTipo'=>5,
+                                                                'idEstudianteAsignatura'=>$a['estAsigId'],
+                                                                'bimestre'=>'Promedio',
+                                                                'idFila'=>$a['asignaturaId'].'5'
+                                                            );
+                                }
+                            }
+                        }                                                                    
 
                                                
                         $cont++;
@@ -720,7 +820,7 @@ class Notas{
 
             if($nivel == 11 or $nivel == 1 or $nivel == 403){
 
-                if ($gestion >= 2019) {
+                if ($gestion == 2019) {
                     for ($i=$inicio; $i <=$fin; $i++) { 
                         $existe = false;
                         foreach ($cualitativas as $c) {
@@ -761,7 +861,7 @@ class Notas{
                 }
 
                 // VERIFICAMOS SI EL OPERATIVO ES MAYOR O IGUAL A 4 PARA CARGAR LA NOTA CUALITATIVA ANUAL
-                if ($operativo >= 4) {
+                if (($operativo >= 4 and $gestion<2020 ) or ($gestion == 2020)) {
                     // Para inicial
                     $existe = false;
                     foreach ($cualitativas as $c) {
