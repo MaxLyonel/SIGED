@@ -55,7 +55,10 @@ class Notas{
             $tipoNota = 'Trimestre';
         }else{
             if($gestion >= 2014){
-                $tipoNota = 'Bimestre';
+                if($gestion <= 2019)
+                    $tipoNota = 'Bimestre';
+                else
+                    $tipoNota = 'Trimestre';
             }else{
                 if($grado == 1 and !in_array($nivel, array(1,11,403))){
                     $tipoNota = 'Bimestre';
@@ -89,177 +92,331 @@ class Notas{
 
             if($tipoNota == 'Trimestre'){
 
-                $tn = array(30,27,6,31,28,7,32,29,8,9,10,11);
-                //$tn = array(6,7,8,9,10,11);
-                // TRIMESTRALES
-                vuelve1:
+                if($gestion == 2020){
 
-                $asignaturas = $this->em->createQueryBuilder()
-                            ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
-                            ->from('SieAppWebBundle:EstudianteAsignatura','ea')
-                            ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
-                            ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
-                            ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
-                            ->groupBy('asit.id, asit.asignatura, ea.id')
-                            ->orderBy('asit.id','ASC')
-                            ->where('ei.id = :idInscripcion')
-                            ->setParameter('idInscripcion',$idInscripcion)
-                            ->getQuery()
-                            ->getResult();
+                    //the new ini
 
-                $cursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()));
-
-                $arrayAsignaturasEstudiante = array();
-                foreach ($asignaturas as $a) {
-                    $arrayAsignaturasEstudiante[] = $a['asignaturaId'];
-                }
-
+                    vuelveX:
+              
+                        // REALIZAMOS LA VUELTA COMPLETA PARA OBTENER LAS MATERIAS CORRECTAS
+                        $asignaturas = $this->em->createQueryBuilder()
+                                    ->select('at.id, at.area, asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                                    ->from('SieAppWebBundle:InstitucioneducativaCurso','iec')
+                                    ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ei.institucioneducativaCurso = iec.id')
+                                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ieco.insitucioneducativaCurso = iec.id')
+                                    ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','ea.estudianteInscripcion = ei.id and ea.institucioneducativaCursoOferta = ieco.id')
+                                    ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                                    ->innerJoin('SieAppWebBundle:AreaTipo','at','WITH','asit.areaTipo = at.id')
+                                    ->groupBy('at.id, at.area, asit.id, asit.asignatura, ea.id')
+                                    ->orderBy('at.id','ASC')
+                                    ->addOrderBy('asit.id','ASC')
+                                    ->where('ei.id = :idInscripcion')
+                                    ->setParameter('idInscripcion',$idInscripcion)
+                                    ->getQuery()
+                                    ->getResult();
                 
-                $nuevaArea = false;
-                foreach ($cursoOferta as $co) {
-                    if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante)){
 
-                        // Si no existe la asignatura, registramos la asignatura para el maestro
-                        $newEstAsig = new EstudianteAsignatura();
-                        $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
-                        $newEstAsig->setFechaRegistro(new \DateTime('now'));
-                        $newEstAsig->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
-                        $newEstAsig->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($co->getId()));
-                        $this->em->persist($newEstAsig);
-                        $this->em->flush();
-                        $nuevaArea = true;
+                    // dump($asignaturas);die;
 
-                        // Registro de materia para estudiantes estudiante_asignatura en el log
-                        $arrayEstAsig = [];
-                        $arrayEstAsig['id'] = $newEstAsig->getId();
-                        $arrayEstAsig['gestionTipo'] = $newEstAsig->getGestionTipo()->getId();
-                        $arrayEstAsig['fechaRegistro'] = $newEstAsig->getFechaRegistro()->format('d-m-Y');
-                        $arrayEstAsig['estudianteInscripcion'] = $newEstAsig->getEstudianteInscripcion()->getId();
-                        $arrayEstAsig['institucioneducativaCursoOferta'] = $newEstAsig->getInstitucioneducativaCursoOferta()->getId();
-                        
-                        $this->funciones->setLogTransaccion(
-                            $newEstAsig->getId(),
-                            'estudiante_asignatura',
-                            'C',
-                            '',
-                            $arrayEstAsig,
-                            '',
-                            'ACADEMICO',
-                            json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-                        );
+                    $cursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()));
+
+                    $arrayAsignaturasEstudiante = array();
+                    foreach ($asignaturas as $a) {
+                        $arrayAsignaturasEstudiante[] = $a['asignaturaId'];
                     }
-                }
 
-                // Volvemos atras si se adiciono alguna nueva materia o asignatura
-                if($nuevaArea == true){
-                    goto vuelve1;
-                }
+                    
+                    $nuevaArea = false;
+                    foreach ($cursoOferta as $co) {
+                        // LA MATERIA TECNICA GENERAL Y ESPECILIZADA NO SE AGREGAN AUTOMATICAMENTE A TODOS LOS ESTUDIANTES A PARTIR DE LA GESTION 2019
+                        if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante) and ($gestion < 2019 or ($gestion >= 2019 and $nivel == 13 and $grado >= 3 and $co->getAsignaturaTipo()->getId() != 1038 and $co->getAsignaturaTipo()->getId() != 1039) or ($gestion >= 2019 and $nivel != 13) or ($gestion >= 2019 and $nivel == 13 and $grado<3))) {
 
-                $notasArray = array();
-                $cont = 0;
-                foreach ($asignaturas as $a) {
-                    $notasArray[$cont] = array('idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
-                    $asignaturasNotas = $this->em->createQueryBuilder()
-                                        ->select('en.id as idNota, nt.id as idNotaTipo, nt.notaTipo, ea.id as idEstudianteAsignatura, en.notaCuantitativa, en.notaCualitativa, at.id')
-                                        ->from('SieAppWebBundle:EstudianteNota','en')
-                                        ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','en.estudianteAsignatura = ea.id')
-                                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
-                                        ->innerJoin('SieAppWebBundle:AsignaturaTipo','at','WITH','ieco.asignaturaTipo = at.id')
-                                        ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','en.notaTipo = nt.id')
-                                        ->orderBy('nt.id','ASC')
-                                        ->where('ea.id = :estAsigId')
-                                        ->setParameter('estAsigId',$a['estAsigId'])
-                                        ->getQuery()
-                                        ->getResult();
+                            // Si no existe la asignatura, registramos la asignatura para el maestro
+                            $newEstAsig = new EstudianteAsignatura();
+                            $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+                            $newEstAsig->setFechaRegistro(new \DateTime('now'));
+                            $newEstAsig->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
+                            $newEstAsig->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($co->getId()));
+                            $this->em->persist($newEstAsig);
+                            $this->em->flush();
+                            $nuevaArea = true;
 
-                    if($nivel != 11 and $nivel != 1 and $nivel != 403){
-                        for($i=0;$i<count($tn);$i++){
-                            $existe = 'no';
-                            foreach ($asignaturasNotas as $an) {
-                                if($tn[$i] == $an['idNotaTipo']){
-                                    $cantidadRegistrados++;
-                                    $notasArray[$cont]['notas'][] =   array(
-                                                            'id'=>$cont."-".$tn[$i],
-                                                            'idEstudianteNota'=>$an['idNota'],
-                                                            'nota'=>$an['notaCuantitativa'],
-                                                            'notaCualitativa'=>$an['notaCualitativa'],
-                                                            'notaNueva'=>'',
-                                                            'notaCualitativaNueva'=>'',
-                                                            'idNotaTipo'=>$an['idNotaTipo'],
-                                                            'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
-                                                            'bimestre'=> $this->literal($tn[$i])['abrev'],
-                                                            'idFila'=>$an['id'].''.$tn[$i]
-                                                        );
-                                    $existe = 'si';
-                                    break;
-                                }
-
-                            }
-                            if($existe == 'no'){
-                                $cantidadFaltantes++;
-                                $notasArray[$cont]['notas'][] =   array(
-                                                            'id'=>$cont."-".$tn[$i],
-                                                            'idEstudianteNota'=>'nuevo',
-                                                            'nota'=>0,
-                                                            'notaCualitativa'=>'',
-                                                            'notaNueva'=>'',
-                                                            'notaCualitativaNueva'=>'',
-                                                            'idNotaTipo'=>$tn[$i],
-                                                            'idEstudianteAsignatura'=>$a['estAsigId'],
-                                                            'bimestre'=> $this->literal($tn[$i])['abrev'],
-                                                            'idFila'=>$a['asignaturaId'].''.$tn[$i]
-                                                        );
-                            }
-                        }
-                    }else{
-                        for($i=6;$i<=8;$i++){
-                            $existe = 'no';
-                            foreach ($asignaturasNotas as $an) {
-                                if($tn[$i] == $an['idNotaTipo']){
-                                    $cantidadRegistrados++;
-                                    $notasArray[$cont]['notas'][] =   array(
-                                                            'id'=>$cont."-".$i,
-                                                            'idEstudianteNota'=>$an['idNota'],
-                                                            'nota'=>$an['notaCuantitativa'],
-                                                            'notaCualitativa'=>$an['notaCualitativa'],
-                                                            'notaNueva'=>'',
-                                                            'notaCualitativaNueva'=>'',
-                                                            'idNotaTipo'=>$an['idNotaTipo'],
-                                                            'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
-                                                            'bimestre'=>$this->literal($tn[$i]['abrev']),
-                                                            'idFila'=>$an['id'].''.$tn[$i]
-                                                        );
-                                    $existe = 'si';
-                                    break;
-                                }
-
-                            }
-                            if($existe == 'no'){
-                                $cantidadFaltantes++;
-                                $notasArray[$cont]['notas'][] =   array(
-                                                            'id'=>$cont."-".$i,
-                                                            'idEstudianteNota'=>'nuevo',
-                                                            'nota'=>0,
-                                                            'notaCualitativa'=>'',
-                                                            'notaNueva'=>'',
-                                                            'notaCualitativaNueva'=>'',
-                                                            'idNotaTipo'=>$i,
-                                                            'idEstudianteAsignatura'=>$a['estAsigId'],
-                                                            'bimestre'=>$this->literal($tn[$i]['abrev']),
-                                                            'idFila'=>$a['asignaturaId'].''.$tn[$i]
-                                                        );
-                            }
+                            // Registro de materia para estudiantes estudiante_asignatura en el log
+                            $arrayEstAsig = [];
+                            $arrayEstAsig['id'] = $newEstAsig->getId();
+                            $arrayEstAsig['gestionTipo'] = $newEstAsig->getGestionTipo()->getId();
+                            $arrayEstAsig['fechaRegistro'] = $newEstAsig->getFechaRegistro()->format('d-m-Y');
+                            $arrayEstAsig['estudianteInscripcion'] = $newEstAsig->getEstudianteInscripcion()->getId();
+                            $arrayEstAsig['institucioneducativaCursoOferta'] = $newEstAsig->getInstitucioneducativaCursoOferta()->getId();
+                            
+                            $this->funciones->setLogTransaccion(
+                                $newEstAsig->getId(),
+                                'estudiante_asignatura',
+                                'C',
+                                '',
+                                $arrayEstAsig,
+                                '',
+                                'ACADEMICO',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                            );
                         }
                     }
 
-                    $cont++;
-                }
+                    // Volvemos atras si se adiciono alguna nueva materia o asignatura
+                    if($nuevaArea == true){
+                        goto vuelveX;
+                    }
 
-                $areas = array();
-                $areas = $notasArray;
-                //dump($areas);die;
-                $tipo = 'Trimestre';
-                //dump($areas);die;
+                    //dump($asignaturas);die;
+                    $notasArray = array();
+                    $cont = 0;
+
+                    switch ($operativo) {
+                        case 0:
+                            $inicio = 1;
+                            $fin = 0;
+                            break;
+                        case 1:
+                            $inicio = 1;
+                            $fin = 1;
+                            break;
+                        case 5:
+                            $inicio = 1;
+                            $fin = 4;
+                            break;
+                        default:
+                            $inicio = 1;
+                            $fin = $operativo;
+                            break;
+                    }
+
+
+                    if($this->session->get('ue_modular') == true and $nivel == 13){
+                        $operativo = 4;
+                        $fin = 4;
+                    }
+
+                    foreach ($asignaturas as $a) {
+                        // Concatenamos la especialidad si se tiene registrado
+                        $nombreAsignatura = $a['asignatura'];
+                        if($a['asignaturaId'] == 1039){
+                            $especialidad = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion'=>$idInscripcion));
+                            if($especialidad){
+                                $nombreAsignatura = $a['asignatura'].':'.$especialidad->getEspecialidadTecnicoHumanisticoTipo()->getEspecialidad();
+                            }
+                        }
+
+                        if(false){
+                            $notasArray[$cont] = array('areaId'=>$a['id'],'area'=>$a['area'],'idAsignatura'=>$a['asignaturaId'],'asignatura'=>$nombreAsignatura);
+                        }else{
+                            $notasArray[$cont] = array('idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
+                        }
+                        $asignaturasNotas = $this->em->createQueryBuilder()
+                                            ->select('en.id as idNota, nt.id as idNotaTipo, nt.notaTipo, ea.id as idEstudianteAsignatura, en.notaCuantitativa, en.notaCualitativa, at.id')
+                                            ->from('SieAppWebBundle:EstudianteNota','en')
+                                            ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','en.estudianteAsignatura = ea.id')
+                                            ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                                            ->innerJoin('SieAppWebBundle:AsignaturaTipo','at','WITH','ieco.asignaturaTipo = at.id')
+                                            ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','en.notaTipo = nt.id')
+                                            ->orderBy('nt.id','ASC')
+                                            ->where('ea.id = :estAsigId')
+                                            ->setParameter('estAsigId',$a['estAsigId'])
+                                            ->getQuery()
+                                            ->getResult();
+
+                                            // dump($asignaturasNotas);
+                                            // dump($inicio);
+                                            // dump($fin);
+                                            // die;
+
+                                               
+                        $cont++;
+                    }
+                    $areas = array();
+                    /*if($conArea == true){
+                        foreach ($notasArray as $n) {
+                            $areas[$n['area']][] = $n;
+                        }
+                    }else{*/
+                        $areas = $notasArray;
+                    //}
+                    //dump($areas);die;
+                    $tipo = 'trimestre2020';
+
+                    //the new end
+
+                }else{
+
+                    $tn = array(30,27,6,31,28,7,32,29,8,9,10,11);
+                    // TRIMESTRALES
+                    vuelve1:
+                    $asignaturas = $this->em->createQueryBuilder()
+                                ->select('asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
+                                ->from('SieAppWebBundle:EstudianteAsignatura','ea')
+                                ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','WITH','ea.estudianteInscripcion = ei.id')
+                                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                                ->innerJoin('SieAppWebBundle:AsignaturaTipo','asit','WITH','ieco.asignaturaTipo = asit.id')
+                                ->groupBy('asit.id, asit.asignatura, ea.id')
+                                ->orderBy('asit.id','ASC')
+                                ->where('ei.id = :idInscripcion')
+                                ->setParameter('idInscripcion',$idInscripcion)
+                                ->getQuery()
+                                ->getResult();
+
+                    $cursoOferta = $this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$inscripcion->getInstitucioneducativaCurso()->getId()));
+
+                    $arrayAsignaturasEstudiante = array();
+                    foreach ($asignaturas as $a) {
+                        $arrayAsignaturasEstudiante[] = $a['asignaturaId'];
+                    }
+
+                    
+                    $nuevaArea = false;
+                    foreach ($cursoOferta as $co) {
+                        if(!in_array($co->getAsignaturaTipo()->getId(), $arrayAsignaturasEstudiante)){
+
+                            // Si no existe la asignatura, registramos la asignatura para el maestro
+                            $newEstAsig = new EstudianteAsignatura();
+                            $newEstAsig->setGestionTipo($this->em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+                            $newEstAsig->setFechaRegistro(new \DateTime('now'));
+                            $newEstAsig->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
+                            $newEstAsig->setInstitucioneducativaCursoOferta($this->em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($co->getId()));
+                            $this->em->persist($newEstAsig);
+                            $this->em->flush();
+                            $nuevaArea = true;
+
+                            // Registro de materia para estudiantes estudiante_asignatura en el log
+                            $arrayEstAsig = [];
+                            $arrayEstAsig['id'] = $newEstAsig->getId();
+                            $arrayEstAsig['gestionTipo'] = $newEstAsig->getGestionTipo()->getId();
+                            $arrayEstAsig['fechaRegistro'] = $newEstAsig->getFechaRegistro()->format('d-m-Y');
+                            $arrayEstAsig['estudianteInscripcion'] = $newEstAsig->getEstudianteInscripcion()->getId();
+                            $arrayEstAsig['institucioneducativaCursoOferta'] = $newEstAsig->getInstitucioneducativaCursoOferta()->getId();
+                            
+                            $this->funciones->setLogTransaccion(
+                                $newEstAsig->getId(),
+                                'estudiante_asignatura',
+                                'C',
+                                '',
+                                $arrayEstAsig,
+                                '',
+                                'ACADEMICO',
+                                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                            );
+                        }
+                    }
+
+                    // Volvemos atras si se adiciono alguna nueva materia o asignatura
+                    if($nuevaArea == true){
+                        goto vuelve1;
+                    }
+
+                    $notasArray = array();
+                    $cont = 0;
+                    foreach ($asignaturas as $a) {
+                        $notasArray[$cont] = array('idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
+                        $asignaturasNotas = $this->em->createQueryBuilder()
+                                            ->select('en.id as idNota, nt.id as idNotaTipo, nt.notaTipo, ea.id as idEstudianteAsignatura, en.notaCuantitativa, en.notaCualitativa, at.id')
+                                            ->from('SieAppWebBundle:EstudianteNota','en')
+                                            ->innerJoin('SieAppWebBundle:EstudianteAsignatura','ea','WITH','en.estudianteAsignatura = ea.id')
+                                            ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco','WITH','ea.institucioneducativaCursoOferta = ieco.id')
+                                            ->innerJoin('SieAppWebBundle:AsignaturaTipo','at','WITH','ieco.asignaturaTipo = at.id')
+                                            ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','en.notaTipo = nt.id')
+                                            ->orderBy('nt.id','ASC')
+                                            ->where('ea.id = :estAsigId')
+                                            ->setParameter('estAsigId',$a['estAsigId'])
+                                            ->getQuery()
+                                            ->getResult();
+
+                        if($nivel != 11 and $nivel != 1 and $nivel != 403){
+                            for($i=0;$i<count($tn);$i++){
+                                $existe = 'no';
+                                foreach ($asignaturasNotas as $an) {
+                                    if($tn[$i] == $an['idNotaTipo']){
+                                        $cantidadRegistrados++;
+                                        $notasArray[$cont]['notas'][] =   array(
+                                                                'id'=>$cont."-".$tn[$i],
+                                                                'idEstudianteNota'=>$an['idNota'],
+                                                                'nota'=>$an['notaCuantitativa'],
+                                                                'notaCualitativa'=>$an['notaCualitativa'],
+                                                                'notaNueva'=>'',
+                                                                'notaCualitativaNueva'=>'',
+                                                                'idNotaTipo'=>$an['idNotaTipo'],
+                                                                'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
+                                                                'bimestre'=> $this->literal($tn[$i])['abrev'],
+                                                                'idFila'=>$an['id'].''.$tn[$i]
+                                                            );
+                                        $existe = 'si';
+                                        break;
+                                    }
+
+                                }
+                                if($existe == 'no'){
+                                    $cantidadFaltantes++;
+                                    $notasArray[$cont]['notas'][] =   array(
+                                                                'id'=>$cont."-".$tn[$i],
+                                                                'idEstudianteNota'=>'nuevo',
+                                                                'nota'=>0,
+                                                                'notaCualitativa'=>'',
+                                                                'notaNueva'=>'',
+                                                                'notaCualitativaNueva'=>'',
+                                                                'idNotaTipo'=>$tn[$i],
+                                                                'idEstudianteAsignatura'=>$a['estAsigId'],
+                                                                'bimestre'=> $this->literal($tn[$i])['abrev'],
+                                                                'idFila'=>$a['asignaturaId'].''.$tn[$i]
+                                                            );
+                                }
+                            }
+                        }else{
+                            for($i=6;$i<=8;$i++){
+                                $existe = 'no';
+                                foreach ($asignaturasNotas as $an) {
+                                    if($tn[$i] == $an['idNotaTipo']){
+                                        $cantidadRegistrados++;
+                                        $notasArray[$cont]['notas'][] =   array(
+                                                                'id'=>$cont."-".$i,
+                                                                'idEstudianteNota'=>$an['idNota'],
+                                                                'nota'=>$an['notaCuantitativa'],
+                                                                'notaCualitativa'=>$an['notaCualitativa'],
+                                                                'notaNueva'=>'',
+                                                                'notaCualitativaNueva'=>'',
+                                                                'idNotaTipo'=>$an['idNotaTipo'],
+                                                                'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
+                                                                'bimestre'=>$this->literal($tn[$i]['abrev']),
+                                                                'idFila'=>$an['id'].''.$tn[$i]
+                                                            );
+                                        $existe = 'si';
+                                        break;
+                                    }
+
+                                }
+                                if($existe == 'no'){
+                                    $cantidadFaltantes++;
+                                    $notasArray[$cont]['notas'][] =   array(
+                                                                'id'=>$cont."-".$i,
+                                                                'idEstudianteNota'=>'nuevo',
+                                                                'nota'=>0,
+                                                                'notaCualitativa'=>'',
+                                                                'notaNueva'=>'',
+                                                                'notaCualitativaNueva'=>'',
+                                                                'idNotaTipo'=>$i,
+                                                                'idEstudianteAsignatura'=>$a['estAsigId'],
+                                                                'bimestre'=>$this->literal($tn[$i]['abrev']),
+                                                                'idFila'=>$a['asignaturaId'].''.$tn[$i]
+                                                            );
+                                }
+                            }
+                        }
+
+                        $cont++;
+                    }
+
+                    $areas = array();
+                    $areas = $notasArray;
+                    //dump($areas);die;
+                    $tipo = 'Trimestre';
+                    //dump($areas);die;
+                }
 
             }else{
                 // BIMESTRALES
