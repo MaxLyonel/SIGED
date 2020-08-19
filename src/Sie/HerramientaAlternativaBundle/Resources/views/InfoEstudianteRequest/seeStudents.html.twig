@@ -88,7 +88,7 @@
                 </div>
             {# endif #}
             {# commented by krlos 15.04.2020 #}
-            {% if app.session.get('ie_id') == 80730796 and app.session.get('ie_gestion') == app.session.get('currentyear') %}
+            {% if app.session.get('ie_id') == 80730796 or app.session.get('ie_gestion') == app.session.get('currentyear') %}
             <div class="col-md-3">
                 <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
                     <i class="fa fa-user"></i> Inscripción con CI
