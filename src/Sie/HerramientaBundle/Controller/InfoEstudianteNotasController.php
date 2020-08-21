@@ -170,8 +170,9 @@ class InfoEstudianteNotasController extends Controller {
                     ));
                   }
 
-                }                
-                return $this->render('SieHerramientaBundle:InfoEstudianteNotas:bimestre.html.twig',array(
+                }
+                               
+                return $this->render('SieHerramientaBundle:InfoEstudianteNotas:newtrimestre.html.twig',array(
                     'notas'=>$notas,
                     'swspeciality'=>$swspeciality,
                     'grado'=>$grado,
