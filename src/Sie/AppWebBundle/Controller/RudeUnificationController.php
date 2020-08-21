@@ -787,7 +787,7 @@ class RudeUnificationController extends Controller{
                  $updateCurrenteInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));
                  $em->flush();
             }   
-
+            $arrApoderadoInscripcionDato = array();
             if(($inscripinco) && ($studentcor)){
                 foreach ($inscripinco as $inscrip) {
 
