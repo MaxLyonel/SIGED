@@ -186,8 +186,8 @@ class Notas{
                             $fin = 4;
                             break;
                         default:
-                            $inicio = 1;
-                            $fin = $operativo;
+                            $inicio = 6;
+                            $fin = 8;
                             break;
                     }
 
@@ -225,9 +225,9 @@ class Notas{
                                             ->getQuery()
                                             ->getResult();
 
-                                            // dump($asignaturasNotas);
-                                            // dump($inicio);
-                                            // dump($fin);
+                                             dump($asignaturasNotas);
+                                             dump($inicio);
+                                             dump($fin);
                                             // die;
 
                         // EN LA GESTION 2019 INICIAL NO SE REGISTRARAN LAS NOTAS POR MATERIA
@@ -331,7 +331,7 @@ class Notas{
 
                                                
                         $cont++;
-                    }
+                    }die;
                     $areas = array();
                     /*if($conArea == true){
                         foreach ($notasArray as $n) {
