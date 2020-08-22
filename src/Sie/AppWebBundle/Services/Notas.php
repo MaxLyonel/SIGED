@@ -93,7 +93,7 @@ class Notas{
             if($tipoNota == 'Trimestre'){
 
                 if($gestion == 2020){
-                    $operativo = 2;
+                    //$operativo = 3;
 
                     //the new ini
 
@@ -174,16 +174,16 @@ class Notas{
 
                     switch ($operativo) {
                         case 0:
-                            $inicio = 1;
+                            $inicio = 6;
                             $fin = 0;
                             break;
                         case 1:
-                            $inicio = 1;
-                            $fin = 1;
+                            $inicio = 6;
+                            $fin = 6;
                             break;
-                        case 5:
-                            $inicio = 1;
-                            $fin = 4;
+                        case 4:
+                            $inicio = 6;
+                            $fin = 3;
                             break;
                         default:
                             $inicio = 6;
@@ -193,11 +193,11 @@ class Notas{
 
 
                     if($this->session->get('ue_modular') == true and $nivel == 13){
-                        $operativo = 4;
-                        $fin = 4;
+                        $operativo = 3;
+                        $fin = 3;
                     }
 
-                    foreach ($asignaturas as $a) {
+                    foreach ($asignaturas as $a) { dump($a);
                         // Concatenamos la especialidad si se tiene registrado
                         $nombreAsignatura = $a['asignatura'];
                         if($a['asignaturaId'] == 1039){
@@ -225,9 +225,9 @@ class Notas{
                                             ->getQuery()
                                             ->getResult();
 
-                                             dump($asignaturasNotas);
-                                             dump($inicio);
-                                             dump($fin);
+                                             //dump($asignaturasNotas);
+                                             //dump($inicio);
+                                             //dump($fin);
                                             // die;
 
                         // EN LA GESTION 2019 INICIAL NO SE REGISTRARAN LAS NOTAS POR MATERIA
@@ -331,7 +331,8 @@ class Notas{
 
                                                
                         $cont++;
-                    }die;
+                    }
+                    //die;
                     $areas = array();
                     /*if($conArea == true){
                         foreach ($notasArray as $n) {

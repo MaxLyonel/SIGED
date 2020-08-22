@@ -130,6 +130,7 @@ class InfoEstudianteNotasController extends Controller {
             ));
         }else{
             $notas = $this->get('notas')->regular($idInscripcion,0);
+            dump($notas);die;
             if($gestion== 2020){
                 $tipoUE = $this->get('funciones')->getTipoUE($aInfoUe['requestUser']['sie'],$aInfoUe['requestUser']['gestion']);
                 $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);              
@@ -142,21 +143,21 @@ class InfoEstudianteNotasController extends Controller {
                     }else{
                         // Verificamos si el tipo es 1:plena, 2:tecnica tecnologica, 3:modular, 5: humanistica 7:transformacion (las que hayan hecho una solicitud pàra trabajar gestion actual)
                         if($tipoUE['id'] == 1 or $tipoUE['id'] == 2 or $tipoUE['id'] == 3 or $tipoUE['id'] == 5 or $tipoUE['id'] == 7){
-                            $plantilla = 'regular';
+                            $plantilla = 'newregular';
                             $vista = 1;
                         }else{
                             // Regularizacion de gestiones pasadas 
                             if($notas['gestion'] < $notas['gestionActual']){
-                                $plantilla = 'regular';
+                                $plantilla = 'newregular';
                                 $vista = 1;
                             }else{
-                                $plantilla = 'regular';
+                                $plantilla = 'newregular';
                                 $vista = 0;
                             }
                         }
                     }
                 }else{
-                    $plantilla = 'regular';
+                    $plantilla = 'newregular';
                     $vista = 0;
                 }
                 $swspeciality  = false;
