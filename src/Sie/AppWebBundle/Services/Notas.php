@@ -91,7 +91,7 @@ class Notas{
             $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado);
 
             if($tipoNota == 'Trimestre'){
-
+                $operativo = 3;
                 if($gestion == 2020){
                     //$operativo = 3;
 
@@ -197,7 +197,8 @@ class Notas{
                         $fin = 3;
                     }
 
-                    foreach ($asignaturas as $a) { dump($a);
+                    foreach ($asignaturas as $a) {
+                     //dump($a);
                         // Concatenamos la especialidad si se tiene registrado
                         $nombreAsignatura = $a['asignatura'];
                         if($a['asignaturaId'] == 1039){
@@ -292,11 +293,11 @@ class Notas{
                              * PROMEDIOS
                              */
 
-                            if($nivel != 11 and $nivel != 1 and $nivel != 403 and $operativo >= 4){
+                            if($nivel != 11 and $nivel != 1 and $nivel != 403 and $operativo >= 3){
                                 // Para el promedio
                                 foreach ($asignaturasNotas as $an) {
                                     $existe = 'no';
-                                    if($an['idNotaTipo'] == 5){
+                                    if(in_array($an['idNotaTipo'], array(9,11,5))){
                                         $notasArray[$cont]['notas'][] =   array(
                                                                     'id'=>$cont."-5",
                                                                     'idEstudianteNota'=>$an['idNota'],
@@ -332,6 +333,7 @@ class Notas{
                                                
                         $cont++;
                     }
+                    //die;
                     //die;
                     $areas = array();
                     /*if($conArea == true){
@@ -883,7 +885,7 @@ class Notas{
                             }
                         }
                     }
-                    if($existe == false and $operativo >= 4){
+                    if($existe == false and $operativo >= 3){
                         // $cantidadFaltantes++;
                         $arrayCualitativas[] = array('idInscripcion'=>$idInscripcion,
                                                      'idEstudianteNotaCualitativa'=>'nuevo',
@@ -1158,7 +1160,7 @@ class Notas{
             $idNotaTipoC = $request->get('idNotaTipoC');
             $idEstudianteAsignaturaC = $request->get('idEstudianteAsignaturaC');
             $notasC = $request->get('notasC');
-            /*
+            
             dump($idEstudianteNota);
             dump($idNotaTipo);
             dump($idEstudianteAsignatura);
@@ -1181,7 +1183,7 @@ die;/*
             /**
              * Para las notas BIMESTRALES
              */
-            if($tipo == 'Bimestre'){
+            if($tipo == 'Bimestre' or $tipo == 'trimestre2020'){
                 // Registro y/o modificacion de notas
                 for($i=0;$i<count($idEstudianteNota);$i++) {
                     if($idEstudianteNota[$i] == 'nuevo'){
