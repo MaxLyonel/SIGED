@@ -66,7 +66,7 @@ class NewInscriptionIniPriController extends Controller
         61710093
       );
 
-      if( in_array($this->session->get('ie_id'), $arrWeenhayec)){
+      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or $this->session->get('roluser')==7){
         //nothing todo
       }else{
         return $this->redirect($this->generateUrl('principal_web'));
