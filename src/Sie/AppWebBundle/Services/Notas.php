@@ -91,9 +91,10 @@ class Notas{
             $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado);
 
             if($tipoNota == 'Trimestre'){
-                $operativo = 3;
+                
                 if($gestion == 2020){
-                    //$operativo = 3;
+                    
+                    $operativo = ($nivel==11 or ($nivel ==12 && $grado < 2))?1:3;
 
                     //the new ini
 
@@ -232,7 +233,8 @@ class Notas{
                                             // die;
 
                         // EN LA GESTION 2019 INICIAL NO SE REGISTRARAN LAS NOTAS POR MATERIA
-                        if (($gestion < 2019) or ($gestion >= 2019 and $nivel != 11) ) {
+                        //if (($gestion < 2019) or ($gestion >= 2019 and $nivel != 11) ) {
+                        if (($gestion < 2019) or ($gestion >= 2019 and $nivel != 11 and $grado >= 2) ) {
                             for($i=$inicio;$i<=$fin;$i++){
                                 $existe = 'no';
                                 foreach ($asignaturasNotas as $an) {
@@ -821,7 +823,8 @@ class Notas{
 
             $cualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$idInscripcion),array('notaTipo'=>'ASC'));
 
-            if($nivel == 11 or $nivel == 1 or $nivel == 403){
+            //if($nivel == 11 or $nivel == 1 or $nivel == 403){
+            if(($nivel == 11 or $nivel == 1 or $nivel == 403) or ($nivel ==12 and $grado < 2)){
 
                 if ($gestion == 2019) {
                     for ($i=$inicio; $i <=$fin; $i++) { 
@@ -885,7 +888,8 @@ class Notas{
                             }
                         }
                     }
-                    if($existe == false and $operativo >= 3){
+                    $conditionAvg = ($nivel == 11 or ($nivel ==12 && $grado < 2) && $gestion == 2020)?$operativo >= 1:$operativo >= 3;
+                    if($existe == false and $conditionAvg){
                         // $cantidadFaltantes++;
                         $arrayCualitativas[] = array('idInscripcion'=>$idInscripcion,
                                                      'idEstudianteNotaCualitativa'=>'nuevo',
@@ -1160,7 +1164,7 @@ class Notas{
             $idNotaTipoC = $request->get('idNotaTipoC');
             $idEstudianteAsignaturaC = $request->get('idEstudianteAsignaturaC');
             $notasC = $request->get('notasC');
-            
+    /*        
             dump($idEstudianteNota);
             dump($idNotaTipo);
             dump($idEstudianteAsignatura);

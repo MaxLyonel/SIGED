@@ -130,7 +130,7 @@ class InfoEstudianteNotasController extends Controller {
             ));
         }else{
             $notas = $this->get('notas')->regular($idInscripcion,0);
-            dump($notas);die;
+            //dump($notas);die;
             if($gestion== 2020){
                 $tipoUE = $this->get('funciones')->getTipoUE($aInfoUe['requestUser']['sie'],$aInfoUe['requestUser']['gestion']);
                 $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);              
