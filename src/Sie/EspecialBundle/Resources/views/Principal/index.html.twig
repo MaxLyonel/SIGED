@@ -4,7 +4,7 @@
 
 <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-table"></i> Principal <span>Menú principal</span></h2>
+        <h2><i class="fa fa-table"></i> Menú Principal <span>Inicio</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -18,43 +18,41 @@
     </div><!-- /.header-content -->
     <!--/ End page header -->
     <div class="body-content animated fadeIn">
-        {#<div class="row">
-            <div class="col-md-12">
-                <!-- Start default panel -->
-                <div class="panel panel-teal rounded shadow">
-                    <!-- Start panel heading -->
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{title}}</h3>
-                        <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
-                    <!--/ End panel heading -->
-                    <!-- Start panel content -->
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="form-group">
-                                <label class="col-md-2 col-md-offset-3 control-label text-right" for="gestiones"><strong>Seleccionar gestión:</strong></label>
-                                <div class="col-md-2">
-                                    <select onchange="registroConsol(this.value)" id="gestiones" class="form-control">
-                                        {% for gestion in gestiones %}
-                                            <option value="{{gestion}}">{{gestion}}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
+        <div class="col-md-6 col-md-offset-3">
+                <!-- Start input fields - basic form -->
+                <div class="panel rounded shadow">
+                    <div class="panel panel-teal shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">Notificaciones</h3>
                             </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body no-padding">
+                            <ul class="list-group">
+                                {% for entity in entities|slice(0, 5) %}
+                                    {% if entity.rolTipo.id == app.session.get('roluser') %}
+                                        <li class="list-group-item">
+                                            <span class="badge {% if(entity.notif.noticiaTipo) == 0  %}badge-success{% elseif(entity.notif.noticiaTipo) == 1 %}badge-warning{% else %}badge-danger{% endif %}">{% if(entity.notif.noticiaTipo) == 0  %}Normal{% elseif(entity.notif.noticiaTipo) == 1 %}Urgente{% else %}Muy Urgente{% endif %}</span>
+                                            <h5 class="list-group-item-heading text-primary"><strong><span class="glyphicon glyphicon-time"></span> {% if entity.notif.fechaCrea %}{{ entity.notif.fechaCrea|date('d-m-Y') }}{% endif %} | {{ entity.notif.titulo }}</strong></h5>
+                                            <p class="list-group-item-text list-group-item-text-notif text-justify"><i class="fa fa-rss-square text-warning"></i> {{ entity.notif.mensaje|raw }}</p>
+                                            <p class="list-group-item-text text-green">
+                                                {% if entity.notif.adjunto %}
+                                                    Descargar adjunto: <a href="{{ asset('uploads/adjuntos/' ~ entity.notif.adjunto) }}" target="_blank"><img src="{{asset('img/pdf.png') }}" alt="{{ entity.notif.adjunto }}" width="20" height="20"></a>
+                                                {% endif %}
+                                            </p>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    <div class="alert alert-info" role="alert">
+                                        <i class="fa fa-fw fa-info-circle"></i> Sin notificaciones
+                                    </div>
+                                {% endfor %}
+                            </ul>
                         </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-md-12" id="tableConsol">
-                                {% include 'SieEspecialBundle:Institucioneducativa:consol_especial.html.twig' with {'consolEspecial': consol, 'label': label, 'label_distrito': label_distrito} %}
-                            </div>
-                        </div>
-                    </div><!-- /.panel-body -->
-                    <!--/ End panel content -->
-                </div><!-- /.panel -->
-                <!--/ End default panel -->
-
+                    </div>
+                </div>
             </div>
-        </div><!-- /.row -->#}
     </div>
 {% endblock %}
 {% block javascripts %}

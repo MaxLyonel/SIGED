@@ -998,13 +998,22 @@ class OperativoController extends Controller {
         $rolusuario = $this->session->get('roluser');
         $this->gestion = date('Y');
         $em = $this->getDoctrine()->getManager();
-        $form = $this->createFormBuilder()
-        ->add('codsie','text',array('label'=>'Cod. SIE:', 'required'=>true, 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
+        $form = $this->createFormBuilder();
+        if($this->session->get('userName')=='4926577'){
+
+            $form =$form->add('codsie','text',array('label'=>'Cod. SIE:', 'required'=>true, 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
+            ->add('operativo','entity',array('label'=>'Operativo:','required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
+                return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true ");},'property'=>'operaTivo','empty_value' => false,'attr'=>array('class'=>'form-control')))
+            ->add('gestion','entity',array('label'=>'Gestión:','required'=>true,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
+                return $g->createQueryBuilder('g')->where('g.id>=2009')->andWhere('g.id<=2019')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => false,'attr'=>array('class'=>'form-control')));
+        }else{
+            $form =$form->add('codsie','text',array('label'=>'Cod. SIE:', 'required'=>true, 'attr'=>array('maxlength' => '8','class'=>'form-control validar')))
         ->add('operativo','entity',array('label'=>'Operativo:','required'=>true,'class'=>'SieAppWebBundle:OperativoTipo','query_builder'=>function(EntityRepository $o){
             return $o->createQueryBuilder('o')->where("o.institucioneducativaTipo=2 and o.esvigente=true and o.id in (2,4)");},'property'=>'operaTivo','empty_value' => false,'attr'=>array('class'=>'form-control')))
         ->add('gestion','entity',array('label'=>'Gestión:','required'=>true,'class'=>'SieAppWebBundle:GestionTipo','query_builder'=>function(EntityRepository $g){
-            return $g->createQueryBuilder('g')->where('g.id>=2009')->andWhere('g.id<=2018')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => false,'attr'=>array('class'=>'form-control')))
-        ->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'form-control btn btn-success','onclick'=>'buscarCeaGestionPasada()')))
+            return $g->createQueryBuilder('g')->where('g.id>=2009')->andWhere('g.id<=2018')->orderBy('g.id','DESC');},'property'=>'gestion','empty_value' => false,'attr'=>array('class'=>'form-control')));
+        }
+        $form =$form->add('buscar', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'form-control btn btn-success','onclick'=>'buscarCeaGestionPasada()')))
         ->getForm();
         return $form;
     }

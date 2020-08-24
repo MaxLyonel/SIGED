@@ -87,13 +87,14 @@
                     </button>
                 </div>
             {# endif #}
-            {# commented by krlos 15.04.2020
+            {# commented by krlos 15.04.2020 #}
+            {% if app.session.get('ie_id') == 80730796 or app.session.get('ie_gestion') == app.session.get('currentyear') %}
             <div class="col-md-3">
                 <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
                     <i class="fa fa-user"></i> Inscripción con CI
                 </button>
             </div>
-            #}
+            {% endif %}
             <!--div class="col-md-3">
                 <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{#{{infoUe}}#}');" >
                     <i class="fa fa-user-plus"></i> Inscrip. sin Rudeal
@@ -136,17 +137,18 @@
                     <div class="panel-heading">
                         <h4>Estudiantes Inscritos:<span class="label label-success">{{totalInscritos}}</label></h4>
                     </div>
-                    <div id="no-more-tables">
+                    <div id="no-more-tables" class="table-responsive">
                         <table class="table table-bordered table-hover cf">
                             <tr>
-                                <td align="center" class="warning"></td>
-                                <td align="center" class="warning">Código Rudeal</td>
-                                <td align="center" class="warning">CI - Complemento</td>
-                                <td align="center" class="warning">Paterno</td>
-                                <td align="center" class="warning">Materno</td>
-                                <td align="center" class="warning">Nombres</td>
-                                <td align="center" class="warning">Fecha de Nacimiento</td>
-                                <td class="warning">Opciones</td>
+                                <th>#</th>
+                                <th>CÓDIGO RUDE</th>
+                                <th>C.I.</th>
+                                <th>PATERNO</th>
+                                <th>MATERNO</th>
+                                <th>NOMBRE(S)</th>
+                                <th>FECHA NAC.</th>
+                                <th>Obs. SEGIP</th>
+                                <th>OPCIONES</th>
                                 <!--td>
                                     <input type="checkbox" id="checkAll" name="selectAll" onclick="selectAllEle();"   >
                                 </td-->
@@ -175,26 +177,46 @@
                                 {# set jsnInfoStudent = objInfoStudent #}
                                 {% set jsnInfoStudent = items|json_encode() %}
 
-                                <tr >
+                                <tr {% if data.segipId == 0 %}class="text-danger"{% endif %} id="trEstudianteSegip_{{data.codigoRude}}">
                                     <td>{{loop.index}}</td>
-                                    <td  align="">{{data.codigoRude}}</td>
-                                    <td  align="">{{data.carnetIdentidad}}
-                                    {% if data.complemento %}
-                                       - {{ data.complemento}}
-                                    {% endif %}
+                                    <td >{{data.codigoRude}}</td>
+                                    <td>{{data.carnetIdentidad}}{% if data.complemento %}-{{data.complemento}}{% endif %}</td>
+                                    <td>{{data.paterno}}</td>
+                                    <td>{{data.materno}}</td>
+                                    <td>{{data.nombre}}</td>
+                                    <td>{{data.fechaNacimiento |date('d-m-Y')}}</td>
+                                    <td class="text-center">
+                                        {# VALIDACIÓN SEGIP #}
+                                        <div id="estudianteSegip_{{data.codigoRude}}">
+                                            {% if data.segipId == 1 %}
+                                                <span class="badge badge-success"><i class="fa fa-fw fa-check"></i> Válido SEGIP</span>
+                                            {% elseif data.segipId == 0 and data.carnetIdentidad %}
+                                                <form action="{{path('herramienta_info_estudiante_validar_segip')}}" method="post">
+                                                    <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{data.codigoRude}}">
+                                                    <button type="button" class="btn btn-link text-danger" onclick="validarEstudianteSegip('{{data.codigoRude}}');"><i class="fa fa-fw fa-edit"></i> Validar con SEGIP</button>
+                                                </form>
+                                            {% else %}
+                                                <span class="badge badge-info"><i class="fa fa-fw fa-info"></i> No cuenta con C.I.</span>
+                                            {% endif %}
+                                        </div>
                                     </td>
-                                    <td  align="">{{data.paterno}}</td>
-                                    <td  align="">{{data.materno}}</td>
-                                    <td  align="">{{data.nombre}}</td>
-                                    <td  align="">{{data.fechaNacimiento |date('d-m-Y')}}</td>
-                                    <td  align="center">
-                                          <div class="input-group mb-8">
-                                            <div class="">
+                                    <td class="text-center">
+                                        <div class="input-group">
                                                 <button data-toggle="dropdown" class="btn btn-success dropdown-toggle" type="button" aria-expanded="false">Opciones <span class="caret"></span></button>
                                                 <ul class="dropdown-menu">
-                                                    {#SE CONTROLA EL ACESSO EN LA PANTALLA DE NOTAS POR ESO ESTA ACTIVO PARA TODOS LO ESTADOS MENOS INCRIPCIONES#}
-                                                    {% if (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') %}
 
+                                                    {# APODERADO BONO FAMILIA #}
+                                                    {# {% if app.session.get('ie_gestion') == 2020 and data.segipId == 1 and data.edad < 18 and true %}
+                                                        <li>
+                                                            <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderadoBonoFamilia({{data.eInsId}});" >
+                                                                <span class="label label-info"><i class="fa fa-list"></i> Registro de apoderado</span>
+                                                            </a>
+                                                        </li>
+                                                    {% endif %} #}
+
+                                                    {#SE CONTROLA EL ACESSO EN LA PANTALLA DE NOTAS POR ESO ESTA ACTIVO PARA TODOS LO ESTADOS MENOS INCRIPCIONES#}
+                                                    {% if (app.session.get('ie_gestion') <= 2020 and  ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') ) )%}
+                                                    {# commented by krlos 07.07.2020  #}
                                                         {% if primariaNuevo %}
                                                             <li>
                                                               <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasPrimaria('{{infoUe}}', '{{jsnInfoStudent}}');" >
@@ -208,11 +230,12 @@
                                                               </a>
                                                             </li>
   
+                                                        {% endif %}
+                                                   
                                                     {% endif %}
-                                                {% endif %}
 
                                                     {#LIBRETAS SOLO EN MODO LECTURA Y AÑOS 2015,2016,2017#}
-                                                    {% if (app.session.get('ie_per_estado') == '0') and ((app.session.get('ie_gestion') == '2015') or (app.session.get('ie_gestion') == '2016') or (app.session.get('ie_gestion') == '2017') or (app.session.get('ie_gestion') == '2018') or (app.session.get('ie_gestion') == '2019')) %}
+                                                    {% if (app.session.get('ie_per_estado') == '0') and ((app.session.get('ie_gestion') == '2015') or (app.session.get('ie_gestion') == '2016') or (app.session.get('ie_gestion') == '2017') or (app.session.get('ie_gestion') == '2018') or (app.session.get('ie_gestion') == '2019') or (app.session.get('ie_gestion') == '2020')) %}
                                                         <li>
                                                           <a href="{{path('herramienta_alter_libretas', {'eInsId': data.eInsId, 'nivel': data.nivelId})}}">
                                                               <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Libreta</span>
@@ -250,21 +273,28 @@
                                                     {% endif %} 
                                                     
                                                     {#ACTIVO ELIMINACION SOLO EN INSCRIPCIONES Y REGULARIZAION#}
-                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') %}                                                        
+                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') %} 
+                                                    {# commented by krlos 07.07.2020#}
+                                                        {% if  app.session.get('roluser') == 7  %}
                                                         <li>
                                                             <a href="#" type="link"  class="" onclick="removeInscriptionStudent('{{infoUe}}', '{{ jsnInfoStudent }}');" >
                                                               <span class="label label-danger"><i class="fa fa-remove"></i>Eliminar Inscripción</span>
                                                           </a>
                                                         </li>
+                                                        {% endif %}
+
+                                                    
                                                     {% endif %}
 
                                                     {#ACTIVO TOMA DE AREAS SOLO EN NOTAS Y REGULARIZAION#}
-                                                    {% if (app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') %}                                                          
+                                                    {% if (app.session.get('ie_gestion') <= 2020 and ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') )) %}      
+                                                    {# commented by krlos 07.07.2020 #}                                                     
                                                         <li>
                                                           <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudeent('{{infoUe}}', '{{jsnInfoStudent}}');" >
                                                             <span class="label label-lilac"><i class="fa fa-file-text"></i> Toma de Áreas/Módulo</span>
                                                           </a>
-                                                        </li>                                                        
+                                                        </li>  
+                                                                                                         
                                                     {% endif %}
                                                     <li class="divider"></li>
                                                     {#ACTIVO DECLARACION JURADA EN LOS ULTIMOS GRADOS DE HUMANISTICA Y TECNICA#}
@@ -283,7 +313,6 @@
                                                         </li>
                                                     {% endif %}
                                                 </ul>
-                                            </div>
                                           </div>
 
 
@@ -331,6 +360,38 @@
     $(document).ready( function(){
         $(".tooltips").tooltip();
     });
+
+    var apoderadoBonoFamilia = function (idInscripcion) {
+
+        $.ajax({
+            type: 'post',
+            data: ({idInscripcion: idInscripcion}),
+            url: "{{ path('apoderado_bono_familia_index') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+                $('#modal').append('<div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-content text-center" style="padding:20px;"><img src="{{asset("img/loading.gif")}}"><br>Cargando...</div></div></div>');
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+                $('#sandbox-container input').datepicker({
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
+                });
+                //$('#modal').modal({backdrop: 'static', keyboard: false})
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
 
     var getNotas = function (infoUe, infoStudent) {
         $.ajax({
@@ -591,4 +652,39 @@
         },
      });
    };
+
+   var validarEstudianteSegip = function(codigoRude){
+        if(confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?')) {
+            $.ajax({
+                type: 'post',
+                data: ({codigoRude: codigoRude}),
+                url: "{{path('herramienta_info_estudiante_validar_segip')}}",
+                beforeSend: function () {
+                    $('#estudianteSegip_'+codigoRude).empty();
+                    $('#estudianteSegip_'+codigoRude).html('Cargando...');
+                },
+                success: function (data) {
+                    $('#estudianteSegip_'+codigoRude).empty();
+                    if(data.estado){
+                        $('#trEstudianteSegip_'+codigoRude).removeClass('text-danger').addClass('text-success');
+                        $('#estudianteSegip_'+codigoRude).html('<span class="badge badge-success"><i class="fa fa-fw fa-check"></i> '+data.mensaje+'</span>');
+                    } else {
+                        $('#trEstudianteSegip_'+codigoRude).removeClass('text-danger').addClass('text-warning');
+                        $('#estudianteSegip_'+codigoRude).html('<span>'+data.mensaje+'</span>');
+                    }
+                },
+                statusCode: {
+                    500: function () {
+                        $('#estudianteSegip_'+codigoRude).empty();
+                        $('#estudianteSegip_'+codigoRude).html('Ocurrió un error interno.');                        
+                    },
+                    404: function () {
+                        $('#estudianteSegip_'+codigoRude).empty();
+                        $('#estudianteSegip_'+codigoRude).html('Ocurrió un error interno.');
+                    }
+                }
+            });
+        }
+    };
+
 </script>

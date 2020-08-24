@@ -16,7 +16,7 @@ inscription_ini_pri_rue_save:
     defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:save }
 
 inscription_ini_pri_rue_findIE:
-     path:    /findIE/{id}/{gestionselected}
+     path:    /findIE/{id}/{nivel}/{grado}/{lastue}
      defaults: { _controller: SieRegularBundle:InscriptionIniPriTrue:findIE }
      options:
          expose: true

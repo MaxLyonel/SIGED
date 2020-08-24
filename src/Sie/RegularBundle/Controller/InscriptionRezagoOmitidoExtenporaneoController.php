@@ -40,7 +40,45 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
      *
      */
     public function indexAction() {
-//die('krlos');
+
+      $arrWeenhayec = array(
+        61710004,
+        61710014,
+        61710021,
+        61710022,
+        61710028,
+        61710031,
+        61710036,
+        61710038,
+        61710041,
+        61710042,
+        61710043,
+        61710062,
+        61710063,
+        61710068,
+        61710076,
+        61710077,
+        61710083,
+        61710084,
+        61710085,
+        61710086,
+        61710087,
+        61710088,
+        61710089,
+        61710090,
+        61710091,
+        61710092,
+        61710093
+      );
+
+      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or $this->session->get('roluser')==7){
+        //nothing todo
+      }else{
+        return $this->redirect($this->generateUrl('principal_web'));
+      }
+
+
+        //
         $em = $this->getDoctrine()->getManager();
         // return $this->redirectToRoute('principal_web');
         $id_usuario = $this->session->get('userId');
@@ -293,6 +331,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
 
       $currentLevelStudent = $dataCurrentInscription['nivelId'].'-'.$dataCurrentInscription['cicloId'].'-'. $dataCurrentInscription['gradoId'];
 
+
       if (!($dataCurrentInscription['nivelId']>10)) {
         // getCourseOld
         $newInfInscription = $this->getCourseOld($dataCurrentInscription['nivelId'],$dataCurrentInscription['cicloId'],$dataCurrentInscription['gradoId'],$dataCurrentInscription['estadoMatriculaId']);
@@ -307,26 +346,60 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
     //if doesnt have next curso info is new or extranjero do the inscription
       
     if( (str_replace('-','',$currentLevelStudent) )!=''){
-      if(($currentLevelStudent == '11-1-1') || ($currentLevelStudent == '11-1-2')){
+      $arrIniPriLevel = array('11-1-0','11-1-1','11-1-2','12-1-1');
+      if(in_array($currentLevelStudent, $arrIniPriLevel)){
         //|| ($currentLevelStudent == '12-1-1')
          //do the inscription
+          $dataStudent = unserialize($form['newdata']);
+          $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataStudent['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
+          $yearStudent = $arrYearStudent['age'];  
+      
+      // //new student validation
+        if ($yearStudent<=6){
+          switch ($yearStudent) {
+            case 4:
+            # check level
+            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1111')?true:false;
+            break;
+            case 5:
+            # check level
+            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1112')?true:false;
+            break;
+            case 6:
+            # check level
+            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1211')?true:false;
+            break;
+            default:
+              # code...
+              break;
+          }
 
-         $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
+        }else{
+          //do inscription
+          $swCorrectInscription =(str_replace('-','',$newLevelStudent)>='1212')?true:false;
+        }//end new student validation
+        $message='';
+        if(!$swCorrectInscription){
+          $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';
+          $this->addFlash('idNoInscription', $message);
+          $swCorrectInscription = false;
+        }
+        /////////////////////////////////
+         // $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
 
-
-         if($keyNextLevelStudent >= 0){
-           if((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent) ){
-             $message = 'Estudiante No Inscrito, no le puede bajar de curso';
-             $this->addFlash('idNoInscription', $message);
-             $swCorrectInscription = false;
-           }else{
-             //do the inscription
-           }
-         }else{
-           $message = 'Estudiante ya cuenta con inscripción';
-           $this->addFlash('idNoInscription', $message);
-           $swCorrectInscription = false;
-         }
+         // if($keyNextLevelStudent >= 0){
+         //   if((str_replace('-','',$newLevelStudent)) < str_replace('-','',$currentLevelStudent) ){
+         //     $message = 'Estudiante No Inscrito, no le puede bajar de curso';
+         //     $this->addFlash('idNoInscription', $message);
+         //     $swCorrectInscription = false;
+         //   }else{
+         //     //do the inscription
+         //   }
+         // }else{
+         //   $message = 'Estudiante ya cuenta con inscripción';
+         //   $this->addFlash('idNoInscription', $message);
+         //   $swCorrectInscription = false;
+         // }
 
        }else{
          //get the current level inscription to do the validation
@@ -361,22 +434,19 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
       //do inscription inicial/ primaria or extranjero
       //get the year of student
 
-      $dataStudent = unserialize($form['newdata']);
-      $arrStudentFecnac = array();
-      $arrStudentFecnac = (explode(' ',$dataStudent['fechaNacimiento']->date));
-      list($year, $month, $day) = (explode('-',$arrStudentFecnac[0]));
-      $tiempo = $this->tiempo_transcurrido($day.'-'.$month.'-'.$year, '30-6-'.date('Y'));
-
-      //new student validation
-        if ($tiempo[0]<=6){
-          switch ($tiempo[0]) {
+          $dataStudent = unserialize($form['newdata']);
+          $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataStudent['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
+          $yearStudent = $arrYearStudent['age'];  
+          // //new student validation
+        if ($yearStudent<=6){
+          switch ($yearStudent) {
             case 4:
             # check level
             $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1111')?true:false;
             break;
             case 5:
             # check level
-            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1112')?true:false;
+            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1112')?true:false;  
             break;
             case 6:
             # check level

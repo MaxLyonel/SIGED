@@ -2,35 +2,90 @@ apoderado_bono_familia_index:
     path:     /
     defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:index }
     options:
-         expose: true
+        expose: true
 
 apoderado_bono_familia_apoderados:
     path:     /apoderados/{idInscripcion}
     defaults: { _controller: "SieHerramientaBundle:ApoderadoBonoFamilia:apoderados" }
     options:
-         expose: true
+        expose: true
 
 apoderado_bono_familia_habilitar:
     path:     /habilitar
     defaults: { _controller: "SieHerramientaBundle:ApoderadoBonoFamilia:habilitar" }
     options:
-         expose: true
+        expose: true
 
 apoderado_bono_familia_validar:
     path:     /validar
     defaults: { _controller: "SieHerramientaBundle:ApoderadoBonoFamilia:validar" }
     options:
-         expose: true
+        expose: true
 
 apoderado_bono_familia_registrar:
     path:     /registrar
     defaults: { _controller: "SieHerramientaBundle:ApoderadoBonoFamilia:registrar" }
     options:
-         expose: true
+        expose: true
 
 apoderado_bono_familia_eliminar:
     path:     /eliminar/{idApoderado}
     defaults: { _controller: "SieHerramientaBundle:ApoderadoBonoFamilia:eliminar" }
     options:
-         expose: true
+        expose: true
 
+apoderado_bono_familia_registrar_entidad:
+    path:     /registrar-entidad
+    defaults: { _controller: "SieHerramientaBundle:ApoderadoBonoFamilia:registrarEntidad" }
+    options:
+        expose: true
+
+apoderado_bono_familia_seguimiento_index:
+    path:     /seguimiento/lista
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:seguimiento }
+
+apoderado_bono_familia_seguimiento_cargar_datos:
+    path:     /seguimiento/cargar
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:seguimientoCargarDatos }
+    options:
+        expose: true
+
+apoderado_bono_familia_seguimiento_detalle:
+    path:     /seguimiento/detalle/{idDpto}
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:seguimientoCargarDetalle }
+    options:
+        expose: true
+
+apoderado_bono_familia_detalle_pago:
+    path:     /pago/detalle/{inscripcionid}
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:detallePago }
+    options:
+        expose: true
+
+apoderado_bono_familia_observados_index:
+    path:     /observados/lista
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observados }
+
+apoderado_bono_familia_observados_cargar_ues:
+    path:     /observados/cargarUes
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observadosCargarUes }
+    options:
+        expose: true
+
+apoderado_bono_familia_observados_cargar_est:
+    path:     /observados/cargarEst
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observadosCargarEstudiantes }
+    options:
+        expose: true
+
+apoderado_bono_familia_observados_cargar_form:
+    path:     /observados/cargarForm
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observadosCargarFormulario }
+    options:
+        expose: true
+
+apoderado_bono_familia_observados_guardar_form:
+    path:     /observados/guardarForm
+    defaults: { _controller: SieHerramientaBundle:ApoderadoBonoFamilia:observadosGuardarFormulario }
+    options:
+        expose: true

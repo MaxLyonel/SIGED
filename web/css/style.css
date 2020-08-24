@@ -42,7 +42,7 @@ a:focus {
 }
 @media(min-width:768px) {
     body {
-        background:#78909C;
+        background:#644491;
     }
 }
 
@@ -218,7 +218,7 @@ a:focus {
 
 .navbar-top {
     margin-left: 0;
-    background: #546E7A ; /* url("../assets/images/backing.png") repeat;*/
+    background: #644491 ; /* url("../assets/images/backing.png") repeat;*/
 }
 
 .navbar-top .navbar-brand a {
@@ -610,8 +610,8 @@ a:focus {
 .navbar-side .navbar-nav>li>a:active {
     text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
     outline: none;
-    color: #000000;
-    background-color: #90A4AE;
+    color: #f5f5f5;
+    background-color: #666691;
 }
 
 .navbar-side .side-nav li,
@@ -693,7 +693,7 @@ a:focus {
 
     .navbar-side .side-nav > li > a:hover {
         color: #fff;
-        background-color: #78909c;
+        background-color: #644491;
     }
 
     .navbar-side .side-nav li.panel ul li a:hover,

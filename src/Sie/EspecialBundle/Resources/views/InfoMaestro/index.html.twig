@@ -93,7 +93,7 @@
                     <div class="panel-body">
                         <div class="panel-body panel-teal">
                             <div class="pull-right">
-                                {% if maestro is empty or (activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false)) %}
+                                {% if (maestro is empty or (activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false))) and gestion == 2020 %}
                                     <a href="{{path('herramienta_especial_info_maestro_find')}}" class="btn btn-teal btn-md" style="display:inline-block" id="nuevoA" name="nuevoA"><i class="fa fa-user"></i> Nueva/o Maestra/o</a>
                                 {% endif %}
                                 {% if maestro_no_idioma is empty and maestro_no_genero is empty and maestro is not empty %}
@@ -178,7 +178,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                      {% if activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false) %}
+                                                        {% if activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false) %}
                                                         <form action="{{path('herramienta_especial_info_maestro_es_vigente_maestro')}}" method="post" style="display: inline-block">
                                                             <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                                             <input type="hidden" name="gestion" value="{{gestion}}">
@@ -210,7 +210,6 @@
                             {% else %}
                                 No hay Maestros Registrados
                             {% endif %}
-
                         </div>
                         <div>
                         </div>

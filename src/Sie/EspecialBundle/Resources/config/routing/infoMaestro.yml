@@ -14,7 +14,7 @@ herramienta_especial_info_maestro_third:
     path:     /sie/third
     defaults: { _controller: "SieEspecialBundle:InfoMaestro:loadThird"}
     options:
-         expose: true
+        expose: true
 
 herramienta_especial_info_maestro_show:
     path:     /{id}/show
@@ -59,22 +59,22 @@ herramienta_especial_info_maestro_result:
     defaults: { _controller: "SieEspecialBundle:InfoMaestro:result" }    
 
 herramienta_especial_listaridiomasleehablaescribe:
-     path:    /idiomas/
-     defaults: { _controller: SieEspecialBundle:InfoMaestro:listaridiomasleehablaescribe }
-     options:
-         expose: true
+    path:    /idiomas/
+    defaults: { _controller: SieEspecialBundle:InfoMaestro:listaridiomasleehablaescribe }
+    options:
+        expose: true
 
 herramienta_especial_listaridiomasleehablaescribe_edit:
-     path:    /idiomasmaestro/{idMaestroInscripcion}/
-     defaults: { _controller: SieEspecialBundle:InfoMaestro:listaridiomasleehablaescribeedit }
-     options:
-         expose: true
+    path:    /idiomasmaestro/{idMaestroInscripcion}/
+    defaults: { _controller: SieEspecialBundle:InfoMaestro:listaridiomasleehablaescribeedit }
+    options:
+        expose: true
 
 herramienta_especial_verificar_existe_persona:
-     path:    /verificar_existe_persona/{carnet}/
-     defaults: { _controller: SieEspecialBundle:InfoMaestro:verificar_existe_persona }
-     options:
-         expose: true    
+    path:    /verificar_existe_persona/{carnet}/
+    defaults: { _controller: SieEspecialBundle:InfoMaestro:verificar_existe_persona }
+    options:
+        expose: true    
 
 herramienta_especial_info_maestro_es_vigente_maestro:
     path:     /maestro/
@@ -100,3 +100,13 @@ herramienta_especial_info_maestro_ratificar_currentyear:
 herramienta_especial_info_maestro_habilitar_ddjj:
     path:     /maestrohabilitarDDJJ/
     defaults: { _controller: "SieEspecialBundle:InfoMaestro:maestroHabilitarDDJJ" }
+
+herramienta_especial_info_maestro_segip_verificar_persona:
+    path:     /verificarPersona
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:verificarPersona" }
+    options:
+        expose: true
+
+herramienta_especial_info_maestro_persona_datos:
+    path:     /registrarPersona
+    defaults: { _controller: "SieEspecialBundle:InfoMaestro:registrarPersona" }

@@ -31,7 +31,7 @@ class ConsolidationSieController extends Controller {
      * @return objeto form para la subida de archivo
      */
     public function indexAction(Request $request) {
-
+        return $this->redirect($this->generateUrl('principal_web'));
         //$sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         $id_usuario = $this->session->get('userId');

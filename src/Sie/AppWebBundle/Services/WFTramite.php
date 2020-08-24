@@ -33,7 +33,6 @@ class WFTramite {
      */
     public function guardarTramiteNuevo($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$tipotramite,$varevaluacion,$idtramite,$datos,$lugarTipoLocalidad_id,$lugarTipoDistrito_id)
     {
-        //dump($lugarTipoLocalidad_id,$lugarTipoDistrito_id);die;
         
         $flujoproceso = $this->em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
         $usuario = $this->em->getRepository('SieAppWebBundle:Usuario')->find($usuario);
@@ -157,6 +156,7 @@ class WFTramite {
     public function guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugarTipoLocalidad_id,$lugarTipoDistrito_id)
     {
         $flujoproceso = $this->em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
+        // dump($flujoproceso,$tarea);die;
         $usuario = $this->em->getRepository('SieAppWebBundle:Usuario')->find($usuario);
         $tramite = $this->em->getRepository('SieAppWebBundle:Tramite')->find($idtramite);
         $tramiteDetalle = $this->em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());

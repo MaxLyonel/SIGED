@@ -13,6 +13,7 @@ use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 use Sie\AppWebBundle\Entity\EstudianteHistorialModificacion; 
 use Sie\AppWebBundle\Entity\EstudianteInscripcion; 
 use Sie\AppWebBundle\Entity\Estudiante; 
+use Sie\AppWebBundle\Entity\EstudianteDocumento; 
 use Symfony\Component\Validator\Constraints\DateTime;
 class NewInscriptionIniPriController extends Controller
 {
@@ -35,7 +36,42 @@ class NewInscriptionIniPriController extends Controller
     }
     // index method
     public function indexAction(Request $request){
-      return $this->redirect($this->generateUrl('principal_web'));
+      $arrWeenhayec = array(
+        61710004,
+        61710014,
+        61710021,
+        61710022,
+        61710028,
+        61710031,
+        61710036,
+        61710038,
+        61710041,
+        61710042,
+        61710043,
+        61710062,
+        61710063,
+        61710068,
+        61710076,
+        61710077,
+        61710083,
+        61710084,
+        61710085,
+        61710086,
+        61710087,
+        61710088,
+        61710089,
+        61710090,
+        61710091,
+        61710092,
+        61710093
+      );
+
+      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or $this->session->get('roluser')==7){
+        //nothing todo
+      }else{
+        return $this->redirect($this->generateUrl('principal_web'));
+      }    	
+     //return $this->redirect($this->generateUrl('principal_web'));
     	$em = $this->getDoctrine()->getManager();
         //validation if the user is logged
         if (!isset($this->userlogged)) {
@@ -150,8 +186,10 @@ class NewInscriptionIniPriController extends Controller
 		      	// validate the year old on the student
 		      	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
 		        $yearStudent = $arrYearStudent['age'];
-		        // check if the student is on 5 - 8 years old
-		        if($yearStudent<=8 && $yearStudent>=4){
+			// check if the student is on 5 - 8 years old
+			 $arrValidationYearOld = in_array($this->session->get('roluser'), array(7,8,10))?array(4,5,6,7,8,9,10,11,12,13,14,15,16,17,18):array(4,5,6);
+			 //if($yearStudent<=8 && $yearStudent>=4){
+			 if(in_array( $yearStudent, $arrValidationYearOld )){
 		        		
 		        		$dataGenderAndCountry = $this->getGenderAndCountry();
 		        		$arrGenero = $dataGenderAndCountry['gender'];
@@ -164,15 +202,15 @@ class NewInscriptionIniPriController extends Controller
 
 		        }else{
 		        	$status = 'error';
-							$code = 400;
-							$message = "Estudiante no cumple con la edad requerida 4 a 8";
-							$swcreatestudent = false; 
+				$code = 400;
+				$message = "Estudiante no cumple con la edad requerida";
+				$swcreatestudent = false; 
 		        }
 		      }else{
-					$status = 'error';
-					$code = 400;
-					$message = "Estudiante no cumple con la validacion segip";
-					$swcreatestudent = false; 
+				$status = 'error';
+				$code = 400;
+				$message = "Estudiante no cumple con la validacion segip";
+				$swcreatestudent = false; 
 		      }
 
 		}else{
@@ -188,6 +226,8 @@ class NewInscriptionIniPriController extends Controller
 						'complemento'=>$value->getComplemento(),
 						'fecNac'=>$value->getFechaNacimiento()->format('d-m-Y') ,
 						'rude'=>$value->getCodigoRude() ,
+						'idStudent'=>$value->getId() ,
+						'articuleten'=>0 ,
 					);
 				}
 				
@@ -236,7 +276,7 @@ class NewInscriptionIniPriController extends Controller
     	$nombre = $request->get('nombre');
     	$withoutcifind = true;
     	$expedidoIdfind = $request->get('expedidoIdfind');
-// dump($request);die;
+
     	$arrGenero = array();
     	$arrPais = array();
 			$arrStudentExist = false;
@@ -281,6 +321,125 @@ class NewInscriptionIniPriController extends Controller
 				
     }
 
+        private function getCurrentInscriptionsByGestoinValida($id, $gestion) {
+    //$session = new Session();
+        $swInscription = false;
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select('n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                ->leftjoin('SieAppWebBundle:NivelTipo', 'n', 'WITH', 'iec.nivelTipo = n.id')
+                ->leftjoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'iec.gradoTipo = g.id')
+                ->leftjoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'iec.paraleloTipo = p.id')
+                ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
+                ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
+                ->where('e.codigoRude = :id')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('ei.estadomatriculaTipo IN (:mat)')
+                ->setParameter('id', $id)
+                ->setParameter('gestion', $gestion)
+                ->setParameter('mat', array( 3,4,5,6,10 ))
+                ->orderBy('iec.gestionTipo', 'DESC')
+                ->getQuery();
+
+            $objInfoInscription = $query->getResult();
+            if(sizeof($objInfoInscription)>=1)
+              return true;
+            else
+              return false;
+
+      }    
+
+
+    public function goOldInscriptionAction(Request $request){
+    	$response = new JsonResponse();
+    	$em = $this->getDoctrine()->getManager();
+    	//get send values
+    	$carnet = $request->get('cifind');
+    	$complemento = $request->get('complementofind');
+    	$fecNac = $request->get('fecnacfind');
+    	$paterno = $request->get('paterno');
+    	$materno = $request->get('materno');
+    	$nombre = $request->get('nombre');
+    	$withoutcifind = true;
+    	$expedidoIdfind = $request->get('expedidoIdfind');
+		
+		$swnewforeign = $request->get('swnewforeign');
+		$swCurrentInscription = false;
+		if($swnewforeign == 0){
+			
+			/*validate students inscripción in current year*/
+			$rude = $request->get('rude');
+			$swCurrentInscription = $this->getCurrentInscriptionsByGestoinValida($rude,$this->currentyear);
+		
+
+		}else{
+
+		}
+		
+
+
+    	$arrGenero = array();
+    	$arrPais = array();
+		$arrStudentExist = false;
+		$existStudent = true;
+		$answerSegip = true;
+
+		if(!$swCurrentInscription){
+			
+			$dataGenderAndCountry = $this->getGenderAndCountry();
+			$arrGenero = $dataGenderAndCountry['gender'];
+			$arrPais 	 = $dataGenderAndCountry['country'];
+			$status = 'success';
+			$code = 200;
+			$message = "Estudiante cumple con los requerimientos!!!";
+			$swcreatestudent = true; 
+
+			$arrStudentExist = array(
+					'paterno'=>$request->get('paterno'),
+					'materno'=>$request->get('materno'),
+					'nombre'=>$request->get('nombre'),
+					'carnet'=>$request->get('cifind'),
+					'complemento'=>$request->get('complementofind'),
+					'fecNac'=>$request->get('fecnacfind'),
+					'rude'=>'' ,
+			);
+		}else{
+
+			$status = 'error';
+			$code = 200;
+			$message = "ESTUDIANTE YA CUENTA CON INSCRIPCIÓN EN LA GESTION ACTUAL";
+			$swcreatestudent = false; 
+
+		}
+
+	
+       $arrResponse = array(
+        'status'          => $status,
+        'code'            => $code,
+        'message'         => $message,
+        'swcreatestudent' => $swcreatestudent,    
+        'arrGenero' => $arrGenero,    
+        'arrPais' => $arrPais,    
+        'arrStudentExist' => $arrStudentExist,    
+        'existStudent' => $existStudent,    
+        'swhomonimo' => !$swCurrentInscription,  
+        
+      );
+      
+      $response->setStatusCode(200);
+      $response->setData($arrResponse);
+
+      return $response;    	
+				
+    }
+
+
+
     public function getGenderAndCountry(){
     		$em = $this->getDoctrine()->getManager();
 	        	 // get genero data
@@ -293,11 +452,18 @@ class NewInscriptionIniPriController extends Controller
 	      $arrData['gender'] = $arrGenero;
 
 	            //get pais data
-	      $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
+      	 $entity = $em->getRepository('SieAppWebBundle:PaisTipo');
+	       $query = $entity->createQueryBuilder('pt')
+	                ->orderBy('pt.pais', 'ASC')
+	                ->getQuery();
+	        $objPais = $query->getResult();
+	       
+
+	      // $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll(array('pais'=>'ASC'));
 	      foreach ($objPais as $value) {
 	        $arrPais[]=array('paisId'=>$value->getId(), 'pais'=>$value->getPais());
 	      }
-	      $arrData['country'] = $arrPais;
+	      $arrData['country'] = ($arrPais) ;
 
 	      return $arrData;
     }
@@ -371,9 +537,18 @@ class NewInscriptionIniPriController extends Controller
           $query->bindValue(':sie', $id);
           $query->execute();
           $aTuicion = $query->fetchAll();
-         */
+	 */
+	
+	            //get the tuicion
+            $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
+            $query->bindValue(':user_id', $this->session->get('userId'));
+            $query->bindValue(':sie', $id);
+            $query->bindValue(':roluser', $this->session->get('roluser'));
+            $query->execute();
+            $aTuicion = $query->fetchAll();
+
         $aniveles = array();
-        // if ($aTuicion[0]['get_ue_tuicion']) {
+         if ($aTuicion[0]['get_ue_tuicion']) {
         //get the IE
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
         if($institucion){
@@ -425,9 +600,15 @@ class NewInscriptionIniPriController extends Controller
         }
         
         
-        /*     } else {
-          $nombreIE = 'No tiene Tuición';
-          } */
+      } else {
+	      $message = 'Usuario No tiene Tuición';
+	       $status = 'error';
+               $code = 400;
+               //$message = "Unidad Educativa no existe";
+               $swprocess = false;
+               $nombreIE = false;
+
+      } 
 
       $arrResponse = array(
         'status'          => $status,
@@ -605,9 +786,8 @@ class NewInscriptionIniPriController extends Controller
      */
     public function doInscriptioninipriAction(Request $request) {
     	
-    	
     	$arrDatos = json_decode($request->get('datos'), true);
-    	
+//  	dump($arrDatos);die;
     	 // ini vars
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
@@ -619,27 +799,24 @@ class NewInscriptionIniPriController extends Controller
         $grado = $arrDatos['gradoId'];
         $paralelo = $arrDatos['paraleloId'];
         $turno = $arrDatos['turnoId'];
+        $swnewforeign = $arrDatos['swnewforeign'];
+        //$articuleten = $arrDatos['articuleten'];
+        //$swrezago = $arrDatos['swrezago'];
+        $typeInscription = $arrDatos['typeInscription'];
         $gestion = $this->session->get('currentyear') ;
-        // get info about student
-        $fecNac = $arrDatos['fecnacfind'];
-        $paterno = $arrDatos['paterno'];
-        $materno = $arrDatos['materno'];
-        $nombre = $arrDatos['nombre'];
-        $genero = $arrDatos['generoId'];
-        // get info about ubication
-        $paisId = $arrDatos['paisId'];
-        $localidad = $arrDatos['localidad'];
-        $lugarNacTipoId = isset($arrDatos['lugarNacTipoId'])?$arrDatos['lugarNacTipoId']:'';
-        $lugarProvNacTipoId = isset($arrDatos['lugarProvNacTipoId'])?$arrDatos['lugarProvNacTipoId']:'';
-        $carnet = isset($arrDatos['cifind'])?$arrDatos['cifind']:'';
-        $complemento = isset($arrDatos['complementofind'])?$arrDatos['complementofind']:'';
-        $expedidoId = $arrDatos['expedidoIdfind'];
+
+        $paterno = mb_strtoupper($arrDatos['paterno'], 'utf-8') ;
+        $materno = mb_strtoupper($arrDatos['materno'], 'utf-8');
+        $nombre = mb_strtoupper($arrDatos['nombre'], 'utf-8');
+       
+		    $fecNac = $arrDatos['fecnacfind'];
+
         $withoutcifind = ($arrDatos['withoutcifind']==false)?false:true;
 
-            // validation if the ue is over 4 operativo
-            $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+        // validation if the ue is over 4 operativo
+        $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
             
-				$swinscription=true;
+	$swinscription=true;
             if($operativo >= 4){
                 $status = 'error';
 				$code = 400;
@@ -680,233 +857,251 @@ class NewInscriptionIniPriController extends Controller
             // validate the year old on the student
 	      	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
 	        $yearStudent = $arrYearStudent['age'];		
+		//dump($yearStudent);die;			
+		switch($typeInscription){
+		case 0:
+			$swinscription = $this->correctOldYearValidation($yearStudent,$nivel,$grado);
+			break;
+		case 1:
+			$swinscription = $this->articuletenYearValidation($yearStudent,$nivel,$grado);
+			break;
+		case 2:
+			$swinscription = $this->rezagoYearValidation($yearStudent,$nivel,$grado);
+			if(!$swnewforeign){
+				$swinscription = !$this->getCurrentInscriptionsByGestoinValida($arrDatos['rude'],$this->currentyear-1);
+			}
+			break;
+		default:
+			$swinscription = false;
+			break;
+		}
+	
 			
-            switch ($yearStudent) {
-              case 4:
-
-                # code...
-                if($nivel=='11' && $grado=='1'){
-                  //good
-                }else{
-                	$status = 'error';
-					$code = 400;
-					$message = "El estudiante no cumple con lo requerido en edad";
-					$swinscription = false; 					
-                }
-                break;
-              case 5:
-                # code...
-                if($nivel=='11' && $grado=='2'){
-                  //good
-                }else{
-                	$status = 'error';
-					$code = 400;
-					$message = "El estudiante no cumple con lo requerido en edad";
-					$swinscription = false;                   
-                }
-                break;
-              case 6:
-                # code...
-                if($nivel=='12' && $grado=='1'){
-                  //good
-                }else{
-                	$status = 'error';
-					$code = 400;
-					$message = "El estudiante no cumple con lo requerido en edad";
-					$swinscription = false; 
-                }
-                break;
-              case 7 or 8:
-                if($nivel=='12' && $grado=='1'){
-                  //good
-                }else{
-                	$status = 'error';
-					$code = 400;
-					$message = "El estudiante no cumple con lo requerido en edad";
-					$swinscription = false; 
-                }
-                break;
-
-              default:
-                # code...
-                	$status = 'error';
-					$code = 400;
-					$message = "El estudiante no cumple con lo requerido en edad";
-					$swinscription = false; 
-                break;
-            }
-
+		
+		/*
+		if($articuleten){
+	        	$iswinscription = $this->articuletenYearValidation($yearStudent,$nivel,$grado);
+		}
+		if($swrezago){
+			$iswinscription = $this->rezagoYearValidation($yearStudent,$nivel,$grado);
+		}
+		if(!$articuleten && !$swrezago){
+	        	$swinscription = $this->correctOldYearValidation($yearStudent,$nivel,$grado);
+		}*/
+/*dump($yearStudent);
+dump($swinscription);
+die;*/
             $arrStudent=array();
             $arrInscription=array();
             // check the years old validation
             if($swinscription){
 
-		       	$arrQuery = array(
-	                'nivelTipo' => $nivel,
-	                'gradoTipo' => $grado,
-	                'paraleloTipo' => $paralelo,
-	                'turnoTipo' => $turno,
-	                'institucioneducativa' => $sie,
-	                'gestionTipo' => $gestion,
-	            );
+				       	$arrQuery = array(
+			                'nivelTipo' => $nivel,
+			                'gradoTipo' => $grado,
+			                'paraleloTipo' => $paralelo,
+			                'turnoTipo' => $turno,
+			                'institucioneducativa' => $sie,
+			                'gestionTipo' => $gestion,
+			            );
 
 
-	            //insert a new record with the new selected variables and put matriculaFinID like 5
-	            $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($arrQuery);
+			            //insert a new record with the new selected variables and put matriculaFinID like 5
+			            $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($arrQuery);
 
-	             try {
+			             try {
 
-                // create rude code to the student
-                
-                $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
-                $query->bindValue(':sie', $sie);            
-                $query->bindValue(':gestion', $gestion);
-                $query->execute();
-                $codigorude = $query->fetchAll();
+			             	if($swnewforeign){
 
-                $codigoRude = $codigorude[0]["get_estudiante_nuevo_rude"];  
-                
-                // set the data person to the student table
-                $estudiante = new Estudiante();
-                // set the new student
-                $estudiante->setCodigoRude($codigoRude);               
-                $estudiante->setPaterno(mb_strtoupper($paterno, 'utf-8'));
-                $estudiante->setMaterno(mb_strtoupper($materno, 'utf-8'));
-                $estudiante->setNombre(mb_strtoupper($nombre, 'utf-8'));                        
-                $estudiante->setFechaNacimiento(new \DateTime($fecNac));            
-                $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($genero));
-                $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId));
-                // check if the country is Bolivia
-                if ($paisId === '1'){                    
-                    $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId));
-                    $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarProvNacTipoId));
-                    $estudiante->setLocalidadNac(mb_strtoupper($localidad, 'utf-8'));
-                }else{//no Bolivia
-                    $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
-                    $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
-                    $estudiante->setLocalidadNac('');
-                }
+			             		  // get info about student
+								       /* $fecNac = $arrDatos['fecnacfind'];
+								        $paterno = $arrDatos['paterno'];
+								        $materno = $arrDatos['materno'];
+								        $nombre = $arrDatos['nombre'];*/
+						$genero = $arrDatos['generoId'];
+						// get info about ubication
+						$paisId = $arrDatos['paisId'];
+						$localidad = $arrDatos['localidad'];
+						$lugarNacTipoId = isset($arrDatos['lugarNacTipoId'])?$arrDatos['lugarNacTipoId']:'';
+						$lugarProvNacTipoId = isset($arrDatos['lugarProvNacTipoId'])?$arrDatos['lugarProvNacTipoId']:'';
+						$carnet = isset($arrDatos['cifind'])?$arrDatos['cifind']:'';
+						$complemento = isset($arrDatos['complementofind'])?$arrDatos['complementofind']:'';
+						$expedidoId = $arrDatos['expedidoIdfind'];
 
-                if(!$withoutcifind){
-	                $estudiante->setCarnetIdentidad($carnet);
-	                $estudiante->setComplemento(mb_strtoupper($complemento, 'utf-8'));
-	                $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
-	                $estudiante->setSegipId(1);
-                }else{
-                	$estudiante->setComplemento('');
-                	$estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
-                }
-                
-                $em->persist($estudiante);
+								      	// create rude code to the student
+		                
+				                $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
+				                $query->bindValue(':sie', $sie);            
+				                $query->bindValue(':gestion', $gestion);
+				                $query->execute();
+				                $codigorude = $query->fetchAll();
+				                $codigoRude = $codigorude[0]["get_estudiante_nuevo_rude"];  
+				                
+				                // set the data person to the student table
+				                $estudiante = new Estudiante();
+				                // set the new student
+				                $estudiante->setCodigoRude($codigoRude);               
+				                $estudiante->setPaterno(mb_strtoupper($paterno, 'utf-8'));
+				                $estudiante->setMaterno(mb_strtoupper($materno, 'utf-8'));
+				                $estudiante->setNombre(mb_strtoupper($nombre, 'utf-8'));                        
+				                $estudiante->setFechaNacimiento(new \DateTime($fecNac));            
+				                $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($genero));
+				                $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($paisId));
+				                // check if the country is Bolivia
+				                if ($paisId == '1'){                    
+				                    $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId));
+				                    $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarProvNacTipoId));
+				                    $estudiante->setLocalidadNac(mb_strtoupper($localidad, 'utf-8'));
+				                }else{//no Bolivia
+				                    $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
+				                    $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
+				                    $estudiante->setLocalidadNac('');
+				                }
 
-	            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
-	            $query->execute();
-	            //insert a new record with the new selected variables and put matriculaFinID like 5
-	            $studentInscription = new EstudianteInscripcion();
-	            $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
-	            $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
-	            $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
-	            $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($estudiante->getId()));
-	            $studentInscription->setObservacion(1);
-	            $studentInscription->setFechaInscripcion(new \DateTime('now'));
-	            $studentInscription->setFechaRegistro(new \DateTime('now'));
-	            $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
-	            $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(59));
+				                if(!$withoutcifind){
+					                $estudiante->setCarnetIdentidad($carnet);
+					                $estudiante->setComplemento(mb_strtoupper($complemento, 'utf-8'));
+					                $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
+					                $estudiante->setSegipId(1);
+				                }else{
+				                	$estudiante->setComplemento('');
+				                	$estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
+				                }
+				                
+				                $em->persist($estudiante);
+				                $em->flush();
 
-	            $arrStudent = array(
-	            	'rude'=>$estudiante->getCodigoRude(),
-	            	'nombre'=>$estudiante->getNombre(),
-	            	'paterno'=>$estudiante->getPaterno(),
-	            	'materno'=>$estudiante->getMaterno(),
-	            	'fecNac'=>$estudiante->getFechaNacimiento()->format('d-m-Y')
-	            );
+				                $studentId = $estudiante->getId();
+		               		  $oldstudentCodigoRude = $estudiante->getCodigoRude();
 
-	            $arrInscription = array(
-	            	'nivelTipo' => $objCurso->getNivelTipo()->getNivel(),
-	                'gradoTipo' => $objCurso->getGradoTipo()->getGrado(),
-	                'paraleloTipo' => $objCurso->getParaleloTipo()->getParalelo(),
-	                'turnoTipo' => $objCurso->getTurnoTipo()->getTurno(),
-	                'sie' => $sie,
-	                'institucioneducativa' => $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie)->getInstitucioneducativa() ,
-	            );
 
-	            // save the file in case if exists
-	                    // check if the file exists
-        		  // if(isset($_FILES['informe'])){
-            //     $file = $_FILES['informe'];
+			             	}else{
+						$studentId = $arrDatos['idStudent'];
+						$oldstudentCodigoRude = $arrDatos['rude'];
+					}
 
-            //     $type = $file['type'];
-            //     $size = $file['size'];
-            //     $tmp_name = $file['tmp_name'];
-            //     $name = $file['name'];
-            //     $extension = explode('.', $name);
-            //     $extension = $extension[count($extension)-1];
-            //     $new_name = date('YmdHis').'.'.$extension;
 
-            //     // GUARDAMOS EL ARCHIVO
-            //     $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataStudentIniPri/' .date('Y');
-            //     if (!file_exists($directorio)) {
-            //         mkdir($directorio, 0775, true);
-            //     }
 
-            //     $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataStudentIniPri/' .date('Y').'/'.$studentInscription->getId();
-            //     if (!file_exists($directoriomove)) {
-            //         mkdir($directoriomove, 0775, true);
-            //     }
+			            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion');");
+			            $query->execute();
+			            //insert a new record with the new selected variables and put matriculaFinID like 5
+			            $studentInscription = new EstudianteInscripcion();
+			            $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
+			            $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+			            $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
+			            $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
+			            $studentInscription->setObservacion(1);
+			            $studentInscription->setFechaInscripcion(new \DateTime('now'));
+			            $studentInscription->setFechaRegistro(new \DateTime('now'));
+			            $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
+			            $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(59));
 
-            //     $archivador = $directoriomove.'/'.$new_name;
-            //     //unlink($archivador);
-            //     if(!move_uploaded_file($tmp_name, $archivador)){
-            //         $response->setStatusCode(500);
-            //         return $response;
-            //     }
+			            $arrStudent = array(
+				            	'rude'=>$oldstudentCodigoRude,
+				            	'nombre'=>$nombre,
+				            	'paterno'=>$paterno,
+				            	'materno'=>$materno,
+				            	'fecNac'=>$fecNac
+			            );
 
-            //     // CREAMOS LOS DATOS DE LA IMAGEN
-            //     $informe = array(
-            //         'name' => $name,
-            //         'type' => $type,
-            //         'tmp_name' => 'nueva_ruta',
-            //         'size' => $size,
-            //         'new_name' => $new_name
-            //     );
-            // }else{
-            //     $informe = null;
-            //     $archivador = 'empty';
-            // }
+			            $arrInscription = array(
+			            	  'nivelTipo' => $objCurso->getNivelTipo()->getNivel(),
+			                'gradoTipo' => $objCurso->getGradoTipo()->getGrado(),
+			                'paraleloTipo' => $objCurso->getParaleloTipo()->getParalelo(),
+			                'turnoTipo' => $objCurso->getTurnoTipo()->getTurno(),
+			                'sie' => $sie,
+			                'institucioneducativa' => $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie)->getInstitucioneducativa() ,
+			            );
 
-	            $em->persist($studentInscription);
-	            $em->flush();          
+			            // save the file in case if exists
+			                    // check if the file exists
+		       	if(isset($_FILES['informe'])){
+		            $file = $_FILES['informe'];
 
-	            // Registro de materia curso oferta en el log
-	            $this->get('funciones')->setLogTransaccion(
-	                $studentInscription->getId(),
-	                'estudiante_inscripcion',
-	                'C',
-	                '',
-	                '',
-	                '',
-	                'SIGED',
-	                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-	            );
-	            // Try and commit the transaction
-	            $em->getConnection()->commit();
+		            $type = $file['type'];
+		            $size = $file['size'];
+		            $tmp_name = $file['tmp_name'];
+		            $name = $file['name'];
+		            $extension = explode('.', $name);
+		            $extension = $extension[count($extension)-1];
+		            $new_name = date('YmdHis').'.'.$extension;
 
-	            $status = 'success';
-				$code = 200;
-				$message = "Estudiante inscripto Correctamente";
-				$swinscription = true; 
+		            // GUARDAMOS EL ARCHIVO
+		            $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataStudentIniPri/' .date('Y');
+		            if (!file_exists($directorio)) {
+		            	mkdir($directorio, 0775, true);
+		            }
 
-		        } catch (Exception $ex) {
-		            $em->getConnection()->rollback();
-		            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
-		        }
+		            $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataStudentIniPri/' .date('Y').'/'.$studentId;
+		            if (!file_exists($directoriomove)) {
+		            	mkdir($directoriomove, 0775, true);
+		            }
 
-		       
+		            $archivador = $directoriomove.'/'.$new_name;
+		            //unlink($archivador);
+			    if(!move_uploaded_file($tmp_name, $archivador)){
+				$em->getConnection()->rollback();
+		               	$response->setStatusCode(500);
+		               	return $response;
+		             }
+                              //save info extranjero inscription
+                              $objEstudiantedoc = new EstudianteDocumento();
+			      
+			      $objEstudiantedoc->setObservacion($typeInscription);
+			      $objEstudiantedoc->setFechaRegistro(new \DateTime('now'));
+			      $objEstudiantedoc->setUrlDocumento($archivador);
+			      $objEstudiantedoc->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
+			      $objEstudiantedoc->setDocumentoTipo($em->getRepository('SieAppWebBundle:DocumentoTipo')->find(1));
+
+                              $em->persist($objEstudiantedoc);
+                              $em->flush();
+
+		            //     // CREAMOS LOS DATOS DE LA IMAGEN
+		            $informe = array(
+		              'name' => $name,
+		              'type' => $type,
+		              'tmp_name' => 'nueva_ruta',
+		              'size' => $size,
+		              'new_name' => $new_name
+		            );
+		          }else{
+		              $informe = null;
+		              $archivador = 'empty';
+		          }
+
+			            $em->persist($studentInscription);
+			            $em->flush();          
+
+			            // Registro de materia curso oferta en el log
+			            $this->get('funciones')->setLogTransaccion(
+			                $studentInscription->getId(),
+			                'estudiante_inscripcion',
+			                'C',
+			                '',
+			                '',
+			                '',
+			                'SIGED',
+			                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+			            );
+			            // Try and commit the transaction
+			            $em->getConnection()->commit();
+
+			            $status = 'success';
+						$code = 200;
+						$message = "Estudiante inscripto Correctamente";
+						$swinscription = true; 
+
+				        } catch (Exception $ex) {
+				            $em->getConnection()->rollback();
+				            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+				        }
+
+				       
 
             }else{
             	$status = 'error';
 				$code = 400;
-				$message = "El estudiante no cumple con lo requerido en edad";
+				$message = "El estudiante no cumple con los requerimientos para la INSCRIPCIÓN";
 				$swinscription = false; 
             }
 
@@ -928,8 +1123,155 @@ class NewInscriptionIniPriController extends Controller
 
     }    
 
+    private function correctOldYearValidation($yearStudent, $nivel, $grado){
+				$swinscription=true;
+	            switch ($yearStudent) {
+		              case 4:
+
+		                # code...
+		                if($nivel=='11' && $grado=='1'){
+		                  //good
+		                }else{
+		                	$status = 'error';
+											$code = 400;
+											$message = "El estudiante no cumple con lo requerido en edad";
+											$swinscription = false; 					
+		                }
+		                break;
+		              case 5:
+		                # code...
+		                if($nivel=='11' && $grado=='2'){
+		                  //good
+		                }else{
+		                	$status = 'error';
+											$code = 400;
+											$message = "El estudiante no cumple con lo requerido en edad";
+											$swinscription = false;                   
+		                }
+		                break;
+		              case 6:
+		                # code...
+		                if($nivel=='12' && $grado=='1'){
+		                  //good
+		                }else{
+		                	$status = 'error';
+											$code = 400;
+											$message = "El estudiante no cumple con lo requerido en edad";
+											$swinscription = false; 
+		                }
+		                break;
+		         //      case 7 or 8:
+		         //        if($nivel=='12' && $grado=='1'){
+		         //          //good
+		         //        }else{
+		         //        	$status = 'error';
+											// $code = 400;
+											// $message = "El estudiante no cumple con lo requerido en edad";
+											// $swinscription = false; 
+		         //        }
+		         //        break;
+
+		              default:
+		                # code...
+		                	$status = 'error';
+											$code = 400;
+											$message = "El estudiante no cumple con lo requerido en edad";
+											$swinscription = false; 
+		                break;
+        }
+
+        return($swinscription);
+
+    }
+
+    private function articuletenYearValidation($yearStudent, $nivel, $grado){
+				$swinscription=true;
+	            switch ($nivel.$grado) {
+		              case 111:
+		                # code...
+		                if(in_array($yearStudent, array(4,5,6) )){
+		                  //good
+		                }else{
+		                	$status = 'error';
+					$code = 400;
+					$message = "El estudiante no cumple con lo requerido en edad";
+					$swinscription = false; 					
+		                }
+		                break;
+		               case 112:
+		                # code...
+		                if(in_array($yearStudent, array(5,6,7) )){
+		                  //good
+		                }else{
+		                	$status = 'error';
+					$code = 400;
+					$message = "El estudiante no cumple con lo requerido en edad";
+					$swinscription = false;                   
+		                }
+		                 case 121:
+		                # code...
+		                if(in_array($yearStudent, array(6,7,8) )){
+		                  //good
+		                }else{
+		                	$status = 'error';
+					$code = 400;
+					$message = "El estudiante no cumple con lo requerido en edad";
+					$swinscription = false; 
+		                }
+		               
+		                break;
+		            
+
+		              default:
+		                # code...
+		                	$status = 'error';
+					$code = 400;
+					$message = "El estudiante no cumple con lo requerido en edad";
+					$swinscription = false; 
+		                break;
+        }
+
+        return($swinscription);
+
+    }
 
 
+
+  private function rezagoYearValidation($yearStudent, $nivel, $grado){
+                    $swinscription=true;
+                    switch ($yearStudent) {
+                              case 7:
+                              case 8:
+                              case 9:
+                              case 10:
+                              case 11:
+                              case 12:
+                              case 13:
+                              case 14:
+                                # code...
+                                      if($nivel=='12' && $grado=='1'){
+                                  //good
+                                }else{
+                                        $status = 'error';
+                                        $code = 400;
+                                        $message = "El estudiante no cumple con lo requerido en edad";
+                                        $swinscription = false;
+                                }
+                                break;
+
+
+                              default:
+                                # code...
+                                        $status = 'error';
+                                        $code = 400;
+                                        $message = "El estudiante no cumple con lo requerido en edad";
+                                        $swinscription = false;
+                                break;
+        }
+
+        return($swinscription);
+
+    }
 
 
 

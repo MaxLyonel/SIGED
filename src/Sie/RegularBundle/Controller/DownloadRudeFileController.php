@@ -16,7 +16,7 @@ class DownloadRudeFileController extends Controller{
      }
 
     public function indexAction(Request $request){
-
+      return $this->redirect($this->generateUrl('principal_web'));
     	//get data user
     	$roluser = $this->session->get('roluser');
     	//get all data to send    	
@@ -69,7 +69,7 @@ class DownloadRudeFileController extends Controller{
 
 
         public function downOperativoRudeAction(Request $request){
-
+          return $this->redirect($this->generateUrl('principal_web'));
 	      // create DB conexion
 	      $em = $this->getDoctrine()->getManager();
 	      // dump($request);die;

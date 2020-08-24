@@ -70,23 +70,31 @@ class ModCiLocalidadController extends Controller {
         // $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude'], 'segipId' => 0));
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
         //verificamos si existe el estudiante
+        
         if ($student) {
             //*******VERIFICANDO QUE LA/EL ESTUDIANTE TENGA INSCRIPCIÓN EN LA GESTIÓN ACTUAL
             $objUe = $em->getRepository('SieAppWebBundle:Estudiante')->getUeIdbyEstudianteId($student->getId(), $this->session->get('currentyear'));
+            
             if (!$objUe) {
                 $message = "La/El estudiante con código RUDE: " . $student->getCodigoRude() . ", no presenta inscripción para la presente gestión.";
                 $this->addFlash('noticilocalidad', $message);
                 return $this->redirectToRoute('modificar_ci_localidad_index');
             }
             //VERIFICANDO TUICIÓN DEL USUARIO
-            $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
-            $query->bindValue(':user_id', $this->session->get('userId'));
-            $query->bindValue(':sie', $objUe[0]['ueId']);
-            $query->bindValue(':roluser', $this->session->get('roluser'));
-            $query->execute();
-            $aTuicion = $query->fetchAll();
+            $cont_true = 0;
+            foreach ($objUe as $value) {
+                $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
+                $query->bindValue(':user_id', $this->session->get('userId'));
+                $query->bindValue(':sie', $value['ueId']);
+                $query->bindValue(':roluser', $this->session->get('roluser'));
+                $query->execute();
+                $aTuicion = $query->fetchAll();
+                if($aTuicion[0]['get_ue_tuicion']) {
+                    $cont_true++;
+                }
+            }
             
-            if (!$aTuicion[0]['get_ue_tuicion']) {
+            if ($cont_true === 0) {
                 $message = "EL Usuario no tiene tuición para realizar la operación.";
                 $this->addFlash('noticilocalidad', $message);
                 return $this->redirectToRoute('modificar_ci_localidad_index');
@@ -99,12 +107,12 @@ class ModCiLocalidadController extends Controller {
                 return $this->redirectToRoute('modificar_ci_localidad_index');
             }
              //*******VERIFICANDO QUE LA/EL ESTUDIANTE NO TENGA DATOS EN BACHILLER DESTACADO
-             $bdestacado=$this->get('seguimiento')->getBachillerDestacado($student->getCodigoRude());
-             if ($bdestacado) {
-                 $message = "La/El estudiante con código RUDE: " . $student->getCodigoRude() . ", cuenta con historial en Bachiller Destacado, por lo que la modificación de datos no se realizará.";
-                 $this->addFlash('notihistory', $message);            
-                 return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
-             }
+            $bdestacado=$this->get('seguimiento')->getBachillerDestacado($student->getCodigoRude());
+            if ($bdestacado) {
+                $message = "La/El estudiante con código RUDE: " . $student->getCodigoRude() . ", cuenta con historial en Bachiller Destacado, por lo que la modificación de datos no se realizará.";
+                $this->addFlash('notihistory', $message);            
+                return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
+            }
             //*******VERIFICANDO QUE LA/EL ESTUDIANTE NO TENGA PARTICIPACIÓN EN OLIMPIADAS
             $olimpiadas=$this->get('seguimiento')->getOlimpiadasGestion($student->getCodigoRude(), $this->session->get('currentyear'));
             if ($olimpiadas) {

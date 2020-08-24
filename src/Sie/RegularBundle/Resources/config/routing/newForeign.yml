@@ -57,3 +57,16 @@ newForeign_gohomonimo:
     defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:gohomonimo }
     options:
          expose: true  
+
+newForeign_showhistory:
+    path:     /showhistory
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:showHistory }
+    options:
+         expose: true  
+
+newForeign_lookforrude:
+    path:     /lookforrude
+    defaults: { _controller: SieRegularBundle:NewInscriptionExtranjero:lookforrude }
+    options:
+         expose: true
+         

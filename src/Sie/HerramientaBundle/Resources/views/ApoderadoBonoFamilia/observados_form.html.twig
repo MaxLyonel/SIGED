@@ -1,0 +1,76 @@
+{% if esObservado %}
+    <div class="row">
+        <div class="col-md-12">
+            <h5 class="text-info">Datos de la/el Estudiante</h5>
+            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                <tr>
+                    <th>Codigo Rude</th><td style="color:#0086DD">{{estudiante.codigoRude}}</td>
+                </tr>
+                <tr>
+                    <th>Estudiante</th><td><strong>{{estudiante.nombre}} {{estudiante.paterno}} {{estudiante.materno}}</strong></td>
+                </tr>
+                <tr>
+                    <th>Carnet de Identidad</th><td>{{estudiante.carnetIdentidad}}{% if estudiante.complemento %} - {{estudiante.complemento}}{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Género</th><td>{{estudiante.generoTipo}}</td>
+                </tr>
+                <tr>
+                    <th>Fecha de Nacimiento</th><td>{{estudiante.fechaNacimiento|date('d-m-Y')}}</td>
+                </tr>
+            </table>
+            {% if apoderados|length > 0 %}
+                <h5 class="text-info">Apoderado(s) registrado(s)</h5>
+                {% for apoderado in apoderados %}
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                        <tr>
+                            <th>Nombre(s) y Apellido(s)</th><td><strong>{{apoderado.persona.nombre}} {{apoderado.persona.paterno}} {{apoderado.persona.materno}}</strong></td>
+                        </tr>
+                        <tr>
+                            <th>Carnet de Identidad</th><td>{{apoderado.persona.carnet}}{% if apoderado.persona.complemento %} - {{apoderado.persona.complemento}}{% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha de Nacimiento</th><td>{{apoderado.persona.fechaNacimiento|date('d-m-Y')}}</td>
+                        </tr>
+                        <tr>
+                            <th>Apoderado</th><td>{{apoderado.apoderadoTipo}}</td>
+                        </tr>
+                    </table>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-warning" role="alert">
+                    <i class="fa fa-fw fa-warning"></i> No cuenta con apoderado(s) registrado(s) en la presente gestión
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <h5 class="text-info">Validación</h5>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="justificacion">
+                    <i class="fa fa-fw fa-edit"></i> <b>Justificación</b>
+                </label>
+                <textarea class="form-control" rows="4" id="justificacion" placeholder="Escriba la justificacion..." required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="adjdocumento">
+                    <i class="fa fa-fw fa-cloud-upload"></i> <b>Adjuntar Informe <span class="text-danger">(.pdf,.doc,.docx / Máximo 3Mb)</span></b>
+                </label>
+                <input type="file" id="adjdocumento" title="Adjuntar Informe" accept="application/pdf,.doc,.docx"  required />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-success" title="Guardar" onclick="guardar('{{codigoRude}}')"><i class="fa fa-fw fa-save"></i> Guardar</button>
+        </div>
+    </div>
+{% else %}
+    <div class="col-md-12">
+        <div class="alert alert-success" role="alert">
+            <i class="fa fa-fw fa-check-circle"></i> El registro ya se encuentra validado
+        </div>
+    </div>
+{% endif %}

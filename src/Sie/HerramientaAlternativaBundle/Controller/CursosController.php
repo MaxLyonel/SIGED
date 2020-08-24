@@ -113,9 +113,9 @@ class CursosController extends Controller {
             //dump($dupcursover); die;
         }
         
-
         if (count($objStudents) > 0){
             $existins = true;
+            
         }
         else {
             $existins = false;
@@ -144,6 +144,17 @@ class CursosController extends Controller {
                     'primariaNuevo' => $primariaNuevo,
                     'iecId'  => $request->get('iecId')
         ));
+    }
+
+    private function calcularEdad($fechaNacimiento){
+        list($anio, $mes, $dia) = explode('-', $fechaNacimiento);
+        $anio_diferencia = date('Y') - $anio;
+        $mes_diferencia = date('m') - $mes;
+        $dia_diferencia = date('d') - $dia;
+        if ($dia_diferencia < 0 || $mes_diferencia < 0) {
+            $anio_diferencia--;
+        }
+        return $anio_diferencia;
     }
 
     public function verificarcursoduplicado($aInfoUeducativa, $idcurso) {
