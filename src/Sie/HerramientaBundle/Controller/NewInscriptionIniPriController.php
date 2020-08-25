@@ -867,7 +867,7 @@ class NewInscriptionIniPriController extends Controller
 			break;
 		case 2:
 			$swinscription = $this->rezagoYearValidation($yearStudent,$nivel,$grado);
-			if(!$swnewforeign){
+			if($swnewforeign){
 				$swinscription = !$this->getCurrentInscriptionsByGestoinValida($arrDatos['rude'],$this->currentyear-1);
 			}
 			break;
