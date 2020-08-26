@@ -1463,7 +1463,6 @@ class ApoderadoBonoFamiliaController extends Controller {
     }
 
     public function detallePagoAction($inscripcionid){
-        $inscripcionid=162418224;
         $em = $this->getDoctrine()->getManager();
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcionid);
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($inscripcion->getEstudiante());
