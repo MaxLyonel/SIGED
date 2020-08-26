@@ -94,7 +94,7 @@ class Notas{
                 
                 if($gestion == 2020){
                     
-                    $operativo = ($nivel==11 or ($nivel ==12 && $grado < 2))?1:3;
+                    $operativo = ($nivel==11 or ($nivel ==12 && $grado == 1))?1:3;
 
                     //the new ini
 
@@ -234,7 +234,7 @@ class Notas{
 
                         // EN LA GESTION 2019 INICIAL NO SE REGISTRARAN LAS NOTAS POR MATERIA
                         //if (($gestion < 2019) or ($gestion >= 2019 and $nivel != 11) ) {
-                        if (($gestion < 2019) or ($gestion >= 2019 and $nivel != 11 and $grado >= 2) ) {
+                        if (($gestion < 2019) or ($gestion >= 2019 and $nivel != 11 and ($nivel.$grado !=121)) ) {
                             for($i=$inicio;$i<=$fin;$i++){
                                 $existe = 'no';
                                 foreach ($asignaturasNotas as $an) {
@@ -824,7 +824,7 @@ class Notas{
             $cualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$idInscripcion),array('notaTipo'=>'ASC'));
 
             //if($nivel == 11 or $nivel == 1 or $nivel == 403){
-            if(($nivel == 11 or $nivel == 1 or $nivel == 403) or ($nivel ==12 and $grado < 2)){
+            if(($nivel == 11 or $nivel == 1 or $nivel == 403) or ($nivel ==12 and $grado == 1)){
 
                 if ($gestion == 2019) {
                     for ($i=$inicio; $i <=$fin; $i++) { 
@@ -870,6 +870,7 @@ class Notas{
                 if (($operativo >= 4 and $gestion<2020 ) or ($gestion == 2020)) {
                     // Para inicial
                     $existe = false;
+                    //dump($cualitativas);die;
                     foreach ($cualitativas as $c) {
                         if($c->getNotaTipo()->getId() == 18){
                             $arrayCualitativas[] = array('idInscripcion'=>$idInscripcion,
@@ -888,7 +889,7 @@ class Notas{
                             }
                         }
                     }
-                    $conditionAvg = ($nivel == 11 or ($nivel ==12 && $grado < 2) && $gestion == 2020)?$operativo >= 1:$operativo >= 3;
+                    $conditionAvg = ($nivel == 11 or ($nivel ==12 && $grado == 1) && $gestion == 2020)?$operativo >= 1:$operativo >= 3;
                     if($existe == false and $conditionAvg){
                         // $cantidadFaltantes++;
                         $arrayCualitativas[] = array('idInscripcion'=>$idInscripcion,
@@ -1184,6 +1185,8 @@ die;/*
             $nivel = $request->get('nivel');
             $gestion = $request->get('gestion');
             $idInscripcion = $request->get('idInscripcion');
+            $arrinfoUe = unserialize($request->get('infoUe')); 
+            
             /**
              * Para las notas BIMESTRALES
              */
@@ -1196,7 +1199,7 @@ die;/*
                             $newNota = new EstudianteNota();
                             $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
                             $newNota->setEstudianteAsignatura($this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]));
-                            if($nivel == 11){
+                            if($nivel == 11 or ($nivel.$arrinfoUe['ueducativaInfoId']['gradoId'] == '121')){
                                 $newNota->setNotaCuantitativa(0);
                                 $newNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
                             }else{
@@ -1315,7 +1318,7 @@ die;/*
                             $newCualitativa->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipoCualitativa[$j]));
                             $newCualitativa->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
 
-                            if ($gestion >= 2019 and ($nivel == 12 or $nivel == 13)) {
+                            if ($gestion >= 2019 and ( ($nivel == 12 and $arrinfoUe['ueducativaInfoId']['gradoId']>1 )or $nivel == 13)) {
                                 $newCualitativa->setNotaCuantitativa($notaCualitativa[$j]);
                                 $newCualitativa->setNotaCualitativa('');
                             } else {

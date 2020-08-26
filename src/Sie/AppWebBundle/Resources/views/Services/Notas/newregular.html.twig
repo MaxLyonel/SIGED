@@ -207,7 +207,7 @@
 
                 {% if notas.gestion >= 2019 and notas.cualitativas|length > 0 and (notas.nivel != 11  and (notas.nivel != 12 and notas.grado != 1))and notas.tipoSubsistema != 4 %}
                     <tr>
-                        <td align="center" colspan="5">PROMEDIO ANUAL ddd</td>
+                        <td align="center" colspan="5">PROMEDIO ANUAL </td>
                         {% for c in notas.cualitativas %}
                             <td align="center">
                                     <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
@@ -222,19 +222,19 @@
         </table>
         </div>
 
-        {% if notas.nivel in [1,11,403] %}
+        {% if notas.nivel in [1,11,403] or (notas.nivel == 12 and notas.grado == 1) %}
             <div class="col-lg-12">
         {% else %}
             <div class="col-lg-4">
         {% endif %}
 
         {% if notas.gestion < 2019 or (notas.gestion >= 2019 and (notas.nivel == 11 or (notas.nivel == 12 and notas.grado == 1)) ) %}
-            <table class="table">
+            <table class="table" >
                 {% if notas.cualitativas|length > 0 %}
                     {% for c in notas.cualitativas %}
                         <tr><td style="padding:0px; margin:0px">
                         {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
-                            {% if (c.notaCualitativa == "") or (vista == 2) or (c.idNotaTipo == notas.operativo and notas.gestion == notas.gestionActual) or (notas.operativo == 4 and notas.nivel in [1,11,403]) %}
+                            {% if (c.notaCualitativa == "") or (vista == 2) or (c.idNotaTipo == notas.operativo and notas.gestion == notas.gestionActual) or (notas.operativo == 4 and (notas.nivel in [1,11,403] or (notas.nivel == 12 and notas.grado == 1) ) ) %}
                                 <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
                                 <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
                                 <p><b>{{c.notaTipo}} </b></p>
