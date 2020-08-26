@@ -1713,9 +1713,10 @@ die;/*
             $tipo = $this->getTipoNota($sie,$gestion,$nivel,$grado);
 
             // ACTUALIZAMOS EL ESTADO DE MATRICULA DE EDUCACION INICIAL A PROMOVIDO
-            if($nivel == 11 or $nivel == 1 or $nivel == 403){
+            if($nivel == 11 or $nivel == 1 or $nivel == 403 or ($nivel.$grado == 121)){
                 // SE ACTUALIZA EL ESTADO DE MATRICULA SI EL OPERATIVO ACTUAL ES MAYOR A 4TO BIMESTRE
-                if($operativo >= 4){
+                //if($operativo >= 4){
+                if($operativo >= 1){
                     $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
 
                     $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
