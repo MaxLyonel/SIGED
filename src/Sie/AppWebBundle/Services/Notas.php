@@ -296,12 +296,14 @@ class Notas{
                              */
 
                             if($nivel != 11 and $nivel != 1 and $nivel != 403 and $operativo >= 3){
+                                //new by krlos
+                                 $idavg = ($gestion <= 2019)?"-5":"-9";
                                 // Para el promedio
                                 foreach ($asignaturasNotas as $an) {
                                     $existe = 'no';
                                     if(in_array($an['idNotaTipo'], array(9,11,5))){
                                         $notasArray[$cont]['notas'][] =   array(
-                                                                    'id'=>$cont."-5",
+                                                                    'id'=>$cont.$idavg,
                                                                     'idEstudianteNota'=>$an['idNota'],
                                                                     'nota'=>$an['notaCuantitativa'],
                                                                     'notaNueva'=>'',
@@ -309,7 +311,7 @@ class Notas{
                                                                     'idNotaTipo'=>$an['idNotaTipo'],
                                                                     'idEstudianteAsignatura'=>$an['idEstudianteAsignatura'],
                                                                     'bimestre'=>$an['notaTipo'],
-                                                                    'idFila'=>$a['asignaturaId'].'5'
+                                                                    'idFila'=>$a['asignaturaId'].$idavg 
                                                                 );
                                         $existe = 'si';
                                         break;
@@ -318,7 +320,7 @@ class Notas{
                                 if($existe == 'no'){
 
                                     $notasArray[$cont]['notas'][] =   array(
-                                                                'id'=>$cont."-5",
+                                                                'id'=>$cont.$idavg ,
                                                                 'idEstudianteNota'=>'nuevo',
                                                                 'nota'=>'',
                                                                 'notaNueva'=>'',
@@ -326,7 +328,7 @@ class Notas{
                                                                 'idNotaTipo'=>5,
                                                                 'idEstudianteAsignatura'=>$a['estAsigId'],
                                                                 'bimestre'=>'Promedio',
-                                                                'idFila'=>$a['asignaturaId'].'5'
+                                                                'idFila'=>$a['asignaturaId'].$idavg 
                                                             );
                                 }
                             }
@@ -1748,7 +1750,7 @@ die;/*
                 $arrayPromedios = array();
                 foreach ($asignaturas as $a) {
                     // Notas Bimestrales
-                    if($tipo == 'Bimestre'){
+                    if($tipo == 'Bimestre' or ($tipo == 'Trimestre' and $gestion == 2020)){
                         $notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>5));
                         if($notaPromedio){
                             /**
@@ -1768,7 +1770,7 @@ die;/*
                         }
                     }
                     // Notas Trimestrales
-                    if($tipo == 'Trimestre'){
+                    if($tipo == 'Trimestre' and $gestion < 2020){
                         $notaPromedioFinal = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>11));
                         if($notaPromedioFinal){
                             $arrayPromedios[] = $notaPromedioFinal->getNotaCuantitativa();
@@ -1800,7 +1802,7 @@ die;/*
                         }
                     }
 
-                    if($tipo == 'Bimestre'){
+                    if($tipo == 'Bimestre' or ($tipo == 'Trimestre' and $gestion == 2020) ){
                         // NO REALIZAMOS LA VERIFICACION DE LOS PROMEDIOS PARA PRIMARIA 
                         // A PARTIR DE LA GESTION 2019 DEBIDO A QUE LA PROMOCION SE
                         // DETERMINA CON EL PROMEDIO ANUAL
@@ -1813,7 +1815,7 @@ die;/*
                             }   
                         }
                     }
-                    if($tipo == 'Trimestre'){
+                    if($tipo == 'Trimestre'  and $gestion < 2020){
                         foreach ($arrayPromedios as $ap) {
                             if($ap < 36){
                                 $nuevoEstado = 11;
