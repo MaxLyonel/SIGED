@@ -1,0 +1,97 @@
+Sie\AppWebBundle\Entity\BfObservadosBono:
+    type: entity
+    table: bf_observados_bono
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestionTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+        institucioneducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        ide:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        codigoRude:
+            type: string
+            nullable: true
+            length: 18
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        carnetIdentidad:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: carnet_identidad
+        complemento:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        generoTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: genero_tipo_id
+        fechaNacimiento:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_nacimiento
+        segipId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: segip_id
+        idins:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 400
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

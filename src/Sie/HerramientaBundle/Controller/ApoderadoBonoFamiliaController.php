@@ -1467,11 +1467,13 @@ class ApoderadoBonoFamiliaController extends Controller {
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcionid);
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($inscripcion->getEstudiante());
         $pagoBf = $em->getRepository('SieAppWebBundle:BfEstudiantePago')->findOneBy(array('codigoRude' => $estudiante->getCodigoRude()));
+        $observadoBf = $em->getRepository('SieAppWebBundle:BfObservadosBono')->findOneBy(array('idins' => $inscripcionid));
         $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $inscripcion, 'esValidado' => 1));
 
         return $this->render('SieHerramientaBundle:ApoderadoBonoFamilia:detalle.html.twig', array(
             'inscripcion'=>$inscripcion,
             'pagoBf'=>$pagoBf,
+            'observadoBf'=>$observadoBf,
             'apoderados'=>$apoderados,
             'estudiante'=>$estudiante
         ));
