@@ -278,46 +278,60 @@
 <script>
     var promedio = function(control,clase){
         //if(control.value == ""){ control.value = 0; }
-        if(control.value < 51){ control.value = 51; }
-        if(control.value > 100){ control.value = 100; }
+        //console.log(control.value.length);return;
+        if(control.value.length > 1){
+            if(control.value < 51){ control.value = 51; }
+            if(control.value > 100){ control.value = 100; }            
+           if(control.value != "" && control.value != 0){
+                control.value = Math.round(control.value);
+            }
+
+            var suma = 0;
+            $("."+clase).each(function (index) {
+                suma = suma + parseInt($(this).val());
+            })
+            var promedio = Math.round(suma/3);
+            if(isNaN(promedio)){
+                promedio = 0;
+            }
+            $('.p'+clase).val(promedio);
+
+            promedioAnual();        
+        }else{
+            if(control.value < 51){ control.value = 51; }
+        }
+
         
-        if(control.value != "" && control.value != 0){
-            control.value = Math.round(control.value);
-        }
-
-        var suma = 0;
-        $("."+clase).each(function (index) {
-            suma = suma + parseInt($(this).val());
-        })
-        var promedio = Math.round(suma/3);
-        if(isNaN(promedio)){
-            promedio = 0;
-        }
-        $('.p'+clase).val(promedio);
-
-        promedioAnual();
+ 
     }
 
     var notaVacia = function(control,clase){
+        //console.log(control.value.length);return;
         if(control.value == ""){ control.value = 51; }
-        if(control.value < 51){ control.value = 51; }
-        if(control.value > 100){ control.value = 100; }
-
-        if(control.value != "" && control.value != 0){
-            control.value = Math.round(control.value);
-        }
         
-        var suma = 0;
-        $("."+clase).each(function (index) {
-            suma = suma + parseInt($(this).val());
-        })
-        var promedio = Math.round(suma/3);
-        if(isNaN(promedio)){
-            promedio = 0;
-        }
-        $('.p'+clase).val(promedio);
+        if(control.value.length > 1){
+            if(control.value < 51){ control.value = 51; }
+            if(control.value > 100){ control.value = 100; }  
+            if(control.value != "" && control.value != 0){
+                control.value = Math.round(control.value);
+            }
+            
+            var suma = 0;
+            $("."+clase).each(function (index) {
+                suma = suma + parseInt($(this).val());
+            })
+            var promedio = Math.round(suma/3);
+            if(isNaN(promedio)){
+                promedio = 0;
+            }
+            $('.p'+clase).val(promedio);
 
-        promedioAnual();
+            promedioAnual();                      
+        
+        }else{
+            if(control.value < 51){ control.value = 51; }
+        }
+
     }
 
     var promedioAnual = function(){
