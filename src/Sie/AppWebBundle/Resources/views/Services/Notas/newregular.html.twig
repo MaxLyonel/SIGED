@@ -278,8 +278,8 @@
 <script>
     var promedio = function(control,clase){
         //if(control.value == ""){ control.value = 0; }
-        //console.log(control.value.length);return;
-        if(control.value.length > 1){
+        console.log(control.value.length);return;
+        
             if(control.value < 51){ control.value = 51; }
             if(control.value > 100){ control.value = 100; }            
            if(control.value != "" && control.value != 0){
@@ -297,9 +297,7 @@
             $('.p'+clase).val(promedio);
 
             promedioAnual();        
-        }else{
-            if(control.value < 51){ control.value = 51; }
-        }
+       
 
         
  
@@ -309,7 +307,7 @@
         //console.log(control.value.length);return;
         if(control.value == ""){ control.value = 51; }
         
-        if(control.value.length > 1){
+        
             if(control.value < 51){ control.value = 51; }
             if(control.value > 100){ control.value = 100; }  
             if(control.value != "" && control.value != 0){
@@ -328,9 +326,7 @@
 
             promedioAnual();                      
         
-        }else{
-            if(control.value < 51){ control.value = 51; }
-        }
+       
 
     }
 
