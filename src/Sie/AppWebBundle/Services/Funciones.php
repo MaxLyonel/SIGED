@@ -1611,7 +1611,6 @@ class Funciones {
      * @param  [array] $codrude    [codigoRude, userId, gestion]
      */
     public function getInscriptionToValidateTuicion($form, $gestion, $calidad){
-        return true;
         //look for the current inscription on 4.5.11 matricula id
         $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
         $query = $entity->createQueryBuilder('e')
