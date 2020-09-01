@@ -1631,18 +1631,24 @@ class Funciones {
                 ->getQuery();
         
         $objCurrentInscripcion = $query->getResult();
-        
+        //dump($objCurrentInscripcion);die;
+        $swtucion = false;
         if($objCurrentInscripcion){
-            // check the tución info
-            $currentSie = $objCurrentInscripcion[0]->getinstitucioneducativa()->getid();
-            $query = $this->em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
-            $query->bindValue(':user_id', $this->session->get('userId'));
-            $query->bindValue(':sie', $currentSie);
-            $query->bindValue(':rolId', $this->session->get('roluser'));
-            $query->execute();
-            $aTuicion = $query->fetch(); 
-            
-            return ($aTuicion['get_ue_tuicion']);
+            while (($objectUe = current($objCurrentInscripcion)) !== FALSE && !$swtucion) {
+                // check the tución info
+                $currentSie = $objectUe->getid();
+                $query = $this->em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+                $query->bindValue(':user_id', $this->session->get('userId'));
+                $query->bindValue(':sie', $currentSie);
+                $query->bindValue(':rolId', $this->session->get('roluser'));
+                $query->execute();
+                $aTuicion = $query->fetch(); 
+                if($aTuicion['get_ue_tuicion']){
+                    $swtucion = $aTuicion['get_ue_tuicion'];
+                }
+                next($objCurrentInscripcion);
+            }
+            return ($swtucion);
         }else{
             return false;
         }
