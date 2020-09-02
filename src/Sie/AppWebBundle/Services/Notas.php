@@ -227,19 +227,20 @@ class Notas{
                                             ->getQuery()
                                             ->getResult();
 
-                                             //dump($asignaturasNotas);
+                                             dump($asignaturasNotas);
                                              //dump($inicio);
                                              //dump($fin);
                                             // die;
 
                         // EN LA GESTION 2019 INICIAL NO SE REGISTRARAN LAS NOTAS POR MATERIA
                         //if (($gestion < 2019) or ($gestion >= 2019 and $nivel != 11) ) {
-                        if (($gestion < 2019) or ($gestion >= 2019 and $nivel != 11 and ($nivel.$grado !=121)) ) {
+                        if (($gestion < 2019) or ($gestion >= 2019 ) ) {
                             for($i=$inicio;$i<=$fin;$i++){
                                 $existe = 'no';
                                 foreach ($asignaturasNotas as $an) {
+                                    dump($an);
                                     if($i == $an['idNotaTipo']){
-                                        if($nivel != 11 and $nivel != 1 and $nivel != 403){
+                                        if($nivel != 11 and $nivel != 1 and $nivel != 403 and $nivel != 11 and ($nivel.$grado !=121)){
                                             $valorNota = $an['notaCuantitativa'];
                                             if($valorNota == 0 or $valorNota == "0"){
                                                 $cantidadFaltantes++;
@@ -269,7 +270,7 @@ class Notas{
                                         break;
                                     }
 
-                                }
+                                }die;
                                 if($existe == 'no'){
                                     $cantidadFaltantes++;
                                     if($nivel != 11 and $nivel != 1 and $nivel != 403){
