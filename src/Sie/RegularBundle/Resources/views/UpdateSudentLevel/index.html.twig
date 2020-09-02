@@ -46,7 +46,7 @@
                 <div class="modal-body">
 
                   <div style="text-align:right;" v-if="swUpdateLevelGradoIniPri">
-                    <button @click="isShowing ^= true" class="btn btn-xs btn-info" >Habilitar Inicial(1,2)/Primaria(1)</button>
+                    <button @click="isShowing ^= true" class="btn btn-xs btn-info" >Habilitar Modificación</button>
                   </div>
 
                   <table class="table table ">
@@ -97,6 +97,12 @@
                       </td>
 
                     </tr>
+            
+                    <tr  v-show="isShowing">
+                      <td colspan="4"><label for="genero">Adjuntar Documumento: LIBRETA ESCOLAR/DOCUMENTO DE APROBACIÓN </label>                      
+                      <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId"></td>                        
+                    </tr>
+               
                     <tr><td><button @click="doUpdate" type="button" class="btn btn-primary">Actualizar</button></td></tr>
                   </table>
 
@@ -209,13 +215,15 @@
 
                     <div v-if="swObservation">
                        <!-- v-on:click="showhistory(oldStudent.rude)" -->
-                        <a class="btn btn-warning" data-toggle="modal" href='#modalEstudianteTwo' > <i class="fa fa-eye"></i> ${ messageObservaation } </a>
+                       {#
+                        <a class="btn btn-warning" data-toggle="modal" href='#modalEstudianteTwo' > <i class="fa fa-eye"></i> ${ messageObservaation } </a>/
+                        #}
                     </div>
                     <div v-else >
-                      <div class="alert alert-success" role="alert">${ messageObservaation } </div>                     
+                      {#<div class="alert alert-success" role="alert">${ messageObservaation } </div>  #}                   
 
                           <div class="col-sm" v-if='swUpdateLevelGradoIniPri' style=" text-align: right; ">
-                            <a class="btn btn-info" data-toggle="modal" href='#modalEstudianteTwo' @click="clearIniPriVars"> <i class="fa fa-eye"></i>Modificar Inicial(1,2)/Primaria(1) </a>
+                            <a class="btn btn-info" data-toggle="modal" href='#modalEstudianteTwo' @click="clearIniPriVars"> <i class="fa fa-eye"></i>Modificar Grado </a>
                           </div>
                     
                     </div>
@@ -268,12 +276,41 @@
               swObservation:false,
               existStudentData:false,
               swUpdateLevelGradoIniPri:false,
-              DBNextLevel:{'paraleloId':'','turnoId':''}
+              DBNextLevel:{'paraleloId':'','turnoId':''},
+              informe:''
               
               
  
             },
             methods: {
+
+              getImage: function(event){
+                  var informe = event.target.files[0];
+                  var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+                  if(!allowedExtensions.exec(event.target.value)){
+                      event.target.value = '';
+                      Swal.fire(
+                            'Archivo incorrecto!',
+                            'El archivo adjunto debe ser una imagen o un archivo pdf',
+                            'warning'
+                          );
+                      this.informe = '';
+                      return false;
+                  }else{
+                      var megas = (informe.size / 1024)/1024;
+                      if (megas > 2) {
+                          event.target.value = '';
+                          Swal.fire(
+                            'Tamaño no permitido!',
+                            'El archivo debe tener un tamaño menor a 2MB',
+                            'warning'
+                          );
+                          this.informe = '';
+                          return false;
+                      }
+                  }
+                  this.informe = event.target.files[0];
+              },                
 
               lookforStudentData: function(){
                 this.buscando=true;
@@ -318,7 +355,9 @@
                 this.isShowing= false;
               },
               setGrado: function(){
-              
+                  this.DBGrado='Seleccionar...';
+                  this.DBParalelos='Seleccionar...';
+                  this.DBTurno='Seleccionar...';
                   axios.post(Routing.generate('updateSudentLevel_setGrado', this.DBNextLevel ))
                       .then(response => {
                           if (response.status == 200) {
@@ -336,6 +375,7 @@
             
               }, 
               setParalelo: function(){
+                this.DBParalelos='Seleccionar...';
                   axios.post(Routing.generate('updateSudentLevel_setParalelo', this.DBNextLevel ))
                       .then(response => {
                           if (response.status == 200) {
@@ -354,7 +394,7 @@
               },                               
               setTurno: function(newobject){
               
-                
+                  this.DBTurno='Seleccionar...';
                   axios.post(Routing.generate('updateSudentLevel_setTurno', this.DBNextLevel ))
                       .then(response => {
                           if (response.status == 200) {
@@ -372,6 +412,15 @@
             
               },
               doUpdate: function(){
+
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                        'Adjuntar Documento',
+                        'Debe adjuntar el DOCUMENTO SOLICITADO para ralizar la modificación, puede ser un archivo de imagen o PDF, no mayor a 2MB',
+                        'warning'
+                        );
+                        return;
+                    }                
 
                     if(typeof this.DBNextLevel.paraleloId ==='undefined' ){
                         Swal.fire(
@@ -403,9 +452,12 @@
                         confirmButtonText: 'Si, proceder',
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
-                      if (result.value) {                
+                      if (result.value) {   
+                        var data = new FormData();
+                        data.append('datos', JSON.stringify(this.DBNextLevel));
+                        data.append('informe', this.informe);             
                 
-                        axios.post(Routing.generate('updateSudentLevel_doUpdate', this.DBNextLevel ))
+                        axios.post(Routing.generate('updateSudentLevel_doUpdate'), data)
                             .then(response => {
                               this.DBhistory = {};
                                 if (response.status == 200) {

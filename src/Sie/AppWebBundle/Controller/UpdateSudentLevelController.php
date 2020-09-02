@@ -14,6 +14,7 @@ use Sie\AppWebBundle\Entity\EstudianteHistorialModificacion;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion; 
 use Sie\AppWebBundle\Entity\Estudiante; 
 use Sie\AppWebBundle\Entity\EstudianteDocumento; 
+use Sie\AppWebBundle\Entity\EstudianteInscripcionExtranjero; 
 use Symfony\Component\Validator\Constraints\DateTime;
 
 class UpdateSudentLevelController extends Controller{
@@ -102,7 +103,7 @@ class UpdateSudentLevelController extends Controller{
                 // if($inscription['gestion']==$this->currentyear && $inscription['estadoMatriculaId']==4){
                 //     $arrCurrenteInscription = $inscription;
                 // }                
-                if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='56' /*|| $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58'*/ ){
+                if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='56' || $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58' ){
                   $arrLastInscription = $inscription;
                   $sw=false;
                 }
@@ -146,12 +147,14 @@ class UpdateSudentLevelController extends Controller{
                     $arrNextLevel['cicloId'] = $arrNextLevelNow['cicloId'];
                     $arrNextLevel['gradoId'] = $arrNextLevelNow['gradoId'];
 
-                    if( $arrCurrenteInscription['nivelId']==$arrNextLevel['nivelId'] && $arrCurrenteInscription['cicloId']==$arrNextLevel['cicloId'] && $arrCurrenteInscription['gradoId']==$arrNextLevel['gradoId']){
+                    //if( $arrCurrenteInscription['nivelId']==$arrNextLevel['nivelId'] && $arrCurrenteInscription['cicloId']==$arrNextLevel['cicloId'] && $arrCurrenteInscription['gradoId']==$arrNextLevel['gradoId']){
+                    if(false){
                         $swObservation = false;
                         $messageObservaation = 'No presenta Observación';
                         
                     }else{
                         $swObservation = true;
+                        $swUpdateLevelGradoIniPri = true; 
                         $messageObservaation = 'Presenta Observación';
                         
                         $objInfoCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findBy(array(
@@ -168,6 +171,22 @@ class UpdateSudentLevelController extends Controller{
 
                         $arrNextLevel['nivel']=$em->getRepository('SieAppWebBundle:NivelTipo')->find($arrNextLevel['nivelId'])->getNivel() ;
                         $arrNextLevel['grado']=$em->getRepository('SieAppWebBundle:GradoTipo')->find($arrNextLevel['gradoId'])->getGrado() ;
+
+                        //the new add by krlos
+                        $levelAllow = array(11,12,13);
+                        $levelAndGrado = $arrCurrenteInscription['nivelId'];
+                        if( in_array($levelAndGrado, $levelAllow) ){
+                            // dump($arrNextLevel);die;
+                            $swUpdateLevelGradoIniPri = true;  
+                            $arrLevel = $this->getInfoUe($arrCurrenteInscription['sie']);
+                            // $arrNextLevel['nivel']=$em->getRepository('SieAppWebBundle:NivelTipo')->find(1)->getNivel() ;
+                            // $arrNextLevel['grado']=$em->getRepository('SieAppWebBundle:GradoTipo')->find(2)->getGrado() ;  
+                        }
+                        //dump($arrLevel);die;
+                        $swObservation = false;
+                        $messageObservaation = 'No presenta Observación';
+                        $existStudentData = true;                        
+
                         
                     }
 
@@ -358,21 +377,25 @@ class UpdateSudentLevelController extends Controller{
     }
 
     public function doUpdateAction(Request $request){
-        // dump($request);die;
+        
+        $arrData = json_decode($request->get('datos'),true);
+
         // ini vars
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();    
         // get the send values
-        $codigoRude = $request->get('codigoRude');
-        $nivelId = $request->get('nivelId');
-        // $cicloId = $request->get('cicloId');
-        $gradoId = $request->get('gradoId');
-        $paraleloId = $request->get('paraleloId');
-        $turnoId = $request->get('turnoId');
-        $sie = $request->get('sie');
-        $gestion = $request->get('gestion');
-        $studenInscriptionId = $request->get('studenInscriptionId');
+        $codigoRude = $arrData['codigoRude'];
+        $nivelId = $arrData['nivelId'];
+        // $cicloId = $arrData['cicloId'];
+        $gradoId = $arrData['gradoId'];
+        $paraleloId = $arrData['paraleloId'];
+        $turnoId = $arrData['turnoId'];
+        $sie = $arrData['sie'];
+        $gestion = $arrData['gestion'];
+        $studenInscriptionId = $arrData['studenInscriptionId'];
+
+
         // condition to find the correct level to fix the observation
         $arrayCondition = array(
             'nivelTipo' => $nivelId,
@@ -391,6 +414,50 @@ class UpdateSudentLevelController extends Controller{
             $em->persist($objStudentInscription);
             $em->flush();
 
+         // save the file in case if exists
+            // check if the file exists
+            if(isset($_FILES['informe'])){
+                $file = $_FILES['informe'];
+                $type = $file['type'];
+                $size = $file['size'];
+                $tmp_name = $file['tmp_name'];
+                $name = $file['name'];
+                $extension = explode('.', $name);
+                $extension = $extension[count($extension)-1];
+                $new_name = $studenInscriptionId.'_'.date('YmdHis').'.'.$extension;
+                // GUARDAMOS EL ARCHIVO
+                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/insExtranjeros/' .date('Y');
+
+                if (!file_exists($directorio)) {
+                    mkdir($directorio, 0775, true);
+                }
+                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/insExtranjeros/' .date('Y').'/'.$studenInscriptionId;
+                if (!file_exists($directoriomove)) {
+                    mkdir($directoriomove, 0775, true);
+                }
+
+                $archivador = $directoriomove.'/'.$new_name;
+                //unlink($archivador);
+                if(!move_uploaded_file($tmp_name, $archivador)){
+                    $em->getConnection()->rollback();
+                    echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+                }
+
+                  //move the file emp to the directory temp
+                  // $file = $oFile->move($dirtmp, $originalName);
+                  // $file = $oFile->move($dirtmp, $studentInscription->getId().'_'.$form['gestion']);
+                  //save info extranjero inscription
+                  $objEstudianteInscripcionExtranjero = new EstudianteInscripcionExtranjero();
+                  $objEstudianteInscripcionExtranjero->setInstitucioneducativaOrigen('MODIFICACION NIVEL Y GRADO');
+                  $objEstudianteInscripcionExtranjero->setCursoVencido('MODIFICACION NIVEL Y GRADO');
+                  $objEstudianteInscripcionExtranjero->setRutaImagen($new_name);
+                  $objEstudianteInscripcionExtranjero->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studenInscriptionId));
+                  $objEstudianteInscripcionExtranjero->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find(0));
+                  $em->persist($objEstudianteInscripcionExtranjero);
+                  $em->flush();
+            
+            }            
+
             $arrNewDataInscription = array('istudenInscriptionId' => $objStudentInscription->getId(), 'institucioneducativaCursoId' => $objStudentInscription->getInstitucioneducativaCurso()->getId());
 
             $this->get('funciones')->setLogTransaccion(
@@ -399,7 +466,7 @@ class UpdateSudentLevelController extends Controller{
                         'U',
                         '',
                         $arrNewDataInscription,
-                        $request->get('oldDataInscription'),
+                        $arrData['oldDataInscription'],
                         'SIGED',
                         json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
                     );
@@ -478,10 +545,10 @@ class UpdateSudentLevelController extends Controller{
                     //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
                     ->where('iec.institucioneducativa = :sie')
                     ->andwhere('iec.gestionTipo = :gestion')
-                    ->andwhere('iec.nivelTipo != :nivel')
+                    //->andwhere('iec.nivelTipo != :nivel')
                     ->setParameter('sie', $id)
                     ->setParameter('gestion', $this->session->get('currentyear') )
-                    ->setParameter('nivel', '13')
+                    //->setParameter('nivel', '13')
                     ->orderBy('iec.nivelTipo', 'ASC')
                     ->distinct()
                     ->getQuery();
@@ -583,12 +650,15 @@ class UpdateSudentLevelController extends Controller{
         $agrados = array();
         
         foreach ($aGrados as $grado) {
+            /*
             if($idnivel == 12 && $grado[1]==1){
                 $agrados[$grado[1]] = array('id'=>$grado[1], 'grado'=>$em->getRepository('SieAppWebBundle:GradoTipo')->find($grado[1])->getGrado() );
             }
             if($idnivel == 11){
                 $agrados[$grado[1]] = array('id'=>$grado[1], 'grado'=>$em->getRepository('SieAppWebBundle:GradoTipo')->find($grado[1])->getGrado() );
-            }            
+            }   
+            */
+            $agrados[$grado[1]] = array('id'=>$grado[1], 'grado'=>$em->getRepository('SieAppWebBundle:GradoTipo')->find($grado[1])->getGrado() );         
         }
       $arrResponse = array(
         'arrGrado' => $agrados
