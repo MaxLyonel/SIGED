@@ -117,7 +117,7 @@ class UpdateSudentLevelController extends Controller{
                     'gestion'=>$this->currentyear,
                 );
             $arrCurrenteInscription = $this->get('funciones')->getCurrentInscriptionByRudeAndGestionAndMatricula($arrayConditionInscription);
-
+            
             if(sizeof($arrCurrenteInscription)>0){
                 $arrCurrenteInscription = $arrCurrenteInscription[0];
                 $arrNextLevel['studenInscriptionId']=$arrCurrenteInscription['studenInscriptionId'];
@@ -129,7 +129,6 @@ class UpdateSudentLevelController extends Controller{
             }else{
                 $arrCurrenteInscription = array();
             }
-
             // thee student has history_?
             if(!$sw){
                 $arrayConditionInscription = array(
@@ -140,6 +139,7 @@ class UpdateSudentLevelController extends Controller{
                 // $arrCurrenteInscription = $this->get('funciones')->getCurrentInscriptionByRudeAndGestionAndMatricula($arrayConditionInscription);
 
                 if(sizeof($arrCurrenteInscription)>0){
+                   
                     // $arrCurrenteInscription = $arrCurrenteInscription[0];
 
                     $arrNextLevelNow = $this->getInfoInscriptionStudent($arrLastInscription['nivelId'].$arrLastInscription['cicloId'].$arrLastInscription['gradoId'],$arrLastInscription['estadoMatriculaId']);
@@ -201,10 +201,12 @@ class UpdateSudentLevelController extends Controller{
                 }
 
             }else{
-                
-                $levelAllow = array(111,112,121);
+                $levelAllow = array(11,12,13);
+                $levelAndGrado = $arrCurrenteInscription['nivelId'];
+                if( in_array($levelAndGrado, $levelAllow) ){                
+                /*$levelAllow = array(111,112,121);
                 $levelAndGrado = $arrCurrenteInscription['nivelId'].$arrCurrenteInscription['gradoId'];
-                if( in_array($levelAndGrado, $levelAllow) ){
+                if( in_array($levelAndGrado, $levelAllow) ){*/
                     // dump($arrNextLevel);die;
                     $swUpdateLevelGradoIniPri = true;  
                     $arrLevel = $this->getInfoUe($arrCurrenteInscription['sie']);
