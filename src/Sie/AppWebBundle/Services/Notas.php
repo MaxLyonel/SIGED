@@ -179,8 +179,8 @@ class Notas{
                             $fin = 0;
                             break;
                         case 1:
-                            $inicio = 6;
-                            $fin = 6;
+                            $inicio = 9;
+                            $fin = 9;
                             break;
                         case 4:
                             $inicio = 6;
@@ -227,7 +227,7 @@ class Notas{
                                             ->getQuery()
                                             ->getResult();
 
-                                             dump($asignaturasNotas);
+                                             //dump($asignaturasNotas);
                                              //dump($inicio);
                                              //dump($fin);
                                             // die;
@@ -238,7 +238,7 @@ class Notas{
                             for($i=$inicio;$i<=$fin;$i++){
                                 $existe = 'no';
                                 foreach ($asignaturasNotas as $an) {
-                                    dump($an);
+                                    //dump($an);
                                     if($i == $an['idNotaTipo']){
                                         if($nivel != 11 and $nivel != 1 and $nivel != 403 and $nivel != 11 and ($nivel.$grado !=121)){
                                             $valorNota = $an['notaCuantitativa'];
@@ -270,7 +270,7 @@ class Notas{
                                         break;
                                     }
 
-                                }die;
+                                }
                                 if($existe == 'no'){
                                     $cantidadFaltantes++;
                                     if($nivel != 11 and $nivel != 1 and $nivel != 403){
@@ -1197,7 +1197,7 @@ die;/*
                 // Registro y/o modificacion de notas
                 for($i=0;$i<count($idEstudianteNota);$i++) {
                     if($idEstudianteNota[$i] == 'nuevo'){
-                        if(($nivel != 11 and $notas[$i] != 0) or ($nivel == 11 and $notas[$i] != "")){
+                        if(($nivel != 11 and $notas[$i] != 0) or ($nivel == 11 and $notas[$i] != "") or ($nivel.$arrinfoUe['ueducativaInfoId']['gradoId'] == '121')){
                             $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();
                             $newNota = new EstudianteNota();
                             $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
