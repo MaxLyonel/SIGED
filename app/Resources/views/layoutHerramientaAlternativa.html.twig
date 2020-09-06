@@ -513,7 +513,7 @@
                                         <span class="arrow"></span>
                                     </a>
                                     <ul>
-                                        {% if ( app.session.get('userName')== 4926577 ) %}
+                                        {% if ( app.session.get('userName')== 4926577 or app.session.get('roluser') == 8) %}
                                         <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li> 
                                         <li><a href="{{path('alternativa_operativo_gestion_pasada')}}">Habilitar Operativo Gestión Pasada</a></li> 
                                         <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li> 
