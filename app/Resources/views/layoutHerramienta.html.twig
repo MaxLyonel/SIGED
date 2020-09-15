@@ -296,7 +296,7 @@
                                 <li><a href="{{ path('herramienta_inbox_index')}}">Recibidos</a></li>
                                 {% if app.session.get('roluser') == 9 %}
                                     <li><a href="{{ path('herramienta_infoconsolidation_index')}}">Consolidación Info</a></li>
-                                {% if app.session.get('roluser') != 9 %}
+                                {% endif %}
                                 {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 %}
                                     <li><a href="{{ path('herramienta_infoconsolidation_gestion_index')}}">Seguimiento Consolidación</a></li>
                                 {% endif %}
