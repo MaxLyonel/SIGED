@@ -152,7 +152,7 @@ class StudentsInscriptionsController extends Controller {
       // $yearStudent = (date('Y') - date('Y',strtotime($form['dateStudent'])));
       // $arrYearStudent =$this->get('funciones')->tiempo_transcurrido($form['dateStudent'], '30-6-'.date('Y'));
       // $yearStudent = $arrYearStudent[0];
-      $yearStudent =$this->get('funciones')->getTheCurrentYear($form['dateStudent'], '30-6-'.date('Y'));
+      $yearStudent =$this->get('funciones')->getTheCurrentYear($form['dateStudent'], '30-8-'.date('Y'));
       // dump($objInstitucioneducativaCursoStudent);
       // dump($yearStudent);
       // die;
@@ -479,7 +479,7 @@ class StudentsInscriptionsController extends Controller {
       // user allowed to show the special inscription option
       $userAllowedOnCasespecial = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
 
-      $arrWithoutsegip = array(6126941);
+      $arrWithoutsegip = array(000000);
       $swWithoutSegip = in_array($this->session->get('userName'), $arrWithoutsegip)?true:false;
 
 
@@ -1395,7 +1395,7 @@ class StudentsInscriptionsController extends Controller {
         $objInstitucioneducativaCursoStudent=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($arrStudent['iecId']);
 
         //get the students age
-        $arrYearStudent =$this->get('funciones')->getTheCurrentYear($arrStudent['fecNac'], '30-6-'.date('Y'));
+        $arrYearStudent =$this->get('funciones')->getTheCurrentYear($arrStudent['fecNac'], '30-8-'.date('Y'));
         $yearStudent = $arrYearStudent['age'];
         //validate the humanisticos
         // if($objInstitucioneducativaCursoStudent->getNivelTipo()->getId()==15){
