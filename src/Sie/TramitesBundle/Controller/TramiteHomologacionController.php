@@ -410,7 +410,7 @@ class TramiteHomologacionController extends Controller {
                     ->add('gestion', 'entity', array('data' => $form['gestion'], 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                             'query_builder' => function(EntityRepository $er) {
                                 return $er->createQueryBuilder('gt')
-                                        ->where('gt.id > 2008')
+                                        ->where('gt.id > 1')
                                         ->orderBy('gt.id', 'DESC');
                             },
                         ));
