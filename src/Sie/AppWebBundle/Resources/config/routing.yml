@@ -279,5 +279,9 @@ sie_app_web_updateStudentLevel:
 
 sie_app_web_requestbjp:
     resource: "@SieAppWebBundle/Resources/config/routing/requestBJP.yml"
-    prefix:   /sie/requestbjp    
+    prefix:   /sie/requestbjp
+
+sie_app_web_claimbjp:
+    resource: "@SieAppWebBundle/Resources/config/routing/claimBJP.yml"
+    prefix:   /claimbjp       
 
