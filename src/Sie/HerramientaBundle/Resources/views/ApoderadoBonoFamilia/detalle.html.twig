@@ -71,6 +71,34 @@
                     <i class="fa fa-fw fa-info-circle"></i> No se realizó el cobro
                 </div>
             {% endif %}
+
+            {% if observadoBf|length > 0 %}
+                <div class="alert alert-danger" role="alert">
+                    <i class="fa fa-fw fa-info-circle"></i> La/El estudiante cuenta con observaciones
+                </div>
+                <h5 class="text-info">Observación</h5>
+                <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                    <tr>
+                        <th>Código RUDE</th><td style="color:#0086DD">{{observadoBf.codigoRude}}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre(s) y Apellido(s)</th><td><strong>{{observadoBf.nombre}} {{observadoBf.paterno}} {{observadoBf.materno}}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Carnet de Identidad</th><td>{{observadoBf.carnetIdentidad}}{% if observadoBf.complemento %} - {{observadoBf.complemento}}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de Nacimiento</th><td>{{observadoBf.fechaNacimiento|date('d-m-Y')}}</td>
+                    </tr>
+                    <tr>
+                        <th>Observación</th><td>{{observadoBf.obs}}</td>
+                    </tr>
+                </table>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    <i class="fa fa-fw fa-info-circle"></i> La/El estudiante no cuenta con observaciones
+                </div>
+            {% endif %}
         </div>
     </div>
 </div>

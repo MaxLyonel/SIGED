@@ -68,7 +68,11 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         61710090,
         61710091,
         61710092,
-        61710093
+        61710093,
+        80730370,
+        81981667,
+        61710097,
+        61710098
       );
 
       if( in_array($this->session->get('ie_id'), $arrWeenhayec) or $this->session->get('roluser')==7){
@@ -164,7 +168,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
             $infoInscription=array();
             //look for the next level inscrption if it has
             while($sw &&  ($inscription = current($inscriptions))){
-                if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='56' /*|| $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58'*/ ){
+                if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='56' || $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58' ){
                   $infoInscription = $inscription;
                   $sw=false;
                 }

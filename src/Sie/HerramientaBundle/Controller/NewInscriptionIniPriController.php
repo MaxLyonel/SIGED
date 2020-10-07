@@ -63,7 +63,11 @@ class NewInscriptionIniPriController extends Controller
         61710090,
         61710091,
         61710092,
-        61710093
+		61710093,
+		80730370,
+		81981667,
+		61710097,
+		61710098
       );
 
       if( in_array($this->session->get('ie_id'), $arrWeenhayec) or $this->session->get('roluser')==7){
@@ -867,7 +871,7 @@ class NewInscriptionIniPriController extends Controller
 			break;
 		case 2:
 			$swinscription = $this->rezagoYearValidation($yearStudent,$nivel,$grado);
-			if(!$swnewforeign){
+			if($swnewforeign){
 				$swinscription = !$this->getCurrentInscriptionsByGestoinValida($arrDatos['rude'],$this->currentyear-1);
 			}
 			break;
