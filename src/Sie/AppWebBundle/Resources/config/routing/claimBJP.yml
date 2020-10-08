@@ -1,14 +1,14 @@
-consulta_bono_familia_index:
+claim_bjp_index:
     path:     /
     defaults: { _controller: SieAppWebBundle:ClaimBJP:index }
 
-consulta_bono_familia_cargar:
+claim_bjp_cargar:
     path:     /cargar
     defaults: { _controller: SieAppWebBundle:ClaimBJP:cargar }
     options:
          expose: true
 
-consulta_bono_familia_buscar:
+claim_bjp_buscar:
     path:     /buscar
     defaults: { _controller: SieAppWebBundle:ClaimBJP:buscar }
     options:
