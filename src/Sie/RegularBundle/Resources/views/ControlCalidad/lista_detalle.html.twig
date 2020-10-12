@@ -187,6 +187,7 @@
                                             </form>
                                         {% endif %}
                                         {% if regla.id == 12 %}
+                                            {#
                                             <form action="{{path('reg_changestadoqa_index')}}" method="post"  target="_blank">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
@@ -195,6 +196,15 @@
                                                 <input type="hidden" id="form_optionTodo" name="form[optionTodo]" value=2>
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                             </form>
+                                            #}
+                                            <form action="{{path('updateSudentLevel_index')}}" method="post"  target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <input type="hidden" id="form_optionTodo" name="form[optionTodo]" value=2>
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>                                            
                                         {% endif %}
                                         {% if regla.id == 11 %}
                                             <button type="submit" class="btn btn-link" onclick="mostrarSolucionApropiacionRudes({{regla.id}}, {{detalle.solucionTipoId}})"><i class="fa fa-eye"></i> Ver solución</button>
