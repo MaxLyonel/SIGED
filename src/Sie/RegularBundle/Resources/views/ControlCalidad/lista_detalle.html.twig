@@ -28,7 +28,7 @@
                                     <td data-title="Solucion">
                                     {% if app.session.get('roluser') != 9 %}
                                         {% if regla.id == 15 %}
-                                            <button type="submit" class="btn btn-link" onclick="mostrarSolucionHistorico({{detalle.id}}, {{detalle.llave}}, {{detalle.gestionTipo}})"><i class="fa fa-eye"></i> Ver observaciones</button>
+                                            <button type="submit" class="btn btn-link" onclick="mostrarSolucionHistorico({{detalle.id}}, {{detalle.llave}}, {{detalle.gestionTipo}})"><i class="fa fa-eye"></i> Ver observaciones</button>                           
                                             {# <form action="{{path('ccalidad_omitir')}}" method="post">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de omitir el proceso de validación del registro observado, por tanto, confirmará que la información actual es la correcta. ¿Desea continuar?');"><i class="fa fa-ban"></i> Omitir</button>
@@ -166,6 +166,19 @@
                                                 
                                             {% endif %}
                                         {% endif %}
+                                        {% if regla.id in [24,26]  %}
+                                                <form action="{{path('rudeunification_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
+                                                    <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"> 
+                                                    <div style="">Ir a solución</div> 
+                                                    </button>
+                                                </form> 
+                                        {% endif %}
+
                                         
                                         {% if regla.id == 10 %}
                                             <form action="{{path('reg_multigrado_index')}}" method="post"  target="_blank">
@@ -186,7 +199,7 @@
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                             </form>
                                         {% endif %}
-                                        {% if regla.id == 12 %}
+                                        {% if regla.id in [12,15] %}
                                             {#
                                             <form action="{{path('reg_changestadoqa_index')}}" method="post"  target="_blank">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
