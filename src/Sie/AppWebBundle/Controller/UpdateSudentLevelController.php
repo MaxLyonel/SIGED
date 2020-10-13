@@ -430,11 +430,20 @@ class UpdateSudentLevelController extends Controller{
             }
             $em->persist($objStudentInscription);
             
-            $objValidacionProceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave'=>$codigoRude, 'validacionReglaTipo'=>12, 'gestionTipo'=>'2020', 'esActivo'=>false));
-            
-            if(is_object($objValidacionProceso)){
-                $objValidacionProceso->setEsActivo('t');
-                $em->persist($objValidacionProceso);
+            $objValidacionProceso = $em->createQueryBuilder()
+                                ->select('v')
+                                ->from('SieAppWebBundle:ValidacionProceso','v')
+                                ->where('v.esActivo is false')
+                                ->Where('v.validacionReglaTipo in (12, 15) ')
+                                ->andwhere('v.llave = :codigoRude')
+                                ->setParameter('codigoRude', $codigoRude)
+                                ->getQuery()
+                                ->getResult();
+                                
+            if(sizeof($objValidacionProceso)>0){
+                $objValidacionProcesoUpdate = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($objValidacionProceso[0]->getId());
+                $objValidacionProcesoUpdate->setEsActivo('t');
+                $em->persist($objValidacionProcesoUpdate);
             }
             
             $em->flush();
