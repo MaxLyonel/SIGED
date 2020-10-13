@@ -39,6 +39,16 @@ class UpdateSudentLevelController extends Controller{
     }
     // index method by krlos
     public function indexAction(Request $request){
+        $form = is_array(($request->get('form')))?$request->get('form'):false;
+        if(!$form){
+            $form = array(
+                'idDetalle'=>'',
+                'llave'=>'',
+                'gestion'=>'',
+                'institucioneducativa'=>'',
+                'optionTodo'=>'',
+            );
+        }
      
         //validation if the user is logged
         if (!isset($this->userlogged)) {
@@ -46,6 +56,7 @@ class UpdateSudentLevelController extends Controller{
         }
 
         return $this->render($this->session->get('pathSystem') .':UpdateSudentLevel:index.html.twig', array(
+                'form' => $form
            
         ));
     }
@@ -396,6 +407,7 @@ class UpdateSudentLevelController extends Controller{
         $sie = $arrData['sie'];
         $gestion = $arrData['gestion'];
         $studenInscriptionId = $arrData['studenInscriptionId'];
+        $extranjero = $arrData['extranjero'];
 
 
         // condition to find the correct level to fix the observation
@@ -413,7 +425,18 @@ class UpdateSudentLevelController extends Controller{
         
             $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studenInscriptionId);
             $objStudentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($arrayCondition));
+            if($extranjero == 1){
+                $objStudentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(19));    
+            }
             $em->persist($objStudentInscription);
+            
+            $objValidacionProceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave'=>$codigoRude, 'validacionReglaTipo'=>12, 'gestionTipo'=>'2020', 'esActivo'=>false));
+            
+            if(is_object($objValidacionProceso)){
+                $objValidacionProceso->setEsActivo('t');
+                $em->persist($objValidacionProceso);
+            }
+            
             $em->flush();
 
          // save the file in case if exists

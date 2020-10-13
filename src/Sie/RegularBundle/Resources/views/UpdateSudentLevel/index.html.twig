@@ -41,7 +41,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Modificar Nivel y Grado</h4>
+                    <h4 class="modal-title">Modificar Nivel y Grado<br> (Verificar, Ratificar el nivel, grado, paralelo turno e indicar si es extranjero )</h4>
                 </div>
                 <div class="modal-body">
 
@@ -99,8 +99,17 @@
                     </tr>
             
                     <tr  v-show="isShowing">
-                      <td colspan="4"><label for="genero">Adjuntar Documumento: LIBRETA ESCOLAR/DOCUMENTO DE APROBACIÓN </label>                      
-                      <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId"></td>                        
+                      <td colspan="1">
+                        <label for="genero">Extranjero: </label>
+                        <select name="arrGrado" id="idgrado" v-model="DBNextLevel.extranjero" class="custom-select form-control" v-on:change="setParalelo();">  
+                            <option value="">Seleccionar...</option>
+                            <option value="0">NO</option>
+                            <option value="1">SI</option>
+                          </select>
+                      </td>                     
+                      <td colspan="3"><label for="genero">Adjuntar Documumento: LIBRETA ESCOLAR/DOCUMENTO DE APROBACIÓN </label>                      
+                      <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId"></td>
+                       
                     </tr>
                
                     <tr><td><button @click="doUpdate" type="button" class="btn btn-primary">Actualizar</button></td></tr>
@@ -270,7 +279,7 @@
               DBParalelos:{},
               currenteInscription:{},
               messageObservaation:'',
-              student:{codigoRude:''},
+              student:{codigoRude:'{{form.llave}}' },
               buscando:false,
               isShowing:false,
               swObservation:false,
@@ -412,7 +421,7 @@
             
               },
               doUpdate: function(){
-
+                
                     if (typeof this.informe != 'object') {
                         Swal.fire(
                         'Adjuntar Documento',
@@ -435,6 +444,15 @@
                         Swal.fire(
                         'Campo Turno es requerido',
                         'Debe seleccionar un Turno',
+                        'warning'
+                        );
+                        return;
+                    }
+
+                    if(typeof this.DBNextLevel.extranjero ==='undefined' ){
+                        Swal.fire(
+                        'Campo Extranjero es requerido',
+                        'Debe seleccionar un Extranjero',
                         'warning'
                         );
                         return;
