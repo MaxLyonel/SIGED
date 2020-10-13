@@ -58,39 +58,52 @@ class RudeUnificationController extends Controller{
         //get info 
         $form = $request->get('form');
         if($form){
-            $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['rude']));
-                if(!$student){
-                    $arrStudent['messageqa'] = 'Rudes no encontrados para unificar.';
-                    $vala = '';
-                    $valb = '';
-                }else{
-                    $students = $em->createQueryBuilder()
-                                ->select('DISTINCT e.codigoRude')
-                                ->from('SieAppWebBundle:Estudiante','e')
-                                ->where('e.paterno = :paterno')
-                                ->andWhere('e.materno = :materno')
-                                ->andWhere('e.nombre = :nombre')
-                                ->andWhere('e.fechaNacimiento = :fechaNacimiento')
-                                ->setParameter('paterno', $student->getPaterno())
-                                ->setParameter('materno', $student->getMaterno())
-                                ->setParameter('nombre', $student->getNombre())
-                                ->setParameter('fechaNacimiento', $student->getFechaNacimiento())
-                                ->getQuery()
-                                ->getResult();
+            $arrObs = array(24,26);
+            if(in_array($form['idRegla'], $arrObs)){
+                $arrRudes = explode('|',  $form['rude']);
+                
+                $arrStudent = array( 
+                    'rudea' => $arrRudes[0],
+                    'rudeb' => $arrRudes[1],
+                    'messageqa' => '',   
+                );
 
-                    if(sizeof($students)<=1){
-                        $arrStudent = array( 
-                            'rudea' => '',
-                            'rudeb' => '',   
-                            'messageqa' => 'No existen dos rudes para Unificar.',
-                        ); 
+            }else{
+
+                $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['rude']));
+                    if(!$student){
+                        $arrStudent['messageqa'] = 'Rudes no encontrados para unificar.';
+                        $vala = '';
+                        $valb = '';
                     }else{
-                         $arrStudent = array( 
-                            'rudea' => $students[0]['codigoRude'],
-                            'rudeb' => $students[1]['codigoRude'],
-                            'messageqa' => '',   
-                        );
-                    }
+                        $students = $em->createQueryBuilder()
+                                    ->select('DISTINCT e.codigoRude')
+                                    ->from('SieAppWebBundle:Estudiante','e')
+                                    ->where('e.paterno = :paterno')
+                                    ->andWhere('e.materno = :materno')
+                                    ->andWhere('e.nombre = :nombre')
+                                    ->andWhere('e.fechaNacimiento = :fechaNacimiento')
+                                    ->setParameter('paterno', $student->getPaterno())
+                                    ->setParameter('materno', $student->getMaterno())
+                                    ->setParameter('nombre', $student->getNombre())
+                                    ->setParameter('fechaNacimiento', $student->getFechaNacimiento())
+                                    ->getQuery()
+                                    ->getResult();
+
+                        if(sizeof($students)<=1){
+                            $arrStudent = array( 
+                                'rudea' => '',
+                                'rudeb' => '',   
+                                'messageqa' => 'No existen dos rudes para Unificar.',
+                            ); 
+                        }else{
+                             $arrStudent = array( 
+                                'rudea' => $students[0]['codigoRude'],
+                                'rudeb' => $students[1]['codigoRude'],
+                                'messageqa' => '',   
+                            );
+                        }
+                }
             }
         }
 

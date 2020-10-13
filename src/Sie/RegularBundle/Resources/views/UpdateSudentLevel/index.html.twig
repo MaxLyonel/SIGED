@@ -107,7 +107,7 @@
                             <option value="1">SI</option>
                           </select>
                       </td>                     
-                      <td colspan="3"><label for="genero">Adjuntar Documumento: LIBRETA ESCOLAR/DOCUMENTO DE APROBACIÓN </label>                      
+                      <td colspan="3"><label for="genero">Adjuntar Documumento: LIBRETA ESCOLAR/DOCUMENTO DE APROBACIÓN, para la inscripción Extranjera </label>                      
                       <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId"></td>
                        
                     </tr>
@@ -421,15 +421,8 @@
             
               },
               doUpdate: function(){
-                
-                    if (typeof this.informe != 'object') {
-                        Swal.fire(
-                        'Adjuntar Documento',
-                        'Debe adjuntar el DOCUMENTO SOLICITADO para ralizar la modificación, puede ser un archivo de imagen o PDF, no mayor a 2MB',
-                        'warning'
-                        );
-                        return;
-                    }                
+                  
+                    
 
                     if(typeof this.DBNextLevel.paraleloId ==='undefined' ){
                         Swal.fire(
@@ -457,8 +450,17 @@
                         );
                         return;
                     }
-
-
+                    
+                    if(this.DBNextLevel.extranjero == 1){
+                      if (typeof this.informe != 'object') {
+                          Swal.fire(
+                          'Adjuntar Documento',
+                          'Debe adjuntar el DOCUMENTO SOLICITADO para ralizar la modificación, puede ser un archivo de imagen o PDF, no mayor a 2MB',
+                          'warning'
+                          );
+                          return;
+                      }
+                    }               
 
                     Swal.fire({
                         title: 'Realizar Actualización?',
