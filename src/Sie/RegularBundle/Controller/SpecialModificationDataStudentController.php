@@ -28,14 +28,27 @@ class SpecialModificationDataStudentController extends Controller{
         $this->userlogged = $this->session->get('userId');
     }
 
-    public function indexAction(){
+    public function indexAction(Request $request){
 
         //validation if the user is logged
         if (!isset($this->userlogged)) {
             return $this->redirect($this->generateUrl('login'));
         }
+
+        $rude = null;
+        $idDetalle = null;
+
+        $formCalidad = $request->get('form');
+
+        if($formCalidad){
+            $rude = $formCalidad['rude'];
+            $idDetalle = $formCalidad['idDetalle'];
+        }
+
         return $this->render('SieRegularBundle:SpecialModificationDataStudent:index.html.twig', array(
-                'form' => $this->craeteformsearch()->createView(),
+                'form' => $this->craeteformsearch($formCalidad['rude'])->createView(),
+                'rude' => $rude,
+                'idDetalle' => $idDetalle
             ));    
     }
 
@@ -45,7 +58,7 @@ class SpecialModificationDataStudentController extends Controller{
                 // ->setAction($this->generateUrl('specialmodificationdata_student_lookfor_student'))
                 ->add('codeRude', 'text', array('label' => 'RUDE', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase','placeholder'=>'RUDE')))
                 ->add('arrOption','choice',
-                      array('label' => 'Opción',
+                    array('label' => 'Opción',
                             'choices' => ($arrOptions),
                             'required' => true,
                             'empty_value' => 'Seleccionar Opción',
@@ -274,7 +287,6 @@ class SpecialModificationDataStudentController extends Controller{
     }
 
     public function updateStudentAction(Request $request){
-
         $response = new JsonResponse();
         // create db conexion
         $em = $this->getDoctrine()->getManager();

@@ -238,6 +238,26 @@
                                                 <button type="submit" class="btn btn-link" onclick="justificarSinCarnet({{detalle.id}})"><i class="fa fa-edit"></i> Omitir</button>
                                             </div>
                                         {% endif %}
+                                        {% if regla.id == 25 %}
+                                            {% set rudes = detalle.llave|split('|') %}
+                                            <form action="{{path('specialmodificationdata_student_index')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_rude" name="form[rude]" value="{{rudes[0]}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Modificar Datos: {{rudes[0]}}</button>
+                                            </form>
+                                            <form action="{{path('specialmodificationdata_student_index')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_rude" name="form[rude]" value="{{rudes[1]}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Modificar Datos: {{rudes[1]}}</button>
+                                            </form>
+                                            <form action="{{path('ccalidad_verificar')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                            </form>
+                                        {% endif %}
                                         {#{% if regla.id == 2 or regla.id == 3 or regla.id == 6 or regla.id == 8 or regla.id == 10 or regla.id == 11 or regla.id == 12 or regla.id == 20 or regla.id == 9 or regla.id == 14 or regla.id == 2 %}#}
                                         {% if 0==1 %}
                                             <form action="{{path('ccalidad_omitir')}}" method="post">
