@@ -433,13 +433,14 @@ class UpdateSudentLevelController extends Controller{
             $objValidacionProceso = $em->createQueryBuilder()
                                 ->select('v')
                                 ->from('SieAppWebBundle:ValidacionProceso','v')
-                                ->where('v.esActivo is false')
-                                ->Where('v.validacionReglaTipo in (12, 15) ')
+                                ->where('v.esActivo = :active')
+                                ->andWhere('v.validacionReglaTipo in (12, 15) ')
                                 ->andwhere('v.llave = :codigoRude')
                                 ->setParameter('codigoRude', $codigoRude)
+                                ->setParameter('active', false)
                                 ->getQuery()
                                 ->getResult();
-                                
+            
             if(sizeof($objValidacionProceso)>0){
                 $objValidacionProcesoUpdate = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($objValidacionProceso[0]->getId());
                 $objValidacionProcesoUpdate->setEsActivo('t');
