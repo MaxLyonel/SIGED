@@ -593,6 +593,14 @@ class ControlCalidadController extends Controller {
                 $resultado = $query->fetchAll();
                 break;
 
+            case 25:
+                $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_cedula_duplicada_nom_diferentes (:tipo, :idDetalle)');
+                $query->bindValue(':tipo', '2');
+                $query->bindValue(':idDetalle', $form['idDetalle']);
+                $query->execute();
+                $resultado = $query->fetchAll();
+                break;
+
             case 27://PROMEDIOS
                 $llave = $form['llave'];
                 $parametros = explode('|', $llave);
