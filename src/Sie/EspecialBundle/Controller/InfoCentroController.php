@@ -242,7 +242,7 @@ class InfoCentroController extends Controller {
 
             $this->get('session')->getFlashBag()->add('updateOk', 'Datos modificados correctamente');
             return $this->redirect($this->generateUrl('herramienta_especial_info_centro_index'));
-         } catch (Exception $ex) {
+        } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
     }
@@ -300,7 +300,7 @@ class InfoCentroController extends Controller {
                 ->getForm();
         return $form;
     }
-  
+
     /**
      * Buscar CEE para habilitar gestión
      */  
@@ -428,10 +428,10 @@ class InfoCentroController extends Controller {
             'label_distrito' => $label_distrito,
             'ues' => $ues
         ));
-      }
+    }
 
     public function registroConsolAction(Request $request, $gestionid){
-        
+        $gestionactual = $gestionid;
         $roluser = $this->session->get('roluser');
         $roluserlugarid = $this->session->get('roluserlugarid');
         $bundle = $this->session->get('pathSystem');
@@ -481,11 +481,12 @@ class InfoCentroController extends Controller {
         }
 
         return $this->render('SieEspecialBundle:Institucioneducativa:consol_especial.html.twig', array(
-          'consol' => $consol,
-          'ues' => $ues,
-          'title' => $title,
-          'label' => $label,
-          'label_distrito' => $label_distrito,
+            'consol' => $consol,
+            'ues' => $ues,
+            'title' => $title,
+            'label' => $label,
+            'label_distrito' => $label_distrito,
+            'gestionactual' => $gestionactual
         ));
     }
 
