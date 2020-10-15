@@ -1045,31 +1045,52 @@ class InfoMaestroController extends Controller {
     }
 
     public function maestroModifDatosAction(Request $request) {
-        dump($request);die;
-        // try {
-        //     $this->session = new Session();
+        // Verificamos si no ha caducado la session
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
 
-        //     // Verificamos si no ha caducado la session
-        //     if (!$this->session->get('userId')) {
-        //         return $this->redirect($this->generateUrl('login'));
-        //     }
+        $em = $this->getDoctrine()->getManager();
+        $idMaestroInscripcion = $request->get('idMaestroInscripcion');
+        $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneById($idMaestroInscripcion);
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($maestroInscripcion->getPersona()->getId());
+        $estado = false;
+        $mensaje = "";
 
-        //     $em = $this->getDoctrine()->getManager();
-        //     $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($request->get('gestion'));
-        //     $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idInstitucion'));
-        //     $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('id' => $request->get('idMaestroInscripcion'), 'gestionTipo' => $gestion, 'institucioneducativa' => $institucion));
+        if($persona){
+            $datos = array(
+                'complemento'=>$persona->getComplemento(),
+                'primer_apellido'=>$persona->getPaterno(),
+                'segundo_apellido'=>$persona->getMaterno(),
+                'nombre'=>$persona->getNombre(),
+                'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y')
+            );
+            if($persona->getCarnet()){
+                $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona->getCarnet(),$datos,'prod','academico');
 
-        //     $cargo = $em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($request->get('idCargo'));
-        //     $maestroInscripcion->setCargotipo($cargo);
-        //     $maestroInscripcion->setEsVigenteAdministrativo(1 - $maestroInscripcion->getEsVigenteAdministrativo());
+                if($resultadoPersona){
+                    $persona->setSegipId(1);
+                    $em->persist($persona);
+                    $em->flush();
+                    $mensaje = "Válido SEGIP";
+                    $estado = true;
+                } else {
+                    $mensaje = "No se realizó la validación con SEGIP.";
+                }                
+            } else {
+                $mensaje = "No se realizó la validación con SEGIP.";
+            }
+        } else {
+            $mensaje = "No se realizó la validación con SEGIP.";
+        }
 
-        //     $em->persist($maestroInscripcion);
-        //     $em->flush();
+        if($estado) {
+            $this->get('session')->getFlashBag()->add('segipOk', $mensaje);
+        } else {
+            $this->get('session')->getFlashBag()->add('segipError', $mensaje);
+        }
 
-        //     return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));
-        // } catch (Exception $ex) {
-            
-        // }
+        return $this->redirect($this->generateUrl('herramientalt_info_maestro_index'));        
     }
 
 

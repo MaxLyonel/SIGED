@@ -1611,6 +1611,7 @@ class Funciones {
      * @param  [array] $codrude    [codigoRude, userId, gestion]
      */
     public function getInscriptionToValidateTuicion($form, $gestion, $calidad){
+        return true;
         //look for the current inscription on 4.5.11 matricula id
         $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
         $query = $entity->createQueryBuilder('e')
@@ -1631,18 +1632,24 @@ class Funciones {
                 ->getQuery();
         
         $objCurrentInscripcion = $query->getResult();
-        
+        //dump($objCurrentInscripcion);die;
+        $swtucion = false;
         if($objCurrentInscripcion){
-            // check the tución info
-            $currentSie = $objCurrentInscripcion[0]->getinstitucioneducativa()->getid();
-            $query = $this->em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
-            $query->bindValue(':user_id', $this->session->get('userId'));
-            $query->bindValue(':sie', $currentSie);
-            $query->bindValue(':rolId', $this->session->get('roluser'));
-            $query->execute();
-            $aTuicion = $query->fetch(); 
-            
-            return ($aTuicion['get_ue_tuicion']);
+            while (($objectUe = current($objCurrentInscripcion)) !== FALSE && !$swtucion) {
+                // check the tución info
+                $currentSie = $objectUe->getid();
+                $query = $this->em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+                $query->bindValue(':user_id', $this->session->get('userId'));
+                $query->bindValue(':sie', $currentSie);
+                $query->bindValue(':rolId', $this->session->get('roluser'));
+                $query->execute();
+                $aTuicion = $query->fetch(); 
+                if($aTuicion['get_ue_tuicion']){
+                    $swtucion = $aTuicion['get_ue_tuicion'];
+                }
+                next($objCurrentInscripcion);
+            }
+            return ($swtucion);
         }else{
             return false;
         }
@@ -1872,6 +1879,37 @@ class Funciones {
 
         return $entities;                
     }
+
+
+    public function getCurrentInscriptionRegular($codigoRude, $gestion){
+        
+        $query = $this->em->createQueryBuilder('e')
+                ->select('ei.id as studenInscriptionId,n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId',
+                 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId',
+                 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa, IDENTITY(iec.cicloTipo) as cicloId, e.fechaNacimiento as fechaNacimiento')
+                ->from('SieAppWebBundle:Estudiante','e')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+                ->leftjoin('SieAppWebBundle:NivelTipo', 'n', 'WITH', 'iec.nivelTipo = n.id')
+                ->leftjoin('SieAppWebBundle:GradoTipo', 'g', 'WITH', 'iec.gradoTipo = g.id')
+                ->leftjoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'iec.paraleloTipo = p.id')
+                ->leftjoin('SieAppWebBundle:TurnoTipo', 't', 'WITH', 'iec.turnoTipo = t.id')
+                ->leftJoin('SieAppWebBundle:EstadoMatriculaTipo', 'em', 'WITH', 'ei.estadomatriculaTipo = em.id')
+                ->where('e.codigoRude = :id')
+                ->andWhere('it.id = :idTipo')
+                ->andWhere('iec.gestionTipo = :gestionTipo')
+                ->setParameter('id', $codigoRude)
+                ->setParameter('idTipo',1)
+                ->setParameter('gestionTipo',$gestion)
+                ->orderBy('iec.gestionTipo', 'DESC')
+                ->addorderBy('ei.fechaInscripcion', 'DESC')
+                ->getQuery();
+        $entities = $query->getResult();
+
+        return $entities;                
+    }    
 
     public function getCurrentInscriptionByRudeAndGestionAndMatricula($data){
         

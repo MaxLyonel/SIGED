@@ -24,6 +24,7 @@ class InscriptionSpecialNewController extends Controller
      */ 
     public function indexAction()
     {
+        
         return $this->render('SieRegularBundle:InscriptionSpecialNew:index.html.twig', array(
                 // ...
                   'form' => $this->createSearchForm()->createView(),

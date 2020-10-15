@@ -22,8 +22,8 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="page-title">
-                <h1>Modificacion de Nivel y Grado
-                    <small>en Estudiantes</small>
+                <h1>Consulta Bono Juancito Pinto
+                    <small>de Estudiantes</small>
                 </h1>
                 <ol class="breadcrumb">
                     <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar</a></li>
@@ -41,79 +41,118 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Modificar Nivel y Grado<br> (Verificar, Ratificar el nivel, grado, paralelo turno e indicar si es extranjero )</h4>
+                    <h4 class="modal-title">Información BJP</h4>
                 </div>
                 <div class="modal-body">
+                  
 
-                  <div style="text-align:right;" v-if="swUpdateLevelGradoIniPri">
-                    <button @click="isShowing ^= true" class="btn btn-xs btn-info" >Habilitar Modificación</button>
-                  </div>
 
-                  <table class="table table ">
-                    <tr>
-                      <tH>NIVEL</tH>
-                      <th>GRADO</th>
-                      <th>PARALELO</th>
-                      <th>TURNO</th>
-                    </tr>
-                    <tr  class="readData">
-                      <td>
-                        <div v-if="!swUpdateLevelGradoIniPri" >${DBNextLevel.nivel}</div>
-                        <div else>
-                          <div v-show="isShowing"> 
-                            <select name="arrLevel" id="idlevel" v-model="DBNextLevel.nivelId" class="custom-select form-control" v-on:change="setGrado();">
-                              <option value="">Seleccionar...</option>
-                              <option v-for="item in DBLevel"  :value="item.id">${ item.level }</option>       
-                            </select>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div id="no-more-tables">
+                            <h5 class="text-info">Datos de la/el Estudiante</h5>
+                            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                                <tr>
+                                    <th>Codigo Rude</th><td style="color:#0086DD">${objStudent.rude}</td>
+                                </tr>
+                                <tr>
+                                    <th>Estudiante</th><td><strong> ${objStudent.nombre} ${objStudent.paterno} ${objStudent.materno}</strong></td>
+                                </tr>
+                                <tr>
+                                    <th>Carnet de Identidad</th><td>${objStudent.carnet} ${objStudent.complemento}</td>
+                                </tr>
+                                <tr>
+                                    <th>Género</th><td>${objStudent.genero}</td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha de Nacimiento</th><td>${objStudent.fecNac}</td>
+                                </tr>
+                                <tr>
+                                    <th>Estado de matrícula</th><td>${objStudent.matricula}</td>
+                                </tr>
+                            </table>
+
+                            <div v-if="DBApoderados.length > 0">
                             
-                          </div>
-                        </div>
-                        
-                      </td>
-                      <td>
-                        <div v-if="!swUpdateLevelGradoIniPri" >${DBNextLevel.grado}</div>
-                        <div else>
-                          <div v-show="isShowing">
-                              <select name="arrGrado" id="idgrado" v-model="DBNextLevel.gradoId" class="custom-select form-control" v-on:change="setParalelo();">  
-                                <option value="">Seleccionar...</option>
-                                <option v-for="item in DBGrado"  :value="item.id">${ item.grado }</option>
-                              </select>
-                          </div>
-                        </div>
-                        
-                      </td>
-                      <td>
-                        <!--  -->
-                         <select name="arrParalelo" id="idparalelo" v-model="DBNextLevel.paraleloId" class="custom-select form-control"  v-on:change="setTurno(this);"  >  
-                            <option value="">Seleccionar...</option>
-                            <option v-for="item in DBParalelos" :value="item.id">${ item.paralelo }</option>
-                          </select>
-                      </td>
-                      <td>
-                          <select name="arrTurno" id="idturno" v-model="DBNextLevel.turnoId" class="custom-select form-control" >  
-                            <option value="">Seleccionar...</option>
-                            <option v-for="item in DBTurno"  :value="item.id">${ item.turno }</option>
-                          </select>
-                      </td>
+                                <h5 class="text-info">Apoderado(s) registrado(s)</h5>
+                                 
+                                    <table v-for="apoderado in DBApoderados" class="table table-condensed table-bordered" style="background:#EEEEEE">
+                                        <tr>
+                                            <th>Nombre(s) y Apellido(s)</th><td><strong>${apoderado.nombre} ${apoderado.paterno} ${apoderado.materno}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Carnet de Identidad</th><td>${apoderado.carnet} <div v-if = " apoderado.complemento "> - ${apoderado.complemento} </div></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Fecha de Nacimiento</th><td>${apoderado.fecNac}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Apoderado</th><td>${apoderado.apoderadoTipo}</td>
+                                        </tr>
+                                    </table>
+                                
+                            </div>                          
+                            <div v-else class="alert alert-warning" role="alert">
+                                <i class="fa fa-fw fa-warning"></i> No cuenta con apoderado(s) registrado(s) en la presente gestión
+                            </div>
+                            
+{#
+                            {% if pagoBf|length > 0 %}
+                                <h5 class="text-info">Persona que realizó el cobro</h5>
+                                <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                                    <tr>
+                                        <th>N° Transacción</th><td style="color:#0086DD">{{pagoBf.transaccion}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nombre(s) y Apellido(s)</th><td><strong>{{pagoBf.nombre}} {{pagoBf.paterno}} {{pagoBf.materno}}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Carnet de Identidad</th><td>{{pagoBf.carnet}}{% if pagoBf.complemento %} - {{pagoBf.complemento}}{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fecha de Nacimiento</th><td>{{pagoBf.fechaNacimiento|date('d-m-Y')}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fecha/Hora</th><td>{{pagoBf.fechaPago|date('d-m-Y')}} {{pagoBf.horaPago|date('H:i:s')}}</td>
+                                    </tr>
+                                </table>
+                            {% else %}
+                                <div class="alert alert-info" role="alert">
+                                    <i class="fa fa-fw fa-info-circle"></i> No se realizó el cobro
+                                </div>
+                            {% endif %}
 
-                    </tr>
-            
-                    <tr  v-show="isShowing">
-                      <td colspan="1">
-                        <label for="genero">Extranjero: </label>
-                        <select name="arrGrado" id="idgrado" v-model="DBNextLevel.extranjero" class="custom-select form-control" v-on:change="setParalelo();">  
-                            <option value="">Seleccionar...</option>
-                            <option value="0">NO</option>
-                            <option value="1">SI</option>
-                          </select>
-                      </td>                     
-                      <td colspan="3"><label for="genero">Adjuntar Documumento: LIBRETA ESCOLAR/DOCUMENTO DE APROBACIÓN, para la inscripción Extranjera </label>                      
-                      <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId"></td>
-                       
-                    </tr>
-               
-                    <tr><td><button @click="doUpdate" type="button" class="btn btn-primary">Actualizar</button></td></tr>
-                  </table>
+                            {% if observadoBf|length > 0 %}
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="fa fa-fw fa-info-circle"></i> La/El estudiante cuenta con observaciones
+                                </div>
+                                <h5 class="text-info">Observación</h5>
+                                <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                                    <tr>
+                                        <th>Código RUDE</th><td style="color:#0086DD">{{observadoBf.codigoRude}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nombre(s) y Apellido(s)</th><td><strong>{{observadoBf.nombre}} {{observadoBf.paterno}} {{observadoBf.materno}}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Carnet de Identidad</th><td>{{observadoBf.carnetIdentidad}}{% if observadoBf.complemento %} - {{observadoBf.complemento}}{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fecha de Nacimiento</th><td>{{observadoBf.fechaNacimiento|date('d-m-Y')}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Observación</th><td>{{observadoBf.obs}}</td>
+                                    </tr>
+                                </table>
+                            {% else %}
+                                <div class="alert alert-info" role="alert">
+                                    <i class="fa fa-fw fa-info-circle"></i> La/El estudiante no cuenta con observaciones
+                                </div>
+                            {% endif %}
+#}                            
+                        </div>
+                    </div>
+                </div>                  
 
              
 
@@ -134,7 +173,7 @@
                
                       <div class="form-row">
                         <div class="form-group col-md-6">
-                          <input type="text" v-model="student.codigoRude" class="form-control jupper" maxlength="17" v-on:keypress="alfanumerico" placeholder="COD. RUDE">
+                          <input type="text" v-model="student.codigoRude" class="form-control jupper" maxlength="18" v-on:keypress="alfanumerico" placeholder="COD. RUDE">
                         </div>
                       </div>
                       
@@ -216,26 +255,18 @@
                                   <td class=" ">${studentHistory.paralelo}</td>
                                   <td class=" ">${studentHistory.turno}</td>
                                   <td class=" ">${studentHistory.estadoMatricula}</td>
+                                  <td class=" ">
+                                    <div class="col-sm" style=" text-align: right; ">
+                                    <a class="btn btn-info" data-toggle="modal" href='#modalEstudianteTwo' @click="clearIniPriVars"> <i class="fa fa-eye"></i>INFO BJP </a>
+                                    </div>
+                                  </td>
                                 </tr>
                                 
                         </tbody>
                     </table> 
                     </small>
 
-                    <div v-if="swObservation">
-                       <!-- v-on:click="showhistory(oldStudent.rude)" -->
-                       {#
-                        <a class="btn btn-warning" data-toggle="modal" href='#modalEstudianteTwo' > <i class="fa fa-eye"></i> ${ messageObservaation } </a>/
-                        #}
-                    </div>
-                    <div v-else >
-                      {#<div class="alert alert-success" role="alert">${ messageObservaation } </div>  #}                   
 
-                          <div class="col-sm" v-if='swUpdateLevelGradoIniPri' style=" text-align: right; ">
-                            <a class="btn btn-info" data-toggle="modal" href='#modalEstudianteTwo' @click="clearIniPriVars"> <i class="fa fa-eye"></i>Modificar Grado </a>
-                          </div>
-                    
-                    </div>
                   </div>                    
                 </div>
             </div>
@@ -277,9 +308,10 @@
               DBhistory:{},
               objStudent:{},
               DBParalelos:{},
+              DBApoderados:{},
               currenteInscription:{},
               messageObservaation:'',
-              student:{codigoRude:'{{form.llave}}' },
+              student:{codigoRude:''},
               buscando:false,
               isShowing:false,
               swObservation:false,
@@ -327,15 +359,16 @@
                 this.swObservation=false;
                 this.messageObservaation='';
                 this.currenteInscription={};
-                this.DBParalelos={};
+                this.DBApoderados={};
                 this.DBNextLevel={};
                 this.DBLevel={};
                 this.DBGrado={};
-                axios.post(Routing.generate('updateSudentLevel_look_student_data', this.student))
+                
+                axios.post(Routing.generate('requestbjp_look_student_data', this.student))
                 .then(response => {
                   
                   if (response.status == 200) {
-                    this.DBParalelos = response.data.arrParalelos;
+                    this.DBApoderados = response.data.arrApoderado;
                     this.DBNextLevel = response.data.arrNextLevel;
                     this.DBhistory = response.data.dataInscriptionR;
                     this.objStudent = response.data.arrStudentExist;
@@ -421,8 +454,15 @@
             
               },
               doUpdate: function(){
-                  
-                    
+
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                        'Adjuntar Documento',
+                        'Debe adjuntar el DOCUMENTO SOLICITADO para ralizar la modificación, puede ser un archivo de imagen o PDF, no mayor a 2MB',
+                        'warning'
+                        );
+                        return;
+                    }                
 
                     if(typeof this.DBNextLevel.paraleloId ==='undefined' ){
                         Swal.fire(
@@ -442,25 +482,7 @@
                         return;
                     }
 
-                    if(typeof this.DBNextLevel.extranjero ==='undefined' ){
-                        Swal.fire(
-                        'Campo Extranjero es requerido',
-                        'Debe seleccionar un Extranjero',
-                        'warning'
-                        );
-                        return;
-                    }
-                    
-                    if(this.DBNextLevel.extranjero == 1){
-                      if (typeof this.informe != 'object') {
-                          Swal.fire(
-                          'Adjuntar Documento',
-                          'Debe adjuntar el DOCUMENTO SOLICITADO para ralizar la modificación, puede ser un archivo de imagen o PDF, no mayor a 2MB',
-                          'warning'
-                          );
-                          return;
-                      }
-                    }               
+
 
                     Swal.fire({
                         title: 'Realizar Actualización?',

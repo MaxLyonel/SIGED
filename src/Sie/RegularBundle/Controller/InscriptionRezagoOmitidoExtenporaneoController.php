@@ -70,7 +70,9 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         61710092,
         61710093,
         80730370,
-        81981667
+        81981667,
+        61710097,
+        61710098
       );
 
       if( in_array($this->session->get('ie_id'), $arrWeenhayec) or $this->session->get('roluser')==7){

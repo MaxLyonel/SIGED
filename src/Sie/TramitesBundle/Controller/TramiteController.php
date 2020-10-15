@@ -2215,11 +2215,10 @@ class TramiteController extends Controller {
              ) as v
            where
            case
-            when (gestion_tipo_id::double precision = date_part('year',current_date)::double precision)
-            then (b1 is null or b1 = 0)
-            when (((gestion_tipo_id > 2013) or (gestion_tipo_id > 2013 and grado_tipo_id = 1)) and gestion_tipo_id < date_part('year',current_date))
+            when (gestion_tipo_id::double precision = 2020::double precision)
+            then false -- (t1 is null or t1 = 0)
+            when (((gestion_tipo_id > 2013) or (gestion_tipo_id > 2013 and grado_tipo_id = 1)) and gestion_tipo_id < 2020)
             then (b1 is null or b1 = 0 or b2 is null or b2 = 0 or b3 is null or b3 = 0 or b4 is null or b4 = 0 or b5 is null or b5 = 0)
-
             else (t1 is null or t1 = 0 or t2 is null or t2 = 0 or t3 is null or t3 = 0 or t4 is null or t4 = 0)
           end
           group by

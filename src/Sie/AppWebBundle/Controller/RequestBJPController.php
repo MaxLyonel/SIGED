@@ -17,8 +17,7 @@ use Sie\AppWebBundle\Entity\EstudianteDocumento;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionExtranjero; 
 use Symfony\Component\Validator\Constraints\DateTime;
 
-class UpdateSudentLevelController extends Controller{
-    
+class RequestBJPController extends Controller{
 
     public $session;
     public $currentyear;
@@ -36,32 +35,22 @@ class UpdateSudentLevelController extends Controller{
         $this->userlogged = $this->session->get('userId');
         $this->aCursos = $this->fillCursos();
         
-    }
+    }    
+
     // index method by krlos
     public function indexAction(Request $request){
-        $form = is_array(($request->get('form')))?$request->get('form'):false;
-        if(!$form){
-            $form = array(
-                'idDetalle'=>'',
-                'llave'=>'',
-                'gestion'=>'',
-                'institucioneducativa'=>'',
-                'optionTodo'=>'',
-            );
-        }
      
         //validation if the user is logged
         if (!isset($this->userlogged)) {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        return $this->render($this->session->get('pathSystem') .':UpdateSudentLevel:index.html.twig', array(
-                'form' => $form
+        return $this->render('SieAppWebBundle:RequestBJP:index.html.twig', array(
            
         ));
-    }
+    }    
 
-    public function lookStudentDataAction(Request $request){
+   public function lookStudentDataAction(Request $request){
 
         // get the send values
         $codigoRude =  mb_strtoupper($request->get('codigoRude'),'utf-8');
@@ -86,13 +75,21 @@ class UpdateSudentLevelController extends Controller{
         $messageObservaation = '';
         
 
+        $arrApoderado = array();
+      
         $arrayCondition = array('codigoRude'=>$codigoRude);
         // get the students info
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
+        
         // continue if exists
         if(sizeof($objStudent)>0){
             $objStudent = $objStudent[0];
-            // the student exist
+            //get history inscription
+            $inscriptions =$this->get('funciones')->getCurrentInscriptionRegular($codigoRude, $this->currentyear);
+            
+            if(sizeof($inscriptions)>0){
+
+                  // the student exist
              $arrStudentExist = array(
                 'paterno'=>$objStudent->getPaterno(),
                 'materno'=>$objStudent->getMaterno(),
@@ -102,133 +99,46 @@ class UpdateSudentLevelController extends Controller{
                 'fecNac'=>$objStudent->getFechaNacimiento()->format('d-m-Y') ,
                 'rude'=>$objStudent->getCodigoRude() ,
                 'idStudent'=>$objStudent->getId() ,
+                'genero'=> $objStudent->getGeneroTipo()->getGenero() ,
+                'matricula'=>$inscriptions[0]['estadoMatricula'] ,
             );
 
-            $inscriptions =$this->get('funciones')->getAllInscriptionRegular($codigoRude);
-             reset($inscriptions);
+                $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscriptions[0]['studenInscriptionId']);
+                $estudiante  = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($inscripcion->getEstudiante());
+                $pagoBf      = $em->getRepository('SieAppWebBundle:BfEstudiantePago')->findOneBy(array('codigoRude' => $estudiante->getCodigoRude()));
+                //$observadoBf = $em->getRepository('SieAppWebBundle:BfObservadosBono')->findOneBy(array('idins' => $inscriptions[0]['studenInscriptionId']));
+                $apoderados  = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $inscripcion, 'esValidado' => 1));
+
+                if(sizeof($apoderados)>0){
+                    foreach ($apoderados as $value) {
+                        # code...
+                        $arrApoderado[] = array(
+                                            'nombre'=>$value->getPersona()->getNombre(),
+                                            'paterno'=>$value->getPersona()->getPaterno(),
+                                            'materno'=>$value->getPersona()->getMaterno(),
+                                            'carnet'=>$value->getPersona()->getCarnet(),
+                                            'complemento'=>$value->getPersona()->getComplemento(),
+                                            'fecNac'=>$value->getPersona()->getFechaNacimiento()->format('d-m-Y'),
+                                            'apoderadoTipo'=>$value->getApoderadoTipo()->getApoderado(),
+                                        );
+                    }
+                }
+
+
+            }else{
+                //error no history
+                // the studnet no exist
+                $code = 200;
+                $message = "Estudiante No existeo no cuenta con Historial";
+                $status = "";
+                $existStudentData = false;
+                $swObservation = false;                
+            }
+
+
             $sw = true;
            
-            //look for the next level inscrption if it has
-            while($sw &&  ($inscription = current($inscriptions))){
-                //get current inscripción estadoMatriculaId
-                // if($inscription['gestion']==$this->currentyear && $inscription['estadoMatriculaId']==4){
-                //     $arrCurrenteInscription = $inscription;
-                // }                
-                if($inscription['estadoMatriculaId']=='5' || $inscription['estadoMatriculaId']=='56' || $inscription['estadoMatriculaId']=='57' || $inscription['estadoMatriculaId']=='58' ){
-                  $arrLastInscription = $inscription;
-                  $sw=false;
-                }
-
-              next($inscriptions);
-            }
-
-             $arrayConditionInscription = array(
-                    'codigoRude'=>$codigoRude,
-                    'matriculaId'=>4,
-                    'gestion'=>$this->currentyear,
-                );
-            $arrCurrenteInscription = $this->get('funciones')->getCurrentInscriptionByRudeAndGestionAndMatricula($arrayConditionInscription);
-            
-            if(sizeof($arrCurrenteInscription)>0){
-                $arrCurrenteInscription = $arrCurrenteInscription[0];
-                $arrNextLevel['studenInscriptionId']=$arrCurrenteInscription['studenInscriptionId'];
-                $arrNextLevel['sie']=$arrCurrenteInscription['sie'];
-                $arrNextLevel['gestion']=$arrCurrenteInscription['gestion'];
-                $arrNextLevel['codigoRude']=$codigoRude;
-                $arrNextLevel['oldDataInscription']=json_encode($arrCurrenteInscription) ;
-
-            }else{
-                $arrCurrenteInscription = array();
-            }
-            // thee student has history_?
-            if(!$sw){
-                $arrayConditionInscription = array(
-                    'codigoRude'=>$codigoRude,
-                    'matriculaId'=>4,
-                    'gestion'=>$this->currentyear,
-                );
-                // $arrCurrenteInscription = $this->get('funciones')->getCurrentInscriptionByRudeAndGestionAndMatricula($arrayConditionInscription);
-
-                if(sizeof($arrCurrenteInscription)>0){
-                   
-                    // $arrCurrenteInscription = $arrCurrenteInscription[0];
-
-                    $arrNextLevelNow = $this->getInfoInscriptionStudent($arrLastInscription['nivelId'].$arrLastInscription['cicloId'].$arrLastInscription['gradoId'],$arrLastInscription['estadoMatriculaId']);
-                    $arrNextLevel['nivelId'] = $arrNextLevelNow['nivelId'];
-                    $arrNextLevel['cicloId'] = $arrNextLevelNow['cicloId'];
-                    $arrNextLevel['gradoId'] = $arrNextLevelNow['gradoId'];
-
-                    //if( $arrCurrenteInscription['nivelId']==$arrNextLevel['nivelId'] && $arrCurrenteInscription['cicloId']==$arrNextLevel['cicloId'] && $arrCurrenteInscription['gradoId']==$arrNextLevel['gradoId']){
-                    if(false){
-                        $swObservation = false;
-                        $messageObservaation = 'No presenta Observación';
-                        
-                    }else{
-                        $swObservation = true;
-                        $swUpdateLevelGradoIniPri = true; 
-                        $messageObservaation = 'Presenta Observación';
-                        
-                        $objInfoCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findBy(array(
-                            'nivelTipo'=>$arrNextLevel['nivelId'],
-                            'cicloTipo'=>$arrNextLevel['cicloId'],
-                            'gradoTipo'=>$arrNextLevel['gradoId'],
-                            'institucioneducativa'=>$arrCurrenteInscription['sie'],
-                            'gestionTipo'=>$this->currentyear,
-                        ));
-                        $arrParalelos = array();
-                        foreach ($objInfoCurso as  $value) {
-                            $arrParalelos[] = array('id'=>$value->getParaleloTipo()->getId(),'paralelo'=>$em->getRepository('SieAppWebBundle:ParaleloTipo')->find($value->getParaleloTipo()->getId())->getParalelo() );
-                        }
-
-                        $arrNextLevel['nivel']=$em->getRepository('SieAppWebBundle:NivelTipo')->find($arrNextLevel['nivelId'])->getNivel() ;
-                        $arrNextLevel['grado']=$em->getRepository('SieAppWebBundle:GradoTipo')->find($arrNextLevel['gradoId'])->getGrado() ;
-
-                        //the new add by krlos
-                        $levelAllow = array(11,12,13);
-                        $levelAndGrado = $arrCurrenteInscription['nivelId'];
-                        if( in_array($levelAndGrado, $levelAllow) ){
-                            // dump($arrNextLevel);die;
-                            $swUpdateLevelGradoIniPri = true;  
-                            $arrLevel = $this->getInfoUe($arrCurrenteInscription['sie']);
-                            // $arrNextLevel['nivel']=$em->getRepository('SieAppWebBundle:NivelTipo')->find(1)->getNivel() ;
-                            // $arrNextLevel['grado']=$em->getRepository('SieAppWebBundle:GradoTipo')->find(2)->getGrado() ;  
-                        }
-                        //dump($arrLevel);die;
-                        $swObservation = false;
-                        $messageObservaation = 'No presenta Observación';
-                        $existStudentData = true;                        
-
-                        
-                    }
-
-                    $existStudentData = true;                                    
-
-                }else{
-
-                    $swObservation = false;
-                    $messageObservaation = 'No presenta Observación';
-                    $existStudentData = true; 
-
-                }
-
-            }else{
-                $levelAllow = array(11,12,13);
-                $levelAndGrado = $arrCurrenteInscription['nivelId'];
-                if( in_array($levelAndGrado, $levelAllow) ){                
-                /*$levelAllow = array(111,112,121);
-                $levelAndGrado = $arrCurrenteInscription['nivelId'].$arrCurrenteInscription['gradoId'];
-                if( in_array($levelAndGrado, $levelAllow) ){*/
-                    // dump($arrNextLevel);die;
-                    $swUpdateLevelGradoIniPri = true;  
-                    $arrLevel = $this->getInfoUe($arrCurrenteInscription['sie']);
-                    // $arrNextLevel['nivel']=$em->getRepository('SieAppWebBundle:NivelTipo')->find(1)->getNivel() ;
-                    // $arrNextLevel['grado']=$em->getRepository('SieAppWebBundle:GradoTipo')->find(2)->getGrado() ;  
-                }
-                $swObservation = false;
-                $messageObservaation = 'No presenta Observación';
-                $existStudentData = true; 
-
-            }
+            $existStudentData = true; 
                 
         }else{
             // the studnet no exist
@@ -243,15 +153,15 @@ class UpdateSudentLevelController extends Controller{
         'status'          => $status,
         'code'            => $code,
         'message'         => $message,
-        'arrNextLevel' => $arrNextLevel,
-        'arrParalelos' => $arrParalelos,
+        'arrApoderado' => $arrApoderado,
+        //'arrParalelos' => $arrParalelos,
         'swObservation' => $swObservation,
         'dataInscriptionR' => $inscriptions,    
         'arrStudentExist' => $arrStudentExist,
         'existStudentData' => $existStudentData,        
         'messageObservaation' => $messageObservaation,
         'arrCurrenteInscription' => $arrCurrenteInscription,
-        'swUpdateLevelGradoIniPri' => $swUpdateLevelGradoIniPri,        
+        //'swUpdateLevelGradoIniPri' => true,        
         'arrLevel' => $arrLevel,        
       );
       
@@ -407,7 +317,6 @@ class UpdateSudentLevelController extends Controller{
         $sie = $arrData['sie'];
         $gestion = $arrData['gestion'];
         $studenInscriptionId = $arrData['studenInscriptionId'];
-        $extranjero = $arrData['extranjero'];
 
 
         // condition to find the correct level to fix the observation
@@ -425,30 +334,7 @@ class UpdateSudentLevelController extends Controller{
         
             $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studenInscriptionId);
             $objStudentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($arrayCondition));
-            if($extranjero == 1){
-                $objStudentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(19));    
-            }
             $em->persist($objStudentInscription);
-            
-            $objValidacionProceso = $em->createQueryBuilder()
-                                ->select('v')
-                                ->from('SieAppWebBundle:ValidacionProceso','v')
-                                ->where('v.esActivo = :active')
-                                ->andWhere('v.validacionReglaTipo in (12, 15) ')
-                                ->andwhere('v.llave = :codigoRude')
-                                ->setParameter('codigoRude', $codigoRude)
-                                ->setParameter('active', false)
-                                ->getQuery()
-                                ->getResult();
-            
-            if(sizeof($objValidacionProceso)>0){
-                foreach ($objValidacionProceso as $value) {
-                    $objValidacionProcesoUpdate = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($value->getId());
-                    $objValidacionProcesoUpdate->setEsActivo('t');
-                    $em->persist($objValidacionProcesoUpdate);
-                }              
-            }
-            
             $em->flush();
 
          // save the file in case if exists
@@ -752,6 +638,6 @@ class UpdateSudentLevelController extends Controller{
       $response->setData($arrResponse);
 
       return $response;
-    }              
+    }                      
 
 }
