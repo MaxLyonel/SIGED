@@ -442,9 +442,11 @@ class UpdateSudentLevelController extends Controller{
                                 ->getResult();
             
             if(sizeof($objValidacionProceso)>0){
-                $objValidacionProcesoUpdate = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($objValidacionProceso[0]->getId());
-                $objValidacionProcesoUpdate->setEsActivo('t');
-                $em->persist($objValidacionProcesoUpdate);
+                foreach ($objValidacionProceso as $value) {
+                    $objValidacionProcesoUpdate = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($value->getId());
+                    $objValidacionProcesoUpdate->setEsActivo('t');
+                    $em->persist($objValidacionProcesoUpdate);
+                }              
             }
             
             $em->flush();
