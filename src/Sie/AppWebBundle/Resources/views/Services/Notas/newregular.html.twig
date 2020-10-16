@@ -164,7 +164,7 @@
                         {% for n in a.notas %}
                             {% if (notas.estadoMatricula in notas.estadosPermitidos) and vista != 0 %}
                             {# {% if ((notas.estadoMatricula in notas.estadosPermitidos) and vista != 0) or ((notas.estadoMatricula in [55]) and notas.gestion == 2019 and notas.operativo == 4 and notas.nivel == 13 and n.nota == '') %} #}
-                                {% if (n.idNotaTipo != 5 and ((notas.nivel in [1,11,403] and n.nota == "") or (notas.nivel not in [1,11,403] and n.nota == 0))) or (vista == 2 and n.idNotaTipo != 5) or (n.idNotaTipo != 5 and n.idNotaTipo == notas.operativo ) %} {# and notas.gestion == notas.gestionActual #}
+                                {% if (n.idNotaTipo != 5 and ((notas.nivel in [1,11,403] and n.nota == "") or (notas.nivel not in [1,11,403] and n.nota == 0))) or (vista == 2 and n.idNotaTipo != 5) or (n.idNotaTipo != 5 and n.idNotaTipo == notas.operativo ) or ( n.idNotaTipo == 6 and notas.operativoTrue == 1) %} {# and notas.gestion == notas.gestionActual #}
                                     <td data-title="{{n.idNotaTipo}} Trimestre">
                                         <input type="hidden" name="idEstudianteNota[]" value="{{n.idEstudianteNota}}">
                                         <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
@@ -231,7 +231,7 @@
         {% else %}
             <div class="col-lg-4">
         {% endif %}
-{#or (notas.gestion >= 2019 and (notas.nivel == 11 or (notas.nivel == 12 and notas.grado == 1)) ) #}
+        {#or (notas.gestion >= 2019 and (notas.nivel == 11 or (notas.nivel == 12 and notas.grado == 1)) ) #}
         {% if notas.gestion < 2019 %}
             <table class="table" >
                 {% if notas.cualitativas|length > 0 %}
