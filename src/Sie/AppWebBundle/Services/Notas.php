@@ -180,7 +180,7 @@ class Notas{
                             $fin = 0;
                             break;
                         case 1:
-                            $inicio = 8;
+                            $inicio = 9;
                             $fin = 9;
                             break;
                         case 4:
