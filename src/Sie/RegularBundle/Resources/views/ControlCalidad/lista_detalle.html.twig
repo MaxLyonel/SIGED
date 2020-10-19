@@ -312,11 +312,11 @@
                                             <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del promedio actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
                                         </form>
                                         <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignarMaestro({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
-                                    {% elseif regla.id == 54 and 1 > 1 %}    
+                                    {% elseif regla.id == 54 %}    
                                         <button type="submit" class="btn btn-link" onclick="ingresarSolucionValidacionSegip({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
-                                    {% elseif regla.id == 55 and 1 > 1 %}    
+                                    {% elseif regla.id == 55 %}    
                                         <button type="submit" class="btn btn-link" onclick="ingresarSolucionFuenteFinanciamiento({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
-                                    {% elseif regla.id == 57 and 1 > 1 %}    
+                                    {% elseif regla.id == 57 %}    
                                         <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignacion({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
                                     {% endif %}
                                     </td>
