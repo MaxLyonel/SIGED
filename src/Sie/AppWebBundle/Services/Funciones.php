@@ -91,29 +91,55 @@ class Funciones {
                 ->setParameter('gestion',$gestion)
                 ->getQuery()
                 ->getResult();
+        if($gestion < 2020 ){
+            $operativo = 5;
+            if(!$objRegistroConsolidado){
+                // Si no existe es operativo inicio de gestion
+                $operativo = 0;
+            }else{
+                //dump($objRegistroConsolidado);die;
+                if($objRegistroConsolidado[0]['bim1'] == 0 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
+                    $operativo = 1; // Primer Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
+                    $operativo = 2; // segundo Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
+                    $operativo = 3; // tercero Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] == 0){
+                    $operativo = 4; // cuarto Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] >= 1){
+                    $operativo = 5; // Fin de gestion o cerrado
+                }
+            }            
 
-        $operativo = 5;
-        if(!$objRegistroConsolidado){
-            // Si no existe es operativo inicio de gestion
-            $operativo = 0;
         }else{
-            //dump($objRegistroConsolidado);die;
-            if($objRegistroConsolidado[0]['bim1'] == 0 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
-                $operativo = 1; // Primer Bimestre
-            }
-            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
-                $operativo = 2; // segundo Bimestre
-            }
-            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] == 0 and $objRegistroConsolidado[0]['bim4'] == 0){
-                $operativo = 3; // tercero Bimestre
-            }
-            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] == 0){
-                $operativo = 4; // cuarto Bimestre
-            }
-            if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1 and $objRegistroConsolidado[0]['bim4'] >= 1){
-                $operativo = 5; // Fin de gestion o cerrado
-            }
+            $operativo = 4;
+            if(!$objRegistroConsolidado){
+                // Si no existe es operativo inicio de gestion
+                $operativo = 0;
+            }else{
+                //dump($objRegistroConsolidado);die;
+                if($objRegistroConsolidado[0]['bim1'] == 0 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0){
+                    $operativo = 1; // Primer Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] == 0 and $objRegistroConsolidado[0]['bim3'] == 0){
+                    $operativo = 2; // segundo Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] == 0){
+                    $operativo = 3; // tercero Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] >= 1 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1){
+                    $operativo = 4; // cuarto Bimestre
+                }
+                if($objRegistroConsolidado[0]['bim1'] == 0 and $objRegistroConsolidado[0]['bim2'] >= 1 and $objRegistroConsolidado[0]['bim3'] >= 1){
+                    $operativo = 1; // Fin de gestion o cerrado
+                }
+            }  
         }
+
 
 
         if( in_array($this->session->get('roluser'), array(7,8,10)) ){
