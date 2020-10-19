@@ -235,7 +235,7 @@
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
                                             </form>
                                             <div class="justificacion">
-                                                <button type="submit" class="btn btn-link" onclick="justificarSinCarnet({{detalle.id}})"><i class="fa fa-edit"></i> Omitir</button>
+                                                <button type="submit" class="btn btn-link" onclick="justificarSinCarnet({{detalle.id}})"><i class="fa fa-edit"></i> Omitir C.I.</button>
                                             </div>
                                         {% endif %}
                                         {% if regla.id == 25 %}
@@ -287,6 +287,9 @@
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
                                             </form>
+                                            <div class="justificacion">
+                                                <button type="submit" class="btn btn-link" onclick="justificarSinCarnet({{detalle.id}})"><i class="fa fa-edit"></i> Omitir C.I.</button>
+                                            </div>
                                         {% endif %}
                                     {% endif %}
                                     {% if regla.id == 9 %}

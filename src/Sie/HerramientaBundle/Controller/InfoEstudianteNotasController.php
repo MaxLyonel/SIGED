@@ -130,7 +130,63 @@ class InfoEstudianteNotasController extends Controller {
             ));
         }else{
             $notas = $this->get('notas')->regular($idInscripcion,0);
-            return $this->render('SieHerramientaBundle:InfoEstudianteNotas:trimestre.html.twig',array(
+            //dump($notas);die;
+            if($gestion== 2020){
+                $tipoUE = $this->get('funciones')->getTipoUE($aInfoUe['requestUser']['sie'],$aInfoUe['requestUser']['gestion']);
+                $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);              
+                if($tipoUE){
+                    // PAra ues modulares secundaria
+                    if($tipoUE['id'] == 3 and $notas['nivel'] == 13){
+                        $notas = $this->get('notas')->regular($idInscripcion,4);
+                        $plantilla = 'modular';
+                        $vista = 1;
+                    }else{
+                        // Verificamos si el tipo es 1:plena, 2:tecnica tecnologica, 3:modular, 5: humanistica 7:transformacion (las que hayan hecho una solicitud pàra trabajar gestion actual)
+                        if($tipoUE['id'] == 1 or $tipoUE['id'] == 2 or $tipoUE['id'] == 3 or $tipoUE['id'] == 5 or $tipoUE['id'] == 7){
+                            $plantilla = 'newregular';
+                            $vista = 1;
+                        }else{
+                            // Regularizacion de gestiones pasadas 
+                            if($notas['gestion'] < $notas['gestionActual']){
+                                $plantilla = 'newregular';
+                                $vista = 1;
+                            }else{
+                                $plantilla = 'newregular';
+                                $vista = 0;
+                            }
+                        }
+                    }
+                }else{
+                    $plantilla = 'newregular';
+                    $vista = 0;
+                }
+                $swspeciality  = false;
+                $objLevelModular    = false;
+                foreach ($notas['cuantitativas'] as $key => $value) {
+                  if($value['idAsignatura']==1039){
+                    $swspeciality    = true;
+                    $objLevelModular = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
+                      'institucioneducativaId'=>$sie,
+                      'gestionTipoId'=>$gestion
+                    ));
+                  }
+
+                }
+                               
+                return $this->render('SieHerramientaBundle:InfoEstudianteNotas:newtrimestre.html.twig',array(
+                    'notas'=>$notas,
+                    'swspeciality'=>$swspeciality,
+                    'grado'=>$grado,
+                    'objLevelModular'=>$objLevelModular,
+                    'inscripcion'=>$inscripcion,
+                    'vista'=>$vista,
+                    'plantilla'=>$plantilla,
+                    'infoUe'=>$infoUe,
+                    'infoStudent'=>$infoStudent
+                ));   
+
+            }else{
+                return $this->render('SieHerramientaBundle:InfoEstudianteNotas:trimestre.html.twig',array(
                 'notas'=>$notas,
                 'grado'=>$grado,
                 'inscripcion'=>$inscripcion,
@@ -139,6 +195,9 @@ class InfoEstudianteNotasController extends Controller {
                 'infoUe'=>$infoUe,
                 'infoStudent'=>$infoStudent
             ));
+
+            }
+
             /*
             $data = $this->getNotas($infoUe,$infoStudent);
             return $this->render('SieHerramientaBundle:InfoEstudianteNotas:notasTrimestre.html.twig',$data);*/
