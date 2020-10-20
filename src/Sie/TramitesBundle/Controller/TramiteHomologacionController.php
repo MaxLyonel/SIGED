@@ -101,9 +101,9 @@ class TramiteHomologacionController extends Controller {
 
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('tramite_homologacion_diploma_humanistico_estudiante_busca'))                
-                ->add('paterno', 'text', array('label' => 'Paterno', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,45}', 'style' => 'text-transform:uppercase')))
-                ->add('materno', 'text', array('label' => 'Materno', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,45}', 'style' => 'text-transform:uppercase')))
-                ->add('nombre', 'text', array('label' => 'Nombre', 'mapped' => false, 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,40}', 'style' => 'text-transform:uppercase')))
+                ->add('paterno', 'text', array('label' => 'Paterno', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase')))
+                ->add('materno', 'text', array('label' => 'Materno', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase')))
+                ->add('nombre', 'text', array('label' => 'Nombre', 'mapped' => false, 'required' => true, 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase')))
                 ->add('buscar', 'button', array('label' => 'Buscar'))
                 ->getForm();
         return $form;
@@ -348,9 +348,9 @@ class TramiteHomologacionController extends Controller {
                         ->setParameter('id', '3');
             }, 'property' => 'genero'
                 ))
-                ->add('paterno', 'text', array('label' => 'Paterno', 'data' => $form['paterno'], 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,45}', 'style' => 'text-transform:uppercase')))
-                ->add('materno', 'text', array('label' => 'Materno', 'data' => $form['materno'], 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,45}', 'style' => 'text-transform:uppercase')))
-                ->add('nombre', 'text', array('label' => 'Nombre', 'data' => $form['nombre'], 'mapped' => false, 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,40}', 'style' => 'text-transform:uppercase')))
+                ->add('paterno', 'text', array('label' => 'Paterno', 'data' => $form['paterno'], 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control',  'style' => 'text-transform:uppercase')))
+                ->add('materno', 'text', array('label' => 'Materno', 'data' => $form['materno'], 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control',  'style' => 'text-transform:uppercase')))
+                ->add('nombre', 'text', array('label' => 'Nombre', 'data' => $form['nombre'], 'mapped' => false, 'required' => true, 'attr' => array('class' => 'form-control',  'style' => 'text-transform:uppercase')))
                 //->add('fnacimiento', 'text', array('mapped' => false, 'required' => true, 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
                 ->add('fnacimiento', 'text', array('mapped' => false, 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control', 'placeholder'=>'DD-MM-YYYY', 'title'=>'DD-MM-YYYY', 'required'=>true, 'pattern'=>'[0-9]{2}-[0-9]{2}-[0-9]{4}')))
                 ->add('pais', 'entity', array('label' => 'Pais', 'attr' => array('class' => 'form-control'),
@@ -410,7 +410,7 @@ class TramiteHomologacionController extends Controller {
                     ->add('gestion', 'entity', array('data' => $form['gestion'], 'attr' => array('class' => 'form-control'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                             'query_builder' => function(EntityRepository $er) {
                                 return $er->createQueryBuilder('gt')
-                                        ->where('gt.id > 2008')
+                                        ->where('gt.id > 1')
                                         ->orderBy('gt.id', 'DESC');
                             },
                         ));
@@ -893,7 +893,7 @@ class TramiteHomologacionController extends Controller {
                 inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                 where case :ci::varchar when '' then e.pasaporte = :pasaporte when '0' then e.pasaporte = :pasaporte else e.carnet_identidad = :ci::varchar and e.complemento = :complemento::varchar end and iec.gestion_tipo_id = :gestion::int and iec.nivel_tipo_id = :nivel::int and iec.grado_tipo_id = :grado::int     
-                and ei.estadomatricula_tipo_id in (4,5,55,9,10,11)
+                and ei.estadomatricula_tipo_id in (4,5,55,11)
                 ");
         $query->bindValue(':ci', $ci);
         $query->bindValue(':pasaporte', $pasaporte);

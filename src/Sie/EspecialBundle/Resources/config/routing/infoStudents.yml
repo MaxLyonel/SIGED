@@ -37,3 +37,27 @@ herramienta_info_estudiante_certificado_discapacidad:
     defaults: { _controller: "SieEspecialBundle:InfoStudents:getCertificadoDiscapacidad" }
     options:
         expose: true
+
+info_students_open_newinscription:
+    path:     /sie/newopeninscription/
+    defaults: { _controller: "SieEspecialBundle:InfoStudents:openNewInscription"}
+    options:
+        expose: true   
+
+info_students_open_checksegipstudent:
+    path:     /sie/checksegipstudent/
+    defaults: { _controller: "SieEspecialBundle:InfoStudents:checksegipstudent"}
+    options:
+        expose: true  
+
+info_students_doInscription:
+    path:     /sie/doInscription/
+    defaults: { _controller: "SieEspecialBundle:InfoStudents:doInscription"}
+    options:
+        expose: true
+        
+info_students_goOldInscription:
+    path:     /sie/goOldInscription/
+    defaults: { _controller: "SieEspecialBundle:InfoStudents:goOldInscription"}
+    options:
+        expose: true

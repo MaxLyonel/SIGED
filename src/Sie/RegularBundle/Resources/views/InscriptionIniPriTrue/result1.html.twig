@@ -1,4 +1,4 @@
-{% extends 'layoutRegular.html.twig' %}
+{% extends 'layoutHerramienta.html.twig' %}
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
@@ -12,22 +12,20 @@
     </style>
 
  <!-- Start page header -->
- <div class="row">
-        <div class="col-lg-12">
-            <div class="page-title">
-                <h1>Inscripción
-                    <small></small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li><i class="fa fa-dashboard"></i>  <a href="{{path('inscription_ini_pri_rue_index')}}">Buscar</a></li>
-                    <li class="active"> Resultado</li>
+    <div class="header-content">
+        <h2><i class="fa fa-list-alt"></i> Inscripción  <span> Resultado</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('inscription_ini_pri_rue_index')}}">Inscripción - Resultado</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
 
-                </ol>
-            </div>
-        </div>
-        <!-- /.col-lg-12 -->
-    </div>
-
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
     <!--/ End page header -->
 
 
@@ -277,42 +275,80 @@
         $(function(){
         $("#form_dateRequest").inputmask({ "alias": "dd-mm-yyyy", "placeholder": "dd-mm-aaaa" });
         });
+            function institucionEducativa(id) {
+
+                if (id.length > 7) {
+                    //get the nivel and grado to do the search
+                    nivel = $('#form_nivelId').val();
+                    grado = $('#form_gradoId').val();
+                    lastue = $('#form_lastue').val();
+                    gestionselected = $('#form_gestionIns').val();
+
+                    //call the ajax function by krlos
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('inscription_ini_pri_rue_findIE', {'id': id, 'nivel': nivel, 'grado': grado, 'lastue': lastue}),
+                        beforeSend: function () {
+                            //$("#departamento").empty();
+                            //$("#div-load").parent().append('<div class="loading"></div>');
+                        },
+                        success: function (data) {
+                            $("#form_institucionEducativaName").val(data.nombre);
+                            //$(".loading").remove();
+                            $("#form_paralelo").empty();
+                            $("#form_paralelo").append('<option value="">Seleccionar</option>');
+                            $.each(data.paralelo, function (i, value) {
+                                $("#form_paralelo").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            //$(".loading").remove();
+                        }
+                    });
+                } else {
+
+                    $("#form_institucionEducativaName").val('');
+                    //$(".loading").remove();
+                    $("#form_paralelo").empty();
+                    $("#form_turno").empty();
+
+                }
+
+            }        
         //call the ajax function by krlos
-        function institucionEducativa(id) {
-            gestionselected = $('#form_gestionIns').val();
+        // function institucionEducativa(id) {
+        //     gestionselected = $('#form_gestionIns').val();
 
-            if (id.length > 7) {
+        //     if (id.length > 7) {
 
-                $.ajax({
-                    type: 'get',
-                    url: Routing.generate('inscription_gestiones_pasadas_findIE', {'id': id, 'gestionselected': gestionselected}),
-                    beforeSend: function () {
-                    },
-                    success: function (data) {
-                        $("#form_institucionEducativaName").val(data.nombre);
+        //         $.ajax({
+        //             type: 'get',
+        //             url: Routing.generate('inscription_gestiones_pasadas_findIE', {'id': id, 'gestionselected': gestionselected}),
+        //             beforeSend: function () {
+        //             },
+        //             success: function (data) {
+        //                 $("#form_institucionEducativaName").val(data.nombre);
 
-                        $("#form_nivel").empty();
-                        $("#form_nivel").append('<option value="">Seleccionar</option>');
-                        $.each(data.aniveles, function (i, value) {
-                            $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
-                        });
-                        $("#form_grado").empty();
-                        $("#form_paralelo").empty();
-                        $("#form_turno").empty();
-                    }
-                });
-            } else {
+        //                 $("#form_nivel").empty();
+        //                 $("#form_nivel").append('<option value="">Seleccionar</option>');
+        //                 $.each(data.aniveles, function (i, value) {
+        //                     $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
+        //                 });
+        //                 $("#form_grado").empty();
+        //                 $("#form_paralelo").empty();
+        //                 $("#form_turno").empty();
+        //             }
+        //         });
+        //     } else {
 
-                //$("#form_institucionEducativaName").val(data.nombre);
-                $("#form_nivel").empty();
-                $("#form_grado").empty();
-                $("#form_paralelo").empty();
-                $("#form_turno").empty();
+        //         //$("#form_institucionEducativaName").val(data.nombre);
+        //         $("#form_nivel").empty();
+        //         $("#form_grado").empty();
+        //         $("#form_paralelo").empty();
+        //         $("#form_turno").empty();
 
 
-            }
+        //     }
 
-        }
+        // }
 
         function getGrado(idnivel) {
 
@@ -360,9 +396,10 @@
         function getTurno(paralelo) {
 
             sie = $('#form_institucionEducativa').val();
-            nivel = $('#form_nivel').val();
-            grado = $('#form_grado').val();
+            nivel = $('#form_nivelId').val();
+            grado = $('#form_gradoId').val();
             gestionselected = $('#form_gestionIns').val();
+
             $.ajax({
                 type: 'get',
                 url: Routing.generate('inscription_gestiones_pasadas_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel, 'grado': grado, 'gestionselected': gestionselected}),
@@ -388,10 +425,12 @@
           var grado = $('#form_grado').val();
           var paralelo = $('#form_paralelo').val();
           var turno = $('#form_turno').val();
+          var observacionOmitido = $('#form_observacionOmitido').val();
          // var question = $('#form_questionStatus').val();
           var observation = $('#form_dateRequest').val();
           var arrDate = observation.split('-');
 
+          
           if(arrDate[2]!=2020){
              Swal.fire({
                 icon: 'error',
@@ -400,8 +439,17 @@
                 showConfirmButton: true,
             })
             return;
-          }          
+          }
+          if(observacionOmitido.length<=15){
+             Swal.fire({
+                icon: 'error',
+                title: 'La justificación debe ser mayor a 15 caracteres!',
+                type: 'error',
+                showConfirmButton: true,
+            })
+            return;            
 
+          }
           if(sie.length > 0 && nivel.length > 0 && grado.length > 0 && paralelo.length > 0 && turno.length > 0 && observation.length > 0){
 
                Swal.fire({

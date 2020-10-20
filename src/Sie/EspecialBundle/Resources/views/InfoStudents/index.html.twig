@@ -464,6 +464,28 @@
             }
         });
       };
+       var doInscriptions = function(data){
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('info_students_open_newinscription') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+      };
 
       var removeInscriptionSpecial = function (infoUe,estInsEspId,estInsId) {
         if(confirm('¿Está completamente segura/o de eliminar la Inscripción? \nPresione en Ok para continuar')){

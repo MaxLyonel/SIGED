@@ -593,6 +593,14 @@ class ControlCalidadController extends Controller {
                 $resultado = $query->fetchAll();
                 break;
 
+            case 25:
+                $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_cedula_duplicada_nom_diferentes (:tipo, :idDetalle)');
+                $query->bindValue(':tipo', '2');
+                $query->bindValue(':idDetalle', $form['idDetalle']);
+                $query->execute();
+                $resultado = $query->fetchAll();
+                break;
+
             case 27://PROMEDIOS
                 $llave = $form['llave'];
                 $parametros = explode('|', $llave);
@@ -836,7 +844,7 @@ class ControlCalidadController extends Controller {
         $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
         $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
 
-        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneByCodigoRude($vproceso->getLlave());
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($vproceso->getLlave());
 
         $datos = array(
             'complemento'=>$estudiante->getComplemento(),
@@ -874,27 +882,73 @@ class ControlCalidadController extends Controller {
     }
 
     public function justificarEstudianteSegipAction(Request $request) {
-
-        $gestion = $this->session->get('idGestionCalidad');
-
+        $defaultController = new DefaultCont();
+        $defaultController->setContainer($this->container);
         $em = $this->getDoctrine()->getManager();
-        
+        $em->getConnection()->beginTransaction();
+        $gestion = $this->session->get('idGestionCalidad');
         $form = $request->get('formJ');
         $justificacion= mb_strtoupper($form['justificacion'], 'utf-8');
         $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
         $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
         $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
 
-        if($vproceso){
-            $mensaje = "Se realizó el proceso satisfactoriamente: ".$justificacion.".";
-            $vproceso->setJustificacion($justificacion);
-            $em->persist($vproceso);
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($vproceso->getLlave());
+
+        try {
+            $antes = json_encode([
+                'carnet_identidad'=>$estudiante->getCarnetIdentidad(),
+                'complemento'=>$estudiante->getCarnetIdentidad(),
+                'paterno'=>$estudiante->getPaterno(),
+                'materno'=>$estudiante->getMaterno(),
+                'nombre'=>$estudiante->getNombre(),
+                'fecha_nacimiento'=>$estudiante->getFechaNacimiento(),
+                'segip_id'=>$estudiante->getSegipId()
+                
+            ]);
+
+            $estudiante->setCarnetIdentidad('');
             $em->flush();
-            $this->ratificar($vproceso);
-            $this->addFlash('success', $mensaje);
-        } else {
-            $mensaje = "No se encontró la inconsistencia.";
-            $this->addFlash('warning', $mensaje);
+
+            $despues = json_encode([
+                'carnet_identidad'=>$estudiante->getCarnetIdentidad(),
+                'complemento'=>$estudiante->getCarnetIdentidad(),
+                'paterno'=>$estudiante->getPaterno(),
+                'materno'=>$estudiante->getMaterno(),
+                'nombre'=>$estudiante->getNombre(),
+                'fecha_nacimiento'=>$estudiante->getFechaNacimiento(),
+                'segip_id'=>$estudiante->getSegipId()
+            ]);
+
+            // registro del log
+            $resp = $defaultController->setLogTransaccion(
+                $estudiante->getId(),
+                'estudiante',
+                'U',
+                json_encode(array('browser' => $_SERVER['HTTP_USER_AGENT'],'ip'=>$_SERVER['REMOTE_ADDR'])),
+                $this->session->get('userId'),
+                '',
+                $despues,
+                $antes,
+                'SIGED',
+                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );
+
+            if($vproceso){
+                $mensaje = "Se realizó el proceso satisfactoriamente: ".$justificacion.".";
+                $vproceso->setJustificacion($justificacion);
+                $em->persist($vproceso);
+                $em->flush();
+                $this->ratificar($vproceso);
+                $this->addFlash('success', $mensaje);
+            } else {
+                $mensaje = "No se encontró la inconsistencia.";
+                $this->addFlash('warning', $mensaje);
+            }
+
+            $em->getConnection()->commit();
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();           
         }
             
         return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));

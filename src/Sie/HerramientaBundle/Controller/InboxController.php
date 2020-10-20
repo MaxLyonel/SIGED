@@ -1062,7 +1062,7 @@ class InboxController extends Controller {
     }
 
     public function downOperativoRudeAction(Request $request){
-
+      return $this->redirect($this->generateUrl('principal_web'));
       // create DB conexion
       $em = $this->getDoctrine()->getManager();
       

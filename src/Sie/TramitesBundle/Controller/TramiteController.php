@@ -2215,11 +2215,10 @@ class TramiteController extends Controller {
              ) as v
            where
            case
-            when (gestion_tipo_id::double precision = date_part('year',current_date)::double precision)
-            then (b1 is null or b1 = 0)
-            when (((gestion_tipo_id > 2013) or (gestion_tipo_id > 2013 and grado_tipo_id = 1)) and gestion_tipo_id < date_part('year',current_date))
+            when (gestion_tipo_id::double precision = 2020::double precision)
+            then false -- (t1 is null or t1 = 0)
+            when (((gestion_tipo_id > 2013) or (gestion_tipo_id > 2013 and grado_tipo_id = 1)) and gestion_tipo_id < 2020)
             then (b1 is null or b1 = 0 or b2 is null or b2 = 0 or b3 is null or b3 = 0 or b4 is null or b4 = 0 or b5 is null or b5 = 0)
-
             else (t1 is null or t1 = 0 or t2 is null or t2 = 0 or t3 is null or t3 = 0 or t4 is null or t4 = 0)
           end
           group by
@@ -3363,6 +3362,7 @@ class TramiteController extends Controller {
             $obs = $request->get('obs');
             $formBusqueda = array('serie'=>$serie,'obs'=>$obs);
             if ($serie != "" and $obs != ""){
+                $em = $this->getDoctrine()->getManager();
                 try {
                     $documentoController = new documentoController();
                     $documentoController->setContainer($this->container);
@@ -3380,23 +3380,21 @@ class TramiteController extends Controller {
                     $tramiteId = $entityDocumento['tramite'];
                     $documentoId = $entityDocumento['documento'];
 
-                    $entityDocumentoTramite = $documentoController->getDocumentoTramite($tramiteId,9);
+                    $entityDocumentoTramite = $documentoController->getDocumentoTramiteTipo($tramiteId,9);
 
                     if(count($entityDocumentoTramite)>0){
                         $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El documento '.$serie.' cuenta con un Documento Supletorio activo, no es posible reactivar el trámite'));
                         // return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
                         return $this->redirectToRoute('tramite_reactiva_lista', ['form' => $formBusqueda], 307);
                     }
-
-                    $em = $this->getDoctrine()->getManager();
                     $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('id' => $tramiteId));
 
                     $entityFlujoProceso = $tramiteProcesoController->getImpresionProcesoFlujo($entityTramite->getFlujoTipo()->getId());
                     $entityFlujoProcesoDetalle = $em->getRepository('SieAppWebBundle:FlujoProcesoDetalle')->findOneBy(array('id' => $entityFlujoProceso->getId()));
 
-                    $valProcesaTramite = $tramiteProcesoController->setProcesaTramite($tramiteId,$entityFlujoProcesoDetalle->getFlujoProcesoAnt()->getId(),$id_usuario,$obs);
+                    $valProcesaTramite = $tramiteProcesoController->setProcesaTramite($tramiteId,$entityFlujoProcesoDetalle->getFlujoProcesoAnt()->getId(),$id_usuario,$obs,$em);
 
-                    // $documentoId = $documentoController->setDocumentoEstado($documentoId, 2);
+                    // $documentoId = $documentoController->setDocumentoEstado($documentoId, 2, $em);
                     $msg = $documentoController->setTramiteDocumentoEstado($tramiteId, 2);
 
                     if($msg != ""){
@@ -3463,9 +3461,9 @@ class TramiteController extends Controller {
                         $tramiteDetalleId =  $tramiteProcesoController->setProcesaTramiteAnula($tramiteId, $id_usuario, $obs, $em);
                         $documentoController = new documentoController();
                         $documentoController->setContainer($this->container);
-                        $entityDocumento = $documentoController->getDocumentoTramite($tramiteId,1);
+                        $entityDocumento = $documentoController->getDocumentoTramiteTipo($tramiteId,1);
                         if (count($entityDocumento) > 0){
-                            $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2);
+                            $documentoId = $documentoController->setDocumentoEstado($entityDocumento->getId(),2, $em);
                         }                    
                         $em->getConnection()->commit();
                         return $response->setData(array('estado' => true, 'obs' => 'Trámite '.$tramiteId.' anulado de forma correcta'));

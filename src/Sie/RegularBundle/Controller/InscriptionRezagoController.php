@@ -171,13 +171,12 @@ class InscriptionRezagoController extends Controller {
                 $message = 'Estudiante cuenta con ' . sizeof($objInscrWithRezago) . ' inscripciones... para esta gestión';
                 $this->addFlash('warningrezago', $message);
                 return $this->redirectToRoute('inscription_rezago_index');
-            }
-
-               
+            }        
 
             //look for inscription like rezago  current year by ID = 4 efectivo
             $inscriptionData = array('studentId' => $student->getId(), 'gestion' => $this->session->get('currentyear'),'matricula' => array('4'));
             $studentInscription = $this->validationInscription($inscriptionData);
+
             // dump($studentInscription);die;
             if (!$studentInscription) {
                 $message = 'No se puede realizar la inscripción, Estudiante no presenta inscripción';
@@ -210,7 +209,7 @@ class InscriptionRezagoController extends Controller {
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($studentInscription[0]['studentId']);
             $yearsStudent = $this->get('seguimiento')->getYearsOldsStudentByFecha($student->getFechaNacimiento()->format('d-m-Y'), "30-06-".$this->session->get('currentyear'));
             if($this->session->get('userName') != '4926577' ){
-                if($yearsStudent[0] > $this->arrLevelYearOld[$studentInscription[0]['nivel']][$studentInscription[0]['grado']-1] && $yearsStudent[0] <= 15){
+                if($yearsStudent[0] > $this->arrLevelYearOld[$studentInscription[0]['nivel']][$studentInscription[0]['grado']-1] && $yearsStudent[0] <= 18){                
                     // nothing to do
                 }else{
                     $message = 'No se puede realizar la inscripción, la/el estudiante no cumple con la edad requerida';
@@ -234,11 +233,6 @@ class InscriptionRezagoController extends Controller {
                 //get los historico de cursos
                 $currentInscription = $this->getCurrentInscriptionsStudent($student->getCodigoRude());
                 //get the materias and notas
-                //$amateriasNotas = $this->getMateriasNotas($student->getId(), $studentInscription->getNivelTipo()->getId(), $studentInscription->getGradoTipo()->getId());
-                //$amateriasNotas = $this->getAsignaturasPerStudent($studentInscription->getInstitucioneducativa()->getId(), $studentInscription->getNivelTipo()->getId(), $studentInscription->getGradoTipo()->getId(), $studentInscription->getParaleloTipo()->getId(), $studentInscription->getTurnoTipo()->getId());
-                ////comment by krlos
-                //$amateriasNotas = $this->getAsignaturasPerStudent($studentInscription[0]['institucioneducativa'], $studentInscription[0]['nivel'], $studentInscription[0]['grado'], $studentInscription[0]['paralelo'], $studentInscription[0]['turno']);
-                //todo buscar el grado curso al que le corresponde de acuerdo a su estado matricual
                 $posicionCurso = $this->getCourse($studentInscription[0]['nivel'], $studentInscription[0]['ciclo'], $studentInscription[0]['grado'], $studentInscription[0]['matricula']);
                 //get paralelos
                 $this->oparalelos = $this->getParalelosStudent($posicionCurso, $studentInscription[0]['institucioneducativa']);
@@ -817,13 +811,15 @@ class InscriptionRezagoController extends Controller {
 
             //save promedios
             //$studentAsignatura = new EstudianteAsignatura();
+            //change to the 2020 year set id notaTipo like 5 or 9
+            $idNotaAvg = ($this->session->get('currentyear') == 2020)?9:5;
             $userId = $this->session->get('userId');
             reset($materias);
             while ($val = current($materias)) {
                 //$studianteAsignatura = new EstudianteAsignatura();
 
                 $studentnotas = new EstudianteNota();
-                $studentnotas->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(5));
+                $studentnotas->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaAvg));
                 $studentnotas->setEstudianteAsignatura($em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneBy(array(
                             'estudianteInscripcion' => $currentInscription->getId(),
                             ///'gestionTipo' => $this->session->get('currentyear'),

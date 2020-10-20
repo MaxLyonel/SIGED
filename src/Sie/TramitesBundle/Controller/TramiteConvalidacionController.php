@@ -102,9 +102,9 @@ class TramiteConvalidacionController extends Controller {
 
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('tramite_convalidacion_diploma_humanistico_estudiante_busca'))                
-                ->add('paterno', 'text', array('label' => 'Paterno', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,45}', 'style' => 'text-transform:uppercase')))
-                ->add('materno', 'text', array('label' => 'Materno', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,45}', 'style' => 'text-transform:uppercase')))
-                ->add('nombre', 'text', array('label' => 'Nombre', 'mapped' => false, 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,40}', 'style' => 'text-transform:uppercase')))
+                ->add('paterno', 'text', array('label' => 'Paterno', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase')))
+                ->add('materno', 'text', array('label' => 'Materno', 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase')))
+                ->add('nombre', 'text', array('label' => 'Nombre', 'mapped' => false, 'required' => true, 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase')))
                 ->add('buscar', 'submit', array('label' => 'Buscar'))
                 ->getForm();
         return $form;
@@ -465,9 +465,9 @@ class TramiteConvalidacionController extends Controller {
                         ->setParameter('id', '3');
             }, 'property' => 'genero'
                 ))
-                ->add('paterno', 'text', array('label' => 'Paterno', 'data' => $form['paterno'], 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,45}', 'style' => 'text-transform:uppercase')))
-                ->add('materno', 'text', array('label' => 'Materno', 'data' => $form['materno'], 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,45}', 'style' => 'text-transform:uppercase')))
-                ->add('nombre', 'text', array('label' => 'Nombre', 'data' => $form['nombre'], 'mapped' => false, 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[a-zñ A-ZÑ]{3,40}', 'style' => 'text-transform:uppercase')))
+                ->add('paterno', 'text', array('label' => 'Paterno', 'data' => $form['paterno'], 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control',  'style' => 'text-transform:uppercase')))
+                ->add('materno', 'text', array('label' => 'Materno', 'data' => $form['materno'], 'mapped' => false, 'required' => false, 'attr' => array('class' => 'form-control',  'style' => 'text-transform:uppercase')))
+                ->add('nombre', 'text', array('label' => 'Nombre', 'data' => $form['nombre'], 'mapped' => false, 'required' => true, 'attr' => array('class' => 'form-control',  'style' => 'text-transform:uppercase')))
                 //->add('fnacimiento', 'text', array('mapped' => false, 'required' => true, 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control')))
                 ->add('fnacimiento', 'text', array('mapped' => false, 'label' => 'Fecha Nacimiento', 'attr' => array('class' => 'form-control', 'placeholder'=>'DD-MM-YYYY', 'title'=>'DD-MM-YYYY', 'required'=>true, 'pattern'=>'[0-9]{2}-[0-9]{2}-[0-9]{4}')))
                 ->add('pais', 'entity', array('label' => 'Pais', 'attr' => array('class' => 'form-control'),
@@ -539,7 +539,7 @@ class TramiteConvalidacionController extends Controller {
             $formulario = $formulario->add('gestion1', 'entity', array('data' => $entityGestion, 'attr' => array('class' => 'form-control btnGestion'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) use ($form) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2005')
+                                ->where('gt.id > 2')
                                 ->andWhere('gt.id <= '.($form['gestionActual']-3))
                                 ->orderBy('gt.id', 'DESC');
                     },
@@ -555,7 +555,7 @@ class TramiteConvalidacionController extends Controller {
             $formulario = $formulario->add('gestion2', 'entity', array('data' => $entityGestion, 'attr' => array('class' => 'form-control btnGestion'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) use ($form) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2005')
+                                ->where('gt.id > 2')
                                 ->andWhere('gt.id <= '.($form['gestionActual']-2))
                                 ->orderBy('gt.id', 'DESC');
                     },
@@ -571,7 +571,7 @@ class TramiteConvalidacionController extends Controller {
             $formulario = $formulario->add('gestion3', 'entity', array('data' => $entityGestion, 'attr' => array('class' => 'form-control btnGestion'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) use ($form) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2005')
+                                ->where('gt.id > 2')
                                 ->andWhere('gt.id <= '.($form['gestionActual']-1))
                                 ->orderBy('gt.id', 'DESC');
                     },
@@ -587,7 +587,7 @@ class TramiteConvalidacionController extends Controller {
             $formulario = $formulario->add('gestion4', 'entity', array('data' => $entityGestion, 'attr' => array('class' => 'form-control btnGestion'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) use ($form) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2005')
+                                ->where('gt.id > 2')
                                 ->andWhere('gt.id <= '.($form['gestionActual']))
                                 ->orderBy('gt.id', 'DESC');
                     },
@@ -881,7 +881,7 @@ class TramiteConvalidacionController extends Controller {
                 inner join estudiante_inscripcion as ei on ei.estudiante_id = e.id
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                 where case :ci::varchar when '' then e.pasaporte = :pasaporte when '0' then e.pasaporte = :pasaporte else e.carnet_identidad = :ci::varchar and e.complemento = :complemento::varchar end and iec.gestion_tipo_id = :gestion::int and iec.nivel_tipo_id = :nivel::int and iec.grado_tipo_id = :grado::int     
-                and ei.estadomatricula_tipo_id in (4,5,55,9,10,11)
+                and ei.estadomatricula_tipo_id in (4,5,55,11)
                 ");
         $query->bindValue(':ci', $ci);
         $query->bindValue(':pasaporte', $pasaporte);
@@ -915,6 +915,7 @@ class TramiteConvalidacionController extends Controller {
                 inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
                 where case :ci::varchar when '' then e.pasaporte = :pasaporte when '0' then e.pasaporte = :pasaporte else e.carnet_identidad = :ci::varchar and e.complemento = :complemento::varchar end 
                 and case when iec.gestion_tipo_id <= :gestion then iec.nivel_tipo_id = 3::int and iec.grado_tipo_id = 4::int else iec.nivel_tipo_id = 13::int and iec.grado_tipo_id = 6::int end    
+                and ei.estadomatricula_tipo_id in (4,5,55,11)
             ");
         $query->bindValue(':ci', $ci);
         $query->bindValue(':pasaporte', $pasaporte);

@@ -263,8 +263,25 @@ sie_app_web_segip:
 #modulo de tramites con flujos
 # sie_app_web_wf_tramite:
 #     resource: "@SieAppWebBundle/Resources/config/routing/wftramite.yml"
-#     prefix:   /sie/tramite
+#     prefix:   /sie/so
 
-sie_app_web_searchRudeStudent:
-    resource: "@SieAppWebBundle/Resources/config/routing/searchRudeStudent.yml"
-    prefix:   /sie/searchRudeStudent
+sie_app_web_solicitudrue:
+    resource: "@SieAppWebBundle/Resources/config/routing/solicitud.yml"
+    prefix:   /acceso/solicitudrue
+    
+sie_app_web_rudeunification:
+    resource: "@SieAppWebBundle/Resources/config/routing/rudeUnification.yml"
+    prefix:   /sie/newunification
+
+sie_app_web_updateStudentLevel:
+    resource: "@SieAppWebBundle/Resources/config/routing/updateStudentLevel.yml"
+    prefix:   /sie/updatestudentlevel
+
+sie_app_web_requestbjp:
+    resource: "@SieAppWebBundle/Resources/config/routing/requestBJP.yml"
+    prefix:   /sie/requestbjp
+
+sie_app_web_claimbjp:
+    resource: "@SieAppWebBundle/Resources/config/routing/claimBJP.yml"
+    prefix:   /claimbjp       
+

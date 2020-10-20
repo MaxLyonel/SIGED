@@ -1,0 +1,15 @@
+claim_bjp_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:ClaimBJP:index }
+
+claim_bjp_cargar:
+    path:     /cargar
+    defaults: { _controller: SieAppWebBundle:ClaimBJP:cargar }
+    options:
+         expose: true
+
+claim_bjp_buscar:
+    path:     /buscar
+    defaults: { _controller: SieAppWebBundle:ClaimBJP:buscar }
+    options:
+         expose: true
