@@ -667,7 +667,7 @@ class InscriptionRezagoController extends Controller {
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']);
             $yearsStudent = $this->get('seguimiento')->getYearsOldsStudentByFecha($student->getFechaNacimiento()->format('d-m-Y'), "30-06-".$this->session->get('currentyear'));
 
-            if($yearsStudent[0]<=15){
+            if($yearsStudent[0]<=18 or $this->session->get('userName') != '4926577'){
                 // no thing to do
             }else{
                 $message = 'Estudiante no cumple con la edad requerida';
