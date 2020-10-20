@@ -82,6 +82,7 @@
                         $('#solution').removeClass('visible').addClass('invisible');
                         $('#collapseTwo').removeClass('collapse').addClass('in');
                     } else {
+                        $(".loading").remove();
                         alert("Error, "+data.msg);
                         boton.show();
                     }                    
