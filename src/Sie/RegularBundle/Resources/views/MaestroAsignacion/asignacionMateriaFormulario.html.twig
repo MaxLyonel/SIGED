@@ -173,12 +173,12 @@
                     }  
                 } else {
                     $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');
-                    registro.html(maestroContent);
+                    registro.html(registroContent);
                 }            
             },
             error: function(error){ 
                 registro.empty();      
-                registro.html(maestroContent);
+                registro.html(registroContent);
             },
         });    
     }

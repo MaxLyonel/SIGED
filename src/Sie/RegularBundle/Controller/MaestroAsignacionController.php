@@ -594,7 +594,7 @@ class MaestroAsignacionController extends Controller {
             $form = $this->getFormRegistroMaestro($val, $item, $fechaInicio, $fechaFin, $financiamientoTipoEntity, $arrayMaestroInscripcionLista, 0);
         }
         $arrayRangoFecha = array('inicio'=>"01-01-".$gestionId,'final'=>"31-12-".$gestionId);
-        $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'notaTipo'=>$notaTipo, 'casoMaestro'=>$maestroInscripcioEntity, 'formNuevo'=>$form, 'formEnable'=>$formEnable, 'rangoFecha'=>$arrayRangoFecha);;
+        $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'notaTipo'=>$notaTipo, 'casoMaestro'=>$maestroInscripcioEntity, 'formNuevo'=>$form, 'formEnable'=>$formEnable, 'rangoFecha'=>$arrayRangoFecha);
                 
         if (isset($info["vp_id"])){
             return $this->render('SieRegularBundle:MaestroAsignacion:asignacionMateriaFormulario.html.twig', $arrayFormulario);
@@ -950,11 +950,19 @@ class MaestroAsignacionController extends Controller {
             $em->getConnection()->beginTransaction();
             try {     
                 $maestroInscripcionEntity = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroInscripcionId);
+                $institucionEducativaId = $maestroInscripcionEntity->getInstitucioneducativa()->getId();
 
                 $maestroInscripcionIdiomaEntity = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion'=>$maestroInscripcionId));
             
                 foreach ($maestroInscripcionIdiomaEntity as $registro) {
                     $em->remove($registro);
+                }
+
+                $institucioneducativaCursoEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findBy(array('maestroInscripcionAsesor'=>$maestroInscripcionId));
+            
+                foreach ($institucioneducativaCursoEntity as $registro) {
+                    $registro->setMaestroInscripcionAsesor(null);
+                    $em->persist($registro);
                 }
                 
                 $em->remove($maestroInscripcionEntity);
@@ -963,6 +971,14 @@ class MaestroAsignacionController extends Controller {
 
                 $em->flush();
                 $em->getConnection()->commit();
+
+                $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_maes_reprocesos_funciones(:maestroInscripcionId::VARCHAR, :institucioneducativaId::VARCHAR, :gestionId::VARCHAR)');
+                $query->bindValue(':maestroInscripcionId', $maestroInscripcionId);
+                $query->bindValue(':institucioneducativaId', $institucionEducativaId);
+                $query->bindValue(':gestionId', $gestionId);
+                $query->execute();
+                $aTuicion = $query->fetchAll();
+
                 $msg = "Maestro eliminado y observación finalizada";
                 return $response->setData(array('estado'=>true, 'msg'=>$msg));
             } catch (Exception $ex) {
@@ -1263,7 +1279,7 @@ class MaestroAsignacionController extends Controller {
             $item = "";
             $fechaInicio = "";
             $fechaFin = "";
-            $financiamientoTipoEntity = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find(0);;
+            $financiamientoTipoEntity = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find(0);
         // }
         
         $arrayMaestroInscripcionLista = array();
@@ -1274,9 +1290,11 @@ class MaestroAsignacionController extends Controller {
                 $arrayMaestroInscripcionLista[base64_encode($data['maestroInscripcionId'])] = $data['paterno']." ".$data['materno']." ".$data['nombre']." (C.I.: ".$data['carnetIdentidad'].")";
             }
         }
-
+        $arrayRangoFecha = array('inicio'=>"01-01-".$gestionId,'final'=>"31-12-".$gestionId);
+        // $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'notaTipo'=>$notaTipo, 'casoMaestro'=>$maestroInscripcioEntity, 'formNuevo'=>$form, 'formEnable'=>$formEnable, 'rangoFecha'=>$arrayRangoFecha);
+          
         $form = $this->getFormRegistroMaestro($val, $item, $fechaInicio, $fechaFin, $financiamientoTipoEntity, $arrayMaestroInscripcionLista, 0);
-        $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'notaTipo'=>$notaTipo, 'formNuevo'=>$form);;
+        $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'notaTipo'=>$notaTipo, 'formNuevo'=>$form, 'rangoFecha'=>$arrayRangoFecha);
 
         $arrayFormulario['formEnable'] = true;
 
@@ -1393,20 +1411,18 @@ class MaestroAsignacionController extends Controller {
         $validacionProcesoId = $request->get('vp_id');
         $maestroInscripcionId = $request->get('id');
         $gestion = $request->get('gestion');
-          
         $em = $this->getDoctrine()->getManager();
         $maestroInscripcionEntidad = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroInscripcionId);
         
-        if($maestroInscripcionEntidad > 0){
-            $msg = "No existe la inscripcion del maestro que solicita modificar, intente nuevamente";
-            return $response->setData(array('estado'=>false, 'msg'=>$msg));
-        } 
+        // if(count($maestroInscripcionEntidad) > 0){
+        //     $msg = "No existe la inscripcion del maestro que solicita modificar, intente nuevamente";
+        //     return $response->setData(array('estado'=>false, 'msg'=>$msg));
+        // } 
      
         $validacionProcesoEntidad = array();
         if($validacionProcesoId > 0){
             $validacionProcesoEntidad = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($validacionProcesoId);
         } 
-        dump($validacionProcesoEntidad);die;
 
         $institucionEducativaId = $maestroInscripcionEntidad->getInstitucioneducativa()->getId();
         $gestionId = $maestroInscripcionEntidad->getGestionTipo()->getId();
@@ -1480,6 +1496,7 @@ class MaestroAsignacionController extends Controller {
         if(count($maestroInscripcionEntidad) > 0){
             $gestionId = $maestroInscripcionEntidad->getGestionTipo()->getId();
             $dependenciaTipoId = $maestroInscripcionEntidad->getInstitucioneducativa()->getDependenciaTipo()->getId();
+            $institucionEducativaId = $maestroInscripcionEntidad->getInstitucioneducativa()->getId();
         } else {
             $msg = "No existe la inscripcion del maestro que solicita modificar, intente nuevamente";
             return $response->setData(array('estado'=>false, 'msg'=>$msg));
@@ -1520,6 +1537,14 @@ class MaestroAsignacionController extends Controller {
             $em->getConnection()->commit();
             $msg = "Modificacion de fuente de financiamiento realizado correctamente";
             $estado = true;           
+
+            $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_maes_reprocesos_funciones(:maestroInscripcionId::VARCHAR, :institucioneducativaId::VARCHAR, :gestionId::VARCHAR)');
+            $query->bindValue(':maestroInscripcionId', $maestroInscripcionId);
+            $query->bindValue(':institucioneducativaId', $institucionEducativaId);
+            $query->bindValue(':gestionId', $gestionId);
+            $query->execute();
+            $aTuicion = $query->fetchAll();
+
             return $response->setData(array('estado'=>$estado, 'msg'=>$msg));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -1596,8 +1621,61 @@ class MaestroAsignacionController extends Controller {
         $fechaNacimiento = $form['fechaNacimiento'];
         $validacionProcesoId = $info['vp_id'];
 
+        $datosActuales = array(
+            'carnet' => $carnetIdentidad,
+            'complemento' => strtoupper($complemento),
+            'nombre' => strtoupper($nombre),
+            'paterno' => strtoupper($paterno),
+            'materno' => strtoupper($materno),
+            'fechaNacimiento' => $fechaNacimiento,
+        ); 
+
         $em = $this->getDoctrine()->getManager();
         $personaEntidad = $em->getRepository('SieAppWebBundle:Persona')->find($personaId);
+
+        $response = new JsonResponse();
+        $datosAnteriores = array();
+        if (count($personaEntidad)>0){
+            $datosAnteriores = array(
+                'carnet' => $personaEntidad->getCarnet(),
+                'complemento' => strtoupper($personaEntidad->getComplemento()),
+                'nombre' => strtoupper($personaEntidad->getNombre()),
+                'paterno' => strtoupper($personaEntidad->getPaterno()),
+                'materno' => strtoupper($personaEntidad->getMaterno()),
+                'fechaNacimiento' => $personaEntidad->getFechaNacimiento()->format('d-m-Y'),
+            ); 
+
+            $diferencias = 0;
+            if ($datosAnteriores['nombre'] != $datosActuales['nombre']){
+                $diferencias++;
+            }
+
+            if ($datosAnteriores['paterno'] != $datosActuales['paterno']){
+                $diferencias++;
+            }
+
+            if ($datosAnteriores['materno'] != $datosActuales['materno']){
+                $diferencias++;
+            }
+
+            if ($datosAnteriores['carnet'] != $datosActuales['carnet']){
+                $diferencias++;
+            }
+
+            if ($datosAnteriores['complemento'] != $datosActuales['complemento']){
+                $diferencias++;
+            }
+
+            if ($datosAnteriores['fechaNacimiento'] != $datosActuales['fechaNacimiento']){
+                $diferencias++;
+            }
+
+            if ($diferencias > 3){
+                $msg  = 'No puede reemplazar la persona por este medio';
+                $estado = false;                
+                return $response->setData(array('estado' => $estado, 'msg' => $msg));
+            }
+        }
         
         $fechaNacimiento = new \Datetime(date($fechaNacimiento));
         $objPersona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
@@ -1611,7 +1689,6 @@ class MaestroAsignacionController extends Controller {
         )); 
         $msg = "";
         $estado = false;
-        $response = new JsonResponse();
         $em->getConnection()->beginTransaction();
         try {
             if(count($objPersona) > 0){
@@ -1705,7 +1782,7 @@ class MaestroAsignacionController extends Controller {
             $lista = array();
             $cabecera = array('Turno', 'Nivel', 'Año de Escolaridad', 'Paralelo', 'Asignatura');
             $contenido = array();
-            dump($institucioneducativaCursoOfertaMaestro);die;
+            // dump($institucioneducativaCursoOfertaMaestro);die;
             foreach ($institucioneducativaCursoOfertaMaestro as $data) {
                 $contenido[$data['turno']][$data['nivel']][$data['grado']][$data['paralelo']][$data['asignatura']][$data['nota']] = base64_encode(json_encode(array('institucioneducativa_curso_oferta_id'=>$data['institucioneducativaCursoOfertaId'], 'nota_tipo_id'=>$data['notaId'], 'institucioneducativa_curso_oferta_maestro_id'=>$data['id'])));
                 array_push($cabecera,$data['nota']);
@@ -1934,6 +2011,16 @@ class MaestroAsignacionController extends Controller {
                     
                     $em->flush();
                     $em->getConnection()->commit();
+
+                    $maestroInscripcionId = $maestroinscripcion->getId();
+
+                    $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_maes_reprocesos_funciones(:maestroInscripcionId::VARCHAR, :institucioneducativaId::VARCHAR, :gestionId::VARCHAR)');
+                    $query->bindValue(':maestroInscripcionId', $maestroInscripcionId);
+                    $query->bindValue(':institucioneducativaId', $institucionEducativaId);
+                    $query->bindValue(':gestionId', $gestionId);
+                    $query->execute();
+                    $aTuicion = $query->fetchAll();
+                    
                     $msg = "Asignación del maestro ".$nombre." ".$paterno." ".$materno." realizado correctamente";
                     $estado = true;
                 }
