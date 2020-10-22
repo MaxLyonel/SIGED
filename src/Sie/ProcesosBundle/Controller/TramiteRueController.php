@@ -2124,7 +2124,7 @@ class TramiteRueController extends Controller
                     $error_upload = true;
                 }
                 $datos['adjuntoinforme']=$adjunto;
-                }
+                
                 $wfdatos->setDatos(json_encode($datos));
                 $em->flush();
                 $origen = '/../web/uploads/archivos/flujos/rue/solicitud/'.$gestion.'/'.$form['codigo'];
