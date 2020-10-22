@@ -77,7 +77,10 @@
                             </div>
                         </div>
                     </div>
+                    
                     {{ form_start(form,{ 'attr': {'id':'form','enctype':'multipart/form-data','onsubmit':'return validacion();'}}) }}
+
+                         {{ form_widget(form.tramite) }}
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="panel panel-primary">
@@ -291,7 +294,7 @@
                 return false;
             }
             var tramitetipo = $('#form_tramite_tipo option:selected').text();
-            var formData = {tramite_tipo:$('#form_tramite_tipo').val(),codigo:$('#form_codigo').val()}
+            var formData = {tramite_tipo:$('#form_tramite_tipo').val(),codigo:$('#form_codigo').val(),tramite:$('#form_tramite').val()}
             $.ajax({
                 type: 'GET',
                 url: "{{path('tramite_rue_buscar_solicitud')}}",
