@@ -1028,6 +1028,7 @@ class TramiteRueController extends Controller
                         ->where('nt.id in (:id)')
                         ->setParameter('id',$form['nivelreducir'])
                         ->getQuery()
+
                         ->getResult();
                     $datos[$tramite['tramite_tipo']]['nivelreducir']=$nivel;
                     $datos[$tramite['tramite_tipo']]['i_alquiler_reducir']=$form['i_alquiler_reducir'];
@@ -1862,7 +1863,9 @@ class TramiteRueController extends Controller
 
     public function recepcionDistritoGuardarAction(Request $request)
     {
-        
+        //variable de control para el cargado de adjunto
+        $error_upload = false;
+
         $form = $request->get('form');
         $file = $request->files->get('form');
         $em = $this->getDoctrine()->getManager();
@@ -1876,17 +1879,37 @@ class TramiteRueController extends Controller
         if($form['varevaluacion1'] == 'SI'){
             $datos['informedistrito']=$form['informedistrito'];
             $datos['fechainformedistrito']=$form['fechainformedistrito'];
-            $datos['adjuntoinforme']=$this->upload($file['adjuntoinforme'],$ruta);
+            
+            $adjunto = $this->upload($file['adjuntoinforme'],$ruta);
+            if($adjunto == ''){
+                $error_upload = true;
+            }
+            $datos['adjuntoinforme']=$adjunto;
+            
             if(isset($file['actaconformidad'])){
-                $datos['actaconformidad']=$this->upload($file['actaconformidad'],$ruta);
-                $datos['bidistrital']=$this->upload($file['bidistrital'],$ruta);
+                $adjunto = $this->upload($file['actaconformidad'],$ruta);
+                if($adjunto == ''){
+                    $error_upload = true;
+                }
+                $datos['actaconformidad']=$adjunto;
+
+                $adjunto = $this->upload($file['bidistrital'],$ruta);
+                if($adjunto == ''){
+                    $error_upload = true;
+                }
+                $datos['bidistrital']=$adjunto;
             }
         }else{
             $datos['varevaluacion2']=$form['varevaluacion2'];
             if($form['varevaluacion2'] == 'SI'){
                 $datos['informedistrito']=$form['informedistrito'];
                 $datos['fechainformedistrito']=$form['fechainformedistrito'];
-                $datos['adjuntoinforme']=$this->upload($file['adjuntoinforme'],$ruta);
+
+                $adjunto = $this->upload($file['adjuntoinforme'],$ruta);
+                if($adjunto == ''){
+                    $error_upload = true;
+                }
+                $datos['adjuntoinforme']=$adjunto;
             }
             $varevaluacion2 = $form['varevaluacion2'];
         }
@@ -2028,7 +2051,8 @@ class TramiteRueController extends Controller
     
     public function recepcionDistritoAperturaGuardarAction(Request $request)
     {
-        
+        //variable de control para el cargado de adjunto
+        $error_upload = false;
         $form = $request->get('form');
         $file = $request->files->get('form');
         $em = $this->getDoctrine()->getManager();
@@ -2048,11 +2072,20 @@ class TramiteRueController extends Controller
             if($form['tramite_tipo'] == 54){
                 if($form['tramite'] != ''){
                     $ruta = '/../web/uploads/archivos/flujos/rue/apertura/'.$gestion.'/'.$form['tramite'].'/';
-                    $datos['adjuntoinforme']=$this->upload($file['adjuntoinforme'],$ruta);
+                
+                    $adjunto = $this->upload($file['adjuntoinforme'],$ruta);
+                    if($adjunto == ''){
+                        $error_upload = true;
+                    }
+                    $datos['adjuntoinforme']=$adjunto;
                 }
             }else{
                 $ruta = '/../web/uploads/archivos/flujos/'. $form['idrue'] .'/rue/'.$gestion.'/';
-                $datos['adjuntoinforme']=$this->upload($file['adjuntoinforme'],$ruta);
+                $adjunto = $this->upload($file['adjuntoinforme'],$ruta);
+                if($adjunto == ''){
+                    $error_upload = true;
+                }
+                $datos['adjuntoinforme']=$adjunto;
             }                        
         }
 
@@ -2084,8 +2117,14 @@ class TramiteRueController extends Controller
             if($form['tramite_tipo'] == 54){
                 $ruta = '/../web/uploads/archivos/flujos/rue/apertura/'.$gestion.'/'.$mensaje['idtramite'].'/';
                 $wfdatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->find($mensaje['iddatos']);
-                $datos = json_decode($wfdatos->getDatos(),true);            
-                $datos['adjuntoinforme']=$this->upload($file['adjuntoinforme'],$ruta);
+                $datos = json_decode($wfdatos->getDatos(),true); 
+                
+                $adjunto = $this->upload($file['adjuntoinforme'],$ruta);
+                if($adjunto == ''){
+                    $error_upload = true;
+                }
+                $datos['adjuntoinforme']=$adjunto;
+                }
                 $wfdatos->setDatos(json_encode($datos));
                 $em->flush();
                 $origen = '/../web/uploads/archivos/flujos/rue/solicitud/'.$gestion.'/'.$form['codigo'];
@@ -2191,6 +2230,8 @@ class TramiteRueController extends Controller
 
     public function recepcionDepartamentoGuardarAction(Request $request)
     {
+        //variable de control para el cargado de adjunto
+        $error_upload = false;
         $form = $request->get('form');
         $files = $request->files->get('form');
         $em = $this->getDoctrine()->getManager();
@@ -2207,15 +2248,30 @@ class TramiteRueController extends Controller
         $datos['informesubdireccion']=$form['informesubdireccion'];
         $datos['fechainformesubdireccion']=$form['fechainformesubdireccion'];
         if($form['informesubdireccion']){
-            $datos['adjuntoinformesubdireccion']=$this->upload($files['adjuntoinformesubdireccion'],$ruta);
+            
+            $adjunto = $this->upload($files['adjuntoinformesubdireccion'],$ruta);
+            if($adjunto == ''){
+                $error_upload = true;
+            }
+            $datos['adjuntoinformesubdireccion']=$adjunto;
         }
         if($form['varevaluacion'] == 'SI'){
             $datos['informejuridica']=$form['informejuridica'];
             $datos['fechainformejuridica']=$form['fechainformejuridica'];
-            $datos['adjuntoinformejuridica']=$this->upload($files['adjuntoinformejuridica'],$ruta);
+
+            $adjunto = $this->upload($files['adjuntoinformejuridica'],$ruta);
+            if($adjunto == ''){
+                $error_upload = true;
+            }
+            $datos['adjuntoinformejuridica']=$adjunto;
             $datos['resolucion']=$form['resolucion'];
             $datos['fecharesolucion']=$form['fecharesolucion'];
-            $datos['adjuntoresolucion']=$this->upload($files['adjuntoresolucion'],$ruta);
+
+            $adjunto = $this->upload($files['adjuntoresolucion'],$ruta);
+            if($adjunto == ''){
+                $error_upload = true;
+            }
+            $datos['adjuntoresolucion']=$adjunto;
         }
         $datos = json_encode($datos);
         //dump($datos);die;
@@ -3694,9 +3750,11 @@ class TramiteRueController extends Controller
         $codigo = $request->get('codigo');
         $em = $this->getDoctrine()->getManager();
         $tramite_tipo = $em->getRepository('SieAppWebBundle:TramiteTipo')->find($request->get('tramite_tipo'));        
+        $tramite = $request->get('tramite');      
         
         $solicitudTramite = $em->getRepository('SieAppWebBundle:SolicitudTramite')->findOneBy(array('codigo'=>$codigo,'estado'=>false));  
         //dump(json_decode($solicitudTramite->getDatos(),true),$tramite_tipo);die;
+        $datos = "";
         if($solicitudTramite){
             $datos = json_decode($solicitudTramite->getDatos(),true);
             //dump($datos['tramites'][0]['id'],$tramite_tipo->getId());die;
@@ -3720,9 +3778,27 @@ class TramiteRueController extends Controller
                 'tramite_tipo'=>$tramite_tipo,
                 'codigo' =>$codigo,
             );
+
+            if(isset($tramite)){
+                $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->findBy(array('tramite'=>$tramite), array('id' => 'DESC'));
+                $solicitudTramite = $em->getRepository('SieAppWebBundle:SolicitudTramite')->findOneBy(array('codigo'=>$codigo,'estado'=>true));
+                if(count($tramiteDetalle) > 0 && count($solicitudTramite)){
+                    if($tramiteDetalle[0]->getFlujoProceso()->getId() == 51){
+                        $datos = json_decode($solicitudTramite->getDatos(),true);
+                        //dump($datos['tramites'][0]['id'],$tramite_tipo->getId());die;
+                        if($datos['tramites'][0]['id'] == $tramite_tipo->getId()){
+                            $data = array(
+                                'datos'=>$datos,
+                                'tramite_tipo'=>$tramite_tipo,
+                                'codigo' =>$codigo,
+                                'gestion'=>$solicitudTramite->getFechaRegistro()->format('Y'),
+                            );    
+                        }     
+                    }
+                }
+            }    
         }
-        //dump($data);die;
-               
+       // dump();die;        
         return $this->render('SieProcesosBundle:TramiteRue:solicitudAperturaReapertura.html.twig', $data);
 
     }
@@ -3878,9 +3954,21 @@ class TramiteRueController extends Controller
         }
         $datos[$tramitetipo]['cantidad_adm']=$form['cantidad_adm'];
         $datos[$tramitetipo]['cantidad_maestro']=$form['cantidad_maestro'];
-        $datos[$tramitetipo]['i_solicitud_apertura']=$this->upload($files['i_solicitud_apertura'],$ruta);
+
+        $adjunto = $this->upload($files['i_solicitud_apertura'],$ruta);
+        if($adjunto == ''){
+            $error_upload = true;
+        }
+        $datos[$tramitetipo]['i_solicitud_apertura']=$adjunto;
+
         if($form['dependencia'] == 1){
-            $datos[$tramitetipo]['i_actafundacion_apertura']=$this->upload($files['i_actafundacion_apertura'],$ruta);
+            
+            $adjunto = $this->upload($files['i_actafundacion_apertura'],$ruta);
+            if($adjunto == ''){
+                $error_upload = true;
+            }
+            $datos[$tramitetipo]['i_actafundacion_apertura']=$adjunto;
+
             $datos[$tramitetipo]['i_folio_apertura']=$form['i_folio_apertura'];
             $datos[$tramitetipo]['i_certificacion_apertura']=$form['i_certificacion_apertura'];
             $datos[$tramitetipo]['i_area_apertura']=$form['i_area_apertura'];
@@ -3888,7 +3976,13 @@ class TramiteRueController extends Controller
         }
         if($form['dependencia'] == 2){
             $datos[$tramitetipo]['i_representante_apertura']=$form['i_representante_apertura'];
-            $datos[$tramitetipo]['i_actafundacion_apertura']=$this->upload($files['i_actafundacion_apertura'],$ruta);
+
+            $adjunto = $this->upload($files['i_actafundacion_apertura'],$ruta);
+            if($adjunto == ''){
+                $error_upload = true;
+            }
+            $datos[$tramitetipo]['i_actafundacion_apertura']=$adjunto;
+
             $datos[$tramitetipo]['i_folio_apertura']=$form['i_folio_apertura'];
             $datos[$tramitetipo]['i_convenio_apertura']=$form['i_convenio_apertura'];
             $datos[$tramitetipo]['i_convenioadministracion_apertura']=isset($form['i_convenioadministracion_apertura'])?$form['i_convenioadministracion_apertura']:0;
@@ -3914,7 +4008,11 @@ class TramiteRueController extends Controller
                 $datos[$tramitetipo]['i_personeria_apertura']=$form['i_personeria_apertura'];
             }
             if($form['constitucion']==48){
-                $datos[$tramitetipo]['i_afcoop_apertura']=$this->upload($files['i_afcoop_apertura'],$ruta);
+                $adjunto = $this->upload($files['i_afcoop_apertura'],$ruta);
+                if($adjunto == ''){
+                    $error_upload = true;
+                }
+                $datos[$tramitetipo]['i_afcoop_apertura']=$adjunto;
             }                        
             $datos[$tramitetipo]['i_fotocopia_nit_apertura']=$form['i_fotocopia_nit_apertura'];
             $datos[$tramitetipo]['nit_apertura']=$form['nit_apertura'];
@@ -3922,23 +4020,45 @@ class TramiteRueController extends Controller
             $datos[$tramitetipo]['i_representante_apertura']=$form['i_representante_apertura'];
             $datos[$tramitetipo]['i_copia_ci_apertura']=$form['i_copia_ci_apertura'];
             $datos[$tramitetipo]['ci_apertura']=$form['ci_apertura'];
-            $datos[$tramitetipo]['i_funcionamiento_apertura']=$this->upload($files['i_funcionamiento_apertura'],$ruta);
+
+            $adjunto = $this->upload($files['i_funcionamiento_apertura'],$ruta);
+            if($adjunto == ''){
+                $error_upload = true;
+            }
+            $datos[$tramitetipo]['i_funcionamiento_apertura']=$adjunto;
+
             $datos[$tramitetipo]['i_estatutos_apertura']=$form['i_estatutos_apertura'];
             if(($form['constitucion']==45 or $form['constitucion']==49) and isset($files['i_certificacionculto_apertura'])){
-                $datos[$tramitetipo]['i_certificacionculto_apertura']=$this->upload($files['i_certificacionculto_apertura'],$ruta);
+
+                $adjunto = $this->upload($files['i_certificacionculto_apertura'],$ruta);
+                if($adjunto == ''){
+                    $error_upload = true;
+                }
+                $datos[$tramitetipo]['i_certificacionculto_apertura']=$adjunto;
             }
             if($form['constitucion']==46 or $form['constitucion']==47 or $form['constitucion']==49){
                 $datos[$tramitetipo]['i_form_fundaempresa_apertura']=$form['i_form_fundaempresa_apertura'];
                 $datos[$tramitetipo]['nro_fundaempresa_apertura']=$form['nro_fundaempresa_apertura'];
                 $datos[$tramitetipo]['fecha_fundaempresa_apertura']=$form['fecha_fundaempresa_apertura'];
             }
-            $datos[$tramitetipo]['i_empleadores_apertura']=$this->upload($files['i_empleadores_apertura'],$ruta);
+
+            $adjunto = $this->upload($files['i_empleadores_apertura'],$ruta);
+            if($adjunto == ''){
+                $error_upload = true;
+            }
+            $datos[$tramitetipo]['i_empleadores_apertura']=$adjunto;
+
             if($form['constitucion']==49){
                 $datos[$tramitetipo]['i_convenio_apertura']=$form['i_convenio_apertura'];
             }                        
             $datos[$tramitetipo]['ii_alquiler_apertura']=$form['ii_alquiler_apertura'];
             if($form['ii_alquiler_apertura']=='SI'){
-                $datos[$tramitetipo]['ii_contrato_apertura']=$this->upload($files['ii_contrato_apertura'],$ruta);
+
+                $adjunto = $this->upload($files['ii_contrato_apertura'],$ruta);
+                if($adjunto == ''){
+                    $error_upload = true;
+                }
+                $datos[$tramitetipo]['ii_contrato_apertura']=$adjunto;
             }else{
                 $datos[$tramitetipo]['ii_folio_apertura']=$form['ii_folio_apertura'];
             }
@@ -4015,7 +4135,8 @@ class TramiteRueController extends Controller
     }
 
     public function reaperturaGuardarAction(Request $request){
-
+        //variable de control para el cargado de adjunto
+        $error_upload = false;
         $this->session = $request->getSession();
         $form = $request->get('form');
         $files = $request->files->get('form');
@@ -4073,7 +4194,13 @@ class TramiteRueController extends Controller
         //dump($datos);die;
         $gestion = $this->session->get('currentyear');
         $ruta = '/../web/uploads/archivos/flujos/'.$form['sie'].'/rue/'.$gestion.'/';
-        $datos[$tramites[0]['tramite_tipo']]['i_solicitud_reapertura']=$this->upload($files['i_solicitud_reapertura'],$ruta);    
+
+        $adjunto = $this->upload($files['i_solicitud_reapertura'],$ruta);
+        if($adjunto == ''){
+            $error_upload = true;
+        }
+        $datos[$tramites[0]['tramite_tipo']]['i_solicitud_reapertura']=$adjunto;
+
         $datos[$tramites[0]['tramite_tipo']]['estadoinstitucion_id']=10;
         $datos[$tramites[0]['tramite_tipo']]['estadoinstitucion']='Abierta';
         //dump($datos);die;
