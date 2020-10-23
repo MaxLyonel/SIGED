@@ -1294,7 +1294,7 @@ class MaestroAsignacionController extends Controller {
         // $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'notaTipo'=>$notaTipo, 'casoMaestro'=>$maestroInscripcioEntity, 'formNuevo'=>$form, 'formEnable'=>$formEnable, 'rangoFecha'=>$arrayRangoFecha);
           
         $form = $this->getFormRegistroMaestro($val, $item, $fechaInicio, $fechaFin, $financiamientoTipoEntity, $arrayMaestroInscripcionLista, 0);
-        $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'notaTipo'=>$notaTipo, 'formNuevo'=>$form, 'rangoFecha'=>$arrayRangoFecha);
+        $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'notaTipo'=>$notaTipo, 'formNuevo'=>$form, 'formCalidad'=>true, 'rangoFecha'=>$arrayRangoFecha);
 
         $arrayFormulario['formEnable'] = true;
 
@@ -1307,7 +1307,7 @@ class MaestroAsignacionController extends Controller {
         ->add('item', 'text', array('label' => 'Item', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $item, 'style' => 'text-transform:uppercase', 'placeholder' => 'Item' , 'maxlength' => 10, 'required' => true)))
         ->add('fechaInicio', 'text', array('label' => 'Fecha inicio de asignación (ej.: 01-01-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaInicio, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha inicio de asignación' , 'maxlength' => 10, 'required' => true)))
         ->add('fechaFin', 'text', array('label' => 'Fecha fin de asignación (ej.: 31-12-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaFin, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha fin de asignación' , 'maxlength' => 10, 'required' => true)))
-        ->add('maestro', 'choice', array('choices' => $maestroInscripcionLista, 'label' => 'Financiamiento', 'empty_value' => 'Seleccione Maestro', 'data' => $maestroInscripcionId, 'attr' => array('onchange' => 'dato_maestro()')))
+        ->add('maestro', 'choice', array('choices' => $maestroInscripcionLista, 'label' => 'Maestro', 'empty_value' => 'Seleccione Maestro', 'data' => $maestroInscripcionId, 'attr' => array('onchange' => 'dato_maestro()')))
         ->add('financiamiento', 'entity', array('data' => $financiamientoTipoEntity, 'label' => 'Financiamiento', 'empty_value' => 'Seleccione Financiamiento', 'class' => 'Sie\AppWebBundle\Entity\FinanciamientoTipo',
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('ft')
