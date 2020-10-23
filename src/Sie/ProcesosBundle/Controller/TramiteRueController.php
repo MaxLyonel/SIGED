@@ -2402,13 +2402,14 @@ class TramiteRueController extends Controller
                             foreach($tareasDatos[0]['datos']['tramites'] as $t){
                                 $vAnterior = array();
                                 $vNuevo = array();
-                                if($t['id'] == 34){#ampliacion de nivel
+                                if($t['id'] == 34){#ampliacion de nivel incluir resolucion
                                     foreach($tareasDatos[0]['datos']['institucioneducativaNivel'] as $n){
                                         $arr[] = $n['id'];
                                     }
                                     $nuevoNivel = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelampliar'];
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
                                     $em->flush();
                                     //adiciona niveles nuevos
                                     foreach($nuevoNivel as $n){
@@ -2422,10 +2423,11 @@ class TramiteRueController extends Controller
                                     }
                                     $em->flush();
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[2]['datos']['resolucion'],$tareasDatos[2]['datos']['fecharesolucion'],json_encode($tareasDatos[0]['datos']['institucioneducativaNivel']),json_encode($tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelampliar']),$form['observacion'],$usuario);
-                                }elseif($t['id'] == 35){#reduccion de nivel
+                                }elseif($t['id'] == 35){#reduccion de nivel incluir resolucion
                                     $nuevoNivel = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelreducir'];
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
                                     $em->flush();
                                     //elimina los niveles
                                     $nivelesElim = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $institucioneducativa->getId()));
@@ -2446,7 +2448,7 @@ class TramiteRueController extends Controller
                                     }
                                     $em->flush();
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[2]['datos']['resolucion'],$tareasDatos[2]['datos']['fecharesolucion'],json_encode($tareasDatos[0]['datos']['institucioneducativaNivel']),json_encode($tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelreducir']),$form['observacion'],$usuario);
-                                }elseif($t['id'] == 36){#cambio de dependencia
+                                }elseif($t['id'] == 36){#cambio de dependencia incluir resolucion
                                     $dependenciaTipo = $em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($tareasDatos[0]['datos'][$t['tramite_tipo']]['dependencia']['id']);
                                     $vAnterior['dependencia']['id'] = $tareasDatos[0]['datos']['institucioneducativa']['dependencia_tipo_id'];
                                     $vAnterior['dependencia']['dependencia'] = $tareasDatos[0]['datos']['institucioneducativa']['dependencia'];
@@ -2454,6 +2456,7 @@ class TramiteRueController extends Controller
                                     $institucioneducativa->setDependenciaTipo($dependenciaTipo);
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
                                     if($tareasDatos[0]['datos'][$t['tramite_tipo']]['dependencia']['id'] == 2){ //convenio
                                         $convenio = $em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById($tareasDatos[0]['datos'][$t['tramite_tipo']]['conveniotipo']['id']);
                                         $institucioneducativa->setConvenioTipo($convenio);
@@ -2469,20 +2472,22 @@ class TramiteRueController extends Controller
                                     $em->flush();
 
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[2]['datos']['resolucion'],$tareasDatos[2]['datos']['fecharesolucion'],json_encode($vAnterior),json_encode($vNuevo),$form['observacion'],$usuario);
-                                }elseif($t['id'] == 37){#cambio de nombre
+                                }elseif($t['id'] == 37){#cambio de nombre incluir resolucion
                                     $institucioneducativa->setInstitucioneducativa(mb_strtoupper($tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_nombre'], 'utf-8'));
                                     $institucioneducativa->setDesUeAntes(mb_strtoupper($tareasDatos[0]['datos']['institucioneducativa']['institucioneducativa'], 'utf-8'));
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
                                     $em->flush();
 
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[2]['datos']['resolucion'],$tareasDatos[2]['datos']['fecharesolucion'],mb_strtoupper($tareasDatos[0]['datos']['institucioneducativa']['institucioneducativa'], 'utf-8'),mb_strtoupper($tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_nombre'], 'utf-8'),$form['observacion'],$usuario);
-                                }elseif($t['id'] == 38){#cambio de jurisdiccion administrativa
+                                }elseif($t['id'] == 38){#cambio de jurisdiccion administrativa incluir resolucion
                                     $iddistrito = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_distrito']['id'];
                                     $lugarIdDistrito = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('lugarNivel' => 7, 'codigo' => $iddistrito))->getId();
                                     $distritoTipo = $em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($iddistrito);
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
                                     $institucioneducativa->setAreaMunicipio($tareasDatos[0]['datos'][$t['tramite_tipo']]['i_area_jur']);
                                     $jurisdicciongeografica = $institucioneducativa->getLeJuridiccionGeografica();
                                     $jurisdicciongeografica->setLugarTipoIdDistrito($lugarIdDistrito);
@@ -2496,18 +2501,20 @@ class TramiteRueController extends Controller
                                     $vNuevo['nuevo_distrito'] = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_distrito'];
                                     
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[2]['datos']['resolucion'],$tareasDatos[2]['datos']['fecharesolucion'],json_encode($vAnterior),json_encode($vNuevo),$form['observacion'],$usuario);
-                                }elseif($t['id'] == 39){#Fusion
+                                }elseif($t['id'] == 39){#Fusion incluir resolucion
                                     $tipo = 'fusion';
                                     $iefusion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($tareasDatos[0]['datos'][$t['tramite_tipo']]['siefusion']['id']);
 
                                     $vAnterior['siefusion'] = array('sie1'=>$institucioneducativa->getId(),'sie2'=>$iefusion->getId());
-                                    $vNuevo = array('sieresultante'=>$institucioneducativa->getId());                                    
+                                    $vNuevo = array('sieresultante'=>$institucioneducativa->getId()); 
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));                                   
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[2]['datos']['resolucion'],$tareasDatos[2]['datos']['fecharesolucion'],json_encode($vAnterior),json_encode($vNuevo),$form['observacion'],$usuario);
-                                }elseif($t['id'] == 40){#Desglose
+                                }elseif($t['id'] == 40){#Desglose incluir resolucion
                                     $tipo = 'desglose';
-                                }elseif($t['id'] == 41){#cambio de infraestructura
+                                }elseif($t['id'] == 41){#cambio de infraestructura incluir resolucion
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
                                     $institucioneducativa->setAreaMunicipio($tareasDatos[0]['datos'][$t['tramite_tipo']]['i_area_infra']);
                                     if(isset($tareasDatos[0]['datos'][$t['tramite_tipo']]['lejurisdiccion'])){
                                         $institucioneducativa->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($tareasDatos[0]['datos'][$t['tramite_tipo']]['lejurisdiccion']));
@@ -2542,11 +2549,12 @@ class TramiteRueController extends Controller
                                     $vNuevo['estado']['id'] = $estado->getId();
                                     $vNuevo['estado']['estado'] = $estado->getEstadoinstitucion();
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[2]['datos']['resolucion'],$tareasDatos[2]['datos']['fecharesolucion'],json_encode($vAnterior),json_encode($vNuevo),$form['observacion'],$usuario);
-                                }elseif($t['id'] == 44){#reapertura
+                                }elseif($t['id'] == 44){#reapertura incluir resolucion
                                     $estado = $em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById(10);
                                     $institucioneducativa->setEstadoinstitucionTipo($estado);
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
+                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
                                     $vAnterior['estado']['id'] = $tareasDatos[0]['datos']['institucioneducativa']['estadoinstitucion_tipo_id'];
                                     $vAnterior['estado']['estado'] = $tareasDatos[0]['datos']['institucioneducativa']['estadoinstitucion'];                                        
                                     $em->flush();
@@ -2554,7 +2562,7 @@ class TramiteRueController extends Controller
                                     $vNuevo['estado']['id'] = $estado->getId();
                                     $vNuevo['estado']['estado'] = $estado->getEstadoinstitucion();
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[1]['datos']['resolucion'],$tareasDatos[1]['datos']['fecharesolucion'],json_encode($vAnterior),json_encode($vNuevo),$form['observacion'],$usuario);
-                                }elseif($t['id'] == 46){#regularizacion rue
+                                }elseif($t['id'] == 46){#regularizacion rue incluir resolucion , ya incluido
                                     $vAnterior['nro_resolucion'] = $institucioneducativa->getNroResolucion();
                                     $vAnterior['fecha_resolucion'] = $institucioneducativa->getFechaResolucion()?$institucioneducativa->getFechaResolucion()->format('d-m-Y'):'';
                                     $institucioneducativa->setFechaResolucion(new \DateTime($tareasDatos[2]['datos']['fecharesolucion']));
@@ -2566,7 +2574,7 @@ class TramiteRueController extends Controller
                                     $vNuevo['nro_resolucion'] = $tareasDatos[2]['datos']['resolucion'];
                                     $vNuevo['fecha_resolucion'] = $tareasDatos[2]['datos']['fecharesolucion'];
                                     $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,$t['id'],$tareasDatos[2]['datos']['resolucion'],$tareasDatos[2]['datos']['fecharesolucion'],json_encode($vAnterior),json_encode($vNuevo),$form['observacion'],$usuario);
-                                }elseif($t['id'] == 54){
+                                }elseif($t['id'] == 54){ //incluir resolucion, revisar Apertura
                                     //$nuevaInstitucioneducativa = $this->registrarInstitucioneducativa($tareasDatos[0][$t['tramite_tipo']]);
                                     $datosSolicitud = $tareasDatos[0]['datos'][$t['tramite_tipo']];
                                     //dump($datosSolicitud);die;
@@ -2631,7 +2639,7 @@ class TramiteRueController extends Controller
                                         $vAnterior['sienuevo'] = $entity->getId();
                                         $historial = $this->registraHistorialTramite($institucioneducativa,$tramite,54,$tareasDatos[2]['datos']['resolucion'],$tareasDatos[2]['datos']['fecharesolucion'],json_encode($vAnterior),json_encode($vNuevo),$form['observacion'],$usuario);
                                     }
-                                }elseif($t['id'] == 55){
+                                }elseif($t['id'] == 55){//Actualizacion de Resolucion
                                     //$nuevaInstitucioneducativa = $this->registrarInstitucioneducativa($tareasDatos[0][$t['tramite_tipo']]);
                                     $datosSolicitud = $tareasDatos[0]['datos'][$t['tramite_tipo']];
                                     $codigoue = $tareasDatos[0]['datos']['institucioneducativa']['id'];
