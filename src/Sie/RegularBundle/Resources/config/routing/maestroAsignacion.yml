@@ -105,9 +105,39 @@ maestroAsignacion_asignar_fuente_financiamiento:
     options:
         expose: true
 
+maestroAsignacion_asignar_fuente_financiamiento_guarda:
+    path:     /asignar/fuente/financiamiento/guarda
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarFuenteFinanciamientoGuarda }
+    options:
+        expose: true
+
+maestroAsignacion_omitir:
+    path:     /omitir
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:omitir }
+    options:
+        expose: true
+
+maestroAsignacion_validar_segip:
+    path:     /validar/segip
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:validarSegip }
+    options:
+        expose: true
+
+maestroAsignacion_validar_segip_guarda:
+    path:     /validar/segip/guarda
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:validarSegipGuarda }
+    options:
+        expose: true
+
 maestroAsignacion_lista:
     path:     /asignar/maestro/lista
     defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroLista }
+    options:
+        expose: true
+
+maestroAsignacion_guarda:
+    path:     /asignar/maestro/guarda
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroGuarda }
     options:
         expose: true
 

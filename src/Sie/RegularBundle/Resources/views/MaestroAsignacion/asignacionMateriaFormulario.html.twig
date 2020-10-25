@@ -86,8 +86,8 @@
         todayHighlight: true,
         format: 'dd-mm-yyyy',
 		language: 'es',
-        endDate: '31-12-2019',
-        startDate: '01-01-2019',
+        endDate: '{{rangoFecha.final}}',
+        startDate: '{{rangoFecha.inicio}}',
     });
 
     var asignar = function(){
@@ -173,12 +173,12 @@
                     }  
                 } else {
                     $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');
-                    registro.html(maestroContent);
+                    registro.html(registroContent);
                 }            
             },
             error: function(error){ 
                 registro.empty();      
-                registro.html(maestroContent);
+                registro.html(registroContent);
             },
         });    
     }

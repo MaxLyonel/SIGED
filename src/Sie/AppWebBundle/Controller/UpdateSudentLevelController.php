@@ -39,6 +39,16 @@ class UpdateSudentLevelController extends Controller{
     }
     // index method by krlos
     public function indexAction(Request $request){
+        $form = is_array(($request->get('form')))?$request->get('form'):false;
+        if(!$form){
+            $form = array(
+                'idDetalle'=>'',
+                'llave'=>'',
+                'gestion'=>'',
+                'institucioneducativa'=>'',
+                'optionTodo'=>'',
+            );
+        }
      
         //validation if the user is logged
         if (!isset($this->userlogged)) {
@@ -46,6 +56,7 @@ class UpdateSudentLevelController extends Controller{
         }
 
         return $this->render($this->session->get('pathSystem') .':UpdateSudentLevel:index.html.twig', array(
+                'form' => $form
            
         ));
     }
@@ -396,6 +407,7 @@ class UpdateSudentLevelController extends Controller{
         $sie = $arrData['sie'];
         $gestion = $arrData['gestion'];
         $studenInscriptionId = $arrData['studenInscriptionId'];
+        $extranjero = $arrData['extranjero'];
 
 
         // condition to find the correct level to fix the observation
@@ -413,7 +425,30 @@ class UpdateSudentLevelController extends Controller{
         
             $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studenInscriptionId);
             $objStudentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($arrayCondition));
+            if($extranjero == 1){
+                $objStudentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(19));    
+            }
             $em->persist($objStudentInscription);
+            
+            $objValidacionProceso = $em->createQueryBuilder()
+                                ->select('v')
+                                ->from('SieAppWebBundle:ValidacionProceso','v')
+                                ->where('v.esActivo = :active')
+                                ->andWhere('v.validacionReglaTipo in (12, 15) ')
+                                ->andwhere('v.llave = :codigoRude')
+                                ->setParameter('codigoRude', $codigoRude)
+                                ->setParameter('active', false)
+                                ->getQuery()
+                                ->getResult();
+            
+            if(sizeof($objValidacionProceso)>0){
+                foreach ($objValidacionProceso as $value) {
+                    $objValidacionProcesoUpdate = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($value->getId());
+                    $objValidacionProcesoUpdate->setEsActivo('t');
+                    $em->persist($objValidacionProcesoUpdate);
+                }              
+            }
+            
             $em->flush();
 
          // save the file in case if exists
