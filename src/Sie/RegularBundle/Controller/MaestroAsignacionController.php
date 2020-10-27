@@ -1621,6 +1621,14 @@ class MaestroAsignacionController extends Controller {
         $fechaNacimiento = $form['fechaNacimiento'];
         $validacionProcesoId = $info['vp_id'];
 
+        $response = new JsonResponse();
+
+        $validacionProcesoEntidad= $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($validacionProcesoId);
+        if(!$validacionProcesoEntidad){
+            $msg = "No existe la inconsistencia seleccionada, intente nuevamente";
+            return $response->setData(array('estado'=>false, 'msg'=>$msg));
+        }
+
         $datosActuales = array(
             'carnet' => $carnetIdentidad,
             'complemento' => strtoupper($complemento),
@@ -1632,8 +1640,6 @@ class MaestroAsignacionController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $personaEntidad = $em->getRepository('SieAppWebBundle:Persona')->find($personaId);
-
-        $response = new JsonResponse();
         $datosAnteriores = array();
         if (count($personaEntidad)>0){
             $datosAnteriores = array(
@@ -1698,6 +1704,8 @@ class MaestroAsignacionController extends Controller {
                     $data->setPersona($maestroPersonaEntity);
                     $em->persist($data);
                 }
+                $validacionProcesoEntidad->setEsActivo(true);
+                $em->persist($validacionProcesoEntidad);
                 $em->flush();
                 $em->getConnection()->commit();
                 $msg = "Asignación de los datos validados de ".$nombre." ".$paterno." ".$materno." a la inscripción realizado correctamente";
@@ -1717,6 +1725,8 @@ class MaestroAsignacionController extends Controller {
                     $personaEntidad->setExpedido($entityExpedido);                    
                     $personaEntidad->setFechaNacimiento($fechaNacimiento);
                     $em->persist($personaEntidad);
+                    $validacionProcesoEntidad->setEsActivo(true);
+                    $em->persist($validacionProcesoEntidad);
                     $em->flush();
                     $em->getConnection()->commit();
                     $msg = "Validación y modificación de datos de ".$nombre." ".$paterno." ".$materno." realizado correctamente";
