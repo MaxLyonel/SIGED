@@ -1623,6 +1623,8 @@ class MaestroAsignacionController extends Controller {
 
         $response = new JsonResponse();
 
+        $em = $this->getDoctrine()->getManager();
+
         $validacionProcesoEntidad= $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($validacionProcesoId);
         if(!$validacionProcesoEntidad){
             $msg = "No existe la inconsistencia seleccionada, intente nuevamente";
@@ -1638,7 +1640,6 @@ class MaestroAsignacionController extends Controller {
             'fechaNacimiento' => $fechaNacimiento,
         ); 
 
-        $em = $this->getDoctrine()->getManager();
         $personaEntidad = $em->getRepository('SieAppWebBundle:Persona')->find($personaId);
         $datosAnteriores = array();
         if (count($personaEntidad)>0){
