@@ -179,7 +179,7 @@ class SeguimientoController extends Controller {
 
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
-                    'subtitulo' => 'Trámite',
+                    'subtitulo' => '',
                     'listaDocumento' => $entityDocumento,
                     'listaTramiteDetalle' => $entityTramiteDetalle,
                     'listaDocumentoDetalle' => $entityDocumentoDetalle,
@@ -239,7 +239,7 @@ class SeguimientoController extends Controller {
         return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteNumeroIndex.html.twig', array(
             'formBusqueda' => $tramiteController->creaFormBuscaTramite('tramite_seguimiento_lista','')->createView(),
             'titulo' => 'Seguimiento',
-            'subtitulo' => 'Número de Trámite',
+            'subtitulo' => 'Número de expediente',
         ));
     }
 
@@ -274,13 +274,13 @@ class SeguimientoController extends Controller {
                     $entityTramite = $tramiteController->getTramite($tramite);
 
                     if(count($entityTramite)<=0){
-                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número de trámite ingresado'));
+                        $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número de expediente ingresado'));
                     }
 
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteNumeroIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaTramite('tramite_seguimiento_lista',$tramite)->createView(),
                         'titulo' => 'Seguimiento',
-                        'subtitulo' => 'Número de Trámite',
+                        'subtitulo' => 'Número de expediente',
                         'listaBusqueda' => $entityTramite,
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
@@ -330,7 +330,7 @@ class SeguimientoController extends Controller {
             try {
                 $entityTramite = $tramiteController->getTramite($codigo);
                 if(count($entityTramite)<=0){
-                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número de trámite'));
+                    $this->session->getFlashBag()->set('warning', array('title' => 'Alerta', 'message' => 'No es posible encontrar la información del número de expediente'));
                 }
 
                 $entityTramite = $entityTramite[0];
@@ -347,7 +347,7 @@ class SeguimientoController extends Controller {
 
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
-                    'subtitulo' => 'Trámite',
+                    'subtitulo' => '',
                     'listaDocumento' => $entityTramite,
                     'listaTramiteDetalle' => $entityTramiteDetalle,
                     'listaDocumentoDetalle' => $entityDocumentoDetalle,
@@ -407,7 +407,7 @@ class SeguimientoController extends Controller {
         return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteRudeIndex.html.twig', array(
             'formBusqueda' => $tramiteController->creaFormBuscaTramiteRude('tramite_seguimiento_rude_lista','')->createView(),
             'titulo' => 'Seguimiento',
-            'subtitulo' => 'Número de Trámite',
+            'subtitulo' => 'Número de expediente',
         ));
     }
 
@@ -449,7 +449,7 @@ class SeguimientoController extends Controller {
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteRudeIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaTramiteRude('tramite_seguimiento_rude_lista',$rude)->createView(),
                         'titulo' => 'Seguimiento',
-                        'subtitulo' => 'Número de Trámite',
+                        'subtitulo' => 'Número de expediente',
                         'listaBusqueda' => $entityTramiteRude,
                     ));
                 } catch (\Doctrine\ORM\NoResultException $exc) {
@@ -525,7 +525,7 @@ class SeguimientoController extends Controller {
                 if (!$permisoTramiteDetalle){
                     return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                         'titulo' => 'Seguimiento',
-                        'subtitulo' => 'Trámite',
+                        'subtitulo' => '',
                         'listaDocumento' => $entityTramite,
                         'listaDocumentoDetalle' => $entityDocumentoDetalle,
                     ));
@@ -533,7 +533,7 @@ class SeguimientoController extends Controller {
 
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
-                    'subtitulo' => 'Trámite',
+                    'subtitulo' => '',
                     'listaDocumento' => $entityTramite,
                     'listaTramiteDetalle' => $entityTramiteDetalle,
                     'listaDocumentoDetalle' => $entityDocumentoDetalle,
@@ -703,7 +703,7 @@ class SeguimientoController extends Controller {
 
                 return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
                     'titulo' => 'Seguimiento',
-                    'subtitulo' => 'Trámite',
+                    'subtitulo' => '',
                     'listaDocumento' => $entityTramite,
                     'listaTramiteDetalle' => $entityTramiteDetalle,
                     'listaDocumentoDetalle' => $entityDocumentoDetalle,
