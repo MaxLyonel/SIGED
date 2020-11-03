@@ -133,7 +133,7 @@ class TramiteDetalleController extends Controller {
 
             $return = "";
         } else {
-            $return = "Trámite no encontrado, intente nuevamente";
+            $return = "Expediente no encontrado, intente nuevamente";
         }
         return $return;
     }
@@ -614,7 +614,7 @@ class TramiteDetalleController extends Controller {
         return $this->render($this->session->get('pathSystem') . ':Tramite:index.html.twig', array(
             'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_recepcion_lista',0,0,0,0)->createView(),
             'titulo' => 'Recepción',
-            'subtitulo' => 'Trámite',
+            'subtitulo' => '',
         ));
     }
 
@@ -661,7 +661,7 @@ class TramiteDetalleController extends Controller {
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:recepcionIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_recepcion_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
                         'titulo' => 'Recepción',
-                        'subtitulo' => 'Trámite',
+                        'subtitulo' => '',
                         'listaParticipante' => $entityParticipantes,
                         'infoAutorizacionCentro' => $entityAutorizacionCentro,
                         'datosBusqueda' => $datosBusqueda,
@@ -802,7 +802,7 @@ class TramiteDetalleController extends Controller {
                 $tramites = $request->get('participantes');
                 if (isset($_POST['botonAceptar'])) {
                     $flujoSeleccionado = 'Adelante';
-                    $obs = "TRÁMITE RECEPCIONADO";
+                    $obs = "RECEPCIONADO";
                 }
                 if (isset($_POST['botonDevolver'])) {
                     $flujoSeleccionado = 'Atras';
@@ -942,7 +942,7 @@ class TramiteDetalleController extends Controller {
         return $this->render($this->session->get('pathSystem') . ':Tramite:index.html.twig', array(
             'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_autorizacion_lista',0,0,0,0)->createView(),
             'titulo' => 'Autorización',
-            'subtitulo' => 'Trámite',
+            'subtitulo' => '',
         ));
     }
 
@@ -989,7 +989,7 @@ class TramiteDetalleController extends Controller {
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:autorizacionIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_autorizacion_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
                         'titulo' => 'Autorización',
-                        'subtitulo' => 'Trámite',
+                        'subtitulo' => '',
                         'listaParticipante' => $entityParticipantes,
                         'infoAutorizacionCentro' => $entityAutorizacionCentro,
                         'datosBusqueda' => $datosBusqueda,
@@ -1132,7 +1132,7 @@ class TramiteDetalleController extends Controller {
                 $tramites = $request->get('participantes');
                 if (isset($_POST['botonAceptar'])) {
                     $flujoSeleccionado = 'Adelante';
-                    $obs = "TRÁMITE AUTORIZADO";
+                    $obs = "AUTORIZADO";
                 }
                 if (isset($_POST['botonDevolver'])) {
                     $flujoSeleccionado = 'Atras';
@@ -1288,8 +1288,8 @@ class TramiteDetalleController extends Controller {
 
         return $this->render($this->session->get('pathSystem') . ':Tramite:index.html.twig', array(
             'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_impresion_lista',0,0,0,0)->createView(),
-            'titulo' => 'Impresión',
-            'subtitulo' => 'Trámite',
+            'titulo' => 'Asignación de cartón',
+            'subtitulo' => '',
         ));
     }
 
@@ -1362,8 +1362,8 @@ class TramiteDetalleController extends Controller {
 
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:impresionIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_impresion_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
-                        'titulo' => 'Impresión',
-                        'subtitulo' => 'Trámite',
+                        'titulo' => 'Asignar cartón',
+                        'subtitulo' => '',
                         'listaParticipante' => $entityParticipantes,
                         'listaFirma' => $entityFirma,
                         'series' => $entityDocumentoSerie,
@@ -2053,7 +2053,7 @@ class TramiteDetalleController extends Controller {
         return $this->render($this->session->get('pathSystem') . ':Tramite:index.html.twig', array(
             'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_envio_lista',0,0,0,0)->createView(),
             'titulo' => 'Envío',
-            'subtitulo' => 'Trámite',
+            'subtitulo' => '',
         ));
     }
 
@@ -2100,7 +2100,7 @@ class TramiteDetalleController extends Controller {
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:envioIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_envio_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
                         'titulo' => 'Envío',
-                        'subtitulo' => 'Trámite',
+                        'subtitulo' => '',
                         'listaParticipante' => $entityParticipantes,
                         'infoAutorizacionCentro' => $entityAutorizacionCentro,
                         'datosBusqueda' => $datosBusqueda,
@@ -2245,7 +2245,7 @@ class TramiteDetalleController extends Controller {
                 $tramites = $request->get('participantes');
                 if (isset($_POST['botonAceptar'])) {
                     $flujoSeleccionado = 'Adelante';
-                    $obs = "TRÁMITE ENVIADO";
+                    $obs = "ENVIADO";
                 }
                 if (isset($_POST['botonDevolver'])) {
                     $flujoSeleccionado = 'Atras';
@@ -2392,7 +2392,7 @@ class TramiteDetalleController extends Controller {
         return $this->render($this->session->get('pathSystem') . ':Tramite:index.html.twig', array(
             'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_entrega_lista',0,0,0,0)->createView(),
             'titulo' => 'Entrega',
-            'subtitulo' => 'Trámite',
+            'subtitulo' => '',
         ));
     }
 
@@ -2439,7 +2439,7 @@ class TramiteDetalleController extends Controller {
                     return $this->render($this->session->get('pathSystem') . ':TramiteDetalle:entregaIndex.html.twig', array(
                         'formBusqueda' => $tramiteController->creaFormBuscaCentroEducacionAlternativaTecnica('tramite_detalle_certificado_tecnico_entrega_lista',$sie,$gestion,$especialidad,$nivel)->createView(),
                         'titulo' => 'Entrega',
-                        'subtitulo' => 'Trámite',
+                        'subtitulo' => '',
                         'listaParticipante' => $entityParticipantes,
                         'infoAutorizacionCentro' => $entityAutorizacionCentro,
                         'datosBusqueda' => $datosBusqueda,
@@ -2709,7 +2709,7 @@ class TramiteDetalleController extends Controller {
         $entityTramiteDetalle = $queryEntidad->fetchAll();
         $entidadFlujoProceso = $this->getUltimoProcesoFlujo($entityTramite->getFlujoTipo()->getId());
         if($entityTramiteDetalle[0]['flujo_proceso_id']!=$entidadFlujoProceso->getId()){
-            $msg = 'El trámite con número '.$tramiteId.' no fue concluido';
+            $msg = 'La emisión '.$tramiteId.' no fue concluido';
         }
         return $msg;
     }

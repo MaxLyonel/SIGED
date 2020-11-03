@@ -9,7 +9,7 @@
                 <div class="portlet portlet-default">
                     <div class="portlet-heading">
                         <div class="portlet-title">
-                            <h4><i class="fa fa-circle text-dpl"></i> Búsqueda de Trámites</h4>
+                            <h4><i class="fa fa-circle text-dpl"></i> Búsqueda</h4>
                         </div>
                         <div class="portlet-widgets">
                             <span class="divider"></span>
@@ -61,7 +61,7 @@
                                 <table id="myTableTitle" class="table table-bordered table-hover cf table-striped">
                                     <thead class="">
                                         <tr class="">
-                                            <th>Trámite</th>
+                                            <th>Expediente</th>
                                             <th>SIE</th>
                                             <th>Código Rude</th>
                                             <th>C.I.</th>
@@ -71,13 +71,13 @@
                                     <tbody>
                                         <tr>
                                             {% if entities|length > 0 %}
-                                                <td data-title="Trámite">{{ entities[0].flujo_tramite|capitalize }}</td>
+                                                <td data-title="Expediente">{{ entities[0].flujo_tramite|capitalize }}</td>
                                                 <td data-title="SIE" >{{ entities[0].sie }} - {{entities[0].centro|capitalize}}</td>
                                                 <td data-title="Código Rude">{{ entities[0].codigo_rude }}</td>
                                                 <td data-title="C.I.">{{ entities[0].carnet_identidad }}</td>
                                                 <td data-title="Nombre" >{{ entities[0].nombre|capitalize  }} {{ entities[0].paterno|capitalize }} {{ entities[0].materno|capitalize }}</td>
                                             {% else %}
-                                                <td data-title="Trámite">&nbsp;</td>
+                                                <td data-title="Expediente">&nbsp;</td>
                                                 <td data-title="SIE" >&nbsp;</td>
                                                 <td data-title="Código Rude">&nbsp;</td>
                                                 <td data-title="C.I.">&nbsp;</td>
@@ -91,7 +91,7 @@
                                         <thead class="">
                                             <tr class="">
                                                 <th>#</th>
-                                                <th>Trámite</th>
+                                                <th>Expediente</th>
                                                 <th>Responsable</th>
                                                 <th>Fecha Registro</th>
                                                 <th>Proceso</th>
@@ -104,7 +104,7 @@
                                                 {% set cont = cont +1 %}
                                                 <tr>
                                                     <td data-title="#">{{ cont }}</td>
-                                                    <td data-title="Trámite">{{ entity.tramite_id }}</td>
+                                                    <td data-title="Expediente">{{ entity.tramite_id }}</td>
                                                     <td data-title="Responsable">{{ entity.usuario_remitente|capitalize }}</td>
                                                     <td data-title="Fecha Registro">{{ entity.fecha_envio }}</td>
                                                     <td data-title="Proceso">{{ entity.proceso }}</td>

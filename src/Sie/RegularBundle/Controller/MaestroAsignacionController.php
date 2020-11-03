@@ -1687,13 +1687,14 @@ class MaestroAsignacionController extends Controller {
         $fechaNacimiento = new \Datetime(date($fechaNacimiento));
         $objPersona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
             'carnet' => $carnetIdentidad,
-            'complemento' => strtoupper($complemento),
-            'nombre' => strtoupper($nombre),
-            'paterno' => strtoupper($paterno),
-            'materno' => strtoupper($materno),
+            'complemento' => strtoupper(trim($complemento,' \t\n\r')),
+            'nombre' => strtoupper(trim($nombre,' \t\n\r')),
+            'paterno' => strtoupper(trim($paterno,' \t\n\r')),
+            'materno' => strtoupper(trim($materno,' \t\n\r')),
             'fechaNacimiento' => $fechaNacimiento,
             'segipId' => 1
         )); 
+        
         $msg = "";
         $estado = false;
         $em->getConnection()->beginTransaction();
