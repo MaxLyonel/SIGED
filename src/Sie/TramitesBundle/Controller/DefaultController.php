@@ -309,7 +309,7 @@ class DefaultController extends Controller {
                     case '15':
                         return $this->render('SieTramitesBundle:Tramite:ListaEstudiantesUnidadEducativa.html.twig', array(
                                     'form' => $this->creaFormularioBuscador('sie_tramite_busca_ue', '', $gestionActual, '', '', 15)->createView()
-                                    , 'titulo' => 'Autorización de Trámites'
+                                    , 'titulo' => 'Autorización'
                                     , 'subtitulo' => 'Certificación Técnica'
                         ));
                         break;
@@ -333,7 +333,7 @@ class DefaultController extends Controller {
                     case '17':
                         return $this->render('SieTramitesBundle:Tramite:ListaEstudiantesUnidadEducativa.html.twig', array(
                                     'form' => $this->creaFormularioBuscador('sie_tramite_busca_ue', '', $gestionActual, '', '', 17)->createView()
-                                    , 'titulo' => 'Legalización de Trámites'
+                                    , 'titulo' => 'Legalización'
                                     , 'subtitulo' => 'Certificación Técnica'
                         ));
                         break;
@@ -394,7 +394,7 @@ class DefaultController extends Controller {
                 case '15':
                     return $this->render('SieTramitesBundle:Tramite:ListaEstudiantesUnidadEducativa.html.twig', array(
                                 'form' => $this->creaFormularioBuscador('sie_tramite_busca_ue', '', $gestionActual, '', '', 15)->createView()
-                                , 'titulo' => 'Autorización de Trámites'
+                                , 'titulo' => 'Autorización'
                                 , 'subtitulo' => 'Certificación Técnica'
                     ));
                     break;
@@ -410,7 +410,7 @@ class DefaultController extends Controller {
                 case '17':
                     return $this->render('SieTramitesBundle:Tramite:ListaEstudiantesUnidadEducativa.html.twig', array(
                                 'form' => $this->creaFormularioBuscador('sie_tramite_busca_ue', '', $gestionActual, '', '', 17)->createView()
-                                , 'titulo' => 'Legalización de Trámites'
+                                , 'titulo' => 'Legalización'
                                 , 'subtitulo' => 'Certificación Técnica'
                     ));
                     break;
@@ -452,10 +452,10 @@ class DefaultController extends Controller {
                     ->add('lista', 'choice', array('label' => 'Lista', 'empty_value' => 'Seleccionar',
                         'choices' => array('16' => 'Recepción Departamento'
                             , '17' => 'Autorización'
-                            , '18' => 'Impresión'
+                            , '18' => 'Asignar cartón'
                             , '19' => 'Certificado Asigando'
                             , '21' => 'Entrega Distrito'
-                            , '15' => 'Trámite Observado'
+                            , '15' => 'Observado'
                         ),
                         'attr' => array('onchange' => 'buscarBoton(this.value, 0)')))
                     ->add('identificador', 'hidden', array('attr' => array('value' => $identificador)))
@@ -683,7 +683,7 @@ class DefaultController extends Controller {
         if ($identificador == 1) {
             $form = $this->createFormBuilder()
                     ->setAction($this->generateUrl($routing))
-                    ->add('tramite', 'text', array('label' => 'Nro. Trámite', 'attr' => array('value' => $value1, 'placeholder' => 'Número de Trámite', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{1,8}', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+                    ->add('tramite', 'text', array('label' => 'Nro.', 'attr' => array('value' => $value1, 'placeholder' => 'Número de expediente', 'class' => 'form-control', 'pattern' => '[0-9\sñÑ]{1,8}', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
                     ->add('identificador', 'hidden', array('attr' => array('value' => $identificador)))
                     ->add('search1', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-blue')))
                     ->getForm();
@@ -867,7 +867,7 @@ class DefaultController extends Controller {
                         $l = 'Entrega Distrito';
                         break;
                     case 15:
-                        $l = 'Trámite Observado';
+                        $l = 'Observado';
                         break;
                 }
 
@@ -1429,7 +1429,7 @@ class DefaultController extends Controller {
                     }
                     $error = $this->procesaTramite($tramiteId, $usuarioId, $flujoSeleccionado, '', $estudianteInscripcionId, $especialidad, $nivel, $ue, $periodo[0]['max']);
                 }
-                $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Trámite registrado'));
+                $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'Registrado'));
                 $this->session->set('save', true);
                 $this->session->set('datosBusqueda', array('sie' => $ue, 'gestion' => $gestion, 'identificador' => $identificador, 'especialidad' => $especialidad, 'nivel' => $nivel, 'tipoTramite' => $tramiteTipoId));
                 return $this->redirectToRoute('sie_tramite_busca_ue');
@@ -1569,16 +1569,16 @@ class DefaultController extends Controller {
             if ($entityTramiteDetalle) {
                 $entityTramiteDetalleNew->setTramiteDetalle($entityTramiteDetalle[0]);
                 if ($flujoSeleccionado == 'Adelante') {
-                    $entityTramiteDetalleNew->setObs('TRÁMITE - PROCESADO');
+                    $entityTramiteDetalleNew->setObs('PROCESADO');
                 } else {
                     if ($flujoSeleccionado == 'Anular') {
-                        $entityTramiteDetalleNew->setObs('TRÁMITE - ANULADO');
+                        $entityTramiteDetalleNew->setObs('ANULADO');
                     } else {
-                        $entityTramiteDetalleNew->setObs('TRÁMITE - ENTREGADO');
+                        $entityTramiteDetalleNew->setObs('ENTREGADO');
                     }
                 }
             } else {
-                $entityTramiteDetalleNew->setObs('TRÁMITE - RECEPCION DISTRITO');
+                $entityTramiteDetalleNew->setObs('RECEPCION DISTRITO');
             }
             $entityTramiteDetalleNew->setTramite($entityTramite);
             $entityTramiteDetalleNew->setTramiteEstado($entityTramiteEstado);
@@ -1925,7 +1925,7 @@ class DefaultController extends Controller {
                 }
 
                 $em->getConnection()->commit();
-                $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => sizeof($estudiantes) . ' Trámite(s) procesado(s)'));
+                $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => sizeof($estudiantes) . ' procesado(s)'));
                 $this->session->set('save', true);
                 $this->session->set('datosBusqueda', array('sie' => $ue, 'gestion' => $gestion, 'nivel' => $nivel, 'especialidad' => $esp, 'identificador' => $identificador));
             } else {
@@ -2127,7 +2127,7 @@ class DefaultController extends Controller {
             $em->flush();
             $return = "";
         } else {
-            $return = "Trámite no encontrado, intente nuevamente";
+            $return = "Expediente no encontrado, intente nuevamente";
         }
         return $return;
     }

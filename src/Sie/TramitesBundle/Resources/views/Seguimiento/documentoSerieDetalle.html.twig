@@ -5,7 +5,7 @@
             <i class="fa fa-home"></i>
             <a href="{{path('tramite_homepage')}}">Perfil</a>
             <i class="fa fa-angle-right"></i>
-            <a >Seguimiento Trámite</a>
+            <a >Seguimiento</a>
         </li>
     </ol>
 {% endblock %}
@@ -36,7 +36,7 @@
                                         <strong>Tipo documento: </strong> {{listaDocumento.documentoTipo}}<br>
                                         <strong>Fecha de emisión: </strong> {{listaDocumento.fechaemision|date('d/m/Y')}}<br>
                                         <strong>D.D.E. Emisor: </strong> {{listaDocumento.departamentoemision}}<br>
-                                        <strong>Nro. Trámite: </strong> {{listaDocumento.tramite}}<br>
+                                        <strong>Nro.: </strong> {{listaDocumento.tramite}}<br>
                                     </address>
                                     <p class="text-right">
                                         {% if msgReactivaTramite is defined  %}
@@ -46,7 +46,7 @@
                                                     <input type="hidden" name="serie" value="{{ arrayForm.serie }}">
                                                     <input type="hidden" name="obs" value="{{ arrayForm.obs }}">
                                                     <input type="hidden" name="_token" value="{{ csrf_token(listaDocumento.tramite) }}">
-                                                    <button type="submit" class="btn btn-success" data-original-title="Reactivar Trámite" onclick="this.style.visibility='hidden';"><strong>Reactivar Trámite</strong></button>
+                                                    <button type="submit" class="btn btn-success" data-original-title="Reactivar" onclick="this.style.visibility='hidden';"><strong>Reactivar</strong></button>
                                                 </form>
                                             {% endif %}
                                         {% endif %}
@@ -61,7 +61,7 @@
                                 <div class="timeline-item alt">
                                     <div class="text-right">
                                         <div class="time-show first">
-                                            <a href="#" class="btn btn-teal"><strong>Inicio del trámite</strong></a>
+                                            <a href="#" class="btn btn-teal"><strong>Inicio</strong></a>
                                         </div>
                                     </div>
                                 </div>
@@ -130,7 +130,7 @@
                                     <div class="timeline-item alt">
                                         <div class="text-right">
                                             <div class="time-show">
-                                                <a href="#" class="btn btn-teal"><strong>Trámite concluido</strong></a>
+                                                <a href="#" class="btn btn-teal"><strong>Concluido</strong></a>
                                             </div>
                                         </div>
                                     </div>

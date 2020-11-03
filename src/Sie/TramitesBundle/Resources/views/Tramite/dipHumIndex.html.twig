@@ -289,7 +289,7 @@
             var botonDevolver = document.getElementsByName('botonDevolver')[0];
             var botonAnular = document.getElementsByName('botonAnular')[0];
             var botonCancelarDevolver = document.getElementsByName('botonCancelarDevolver')[0];
-            var r = confirm("¿ Desea registrar el trámite de los "+cantidadParticipantes+" estudiantes seleccionados ?");
+            var r = confirm("¿ Desea registrar los "+cantidadParticipantes+" estudiantes seleccionados ?");
 
             if (r == false) {
                 if (botonAceptar){
@@ -425,7 +425,7 @@
             
             $('#tablaParticipantes tbody').on("click", ".btnAnular", function(){    
                 var data = table.row( $(this).parents('tr')).data();
-                var r = confirm("¿ Desea anular el trámite "+data[1]+" ?");
+                var r = confirm("¿ Desea anular el expediente "+data[1]+" ?");
                 if (r == true) {              
                     // var estado = table.row($(this).parent().parent().children('td.estado')).value;
                     var estado = false;
@@ -483,7 +483,7 @@
                                 td.html("<div class='ckbox ckbox-info'><input name='participantes[]' id='"+id+"' value='"+val+"'  type='checkbox' onchange='validarMarcar(this);'><label for='"+id+"'></label></div>");  
                             } else {
                                 div.html(contDiv); 
-                                alert("Datos no validados, el trámite debe ser anulado para que las instancias correspondientes subsanen los datos registrados");
+                                alert("Datos no validados, la emisión debe ser anulado para que las instancias correspondientes subsanen los datos registrados");
                             }                       
                         },
                         error: function(xhr) {
