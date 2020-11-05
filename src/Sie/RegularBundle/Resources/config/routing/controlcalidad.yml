@@ -59,3 +59,7 @@ ccalidad_validar_estudiante_segip:
 ccalidad_justificar_estudiante_segip:
     path:     /justificarEstudianteSegip
     defaults: { _controller: "SieRegularBundle:ControlCalidad:justificarEstudianteSegip" }
+
+ccalidad_justificar_homonimo_gemelo:
+    path:     /justificarHomonimoGemelo
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:justificarHomonimoGemelo" }
