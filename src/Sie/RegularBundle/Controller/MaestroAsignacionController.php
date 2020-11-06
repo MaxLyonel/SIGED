@@ -1294,7 +1294,7 @@ class MaestroAsignacionController extends Controller {
         // $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'notaTipo'=>$notaTipo, 'casoMaestro'=>$maestroInscripcioEntity, 'formNuevo'=>$form, 'formEnable'=>$formEnable, 'rangoFecha'=>$arrayRangoFecha);
           
         $form = $this->getFormRegistroMaestro($val, $item, $fechaInicio, $fechaFin, $financiamientoTipoEntity, $arrayMaestroInscripcionLista, 0);
-        $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'notaTipo'=>$notaTipo, 'formNuevo'=>$form, 'rangoFecha'=>$arrayRangoFecha);
+        $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'notaTipo'=>$notaTipo, 'formNuevo'=>$form, 'formCalidad'=>true, 'rangoFecha'=>$arrayRangoFecha);
 
         $arrayFormulario['formEnable'] = true;
 
@@ -1307,7 +1307,7 @@ class MaestroAsignacionController extends Controller {
         ->add('item', 'text', array('label' => 'Item', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $item, 'style' => 'text-transform:uppercase', 'placeholder' => 'Item' , 'maxlength' => 10, 'required' => true)))
         ->add('fechaInicio', 'text', array('label' => 'Fecha inicio de asignación (ej.: 01-01-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaInicio, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha inicio de asignación' , 'maxlength' => 10, 'required' => true)))
         ->add('fechaFin', 'text', array('label' => 'Fecha fin de asignación (ej.: 31-12-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaFin, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha fin de asignación' , 'maxlength' => 10, 'required' => true)))
-        ->add('maestro', 'choice', array('choices' => $maestroInscripcionLista, 'label' => 'Financiamiento', 'empty_value' => 'Seleccione Maestro', 'data' => $maestroInscripcionId, 'attr' => array('onchange' => 'dato_maestro()')))
+        ->add('maestro', 'choice', array('choices' => $maestroInscripcionLista, 'label' => 'Maestro', 'empty_value' => 'Seleccione Maestro', 'data' => $maestroInscripcionId, 'attr' => array('onchange' => 'dato_maestro()')))
         ->add('financiamiento', 'entity', array('data' => $financiamientoTipoEntity, 'label' => 'Financiamiento', 'empty_value' => 'Seleccione Financiamiento', 'class' => 'Sie\AppWebBundle\Entity\FinanciamientoTipo',
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('ft')
@@ -1621,6 +1621,16 @@ class MaestroAsignacionController extends Controller {
         $fechaNacimiento = $form['fechaNacimiento'];
         $validacionProcesoId = $info['vp_id'];
 
+        $response = new JsonResponse();
+
+        $em = $this->getDoctrine()->getManager();
+
+        $validacionProcesoEntidad= $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($validacionProcesoId);
+        if(!$validacionProcesoEntidad){
+            $msg = "No existe la inconsistencia seleccionada, intente nuevamente";
+            return $response->setData(array('estado'=>false, 'msg'=>$msg));
+        }
+
         $datosActuales = array(
             'carnet' => $carnetIdentidad,
             'complemento' => strtoupper($complemento),
@@ -1630,10 +1640,7 @@ class MaestroAsignacionController extends Controller {
             'fechaNacimiento' => $fechaNacimiento,
         ); 
 
-        $em = $this->getDoctrine()->getManager();
         $personaEntidad = $em->getRepository('SieAppWebBundle:Persona')->find($personaId);
-
-        $response = new JsonResponse();
         $datosAnteriores = array();
         if (count($personaEntidad)>0){
             $datosAnteriores = array(
@@ -1680,13 +1687,14 @@ class MaestroAsignacionController extends Controller {
         $fechaNacimiento = new \Datetime(date($fechaNacimiento));
         $objPersona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
             'carnet' => $carnetIdentidad,
-            'complemento' => strtoupper($complemento),
-            'nombre' => strtoupper($nombre),
-            'paterno' => strtoupper($paterno),
-            'materno' => strtoupper($materno),
+            'complemento' => strtoupper(trim($complemento,' \t\n\r')),
+            'nombre' => strtoupper(trim($nombre,' \t\n\r')),
+            'paterno' => strtoupper(trim($paterno,' \t\n\r')),
+            'materno' => strtoupper(trim($materno,' \t\n\r')),
             'fechaNacimiento' => $fechaNacimiento,
             'segipId' => 1
         )); 
+        
         $msg = "";
         $estado = false;
         $em->getConnection()->beginTransaction();
@@ -1698,6 +1706,8 @@ class MaestroAsignacionController extends Controller {
                     $data->setPersona($maestroPersonaEntity);
                     $em->persist($data);
                 }
+                $validacionProcesoEntidad->setEsActivo(true);
+                $em->persist($validacionProcesoEntidad);
                 $em->flush();
                 $em->getConnection()->commit();
                 $msg = "Asignación de los datos validados de ".$nombre." ".$paterno." ".$materno." a la inscripción realizado correctamente";
@@ -1717,6 +1727,8 @@ class MaestroAsignacionController extends Controller {
                     $personaEntidad->setExpedido($entityExpedido);                    
                     $personaEntidad->setFechaNacimiento($fechaNacimiento);
                     $em->persist($personaEntidad);
+                    $validacionProcesoEntidad->setEsActivo(true);
+                    $em->persist($validacionProcesoEntidad);
                     $em->flush();
                     $em->getConnection()->commit();
                     $msg = "Validación y modificación de datos de ".$nombre." ".$paterno." ".$materno." realizado correctamente";

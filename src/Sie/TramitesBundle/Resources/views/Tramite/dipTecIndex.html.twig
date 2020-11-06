@@ -92,7 +92,7 @@
                                 <table id="myTableTitle" class="table table-bordered table-hover cf table-striped">
                                     <thead class="">
                                         <tr class="">
-                                            <th>Trámite</th>
+                                            <th>Expediente</th>
                                             <th>SIE</th>
                                             <th>Código Rude</th>
                                             <th>C.I.</th>
@@ -102,13 +102,13 @@
                                     <tbody>
                                         <tr>
                                             {% if entities|length > 0 %}
-                                                <td data-title="Trámite">{{ entities[0].flujo_tramite }}</td>
+                                                <td data-title="Expediente">{{ entities[0].flujo_tramite }}</td>
                                                 <td data-title="SIE" >{{ entities[0].sie }}</td>
                                                 <td data-title="Código Rude">{{ entities[0].codigo_rude }}</td>
                                                 <td data-title="C.I.">{{ entities[0].carnet_identidad }}</td>
                                                 <td data-title="Nombre" >{{ entities[0].nombre }} {{ entities[0].paterno }} {{ entities[0].materno }}</td>
                                             {% else %}
-                                                <td data-title="Trámite">&nbsp;</td>
+                                                <td data-title="Expediente">&nbsp;</td>
                                                 <td data-title="SIE" >&nbsp;</td>
                                                 <td data-title="Código Rude">&nbsp;</td>
                                                 <td data-title="C.I.">&nbsp;</td>
@@ -122,7 +122,7 @@
                                         <thead class="">
                                             <tr class="">
                                                 <th>#</th>
-                                                <th>Trámite</th>
+                                                <th>Expediente</th>
                                                 <th>Responsable</th>
                                                 <th>Fecha Registro</th>
                                                 <th>Proceso</th>
@@ -135,7 +135,7 @@
                                                 {% set cont = cont +1 %}
                                                 <tr>
                                                     <td data-title="#">{{ cont }}</td>
-                                                    <td data-title="Trámite">{{ entity.numero_tramite }}</td>
+                                                    <td data-title="Expediente">{{ entity.numero_tramite }}</td>
                                                     <td data-title="Responsable">{{ entity.usuario_remitente }}</td>
                                                     <td data-title="Fecha Registro">{{ entity.fecha_envio }}</td>
                                                     <td data-title="Proceso">{{ entity.proceso }}</td>

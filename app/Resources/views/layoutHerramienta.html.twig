@@ -603,6 +603,20 @@
                             </ul>
                         </li>
                     {% endif %}
+
+                    {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
+                        <li class="submenu">
+                            <a class="btn btn-success" href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Plataforma Educativa</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('plataforma_index')}}">Solicitud</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+
                     {#
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
                         <li class="submenu">

@@ -129,7 +129,7 @@
                                     <table id="myTable" class="table table-bordered table-hover cf dataTable tabla_dis">
                                         <thead class="">
                                             <tr class="">
-                                                <th>Trámite</th>
+                                                <th>Expediente</th>
                                                 <th>C.E.A</th>
                                                 <th>Código Rudeal</th>
                                                 <th>C.I.</th>
@@ -145,9 +145,9 @@
                                             {% for bachiller in estudiantes %}
                                                 {% set cont = cont +1 %}
                                                 <tr>
-                                                    <td data-title="tramite">{{ bachiller.tramite}}</td>
-                                                    <td data-title="institucioneducativa">{{ bachiller.institucioneducativa}}</td>
-                                                    <td data-title="Codigo Rude">{{ bachiller.codigo_rude }}</td>
+                                                    <td data-title="Expediente">{{ bachiller.tramite}}</td>
+                                                    <td data-title="C.E.A">{{ bachiller.institucioneducativa}}</td>
+                                                    <td data-title="Código Rudeal">{{ bachiller.codigo_rude }}</td>
                                                     <td data-title="C.I.">{{ bachiller.carnet_identidad }}</td>
                                                     <td data-title="Paterno">{{ bachiller.paterno }}</td>
                                                     <td data-title="Materno">{{ bachiller.materno }}</td>

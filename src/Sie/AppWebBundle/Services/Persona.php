@@ -10,16 +10,18 @@ class Persona {
 
 	protected $em;
     protected $router;
+    private $token;
     
 	public function __construct(EntityManager $entityManager, Router $router) {
 		$this->em = $entityManager;
-		$this->router = $router;
+        $this->router = $router;
+        $this->token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTYwNDM5MDczOCwiZXhwIjoxNjM1OTI2NzM4fQ.lhmPSSfLEXxosLYSNryV_x5WsL2KOOgU-ovqbSiVenc';
 	}
 
     public function buscarPersona($carnet, $complemento, $extranjero) {
 
         /***NUEVO TOKEN A LA FECHA 28/10/2019*/
-        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU3MjI3MzAzMiwiZXhwIjoxNjAzODA5MDMyfQ.F4Vu2jxfQzuZDWWR5wD93aRNTKKTfMYTVE2m4Wu8GIQ';
+        $token = $this->token;
         /***NUEVO TOKEN A LA FECHA 28/10/2019*/
         
 
@@ -41,7 +43,7 @@ class Persona {
 
     public function BuscarPersonaPorCarnetComplementoFechaNacimiento($carnet, $complemento, $fechaNacimiento) {
         /***NUEVO TOKEN A LA FECHA 28/10/2019*/
-        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU3MjI3MzAzMiwiZXhwIjoxNjAzODA5MDMyfQ.F4Vu2jxfQzuZDWWR5wD93aRNTKKTfMYTVE2m4Wu8GIQ';
+        $token = $this->token;
 
         $client = new Client([
         // Base URI is used with relative requests
@@ -61,7 +63,7 @@ class Persona {
 
     public function registrarPersona($carnet, $complemento, $fechanacimiento, $paterno, $materno, $nombre, $genero) {
         /***NUEVO TOKEN A LA FECHA 28/10/2019*/
-        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU3MjI3MzAzMiwiZXhwIjoxNjAzODA5MDMyfQ.F4Vu2jxfQzuZDWWR5wD93aRNTKKTfMYTVE2m4Wu8GIQ';
+        $token = $this->token;
 
         $client = new Client([
         // Base URI is used with relative requests
@@ -81,7 +83,7 @@ class Persona {
 
     public function actualizarPersona($id, $carnet, $complemento, $fechanacimiento, $paterno, $materno, $nombre, $genero) {
         /***NUEVO TOKEN A LA FECHA 28/10/2019*/
-        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU3MjI3MzAzMiwiZXhwIjoxNjAzODA5MDMyfQ.F4Vu2jxfQzuZDWWR5wD93aRNTKKTfMYTVE2m4Wu8GIQ';
+        $token = $this->token;
 
         $client = new Client([
         // Base URI is used with relative requests
