@@ -593,7 +593,7 @@ class RudeUnificationController extends Controller{
             select gestion_tipo_id_raep as gestion_rude_c, estadomatricula_tipo_id_fin_r as estadomatricula_rude_c
             from sp_genera_estudiante_historial('".$rudecor."') 
             where institucioneducativa_tipo_id_raep = 1
-            and estadomatricula_tipo_id_fin_r not in ('6','9')
+            and estadomatricula_tipo_id_fin_r not in ('6','9') and estadomatricula_fin_r in ('PROMOVIDO','PROMOVIDO BACHILLER DE EXCELENCIA','REPROBADO')
             ) c 
             ON b.gestion_rude_b = c.gestion_rude_c
             AND b.estadomatricula_rude_b = c.estadomatricula_rude_c) regular");
