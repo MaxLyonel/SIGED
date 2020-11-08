@@ -58,18 +58,6 @@ class PrintRecordCardController extends Controller
         }
 
 
-
-        // VERIFICAMOS SI LA OPCION ES POR CARNET PARA VALIDAR CON EL SEGIP
-        /*if ($opcion == 2) {
-            $validarSegip = $this->validarSegip($estudiante, $estudiante->getCarnetIdentidad());
-            if (!$validarSegip) {
-                return $response->setData([
-                    'status'=>'error',
-                    'msg'=>'Los datos del estudiante no son válidos'
-                ]);
-            }
-        }*/
-
         // BUSCAMOS UNA INSCRIPCION CON ESTADO EFECTIVO EN LA GESTION 2020
         $inscripcionesEfectivas = $em->createQueryBuilder()
                             ->select('ei.id, nt.id as idNivel, grat.id as idGrado, IDENTITY(iec.institucioneducativa) as institucioneducativaId, (iec.id) as iecId')
@@ -103,34 +91,11 @@ class PrintRecordCardController extends Controller
         foreach ($inscripcionesEfectivas as $value) {
         	
         	//$periodoCode++;
-        	//$objInstitucioneducativaCursoStudent = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPerIecid($this->session->get('ie_id'), $gestionSelected, $this->session->get('ie_subcea'), $periodoCode, $value['iecId']);
-
-        		$arrUrlRerport[]=array('urlreport'=> $this->generateUrl('herramienta_alter_libretas', array('eInsId'=>$value['id'],'nivel'=>15)));
+        	$arrDataCentro = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getInfoAbouttheCourse($value['iecId']);
+        	$arrUrlRerport[]=array('urlreport'=> $this->generateUrl('herramienta_alter_printrecordcard', array('eInsId'=>$value['id'],'nivel'=>$arrDataCentro[0]['nivelId'],'sie'=>$value['institucioneducativaId'],'gestion'=>$gestionSelected,'subcea'=>$arrDataCentro[0]['sucursalId'],'periodo'=>$arrDataCentro[0]['periodoId'],'iecid'=>$value['iecId'])));
         	
         }
      
-      
-      	/*if($objInstitucioneducativaCursoStudent[0]['nivelId'] == 15){
-      		//print the record card
-			
-			    $arrToPrint = array(
-			        'status'                 => 200,
-			        'showbuttonPDF'          => true,
-			        'message'                => 'Datos registrados',
-			        'urlreport'=> $this->generateUrl('herramienta_alter_libretas', array('eInsId'=>$inscripcionesEfectivas[0]['id'],'nivel'=>$objInstitucioneducativaCursoStudent[0]['nivelId']))
-			    );
-			     		
-
-      	}else{
-      		//no print
-      		 $arrToPrint = array(
-			        'status'                 => 400,
-			        'showbuttonPDF'          => false,
-			        'message'                => 'Datos no encontrados',
-			        'urlreport'=> 'No permitido...'
-			    );
-      	}*/
-
 
         $arrStudent = array(
             'nombre'=>$estudiante->getNombre(),
