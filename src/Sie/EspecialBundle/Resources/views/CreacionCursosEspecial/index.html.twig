@@ -9,11 +9,11 @@
         <ol class="breadcrumb">
             <li>
                 <i class="fa fa-home"></i>
-                <a href="#">Creación de Cursos</a>
-                <i class="fa fa-angle-right"></i>
+                <a href="{{path('info_especial_open', {'form':{'idInstitucion': institucion.id,'gestion':gestion,'institucioneducativa':institucion.institucioneducativa,'institucioneducativaTipoId':4,'data':''}})}}">Menu Principal</a>
+                <i class="fa fa-angle-right">
+                </i>
             </li>
-
-            <li class="active">Buscar</li>
+            <li><a href="#">Creación de Cursos</a></li>
         </ol>
     </div><!-- /.breadcrumb-wrapper -->
 </div><!-- /.header-content -->
@@ -84,19 +84,19 @@
     </div>
     <div class="row">
         <div class="col-lg-12">
-            {# <div class="pull-right">
-                {% if onlyview == false and app.session.get('roluser') == 9 %}
+            <div class="pull-right">
+                {% if onlyview == false and app.session.get('roluser') == 9 and gestion >= app.session.get('currentyear') %}
                     <form action="{{path('creacioncursos_especial_new')}}" style="display: inline-block" method="post">
                         <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                         <input type="hidden" name="idGestion" value="{{gestion}}">
                         <button type="submit" class="btn btn-md btn-teal"><i class="fa fa-save"></i> Nuevo Curso</button>
                     </form>
                 {% endif %}
-            </div> #}
+            </div>
             <div class="callout callout-warning">
                 <strong>Recuerde que:</strong><br />
                 - Es obligatorio el registro de todos los cursos existentes en el Centro de Educación Especial.<br />
-                - Una vez finalizado el registro y validación, se debe generar e imprimir el reporte.
+                - No se puede eliminar un curso con estudiantes inscritos.
             </div>
         </div>
     </div> 
@@ -129,7 +129,7 @@
                                             <th>Servicio</th>
                                             <th>Técnica</th>
                                             <th>Turno</th>
-                                            {# <th>Acciones</th> #}
+                                            <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -165,7 +165,7 @@
                                                     <th>Servicio</th>
                                                     <th>Técnica</th>
                                                     <th>Turno</th>                                                    
-                                                    {# <th>Acciones</th> #}
+                                                    <th>Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -187,16 +187,16 @@
                                                 <td data-title="Servicio">{{c.especialServicioTipo.servicio}}</td>
                                                 <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                 <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
-                                                {# <td data-title="Acciones">
-                                                    {% if onlyview %}
-                                                        -
-                                                    {% else %}
+                                                <td data-title="Acciones">
+                                                    {% if onlyview == false and app.session.get('roluser') == 9 %}
                                                         <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
                                                             <input type="hidden" name="idCurso" value="{{c.id}}">
                                                             <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
                                                         </form>
+                                                    {% else %}
+                                                        -
                                                     {% endif %}
-                                                </td> #}
+                                                </td>
                                             </tr>
                                         {% else %}
                                             <tr {% if c.institucioneducativaCurso.nivelTipo.id == 11 %} 
@@ -217,16 +217,16 @@
                                                     <td data-title="Servicio">{{c.especialServicioTipo.servicio}}</td>
                                                     <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                     <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
-                                                    {# <td data-title="Acciones">
-                                                        {% if onlyview %}
-                                                            -
-                                                        {% else %}
+                                                    <td data-title="Acciones">
+                                                        {% if onlyview == false and app.session.get('roluser') == 9 %}
                                                             <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
                                                                 <input type="hidden" name="idCurso" value="{{c.id}}">
-                                                                <button type="submit" class="btn-link" onclick="return confirm('Se eliminará el registro. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
+                                                                <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
                                                             </form>
+                                                        {% else %}
+                                                            -
                                                         {% endif %}
-                                                    </td> #}
+                                                    </td>
                                                 </tr>
                                                 {% endif %}
                                                     {% endfor %}
