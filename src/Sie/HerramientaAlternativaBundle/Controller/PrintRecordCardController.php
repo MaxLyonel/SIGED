@@ -105,9 +105,10 @@ class PrintRecordCardController extends Controller
             'estInsId'=>$inscripcionesEfectivas[0]['id'],
             'institucioneducativaId'=>$inscripcionesEfectivas[0]['institucioneducativaId'],
             'codigoRude' => $estudiante->getCodigoRude(),
+            'carnet' => $estudiante->getCarnetIdentidad(),
             //'idObsBono' => sizeof($objObservationsStudent)>0?$objObservationsStudent[0]->getId():''
         );          
-      
+     
         return $response->setData([
             'status'=>'success',
             'datos'=>array(
