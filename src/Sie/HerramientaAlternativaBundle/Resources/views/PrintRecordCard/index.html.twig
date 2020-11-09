@@ -188,11 +188,32 @@
 					<div v-if="validado" class="respuesta">
 
 						<div class="alert" :class="[{'alert-success':datos.statusEstudiante == 'success'}, {'alert-warning':datos.statusEstudiante == 'warning'}]">
-							Nombre de la/el participante:
+							Información de la/el PARTICIPANTE:
+							<table class="table">
+							<thead>
+								<tr>
+								<th scope="col">Cod. Rude</th>
+								<th scope="col">CI</th>
+								<th scope="col">Paterno</th>
+								<th scope="col">Materno</th>
+								<th scope="col">Nombre(s)</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+								<td>${estudiante.codigoRude}</td>
+								<td>${estudiante.carnet}</td>
+								<td>${estudiante.materno}</td>
+								<td>${estudiante.paterno}</td>
+								<td>${estudiante.nombre}</td>
+								</tr>
+							</tbody>
+							</table>							
+
 							<p> 
 								<ul>
 									<li>
-										<strong> ${estudiante.nombre} ${estudiante.paterno} ${estudiante.materno}</strong>
+										<strong>Descargar</strong>
 									</li>
 									<li v-for="element in DBUrlReport">
 										<a v-bind:href="element.urlreport">
@@ -364,6 +385,7 @@
 								this.estudiante.nombre = this.datos.arrStudent.nombre;
 								this.estudiante.paterno = this.datos.arrStudent.paterno;
 								this.estudiante.materno = this.datos.arrStudent.materno;
+								this.estudiante.carnet = this.datos.arrStudent.carnet;
 								this.estudiante.estId = this.datos.arrStudent.estId;
 								this.estudiante.estInsId = this.datos.arrStudent.estInsId;
 								/*this.estudiante.idObsBono = this.datos.arrStudent.idObsBono;*/
