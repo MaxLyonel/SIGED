@@ -295,8 +295,8 @@
 	                     	</td>
 	                     </tr>
 	                    <tr v-if="!swCompleteRequest" >
-	                    	<td><label><input type="radio" id="swInscriptionA" value="swInscriptionA" name="swInscription" :class="{active: opcion == 1}" @click="opcion = 1" checked="true"> La Institución Educativa tiene PLATAFORMA</label>										
-	                    	<td><label><input type="radio" id="swInscriptionB" value="swInscriptionB" name="swInscription" :class="{active: opcion == 2}" @click="opcion = 2"> La Institución Educativa requiere PLATAFORMA</label></td>
+	                    	<td><label><input type="radio" id="swInscriptionA" value="swInscriptionA" name="swInscription" :class="{active: opcion == 1}" @click="opcion = 1" checked="true"> La Institución Educativa que PLATAFORMA va utilizar:</label>										
+	                    	{#<td><label><input type="radio" id="swInscriptionB" value="swInscriptionB" name="swInscription" :class="{active: opcion == 2}" @click="opcion = 2"> La Institución Educativa requiere PLATAFORMA</label></td>#}
 	                    </tr>
 	                    <tr v-if="!swCompleteRequest">
 	                    	<td colspan="2">
@@ -343,6 +343,25 @@
 											<div class="tab-content">
 												<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
 													<div class="row">
+														<div class="form-group col-md-4">
+															<label>Plataforma<span class="requerido">*</span></label></br>
+															<label style="color:#D2691E"> <input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="selectPlataforma(2)" ><img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/moodle.png') }}"> Moodle </label></br>	
+															<label style="color:#228B22"><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="selectPlataforma(3)" > <img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/classroom.png') }}"> classroom</label></br>	
+															<label style="color:#00008B"><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="selectPlataforma(4)" > <img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/msteams.png') }}">  Microsoft Teams</label>																
+														</div>
+														<div class="form-group col-md-8">
+															{#<label>Su Plataforma Web solicitada es:<span class="requerido"></span></label>#}
+															{#<input id="complemento" name="complemento" type="text" placeholder="complemento" class="form-control" v-model="dataPlataforma.dataDominio.requestSite" readonly="true">#}
+															<label>Dominio <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="Registre nombre del dominio web" data-trigger="hover"></i> <span class="requerido">*</span> </label>
+															<input id="dominio" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.dominio"  v-bind:readonly="is_readonly">															
+															<label>IP <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="registre dirección de IP" data-trigger="hover"></i> </label>
+															<input id="ip" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.ip" v-bind:readonly="is_readonly">															
+														</div>
+													</div>
+												</div>
+												{#
+												<div role="tabpanel" :class="['tab-pane', {active: opcion == 2}]">
+													<div class="row">
 														<p>Registre la siguiente información solicitada:</p>
 														<div class="form-group col-md-8">
 															<label>Dominio <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="Registre nombre del dominio web" data-trigger="hover"></i> <span class="requerido">*</span> </label>
@@ -351,23 +370,11 @@
 														<div class="form-group col-md-4">
 															<label>IP <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="registre dirección de IP" data-trigger="hover"></i> </label>
 															<input id="ip" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.ip">
-														</div>														
-													</div>
-												</div>
-												<div role="tabpanel" :class="['tab-pane', {active: opcion == 2}]">
-													<div class="row">
-														<div class="form-group col-md-4">
-															<label>Plataforma<span class="requerido">*</span></label></br>
-															<label style="color:#D2691E"> <input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 2" ><img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/moodle.png') }}"> Moodle </label></br>	
-															<label style="color:#228B22"><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 3" > <img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/classroom.png') }}"> classroom</label></br>	
-															<label style="color:#00008B"><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 4" > <img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/msteams.png') }}">  Microsoft Teams</label>																
-														</div>
-														<div class="form-group col-md-8">
-														<label>Su Plataforma Web solicitada es:<span class="requerido"></span></label>
-															<input id="complemento" name="complemento" type="text" placeholder="complemento" class="form-control" v-model="dataPlataforma.dataDominio.requestSite" readonly="true">
 														</div>
 													</div>
+
 												</div>
+												#}
 												{#
 												<div role="tabpanel" :class="['tab-pane', {active: opcion == 3}]">
 													<div class="row">
@@ -391,7 +398,8 @@
 	                    <tr v-else> 
 	                    	<td> 
 	                    		<div class="alert alert-success" role="alert">
-								  Solicitud realizada con exito, en proceso de atención
+								  Solicitud realizada con exito
+								  <!--, en proceso de atención-->
 								</div>
 	                    	</td>
 	                    </tr>
@@ -548,7 +556,8 @@
               	documentocartaSolicitud:'',
               	documentocarnet:'',
               	documentoidoneidad:'',
-              	documentofotcopiaRM:'',              	
+              	documentofotcopiaRM:'',
+				is_readonly : false,              	
             
             },
             methods: {
@@ -586,10 +595,19 @@
                       'No se pudo realizar la Busqueda',
                       'error'
                   )
-                  
                 });                
         
               },
+			  selectPlataforma: function(valueSelected){
+				  this.opcionreqdomi = valueSelected;
+				  if(this.opcionreqdomi == 2){
+					  this.is_readonly = true;
+					  this.dataPlataforma.dataDominio.dominio = '';
+					  this.dataPlataforma.dataDominio.ip = '';
+				  }else{
+					  this.is_readonly = false;
+				  }
+			  },
               enterDataRequest: function(){
               	this.swattach=false;
               	this.buscando = true;
@@ -601,7 +619,7 @@
 
                 if(this.swresponse ){
 
-	              	if(this.opcion == 1){
+	              	if(this.opcionreqdomi == 3 || this.opcionreqdomi == 4){
 	              		
 	              		if(this.dataPlataforma.dataDominio.dominio==''){
 	              			Swal.fire(
@@ -615,19 +633,19 @@
 
 	              		}
 	              	}
-	              	if(this.opcion == 2){
+	              	//if(this.opcion == 2){
 	              		
-	              		if(this.opcionreqdomi==0){
-	              			Swal.fire(
-		                      'Aviso',
-		                      'Debe seleccionar la plataforma',
-		                      'error'
-		                  	)
-		                  	this.swattach =false; 
-	              			this.buscando =false;
-		                  	return;
-	              		}
-	              	}
+					if(this.opcionreqdomi==0){
+						Swal.fire(
+							'Aviso',
+							'Debe seleccionar la plataforma',
+							'error'
+						)
+						this.swattach =false; 
+						this.buscando =false;
+						return;
+					}
+	              	//}
 
                     Swal.fire({
                         title: 'Realizar Actualización?',
