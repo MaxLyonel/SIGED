@@ -335,11 +335,11 @@ class UnidadEducativaPlataformaController extends Controller{
             }			
 			
 			//$objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['plataforma']=='false'?0:1);
-            if($this->arrDataRequestPlataforma['dataDominio']['opcion']==1){
+            /*if($this->arrDataRequestPlataforma['dataDominio']['opcion']==1){
                 $objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['opcion']);
-            }else{
+            }else{*/
                 $objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['opcionreqdomi']);
-            }
+            //}
 			
 			$objPlataforma->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
 			$objPlataforma->setDirectorPersona($em->getRepository('SieAppWebBundle:Persona')->find($this->arrDataRequestPlataforma['dataDirector']['personId']));
