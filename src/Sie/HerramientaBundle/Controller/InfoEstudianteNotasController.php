@@ -129,11 +129,13 @@ class InfoEstudianteNotasController extends Controller {
                 'infoStudent'=>$infoStudent
             ));
         }else{
-            $notas = $this->get('notas')->regular($idInscripcion,0);
+            
             //dump($notas);die;
-            if($gestion== 2020){
+            if($gestion == 2020){
                 $tipoUE = $this->get('funciones')->getTipoUE($aInfoUe['requestUser']['sie'],$aInfoUe['requestUser']['gestion']);
-                $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);              
+                $operativo = $this->get('funciones')->obtenerOperativoTrimestre2020($sie,$gestion);
+                
+                $notas = $this->get('notas')->regular($idInscripcion,$operativo);
                 if($tipoUE){
                     // PAra ues modulares secundaria
                     if($tipoUE['id'] == 3 and $notas['nivel'] == 13){
@@ -186,6 +188,7 @@ class InfoEstudianteNotasController extends Controller {
                 ));   
 
             }else{
+                $notas = $this->get('notas')->regular($idInscripcion,0);
                 return $this->render('SieHerramientaBundle:InfoEstudianteNotas:trimestre.html.twig',array(
                 'notas'=>$notas,
                 'grado'=>$grado,
