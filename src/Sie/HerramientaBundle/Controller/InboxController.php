@@ -51,7 +51,7 @@ class InboxController extends Controller {
         $this->arrUeNocturnas = $this->fillSieNocutrnas();
         $this->arrUeTecTeg = $this->fillSieTecnicos();
         $this->arrUeGeneral = $this->fillSieGeneral();
-        $this->reglasQA = '100';//'3,4,5,6,7,8,11,12,13,15,16,20,24,25,26';
+        $this->reglasQA = '2,3,6,8,10,11,12,13,15,16,20,24,25,26';
     }
     /**
        *fill the sie's modulars
