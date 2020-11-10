@@ -189,7 +189,7 @@ class ChangeMatriculaController extends Controller {
           if($form['questionStatus']==1){
             $updateMatricula = 6;
           }else{
-            $updateMatricula = 10;
+            $updateMatricula = 6;
             // $updateMatricula = 9;
           }
 
