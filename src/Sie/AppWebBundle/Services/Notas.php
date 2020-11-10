@@ -75,6 +75,7 @@ class Notas{
      */
 	public function regular($idInscripcion,$operativo){
         try {
+            $operativoTrue = $operativo;
             $tipoSubsistema = $this->session->get('tiposubsistema');
 
             $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
@@ -1009,6 +1010,7 @@ class Notas{
                 'cuantitativas'=>$areas,
                 'cualitativas'=>$arrayCualitativas,
                 'operativo'=>$operativo,
+                'operativoTrue'=>$operativoTrue,
                 'nivel'=>$nivel,
                 'estadoMatricula'=>$inscripcion->getEstadomatriculaTipo()->getId(),
                 'gestionActual'=>$this->session->get('currentyear'),

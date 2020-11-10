@@ -11,7 +11,8 @@
 		<tbody>
 			{% for mco in maestrosCursoOferta %}
 				<tr>
-					{% if operativo == mco.idNotaTipo or (operativo == 5 and mco.idNotaTipo == 4) %}
+					{# {% if operativo == mco.idNotaTipo or (operativo == 5 and mco.idNotaTipo == 4) %} #}
+					{% if onlyview == false %}
 						<td>{{mco.periodo}}</td>
 						<td>
 							<input type="hidden" name="ieco[]" value="{{mco.idco}}">
