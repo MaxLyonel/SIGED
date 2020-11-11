@@ -80,6 +80,7 @@ class DocumentoController extends Controller {
             , (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documento_tipo as documentoTipo
             , (case e.complemento when '' then e.carnet_identidad when 'null' then e.carnet_identidad else CONCAT(CONCAT(e.carnet_identidad,'-'),e.complemento) end) as carnetIdentidad
             , tt.tramite_tipo as tramiteTipo, d.documento_firma_id as documentoFirmaId, d.token_privado as keyprivado, d.token_impreso, dt.id as documentoTipoId, de.id as documentoEstadoId
+            , p.nombre || ' ' || p.paterno || ' ' || p.materno as personafirma
             from documento as d
             inner join documento_estado as de on de.id = d.documento_estado_id
             inner join documento_tipo as dt on dt.id = d.documento_estado_id
@@ -93,6 +94,8 @@ class DocumentoController extends Controller {
             inner join gestion_tipo as gt on gt.id = ds.gestion_id
             inner join pais_tipo as pt on pt.id = e.pais_tipo_id
             inner join departamento_tipo as dept on dept.id = ds.departamento_tipo_id
+            left join documento_firma as df on df.id = d.documento_firma_id
+            left join persona as p on p.id = df.persona_id
             left join lugar_tipo as ltp on ltp.id = e.lugar_prov_nac_tipo_id
             left join lugar_tipo as ltd on ltd.id = ltp.lugar_tipo_id
             where md5(cast(d.id as varchar)) = :id and dt.id in (1,2,3,4,5,6,7,8,9) and de.id in (1)
@@ -126,6 +129,7 @@ public function getDocumentoTokenImpreso($token) {
         , (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documento_tipo as documentoTipo
         , (case e.complemento when '' then e.carnet_identidad when 'null' then e.carnet_identidad else CONCAT(CONCAT(e.carnet_identidad,'-'),e.complemento) end) as carnetIdentidad
         , tt.tramite_tipo as tramiteTipo, d.documento_firma_id as documentoFirmaId, d.token_privado as keyprivado, d.token_impreso, de.id as documentoEstadoId
+        , p.nombre || ' ' || p.paterno || ' ' || p.materno as personafirma
         from documento as d
         inner join documento_estado as de on de.id = d.documento_estado_id
         inner join documento_tipo as dt on dt.id = d.documento_estado_id
@@ -139,6 +143,8 @@ public function getDocumentoTokenImpreso($token) {
         inner join gestion_tipo as gt on gt.id = ds.gestion_id
         inner join pais_tipo as pt on pt.id = e.pais_tipo_id
         inner join departamento_tipo as dept on dept.id = ds.departamento_tipo_id
+        left join documento_firma as df on df.id = d.documento_firma_id
+        left join persona as p on p.id = df.persona_id
         left join lugar_tipo as ltp on ltp.id = e.lugar_prov_nac_tipo_id
         left join lugar_tipo as ltd on ltd.id = ltp.lugar_tipo_id
         where d.token_impreso = :token and dt.id in (1,3,4,5,6,7,8,9)
@@ -2595,7 +2601,8 @@ public function getDocumentoTokenImpreso($token) {
                         'emisiondepartamento'=>$entityDocumento['departamentoemision'],
                         'emisionfecha'=>$entityDocumento['fechaemision'],
                         'tokenfirma'=>base64_encode($entityDocumento['documentofirmaid']),
-                        'documentotipo'=>$entityDocumento['documentotipo']
+                        'documentotipo'=>$entityDocumento['documentotipo'],
+                        'personafirma'=>$entityDocumento['personafirma']
                     );
                     // dump($datos);
                     $keys = $this->getEncodeRSA($datos);
@@ -2706,7 +2713,8 @@ public function getDocumentoTokenImpreso($token) {
                         'emisiondepartamento'=>$entityDocumento['departamentoemision'],
                         'emisionfecha'=>$entityDocumento['fechaemision'],
                         'tokenfirma'=>'',
-                        'documentotipo'=>$entityDocumento['documentotipo']
+                        'documentotipo'=>$entityDocumento['documentotipo'],
+                        'personafirma'=>$entityDocumento['personafirma']
                     );
                     // $keys = $this->getEncodeRSA($datos);
                     $datosRegistrados = $datos;
