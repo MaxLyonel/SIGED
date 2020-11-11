@@ -74,8 +74,30 @@ class InstitucioneducativaCursoRepository extends EntityRepository
                 ->setParameter('iecId', $iecId)
         ;
         return $qb->getQuery()->getResult();
-    }    
+    }
+    
+    public function getInfoAbouttheCourse($ie_curso_id) {
+        $qb = $this->getEntityMAnager()->createQueryBuilder();
+        $qb
 
+                ->select(' a.codigo as nivelId, b.codigo as cicloId, d.codigo as gradoId, IDENTITY(f.sucursalTipo) as sucursalId, f.periodoTipoId as periodoId')
+                ->from('SieAppWebBundle:SuperiorFacultadAreaTipo', 'a')
+                ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'b', 'WITH', 'a.id = b.superiorFacultadAreaTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'd', 'WITH', 'c.superiorAcreditacionTipo=d.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'e', 'WITH', 'e.acreditacionEspecialidad=c.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'f', 'WITH', 'e.institucioneducativaSucursal = f.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g', 'WITH', 'g.superiorInstitucioneducativaAcreditacion=e.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo=g.id')
+                ->innerJoin('SieAppWebBundle:ParaleloTipo', 'p', 'WITH', 'h.paraleloTipo = p.id')
+                ->innerJoin('SieAppWebBundle:TurnoTipo', 'q', 'WITH', 'h.turnoTipo  = q.id')
+                ->where('h.id = :ie_curso_id')
+               
+                ->setParameter('ie_curso_id', $ie_curso_id)
+        ;
+
+        return $objStudents = $qb->getQuery()->getResult();    
+    }
     public function getListStudentPerCourseAlter($ie_curso_id) {
         $qb = $this->getEntityMAnager()->createQueryBuilder();
         $qb

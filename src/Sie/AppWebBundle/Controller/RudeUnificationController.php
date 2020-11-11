@@ -593,7 +593,7 @@ class RudeUnificationController extends Controller{
             select gestion_tipo_id_raep as gestion_rude_c, estadomatricula_tipo_id_fin_r as estadomatricula_rude_c
             from sp_genera_estudiante_historial('".$rudecor."') 
             where institucioneducativa_tipo_id_raep = 1
-            and estadomatricula_tipo_id_fin_r not in ('6','9')
+            and estadomatricula_tipo_id_fin_r not in ('6','9') and estadomatricula_fin_r in ('PROMOVIDO','PROMOVIDO BACHILLER DE EXCELENCIA','REPROBADO')
             ) c 
             ON b.gestion_rude_b = c.gestion_rude_c
             AND b.estadomatricula_rude_b = c.estadomatricula_rude_c) regular");
@@ -612,7 +612,7 @@ class RudeUnificationController extends Controller{
         INNER JOIN
         (select gestion_tipo_id_raep as gestion_rude_c, estadomatricula_fin_r as estadomatricula_rude_c,institucioneducativa_id_raep as institucioneducativa_id_c,institucioneducativa_raep as institucioneducativa_c,codigo_rude_raep as codigo_rude_c
         from sp_genera_estudiante_historial('". $rudeb ."') 
-        where institucioneducativa_tipo_id_raep = 1
+        where institucioneducativa_tipo_id_raep = 1 and estadomatricula_fin_r in ('PROMOVIDO','PROMOVIDO BACHILLER DE EXCELENCIA','REPROBADO')
         ) c  ON b.gestion_rude_b = c.gestion_rude_c AND b.institucioneducativa_id_b=c.institucioneducativa_id_c");
 
         $query->execute();
@@ -640,6 +640,7 @@ class RudeUnificationController extends Controller{
 
         //check about the history and status and levels
         $validaDobleInscripcionRegular = $this->getVerificaDobleInscripcion($rudeCorrect,$rudeWrong);
+        
         if(sizeof($validaDobleInscripcionRegular) > 0 && $validaDobleInscripcionRegular[0]['gestion']!=$this->currentyear ){
             $status='error';
             $code = 400;            
@@ -659,6 +660,7 @@ class RudeUnificationController extends Controller{
             return $response;
         }
         $validaEstadosRegular = $this->getVerificaEstadosGestion($rudeCorrect,$rudeWrong);
+        
         if(sizeof($validaEstadosRegular) > 0 && $validaEstadosRegular[0]['gestion']!=$this->currentyear ){
             $status='error';
             $code = 400;            
@@ -909,19 +911,27 @@ class RudeUnificationController extends Controller{
                     if($unificationIniPri){ 
                         $em->remove($inscrip);  
                     }else{
-
                         $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscrip->getInstitucioneducativaCurso());                        
 
                         if($unificationNormal || $unificationForeign || $unificationIniPriCase2){
                             if($unificationIniPriCase2 && $inscrip->getEstadomatriculaTipo()->getId() == 4 && !$swChanteStatusCorrectInscription){
                                 // to change the matricula student
                                 $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));
+
+                                //if the student has oferta
+                                $objOferta = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion'=>$inscrip->getId()));
+                                if(sizeof($objOferta)>0){
+                                    foreach ($objOferta as $value) {
+                                        $em->remove($value);
+                                    }
+                                }
+
                                 $em->remove($inscrip);
 
                             }else{
                                 $inscrip->setEstudiante($studentcor);
                             } 
-                                                          
+                            
                             if($unificationNormal){
                                 if(!$inscriptionCorrect ){
 

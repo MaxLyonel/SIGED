@@ -155,6 +155,12 @@ class RemoveInscriptionController extends Controller {
                 $obs = '';
             }
 
+            $objEstudianteInscripcionCambioestado = $em->getRepository('SieAppWebBundle:EstudianteInscripcionCambioestado')->findBy(array('estudianteInscripcion' => $eiid));
+            foreach ($objEstudianteInscripcionCambioestado as $element) {
+                $em->remove($element);
+            }
+            $em->flush();            
+
 //            step 2 delete nota
             $objEstAsig = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion' => $eiid, 'gestionTipo' => $gestion ));
 

@@ -922,9 +922,11 @@ class TramiteRueController extends Controller
         $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['idrue']);
         $ie_lugardistrito = $ie->getLeJuridicciongeografica()->getLugarTipoIdDistrito();
         $ie_lugarlocalidad = $ie->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();
+
         /**
          * datos propios de la solicitud del formulario rue
          */
+        
         $query = $em->getConnection()->prepare('SELECT ie.id,ie.institucioneducativa,ie.area_municipio,ie.fecha_fundacion,ie.le_juridicciongeografica_id,ie.estadoinstitucion_tipo_id,et.estadoinstitucion,ie.dependencia_tipo_id,dt.dependencia,ie.convenio_tipo_id,ct.convenio,ies.telefono1, ie.fecha_resolucion, ie.nro_resolucion
                 FROM institucioneducativa ie
                 left join institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
@@ -935,13 +937,33 @@ class TramiteRueController extends Controller
                 and ie.id='. $form['idrue']);
                 $query->execute();
         $institucioneducativa = $query->fetchAll();
+
+        //dump($form['tramites']);die;
+        if($form['tramites'] == 42 or $form['tramites'] == 43){
+            
+            if(sizeof($institucioneducativa) == 0){
+                $query = $em->getConnection()->prepare('SELECT ie.id,ie.institucioneducativa,ie.area_municipio,ie.fecha_fundacion,ie.le_juridicciongeografica_id,ie.estadoinstitucion_tipo_id,et.estadoinstitucion,ie.dependencia_tipo_id,dt.dependencia,ie.convenio_tipo_id,ct.convenio,ies.telefono1, ie.fecha_resolucion, ie.nro_resolucion
+                FROM institucioneducativa ie
+                left join institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
+                join estadoinstitucion_tipo et on ie.estadoinstitucion_tipo_id=et.id
+                join dependencia_tipo dt on dt.id=ie.dependencia_tipo_id
+                left join convenio_tipo ct on ct.id=ie.convenio_tipo_id
+                where  ie.id='. $form['idrue'].
+                'ORDER BY ies.gestion_tipo_id DESC');
+                $query->execute();
+                $institucioneducativa = $query->fetchAll();
+            }
+            //dump($institucioneducativa);die;
+        }
+
+        //dump($institucioneducativa);die;
         $query = $em->getConnection()->prepare('SELECT nt.id,nt.nivel
                 FROM institucioneducativa_nivel_autorizado ien
                 join nivel_tipo nt on ien.nivel_tipo_id = nt.id
                 WHERE ien.institucioneducativa_id='. $form['idrue']);
                 $query->execute();
         $ieNivelAutorizado = $query->fetchAll();
-        //dump($institucioneducativa);die;
+        
         $query = $em->getConnection()->prepare('SELECT le.id,le.zona,le.direccion,le.distrito_tipo_id,dt.distrito,
                 lt.id as localidad2001_id,lt.lugar as localidad2001,lt1.id as canton2001_id,lt1.lugar as canton2001,lt2.id as municipio2001_id,lt2.lugar as municipio2001,lt3.id as provincia2001_id,lt3.lugar as provincia2001,lt4.id as departamento2001_id,lt4.lugar as departamento2001,lt.area2001,
                 lt5.id as comunidad2012_id,lt5.lugar as comunidad2012,lt6.id as municipio2012_id,lt6.lugar as municipio2012,lt7.id as provincia2012_id,lt7.lugar as provincia2012,lt8.id as departamento2012_id,lt8.lugar as departamento2012

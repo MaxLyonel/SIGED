@@ -186,7 +186,9 @@
                                                 {{data.estadomatricula}}
                                             </button>
                                         {% else %} #}
-                                            {{data.estadomatricula}}
+                                            <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
+                                                {{data.estadomatricula}}
+                                            </button>
                                         {# {% endif %} #}
                                     {% else %}
                                         {% if app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4)  %}
@@ -288,24 +290,23 @@
                                     {% if app.session.get('roluser') == 8 or app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 ) %}
                                         {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or (data.estadomatriculaId in [5,11,55] and operativo <= 4) or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear') and operativo < 5) %}
                                             {# SE VALIDA LA ESPECIALIDAD PARA ESTUDIANTES DE 5 Y 6 DE SECUNDARIA #}
-                                            {#
-                                            {% if gestion == 2019 and nivel == 13 and grado >= 5 %}
+                                            {% if gestion > 2019 and nivel == 13 and grado >= 5 %}
 
-                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones krlos">
+                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                         <i class="fa fa-list"></i>
                                                     </button>
                                                 </div>
                                             {% else %}
                                                 {# PARA TODAS LAS DEMAS GESTIONES #}
-                                                {#
-                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones krlos">
+                                                
+                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                         <i class="fa fa-list"></i>
                                                     </button>
                                                 </div>
+                                                
                                             {% endif %}
-                                            #}
 
                                         {% endif %}
                                     {% endif %}

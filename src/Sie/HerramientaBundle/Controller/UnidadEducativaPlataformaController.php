@@ -104,8 +104,9 @@ class UnidadEducativaPlataformaController extends Controller{
 
     		$swCompleteRequest = $objPlataforma->getEstado();
 
-             if($objPlataforma->getPlataforma()==1){
-                        $requestPlataforma = '';
+             //if($objPlataforma->getPlataforma()==1){
+             if( in_array($objPlataforma->getPlataforma(), array(3,4) ) ){
+                        $requestPlataforma = $this->arrPlataforma[$objPlataforma->getPlataforma()];
                         $ip = $objPlataforma->getIp();
                     }else{
                         $requestPlataforma = $this->arrPlataforma[$objPlataforma->getPlataforma()];    
@@ -335,11 +336,11 @@ class UnidadEducativaPlataformaController extends Controller{
             }			
 			
 			//$objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['plataforma']=='false'?0:1);
-            if($this->arrDataRequestPlataforma['dataDominio']['opcion']==1){
+            /*if($this->arrDataRequestPlataforma['dataDominio']['opcion']==1){
                 $objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['opcion']);
-            }else{
+            }else{*/
                 $objPlataforma->setPlataforma($this->arrDataRequestPlataforma['dataDominio']['opcionreqdomi']);
-            }
+            //}
 			
 			$objPlataforma->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id')));
 			$objPlataforma->setDirectorPersona($em->getRepository('SieAppWebBundle:Persona')->find($this->arrDataRequestPlataforma['dataDirector']['personId']));
@@ -482,19 +483,22 @@ class UnidadEducativaPlataformaController extends Controller{
 
 		$allData = json_decode($request->get('datos'), true);
 		$dataDirector=$allData['dataDirector'];
-
+        /*
 		$documentocartaSolicitud = $_FILES['documentocartaSolicitud'];
 		$documentoidoneidad      = $_FILES['documentoidoneidad'];
 		$documentocarnet = $_FILES['documentocarnet'];
 		$documentofotcopiaRM = $_FILES['documentofotcopiaRM'];
+        */
 		$em = $this->getDoctrine()->getManager();
 
 		// move all files to the server
+        $arrPathsDocs = array();
+        /*
 		$pathdocumentocartaSolicitud = $this->saveDocument($documentocartaSolicitud, $dataDirector['sie']);
 		$pathdocumentoidoneidad = $this->saveDocument($documentoidoneidad, $dataDirector['sie']);
 		$pathdocumentocarnet = $this->saveDocument($documentocarnet, $dataDirector['sie']);
 		$pathdocumentofotcopiaRM = $this->saveDocument($documentofotcopiaRM, $dataDirector['sie']);
-
+        
 		// get all files to save
 		$arrPathsDocs = array(
 			'cartasolicitud'=>$pathdocumentocartaSolicitud,
@@ -502,7 +506,7 @@ class UnidadEducativaPlataformaController extends Controller{
 			'documentocarnet'=>$pathdocumentocarnet,
 			'documentofotcopiaRM'=>$pathdocumentofotcopiaRM,
 		);
-
+        */
 		try {
 
 
@@ -510,8 +514,8 @@ class UnidadEducativaPlataformaController extends Controller{
 		    		'institucioneducativa' => $dataDirector['sie']
 		    	));
 
-                  if($objPlataforma->getPlataforma()==1){
-                        $requestPlataforma = '';
+                    if( in_array($objPlataforma->getPlataforma(), array(3,4) ) ){
+                        $requestPlataforma = $this->arrPlataforma[$objPlataforma->getPlataforma()];
                         $ip = $objPlataforma->getIp();
                     }else{
                         $requestPlataforma = $this->arrPlataforma[$objPlataforma->getPlataforma()];    
