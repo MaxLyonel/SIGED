@@ -107,11 +107,6 @@
                                         {% elseif regla.id == 57 %}    
                                             <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignacion({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
                                         {% endif %}
-                                        {% if regla.id in [24,26]  %}
-                                            <div class="justificacion">
-                                                <button type="submit" class="btn btn-link" onclick="justificarHomonimoGemelo({{detalle.id}})"><i class="fa fa-edit"></i> Omitir: Homónimos/Gemelas(os)</button>
-                                            </div>
-                                        {% endif %}
                                         {% if regla.id == 25 %}
                                             {% set rudes = detalle.llave|split('|') %}
                                             <form action="{{path('specialmodificationdata_student_index')}}" method="post" target="_blank">
@@ -156,6 +151,9 @@
                                                 <div style="">Ir a solución</div> 
                                                 </button>
                                             </form>
+                                            <div class="justificacion">
+                                                <button type="submit" class="btn btn-link" onclick="justificarHomonimoGemelo({{detalle.id}})"><i class="fa fa-edit"></i> Omitir: Homónimos/Gemelas(os)</button>
+                                            </div>
                                         {% endif %}
                                         {% if regla.id == 6 %}
                                             <form action="{{path('regularizacionDobleInscripcion_result')}}" method="post">
