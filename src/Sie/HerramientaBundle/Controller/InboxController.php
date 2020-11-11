@@ -686,7 +686,7 @@ class InboxController extends Controller {
           'infoMaestroform' => $this->InfoStudentForm('herramienta_info_maestro_index', 'Personal Docente',$data)->createView(),
           'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
           'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo',$data)->createView(),
-          'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Desahabilitado Temporalmente',$data)->createView(),
+          'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Deshabilitado Temporalmente',$data)->createView(),
           'data'=>$dataInfo
         ));
       }
@@ -875,7 +875,7 @@ class InboxController extends Controller {
                       'infoMaestroform' => $this->InfoStudentForm('herramienta_info_maestro_index', 'Maestros',$data)->createView(),
                       'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
                       'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo', $data)->createView(),
-                      'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Desahabilitado Temporalmente',$data)->createView(),
+                      'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Deshabilitado Temporalmente',$data)->createView(),
                       'data' => $data
           ));
           break;
@@ -889,7 +889,7 @@ class InboxController extends Controller {
                         //'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Información Estudiante',$data)->createView(),
                         'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudianterequest_index', 'Información Estudiante',$data)->createView(),
                         'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo', $data)->createView(),
-                        'closeOperativoform' => $this->CloseOperativoForm('herramienta_inbox_close_operativo', 'Desahabilitado Temporalmente',$data)->createView(),
+                        'closeOperativoform' => $this->CloseOperativoForm('herramienta_inbox_close_operativo', 'Deshabilitado Temporalmente',$data)->createView(),
                         'data' => $data
 
             ));
