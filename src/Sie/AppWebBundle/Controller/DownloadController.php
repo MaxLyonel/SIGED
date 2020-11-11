@@ -772,9 +772,9 @@ class DownloadController extends Controller {
         // Validamos que tipo de libreta se ha de imprimir
         // Modular y plena
 
-        if($this->session->get('ue_plena')){
+        //if($this->session->get('ue_plena')){
            $reporte = 'reg_cert_cut_v1_ma.rptdesign';
-        }
+        //}
         //dump($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&');die;
         // Generamos el reporte
 

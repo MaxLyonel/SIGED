@@ -163,6 +163,7 @@ class DeclaracionJuradaController extends Controller {
                         select e.codigo_rude, e.carnet_identidad,e.complemento, e.pasaporte, e.paterno, e.materno, e.nombre, e.fecha_nacimiento,
                         e.genero_tipo_id, ptp.pais,ltd.lugar as departamento,ltp.lugar as provincia, e.localidad_nac , g.genero, ei.estadomatricula_tipo_id,
                         i.institucioneducativa, i.id as insteduid,iec.gestion_tipo_id, iec.nivel_tipo_id as nivel_id, iec.grado_tipo_id, sat.id as acre, iec.gestion_tipo_id
+                        , eiht.id as estinsbthid, ei.id as estinsid
                         from estudiante e
                         left join pais_tipo ptp on (e.pais_tipo_id = ptp.id)
                         left join lugar_tipo ltpa on (e.lugar_nac_tipo_id= ltpa.id)
@@ -176,6 +177,7 @@ class DeclaracionJuradaController extends Controller {
                         left join superior_acreditacion_especialidad as sae on sae.id = siea.acreditacion_especialidad_id
                         left join superior_acreditacion_tipo as sat on sat.id = sae.superior_acreditacion_tipo_id
                         left join institucioneducativa i on (iec.institucioneducativa_id = i.id)
+                        left join estudiante_inscripcion_humnistico_tecnico as eiht on eiht.estudiante_inscripcion_id = ei.id
                         where iec.gestion_tipo_id = ".$gestion." and i.id = ".$sie."
                         and
                         case when iec.gestion_tipo_id >=2011 then (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id=15 and sat.codigo = 3 /*sat.id in (6,52)*/)
