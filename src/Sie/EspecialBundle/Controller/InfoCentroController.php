@@ -200,7 +200,7 @@ class InfoCentroController extends Controller {
                 ->add('referenciaTelefono2', 'text', array('label' => 'Pertenece a (cargo o relación)', 'data' => $sucursal->getReferenciaTelefono2(), 'attr' => array('class' => 'form-control')))
                 ->add('email', 'text', array('label' => 'Correo electrónico del (CEE)', 'required' => false, 'data' => $sucursal->getEmail(), 'attr' => array('class' => 'form-control')))
                 ->add('casilla', 'text', array('label' => 'Casilla postal del (CEE)', 'required' => false, 'data' => $sucursal->getCasilla(), 'attr' => array('class' => 'form-control')))
-                ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
+                ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-facebook')))
                 ->getForm();
 
         return $form;
@@ -296,7 +296,7 @@ class InfoCentroController extends Controller {
                 //->setAction($this->generateUrl('info_especial_index'))
                 ->add('sie', 'text', array('required' => true, 'attr' => array('autocomplete' => 'off', 'maxlength' => 8)))
                 ->add('gestion', 'choice', array('required' => true, 'choices' => $gestiones))
-                ->add('buscar', 'button', array('label' => 'Habilitar', 'attr' => array('class' => 'btn btn-primary', 'onclick' => 'habilitarGestion()')))
+                ->add('buscar', 'button', array('label' => 'Habilitar', 'attr' => array('class' => 'btn btn-facebook', 'onclick' => 'habilitarGestion()')))
                 ->getForm();
         return $form;
     }
