@@ -1,4 +1,8 @@
-
+{% if estado == true %}
+    <div class="alert alert-danger">
+        <strong>Alerta!</strong> Se proceso nuevamente los datos del maestro y no mostro más la insconsistencia, actualice la lista de inconsistencias.
+    </div>
+{% else %}
 	<div class="row">
         <div class="col-lg-12">
             {{form_start(form, { 'attr': {'role': "form", 'class': 'form-horizontal center', 'id': "formModificar"} } )}}
@@ -57,3 +61,4 @@
         });
 
 	</script>
+{% endif %}
