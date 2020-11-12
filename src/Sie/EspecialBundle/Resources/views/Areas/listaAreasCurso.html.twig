@@ -6,7 +6,7 @@
 <div class="col-lg-12">
     <div class="pull-right">
         {% if onlyview == false %}
-            <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas')" class="btn btn-primary btn-md"><i class="fa fa-plus-circle text-white"></i> Adicionar Área para especial </button>
+            <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas')" class="btn btn-facebook btn-md"><i class="fa fa-plus-circle text-white"></i> Adicionar Área para especial </button>
         {% endif %}
     </div> 
 </div>
@@ -47,7 +47,7 @@
 
                         <td data-title="Acciones">
                             
-                                <button class="btn" onclick="addpop({{cursoOferta.id}})" title="Asignar maestro"><i class="fa fa-users text-teal"></i></button>
+                                <button class="btn" onclick="addpop({{cursoOferta.id}})" title="Asignar maestro"><i class="fa fa-users text-primary"></i></button>
                                 <div class="arrow-before" style="display:none; margin-left:10px;" id="before{{cursoOferta.id}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="after{{cursoOferta.id}}"></div>
                                 <div id="{{cursoOferta.id}}" style="display:none; position:absolute; z-index:5; width:500px; margin-left:-460px; border:2px solid #EEEEEE; box-shadow: 7px 7px 4px #929292;" class="divMaestros"></div>                      
                         
