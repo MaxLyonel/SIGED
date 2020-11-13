@@ -132,14 +132,14 @@
                                                         <form name="formDocente" id="formDocente" role="form" action="{{ path('sie_ue_informacion_general_impresion_docente') }}" method="POST">
                                                             <input type="hidden" name="gestion" value="{{ gestion }}" />
                                                             <input type="hidden" name="sie" value="{{ infoEntidad.id }}" />  
-                                                            <a class="btn btn-primary" onclick="document.forms['formDocente'].submit();">
+                                                            <a class="btn btn-facebook" onclick="document.forms['formDocente'].submit();">
                                                                 <h4>Maestros <i class="fa fa-download"></i></h4>
                                                             </a>
                                                         </form>                 
                                                         <form name="formAdministrativo" id="formAdministrativo" role="form" action="{{ path('sie_ue_informacion_general_impresion_administrativo') }}" method="POST">
                                                             <input type="hidden" name="gestion" value="{{ gestion }}" />
                                                             <input type="hidden" name="sie" value="{{ infoEntidad.id }}" />  
-                                                            <a class="btn btn-primary" onclick="document.forms['formAdministrativo'].submit();">
+                                                            <a class="btn btn-facebook" onclick="document.forms['formAdministrativo'].submit();">
                                                                 <h4>Administrativos <i class="fa fa-download"></i></h4>
                                                             </a>
                                                         </form>

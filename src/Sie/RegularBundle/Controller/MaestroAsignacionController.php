@@ -526,6 +526,7 @@ class MaestroAsignacionController extends Controller {
         
         $maestroInscripcionId = 0;
         $listaMaestros = $this->getMaestrosInstitucionEducativaCursoOferta($val['institucioneducativa_curso_oferta_id'], $val['nota_tipo_id']);
+        // dump($listaMaestros);dump($val['institucioneducativa_curso_oferta_id'], $val['nota_tipo_id']);die;
         $detalleCursoOferta = $this->getInstitucionEducativaCursoOferta($val['institucioneducativa_curso_oferta_id']);
         if(count($detalleCursoOferta )>0){
             $detalleCursoOferta = $detalleCursoOferta[0];
@@ -732,12 +733,14 @@ class MaestroAsignacionController extends Controller {
         }
 
         $institucioneducativaCursoOfertaEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($institucioneducativaCursoOfertaId);
-        if(count($maestroInscripcionEntity) <= 0){
+        if(count($institucioneducativaCursoOfertaEntity) <= 0){
             $msg = "No existe el curso al cual quiere registrar, intente nuevamente";
             return $response->setData(array('estado'=>false, 'msg'=>$msg));
         }
         $horasMes = $institucioneducativaCursoOfertaEntity->getHorasmes();
         $gestionId = $institucioneducativaCursoOfertaEntity->getInsitucioneducativaCurso()->getGestionTipo()->getId();
+        $institucionEducativaId = $maestroInscripcionEntity->getInstitucioneducativa()->getId();
+        $asignaturaId = $institucioneducativaCursoOfertaEntity->getAsignaturaTipo()->getId();
 
         $notaTipoEntity = $em->getRepository('SieAppWebBundle:NotaTipo')->find($notaTipoId);
         if(count($notaTipoEntity) <= 0){
@@ -759,12 +762,19 @@ class MaestroAsignacionController extends Controller {
 
         $institucioneducativaCursoOfertaMaestroLista = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta' => $institucioneducativaCursoOfertaId, 'notaTipo' => $notaTipoId));
         if(count($institucioneducativaCursoOfertaMaestroLista) > 0){
-            $validacionFechaSecuencial = $this->getValidacionFechaSecuencial($institucioneducativaCursoOfertaMaestroLista, $gestionId, $fechaInicio, $fechaFin, 0);
-            if(!$validacionFechaSecuencial['estado']){                
-                return $response->setData(array('estado'=>$validacionFechaSecuencial['estado'], 'msg'=>$validacionFechaSecuencial['msg']));
+            if($asignaturaId == 1039){
+                $institucioneducativaEspecialidadTecnicoHumanisticoEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array('institucioneducativa' => $institucionEducativaId, 'gestionTipo' => $gestionId));
+                if(count($institucioneducativaCursoOfertaMaestroLista) >= count($institucioneducativaEspecialidadTecnicoHumanisticoEntity)){
+                    $msg = "No puede agregar mas de 1 maestro por especialidad";
+                    return $response->setData(array('estado'=>false, 'msg'=>$msg)); 
+                }
+            } else {
+                $validacionFechaSecuencial = $this->getValidacionFechaSecuencial($institucioneducativaCursoOfertaMaestroLista, $gestionId, $fechaInicio, $fechaFin, 0);
+                if(!$validacionFechaSecuencial['estado']){                
+                    return $response->setData(array('estado'=>$validacionFechaSecuencial['estado'], 'msg'=>$validacionFechaSecuencial['msg']));
+                }
             }
         } 
-
         //dump($maestroInscripcionId);dump($institucioneducativaCursoOfertaId);dump($notaTipoId);die;
 
         $em->getConnection()->beginTransaction();
@@ -1094,6 +1104,7 @@ class MaestroAsignacionController extends Controller {
             return $response->setData(array('estado'=>false, 'msg'=>$msg));
         }
         $gestionId = $institucioneducativaCursoOfertaMaestroEntity->getinstitucioneducativaCursoOferta()->getInsitucioneducativaCurso()->getGestionTipo()->getId();
+        $institucionEducativaId = $institucioneducativaCursoOfertaMaestroEntity->getinstitucioneducativaCursoOferta()->getInsitucioneducativaCurso()->getInstitucioneducativa()->getId();
 
         $institucioneducativaCursoOfertaId = $institucioneducativaCursoOfertaMaestroEntity->getInstitucioneducativaCursoOferta()->getId();
         $notaTipoId = $institucioneducativaCursoOfertaMaestroEntity->getNotaTipo()->getId();
@@ -1104,6 +1115,23 @@ class MaestroAsignacionController extends Controller {
         if(!$validacionFechaSecuencial['estado']){
             return $response->setData(array('estado'=>$validacionFechaSecuencial['estado'], 'msg'=>$validacionFechaSecuencial['msg']));
         }
+
+        if(count($listaMaestros) > 0){
+            if($asignaturaId == 1039){
+                dump(count($listaMaestros), count($institucioneducativaEspecialidadTecnicoHumanisticoEntity));die;
+                $institucioneducativaEspecialidadTecnicoHumanisticoEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array('institucioneducativa' => $institucionEducativaId, 'gestionTipo' => $gestionId));
+                if(count($listaMaestros) >= count($institucioneducativaEspecialidadTecnicoHumanisticoEntity)){
+                    $msg = "No puede agregar mas de 1 maestro por especialidad";
+                    return $response->setData(array('estado'=>false, 'msg'=>$msg)); 
+                }
+            } else {
+                $validacionFechaSecuencial = $this->getValidacionFechaSecuencial($listaMaestros, $gestionId, $fechaInicio, $fechaFin, $institucioneducativaCursoOfertaMaestroId);
+                if(!$validacionFechaSecuencial['estado']){
+                    return $response->setData(array('estado'=>$validacionFechaSecuencial['estado'], 'msg'=>$validacionFechaSecuencial['msg']));
+                }
+            }
+        } 
+
         //$horasMes = $institucioneducativaCursoOfertaMaestroEntity->getInstitucioneducativaCursoOferta()->getHorasmes();
         $em->getConnection()->beginTransaction();
         try {     
