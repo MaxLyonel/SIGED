@@ -74,7 +74,7 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <div class="panel rounded shadow panel-teal">
+                <div class="panel rounded shadow panel-primary">
                     <div class="panel-heading">
                         <div class="pull-left">
                             <h3 class="panel-title">Administrativos</h3>
@@ -83,14 +83,14 @@
                             <form action="{{path('reporte_especial_uno')}}" method="post" style="display:inline-block">
                                 <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                 <input type="hidden" name="gestion" value="{{gestion}}">
-                                <button type="submit" class="btn btn-md btn-primary"><i class="fa fa-save"></i> Generar Reporte</button>
+                                <button type="submit" class="btn btn-md btn-facebook"><i class="fa fa-save"></i> Generar Reporte</button>
                             </form>
                             <a href="{{path('info_personal_adm_especial_find')}}" class="btn btn-warning btn-md"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
                         </div>
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
-                        <div class="panel-body panel-teal">
+                        <div class="panel-body panel-primary">
 
                             {% if personal is not empty %}
                                 <div id="no-more-tables">

@@ -34,7 +34,7 @@
                         <form action="{{path('reporte_especial_cuatro')}}" method="post" style="display:inline-block">
                             <input type="hidden" name="idInstitucion" value="{{app.session.get('idInstitucion')}}">
                             <input type="hidden" name="gestion" value="{{app.session.get('idGestion')}}">
-                            <button type="submit" class="btn btn-md btn-primary"><i class="fa fa-save"></i> Generar Reporte</button>
+                            <button type="submit" class="btn btn-md btn-facebook"><i class="fa fa-save"></i> Generar Reporte</button>
                         </form>
                   </div>
             {% else %}        
@@ -50,7 +50,7 @@
                 </div>
                 <div id="panelinstitucion" class="panel-collapse collapse in">
                     <div class="portlet-body">
-                        <div class="panel-body panel-teal">
+                        <div class="panel-body panel-primary">
                             {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form-horizontal'} } )}}
                             <div class="panel-body">
 
