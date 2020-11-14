@@ -324,12 +324,12 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                 $estudianteAsignatura = $this->get('areasEstudiante')->nuevo($idCursoOferta, $idIns, $gestion);
 
                 $objInfoCourse = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscripcion->getInstitucioneducativaCurso());
-
-                $query = $em->getConnection()->prepare('SELECT * from sp_genera_migracion_notas_ttg_tte_2019_2020(:iestudiante_id::VARCHAR, :iinstitucioneducativa_id ::VARCHAR)');
-                $query->bindValue(':iestudiante_id', $inscripcion->getEstudiante()->getId());
-                $query->bindValue(':iinstitucioneducativa_id', $objInfoCourse->getInstitucioneducativa()->getId());
-                $query->execute();
-                
+                if($objInfoCourse->getNivelTipo()->getId() == 13 && $objInfoCourse->getGradoTipo()->getId() == 5 ){                    
+                    $query = $em->getConnection()->prepare('SELECT * from sp_genera_migracion_notas_ttg_tte_2019_2020(:iestudiante_id::VARCHAR, :iinstitucioneducativa_id ::VARCHAR)');
+                    $query->bindValue(':iestudiante_id', $inscripcion->getEstudiante()->getId());
+                    $query->bindValue(':iinstitucioneducativa_id', $objInfoCourse->getInstitucioneducativa()->getId());
+                    $query->execute();
+                }
 
                 // VERIFICAMOS SI YA TIENE REGISTRADO LA ESPECIALIDAD
                 $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array(
@@ -346,7 +346,7 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                                 ->getQuery()
                                 ->getResult();
                 }
-
+                
                 // REGISTRAMOS LA NUEVA ESPECIALIDAD                    
                 $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->find($idieeht);
                 $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion_humnistico_tecnico');");
