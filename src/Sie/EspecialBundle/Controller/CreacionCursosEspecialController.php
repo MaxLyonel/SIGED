@@ -301,7 +301,7 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('nivelTecnico','choice',array('label'=>'Nivel de Formación Técnica','choices'=>$nivelesTecnicoArray,'data'=> $nivelTecnico,'attr'=>array('class'=>'form-control')))
 
                     ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'attr'=>array('class'=>'form-control')))
-                    ->add('guardar','submit',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-primary')))
+                    ->add('guardar','submit',array('label'=>'Crear Curso','attr'=>array('class'=>'btn btn-facebook')))
                     ->getForm();
             $em->getConnection()->commit();
 
