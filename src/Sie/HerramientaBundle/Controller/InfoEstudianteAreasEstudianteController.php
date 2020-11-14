@@ -323,6 +323,14 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                 // REGSITRAMOS LA MATERIA ESPECIALIZADA AL ESTUDIANTE
                 $estudianteAsignatura = $this->get('areasEstudiante')->nuevo($idCursoOferta, $idIns, $gestion);
 
+                $objInfoCourse = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscripcion->getInstitucioneducativaCurso());
+
+                $query = $em->getConnection()->prepare('SELECT * from sp_genera_migracion_notas_ttg_tte_2019_2020(:iestudiante_id::VARCHAR, :iinstitucioneducativa_id ::VARCHAR)');
+                $query->bindValue(':iestudiante_id', $inscripcion->getEstudiante()->getId());
+                $query->bindValue(':iinstitucioneducativa_id', $objInfoCourse->getInstitucioneducativa()->getId());
+                $query->execute();
+                
+
                 // VERIFICAMOS SI YA TIENE REGISTRADO LA ESPECIALIDAD
                 $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array(
                     'estudianteInscripcion'=>$idIns
@@ -341,7 +349,8 @@ class InfoEstudianteAreasEstudianteController extends Controller {
 
                 // REGISTRAMOS LA NUEVA ESPECIALIDAD                    
                 $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->find($idieeht);
-
+                $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion_humnistico_tecnico');");
+                $query->execute();
                 $especialidadEstudiante = new EstudianteInscripcionHumnisticoTecnico();
                 $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
                 $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idIns));
