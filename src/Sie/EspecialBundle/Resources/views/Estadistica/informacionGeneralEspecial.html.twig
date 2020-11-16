@@ -127,7 +127,7 @@
                                                         <form name="formDocente" id="formDocente" role="form" action="{{ path('sie_ue_especial_informacion_general_impresion_docente') }}" method="POST">
                                                             <input type="hidden" name="gestion" value="{{ gestion }}" />
                                                             <input type="hidden" name="sie" value="{{ infoLugar }}" />  
-                                                            <a class="btn btn-primary" onclick="document.forms['formDocente'].submit();">
+                                                            <a class="btn btn-facebook" onclick="document.forms['formDocente'].submit();">
                                                                 <h4>Maestros <i class="fa fa-download"></i></h4>
                                                             </a>
                                                         </form>                 
@@ -219,7 +219,7 @@
                                 <!-- Start project overview -->
                                 <div class="row">                                
                                     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="mini-stat clearfix bg-teal rounded">
+                                        <div class="mini-stat clearfix bg-primary rounded">
                                             <span class="mini-stat-chart">
                                                 <span><i class="fa fa-child fa-4x"></i></span>
                                             </span><!-- /.mini-stat-chart -->
@@ -254,7 +254,7 @@
                                 </div>
                                 <div class="row">                                
                                     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="mini-stat clearfix bg-teal rounded">
+                                        <div class="mini-stat clearfix bg-primary rounded">
                                             <span class="mini-stat-chart">
                                                 <span><i class="fa fa-child fa-4x"></i></span>
                                             </span><!-- /.mini-stat-chart -->
@@ -290,7 +290,7 @@
                                 
                                 <div class="row">                                
                                     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                                        <div class="mini-stat clearfix bg-teal rounded">
+                                        <div class="mini-stat clearfix bg-primary rounded">
                                             <span class="mini-stat-chart">
                                                 <span><i class="fa fa-child fa-4x"></i></span>
                                             </span><!-- /.mini-stat-chart -->
@@ -494,7 +494,7 @@
                                             </div>
                                         </div>   
                                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                            <div class="mini-stat-type-4 bg-teal shadow">
+                                            <div class="mini-stat-type-4 bg-primary shadow">
                                                 <i class="fa fa-home fa-2x"></i>
                                                 <h2>{{infoEstadisticaEspecialIE['ie_privada']|number_format(0, ',', '.')}}</h2>
                                                 <h4>Privada</h4>
@@ -552,7 +552,7 @@
                                         <!-- Start project overview -->
                                         <div class="row">
                                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <div class="panel-body bg-teal">
+                                                <div class="panel-body bg-primary">
                                                     <div class="ribbon-wrapper">
                                                     </div><!-- /.ribbon-wrapper -->
                                                     <ul class="inner-all list-unstyled">
@@ -585,7 +585,7 @@
                                     <i class="fa fa-angle-up"></i>
                                 </button>  
                                 {% if ingresaAdmin == 1 %}
-                                    <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdfTemp'].submit();" title="Descargar PDF" class="btn btn-primary">
+                                    <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdfTemp'].submit();" title="Descargar PDF" class="btn btn-facebook">
                                         <i class="fa fa-file-pdf-o"></i>
                                     </button>
                                 {% endif %} 

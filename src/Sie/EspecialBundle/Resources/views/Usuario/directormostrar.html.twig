@@ -48,7 +48,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <form action="{{path('usuariopasswd')}}" method="post">
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-gear"></i> Cambiar Contraseña</button>
+                                <button type="submit" class="btn btn-facebook"><i class="fa fa-gear"></i> Cambiar Contraseña</button>
                             </form>
                         </div>                        
                     </div>
@@ -114,7 +114,7 @@
                     {% if app.session.get('roluser') == 9 %} {#UNIDAD EDUCATIVA#}               
                         <div class="row">                        
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type = "button" class = "btn btn-primary" title = "Actualización de Cargo Director"  
+                                <button type = "button" class = "btn btn-facebook" title = "Actualización de Cargo Director"  
                                         data-container = "body" data-toggle = "popover" data-placement = "left" 
                                         data-content = "Para seleccionar la persona que actualmente trabaja con el cargo de director, dirigase al Sistema Academico - Regular.">
                                     <i class="glyphicon glyphicon-edit"></i> Editar
@@ -126,7 +126,7 @@
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}           
                         <div class="row">                        
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type = "button" class = "btn btn-primary" title = "Actualización de Persona y Usuario"  
+                                <button type = "button" class = "btn btn-facebook" title = "Actualización de Persona y Usuario"  
                                         data-container = "body" data-toggle = "popover" data-placement = "left" 
                                         data-content = "Para seleccionar la persona que actualmente trabaja con el cargo de tecnico distrital, dirigase a su tecnico departamental.">
                                     <i class="glyphicon glyphicon-edit"></i> Editar

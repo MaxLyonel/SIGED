@@ -115,9 +115,14 @@
                                                         <td data-title="Nombre" >{{ entity.nombre }}</td>
                                                         <td data-title="F. Nac.">{{entity.fecha_nacimiento|date('d-m-Y')}}</td>
                                                         <td class="text-center">
-                                                            <a href="{{path('download_ddjjone_web', {'rude': entity.codigo_rude, 'gestion':entity.gestion_tipo_id , 'sie':entity.insteduid } )}}">
-                                                                <img src="{{asset('img/pdf.png') }}" data-1x="{{asset('img/pdf.png')}}" data-2x="{{asset('img/pdf.png')}}" height="40" width="40"   class="hisrc img-responsive" alt="">
+                                                            <a class="btn btn-circle btn-success" href="{{path('download_ddjjone_web', {'rude': entity.codigo_rude, 'gestion':entity.gestion_tipo_id , 'sie':entity.insteduid } )}}">
+                                                                <i class="fa fa-download"></i>
                                                             </a>
+                                                            {% if entity.estinsbthid > 0 and (entity.estadomatricula_tipo_id == 5 or entity.estadomatricula_tipo_id == 55) %}                                                            
+                                                                <a class="btn btn-circle btn-primary" href="{{path('download_cut', {'idInscripcion': entity.estinsid, 'rude': entity.codigo_rude, 'sie':entity.insteduid, 'gestion': entity.gestion_tipo_id, 'nivel':0000,'grado':000, 'paralelo':000,'turno':000, 'ciclo':000} )}}">
+                                                                    <i class="fa fa-print"></i>
+                                                                </a>
+                                                            {% endif %}
                                                         </td>
                                                     </tr>
                                                 {% endfor %}

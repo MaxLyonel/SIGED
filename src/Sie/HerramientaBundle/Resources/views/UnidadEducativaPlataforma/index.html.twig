@@ -407,18 +407,23 @@
 	                    <tr v-if="swattach">
 	                     	<td colspan="2">
 
+
+
 	                    		<fieldset>
-
-			                        <div class="form-group" style="font-size:15px; text-align: center;">
-			                        	
-
-			                        	<a  target="_blank" class="btn btn-inverse btn-stroke" href="{{path('plataforma_generateRequestDominioPDF', {'sie':app.session.get('ie_id')})}}" style=""><span class="glyphicon glyphicon-list-alt" ></span>Generar/Descargar Carta de Compromiso</a>
-			                        	{#
+									<div class="form-group" style="font-size:15px; text-align: center;">
+										<div class="alert alert-success" role="alert">
+										 Datos registrados correctamente, confirmar envío de solicitud.
+										</div>
+									</div>
+									{#
 	                                    <form action="{{path('plataforma_generateRequestDominioPDF')}}" method="post" style="display:inline-block">
 	                                       <input type="hidden" name="requestdata" id="requestdata" value="">
 	                                       <button type="submit" class="btn-link"><i class="fa fa-edit"></i>Generar/Descargar Carta de Solicitud</button>
 	                                    </form>	#}		                        				                           
-
+									{#
+			                        <div class="form-group" style="font-size:15px; text-align: center;">
+			                        	<a  target="_blank" class="btn btn-inverse btn-stroke" href="{{path('plataforma_generateRequestDominioPDF', {'sie':app.session.get('ie_id')})}}" style=""><span class="glyphicon glyphicon-list-alt" ></span>Generar/Descargar Carta de Compromiso</a>
+			                        	
 			                        </div>
 			                        <div class="form-group">
 			                            <div class="col-md-6">
@@ -442,6 +447,7 @@
                                          <input type="file" name="image" @change="getfotocopiarm" accept="file/*" class="form-control" id="archivoAdjuntoId4">
 			                            </div>
 			                        </div>
+									#}
 			                    </br>
 
 		                        <div class="form-group">		                           
@@ -712,7 +718,7 @@
               },
             sendRequest: function(){
 
-            	if(typeof this.documentocartaSolicitud != 'object'){
+            	/*if(typeof this.documentocartaSolicitud != 'object'){
             		Swal.fire(
                         'Adjuntar CARTA SOLICITUD',
                         'Debe adjuntar el documento CARTA SOLICITUD para ralizar la solicitud, puede ser un archivo de imagen o PDF',
@@ -743,7 +749,7 @@
                         'warning'
                         );
                         return;
-            	}            	
+            	}*/            	
 
                     Swal.fire({
                         title: 'Realizar Solicitud?',

@@ -232,7 +232,7 @@ class InfoStudentsController extends Controller {
     $form = $this->createFormBuilder()
             ->add('rudeal','text', array('label'=>'Rude', 'attr'=> array('class'=>'form-control', 'placeholder' => 'Rude', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
             ->add('data', 'hidden', array('data'=> $data))
-            ->add('find', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-primary', 'onclick'=>'findStudent()')))
+            ->add('find', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-facebook', 'onclick'=>'findStudent()')))
             ->getForm();
     return $form;
   }

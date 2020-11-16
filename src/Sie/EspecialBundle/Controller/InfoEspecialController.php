@@ -186,7 +186,7 @@ class InfoEspecialController extends Controller{
                       ->setAction($this->generateUrl($goToPath))
                       ->add('gestion', 'hidden', array('data' => $data['gestion']))
                       ->add('sie', 'hidden', array('data' => $this->unidadEducativa))//81880091
-                      ->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')))
+                      ->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-facebook btn-md btn-block', 'onclick'=>'closeOperativo()')))
                       ->getForm()
       ;
   }
@@ -202,7 +202,7 @@ class InfoEspecialController extends Controller{
                       ->setAction($this->generateUrl($goToPath))
                       ->add('gestion', 'hidden', array('data' => $data['gestion']))
                       ->add('sie', 'hidden', array('data' => $data['idInstitucion']))//81880091
-                      ->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
+                      ->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-facebook btn-md btn-block')))
                       ->getForm()
       ;
   }
