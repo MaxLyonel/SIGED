@@ -686,7 +686,7 @@ class InboxController extends Controller {
           'infoMaestroform' => $this->InfoStudentForm('herramienta_info_maestro_index', 'Personal Docente',$data)->createView(),
           'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
           'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo',$data)->createView(),
-          'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
+          'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Deshabilitado Temporalmente',$data)->createView(),
           'data'=>$dataInfo
         ));
       }
@@ -725,7 +725,8 @@ class InboxController extends Controller {
             $form =$form->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
             ;
           }else{
-            $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
+            //$form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
+            $form =$form->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
             ;
           }
 
@@ -761,11 +762,10 @@ class InboxController extends Controller {
            ($this->session->get('ue_sol_regularizar')  ) ||
            ($this->session->get('ue_tecteg') )
         ){
-          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')))
-          ;
+          //$form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')));
+          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-danger btn-md btn-block')));
         }else{
-          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
-          ;
+          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-danger btn-md btn-block')));
         }
         $form = $form->getForm();
         return $form;
@@ -875,7 +875,7 @@ class InboxController extends Controller {
                       'infoMaestroform' => $this->InfoStudentForm('herramienta_info_maestro_index', 'Maestros',$data)->createView(),
                       'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
                       'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo', $data)->createView(),
-                      'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
+                      'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Deshabilitado Temporalmente',$data)->createView(),
                       'data' => $data
           ));
           break;
@@ -889,7 +889,7 @@ class InboxController extends Controller {
                         //'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Información Estudiante',$data)->createView(),
                         'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudianterequest_index', 'Información Estudiante',$data)->createView(),
                         'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo', $data)->createView(),
-                        'closeOperativoform' => $this->CloseOperativoForm('herramienta_inbox_close_operativo', 'Cerrar Operativo',$data)->createView(),
+                        'closeOperativoform' => $this->CloseOperativoForm('herramienta_inbox_close_operativo', 'Deshabilitado Temporalmente',$data)->createView(),
                         'data' => $data
 
             ));

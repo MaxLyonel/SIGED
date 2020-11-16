@@ -425,6 +425,9 @@ class DownloadController extends Controller {
      * @return Response a pdf list students per UE
      */
     public function boletinPromoPerUeAction(Request $request, $ue, $nivel, $ciclo, $grado, $paralelo, $turno, $gestion, $itemsUe) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = $fechaActual->format('Y');
 
         $aDataUe = explode(',', $itemsUe);
 
@@ -436,17 +439,25 @@ class DownloadController extends Controller {
         $sie = $ue;
         $data = $user.'|'.$sie.'|'.$gestion.'|'.$nivel.'|'.$ciclo.'|'.$grado.'|'.$paralelo.'|'.$turno;
         $link = 'http://'.$_SERVER['SERVER_NAME'].'/cen/'.$this->getLinkEncript($data);
-
+        
         switch ($nivel) {
             case 1:
             case 11:
-                $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_inicial_v2.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                if($gestion == $gestionActual){
+                    $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_inicial_v2_no_valido.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                } else {
+                    $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_inicial_v2.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                }
                 break;
             case 2:
             case 3:
             case 12:
             case 13:
-                $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_v2.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                if($gestion == $gestionActual){
+                    $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_v2_no_valido.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                } else {
+                    $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_v2.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                }
                 break;
           }
         $response->setContent(file_get_contents($report));
@@ -772,9 +783,9 @@ class DownloadController extends Controller {
         // Validamos que tipo de libreta se ha de imprimir
         // Modular y plena
 
-        if($this->session->get('ue_plena')){
+        //if($this->session->get('ue_plena')){
            $reporte = 'reg_cert_cut_v1_ma.rptdesign';
-        }
+        //}
         //dump($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&');die;
         // Generamos el reporte
 

@@ -35,8 +35,6 @@ class DefaultController extends Controller {
      */
     public function indexAction(Request $request) {
 
-        //return $this->render('SieAppWebBundle:Default:sie.html.twig');
-
         $this->session = $request->getSession();
 
         //$this->session->clear();
@@ -195,13 +193,37 @@ class DefaultController extends Controller {
                 $layout = 'layoutJuegos.html.twig';
                 $this->session->set('pathSystem', "SieJuegosBundle");
                 break;
-            case '172.20.196.17':
-                $sysname = 'TRAMITE';
-                $sysporlet = 'green';
-                $sysbutton = false;
-                $layout = 'layoutTramites.html.twig';
-                $this->session->set('pathSystem', "SieTramitesBundle");
+            case '172.20.196.17':                
+                // $sysname = 'TRAMITE';
+                // $sysporlet = 'green';
+                // $sysbutton = false;
+                // $layout = 'layoutTramites.html.twig';
+                // $this->session->set('pathSystem', "SieTramitesBundle");
+                // break;
+                $sysname = 'Sistema Siged';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutRegular.html.twig';
+                $this->session->set('pathSystem', "SieRegularBundle");
+                $this->session->set('sistemaid', 1);
+                $this->session->set('color', 'blue');
                 break;
+                // $sysname = 'Sistema Académico Educación Regular';
+                // $sysporlet = 'blue';
+                // $sysbutton = true;
+                // $layout = 'layoutHerramienta.html.twig';
+                // $this->session->set('pathSystem', "SieHerramientaBundle");
+                // $this->session->set('color', 'primary');
+                // $this->session->set('sistemaid', 6);
+                // break;
+                // $sysname = 'Sistema Académico Educación Alternativa';
+                // $sysporlet = 'blue';
+                // $sysbutton = true;
+                // $layout = 'layoutHerramientaAlternativa.html.twig';
+                // $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
+                // $this->session->set('color', 'success');
+                // $this->session->set('sistemaid', 2);
+                // break;
             case 'tramite.sie.gob.bo':
                     $sysname = 'TRAMITE';
                     $sysporlet = 'green';
