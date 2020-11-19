@@ -62,7 +62,7 @@
                                 {% endif %}
                             </td>                
                         {% endif %}                
-                        {% if (app.session.get('roluser') == 20) %} {#ROL DE CONSULTA MODO LECTURA#}
+                        {% if (app.session.get('roluser') in [20,32]) %} {#ROL DE CONSULTA MODO LECTURA#}
                             <td class="text-center">
                                 <form action="{{path('sie_alt_ges_sub_sem_open', {'teid':'99', 'gestion': reg.gestionTipo,'subcea':reg.SucursalIE,'semestre':reg.periodoTipoId,'idiesuc':reg.IEsucursalId})}}" method="post" style="display:inline-block">                            
                                     <button type="submit" class="btn btn-circle btn-success btn-stroke tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Ver.">
