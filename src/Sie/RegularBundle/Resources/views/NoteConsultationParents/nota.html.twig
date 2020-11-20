@@ -94,7 +94,7 @@
                 </tr>
             </table>
             {% if subsistema == 1 %}
-                {% include 'SieRegularBundle:NoteConsultationParents:nota_regular.html.twig' with {'cabeceras': cabeceras, 'indices': indices, 'notas': notas, 'cualitativo': cualitativo, 'inscripcion': inscripcion, 'gestion': gestion} %}
+                {% include 'SieRegularBundle:NoteConsultationParents:nota_regular.html.twig' with {'cabeceras': cabeceras, 'indices': indices, 'notas': notas, 'cualitativo': cualitativo, 'cualitativo2020': cualitativo2020, 'inscripcion': inscripcion, 'gestion': gestion} %}
             {% elseif subsistema == 2 %}
                 {% include 'SieRegularBundle:NoteConsultationParents:nota_alternativa.html.twig' with {'notas': notas, 'inscripcion': inscripcion, 'gestion': gestion} %}
             {% elseif subsistema == 4 %}
