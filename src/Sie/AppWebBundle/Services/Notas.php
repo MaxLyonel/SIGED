@@ -1244,7 +1244,7 @@ die;/*
                         $updateNota = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->find($idEstudianteNota[$i]);
                         // $regAnterior = clone $updateNota;
                         if($updateNota){
-                            if($nivel == 11){
+                            if($nivel == 11 or ($nivel.$arrinfoUe['ueducativaInfoId']['gradoId'] == '121')){
                                 // Verificamos si la nota fue modificada o no para guardar los datos del usuario
                                 if($updateNota->getNotaCualitativa() != mb_strtoupper($notas[$i],'utf-8') and $notas[$i] != ""){
                                     
