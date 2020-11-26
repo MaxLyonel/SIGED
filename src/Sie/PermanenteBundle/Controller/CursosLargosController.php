@@ -2624,6 +2624,11 @@ class CursosLargosController extends Controller {
             $em->remove($inscripcionestudiante);
             $em->flush();
 
+            if ($objRude) {
+                $em->remove($objRude);
+            }
+            $em->flush();            
+
             $em->getConnection()->commit();
 
             $query = $em->getConnection()->prepare('
