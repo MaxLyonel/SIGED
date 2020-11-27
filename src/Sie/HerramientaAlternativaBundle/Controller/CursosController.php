@@ -619,12 +619,6 @@ class CursosController extends Controller {
                         foreach ($objTramiteDetalle as $element) {
                             $em->remove($element);
                         }
-                        if(is_object($objDocumento)){
-
-                            foreach($objDocumento as $ele){
-                                    $em->remove($ele);
-                            }  
-                        }
 
                     }
 
@@ -632,11 +626,10 @@ class CursosController extends Controller {
                     $em->flush();
 
                     $removeit = true;
-                }                
+                }
+              
 
             }
-
-
 
             if($removeit){
 
