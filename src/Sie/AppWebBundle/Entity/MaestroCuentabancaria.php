@@ -724,4 +724,116 @@ class MaestroCuentabancaria
     {
         return $this->expedido;
     }
+    /**
+     * @var string
+     */
+    private $lote;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaEnvio;
+
+    /**
+     * @var boolean
+     */
+    private $esExtranjero;
+
+    /**
+     * @var integer
+     */
+    private $enlazadorApellido;
+
+
+    /**
+     * Set lote
+     *
+     * @param string $lote
+     * @return MaestroCuentabancaria
+     */
+    public function setLote($lote)
+    {
+        $this->lote = $lote;
+    
+        return $this;
+    }
+
+    /**
+     * Get lote
+     *
+     * @return string 
+     */
+    public function getLote()
+    {
+        return $this->lote;
+    }
+
+    /**
+     * Set fechaEnvio
+     *
+     * @param \DateTime $fechaEnvio
+     * @return MaestroCuentabancaria
+     */
+    public function setFechaEnvio($fechaEnvio)
+    {
+        $this->fechaEnvio = $fechaEnvio;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaEnvio
+     *
+     * @return \DateTime 
+     */
+    public function getFechaEnvio()
+    {
+        return $this->fechaEnvio;
+    }
+
+    /**
+     * Set esExtranjero
+     *
+     * @param boolean $esExtranjero
+     * @return MaestroCuentabancaria
+     */
+    public function setEsExtranjero($esExtranjero)
+    {
+        $this->esExtranjero = $esExtranjero;
+    
+        return $this;
+    }
+
+    /**
+     * Get esExtranjero
+     *
+     * @return boolean 
+     */
+    public function getEsExtranjero()
+    {
+        return $this->esExtranjero;
+    }
+
+    /**
+     * Set enlazadorApellido
+     *
+     * @param integer $enlazadorApellido
+     * @return MaestroCuentabancaria
+     */
+    public function setEnlazadorApellido($enlazadorApellido)
+    {
+        $this->enlazadorApellido = $enlazadorApellido;
+    
+        return $this;
+    }
+
+    /**
+     * Get enlazadorApellido
+     *
+     * @return integer 
+     */
+    public function getEnlazadorApellido()
+    {
+        return $this->enlazadorApellido;
+    }
 }
