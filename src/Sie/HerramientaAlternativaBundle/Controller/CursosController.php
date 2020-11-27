@@ -614,8 +614,7 @@ class CursosController extends Controller {
                 if(is_object($objDocumento)){
                     $removeit = false;
                 }else{
-
-                    $objTramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->findBy(array('tramite' =>  $objTramite->getId() ));
+                    $objTramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->findBy(array('tramite' =>  $objTramite->getId() ), array('id' => 'DESC'));
                     if ($objTramiteDetalle){
                         foreach ($objTramiteDetalle as $element) {
                             $em->remove($element);
@@ -626,14 +625,12 @@ class CursosController extends Controller {
                                     $em->remove($ele);
                             }  
                         }
-                        foreach($objTramiteDetalle as $ele){
-                            $em->remove($ele);
-                        }
-                        $em->remove($objTramite);
-                        $em->flush();
+
                     }
 
-                    dump($objTramiteDetalle);
+                    $em->remove($objTramite);
+                    $em->flush();
+
                     $removeit = true;
                 }                
 
