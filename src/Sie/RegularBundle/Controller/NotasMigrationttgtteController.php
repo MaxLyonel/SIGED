@@ -40,7 +40,18 @@ class NotasMigrationttgtteController extends Controller
                 // validation type of request
                 if($estudiante['bth']=='true'){
                     $opcion = 2;
-                }                    
+                }   
+                $arrStudent = array(
+                    'nombre'=>'',
+                    'paterno'=>'',
+                    'materno'=>'',
+                    'estId'=>'',
+                    'estInsId'=>'',
+                    'institucioneducativaId'=>'',
+                    'codigoRude' => '',
+                    'carnet' => '',
+                    //'idObsBono' => sizeof($objObservationsStudent)>0?$objObservationsStudent[0]->getId():''
+                );                                  
                 // validation on SIE info
                 $codigoSie = mb_strtoupper($estudiante['codigoSie']);
                 $objInstitucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id'=>$codigoSie, 'institucioneducativaTipo'=>1));
@@ -65,7 +76,7 @@ class NotasMigrationttgtteController extends Controller
                         }                    
                     }
                     
-                    $arrStudent = array(
+                    $arrUnidadEducativa = array(
                         'nombre'=>$objInstitucioneducativa->getInstitucioneducativa(),
                         'codigoSie' => $objInstitucioneducativa->getId(),
                         
@@ -106,7 +117,18 @@ class NotasMigrationttgtteController extends Controller
                                 'msg'=>'El estudiante no cuenta con una inscripción efectiva en la presente gestión'
                             ]);
                         }
-                        $idStudent = $objestudiante->getId();                            
+                        $idStudent = $objestudiante->getId(); 
+                        $arrStudent = array(
+                            'nombre'=>$objestudiante->getNombre(),
+                            'paterno'=>$objestudiante->getPaterno(),
+                            'materno'=>$objestudiante->getMaterno(),
+                            'estId'=>$objestudiante->getId(),
+                            'estInsId'=>$inscripcionesEfectivas[0]['id'],
+                            'institucioneducativaId'=>$inscripcionesEfectivas[0]['institucioneducativaId'],
+                            'codigoRude' => $objestudiante->getCodigoRude(),
+                            'carnet' => $objestudiante->getCarnetIdentidad(),
+                            //'idObsBono' => sizeof($objObservationsStudent)>0?$objObservationsStudent[0]->getId():''
+                        );                                                     
 
                     }else{
                         return $response->setData([
@@ -164,15 +186,12 @@ class NotasMigrationttgtteController extends Controller
                         $query->execute();     
                         break;
                 }
-
-           
-               
-         
              
                 return $response->setData([
                     'status'=>'success',
                     'datos'=>array(
            
+                        'arrUnidadEducativa'=>$arrUnidadEducativa,
                         'arrStudent'=>$arrStudent,
                         'opcion' => 2
                         

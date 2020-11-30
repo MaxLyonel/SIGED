@@ -211,29 +211,7 @@
 					<div v-if="validado" class="respuesta">
 
 						<div v-if="opcion == 1" class="alert" :class="[{'alert-success':datos.statusEstudiante == 'success'}, {'alert-warning':datos.statusEstudiante == 'warning'}]">
-							Información de la/el ESTUDIANTE:
-							<div class="table-responsive">
-							<table class="table">
-							<thead>
-								<tr>
-								<th scope="col">Cod. Rude</th>
-								<th scope="col">CI</th>
-								<th scope="col">Paterno</th>
-								<th scope="col">Materno</th>
-								<th scope="col">Nombre(s)</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-								<td>${estudiante.codigoRude}</td>
-								<td>${estudiante.carnet}</td>
-								<td>${estudiante.materno}</td>
-								<td>${estudiante.paterno}</td>
-								<td>${estudiante.nombre}</td>
-								</tr>
-							</tbody>
-							</table>
-							</div>							
+							
 
 							<p> 
                                 <div class="alert alert-success" role="alert">
@@ -257,12 +235,35 @@
 							<tbody>
 								<tr>
 								<td>${estudiante.institucioneducativaId}</td>
-								<td>${estudiante.nombre}</td>
+								<td>${estudiante.nameue}</td>
 
 								</tr>
 							</tbody>
 							</table>
-							</div>							
+							</div>
+							Información de la/el ESTUDIANTE:
+							<div class="table-responsive">
+							<table class="table">
+							<thead>
+								<tr>
+								<th scope="col">Cod. Rude</th>
+								<th scope="col">CI</th>
+								<th scope="col">Paterno</th>
+								<th scope="col">Materno</th>
+								<th scope="col">Nombre(s)</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+								<td>${estudiante.codigoRude}</td>
+								<td>${estudiante.carnet}</td>
+								<td>${estudiante.materno}</td>
+								<td>${estudiante.paterno}</td>
+								<td>${estudiante.nombre}</td>
+								</tr>
+							</tbody>
+							</table>
+							</div>														
 
 							<p> 
                                 <div class="alert alert-success" role="alert">
@@ -331,6 +332,16 @@
 					codigoRude: '',
                     codigoSie: '',
 					codigoRudeId: '',
+					carnet: '',
+		    		complemento: '',
+		    		nombre: '',
+		    		paterno: '',
+		    		materno: '',
+		    		fechaNacimiento: '',
+		    		nivel: '',
+					estId: '',
+		    		grado: ''
+
 		    		
 		    	},
 				dataClaim: {persona:{swchangeTutor:false,paterno:'',materno:'',nombre:''}, student:{}} ,
@@ -392,6 +403,26 @@
 		    			});
 		    			return false;
 		    		}
+
+					var messageToProcess;
+					if(this.estudiante.bth){
+						messageToProcess = 'Proceso de eliminación de Especialidades?';
+					}else{
+						messageToProcess = 'Proceso de eliminación de Notas?';
+					}
+
+                	Swal.fire({
+                        title: messageToProcess,
+                        text: "esta seguro de CONTINUAR la eliminación",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	if (result.value) { 
+
 		    		this.datos = [];
 		    		this.validado = false;
 		    		this.cortina = true;
@@ -401,53 +432,61 @@
 	    		  		type:'info',
 	    		  		showConfirmButton: false,
 	    			});
-		    		axios.post(Routing.generate('notasMigrationttgtte_buscar', { estudiante: this.estudiante, opcion: this.opcion}))
-		    			.then(response => {
-		    				if (response.data.status === 'error') {
-			    				Swal.fire(
-	    					  		'Aviso',
-	    					  		response.data.msg,
-	    					  		'info'
-	    						)
-		    				}
 
-		    				if (response.data.status == 'success') {
-		    					Swal.close();
-								
-		    					this.datos = response.data.datos;
-                                this.opcion = response.data.datos.opcion;
-								
-								if(this.opcion == 1){
-                                    this.showFormReclamo = this.datos.showFormReclamo;
-                                    this.estudiante.nombre = this.datos.arrStudent.nombre;
-                                    this.estudiante.paterno = this.datos.arrStudent.paterno;
-                                    this.estudiante.materno = this.datos.arrStudent.materno;
-                                    this.estudiante.carnet = this.datos.arrStudent.carnet;
-                                    this.estudiante.estId = this.datos.arrStudent.estId;
-                                    this.estudiante.estInsId = this.datos.arrStudent.estInsId;
-                                    /*this.estudiante.idObsBono = this.datos.arrStudent.idObsBono;*/
-                                    this.estudiante.codigoRudeId = this.datos.arrStudent.codigoRude;
-                                    this.estudiante.institucioneducativaId = this.datos.arrStudent.institucioneducativaId;
-                                    /*this.urlreport = this.datos.arrToPrint.urlreport;
-                                    this.showbuttonPDF = this.datos.arrToPrint.showbuttonPDF;*/
-                                    this.DBUrlReport = this.datos.arrUrlRerport;
-								}else{
-                                     this.estudiante.nombre = this.datos.arrStudent.nombre;
-                                     this.estudiante.institucioneducativaId = this.datos.arrStudent.codigoSie;
+					
+						axios.post(Routing.generate('notasMigrationttgtte_buscar', { estudiante: this.estudiante, opcion: this.opcion}))
+							.then(response => {
+								if (response.data.status === 'error') {
+									Swal.fire(
+										'Aviso',
+										response.data.msg,
+										'info'
+									)
+								}
 
-                                }
-		    					this.validado = true;
-		    				}
-		    				this.cortina = false;
-		    			})
-		    			.catch(e => {
-		    				Swal.fire(
-    					  		'Aviso',
-    					  		'No se pudo realizar la verficación',
-    					  		'error'
-    						)
-		    				this.cortina = false;
-		    			});
+								if (response.data.status == 'success') {
+									Swal.close();
+									
+									this.datos = response.data.datos;
+									this.opcion = response.data.datos.opcion;
+									
+									//if(this.opcion == 1){
+										this.showFormReclamo = this.datos.showFormReclamo;
+										this.estudiante.nombre = this.datos.arrStudent.nombre;
+										this.estudiante.paterno = this.datos.arrStudent.paterno;
+										this.estudiante.materno = this.datos.arrStudent.materno;
+										this.estudiante.carnet = this.datos.arrStudent.carnet;
+										this.estudiante.estId = this.datos.arrStudent.estId;
+										this.estudiante.estInsId = this.datos.arrStudent.estInsId;
+										/*this.estudiante.idObsBono = this.datos.arrStudent.idObsBono;*/
+										this.estudiante.codigoRudeId = this.datos.arrStudent.codigoRude;
+										this.estudiante.institucioneducativaId = this.datos.arrStudent.institucioneducativaId;
+
+										this.estudiante.nameue = this.datos.arrUnidadEducativa.nombre;
+										
+										/*this.urlreport = this.datos.arrToPrint.urlreport;
+										this.showbuttonPDF = this.datos.arrToPrint.showbuttonPDF;*/
+										this.DBUrlReport = this.datos.arrUrlRerport;
+										
+									/*}else{
+										this.estudiante.nombre = this.datos.arrStudent.nombre;
+										this.estudiante.institucioneducativaId = this.datos.arrStudent.codigoSie;
+
+									}*/
+									this.validado = true;
+								}
+								this.cortina = false;
+							})
+							.catch(e => {
+								Swal.fire(
+									'Aviso',
+									'No se pudo realizar la verficación',
+									'error'
+								)
+								this.cortina = false;
+							});
+					 }
+	                })
 		    	},
 				validEmail(email){
 					var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -469,9 +508,15 @@
 		    		this.estudiante.nivel = '';
 		    		this.estudiante.grado = '';
 					this.estudiante.codigoSie = '';
+					this.estudiante.nameue = '';
                     this.urlreport ='';
                     this.showbuttonPDF ='';
                     this.DBUrlReport = '';
+					this.tri1= false;
+					this.tri2= false;
+					this.tri3= false;
+					this.prom= false;
+					this.bth=  false;					
 		    	},
 		    	validarFormatoFecha(campo) {
 	    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
