@@ -39,7 +39,7 @@
     <div class="row">
         <!-- Institución Educativa -->
         <!-- Director/a -->
-        <div class="col-lg-6 col-lg-offset-3">
+        <div class="col-lg-8 col-lg-offset-2">
                 <div class="col-xs-12 col-lg-12">
                     <div class="panel panel-icon panel-primary">
                         <div class="panel-heading">
@@ -91,7 +91,7 @@
                                 {{ form_widget(form_dir.carnet, { 'attr': {'class': 'form-control', 'value': entity.carnet, 'style': 'text-transform:uppercase' }  }) }}
                                 <div class="help-block with-errors">{{ form_errors(form_dir.carnet) }}</div>
                             </div>
-
+                            <div class="col-sm-4 text-info">Si el carnet corresponde a un extranjero, se debe omitir la cadena "E-" y se debe ingresar todos los ceros "0".</div>
                         </div>
                         <div class="form-group">
                             <label for="sie_appwebbundle_maestrocuentabancaria_complemento" class="col-sm-4 control-label">{{ form_label(form_dir.complemento) }}</label>
@@ -100,7 +100,23 @@
                                 <div class="help-block with-errors">{{ form_errors(form_dir.complemento) }}</div>
                             </div>
                             <div class="col-sm-6 text-info">El "complemento" NO se refiere al "lugar de expedición del C.I."</div>
-                        </div>    
+                        </div>
+                        <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_expedido" class="col-sm-4 control-label">{{ form_label(form_dir.expedido) }}</label>
+                            <div class="col-sm-4">
+                                {{ form_widget(form_dir.expedido, { 'attr': {'class': 'form-control' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.expedido) }}</div>
+                            </div>
+                            <div class="col-sm-4 text-warning">Debe verificar esta información para no presentar observaciones al momento del cobro.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_nacionalidad" class="col-sm-4 control-label">{{ form_label(form_dir.nacionalidad) }}</label>
+                            <div class="col-sm-4">
+                                {{ form_widget(form_dir.nacionalidad, { 'attr': {'class': 'form-control' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.nacionalidad) }}</div>
+                            </div>
+                            <div class="col-sm-4 text-warning">Debe verificar esta información para no presentar observaciones al momento del cobro.</div>
+                        </div>
                         <div class="form-group">
                             <label for="sie_appwebbundle_maestrocuentabancaria_paterno" class="col-sm-4 control-label">{{ form_label(form_dir.paterno) }}</label>
                             <div class="col-sm-4">
@@ -124,12 +140,20 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_enlazador" class="col-sm-4 control-label">{{ form_label(form_dir.enlazador) }}</label>
+                            <div class="col-sm-4">
+                                {{ form_widget(form_dir.enlazador, { 'attr': {'class': 'form-control' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.enlazador) }}</div>
+                            </div>
+                            <div class="col-sm-4 text-warning">Debe verificar esta información para no presentar observaciones al momento del cobro.</div>
+                        </div>
+                        <div class="form-group">
                             <label for="sie_appwebbundle_maestrocuentabancaria_apellidoEsposo" class="col-sm-4 control-label">{{ form_label(form_dir.apellidoEsposo) }}</label>
                             <div class="col-sm-4">
                                 {{ form_widget(form_dir.apellidoEsposo, { 'attr': {'class': 'form-control jletters', 'value': '', 'style': 'text-transform:uppercase' }  }) }}
                                 <div class="help-block with-errors">{{ form_errors(form_dir.apellidoEsposo) }}</div>
                             </div>
-                            <div class="col-sm-4 text-info">Llenar en caso de que tenga el enlazador en su Cédula sea "Vda." o "de".</div>
+                            <div class="col-sm-4 text-info">Llenar en caso de que tenga el enlazador en su Cédula: "De" o "Vda. de".</div>
                         </div>
                         <div class="form-group">
                             <div id='sandbox-container'>
@@ -267,6 +291,22 @@
                 $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").focus();
                 $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").val('0');
                 $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").attr('readonly', true);
+            }
+        });
+
+        $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").val('');
+        $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").attr('readonly', true);
+
+        $('#sie_appwebbundle_maestrocuentabancaria_enlazador').on('change', function () {
+            if ($(this).val() != 0) {
+                $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").focus();
+                $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").val('');
+                $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").attr('readonly', false);
+            }
+            else {
+                $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").focus();
+                $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").val('');
+                $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").attr('readonly', true);
             }
         });
     </script>

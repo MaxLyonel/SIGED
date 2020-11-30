@@ -26,6 +26,9 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
     public function __construct() {
         $this->session = new Session();
+        $this->fechaActual = new \DateTime('now');
+        $this->fechaCorte = new \DateTime('2020-12-13');
+        $this->gestionOperativo = $this->session->get('currentyear');
     }
 
     /*
@@ -41,10 +44,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -84,10 +84,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -127,10 +124,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -292,10 +286,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -314,7 +305,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             $maestroinscripcionId = $form_aux['maestroInscripcion'];
             $institucioneducativaId = $form_aux['institucioneducativa'];
             $cargoTipoId = $form_aux['cargoTipo'];
-            $gestion = 2019;
+            $gestion = $this->gestionOperativo;
 
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -405,10 +396,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -444,10 +432,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -643,10 +628,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -694,7 +676,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
                     ->andWhere('m.gestionTipo = :gestion')
                     ->andWhere('m.esoficial = :esoficial')
                     ->setParameter('institucion', $formulario['institucioneducativa'])
-                    ->setParameter('gestion', 2019)
+                    ->setParameter('gestion', $this->gestionOperativo)
                     ->setParameter('esoficial', 't')
                     ->getQuery();
 
@@ -731,10 +713,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -768,10 +747,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -875,10 +851,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -906,7 +879,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
                     ->andWhere('e.generoTipo = :genero')
                     ->andWhere('e.esoficial = :esoficial')
                     ->setParameter('institucion', $institucioneducativaId)
-                    ->setParameter('gestion', 2019)
+                    ->setParameter('gestion', $this->gestionOperativo)
                     ->setParameter('genero', $generoTipoId)
                     ->setParameter('esoficial', 't')
                     ->getQuery();
@@ -921,7 +894,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estudianteInscripcionId);
             $ieducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucioneducativaId);
             $genero = $em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoTipoId);
-            $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find(2019);
+            $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find($this->gestionOperativo);
 
             $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(55));
 
@@ -994,7 +967,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 ->andWhere('sia.gestionTipo = :gestion')
                 ->setParameter('institucion', $institucion)
                 ->setParameter('codigo', 3)
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->getQuery();
 
         $quinto = $query->getResult();
@@ -1013,7 +986,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 ->andWhere('m.esoficial = :esoficial')
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $institucion)
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->setParameter('esoficial', 't')
                 ->getQuery();
 
@@ -1029,7 +1002,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 ->andWhere('ed.gestionTipo = :gestion')
                 ->andWhere('ed.esoficial = :esoficial')
                 ->setParameter('institucion', $institucion)
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->setParameter('esoficial', 't')
                 ->getQuery();
 
@@ -1065,7 +1038,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
         $em->flush();
 
-        $gestion_reporte = 2019;
+        $gestion_reporte = $this->gestionOperativo;
 
         $arch = 'DECLARACION_JURADA_BACHILLER_' . $institucion . '_' . date('YmdHis') . '.pdf';
         $response = new Response();
@@ -1110,7 +1083,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 ->andWhere('sia.gestionTipo = :gestion')
                 ->setParameter('institucion', $institucion)
                 ->setParameter('codigo', 3)
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->getQuery();
 
         $quinto = $query->getResult();
@@ -1130,7 +1103,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $institucion)
                 ->setParameter('esoficial', 't')
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->getQuery();
 
         $director = $query->getOneOrNullResult();
@@ -1161,7 +1134,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
                 ->where('m.institucioneducativa = :institucion')
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $institucion)
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->getQuery();
 
         $directores = $query->getResult();
@@ -1172,7 +1145,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
             $em->flush();
         }
 
-        $gestion_reporte = 2019;
+        $gestion_reporte = $this->gestionOperativo;
 
         $arch = 'DECLARACION_JURADA_DIRECTOR_' . $institucion . '_' . date('YmdHis') . '.pdf';
         $response = new Response();
@@ -1221,7 +1194,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
         
         $form = $this->createSearchDistritoForm();
         $form->handleRequest($request);
-        $gestion = 2019;
+        $gestion = $this->gestionOperativo;
 
         if ($form->isValid()) {
 
