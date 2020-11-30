@@ -28,7 +28,7 @@ class NotasMigrationttgtteController extends Controller
                 )); 
             }
         
-            public function buscarAction(Request $request){
+            public function buscarAction(Request $request){ 
                 $response = new JsonResponse();
                 $estudiante = $request->get('estudiante', null);
                 $opcion = $request->get('opcion', null);
@@ -36,14 +36,50 @@ class NotasMigrationttgtteController extends Controller
                 $em = $this->getDoctrine()->getManager();
                 
                 $objUe = true;
+                $arrNotaTipo = array();
+                // validation type of request
+                if($estudiante['bth']=='true'){
+                    $opcion = 2;
+                }                    
+                // validation on SIE info
+                $codigoSie = mb_strtoupper($estudiante['codigoSie']);
+                $objInstitucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id'=>$codigoSie, 'institucioneducativaTipo'=>1));
+                // check if the UE exist
+                if(!$objInstitucioneducativa){                    
+                    return $response->setData([
+                        'status'=>'error',
+                        'msg'=>'Los datos del introducidos no son válidos, codigo SIE invalido'
+                    ]);
+                }else{
+                    // validation to the UE plena
+                    if($opcion == 2){
+                        $objUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('institucioneducativaId'=>$codigoSie, 'gestionTipoId'=>$this->session->get('currentyear'),'institucioneducativaHumanisticoTecnicoTipo'=>1));
+                        
+                        if(sizeof($objUePlena)>0){
+                           
+                        }else{
+                            return $response->setData([
+                                'status'=>'error',
+                                'msg'=>'Los datos del introducidos no son válidos, codigo SIE no pertenece a una Unidad Educativa Plena'
+                            ]);
+                        }                    
+                    }
+                    
+                    $arrStudent = array(
+                        'nombre'=>$objInstitucioneducativa->getInstitucioneducativa(),
+                        'codigoSie' => $objInstitucioneducativa->getId(),
+                        
+                    );                     
+                }
 
-                // VALIDAMOS DATOS DEL ESTUDIANTE
-                $arrStudent = array();
-                switch ($opcion) {
-                    case 1:
-                        $codigoRude = mb_strtoupper($estudiante['codigoRude']);
-                        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$codigoRude));
-                        $codigoRude = $estudiante->getCodigoRude();
+                // validation on codigoRude
+                if($estudiante['codigoRude']){
+
+                    $codigoRude = mb_strtoupper($estudiante['codigoRude']);
+                    $objestudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$estudiante['codigoRude']));
+                    
+                    if (($estudiante)) {
+                        //$codigoRude = $objestudiante->getCodigoRude();
                         // BUSCAMOS UNA INSCRIPCION CON ESTADO EFECTIVO EN LA GESTION 2020
                         $inscripcionesEfectivas = $em->createQueryBuilder()
                                             ->select('ei.id, nt.id as idNivel, grat.id as idGrado, IDENTITY(iec.institucioneducativa) as institucioneducativaId, (iec.id) as iecId, e.id as estId')
@@ -58,75 +94,78 @@ class NotasMigrationttgtteController extends Controller
                                             //->andWhere('ei.estadomatriculaTipo = 4')
                                             ->andWhere('gt.id = :year')
                                             ->andWhere('inst.institucioneducativaTipo IN (:tipeInst)')
-                                            ->setParameter('idEstudiante', $estudiante->getId())
+                                            ->setParameter('idEstudiante', $objestudiante->getId())
                                             ->setParameter('tipeInst', array(1))
                                             ->setParameter('year', $gestionSelected)
                                             ->getQuery()
-                                            ->getResult();
-                
-                        
+                                            ->getResult();    
+
                         if (count($inscripcionesEfectivas)==0) {
                             return $response->setData([
                                 'status'=>'error',
                                 'msg'=>'El estudiante no cuenta con una inscripción efectiva en la presente gestión'
                             ]);
                         }
-                        
-                        break;
-                    case 2:
-                        $codigoSie = mb_strtoupper($estudiante['codigoSie']);
-                        $estudiante = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id'=>$codigoSie, 'institucioneducativaTipo'=>1));
-                        //$codigoRude = $estudiante->getCodigoRude();
-                        break;
-                }
+                        $idStudent = $objestudiante->getId();                            
+
+                    }else{
+                        return $response->setData([
+                            'status'=>'error',
+                            'msg'=>'Los datos del introducidos no son válidos, codigo Rude invalido'
+                        ]);
+                    }                        
                 
-                if (!is_object($estudiante)) {
-                    return $response->setData([
-                        'status'=>'error',
-                        'msg'=>'Los datos del introducidos no son válidos'
-                    ]);
+                }else{
+                    $idStudent = null;
                 }
-        
-        
+                // get the nota tipo info to do execute the query
+                if($estudiante['tri1']=='true'){
+                    array_push($arrNotaTipo,6);
+                }
+                if($estudiante['tri2']=='true'){
+                    array_push($arrNotaTipo,7);
+                }
+                if($estudiante['tri3']=='true'){
+                    array_push($arrNotaTipo,8);
+                }                   
+                if($estudiante['prom']=='true'){
+                    array_push($arrNotaTipo,9);
+                }                             
+                $notaTipoId = implode(',', $arrNotaTipo);
+
+
+                                      
 
         
                 switch ($opcion) {
                     case 1:
                         //get notas from 2019 to 2020
-                        /*$query = $em->getConnection()->prepare('SELECT * from sp_genera_migracion_notas_ttg_tte_2019_2020(:iestudiante_id ::VARCHAR,:iinstitucioneducativa_id::VARCHAR, )');
-                        $query->bindValue(':iestudiante_id', $inscripcionesEfectivas[0]['estId']);
-                        $query->bindValue(':iinstitucioneducativa_id', NULL);               
-                        $query->execute();*/
-
-                        $arrStudent = array(
-                            'nombre'=>$estudiante->getNombre(),
-                            'paterno'=>$estudiante->getPaterno(),
-                            'materno'=>$estudiante->getMaterno(),
-                            'estId'=>$estudiante->getId(),
-                            'estInsId'=>$inscripcionesEfectivas[0]['id'],
-                            'institucioneducativaId'=>$inscripcionesEfectivas[0]['institucioneducativaId'],
-                            'codigoRude' => $estudiante->getCodigoRude(),
-                            'carnet' => $estudiante->getCarnetIdentidad(),
-                            //'idObsBono' => sizeof($objObservationsStudent)>0?$objObservationsStudent[0]->getId():''
-                        ); 
+                        $query = $em->getConnection()->prepare('SELECT * from sp_genera_elimina_notas_2020(:ibandera ::VARCHAR,:icodue ::VARCHAR,:inivel_tipo_id ::VARCHAR,:igrado_tipo_id ::VARCHAR,:iasignatura_tipo_id ::VARCHAR,:inota_tipo_id::VARCHAR,:iestudiante_id::VARCHAR )');
+                        $query->bindValue(':ibandera', 1);
+                        $query->bindValue(':icodue', $objInstitucioneducativa->getId());
+                        $query->bindValue(':inivel_tipo_id', null);
+                        $query->bindValue(':igrado_tipo_id', null);
+                        $query->bindValue(':iasignatura_tipo_id', null);
+                        $query->bindValue(':inota_tipo_id', $notaTipoId);
+                        $query->bindValue(':iestudiante_id', $idStudent);
+                        $query->execute();
                        
                         break;
                     case 2:
-                        //get notas from history to 2020 notas
-                        /*$query = $em->getConnection()->prepare('SELECT * from sp_genera_migracion_notas_ttg_tte_2019_2020(:iestudiante_id ::VARCHAR,:iinstitucioneducativa_id::VARCHAR, )');
-                        $query->bindValue(':iestudiante_id', $inscripcionesEfectivas[0]['estId']);
-                        $query->bindValue(':iinstitucioneducativa_id', $inscripcionesEfectivas[0]['institucioneducativaId']);               
-                        $query->execute();*/
-                       
-                        $arrStudent = array(
-                            'nombre'=>$estudiante->getInstitucioneducativa(),
-                            'codigoSie' => $estudiante->getId(),
-                            //'idObsBono' => sizeof($objObservationsStudent)>0?$objObservationsStudent[0]->getId():''
-                        ); 
-                        
+                        //get notas from 2019 to 2020
+                        $query = $em->getConnection()->prepare('SELECT * from sp_genera_elimina_notas_2020(:ibandera ::VARCHAR,:icodue ::VARCHAR,:inivel_tipo_id ::VARCHAR,:igrado_tipo_id ::VARCHAR,:iasignatura_tipo_id ::VARCHAR,:inota_tipo_id::VARCHAR,:iestudiante_id::VARCHAR )');
+                        $query->bindValue(':ibandera', 2);
+                        $query->bindValue(':icodue', $objInstitucioneducativa->getId());
+                        $query->bindValue(':inivel_tipo_id', null);
+                        $query->bindValue(':igrado_tipo_id', null);
+                        $query->bindValue(':iasignatura_tipo_id', null);
+                        $query->bindValue(':inota_tipo_id', null);
+                        $query->bindValue(':iestudiante_id', $idStudent);
+                        $query->execute();     
                         break;
                 }
-             
+
+           
                
          
              
@@ -135,11 +174,8 @@ class NotasMigrationttgtteController extends Controller
                     'datos'=>array(
            
                         'arrStudent'=>$arrStudent,
-                        'opcion' => $opcion
-                        //'arrToPrint'=>$arrToPrint,
-                      
-        
-                       
+                        'opcion' => 2
+                        
                     )
                 ]);
             }                

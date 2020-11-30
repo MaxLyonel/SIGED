@@ -100,7 +100,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="page-title">
-                <h1>Migración de Notas TTG - TTE
+                <h1>Eliminación de Notas/Especialidad
                     <small></small>
                 </h1>
                 <ol class="breadcrumb">
@@ -123,7 +123,6 @@
 				<div class="col-md-12 caja">
 					
 					<div v-show="!validado" class="contenido">
-						<p class="subtitulo">Migrar por:</p>
 						
 						<div class="row">
 							<div class="col-md-12">
@@ -131,22 +130,63 @@
 									<!-- Nav tabs -->
 									<ul class="nav nav-tabs" role="tablist">
 										<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
-											<a role="tab" data-toggle="tab">Código Rude</a>
+											<a role="tab" data-toggle="tab">Criterios de Eliminación</a>
 										</li>
+										{#
 										<li :class="{active: opcion == 2}" @click="opcion = 2">
 											<a aria-controls="tabcarnet" role="tab" data-toggle="tab">Código SIE</a>
 										</li>
+										#}
 									</ul>
 									<!-- Tab panes -->
 									<div class="tab-content">
 										<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
-											<div class="row">
-												<div class="form-group col-md-12">
-													<label>Código Rude <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El Código Rude lo puede encontrar en la libreta electrónica del estudiante de una gestion pasada" data-trigger="hover"></i> </label>
-													<input type="text" v-model="estudiante.codigoRude" class="form-control jupper" maxlength="18" v-on:keypress="alfanumerico">
+											<div class="row">								
+
+												<div class="col-md-12">
+
+													<table class="table table">
+														<tr >
+															<td>
+																<label>Código SIE <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El Código SIE lo puede encontrar en la libreta electrónica del estudiante" data-trigger="hover"></i> </label>
+																<input type="text" v-model="estudiante.codigoSie" class="form-control jupper" maxlength="18" v-on:keypress="alfanumerico">
+															</td>
+															<td>
+																<label>Código Rude <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El Código Rude lo puede encontrar en la libreta electrónica del estudiante de una gestion pasada" data-trigger="hover"></i> </label>
+																<input type="text" v-model="estudiante.codigoRude" class="form-control jupper" maxlength="18" v-on:keypress="alfanumerico">
+															</td>
+														</tr>
+														<tr >
+															<td>
+																<label>Trimestres </label>
+																<p>
+																<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" v-model="estudiante.tri1">
+																<label class="form-check-label" for="inlineCheckbox1">1</label>																
+																<input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" v-model="estudiante.tri2">
+																<label class="form-check-label" for="inlineCheckbox2">2</label>
+																<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option3" v-model="estudiante.tri3">
+																<label class="form-check-label" for="inlineCheckbox1">3</label>																
+																<input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="avg" v-model="estudiante.prom">
+																<label class="form-check-label" for="inlineCheckbox2">Promedio</label>																
+																</p>
+															</td>
+															<td>
+																<label>BTH </label>
+																<p>
+																<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="bth" v-model="estudiante.bth">
+																<label class="form-check-label" for="inlineCheckbox1">Especialidades</label>																
+																</p>															
+															</td>
+														</tr>
+
+													</table>												
 												</div>
+												<div class="form-group col-md-12">
+
+												</div>												
 											</div>
 										</div>
+										{#
 										<div role="tabpanel" :class="['tab-pane', {active: opcion == 2}]">
 											<div class="row">
 												<div class="form-group col-md-12">
@@ -155,7 +195,7 @@
 												</div>
 											</div>
 										</div>
-
+										#}
 									</div>
 								</div>
 							</div>
@@ -165,13 +205,14 @@
 						
 
 						<div class="col-md-12 text-center">
-							<button type="button" class="btn btn-success" @click="consultar">Buscar y Migrar</button>
+							<button type="button" class="btn btn-success" @click="consultar">Buscar y Eliminar</button>
 						</div>
 					</div>
 					<div v-if="validado" class="respuesta">
 
 						<div v-if="opcion == 1" class="alert" :class="[{'alert-success':datos.statusEstudiante == 'success'}, {'alert-warning':datos.statusEstudiante == 'warning'}]">
 							Información de la/el ESTUDIANTE:
+							<div class="table-responsive">
 							<table class="table">
 							<thead>
 								<tr>
@@ -191,7 +232,8 @@
 								<td>${estudiante.nombre}</td>
 								</tr>
 							</tbody>
-							</table>							
+							</table>
+							</div>							
 
 							<p> 
                                 <div class="alert alert-success" role="alert">
@@ -203,6 +245,7 @@
 
 						<div v-if="opcion == 2" class="alert" :class="[{'alert-success':datos.statusEstudiante == 'success'}, {'alert-warning':datos.statusEstudiante == 'warning'}]">
 							Información de la Unidad Educativa:
+							<div class="table-responsive">
 							<table class="table">
 							<thead>
 								<tr>
@@ -213,16 +256,17 @@
 							</thead>
 							<tbody>
 								<tr>
-								<td>${estudiante.codigoRude}</td>
-								<td>${estudiante.carnet}</td>
+								<td>${estudiante.institucioneducativaId}</td>
+								<td>${estudiante.nombre}</td>
 
 								</tr>
 							</tbody>
-							</table>							
+							</table>
+							</div>							
 
 							<p> 
                                 <div class="alert alert-success" role="alert">
-                                    Migración correcta...
+                                    Proceso realizado correctamente...
                                 </div>							
 							</p>
 														
@@ -279,18 +323,15 @@
 		    	},
 		    	estudiante: {
 		    		/*codigoRude: '4073040820205783 809700692017061 718500012020019',*/
+					tri1: false,
+					tri2: false,
+					tri3: false,
+					prom: false,
+					bth:  false,
 					codigoRude: '',
                     codigoSie: '',
 					codigoRudeId: '',
-		    		carnet: '',
-		    		complemento: '',
-		    		nombre: '',
-		    		paterno: '',
-		    		materno: '',
-		    		fechaNacimiento: '',
-		    		nivel: '',
-					estId: '',
-		    		grado: ''
+		    		
 		    	},
 				dataClaim: {persona:{swchangeTutor:false,paterno:'',materno:'',nombre:''}, student:{}} ,
 				DBTiposReclamos: {},
@@ -330,12 +371,10 @@
                     this.urlreport ='';
                     this.showbuttonPDF ='';
 		    		if (this.opcion == 1) {
-		    			if (this.estudiante.codigoRude == '') {
+		    			/*if (this.estudiante.codigoRude == '') {
 		    				this.errores.push('Código Rude');
-		    			}
-		    		}
-		    		if (this.opcion == 2) {
-		    			if (this.estudiante.codigoSie == '') {
+		    			}*/
+						if (this.estudiante.codigoSie == '') {
 		    				this.errores.push('Código SIE');
 		    			}
 		    		}
@@ -376,7 +415,8 @@
 		    					Swal.close();
 								
 		    					this.datos = response.data.datos;
-                                this.opcion = response.data.opcion;
+                                this.opcion = response.data.datos.opcion;
+								
 								if(this.opcion == 1){
                                     this.showFormReclamo = this.datos.showFormReclamo;
                                     this.estudiante.nombre = this.datos.arrStudent.nombre;
@@ -428,6 +468,7 @@
 		    		this.estudiante.fechaNacimiento = '';
 		    		this.estudiante.nivel = '';
 		    		this.estudiante.grado = '';
+					this.estudiante.codigoSie = '';
                     this.urlreport ='';
                     this.showbuttonPDF ='';
                     this.DBUrlReport = '';
