@@ -90,16 +90,16 @@ class NotasMigrationController extends Controller
             case 1:
                 //get notas from 2019 to 2020
                 $query = $em->getConnection()->prepare('SELECT * from sp_genera_migracion_notas_estudiante_2019_2020(:icodue::VARCHAR, :iestudiante_id ::VARCHAR)');
-                $query->bindValue(':icodue', $inscripcionesEfectivas[0]['estId']);
-                $query->bindValue(':iestudiante_id', $inscripcionesEfectivas[0]['institucioneducativaId']);               
+                $query->bindValue(':icodue', $inscripcionesEfectivas[0]['institucioneducativaId']);
+                $query->bindValue(':iestudiante_id', $inscripcionesEfectivas[0]['estId']);               
                 $query->execute();
                
                 break;
             case 2:
                 //get notas from history to 2020 notas
                 $query = $em->getConnection()->prepare('SELECT * from sp_genera_migracion_notas_estudiante_historico_2020(:icodue::VARCHAR, :iestudiante_id ::VARCHAR)');
-                $query->bindValue(':icodue', $inscripcionesEfectivas[0]['estId']);
-                $query->bindValue(':iestudiante_id', $inscripcionesEfectivas[0]['institucioneducativaId']);                
+                $query->bindValue(':icodue', $inscripcionesEfectivas[0]['institucioneducativaId']);
+                $query->bindValue(':iestudiante_id', $inscripcionesEfectivas[0]['estId']);                
                 $query->execute();
                 
                 break;
