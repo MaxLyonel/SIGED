@@ -1,0 +1,21 @@
+notasMigration_index:
+    path:     /
+    defaults: { _controller: SieRegularBundle:NotasMigration:index }
+
+notasMigration_cargar:
+    path:     /cargar
+    defaults: { _controller: SieRegularBundle:NotasMigration:cargar }
+    options:
+         expose: true
+
+notasMigration_buscar:
+    path:     /buscar
+    defaults: { _controller: SieRegularBundle:NotasMigration:buscar }
+    options:
+         expose: true
+
+notasMigration_registryClaim:
+    path:     /registryClaim
+    defaults: { _controller: SieRegularBundle:NotasMigration:registryClaim }
+    options:
+         expose: true         

@@ -58,15 +58,17 @@ class InfoEstudianteAreasEstudianteController extends Controller {
         $estudianteAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura);
         
         $inscripcion = $estudianteAsignatura->getEstudianteInscripcion();
+        $gestion = $estudianteAsignatura->getGestionTipo()->getId();
         $idInscripcion = $inscripcion->getId();
         
         $data = [];
-
+        
         if($estudianteAsignatura){
             // VERIFICAMOS SI EL AREA NO TIENE NOTAS
             $notas = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$idEstudianteAsignatura));
+            
             if($notas){
-                if($this->session->get('roluser') == 8){
+                if($this->session->get('roluser') == 8 or $gestion == 2020){
                     // ELIMINAMOS LA MATERIA AUN SI TIENE NOTAS SOLO PARA TECNICO NACIONAL
 
                     // ELIMINAMOS LA ESPECIALIDAD SI LA MATERIA ES TECNICA ESPECIALIZADA
@@ -92,7 +94,9 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                     
 
                     $eliminar = $this->get('areasEstudiante')->delete($idEstudianteAsignatura);
-                    if($eliminar){
+                    if($eliminar){                                     
+                        // SE ACTUALIZA EL ESTADO DE MATRICULA SI CORRESPONDE
+                        $actualizarEstadoMatricula = $this->get('notas')->actualizarEstadoMatricula($idInscripcion);         
                         $data = array(
                             'status'=>200,
                             'type'=>'success',
@@ -105,7 +109,6 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                             'msg'=> 'Error al eliminar el área del estudiante.'
                         );
                     }
-
 
                 }else{
                     // SI EL USUARIO NO ES NACIONAL NO SE PUEDE ELIMINAR
@@ -131,6 +134,8 @@ class InfoEstudianteAreasEstudianteController extends Controller {
 
                 $eliminar = $this->get('areasEstudiante')->delete($idEstudianteAsignatura);
                 if($eliminar){
+                    // SE ACTUALIZA EL ESTADO DE MATRICULA SI CORRESPONDE
+                    $actualizarEstadoMatricula = $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
                     $data = array(
                         'status'=>200,
                         'type'=>'success',
@@ -144,6 +149,7 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                     );
                 }
             }
+
         }else{
             $data = array(
                 'status'=>500,
@@ -231,6 +237,7 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                     $llenarNotas = $this->get('notas')->llenarNotasMateriaAntes($idInscripcion, $idCursoOferta);
 
                     if ((count($llenarNotas['cuantitativas']) > 0 or count($llenarNotas['cualitativas']) > 0 ) or $registrarEspecialidad ){
+                        
                         // SI SE TIENE QUE LLENAR NOTAS LE MANDAMOS UNA VISTA DONDE REGISTRE LAS NOTAS
                         return $this->render('SieHerramientaBundle:InfoEstudianteAreasEstudiante:completarNotas.html.twig',array(
                             'areas'=>$areas,
@@ -252,6 +259,7 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                             );
 
                             $areas = $this->get('areasEstudiante')->areasEstudiante($idInscripcion);
+
 
                         }else{
                             // SI OCURRIO UN ERROR AL AGREGAR EL AREA
@@ -394,6 +402,8 @@ class InfoEstudianteAreasEstudianteController extends Controller {
 
             $em->getConnection()->commit();
 
+            // SE ACTUALIZA EL ESTADO DE MATRICULA SI CORRESPONDE
+            $actualizarEstadoMatricula = $this->get('notas')->actualizarEstadoMatricula($idIns);
             return $this->render('SieHerramientaBundle:InfoEstudianteAreasEstudiante:index.html.twig',array(
                     'areas'=>$areas,
                     'inscripcion'=>$inscripcion,
@@ -440,6 +450,15 @@ class InfoEstudianteAreasEstudianteController extends Controller {
             if(!$especialidadEstudiante){
                 $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
                 $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+                //added funciont to migrate notas by krlos
+                $objInfoCourse = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscripcion->getInstitucioneducativaCurso());
+                if($objInfoCourse->getNivelTipo()->getId() == 13 && $objInfoCourse->getGradoTipo()->getId() == 5 ){                    
+                    $query = $em->getConnection()->prepare('SELECT * from sp_genera_migracion_notas_ttg_tte_2019_2020(:iestudiante_id::VARCHAR, :iinstitucioneducativa_id ::VARCHAR)');
+                    $query->bindValue(':iestudiante_id', $inscripcion->getEstudiante()->getId());
+                    $query->bindValue(':iinstitucioneducativa_id', $objInfoCourse->getInstitucioneducativa()->getId());
+                    $query->execute();
+                }
+
                 $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
                 // OBTENEMOS LAS ESPECIALIDADES DE LA UNIDAD EDUCATIVA
                 $especialidadesUe = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array(

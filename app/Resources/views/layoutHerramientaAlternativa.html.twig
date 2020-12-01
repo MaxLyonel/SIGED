@@ -237,19 +237,19 @@
                                             <div href="form-element.html#" class="media">
                                                 <div class="media-object pull-left"><i class="fa fa-male"></i></div>
                                                 <div class="media-body">
-                                                    <span class="media-text">
+                                                    {# <span class="media-text">
                                                         Se habilita la opción Historial del Centro en el menú Gestión en el Sistema de Educación Alternativa, para que los CEAs puedan realizar el registro de la información del periodo actual o la regularización de alguna gestión pasada.
                                                     </span>
-                                                    <span class="media-meta">05/09/2018</span>
+                                                    <span class="media-meta">05/09/2018</span> #}
                                                 </div>
                                             </div>
                                             <div href="form-element.html#" class="media">
                                                 <div class="media-object pull-left"><i class="fa fa-male"></i></div>
                                                 <div class="media-body">
-                                                    <span class="media-text">
+                                                    {# <span class="media-text">
                                                         El Equipo de Información Educativa comunica que, por razones de mantenimiento, el módulo para inscripciones automáticas se encuentra deshabilitado. Sin embargo, la inscripción individual por RUDE se encuentra habilitada para continuar el trabajo correspondiente al operativo de insripciones.
                                                     </span>
-                                                    <span class="media-meta">23/08/2018</span>
+                                                    <span class="media-meta">23/08/2018</span> #}
                                                 </div>
                                             </div>
                                             {#{% if notification is defined  %}
@@ -561,7 +561,7 @@
                             </ul>
                         </li>
                     {% endif %}
-                    {% if (app.session.get('roluser') == 20) %} {#NACIONAL INVITADO#}
+                    {% if (app.session.get('roluser') == 20 or app.session.get('roluser') == 32) %} {#NACIONAL INVITADO#}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
