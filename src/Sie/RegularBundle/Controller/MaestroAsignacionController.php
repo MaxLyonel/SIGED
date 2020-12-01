@@ -355,45 +355,48 @@ class MaestroAsignacionController extends Controller {
                             break;
                         case "grado_tipo_id": 
                             $nameAux = "Grado"; 
+                            $arrayMod[$nameAux] = $val;
                             break;
                         case "paralelo": 
                             $nameAux = "Paralelo"; 
+                            $arrayMod[$nameAux] = $val;
                             break;
                         case "insc": 
                             $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>0))), 'estado'=>$val);
-                            $nameAux = "I.G."; 
+                            $nameAux = "Maestro";
+                            $arrayMod[$nameAux] = $val; 
                             break;
                         case "b1": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>1))), 'estado'=>$val);
-                            $nameAux = "B1"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>1))), 'estado'=>$val);
+                            // $nameAux = "B1"; 
                             break;
                         case "b2": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>2))), 'estado'=>$val);
-                            $nameAux = "B2"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>2))), 'estado'=>$val);
+                            // $nameAux = "B2"; 
                             break;
                         case "b3": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>3))), 'estado'=>$val);
-                            $nameAux = "B3"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>3))), 'estado'=>$val);
+                            // $nameAux = "B3"; 
                             break;
                         case "b4": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>4))), 'estado'=>$val);
-                            $nameAux = "B4"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>4))), 'estado'=>$val);
+                            // $nameAux = "B4"; 
                             break;
                         case "t1": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>6))), 'estado'=>$val);
-                            $nameAux = "T1"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>6))), 'estado'=>$val);
+                            // $nameAux = "T1"; 
                             break;
                         case "t2": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>7))), 'estado'=>$val);
-                            $nameAux = "T2"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>7))), 'estado'=>$val);
+                            // $nameAux = "T2"; 
                             break;
                         case "t3": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>8))), 'estado'=>$val);
-                            $nameAux = "T3"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>8))), 'estado'=>$val);
+                            // $nameAux = "T3"; 
                             break;
                         default: $name = $name;
                     } 
-                    $arrayMod[$nameAux] = $val;
+                    // $arrayMod[$nameAux] = $val;
                 } else {
                     $arrayId = $val;
                     $arrayName = $name;
@@ -468,42 +471,44 @@ class MaestroAsignacionController extends Controller {
                             break;
                         case "asignatura": 
                             $nameAux = "Asignatura"; 
+                            $arrayMod[$nameAux] = $val;
                             break;
                         case "insc": 
                             $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>0))), 'estado'=>$val);
-                            $nameAux = "I.G."; 
+                            $nameAux = "Maestro"; 
+                            $arrayMod[$nameAux] = $val;
                             break;
                         case "b1": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>1))), 'estado'=>$val);
-                            $nameAux = "B1"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>1))), 'estado'=>$val);
+                            // $nameAux = "B1"; 
                             break;
                         case "b2": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>2))), 'estado'=>$val);
-                            $nameAux = "B2"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>2))), 'estado'=>$val);
+                            // $nameAux = "B2"; 
                             break;
                         case "b3": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>3))), 'estado'=>$val);
-                            $nameAux = "B3"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>3))), 'estado'=>$val);
+                            // $nameAux = "B3"; 
                             break;
                         case "b4": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>4))), 'estado'=>$val);
-                            $nameAux = "B4"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>4))), 'estado'=>$val);
+                            // $nameAux = "B4"; 
                             break;
                         case "t1": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>6))), 'estado'=>$val);
-                            $nameAux = "T1"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>6))), 'estado'=>$val);
+                            // $nameAux = "T1"; 
                             break;
                         case "t2": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>7))), 'estado'=>$val);
-                            $nameAux = "T2"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>7))), 'estado'=>$val);
+                            // $nameAux = "T2"; 
                             break;
                         case "t3": 
-                            $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>8))), 'estado'=>$val);
-                            $nameAux = "T3"; 
+                            // $val = array('value'=>base64_encode(json_encode(array($arrayName=>$arrayId, 'nota_tipo_id'=>8))), 'estado'=>$val);
+                            // $nameAux = "T3"; 
                             break;
                         default: $name = $name;
                     }
-                    $arrayMod[$nameAux] = $val;
+                    // $arrayMod[$nameAux] = $val;
                 } else {
                     $arrayId = $val;
                     $arrayName = $name;
@@ -1108,6 +1113,7 @@ class MaestroAsignacionController extends Controller {
 
         $institucioneducativaCursoOfertaId = $institucioneducativaCursoOfertaMaestroEntity->getInstitucioneducativaCursoOferta()->getId();
         $notaTipoId = $institucioneducativaCursoOfertaMaestroEntity->getNotaTipo()->getId();
+        $asignaturaId = $institucioneducativaCursoOfertaMaestroEntity->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId();
         
         $listaMaestros = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta' => $institucioneducativaCursoOfertaId, 'notaTipo' => $notaTipoId), array('asignacionFechaInicio'=>'asc'));
         
@@ -1118,7 +1124,6 @@ class MaestroAsignacionController extends Controller {
 
         if(count($listaMaestros) > 0){
             if($asignaturaId == 1039){
-                dump(count($listaMaestros), count($institucioneducativaEspecialidadTecnicoHumanisticoEntity));die;
                 $institucioneducativaEspecialidadTecnicoHumanisticoEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array('institucioneducativa' => $institucionEducativaId, 'gestionTipo' => $gestionId));
                 if(count($listaMaestros) >= count($institucioneducativaEspecialidadTecnicoHumanisticoEntity)){
                     $msg = "No puede agregar mas de 1 maestro por especialidad";
