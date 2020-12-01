@@ -59,7 +59,7 @@ class NotasMigrationttgtteController extends Controller
                 if(!$objInstitucioneducativa){                    
                     return $response->setData([
                         'status'=>'error',
-                        'msg'=>'Los datos del introducidos no son válidos, codigo SIE invalido'
+                        'msg'=>'Los datos introducidos no son válidos, codigo SIE invalido'
                     ]);
                 }else{
                     // validation to the UE plena
@@ -150,9 +150,10 @@ class NotasMigrationttgtteController extends Controller
                 if($estudiante['tri3']=='true'){
                     array_push($arrNotaTipo,8);
                 }                   
-                if($estudiante['prom']=='true'){
-                    array_push($arrNotaTipo,9);
-                }                             
+                array_push($arrNotaTipo,9);
+                /*if($estudiante['prom']=='true'){
+                
+                }*/                             
                 $notaTipoId = implode(',', $arrNotaTipo);
 
 

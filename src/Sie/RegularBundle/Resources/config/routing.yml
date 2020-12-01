@@ -420,3 +420,7 @@ sie_regular_notasMigration:
 sie_regular_notasMigrationttgtte:
     resource: "@SieRegularBundle/Resources/config/routing/notasMigrationttettg.yml"
     prefix:   /sie/migrationsttgtte
+
+sie_regular_migrateNotasModular:
+    resource: "@SieRegularBundle/Resources/config/routing/migrateNotasModular.yml"
+    prefix:   /sie/migrationsmodular
