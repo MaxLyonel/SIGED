@@ -412,3 +412,11 @@ sie_app_web_inscription_reza_omi_exten:
 #     resource: "@SieRegularBundle/Resources/config/routing/consultaBonoFamilia.yml"
 #     prefix:   /consulta-bono-familia
 
+
+sie_regular_notasMigration:
+    resource: "@SieRegularBundle/Resources/config/routing/notasMigration.yml"
+    prefix:   /sie/migrations
+
+sie_regular_notasMigrationttgtte:
+    resource: "@SieRegularBundle/Resources/config/routing/notasMigrationttettg.yml"
+    prefix:   /sie/migrationsttgtte
