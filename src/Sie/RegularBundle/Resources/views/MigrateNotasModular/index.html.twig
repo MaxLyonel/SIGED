@@ -100,7 +100,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="page-title">
-                <h1>Eliminación de Notas/Especialidad
+                <h1>Migración Unidad Educativa Modular
                     <small></small>
                 </h1>
                 <ol class="breadcrumb">
@@ -130,7 +130,7 @@
 									<!-- Nav tabs -->
 									<ul class="nav nav-tabs" role="tablist">
 										<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
-											<a role="tab" data-toggle="tab">Criterios de Eliminación</a>
+											<a role="tab" data-toggle="tab">Migración Notas Modular</a>
 										</li>
 										{#
 										<li :class="{active: opcion == 2}" @click="opcion = 2">
@@ -148,40 +148,10 @@
 													<table class="table table">
 														<tr >
 															<td>
-																<label>Código SIE <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El Código SIE lo puede encontrar en la libreta electrónica del estudiante" data-trigger="hover"></i> </label>
+																<label>Código SIE <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="Registre el código SIE de la Unidad Educativa Modular" data-trigger="hover"></i> </label>
 																<input type="text" v-model="estudiante.codigoSie" class="form-control jupper" maxlength="18" v-on:keypress="alfanumerico">
 															</td>
-															<td>
-																<label>Código Rude <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El Código Rude lo puede encontrar en la libreta electrónica del estudiante de una gestion pasada" data-trigger="hover"></i> </label>
-																<input type="text" v-model="estudiante.codigoRude" class="form-control jupper" maxlength="18" v-on:keypress="alfanumerico">
-															</td>
 														</tr>
-														<tr >
-															<td>
-																<label>Trimestres <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="Seleccione el o los Trimestre(s) a eliminar" data-trigger="hover"></i>  </label>
-																<p>
-																<table class="table table">
-																	<tr>
-																		<td><input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1" v-model="estudiante.tri1">
-																		<label class="form-check-label" for="inlineCheckbox1">1ro</label></td>
-																		<td><input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2" v-model="estudiante.tri2">
-																		<label class="form-check-label" for="inlineCheckbox2">2do</label></td>
-																		<td><input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3" v-model="estudiante.tri3">
-																		<label class="form-check-label" for="inlineCheckbox1">3er</label></td>
-																		{#<td><input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="avg" v-model="estudiante.prom">
-																		<label class="form-check-label" for="inlineCheckbox2">Promedio</label></td>#}
-																</table>	
-																</p>
-															</td>
-															<td>
-																<label>BTH <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="Si selecciona esta opción(BTH), solo se eliminaran las especialidades de 5to de Secundaria, no asi las calficaciones" data-trigger="hover"></i> </label>
-																<p>
-																<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="bth" v-model="estudiante.bth">
-																<label class="form-check-label" for="inlineCheckbox1">Especialidades</label>																
-																</p>															
-															</td>
-														</tr>
-
 													</table>					
 													</div>							
 												</div>
@@ -190,16 +160,6 @@
 												</div>												
 											</div>
 										</div>
-										{#
-										<div role="tabpanel" :class="['tab-pane', {active: opcion == 2}]">
-											<div class="row">
-												<div class="form-group col-md-12">
-													<label>Código SIE <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El Código SIE lo puede encontrar en la libreta electrónica del estudiante" data-trigger="hover"></i> </label>
-													<input type="text" v-model="estudiante.codigoSie" class="form-control jupper" maxlength="18" v-on:keypress="alfanumerico">
-												</div>
-											</div>
-										</div>
-										#}
 									</div>
 								</div>
 							</div>
@@ -209,7 +169,7 @@
 						
 
 						<div class="col-md-12 text-center">
-							<button type="button" class="btn btn-success" @click="consultar">Buscar y Eliminar</button>
+							<button type="button" class="btn btn-success" @click="consultar">Buscar y Migrar</button>
 						</div>
 					</div>
 					<div v-if="validado" class="respuesta">
@@ -245,30 +205,6 @@
 							</tbody>
 							</table>
 							</div>
-							Información de la/el ESTUDIANTE:
-							<div class="table-responsive">
-							<table class="table">
-							<thead>
-								<tr>
-								<th scope="col">Cod. Rude</th>
-								<th scope="col">CI</th>
-								<th scope="col">Paterno</th>
-								<th scope="col">Materno</th>
-								<th scope="col">Nombre(s)</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-								<td>${estudiante.codigoRude}</td>
-								<td>${estudiante.carnet}</td>
-								<td>${estudiante.materno}</td>
-								<td>${estudiante.paterno}</td>
-								<td>${estudiante.nombre}</td>
-								</tr>
-							</tbody>
-							</table>
-							</div>														
-
 							<p> 
                                 <div class="alert alert-success" role="alert">
                                     Proceso realizado correctamente...
@@ -328,23 +264,8 @@
 		    	},
 		    	estudiante: {
 		    		/*codigoRude: '4073040820205783 809700692017061 718500012020019',*/
-					tri1: false,
-					tri2: false,
-					tri3: false,
-					prom: false,
-					bth:  false,
-					codigoRude: '',
                     codigoSie: '',
 					codigoRudeId: '',
-					carnet: '',
-		    		complemento: '',
-		    		nombre: '',
-		    		paterno: '',
-		    		materno: '',
-		    		fechaNacimiento: '',
-		    		nivel: '',
-					estId: '',
-		    		grado: ''
 
 		    		
 		    	},
@@ -386,9 +307,6 @@
                     this.urlreport ='';
                     this.showbuttonPDF ='';
 		    		if (this.opcion == 1) {
-		    			/*if (this.estudiante.codigoRude == '') {
-		    				this.errores.push('Código Rude');
-		    			}*/
 						if (this.estudiante.codigoSie == '') {
 		    				this.errores.push('Código SIE');
 		    			}
@@ -408,16 +326,10 @@
 		    			return false;
 		    		}
 
-					var messageToProcess;
-					if(this.estudiante.bth){
-						messageToProcess = 'Proceso de eliminación de Especialidades';
-					}else{
-						messageToProcess = 'Proceso de eliminación de Notas';
-					}
 
                 	Swal.fire({
-                        title: messageToProcess,
-                        text: "esta seguro de CONTINUAR con la eliminación",
+                        title: 'Proceso de Migración Notas Modulares',
+                        text: "esta seguro de CONTINUAR con el proceso",
                         type: 'question',
                         showCancelButton: true,
                         confirmButtonColor: '#3085d6',
@@ -438,7 +350,7 @@
 	    			});
 
 					
-						axios.post(Routing.generate('notasMigrationttgtte_buscar', { estudiante: this.estudiante, opcion: this.opcion}))
+						axios.post(Routing.generate('migrateNotasModular_buscar', { estudiante: this.estudiante, opcion: this.opcion}))
 							.then(response => {
 								if (response.data.status === 'error') {
 									Swal.fire(
@@ -447,36 +359,19 @@
 										'info'
 									)
 								}
-
+                                   
 								if (response.data.status == 'success') {
+
+                                     
 									Swal.close();
 									
 									this.datos = response.data.datos;
-									this.opcion = response.data.datos.opcion;
-									
-									//if(this.opcion == 1){
-										this.showFormReclamo = this.datos.showFormReclamo;
-										this.estudiante.nombre = this.datos.arrStudent.nombre;
-										this.estudiante.paterno = this.datos.arrStudent.paterno;
-										this.estudiante.materno = this.datos.arrStudent.materno;
-										this.estudiante.carnet = this.datos.arrStudent.carnet;
-										this.estudiante.estId = this.datos.arrStudent.estId;
-										this.estudiante.estInsId = this.datos.arrStudent.estInsId;
-										/*this.estudiante.idObsBono = this.datos.arrStudent.idObsBono;*/
-										this.estudiante.codigoRudeId = this.datos.arrStudent.codigoRude;
-										this.estudiante.institucioneducativaId = this.datos.arrUnidadEducativa.codigoSie;
-
-										this.estudiante.nameue = this.datos.arrUnidadEducativa.nombre;
-										
-										/*this.urlreport = this.datos.arrToPrint.urlreport;
-										this.showbuttonPDF = this.datos.arrToPrint.showbuttonPDF;*/
-										this.DBUrlReport = this.datos.arrUrlRerport;
-										
-									/*}else{
-										this.estudiante.nombre = this.datos.arrStudent.nombre;
-										this.estudiante.institucioneducativaId = this.datos.arrStudent.codigoSie;
-
-									}*/
+                                    
+									this.opcion = response.data.datos.opcion;                                
+                                    
+                                    this.estudiante.institucioneducativaId = this.datos.arrUnidadEducativa.codigoSie;
+                                    this.estudiante.nameue = this.datos.arrUnidadEducativa.nombre;
+                                    									
 									this.validado = true;
 								}
 								this.cortina = false;
