@@ -24,7 +24,7 @@ class NotasMigrationttgtteController extends Controller
             public function indexAction() {
          
                 return $this->render('SieRegularBundle:NotasMigrationttgtte:index.html.twig', array(
-                    // ...
+                    'rolUser'=>$this->session->get('roluser'),
                 )); 
             }
         
