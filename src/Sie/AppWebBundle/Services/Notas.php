@@ -197,6 +197,10 @@ class Notas{
                     if($this->session->get('ue_modular') == true and $nivel == 13){
                         $operativo = 3;
                         $fin = 3;
+                        if($gestion == 2020){
+                            $inicio = 6;
+                            $fin = 8;
+                        }                        
                     }
 
                     foreach ($asignaturas as $a) {
@@ -662,6 +666,10 @@ class Notas{
                 if($this->session->get('ue_modular') == true and $nivel == 13){
                     $operativo = 4;
                     $fin = 4;
+                    if($gestion == 2020){
+                        $inicio = 6;
+                        $fin = 9;
+                    }
                 }
 
                 foreach ($asignaturas as $a) {

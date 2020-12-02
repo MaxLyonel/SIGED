@@ -136,12 +136,13 @@ class InfoEstudianteNotasController extends Controller {
                 $operativo = $this->get('funciones')->obtenerOperativoTrimestre2020($sie,$gestion);
                 
                 $notas = $this->get('notas')->regular($idInscripcion,$operativo);
+                
                 if($tipoUE){
                     // PAra ues modulares secundaria
                     if($tipoUE['id'] == 3 and $notas['nivel'] == 13){
-                        //$notas = $this->get('notas')->regular($idInscripcion,4);
+                        $notas = $this->get('notas')->regular($idInscripcion,4);
                         //$plantilla = 'modular';
-                        $plantilla = 'newregular';
+                        $plantilla = 'newmodular';
                         $vista = 1;
                     }else{
                         // Verificamos si el tipo es 1:plena, 2:tecnica tecnologica, 3:modular, 5: humanistica 7:transformacion (las que hayan hecho una solicitud pàra trabajar gestion actual)
