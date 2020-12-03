@@ -23,7 +23,7 @@ class MaestroCuentabancariaType extends AbstractType {
                 'class' => 'Sie\AppWebBundle\Entity\EntidadfinancieraTipo',
                 'mapped' => false,
                 'required' => true,
-                'label' => 'Entidad Financiera'
+                'label' => 'Modalidad de cobro'
             ))
             ->add('carnet', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'maxlength' => '14')))
             ->add('paterno', 'text', array('label' => 'Apellido Paterno', 'required' => false, 'attr' => array('autocomplete' => 'off')))

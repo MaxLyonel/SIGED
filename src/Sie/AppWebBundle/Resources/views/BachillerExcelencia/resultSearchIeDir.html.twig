@@ -169,17 +169,20 @@
                         </div>
                         <div class="form-group">
                             <label for="sie_appwebbundle_maestrocuentabancaria_entidadfinancieraTipo" class="col-sm-4 control-label">{{ form_label(form_dir.entidadfinancieraTipo) }}</label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 {{ form_widget(form_dir.entidadfinancieraTipo, { 'attr': {'class': 'form-control' }  }) }}
                                 <div class="help-block with-errors">{{ form_errors(form_dir.entidadfinancieraTipo) }}</div>
                             </div>
+                            <div class="col-sm-4 text-warning">* <span class="text-danger">COBRO EN CAJA:</span> Deberá retirar el monto correspondiente en cualquier <span class="text-danger">agencia</span> del BANCO UNIÓN a nivel nacional.<br />
+                            * <span class="text-danger">ABONO EN CUENTA:</span> Deberá retirar el monto correspondiente en cualquier <span class="text-danger">cajero</span> del BANCO UNIÓN a nivel nacional.</div>
                         </div>
                         <div class="form-group">
                             <label for="sie_appwebbundle_maestrocuentabancaria_cuentabancaria" class="col-sm-4 control-label">{{ form_label(form_dir.cuentabancaria) }}</label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 {{ form_widget(form_dir.cuentabancaria, { 'attr': {'class': 'form-control jnumbers', 'style': 'text-transform:uppercase', 'placeholder': 'Ingrese los 14 dígitos de su cuenta Banco Unión' }  }) }}
                                 <div class="help-block with-errors">{{ form_errors(form_dir.cuentabancaria) }}</div>
                             </div>
+                            <div class="col-sm-4 text-warning">Debe verificar esta información para no presentar observaciones al momento del cobro.</div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-6 col-sm-offset-4">
@@ -218,16 +221,16 @@
         function guardarDirector() {
             var ent = $("#sie_appwebbundle_maestrocuentabancaria_entidadfinancieraTipo").val();
             if (ent == 1) {
-                ent = 'SIN DATO';
+                ent = 'COBRO EN CAJA (BANCO UNIÓN)';
             } else {
-                ent = 'BANCO UNIÓN';
+                ent = 'ABONO EN CUENTA (BANCO UNIÓN)';
             }
             var msj = '\n- Carnet de Identidad: ' + $("#sie_appwebbundle_maestrocuentabancaria_carnet").val();
             msj += '\n- Complemento: ' + $("#sie_appwebbundle_maestrocuentabancaria_complemento").val();
             msj += '\n- Apellido Paterno: ' + $("#sie_appwebbundle_maestrocuentabancaria_paterno").val();
             msj += '\n- Apellido Materno: ' + $("#sie_appwebbundle_maestrocuentabancaria_materno").val();
             msj += '\n- Nombre(s): ' + $("#sie_appwebbundle_maestrocuentabancaria_nombre").val();
-            msj += '\n- Entidad Financiera: ' + ent;
+            msj += '\n- Modalidad de cobro: ' + ent;
             msj += '\n- Nro. Cta. Bancaria: ' + $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").val();
             msj += '\n\nTenga en cuenta que no podrá realizar cambios posteriores. Verifique la información introducida.';
             msj += '\n\nNota.- Para confirmar los datos ingresados presione sobre el botón "Aceptar", para corregir la información introducida presione sobre el botón "Cancelar".';
