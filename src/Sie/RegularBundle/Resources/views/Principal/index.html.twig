@@ -199,10 +199,35 @@
                     <div class="clearfix"></div>
                 </div>
                 <div class="portlet-body text-center">
-                    <img src ="/images/bjpinto/bjp1.jpeg" width="350" alt="BJP">
-                    <img src ="/images/bjpinto/bjp2.jpeg" width="350" alt="BJP">
-                    <img src ="/images/bjpinto/bjp3.jpeg" width="350" alt="BJP">
-                    <img src ="/images/bjpinto/bjp4.jpeg" width="350" alt="BJP">
+                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                            <li data-target="#myCarousel" data-slide-to="1"></li>
+                        </ol>
+
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner">
+                            <div class="item active">
+                                <img src="/images/bjpinto/bjp_A.jpeg" alt="Los Angeles" style="width:100%;">
+                            </div>
+
+                            <div class="item">
+                                <img src="/images/bjpinto/bjp_B.jpeg" alt="Chicago" style="width:100%;">
+                            </div>
+                        </div>
+
+                        <!-- Left and right controls -->
+                        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                            <span class="sr-only">Anterior</span>
+                        </a>
+                        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                            <span class="sr-only">Siguiente</span>
+                        </a>
+                    </div>
+                    
                     {# {% for instalador in instalador %}
                         {%if (loop.index ==1)%}
                             <div>
