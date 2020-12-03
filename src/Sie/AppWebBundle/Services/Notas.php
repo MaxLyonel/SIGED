@@ -1717,7 +1717,9 @@ die;/*
 
             $gestionActual = $this->session->get('currentyear');
 
-            $operativo = $this->funciones->obtenerOperativo($sie,$gestion);
+            //$operativo = $this->funciones->obtenerOperativo($sie,$gestion);
+            $operativo = $this->funciones->obtenerOperativoTrimestre2020($sie,$gestion);
+            
             /*
             if($gestion <= 2012 or ($gestion == 2013 and $grado > 1 and $nivel != 11) or ($gestion == 2013 and $grado == (1 or 2 ) and $nivel == 11) ){
                 $tipo = 't';
@@ -1759,11 +1761,13 @@ die;/*
             }else{
                 // ACTUALIZAMOS EL ESTADO DE MATRICULA DE PRIMARIA Y SECUNDARIA
                 $asignaturas = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findby(array('estudianteInscripcion'=>$idInscripcion));
+                
                 $arrayPromedios = array();
                 foreach ($asignaturas as $a) {
                     // Notas Bimestrales
                     if($tipo == 'Bimestre' or ($tipo == 'Trimestre' and $gestion == 2020)){
-                        $notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>5));
+                        //$notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>5));
+                        $notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>9));
                         //$notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId()));
                         if($notaPromedio){
                             /**
