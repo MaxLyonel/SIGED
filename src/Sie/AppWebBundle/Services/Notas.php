@@ -308,7 +308,7 @@ class Notas{
                                 // Para el promedio
                                 foreach ($asignaturasNotas as $an) {
                                     $existe = 'no';
-                                    if(in_array($an['idNotaTipo'], array(9,11,5))){
+                                    if(in_array($an['idNotaTipo'], array(9))){
                                         $notasArray[$cont]['notas'][] =   array(
                                                                     'id'=>$cont.$idavg,
                                                                     'idEstudianteNota'=>$an['idNota'],
@@ -338,6 +338,7 @@ class Notas{
                                                                 'idFila'=>$a['asignaturaId'].$idavg 
                                                             );
                                 }
+                                
                             }
                         }                                                                    
 
@@ -1211,7 +1212,12 @@ die;/*
                         if(($nivel != 11 and $notas[$i] != 0) or ($nivel == 11 and $notas[$i] != "") or ($nivel.$arrinfoUe['ueducativaInfoId']['gradoId'] == '121')){
                             $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();
                             $newNota = new EstudianteNota();
-                            $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
+                            if($idNotaTipo[$i]==5){
+                                $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find(9));
+                            }else{
+                                $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));    
+                            }
+                            
                             $newNota->setEstudianteAsignatura($this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]));
                             if($nivel == 11 or ($nivel.$arrinfoUe['ueducativaInfoId']['gradoId'] == '121')){
                                 $newNota->setNotaCuantitativa(0);
