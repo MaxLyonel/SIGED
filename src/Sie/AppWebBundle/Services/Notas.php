@@ -1690,6 +1690,7 @@ die;/*
     }
 
 	public function actualizarEstadoMatricula($idInscripcion){
+        
         try {
             $this->em->getConnection()->beginTransaction();
             $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
@@ -1733,7 +1734,6 @@ die;/*
                     $nuevo['estadoMatricula'] = $inscripcion->getEstadomatriculaTipo()->getId();       
 
                     if ($anterior['estadoMatricula'] != $nuevo['estadoMatricula']) {
-
                         $this->funciones->setLogTransaccion(
                             $inscripcion->getId(),
                             'estudiante_inscripcion',
@@ -1755,6 +1755,7 @@ die;/*
                     // Notas Bimestrales
                     if($tipo == 'Bimestre' or ($tipo == 'Trimestre' and $gestion == 2020)){
                         $notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>5));
+                        //$notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId()));
                         if($notaPromedio){
                             /**
                              * GESTION 2018 NO SE CONSIDERAN LAS MATERIAS DE
@@ -1770,6 +1771,8 @@ die;/*
                             }else{
                                 $arrayPromedios[] = $notaPromedio->getNotaCuantitativa();
                             }
+                        } else {
+                            $arrayPromedios[] = 0; 
                         }
                     }
                     // Notas Trimestrales
@@ -1785,7 +1788,6 @@ die;/*
                         }
                     }
                 }
-
                 if((sizeof($asignaturas) > 0 && count($asignaturas) == count($arrayPromedios)) or ($gestion < $gestionActual && sizeof($arrayPromedios) > 0 ) or ($gestion == 2018 && count($arrayPromedios) == (count($asignaturas) - 2)) ){
                     $estadoAnterior = $inscripcion->getEstadomatriculaTipo()->getId();
                     
@@ -1806,16 +1808,35 @@ die;/*
                     }
 
                     if($tipo == 'Bimestre' or ($tipo == 'Trimestre' and $gestion == 2020) ){
+                        $registroConsolidacion = $this->em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion'=>2020,'unidadEducativa'=>$sie));
+                        $cierreGestion2020 = false;
+                        if(count($registroConsolidacion)>0){
+                            if($registroConsolidacion->getBim1() != 0 and $registroConsolidacion->getBim2() != 0 and $registroConsolidacion->getBim3() != 0){
+                                $cierreGestion2020 = true;
+                            }
+                        }
+                        
                         // NO REALIZAMOS LA VERIFICACION DE LOS PROMEDIOS PARA PRIMARIA 
                         // A PARTIR DE LA GESTION 2019 DEBIDO A QUE LA PROMOCION SE
                         // DETERMINA CON EL PROMEDIO ANUAL
-                        if ($gestion < 2019 or ($gestion >= 2019 and $nivel != 12)) {
-                            foreach ($arrayPromedios as $ap) {
-                                if($ap < 51){
-                                    $nuevoEstado = 11;
-                                    break;
-                                }
-                            }   
+                        if($gestion == 2020 and $cierreGestion2020 == false){
+                            if ($gestion < 2019 or ($gestion >= 2019 and $nivel != 12)) {
+                                foreach ($arrayPromedios as $ap) {
+                                    if($ap < 51){
+                                        $nuevoEstado = 4;
+                                        break;
+                                    }
+                                }   
+                            }
+                        } else {
+                            if ($gestion < 2019 or ($gestion >= 2019 and $nivel != 12)) {
+                                foreach ($arrayPromedios as $ap) {
+                                    if($ap < 51){
+                                        $nuevoEstado = 11;
+                                        break;
+                                    }
+                                }   
+                            }
                         }
                     }
                     if($tipo == 'Trimestre'  and $gestion < 2020){
@@ -1829,7 +1850,6 @@ die;/*
 
                     if(count($asignaturas) != count($arrayPromedios)){
                         if($gestion >= 2018){
-
                         }else{
                             $nuevoEstado = 11;
                         }
@@ -1894,7 +1914,6 @@ die;/*
                                 }
 
                             }else{
-
                                 $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
                                 $this->em->persist($inscripcion);
                                 $this->em->flush();

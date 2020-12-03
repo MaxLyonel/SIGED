@@ -45,8 +45,13 @@
                         {{ form_widget(formNuevo.maestro, { 'attr': {'class': 'form-control'} }) }}
                     </div>
                     <div class="form-group">
-                        {{ form_label(formNuevo.item) }}
-                        {{ form_widget(formNuevo.item, { 'attr': {'class': 'form-control'} }) }}
+                        <div class="row">
+                            {{ form_label(formNuevo.item,'', { 'label_attr': {'class': 'col-sm-12'} }) }}
+                            <div class="col-sm-6">
+                            {{ form_widget(formNuevo.item, { 'attr': {'class': 'form-control', 'oninput': 'validaItem()'} }) }}
+                            </div>
+                            <label class="col-sm-6 btn btn-default" id="form_item_detalle">&nbsp;</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         {{ form_label(formNuevo.financiamiento) }}
@@ -397,6 +402,15 @@
                     alert("Error, no fue posible realizar el registro, intente nuevamente");  
                 },
             });    
+        }
+
+        var validaItem = function(){
+            var item = parseInt($('#form_item').val());
+            if(item == 0){
+                $('#form_item_detalle').html("Acefalía");
+            } else {
+                $('#form_item_detalle').html("&nbsp;");
+            }
         }
 
 
