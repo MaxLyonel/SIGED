@@ -18,41 +18,88 @@
     </div><!-- /.header-content -->
     <!--/ End page header -->
     <div class="body-content animated fadeIn">
-        <div class="col-md-6 col-md-offset-3">
-                <!-- Start input fields - basic form -->
-                <div class="panel rounded shadow">
-                    <div class="panel panel-primary shadow">
-                        <div class="panel-heading">
-                            <div class="pull-left">
-                                <h3 class="panel-title">Notificaciones</h3>
+        <div class="col-md-6">
+            <!-- Start input fields - basic form -->
+            <div class="panel rounded shadow">
+                <div class="panel panel-primary shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Bono Juancito Pinto</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body no-padding">
+                        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#myCarousel" data-slide-to="1"></li>
+                            </ol>
+
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <img src="/images/bjpinto/bjp_A.jpeg" alt="Los Angeles" style="width:100%;">
+                                </div>
+
+                                <div class="item">
+                                    <img src="/images/bjpinto/bjp_B.jpeg" alt="Chicago" style="width:100%;">
+                                </div>
                             </div>
-                            <div class="clearfix"></div>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body no-padding">
-                            <ul class="list-group">
-                                {% for entity in entities|slice(0, 5) %}
-                                    {% if entity.rolTipo.id == app.session.get('roluser') %}
-                                        <li class="list-group-item">
-                                            <span class="badge {% if(entity.notif.noticiaTipo) == 0  %}badge-success{% elseif(entity.notif.noticiaTipo) == 1 %}badge-warning{% else %}badge-danger{% endif %}">{% if(entity.notif.noticiaTipo) == 0  %}Normal{% elseif(entity.notif.noticiaTipo) == 1 %}Urgente{% else %}Muy Urgente{% endif %}</span>
-                                            <h5 class="list-group-item-heading text-primary"><strong><span class="glyphicon glyphicon-time"></span> {% if entity.notif.fechaCrea %}{{ entity.notif.fechaCrea|date('d-m-Y') }}{% endif %} | {{ entity.notif.titulo }}</strong></h5>
-                                            <p class="list-group-item-text list-group-item-text-notif text-justify"><i class="fa fa-rss-square text-warning"></i> {{ entity.notif.mensaje|raw }}</p>
-                                            <p class="list-group-item-text text-green">
-                                                {% if entity.notif.adjunto %}
-                                                    Descargar adjunto: <a href="{{ asset('uploads/adjuntos/' ~ entity.notif.adjunto) }}" target="_blank"><img src="{{asset('img/pdf.png') }}" alt="{{ entity.notif.adjunto }}" width="20" height="20"></a>
-                                                {% endif %}
-                                            </p>
-                                        </li>
-                                    {% endif %}
-                                {% else %}
-                                    <div class="alert alert-info" role="alert">
-                                        <i class="fa fa-fw fa-info-circle"></i> Sin notificaciones
-                                    </div>
-                                {% endfor %}
-                            </ul>
+
+                            <!-- Left and right controls -->
+                            <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                                <span class="sr-only">Anterior</span>
+                            </a>
+                            <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                                <span class="sr-only">Siguiente</span>
+                            </a>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="embed-responsive embed-responsive-16by9">
+                            <iframe width="100%" height="315" src="https://www.youtube.com/embed/MN9afgpY3w0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-md-6">
+            <!-- Start input fields - basic form -->
+            <div class="panel rounded shadow">
+                <div class="panel panel-primary shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Notificaciones</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body no-padding">
+                        <ul class="list-group">
+                            {% for entity in entities|slice(0, 5) %}
+                                {% if entity.rolTipo.id == app.session.get('roluser') %}
+                                    <li class="list-group-item">
+                                        <span class="badge {% if(entity.notif.noticiaTipo) == 0  %}badge-success{% elseif(entity.notif.noticiaTipo) == 1 %}badge-warning{% else %}badge-danger{% endif %}">{% if(entity.notif.noticiaTipo) == 0  %}Normal{% elseif(entity.notif.noticiaTipo) == 1 %}Urgente{% else %}Muy Urgente{% endif %}</span>
+                                        <h5 class="list-group-item-heading text-primary"><strong><span class="glyphicon glyphicon-time"></span> {% if entity.notif.fechaCrea %}{{ entity.notif.fechaCrea|date('d-m-Y') }}{% endif %} | {{ entity.notif.titulo }}</strong></h5>
+                                        <p class="list-group-item-text list-group-item-text-notif text-justify"><i class="fa fa-rss-square text-warning"></i> {{ entity.notif.mensaje|raw }}</p>
+                                        <p class="list-group-item-text text-green">
+                                            {% if entity.notif.adjunto %}
+                                                Descargar adjunto: <a href="{{ asset('uploads/adjuntos/' ~ entity.notif.adjunto) }}" target="_blank"><img src="{{asset('img/pdf.png') }}" alt="{{ entity.notif.adjunto }}" width="20" height="20"></a>
+                                            {% endif %}
+                                        </p>
+                                    </li>
+                                {% endif %}
+                            {% else %}
+                                <div class="alert alert-info" role="alert">
+                                    <i class="fa fa-fw fa-info-circle"></i> Sin notificaciones
+                                </div>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
 {% block javascripts %}
