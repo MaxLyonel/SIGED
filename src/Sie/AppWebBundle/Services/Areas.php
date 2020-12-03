@@ -298,6 +298,7 @@ class Areas {
             $tipoUE = $this->funciones->getTipoUE($sie,$gestion);
             $asignaturas = array();
             $posiblesEliminar = array();
+            
             if($tipoUE){
                 switch ($tipoUE['id']) {
                     case 2: // Ues tecnicas
@@ -317,10 +318,14 @@ class Areas {
                         //////////////////////////////////////////
 
                         // Para todas las ues que puedan eliminar materias tecnica general y especializada
-                        if(in_array($tipoUE['id'], array(2,3,4,5)) and $grado > 2){
-                            $posiblesEliminar = array(1038,1039);
+                        if(in_array($tipoUE['id'], array(1,2,3,4,5)) and $grado > 2){
+                            $posiblesEliminar = array(1038,1039,1033);
                         }
 
+                        if(in_array($tipoUE['id'], array(1,2,3,4,5)) and $grado >= 1 and $grado <= 4){
+                            $posiblesEliminar = array(1055,1056,1057);
+                        }
+                        
                         // Posibles a eliminar para ues nocturanas (6)
                         if($tipoUE['id'] == 6){
                             if($gestion >= 2016 and $nivel == 13){

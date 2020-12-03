@@ -197,6 +197,10 @@ class Notas{
                     if($this->session->get('ue_modular') == true and $nivel == 13){
                         $operativo = 3;
                         $fin = 3;
+                        if($gestion == 2020){
+                            $inicio = 6;
+                            $fin = 8;
+                        }                        
                     }
 
                     foreach ($asignaturas as $a) {
@@ -300,10 +304,11 @@ class Notas{
                             if($nivel != 11 and $nivel != 1 and $nivel != 403 and $operativo >= 3){
                                 //new by krlos
                                  $idavg = ($gestion <= 2019)?"-5":"-9";
+                                 
                                 // Para el promedio
                                 foreach ($asignaturasNotas as $an) {
                                     $existe = 'no';
-                                    if(in_array($an['idNotaTipo'], array(9,11,5))){
+                                    if(in_array($an['idNotaTipo'], array(9))){
                                         $notasArray[$cont]['notas'][] =   array(
                                                                     'id'=>$cont.$idavg,
                                                                     'idEstudianteNota'=>$an['idNota'],
@@ -327,12 +332,13 @@ class Notas{
                                                                 'nota'=>'',
                                                                 'notaNueva'=>'',
                                                                 'notaCualitativaNueva'=>'',
-                                                                'idNotaTipo'=>5,
+                                                                'idNotaTipo'=>9,
                                                                 'idEstudianteAsignatura'=>$a['estAsigId'],
                                                                 'bimestre'=>'Promedio',
                                                                 'idFila'=>$a['asignaturaId'].$idavg 
                                                             );
                                 }
+                                
                             }
                         }                                                                    
 
@@ -662,6 +668,10 @@ class Notas{
                 if($this->session->get('ue_modular') == true and $nivel == 13){
                     $operativo = 4;
                     $fin = 4;
+                    if($gestion == 2020){
+                        $inicio = 6;
+                        $fin = 9;
+                    }
                 }
 
                 foreach ($asignaturas as $a) {
@@ -1202,7 +1212,12 @@ die;/*
                         if(($nivel != 11 and $notas[$i] != 0) or ($nivel == 11 and $notas[$i] != "") or ($nivel.$arrinfoUe['ueducativaInfoId']['gradoId'] == '121')){
                             $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota');")->execute();
                             $newNota = new EstudianteNota();
-                            $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
+                            if($idNotaTipo[$i]==5){
+                                $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find(9));
+                            }else{
+                                $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));    
+                            }
+                            
                             $newNota->setEstudianteAsignatura($this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]));
                             if($nivel == 11 or ($nivel.$arrinfoUe['ueducativaInfoId']['gradoId'] == '121')){
                                 $newNota->setNotaCuantitativa(0);
@@ -1708,7 +1723,9 @@ die;/*
 
             $gestionActual = $this->session->get('currentyear');
 
-            $operativo = $this->funciones->obtenerOperativo($sie,$gestion);
+            //$operativo = $this->funciones->obtenerOperativo($sie,$gestion);
+            $operativo = $this->funciones->obtenerOperativoTrimestre2020($sie,$gestion);
+            
             /*
             if($gestion <= 2012 or ($gestion == 2013 and $grado > 1 and $nivel != 11) or ($gestion == 2013 and $grado == (1 or 2 ) and $nivel == 11) ){
                 $tipo = 't';
@@ -1750,11 +1767,13 @@ die;/*
             }else{
                 // ACTUALIZAMOS EL ESTADO DE MATRICULA DE PRIMARIA Y SECUNDARIA
                 $asignaturas = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findby(array('estudianteInscripcion'=>$idInscripcion));
+                
                 $arrayPromedios = array();
                 foreach ($asignaturas as $a) {
                     // Notas Bimestrales
                     if($tipo == 'Bimestre' or ($tipo == 'Trimestre' and $gestion == 2020)){
-                        $notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>5));
+                        //$notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>5));
+                        $notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>9));
                         //$notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId()));
                         if($notaPromedio){
                             /**

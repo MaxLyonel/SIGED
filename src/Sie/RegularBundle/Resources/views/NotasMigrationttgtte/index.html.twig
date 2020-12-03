@@ -152,11 +152,20 @@
 																<input type="text" v-model="estudiante.codigoSie" class="form-control jupper" maxlength="18" v-on:keypress="alfanumerico">
 															</td>
 															<td>
+																<label>BTH <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="Si selecciona esta opción(BTH), solo se eliminaran las especialidades de 5to de Secundaria, no asi las calficaciones" data-trigger="hover"></i> </label>
+																<p>
+																<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="bth" v-model="estudiante.bth">
+																<label class="form-check-label" for="inlineCheckbox1">Especialidades</label>																
+																</p>
+																															
+
+															</td>
+														</tr>
+														<tr v-if="rolUser == 8">
+															<td>
 																<label>Código Rude <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El Código Rude lo puede encontrar en la libreta electrónica del estudiante de una gestion pasada" data-trigger="hover"></i> </label>
 																<input type="text" v-model="estudiante.codigoRude" class="form-control jupper" maxlength="18" v-on:keypress="alfanumerico">
 															</td>
-														</tr>
-														<tr >
 															<td>
 																<label>Trimestres <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="Seleccione el o los Trimestre(s) a eliminar" data-trigger="hover"></i>  </label>
 																<p>
@@ -171,14 +180,8 @@
 																		{#<td><input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="avg" v-model="estudiante.prom">
 																		<label class="form-check-label" for="inlineCheckbox2">Promedio</label></td>#}
 																</table>	
-																</p>
-															</td>
-															<td>
-																<label>BTH <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="Si selecciona esta opción(BTH), solo se eliminaran las especialidades de 5to de Secundaria, no asi las calficaciones" data-trigger="hover"></i> </label>
-																<p>
-																<input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="bth" v-model="estudiante.bth">
-																<label class="form-check-label" for="inlineCheckbox1">Especialidades</label>																
 																</p>															
+															
 															</td>
 														</tr>
 
@@ -315,6 +318,7 @@
 		    el: '#app',
 		    data: {
 		    	state: {isSending: false},
+				rolUser:{{rolUser}},
 		    	errores: [],
 		    	opcion: 1,
 		    	niveles: [],
