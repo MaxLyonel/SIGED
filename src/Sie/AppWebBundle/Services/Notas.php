@@ -304,6 +304,7 @@ class Notas{
                             if($nivel != 11 and $nivel != 1 and $nivel != 403 and $operativo >= 3){
                                 //new by krlos
                                  $idavg = ($gestion <= 2019)?"-5":"-9";
+                                 
                                 // Para el promedio
                                 foreach ($asignaturasNotas as $an) {
                                     $existe = 'no';
@@ -331,7 +332,7 @@ class Notas{
                                                                 'nota'=>'',
                                                                 'notaNueva'=>'',
                                                                 'notaCualitativaNueva'=>'',
-                                                                'idNotaTipo'=>5,
+                                                                'idNotaTipo'=>9,
                                                                 'idEstudianteAsignatura'=>$a['estAsigId'],
                                                                 'bimestre'=>'Promedio',
                                                                 'idFila'=>$a['asignaturaId'].$idavg 
