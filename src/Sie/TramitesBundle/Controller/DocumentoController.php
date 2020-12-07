@@ -2394,7 +2394,7 @@ public function getDocumentoTokenImpreso($token) {
         if (isset($gestion)) {
             $gestionId = $gestion;
         } else {
-            $gestionId = $gestionActual->format('y');
+            $gestionId = $gestionActual->format('Y');
         }
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
