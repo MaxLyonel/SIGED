@@ -139,13 +139,13 @@ class DefaultController extends Controller {
                 $layout = 'layoutPermanente.html.twig';
                 $this->session->set('pathSystem', "SiePermanenteBundle");
                 break;
-            case 'diplomas2015.sie.gob.bo':
-                $sysname = 'DIPLOMAS';
-                $sysporlet = 'dpl';
-                $sysbutton = false;
-                $layout = 'layoutDiplomas.html.twig';
-                $this->session->set('pathSystem', "SieDiplomaBundle");
-                break;
+            // case 'diplomas2015.sie.gob.bo':
+            //     $sysname = 'DIPLOMAS';
+            //     $sysporlet = 'dpl';
+            //     $sysbutton = false;
+            //     $layout = 'layoutDiplomas.html.twig';
+            //     $this->session->set('pathSystem', "SieDiplomaBundle");
+            //     break;
             case '172.20.16.239a':
             case 'diplomas2015.local':
                 $sysname = 'DIPLOMAS';
@@ -154,13 +154,13 @@ class DefaultController extends Controller {
                 $layout = 'layoutDiplomas.html.twig';
                 $this->session->set('pathSystem', "SieDiplomaBundle");
                 break;
-            case 'diplomas.sie.gob.bo':
-                $sysname = 'DIPLOMAS';
-                $sysporlet = 'dpl';
-                $sysbutton = false;
-                $layout = 'layoutDiplomas.html.twig';
-                $this->session->set('pathSystem', "SieDiplomaBundle");
-                break;
+            // case 'diplomas.sie.gob.bo':
+            //     $sysname = 'DIPLOMAS';
+            //     $sysporlet = 'dpl';
+            //     $sysbutton = false;
+            //     $layout = 'layoutDiplomas.html.twig';
+            //     $this->session->set('pathSystem', "SieDiplomaBundle");
+            //     break;
             case 'reportes.sie.gob.bo':
             case 'reportes':
                 $sysname = 'REPORTES';
@@ -225,6 +225,8 @@ class DefaultController extends Controller {
                 // $this->session->set('sistemaid', 2);
                 // break;
             case 'tramite.sie.gob.bo':
+            case 'diplomas.sie.gob.bo':
+            case 'diplomas2015.sie.gob.bo':
                     $sysname = 'TRAMITE';
                     $sysporlet = 'green';
                     $sysbutton = false;

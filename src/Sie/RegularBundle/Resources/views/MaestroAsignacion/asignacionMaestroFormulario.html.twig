@@ -135,6 +135,9 @@
 
     var setFormMaestro = function(item, fechaInicio, fechaFin, financiamiento){   
         $('#form_item').val(item);
+        if(item == 0){
+            $('#form_item_detalle').html('ACÉFALO');
+        }
         $('#form_financiamiento').val(financiamiento);
         $('#form_fechaInicio').val(fechaInicio);
         $('#form_fechaFin').val(fechaFin);       
@@ -262,7 +265,7 @@
             $('#form_item').focus();
             return false;
         }
-        if($('#form_financiamiento').val() == "0" || $('#form_financiamiento').val() == ""){
+        if($('#form_financiamiento').val() == ""){
             alert("Debe seleccionar el financiamiento del item");
             $('#form_financiamiento').focus();
             return false;
@@ -407,7 +410,7 @@
         var validaItem = function(){
             var item = parseInt($('#form_item').val());
             if(item == 0){
-                $('#form_item_detalle').html("Acefalía");
+                $('#form_item_detalle').html("ACÉFALO");
             } else {
                 $('#form_item_detalle').html("&nbsp;");
             }
