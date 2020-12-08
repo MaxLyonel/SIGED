@@ -686,7 +686,7 @@ class InboxController extends Controller {
           'infoMaestroform' => $this->InfoStudentForm('herramienta_info_maestro_index', 'Personal Docente',$data)->createView(),
           'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
           'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo',$data)->createView(),
-          'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Deshabilitado Temporalmente',$data)->createView(),
+          'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
           'data'=>$dataInfo
         ));
       }
@@ -762,10 +762,9 @@ class InboxController extends Controller {
            ($this->session->get('ue_sol_regularizar')  ) ||
            ($this->session->get('ue_tecteg') )
         ){
-          //$form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')));
-          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-danger btn-md btn-block')));
-        }else{
-          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-danger btn-md btn-block')));
+          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')));
+        } else {
+          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')));
         }
         $form = $form->getForm();
         return $form;
@@ -875,7 +874,7 @@ class InboxController extends Controller {
                       'infoMaestroform' => $this->InfoStudentForm('herramienta_info_maestro_index', 'Maestros',$data)->createView(),
                       'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
                       'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo', $data)->createView(),
-                      'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Deshabilitado Temporalmente',$data)->createView(),
+                      'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
                       'data' => $data
           ));
           break;
@@ -889,7 +888,7 @@ class InboxController extends Controller {
                         //'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Información Estudiante',$data)->createView(),
                         'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudianterequest_index', 'Información Estudiante',$data)->createView(),
                         'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo', $data)->createView(),
-                        'closeOperativoform' => $this->CloseOperativoForm('herramienta_inbox_close_operativo', 'Deshabilitado Temporalmente',$data)->createView(),
+                        'closeOperativoform' => $this->CloseOperativoForm('herramienta_inbox_close_operativo', 'Cerrar Operativo',$data)->createView(),
                         'data' => $data
 
             ));
@@ -1120,27 +1119,34 @@ class InboxController extends Controller {
           $em->flush();
       }
 
-      if($this->session->get('ue_caldiff') == false) {
-        if ($this->session->get('ue_modular')) {
-          $inconsistencia = null;
-        } else {
-          if($this->session->get('ie_id')=='80730460' && $form['gestion']==2018){
-            $query = $em->getConnection()->prepare('select * from sp_validacion_regular_insamericano_web(:gestion, :sie, :periodo)');
-            $query->bindValue(':gestion', $form['gestion']);
-            $query->bindValue(':sie', $form['sie']);
-            $query->bindValue(':periodo', $periodo);
-            $query->execute();
-            $inconsistencia = $query->fetchAll();
-          }else{
-            $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
-            $query->bindValue(':gestion', $form['gestion']);
-            $query->bindValue(':sie', $form['sie']);
-            $query->bindValue(':periodo', $periodo);
-            $query->execute();
-            $inconsistencia = $query->fetchAll();
-          }
-        }
-      }
+      $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web_2020(:gestion, :sie, :periodo)');
+      $query->bindValue(':gestion', $form['gestion']);
+      $query->bindValue(':sie', $form['sie']);
+      $query->bindValue(':periodo', $periodo);
+      $query->execute();
+      $inconsistencia = $query->fetchAll();
+
+      // if($this->session->get('ue_caldiff') == false) {
+      //   if ($this->session->get('ue_modular')) {
+      //     $inconsistencia = null;
+      //   } else {
+      //     if($this->session->get('ie_id')=='80730460' && $form['gestion']==2018){
+      //       $query = $em->getConnection()->prepare('select * from sp_validacion_regular_insamericano_web(:gestion, :sie, :periodo)');
+      //       $query->bindValue(':gestion', $form['gestion']);
+      //       $query->bindValue(':sie', $form['sie']);
+      //       $query->bindValue(':periodo', $periodo);
+      //       $query->execute();
+      //       $inconsistencia = $query->fetchAll();
+      //     }else{
+      //       $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
+      //       $query->bindValue(':gestion', $form['gestion']);
+      //       $query->bindValue(':sie', $form['sie']);
+      //       $query->bindValue(':periodo', $periodo);
+      //       $query->execute();
+      //       $inconsistencia = $query->fetchAll();
+      //     }
+      //   }
+      // }
 
       /***********************************\
       * *
@@ -1149,25 +1155,26 @@ class InboxController extends Controller {
       * return type of UE *
       * *
       \************************************/
-      $objOperativoValidacionPersonal = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findBy(array(
-        'institucioneducativa' => $form['sie'],
-        'gestionTipo' => $form['gestion'],
-        'notaTipo' => $periodo
-      ));
+      $valPersonalAdm = false;
+      // $objOperativoValidacionPersonal = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findBy(array(
+      //   'institucioneducativa' => $form['sie'],
+      //   'gestionTipo' => $form['gestion'],
+      //   'notaTipo' => $periodo
+      // ));
 
-      $arrValidacionPersonal = array();
-      if($objOperativoValidacionPersonal>0){
-        foreach ($objOperativoValidacionPersonal as $key => $value) {
-          # code...
-          if($value->getRolTipo()->getId() == 2 || $value->getRolTipo()->getId() == 5)
-            $arrValidacionPersonal[] = $value->getRolTipo()->getId();
-        }
-      }
-      //validation docente Administrativo director
-      if(sizeof($arrValidacionPersonal)<2){
-        $observation = true;
-        $valPersonalAdm = true;
-      }
+      // $arrValidacionPersonal = array();
+      // if($objOperativoValidacionPersonal>0){
+      //   foreach ($objOperativoValidacionPersonal as $key => $value) {
+      //     # code...
+      //     if($value->getRolTipo()->getId() == 2 || $value->getRolTipo()->getId() == 5)
+      //       $arrValidacionPersonal[] = $value->getRolTipo()->getId();
+      //   }
+      // }
+      // //validation docente Administrativo director
+      // if(sizeof($arrValidacionPersonal)<2){
+      //   $observation = true;
+      //   $valPersonalAdm = true;
+      // }
 
       /***********************************\
       * *
