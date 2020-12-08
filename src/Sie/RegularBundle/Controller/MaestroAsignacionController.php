@@ -746,10 +746,14 @@ class MaestroAsignacionController extends Controller {
             $institucionEducativaId = $institucioneducativaCursoOfertaEntity->getInsitucioneducativaCurso()->getInstitucioneducativa()->getId();
             // $institucionEducativaId = $maestroInscripcionEntity->getInstitucioneducativa()->getId();
             $asignaturaId = $institucioneducativaCursoOfertaEntity->getAsignaturaTipo()->getId();
-    
-            $maestroInscripcionEntity = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroInscripcionId);
+            if($maestroInscripcionId == 0){
+                $maestroInscripcionEntity = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('persona'=>0,'institucioneducativa'=>$institucionEducativaId));
+                $maestroInscripcionId = $maestroInscripcionEntity->getId();
+            } else {
+                $maestroInscripcionEntity = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroInscripcionId);
+            }
             if(count($maestroInscripcionEntity) <= 0){
-                if($maestroInscripcionId == 0){
+                if($maestroInscripcionId == 0 and count($maestroInscripcionEntity) == 0){
                     ////////// ingresar
                     $institucioneducativaSucursalEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $institucionEducativaId, 'gestionTipo' => $gestionId, 'periodoTipoId' => 1));
                     $maestroinscripcion = new MaestroInscripcion();
