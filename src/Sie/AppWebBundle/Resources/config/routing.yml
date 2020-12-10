@@ -285,3 +285,6 @@ sie_app_web_claimbjp:
     resource: "@SieAppWebBundle/Resources/config/routing/claimBJP.yml"
     prefix:   /claimbjp       
 
+sie_app_web_studentEvent:
+    resource: "@SieAppWebBundle/Resources/config/routing/studentEvent.yml"
+    prefix:   /sie/studentevent
