@@ -21,16 +21,28 @@ herramienta_clistarniveles:
     path:     /clistarniveles/{turno}
     defaults: { _controller: "SieHerramientaBundle:CreacionCursos:listarniveles" }
     options:
-         expose: true
+        expose: true
 
 herramienta_clistargrados:
     path:     /clistargrados/{nivel}
     defaults: { _controller: "SieHerramientaBundle:CreacionCursos:listargrados" }
     options:
-         expose: true
+        expose: true
 
 herramienta_acurso_getareas:
     path:     /acursos/
     defaults: { _controller: "SieHerramientaBundle:CreacionCursos:getAreas" }
     options:
-         expose: true
+        expose: true
+
+herramienta_acurso_editar_turno:
+    path:     /acursos/editarTurno
+    defaults: { _controller: "SieHerramientaBundle:CreacionCursos:editarTurno" }
+    options:
+        expose: true
+
+herramienta_acurso_guardar_turno:
+    path:     /acursos/guardarTurno
+    defaults: { _controller: "SieHerramientaBundle:CreacionCursos:guardarTurno" }
+    options:
+        expose: true
