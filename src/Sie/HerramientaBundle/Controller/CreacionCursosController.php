@@ -569,4 +569,46 @@ class CreacionCursosController extends Controller {
                 'areas'=>null
         ));
     }
+
+    public function editarTurnoAction(Request $request){
+        $iecId = $request->get('cursoId');
+        $em = $this->getDoctrine()->getManager();
+        $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId);
+
+        $query = $em->createQuery(
+            'SELECT t FROM SieAppWebBundle:TurnoTipo t
+            WHERE t.id IN (:id)')->setParameter('id',array(1,2,4,8,9,10,11));
+        
+        $turnos_result = $query->getResult();
+        $turnosArray = array();
+        foreach ($turnos_result as $t){
+            $turnosArray[$t->getId()] = $t->getTurno();
+        }
+        
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl('herramienta_acurso_guardar_turno'))
+                ->add('curso', 'hidden', array('data' => $curso->getId()))
+                ->add('turno', 'choice', array('label' => 'Turno', 'required' => true, 'choices' => $turnosArray, 'data' => $curso->getTurnoTipo()->getId(), 'attr' => array('class' => 'form-control')))
+                ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-warning')))
+                ->getForm();
+
+        return $this->render('SieHerramientaBundle:InfoEstudianteAreas:turno.html.twig',array(
+            'form'=>$form->createView()
+        ));
+    }
+
+    public function guardarTurnoAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+
+        $turno = $em->getRepository('SieAppWebBundle:TurnoTipo')->find($form['turno']);
+        $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($form['curso']);
+
+        $curso->setTurnoTipo($turno);
+        $em->persist($curso);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('herramienta_ieducativa_index'));
+        //herramienta_creacioncursos
+    }
 }

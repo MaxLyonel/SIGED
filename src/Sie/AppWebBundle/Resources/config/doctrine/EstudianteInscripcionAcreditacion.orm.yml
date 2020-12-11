@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\EstudianteInscripcionAcreditacion:
+    type: entity
+    table: estudiante_inscripcion_acreditacion
+    indexes:
+        IDX_9E154D3259590C39:
+            columns:
+                - estudiante_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+        evento:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    manyToOne:
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
