@@ -1200,4 +1200,60 @@ class MaestroInscripcion
     {
         return $this->recintoPenitenciarioTipo;
     }
+    /**
+     * @var \DateTime
+     */
+    private $asignacionFechaInicio;
+
+    /**
+     * @var \DateTime
+     */
+    private $asignacionFechaFin;
+
+
+    /**
+     * Set asignacionFechaInicio
+     *
+     * @param \DateTime $asignacionFechaInicio
+     * @return MaestroInscripcion
+     */
+    public function setAsignacionFechaInicio($asignacionFechaInicio)
+    {
+        $this->asignacionFechaInicio = $asignacionFechaInicio;
+    
+        return $this;
+    }
+
+    /**
+     * Get asignacionFechaInicio
+     *
+     * @return \DateTime 
+     */
+    public function getAsignacionFechaInicio()
+    {
+        return $this->asignacionFechaInicio;
+    }
+
+    /**
+     * Set asignacionFechaFin
+     *
+     * @param \DateTime $asignacionFechaFin
+     * @return MaestroInscripcion
+     */
+    public function setAsignacionFechaFin($asignacionFechaFin)
+    {
+        $this->asignacionFechaFin = $asignacionFechaFin;
+    
+        return $this;
+    }
+
+    /**
+     * Get asignacionFechaFin
+     *
+     * @return \DateTime 
+     */
+    public function getAsignacionFechaFin()
+    {
+        return $this->asignacionFechaFin;
+    }
 }
