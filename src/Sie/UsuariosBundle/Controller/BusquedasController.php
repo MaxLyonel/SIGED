@@ -446,7 +446,7 @@ class BusquedasController extends Controller
                     ON usuario.persona_id = persona.id  
             WHERE    
               (usuario.id = '".$usuarioid."') and              
-              (maestro_inscripcion.gestion_tipo_id = '2018') and
+              (maestro_inscripcion.gestion_tipo_id = '2020') and
               (maestro_inscripcion.es_vigente_administrativo = true) and
               ((cargo_tipo.id = '1') or (cargo_tipo.id = '12'))
             GROUP BY
@@ -461,6 +461,7 @@ class BusquedasController extends Controller
         $params = array();
         $stmt->execute($params);        
         $po = $stmt->fetchAll();
+
         //dump(count($po)); die;
         if (count($po) == 0) {//ERROR
             $sesion->set('ie_activo','0');

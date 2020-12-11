@@ -237,19 +237,19 @@
                                             <div href="form-element.html#" class="media">
                                                 <div class="media-object pull-left"><i class="fa fa-male"></i></div>
                                                 <div class="media-body">
-                                                    <span class="media-text">
+                                                    {# <span class="media-text">
                                                         Se habilita la opción Historial del Centro en el menú Gestión en el Sistema de Educación Alternativa, para que los CEAs puedan realizar el registro de la información del periodo actual o la regularización de alguna gestión pasada.
                                                     </span>
-                                                    <span class="media-meta">05/09/2018</span>
+                                                    <span class="media-meta">05/09/2018</span> #}
                                                 </div>
                                             </div>
                                             <div href="form-element.html#" class="media">
                                                 <div class="media-object pull-left"><i class="fa fa-male"></i></div>
                                                 <div class="media-body">
-                                                    <span class="media-text">
+                                                    {# <span class="media-text">
                                                         El Equipo de Información Educativa comunica que, por razones de mantenimiento, el módulo para inscripciones automáticas se encuentra deshabilitado. Sin embargo, la inscripción individual por RUDE se encuentra habilitada para continuar el trabajo correspondiente al operativo de insripciones.
                                                     </span>
-                                                    <span class="media-meta">23/08/2018</span>
+                                                    <span class="media-meta">23/08/2018</span> #}
                                                 </div>
                                             </div>
                                             {#{% if notification is defined  %}
@@ -513,6 +513,7 @@
                                         <span class="arrow"></span>
                                     </a>
                                     <ul>
+                                        {% if ( app.session.get('userName')== 4926577 or app.session.get('roluser') == 8) %}
                                         <li><a href="{{path('alternativa_operativo_home')}}">Habilitar Operativo</a></li> 
                                         <li><a href="{{path('alternativa_operativo_gestion_pasada')}}">Habilitar Operativo Gestión Pasada</a></li> 
                                         <li><a href="{{path('alternativa_operativo_ampliar')}}">Ampliar Operativo</a></li> 
@@ -520,6 +521,7 @@
                                         <li><a href="{{path('alternativa_operativo_nuevo_reapertura')}}">Habilitar Operativo CEAS Nuevos</a></li> 
                                         <li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                         <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>
+                                        {% endif %}
                                     </ul>
                                 </li>
 
@@ -533,6 +535,7 @@
                                 <li><a href="{{path('estudiante_index')}}">Búsqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('history_new_inscription_index')}}">Historial de Inscripción</a></li>
                                 <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>
+                                <li><a href="{{ path('printRecordCard_index')}}">Impresión de Libretas</a></li>
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                 <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
                                 {% if (app.session.get('ie_id') != -1) %}
@@ -546,7 +549,7 @@
 
                             </ul>
                         </li>
-                        {# <li class="submenu">
+                        <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -556,9 +559,9 @@
                                 <li><a href="{{ path('bach_exc_alt_rst')}}">Restablecer registros</a></li>
                                 <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
                             </ul>
-                        </li> #}
+                        </li>
                     {% endif %}
-                    {% if (app.session.get('roluser') == 20) %} {#NACIONAL INVITADO#}
+                    {% if (app.session.get('roluser') == 20 or app.session.get('roluser') == 32) %} {#NACIONAL INVITADO#}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -608,6 +611,7 @@
                                 <li><a href="{{path('estudiante_index')}}">Búsqueda de Estudiante/Participante</a></li>
                                 <li><a href="{{path('history_new_inscription_index')}}">Historial de Inscripción</a></li>
                                 <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>
+                                <li><a href="{{ path('printRecordCard_index')}}">Impresión de Libretas</a></li>
 
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>
                                 <li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
@@ -625,7 +629,7 @@
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
                             </ul>
                         </li>
-                        {# <li class="submenu">
+                        <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -635,7 +639,7 @@
                                 <li><a href="{{ path('bach_exc_alt_rst')}}">Restablecer registros</a></li>
                                 <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
                             </ul>
-                        </li> #}
+                        </li>
                     {% endif %}
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
@@ -669,6 +673,7 @@
                                 <li><a href="{{path('estudiante_index')}}">Búsqueda de Estudiante/Participante </a></li>
                                 <li><a href="{{path('history_new_inscription_index')}}">Historial de Inscripción</a></li>
                                 <li><a href="{{ path('modificar_ci_localidad_index')}}">Incorporar Datos</a></li>
+                                
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_panel_operativos')}}">Panel de control de operativos</a></li>#}
                                 {#<li><a href="{{path('sie_alt_ges_sub_sem_ceas_pendinte')}}">Lista de CEAS Pendientes </a></li>#}
 
@@ -701,7 +706,7 @@
                                 <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                             </ul>
                         </li>
-                        {# <li class="submenu">
+                        <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
                                 <span class="text">Bachiller de Excelencia</span>
@@ -714,7 +719,7 @@
                                 <li><a href="{{ path('bach_exc_alt_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
 
                             </ul>
-                        </li> #}
+                        </li>
                     {% endif %}
                     {% if app.session.get('roluser') == 2 %}{#MAESTRO#}
                         <li class="submenu">

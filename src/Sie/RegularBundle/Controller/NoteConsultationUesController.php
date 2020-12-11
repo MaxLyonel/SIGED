@@ -120,6 +120,7 @@ class NoteConsultationUesController extends Controller {
                         // $inconsistenciaReviewQa = $query->fetchAll();  
 
                         //  valiation IG off
+                      if($gestion == $this->session->get('currentyear') ) {
                         //first validations calidad
                         /***********************************\
                         * *
@@ -184,7 +185,8 @@ class NoteConsultationUesController extends Controller {
                           $exist = false;
                         }
 
-                      }                    
+                      }
+                    }
 
               }else{
                 $message = 'Unidad Educativa no cuenta con información de consolidación';

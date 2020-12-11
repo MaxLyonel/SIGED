@@ -11,7 +11,7 @@
             <i class="fa fa-home"></i>
             <a href="{{path('tramite_homepage')}}">Perfil</a>
             <i class="fa fa-angle-right"></i>
-            <a >Trámite detalle</a>
+            <a >Detalle</a>
         </li>
     </ol>
 {% endblock %}
@@ -39,7 +39,7 @@
                             </div>
                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                 <div class="text-right">
-                                    <h3 class="mt-0 text-info"><strong>Trámite Nro.: </strong> {{listaDocumento.tramite}}</h3>
+                                    <h3 class="mt-0 text-info"><strong>Nro.: </strong> {{listaDocumento.tramite}}</h3>
                                     {% if listaDocumento.serie is not null and listaDocumento.serie != "" %}<h3 class="mt-0 text-primary"><strong>N° SERIE:</strong> {{listaDocumento.serie}}</h3>{% endif %}
                                     <address>
                                         {% if listaDocumento.documentoTipo is not null and listaDocumento.documentoTipo != "" %}<strong>Tipo documento: </strong>  {{listaDocumento.documentoTipo}}{% endif %}<br>
@@ -54,8 +54,17 @@
                                                     <input type="hidden" name="serie" value="{{ arrayForm.serie }}">
                                                     <input type="hidden" name="obs" value="{{ arrayForm.obs }}">
                                                     <input type="hidden" name="_token" value="{{ csrf_token(listaDocumento.tramite) }}">
-                                                    <button type="submit" class="btn btn-success" data-original-title="Reactivar Trámite" onclick="this.style.visibility='hidden';"><strong>Reactivar Trámite</strong></button>
+                                                    <button type="submit" class="btn btn-success" data-original-title="Reactivar" onclick="this.style.visibility='hidden';"><strong>Reactivar</strong></button>
                                                 </form>
+                                            {% endif %}
+                                        {% endif %}
+
+                                        {% if msgReactivaDocumento is defined  %}
+                                            {% if msgReactivaDocumento == ""  %}
+                                                {% if formBusqueda is defined  %}
+                                                    {{form_start(formBusqueda, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                                                    {{form_end(formBusqueda)}}
+                                                {% endif %}
                                             {% endif %}
                                         {% endif %}
                                     </p>
@@ -79,7 +88,7 @@
                                     <div class="timeline-item alt">
                                         <div class="text-right">
                                             <div class="time-show first">
-                                                <a class="btn btn-teal"><strong>Inicio del trámite</strong></a>
+                                                <a class="btn btn-teal"><strong>Inicio</strong></a>
                                             </div>
                                         </div>
                                     </div>
@@ -107,7 +116,7 @@
                                         {% set anterior_flujo_proceso_id = detalle.anterior_flujo_proceso_id %}
                                         {% set siguienteProceso = detalle.siguiente_proceso %}
                                         {% if siguienteProceso == "" %}
-                                            {% set siguienteProceso = "Fin del trámite" %}
+                                            {% set siguienteProceso = "Fin" %}
                                         {% endif %}
 
                                         {% if c == 1 %}
@@ -135,7 +144,7 @@
                                             <div class="timeline-desk">
                                                 <div class="panel panel-{{color}} shadow">
                                                     <div class="panel-heading">
-                                                        <div class="panel-title">{% if anterior_estado_id == 4 %}Devuelto a los trámites con {% endif %}{{ proceso }}</div>
+                                                        <div class="panel-title">{% if anterior_estado_id == 4 %}Devuelto con {% endif %}{{ proceso }}</div>
                                                         <span class="arrow{% if loop.index % 2 == 0 %}-alt{% endif %}"></span>
                                                         <span class="timeline-icon bg-{{color}}"><i class="fa {{ icon }}"></i></span>
                                                     </div>
@@ -153,7 +162,7 @@
                                         <div class="timeline-item alt">
                                             <div class="text-right">
                                                 <div class="time-show">
-                                                    <a href="#" class="btn btn-teal"><strong>Trámite concluido</strong></a>
+                                                    <a href="#" class="btn btn-teal"><strong>Concluido</strong></a>
                                                 </div>
                                             </div>
                                         </div>

@@ -110,7 +110,7 @@ class Segip {
 
         $parametros = array();
         foreach ($opcional as $key => $value) {
-            if($value && $key != 'entorno' && $key != '_token' && $key != 'carnet'){
+            if(($key != 'entorno' && $key != '_token' && $key != 'carnet') && ($value != '')){
                 $parametros[$key] = $value;
             }
             

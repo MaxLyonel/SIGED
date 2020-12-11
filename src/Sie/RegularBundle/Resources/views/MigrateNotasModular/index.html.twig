@@ -1,0 +1,503 @@
+
+{% extends 'layoutRegular.html.twig' %}
+
+{% block contentoption %}
+<style type="text/css">
+.validation{ 
+  background: #12c593 !important;
+  padding: 10px !important;
+  border-radius: 0 !important;
+  position: relative; 
+  display: inline-block !important;
+  box-shadow: 1px 1px 1px #aaaaaa;
+  margin-top: 10px;
+}
+.newRude{ 
+  background: #20e5fb !important;
+  padding: 10px !important;
+  border-radius: 0 !important;
+  position: relative; 
+  display: inline-block !important;
+  box-shadow: 1px 1px 1px #aaaaaa;
+  margin-top: 10px;
+}
+.custom-date{
+	background: #FFF !important;
+}
+</style>
+	<style>
+		/*body{
+			background: #EEEEEE;
+			margin: 0;
+			padding: 0;
+		}*/
+		[v-cloak]{
+			display: none;
+		}
+		.jupper{
+			text-transform: uppercase;
+		}
+		.titulo{
+			margin-bottom: 15px;
+		}
+		.caja{
+			background: #FFFFFF;
+			padding: 10px;
+			/*width: 500px;*/
+			margin-top: 50px;
+			/*margin-left: auto;*/
+			/*margin-right: auto;*/
+		}
+		.caja h2{
+			text-align: center;
+		}
+		.tab-pane{
+			padding-top: 10px;
+		}
+		.secundario{
+			color:#CCCCCC;
+			font-style: italic;
+			font-size: 0.8em;
+		}
+		.respuesta p{
+			margin-bottom: 10px;
+		}
+		.respuesta h3{
+			text-align: center;
+			margin-bottom: 15px;
+		}
+		.respuesta .botones{
+			text-align: center;
+		}
+		.cortina{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background: #CCCCCC;
+			opacity: 0.6;
+			z-index: 100;
+			text-align: center;
+			font-size: 1.5em;
+			padding-top: 200px;
+		}
+		.form-control .popover {
+  			width:600px;
+  			height:250px;
+		}
+
+		.popover {
+		  	/*max-width: 700px;*/
+		  	width: 600px;
+		  	background: #EFF7FF;
+		  	color: #11BCFB;
+		}
+		.subtitulo{
+			font-size: 1.2em;
+		}
+	</style>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Migración Unidad Educativa Modular
+                    <small></small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar</a></li>
+
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>    
+
+
+    <!-- /.row -->
+	<div id="app" v-cloak>
+		<div v-if="cortina" class="cortina">
+			{# <i class="fa fa-refresh fa-spin"></i> Procesando... #}
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 col-xs-12 col-lg-10 caja">
+					
+					<div v-show="!validado" class="contenido">
+						
+						<div class="row">
+							<div class="col-md-12">
+								<div role="tabpanel">
+									<!-- Nav tabs -->
+									<ul class="nav nav-tabs" role="tablist">
+										<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
+											<a role="tab" data-toggle="tab">Migración Notas Modular</a>
+										</li>
+										{#
+										<li :class="{active: opcion == 2}" @click="opcion = 2">
+											<a aria-controls="tabcarnet" role="tab" data-toggle="tab">Código SIE</a>
+										</li>
+										#}
+									</ul>
+									<!-- Tab panes -->
+									<div class="tab-content">
+										<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+											<div class="row">								
+
+												<div class="col-md-12">
+													<div class="table-responsive">
+													<table class="table table">
+														<tr >
+															<td>
+																<label>Código SIE <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="Registre el código SIE de la Unidad Educativa Modular" data-trigger="hover"></i> </label>
+																<input type="text" v-model="estudiante.codigoSie" class="form-control jupper" maxlength="18" v-on:keypress="alfanumerico">
+															</td>
+														</tr>
+													</table>					
+													</div>							
+												</div>
+												<div class="form-group col-md-12">
+
+												</div>												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<br>
+
+						
+
+						<div class="col-md-12 text-center">
+							<button type="button" class="btn btn-success" @click="consultar">Buscar y Migrar</button>
+						</div>
+					</div>
+					<div v-if="validado" class="respuesta">
+
+						<div v-if="opcion == 1" class="alert" :class="[{'alert-success':datos.statusEstudiante == 'success'}, {'alert-warning':datos.statusEstudiante == 'warning'}]">
+							
+
+							<p> 
+                                <div class="alert alert-success" role="alert">
+                                    Migración correcta...
+                                </div>							
+							</p>
+														
+						</div>
+
+						<div v-if="opcion == 2" class="alert" :class="[{'alert-success':datos.statusEstudiante == 'success'}, {'alert-warning':datos.statusEstudiante == 'warning'}]">
+							Información de la Unidad Educativa:
+							<div class="table-responsive">
+							<table class="table">
+							<thead>
+								<tr>
+								<th scope="col">Cod. SIE</th>
+								<th scope="col">institucioneducativa</th>
+
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+								<td>${estudiante.institucioneducativaId}</td>
+								<td>${estudiante.nameue}</td>
+
+								</tr>
+							</tbody>
+							</table>
+							</div>
+							<p> 
+                                <div class="alert alert-success" role="alert">
+                                    Proceso realizado correctamente...
+                                </div>							
+							</p>
+														
+						</div>                        
+						
+						<div>
+
+				
+						</div>
+
+						<div class="botones" v-if='!showFormReclamo'>
+							<button type="button" @click="cerrar" class="btn btn-default">Volver </button>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript">
+		// $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+	</script>
+	
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+      <script src="{{asset('js/inputmask.js')}}"></script>
+    <script type="text/javascript">
+
+    		$(function () {
+			
+		})
+
+		var app = new Vue({
+		    delimiters: ['${', '}'],
+		    el: '#app',
+		    data: {
+		    	state: {isSending: false},
+		    	errores: [],
+		    	opcion: 1,
+		    	niveles: [],
+		    	grados: [],
+		    	gradosDisponibles: [],
+                urlreport: '',
+                showbuttonPDF: '',
+		    	apoderado: {
+		    		carnet: '',
+		    		complemento: ''
+		    	},
+		    	estudiante: {
+		    		/*codigoRude: '4073040820205783 809700692017061 718500012020019',*/
+                    codigoSie: '',
+					codigoRudeId: '',
+
+		    		
+		    	},
+				dataClaim: {persona:{swchangeTutor:false,paterno:'',materno:'',nombre:''}, student:{}} ,
+				DBTiposReclamos: {},
+				DBObservationsStudent: {},
+				DBTutorInfo: {},
+		    	validado: false,
+		    	cortina: false,
+				showFormReclamo:false,
+		    	datos: [],
+                DBUrlReport: {},
+		    	
+		    },
+		    mounted(){
+
+		    },
+		    methods: {
+		    	actualizarGrados(){
+		    		if (this.estudiante.nivel == 11) {
+		    			this.estudiante.grado = '1';
+		    			this.gradosDisponibles = [];
+		    			console.log(this.grados);
+		    			let me = this;
+		    			$.each(this.grados, function(index, val) {
+		    				console.log(val);
+		    				if (val.id == 1 || val.id == 2) {
+		    				 	me.gradosDisponibles.push(me.grados[index]);
+		    				}
+		    			});
+		    		}else{
+		    			this.gradosDisponibles = this.grados;
+		    		}
+		    	},
+
+		    	consultar(){
+		    		this.errores = [];
+		    		this.state.isSending = false;
+                    this.urlreport ='';
+                    this.showbuttonPDF ='';
+		    		if (this.opcion == 1) {
+						if (this.estudiante.codigoSie == '') {
+		    				this.errores.push('Código SIE');
+		    			}
+		    		}
+		    			    	
+		    		if (this.errores.length > 0) {
+			    		let texto = '<div class="errores">';
+			    		$.each(this.errores, function (i, value) {
+	                        texto = texto + '<li>' + value + '</li>';
+	                    });
+	                    texto = texto + '</div>';
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:texto,
+		    		  		type:'warning'
+		    			});
+		    			return false;
+		    		}
+
+
+                	Swal.fire({
+                        title: 'Proceso de Migración Notas Modulares',
+                        text: "esta seguro de CONTINUAR con el proceso",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	if (result.value) { 
+
+		    		this.datos = [];
+		    		this.validado = false;
+		    		this.cortina = true;
+	    			Swal.fire({
+	    		  		title:'Procesando',
+	    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-search fa-spin"></i> Espere un momento</div> ',
+	    		  		type:'info',
+	    		  		showConfirmButton: false,
+	    			});
+
+					
+						axios.post(Routing.generate('migrateNotasModular_buscar', { estudiante: this.estudiante, opcion: this.opcion}))
+							.then(response => {
+								if (response.data.status === 'error') {
+									Swal.fire(
+										'Aviso',
+										response.data.msg,
+										'info'
+									)
+								}
+                                   
+								if (response.data.status == 'success') {
+
+                                     
+									Swal.close();
+									
+									this.datos = response.data.datos;
+                                    
+									this.opcion = response.data.datos.opcion;                                
+                                    
+                                    this.estudiante.institucioneducativaId = this.datos.arrUnidadEducativa.codigoSie;
+                                    this.estudiante.nameue = this.datos.arrUnidadEducativa.nombre;
+                                    									
+									this.validado = true;
+								}
+								this.cortina = false;
+							})
+							.catch(e => {
+								Swal.fire(
+									'Aviso',
+									'No se pudo realizar la verficación',
+									'error'
+								)
+								this.cortina = false;
+							});
+					 }
+	                })
+		    	},
+				validEmail(email){
+					var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+					return re.test(email);
+				},			
+		
+		    	cerrar(){
+		    		this.validado = false;
+		    		this.opcion = 1;
+		    		this.apoderado.carnet = '';
+		    		this.apoderado.complemento = '';
+		    		this.estudiante.codigoRude = '';
+		    		this.estudiante.carnet = '';
+		    		this.estudiante.complemento = '';
+		    		this.estudiante.nombre = '';
+		    		this.estudiante.paterno = '';
+		    		this.estudiante.materno = '';
+		    		this.estudiante.fechaNacimiento = '';
+		    		this.estudiante.nivel = '';
+		    		this.estudiante.grado = '';
+					this.estudiante.codigoSie = '';
+					this.estudiante.nameue = '';
+                    this.urlreport ='';
+                    this.showbuttonPDF ='';
+                    this.DBUrlReport = '';
+					this.tri1= false;
+					this.tri2= false;
+					this.tri3= false;
+					this.prom= false;
+					this.bth=  false;					
+		    	},
+		    	validarFormatoFecha(campo) {
+	    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+	    	        if ((campo.match(RegExPattern)) && (campo!='')) {
+	    	            return true;
+	    	        } else {
+	    	            return false;
+	    	        }
+		    	},
+		    	numerico: function(event){
+		    	    var k = event.charCode || event.keyCode;
+		    	    if ((k < 48 || k > 57) //NUmeros
+		    	        && (k != 13) //ENTER
+		    	        && (k != 8) //retroceso
+		    	        && (k != 9) //tab
+		    	    ){
+		    	        event.preventDefault();
+		    	        return false;
+		    	    }
+		    	},
+		    	alfabetico: function(event){
+	                var k = event.charCode || event.keyCode;
+	                if ((k < 97 || k > 122)//letras minusculas
+	                    && (k < 65 || k > 90) //letras mayusculas
+	                    && (k != 13) //ENTER
+	                    && (k != 8) //retroceso
+	                    && (k != 9) //tab
+	                    && (k != 241) //ñ
+	                     && (k != 209) //Ñ
+	                     && (k != 32) //espacio
+	                     && (k != 225) //á
+	                     && (k != 233) //é
+	                     && (k != 237) //í
+	                     && (k != 243) //ó
+	                     && (k != 250) //ú
+	                     && (k != 193) //Á
+	                     && (k != 201) //É
+	                     && (k != 205) //Í
+	                     && (k != 211) //Ó
+	                     && (k != 218) //Ú
+	                     && (k != 44) //coma ,
+	                     && (k != 46) //punto .
+	                ){
+	                	event.preventDefault();
+	                	return false;
+	                }
+	            },
+		    	alfanumerico: function(event){
+	                var k = event.charCode || event.keyCode;
+	                if ((k < 97 || k > 122)//letras minusculas
+	                    && (k < 65 || k > 90) //letras mayusculas
+	                    && (k < 48 || k > 57) //NUmeros
+	                    && (k != 13) //ENTER
+	                    && (k != 8) //retroceso
+	                    && (k != 9) //tab
+	                    && (k != 241) //ñ
+	                     && (k != 209) //Ñ
+	                     && (k != 32) //espacio
+	                     && (k != 225) //á
+	                     && (k != 233) //é
+	                     && (k != 237) //í
+	                     && (k != 243) //ó
+	                     && (k != 250) //ú
+	                     && (k != 193) //Á
+	                     && (k != 201) //É
+	                     && (k != 205) //Í
+	                     && (k != 211) //Ó
+	                     && (k != 218) //Ú
+	                     && (k != 44) //coma ,
+	                     && (k != 46) //punto .
+	                ){
+	                	event.preventDefault();
+	                	return false;
+	                }
+	            },
+		    }
+		});
+
+
+
+
+
+
+    </script>
+{%endblock%}

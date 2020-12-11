@@ -1109,6 +1109,7 @@ class AreasController extends Controller {
      * Asignar maestro al area
      */
     public function maestrosAction(Request $request){
+        
         $ieco = $request->get('idco');
 
         $em = $this->getDoctrine()->getManager();
@@ -1130,7 +1131,8 @@ class AreasController extends Controller {
         $gestion = $curso[0]['gestion'];
 
         $arrayMaestros = array();
-        if($gestion <= 2012 or ($gestion == 2013 and $grado > 1 and $nivel != 11) or ($gestion == 2013 and $grado == (1 or 2 ) and $nivel == 11) ){
+
+        if($gestion <= 2012 or ($gestion == 2013 and $grado > 1 and $nivel != 11) or ($gestion == 2013 and $grado == (1 or 2 ) and $nivel == 11) or $gestion == 2020 ){
             // trimestrales
             $inicio = 6;
             $fin = 8;

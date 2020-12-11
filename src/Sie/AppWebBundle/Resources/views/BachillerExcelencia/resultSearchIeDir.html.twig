@@ -39,7 +39,7 @@
     <div class="row">
         <!-- Institución Educativa -->
         <!-- Director/a -->
-        <div class="col-lg-6 col-lg-offset-3">
+        <div class="col-lg-8 col-lg-offset-2">
                 <div class="col-xs-12 col-lg-12">
                     <div class="panel panel-icon panel-primary">
                         <div class="panel-heading">
@@ -92,7 +92,7 @@
                                 {{ form_widget(form_dir.carnet, { 'attr': {'class': 'form-control', 'value': entity.carnet, 'style': 'text-transform:uppercase' }  }) }}
                                 <div class="help-block with-errors">{{ form_errors(form_dir.carnet) }}</div>
                             </div>
-
+                            <div class="col-sm-4 text-info">Si el carnet corresponde a un extranjero, se debe omitir la cadena "E-" y se debe ingresar todos los ceros "0".</div>
                         </div>
                         <div class="form-group">
                             <label for="sie_appwebbundle_maestrocuentabancaria_complemento" class="col-sm-4 control-label">{{ form_label(form_dir.complemento) }}</label>
@@ -101,6 +101,22 @@
                                 <div class="help-block with-errors">{{ form_errors(form_dir.complemento) }}</div>
                             </div>
                             <div class="col-sm-6 text-info">El "complemento" NO se refiere al "lugar de expedición del C.I."</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_expedido" class="col-sm-4 control-label">{{ form_label(form_dir.expedido) }}</label>
+                            <div class="col-sm-4">
+                                {{ form_widget(form_dir.expedido, { 'attr': {'class': 'form-control' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.expedido) }}</div>
+                            </div>
+                            <div class="col-sm-4 text-warning">Debe verificar esta información para no presentar observaciones al momento del cobro.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_nacionalidad" class="col-sm-4 control-label">{{ form_label(form_dir.nacionalidad) }}</label>
+                            <div class="col-sm-4">
+                                {{ form_widget(form_dir.nacionalidad, { 'attr': {'class': 'form-control' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.nacionalidad) }}</div>
+                            </div>
+                            <div class="col-sm-4 text-warning">Debe verificar esta información para no presentar observaciones al momento del cobro.</div>
                         </div>
                         <div class="form-group">
                             <label for="sie_appwebbundle_maestrocuentabancaria_paterno" class="col-sm-4 control-label">{{ form_label(form_dir.paterno) }}</label>
@@ -125,12 +141,20 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label for="sie_appwebbundle_maestrocuentabancaria_enlazador" class="col-sm-4 control-label">{{ form_label(form_dir.enlazador) }}</label>
+                            <div class="col-sm-4">
+                                {{ form_widget(form_dir.enlazador, { 'attr': {'class': 'form-control' }  }) }}
+                                <div class="help-block with-errors">{{ form_errors(form_dir.enlazador) }}</div>
+                            </div>
+                            <div class="col-sm-4 text-warning">Debe verificar esta información para no presentar observaciones al momento del cobro.</div>
+                        </div>
+                        <div class="form-group">
                             <label for="sie_appwebbundle_maestrocuentabancaria_apellidoEsposo" class="col-sm-4 control-label">{{ form_label(form_dir.apellidoEsposo) }}</label>
                             <div class="col-sm-4">
                                 {{ form_widget(form_dir.apellidoEsposo, { 'attr': {'class': 'form-control jletters', 'value': '', 'style': 'text-transform:uppercase' }  }) }}
                                 <div class="help-block with-errors">{{ form_errors(form_dir.apellidoEsposo) }}</div>
                             </div>
-                            <div class="col-sm-4 text-info">Llenar en caso de que tenga el enlazador en su Cédula sea "Vda." o "de".</div>
+                            <div class="col-sm-4 text-info">Llenar en caso de que tenga el enlazador en su Cédula: "De" o "Vda. de".</div>
                         </div>
                         <div class="form-group">
                             <div id='sandbox-container'>
@@ -145,17 +169,20 @@
                         </div>
                         <div class="form-group">
                             <label for="sie_appwebbundle_maestrocuentabancaria_entidadfinancieraTipo" class="col-sm-4 control-label">{{ form_label(form_dir.entidadfinancieraTipo) }}</label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 {{ form_widget(form_dir.entidadfinancieraTipo, { 'attr': {'class': 'form-control' }  }) }}
                                 <div class="help-block with-errors">{{ form_errors(form_dir.entidadfinancieraTipo) }}</div>
                             </div>
+                            <div class="col-sm-4 text-warning">* <span class="text-danger">COBRO EN CAJA:</span> Deberá retirar el monto correspondiente en cualquier <span class="text-danger">agencia</span> del BANCO UNIÓN a nivel nacional.<br />
+                            * <span class="text-danger">ABONO EN CUENTA:</span> Deberá retirar el monto correspondiente en cualquier <span class="text-danger">cajero</span> del BANCO UNIÓN a nivel nacional.</div>
                         </div>
                         <div class="form-group">
                             <label for="sie_appwebbundle_maestrocuentabancaria_cuentabancaria" class="col-sm-4 control-label">{{ form_label(form_dir.cuentabancaria) }}</label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 {{ form_widget(form_dir.cuentabancaria, { 'attr': {'class': 'form-control jnumbers', 'style': 'text-transform:uppercase', 'placeholder': 'Ingrese los 14 dígitos de su cuenta Banco Unión' }  }) }}
                                 <div class="help-block with-errors">{{ form_errors(form_dir.cuentabancaria) }}</div>
                             </div>
+                            <div class="col-sm-4 text-warning">Debe verificar esta información para no presentar observaciones al momento del cobro.</div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-6 col-sm-offset-4">
@@ -194,16 +221,16 @@
         function guardarDirector() {
             var ent = $("#sie_appwebbundle_maestrocuentabancaria_entidadfinancieraTipo").val();
             if (ent == 1) {
-                ent = 'SIN DATO';
+                ent = 'COBRO EN CAJA (BANCO UNIÓN)';
             } else {
-                ent = 'BANCO UNIÓN';
+                ent = 'ABONO EN CUENTA (BANCO UNIÓN)';
             }
             var msj = '\n- Carnet de Identidad: ' + $("#sie_appwebbundle_maestrocuentabancaria_carnet").val();
             msj += '\n- Complemento: ' + $("#sie_appwebbundle_maestrocuentabancaria_complemento").val();
             msj += '\n- Apellido Paterno: ' + $("#sie_appwebbundle_maestrocuentabancaria_paterno").val();
             msj += '\n- Apellido Materno: ' + $("#sie_appwebbundle_maestrocuentabancaria_materno").val();
             msj += '\n- Nombre(s): ' + $("#sie_appwebbundle_maestrocuentabancaria_nombre").val();
-            msj += '\n- Entidad Financiera: ' + ent;
+            msj += '\n- Modalidad de cobro: ' + ent;
             msj += '\n- Nro. Cta. Bancaria: ' + $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").val();
             msj += '\n\nTenga en cuenta que no podrá realizar cambios posteriores. Verifique la información introducida.';
             msj += '\n\nNota.- Para confirmar los datos ingresados presione sobre el botón "Aceptar", para corregir la información introducida presione sobre el botón "Cancelar".';
@@ -269,5 +296,22 @@
                 $("#sie_appwebbundle_maestrocuentabancaria_cuentabancaria").attr('readonly', true);
             }
         });
+
+        $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").val('');
+        $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").attr('readonly', true);
+
+        $('#sie_appwebbundle_maestrocuentabancaria_enlazador').on('change', function () {
+            if ($(this).val() != 0) {
+                $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").focus();
+                $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").val('');
+                $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").attr('readonly', false);
+            }
+            else {
+                $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").focus();
+                $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").val('');
+                $("#sie_appwebbundle_maestrocuentabancaria_apellidoEsposo").attr('readonly', true);
+            }
+        });
+
     </script>
 {% endblock %}

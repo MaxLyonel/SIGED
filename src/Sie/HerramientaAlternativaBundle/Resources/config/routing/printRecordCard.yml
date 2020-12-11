@@ -1,0 +1,21 @@
+printRecordCard_index:
+    path:     /
+    defaults: { _controller: SieHerramientaAlternativaBundle:PrintRecordCard:index }
+
+printRecordCard_cargar:
+    path:     /cargar
+    defaults: { _controller: SieHerramientaAlternativaBundle:PrintRecordCard:cargar }
+    options:
+         expose: true
+
+printRecordCard_buscar:
+    path:     /buscar
+    defaults: { _controller: SieHerramientaAlternativaBundle:PrintRecordCard:buscar }
+    options:
+         expose: true
+
+printRecordCard_registryClaim:
+    path:     /registryClaim
+    defaults: { _controller: SieHerramientaAlternativaBundle:PrintRecordCard:registryClaim }
+    options:
+         expose: true         

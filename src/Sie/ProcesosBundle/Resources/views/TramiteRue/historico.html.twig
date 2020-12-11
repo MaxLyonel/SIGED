@@ -1331,6 +1331,11 @@
                                                                             <td>
                                                                                 <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal_aperturah" data-placement="top" title="Ver datos de la Nueva Unidad Educativa" ><i class="glyphicon glyphicon-plus"></i>Ver datos de la Unidad Educativa</button>
                                                                             </td>
+
+                                                                        {% elseif t.id == 55 %}{# actualizacion #}
+                                                                            <td>Número: {{d.datos.institucioneducativa.nro_resolucion}}</br>Fecha: {{d.datos.institucioneducativa.fecha_resolucion}}</td>
+                                                                            <td>
+                                                                            </td>
                                                                         {% endif %}
                                                                         <td>
                                                                             <button type="button" class="btn btn-xs btn-success" data-toggle="modal" data-target="#modal_{{t.id}}h" data-placement="top" title="Ver Requisitos"><i class="glyphicon glyphicon-plus"></i></button>

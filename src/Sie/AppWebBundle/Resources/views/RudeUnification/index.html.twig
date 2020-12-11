@@ -1,6 +1,13 @@
 {% extends 'layoutRegular.html.twig' %}
 {% block stylesheets %}
     {{parent()}}
+    <style>
+
+        [v-cloak]{
+            display: none;
+        }
+     
+    </style>    
 
 {% endblock %}
 {% block contentoption %}
@@ -20,15 +27,17 @@
     </div>
 
     <!-- /.row -->
-<div id="app">
-<div v-cloak>
+<div id="app" v-cloak>
+<div >
 
-	<div class="body-content animated fadeIn">
+    <div class="body-content animated fadeIn">
 
         <div class="row">
             <div class="col-xs-12 col-lg-12">
                 <div class="panel panel-icon panel-default">
                     <div class="panel-heading">
+
+
                         <i class="fa fa-search"></i>
 
                         <div v-if="responseObject.messageqa != ''" class="alert alert-warning" role="alert" >
@@ -39,6 +48,9 @@
                         <div class="pull-right"></div>  
                         </br>                                      
                         </br>
+                        <div class="alert alert-warning" role="alert">
+                         Después de Unificar se recomienda hacer la verificación y/o ratificación del Apoderado.
+                      </div>
                             <form>
                                 <div class="form-row">
                                     <div class="form-group col-md-6">
@@ -81,7 +93,7 @@
             
         </div>
         {# response start #}
-        <div class="row" v-if="swresponse && !message" >
+        <div class="row"  >
           <div v-if="swhistory" >
            <div class="table-responsive">
               <table class="table" border="0">
@@ -429,10 +441,13 @@
 
                     
                   </tr>
-                  <tr>
+                  <tr style="background-color: #EDEC97;" v-for="obsMessage in arrMessage"  ><td colspan="2" > ${obsMessage} </td> </tr>                  
+                  <!-- v-if="swresponse && message!=''" -->
+                  <tr >
                     <td> <button type="button" class="btn btn-success" v-on:click="selectTheCorrectRude(studenta.codigoRude, studentb.codigoRude, responseObject.unificationIniPri, responseObject.unificationIniPriCase2)" >RUDE CORRECTO -> ${studenta.codigoRude} </button> </td>
                     <td> <button type="button" class="btn btn-success" v-on:click="selectTheCorrectRude(studentb.codigoRude,studenta.codigoRude, responseObject.unificationIniPri, responseObject.unificationIniPriCase2)">RUDE CORRECTO -> ${studentb.codigoRude}</button> </td>
                   </tr>
+
                 </tbody>
               </table>
             </div> 
@@ -774,24 +789,23 @@
           </div>
         </div>
 
-        <div class="row" v-if="swDoneUnification" >
+        <div class="row"  >
           <div class="col-md-12" >
-            ${messageDoneUnification}
+            <div v-if="swDoneUnification" class="alert alert-success" role="alert">
+              ${messageDoneUnification}
+            </div>
+            <div v-if="!swDoneUnification && messageDoneUnification!= '' " class="alert alert-warning" role="alert">
+              ${messageDoneUnification}
+            </div>
+            
           </div>        
         </div>
 
-
-
        
         {# response end #}
-       
-        
-
-        
 
 
-
-	</div>
+    </div>
 </div>
 </div>
 
@@ -799,9 +813,9 @@
 {% block javascripts%}
     {{parent()}}
     <script type="text/javascript">
-		// $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
-	</script>
-	
+        // $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+    </script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
@@ -811,23 +825,26 @@
 // $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
     
     Vue.filter('uppercase', function (value) {
-    	if (typeof value === "undefined") 
-	 		return '';
-	       	else
-			return value.toUpperCase()
-	     })
+        if (typeof value === "undefined") 
+            return '';
+            else
+            return value.toUpperCase()
+         })
 
         var app = new Vue({
             delimiters: ['${', '}'],
             el: '#app',
             data: {
 
-		        responseObject: {
+                responseObject: {
               rudea:'{{rudeStudent.rudea}}',
               rudeb:'{{rudeStudent.rudeb}}',
               messageqa:'{{rudeStudent.messageqa}}',
+              arrMessage:[],
               unificationIniPri:false,
               unificationIniPriCase2:false,
+              unificationNormal:false,
+              unificationForeign:false,
               rudeCorrect:false,
               rudeWrong:false,
               swChanteStatusCorrectInscription:false
@@ -921,6 +938,7 @@
                     this.showUnification = false;
                     this.swDoneUnification = false;
                     this.messageDoneUnification = '';
+                    this.arrMessage = [];
 
                     this.studentCorrect = {};
                     this.studentWrong = {};
@@ -939,9 +957,9 @@
                             this.studentb = response.data.studentB;
 
                             this.studentHistoryRegA  = response.data.dataHistoryA.dataInscriptionR;
-      			                this.studentHistoryAltA  = response.data.dataHistoryA.dataInscriptionA;
-      			                this.studentHistoryEspA  = response.data.dataHistoryA.dataInscriptionE;
-      			                this.studentHistoryPerA  = response.data.dataHistoryA.dataInscriptionP;
+                                this.studentHistoryAltA  = response.data.dataHistoryA.dataInscriptionA;
+                                this.studentHistoryEspA  = response.data.dataHistoryA.dataInscriptionE;
+                                this.studentHistoryPerA  = response.data.dataHistoryA.dataInscriptionP;
 
                             this.studentHistoryRegB  = response.data.dataHistoryB.dataInscriptionR;
                             this.studentHistoryAltB  = response.data.dataHistoryB.dataInscriptionA;
@@ -950,13 +968,15 @@
 
                             this.responseObject.rudea = response.data.rudea;
                             this.responseObject.rudeb = response.data.rudeb;
-                            this.responseObject.unificationIniPri = response.data.unificationIniPri;
-                            
+                            this.responseObject.unificationIniPri = response.data.unificationIniPri;                            
                             this.responseObject.unificationIniPriCase2 = response.data.unificationIniPriCase2;
+                            this.responseObject.unificationNormal = response.data.unificationNormal;
+                            this.responseObject.unificationForeign = response.data.unificationForeign;
 
 
                             this.swhistory = response.data.swhistory;
                             this.currentyear = response.data.currentyear;
+                            this.arrMessage = response.data.arrMessage;
                             
                         }                        
                         this.buscando = false;
@@ -1030,7 +1050,7 @@
                       this.studentHistoryEspCorrect = this.studentHistoryEspA;
                       this.studentHistoryPerCorrect = this.studentHistoryPerA;
 
-                      if( historyLengthA > historyLengthB){
+                      if( historyLengthA >= historyLengthB){
                         this.showButtonUnification = true;
                       }
                      
@@ -1042,7 +1062,7 @@
                       this.studentHistoryEspCorrect = this.studentHistoryEspB;
                       this.studentHistoryPerCorrect = this.studentHistoryPerB;
 
-                      if( historyLengthB > historyLengthA){
+                      if( historyLengthB >= historyLengthA){
                         this.showButtonUnification = true;
                       }
                     }
@@ -1191,18 +1211,18 @@
 
                 },
 
-            	
+                
           buscarEstudiante: function(){
-    					
+                        
                 axios.get(Routing.generate('newinscriptionInipri_checksegipstudent', this.responseObject ))
                 .then(response => {
                     if (response.status == 200) {
-                    	this.responseprocess = response.data.swcreatestudent;
-                    	this.message = response.data.message;
-                    	this.DBGenero= response.data.arrGenero;
-                    	this.DBPais= response.data.arrPais;
-                    	this.DBstudentExist= response.data.arrStudentExist;
-                    	this.existStudent = response.data.existStudent;
+                        this.responseprocess = response.data.swcreatestudent;
+                        this.message = response.data.message;
+                        this.DBGenero= response.data.arrGenero;
+                        this.DBPais= response.data.arrPais;
+                        this.DBstudentExist= response.data.arrStudentExist;
+                        this.existStudent = response.data.existStudent;
                     }                        
                     this.buscando = false;
                 })
@@ -1213,8 +1233,8 @@
             },
    
             customFormatter(date) {
-	             return moment(date).format('l');
-	           },
+                 return moment(date).format('l');
+               },
             },
             mounted(){
             }

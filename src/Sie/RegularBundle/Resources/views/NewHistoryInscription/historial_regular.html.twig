@@ -16,9 +16,7 @@
           <th class="text-center">Paralelo</th>
           <th class="text-center">Turno</th>
           <th class="text-center">Estado Matrícula</th>
-          {% if visible is defined and visible == true %}
-            <th class="text-center">Acciones</th>
-          {% endif %}
+          <th class="text-center">Acciones</th>
         </tr>
       </thead>
 
@@ -33,11 +31,15 @@
             <td>{{data.paralelo_raep}}</td>
             <td>{{data.turno_raep}} </td>
             <td class="text-center">{{data.estadomatricula_fin_r}}</td>
-            {% if visible is defined and visible == true %}
-              <td class="text-center">
+            <td class="text-center">
+              {% if visible is defined and visible == true %}
                 <a href="#" onclick="seeNotaNew('{{data.estudiante_inscripcion_id_raep}}', '{{data.estudiante_id_raep}}', '{{data.gestion_tipo_id_raep}}', '1')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
-              </td>
-            {% endif %}
+              {% endif %}
+              <span class="clearfix"></span>
+              {# {% if data.gestion_tipo_id_raep == 2020 and app.session.get('roluser') == 8 %}
+                <a href="#" onclick="pagoBf('{{data.estudiante_inscripcion_id_raep}}')" ><span class="fa fa-list"></span> Bono familia</a>
+              {% endif %} #}
+            </td>
           </tr>
         {% endfor %}
       </tbody>

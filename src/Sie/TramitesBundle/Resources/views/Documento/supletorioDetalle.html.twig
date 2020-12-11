@@ -5,7 +5,7 @@
             <i class="fa fa-home"></i>
             <a href="{{path('tramite_homepage')}}">Perfil</a>
             <i class="fa fa-angle-right"></i>
-            <a >Seguimiento Trámite</a>
+            <a >Seguimiento</a>
         </li>
     </ol>
 {% endblock %}
@@ -36,7 +36,7 @@
                                         <strong>Tipo documento: </strong> {{listaDocumento.documentoTipo}}<br>
                                         <strong>Fecha de emisión: </strong> {{listaDocumento.fechaemision|date('d/m/Y')}}<br>
                                         <strong>D.D.E. Emisor: </strong> {{listaDocumento.departamentoemision}}<br>
-                                        <strong>Nro. Trámite: </strong> {{listaDocumento.tramite}}<br>
+                                        <strong>Nro.: </strong> {{listaDocumento.tramite}}<br>
                                     </address>
                                 </div>
                             </div>

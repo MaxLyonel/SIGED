@@ -79,7 +79,8 @@ class DocumentoController extends Controller {
             , e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, to_char(e.fecha_nacimiento, 'dd/mm/YYYY') as fechanacimiento
             , (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documento_tipo as documentoTipo
             , (case e.complemento when '' then e.carnet_identidad when 'null' then e.carnet_identidad else CONCAT(CONCAT(e.carnet_identidad,'-'),e.complemento) end) as carnetIdentidad
-            , tt.tramite_tipo as tramiteTipo, d.documento_firma_id as documentoFirmaId, d.token_privado as keyprivado, d.token_impreso
+            , tt.tramite_tipo as tramiteTipo, d.documento_firma_id as documentoFirmaId, d.token_privado as keyprivado, d.token_impreso, dt.id as documentoTipoId, de.id as documentoEstadoId
+            , p.nombre || ' ' || p.paterno || ' ' || p.materno as personafirma
             from documento as d
             inner join documento_estado as de on de.id = d.documento_estado_id
             inner join documento_tipo as dt on dt.id = d.documento_estado_id
@@ -93,9 +94,11 @@ class DocumentoController extends Controller {
             inner join gestion_tipo as gt on gt.id = ds.gestion_id
             inner join pais_tipo as pt on pt.id = e.pais_tipo_id
             inner join departamento_tipo as dept on dept.id = ds.departamento_tipo_id
+            left join documento_firma as df on df.id = d.documento_firma_id
+            left join persona as p on p.id = df.persona_id
             left join lugar_tipo as ltp on ltp.id = e.lugar_prov_nac_tipo_id
             left join lugar_tipo as ltd on ltd.id = ltp.lugar_tipo_id
-            where md5(cast(d.id as varchar)) = :id and dt.id in (1,3,4,5,6,7,8,9) and de.id in (1)
+            where md5(cast(d.id as varchar)) = :id and dt.id in (1,2,3,4,5,6,7,8,9) and de.id in (1)
             order by e.paterno, e.materno, e.nombre
         ");
         $queryEntidad->bindValue(':id', $id);
@@ -103,7 +106,7 @@ class DocumentoController extends Controller {
         $entityDocumento = $queryEntidad->fetchAll();
 
         if(count($entityDocumento)>0){
-            return $entityDocumento[0];
+            return $entityDocumento;
         } else {
             return $entityDocumento;
         }
@@ -126,6 +129,7 @@ public function getDocumentoTokenImpreso($token) {
         , (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documento_tipo as documentoTipo
         , (case e.complemento when '' then e.carnet_identidad when 'null' then e.carnet_identidad else CONCAT(CONCAT(e.carnet_identidad,'-'),e.complemento) end) as carnetIdentidad
         , tt.tramite_tipo as tramiteTipo, d.documento_firma_id as documentoFirmaId, d.token_privado as keyprivado, d.token_impreso, de.id as documentoEstadoId
+        , p.nombre || ' ' || p.paterno || ' ' || p.materno as personafirma
         from documento as d
         inner join documento_estado as de on de.id = d.documento_estado_id
         inner join documento_tipo as dt on dt.id = d.documento_estado_id
@@ -139,6 +143,8 @@ public function getDocumentoTokenImpreso($token) {
         inner join gestion_tipo as gt on gt.id = ds.gestion_id
         inner join pais_tipo as pt on pt.id = e.pais_tipo_id
         inner join departamento_tipo as dept on dept.id = ds.departamento_tipo_id
+        left join documento_firma as df on df.id = d.documento_firma_id
+        left join persona as p on p.id = df.persona_id
         left join lugar_tipo as ltp on ltp.id = e.lugar_prov_nac_tipo_id
         left join lugar_tipo as ltd on ltd.id = ltp.lugar_tipo_id
         where d.token_impreso = :token and dt.id in (1,3,4,5,6,7,8,9)
@@ -958,9 +964,21 @@ public function getDocumentoTokenImpreso($token) {
     // PARAMETROS: tramiteId, documentoTipoId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function getDocumentoTramite($tramiteId, $documentoTipoId) {
+    public function getDocumentoTramiteTipo($tramiteId, $documentoTipoId) {
         $em = $this->getDoctrine()->getManager();
         $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tramite' => $tramiteId, 'documentoTipo' => $documentoTipoId, 'documentoEstado' => 1));
+        return $entityDocumento;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista los documentos activos en función al trámite
+    // PARAMETROS: tramiteId, documentoTipoId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getDocumentoTramite($tramiteId) {
+        $em = $this->getDoctrine()->getManager();
+        $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tramite' => $tramiteId, 'documentoEstado' => 1));
         return $entityDocumento;
     }
 
@@ -1057,6 +1075,23 @@ public function getDocumentoTokenImpreso($token) {
             ->add('serie', 'text', array('label' => 'SERIE', 'attr' => array('value' => $serie, 'class' => 'form-control', 'placeholder' => 'Número y Serie', 'pattern' => '^@?(\w){1,12}$', 'maxlength' => '12', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
             ->add('obs', 'textarea', array('label' => 'OBS.', 'attr' => array('value' => $obs, 'class' => 'form-control', 'placeholder' => 'Comentario', 'pattern' => '^@?(\w){1,200}$', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
             ->add('search', 'submit', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary')))
+            ->getForm();
+        return $form;
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que genera un formulario para la busqueda de documentos por numero de serie que sera anulados al reactivar su trámite
+    // PARAMETROS: institucionEducativaId, gestionId
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function creaFormReactivaDocumentoSerie($routing, $serie, $obs, $documentoId) {
+        $form = $this->createFormBuilder()
+            ->setAction($this->generateUrl($routing))
+            ->add('documento', 'hidden', array('label' => 'DOCUMENTO', 'attr' => array('value' => base64_encode($documentoId))))
+            ->add('serie', 'hidden', array('label' => 'SERIE', 'attr' => array('value' => $serie, 'class' => 'form-control', 'placeholder' => 'Número y Serie', 'pattern' => '^@?(\w){1,12}$', 'maxlength' => '12', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+            ->add('obs', 'hidden', array('label' => 'OBS.', 'attr' => array('value' => $obs, 'class' => 'form-control', 'placeholder' => 'Comentario', 'pattern' => '^@?(\w){1,200}$', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
+            ->add('search', 'submit', array('label' => 'Reactivar Documento', 'attr' => array('class' => 'btn btn-primary')))
             ->getForm();
         return $form;
     }
@@ -1338,7 +1373,7 @@ public function getDocumentoTokenImpreso($token) {
                     }
 
                     if (!$entity[0]["estadofintramite"]){
-                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con codigo rude "'.$entity[0]["rude"].'" y con número de serie "'.$entity[0]["serie"].'" no concluyo su trámite, conluya su tramite e intente nuevamente'));
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con codigo rude "'.$entity[0]["rude"].'" y con número de serie "'.$entity[0]["serie"].'" no concluyo su emisión, conluya e intente nuevamente'));
                         // return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
                         return $this->redirectToRoute('tramite_documento_legalizacion_numero_serie');
                     } elseif (!$entity[0]["estadodocumento"]){
@@ -1843,7 +1878,7 @@ public function getDocumentoTokenImpreso($token) {
                     if($msgContenidoDocumento == ""){
                         $documentoFirmaId = 0;
                         $idDocumento = $this->setDocumento($codTramite, $id_usuario, 9, $numeroSerieSupletorio, '', $fechaActual, $documentoFirmaId); 
-                        $documentoAnuladoId = $this->setDocumentoEstado($documentoId,2);
+                        $documentoAnuladoId = $this->setDocumentoEstado($documentoId, 2, $em);
                         $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => 'El certificado supletorio con numero de serie "'.$numeroSerieSupletorio.'" fue generado, anulado el documento'.$entityDocumento['serie']));
                         $em->getConnection()->commit();
                     } else {
@@ -2359,7 +2394,7 @@ public function getDocumentoTokenImpreso($token) {
         if (isset($gestion)) {
             $gestionId = $gestion;
         } else {
-            $gestionId = $gestionActual->format('y');
+            $gestionId = $gestionActual->format('Y');
         }
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
@@ -2528,7 +2563,7 @@ public function getDocumentoTokenImpreso($token) {
         $estado = true;            
         $datosDocumentoValidado = array();
 
-        // dump($request);dump($qr);
+        //dump($request);dump($datosEnviados);die;
         //$entityDocumento = $this->getDocumentoMd5($documento);
         // $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tokenImpreso' => $datosEnviados));
         $entityDocumento = $this->getDocumentoTokenImpreso($datosEnviados);
@@ -2566,7 +2601,8 @@ public function getDocumentoTokenImpreso($token) {
                         'emisiondepartamento'=>$entityDocumento['departamentoemision'],
                         'emisionfecha'=>$entityDocumento['fechaemision'],
                         'tokenfirma'=>base64_encode($entityDocumento['documentofirmaid']),
-                        'documentotipo'=>$entityDocumento['documentotipo']
+                        'documentotipo'=>$entityDocumento['documentotipo'],
+                        'personafirma'=>$entityDocumento['personafirma']
                     );
                     // dump($datos);
                     $keys = $this->getEncodeRSA($datos);
@@ -2622,5 +2658,482 @@ public function getDocumentoTokenImpreso($token) {
             'subtitulo' => 'Diploma de Bachiller',
     	));
         
+    }    
+    
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que verifica la valides del documento emitido con firma electronica
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function validarDocumentoAction(Request $request, $qr){
+        $em = $this->getDoctrine()->getManager();
+        
+        $datosEnviados = str_replace(' ', '+', $qr);
+        $datosEnviados = str_replace('%20', '+', $datosEnviados);    
+        $msg = '';
+        $estado = true;            
+        $datosDocumentoValidado = array();
+
+        $entityDocumento = $this->getDocumentoMd5($datosEnviados);
+        // dump($request);dump($datosEnviados);dump($entityDocumento);die;
+        // $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tokenImpreso' => $datosEnviados));
+        // $entityDocumento = $this->getDocumentoTokenImpreso($datosEnviados);
+        //dump(count($entityDocumento));die;
+        
+        if(count($entityDocumento)>0){
+            if(count($entityDocumento)>1){
+                $msg = 'Documento observado por duplicidad en su registro, verifique con la Dirección Distrital o Dirección Departamental';
+                $estado = false;
+            } else {
+                $entityDocumento = $entityDocumento[0];
+                $entityDocumentoEstadoId = $entityDocumento['documentoestadoid'];
+                if($entityDocumentoEstadoId != 1){
+                    $msg = 'Documento no vigente, verifique con la Dirección Distrital o Dirección Departamental';
+                    $estado = false;
+                } else {            
+                    if ($entityDocumento['departamentonacimiento'] == ""){
+                        $lugarNacimiento = $entityDocumento['departamentonacimiento'];
+                    } else {
+                        $lugarNacimiento = $entityDocumento['departamentonacimiento'] . ' - ' . $entityDocumento['paisnacimiento'];
+                    }
+                    $datos = array(
+                        'inscripcion'=>$entityDocumento['estudianteinscripcionid'],
+                        'tramite'=>$entityDocumento['tramite'],
+                        'serie'=>$entityDocumento['serie'],
+                        'codigorude'=>$entityDocumento['rude'],
+                        'sie'=>$entityDocumento['sie'],
+                        'gestionegreso'=>$entityDocumento['gestion'],
+                        'nombre'=>$entityDocumento['nombre'],
+                        'paterno'=>$entityDocumento['paterno'],
+                        'materno'=>$entityDocumento['materno'],
+                        'nacimientolugar'=>$lugarNacimiento,
+                        'nacimientofecha'=>$entityDocumento['fechanacimiento'],
+                        'cedulaidentidad'=>$entityDocumento['carnetidentidad'],
+                        'emisiondepartamento'=>$entityDocumento['departamentoemision'],
+                        'emisionfecha'=>$entityDocumento['fechaemision'],
+                        'tokenfirma'=>'',
+                        'documentotipo'=>$entityDocumento['documentotipo'],
+                        'personafirma'=>$entityDocumento['personafirma']
+                    );
+                    // $keys = $this->getEncodeRSA($datos);
+                    $datosRegistrados = $datos;
+                    //dump($datosRegistrados);die;
+
+                    // $keyPrivado = $entityDocumento['keyprivado'];
+                    // $keyPrivado = $ll;
+                    // dump(md5(3197208));dump($entityDocumento['token_impreso']);dump($datos);dump($datosEnviados);dump($ll);
+                    try {
+                        // $datosEnviadosDecode = $this->getDecodeRSA($datosEnviados, $keyPrivado);
+                        // $datosEnviadosDecode = unserialize($datosEnviadosDecode);
+                        // dump($datosEnviadosDecode);die;
+                        // if(
+                        //     $datosEnviadosDecode['inscripcion'] == $datosRegistrados['inscripcion'] and 
+                        //     $datosEnviadosDecode['tramite'] == $datosRegistrados['tramite'] and 
+                        //     $datosEnviadosDecode['serie'] == $datosRegistrados['serie'] and 
+                        //     $datosEnviadosDecode['codigorude'] == $datosRegistrados['codigorude'] and 
+                        //     $datosEnviadosDecode['sie'] == $datosRegistrados['sie'] and 
+                        //     $datosEnviadosDecode['gestionegreso'] == $datosRegistrados['gestionegreso'] and 
+                        //     $datosEnviadosDecode['nombre'] == $datosRegistrados['nombre'] and 
+                        //     $datosEnviadosDecode['paterno'] == $datosRegistrados['paterno'] and 
+                        //     $datosEnviadosDecode['materno'] == $datosRegistrados['materno'] and 
+                        //     $datosEnviadosDecode['cedulaidentidad'] == $datosRegistrados['cedulaidentidad'] and 
+                        //     $datosEnviadosDecode['emisiondepartamento'] == $datosRegistrados['emisiondepartamento'] and 
+                        //     $datosEnviadosDecode['tokenfirma'] == $datosRegistrados['tokenfirma']
+                        //     ){
+                        //     $msg = 'Documento válido';
+                        //     $estado = true;
+                        //     $datosDocumentoValidado = $datosRegistrados;
+                        // } else {
+                        //     $msg = 'Datos modificados, documento no válido';
+                        //     $estado = false;
+                        // }                        
+                        $msg = 'Documento válido';
+                        $estado = true;
+                        $datosDocumentoValidado = $datosRegistrados;
+                    } catch (\Exception $e) {
+                        $msg = 'Documento no válido';
+                        $estado = false;
+                        // dump("no decodificado");die;
+                    }
+                }
+            }
+        } else {
+            $msg = 'Documento inexistente, verifique con la Dirección Distrital o Dirección Departamental';
+            $estado = false;
+        }
+        // dump($this->session->get('pathSystem'));die;
+
+
+        return $this->render('SieTramitesBundle:Documento:validacion.html.twig',array(
+            'listaDocumento' => $datosDocumentoValidado,   
+            'estado' => $estado, 
+            'msg' => $msg,
+            'titulo' => 'Validación del documento',
+            'subtitulo' => 'Diploma de Bachiller',
+    	));
+        
     }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que genera un formulario de busqueda para reactivar el documento anulado
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function reactivaBuscaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+        $route = $request->get('_route');
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $rolPermitido = array(16,8,42);
+
+        $defaultTramiteController = new defaultTramiteController();
+        $defaultTramiteController->setContainer($this->container);
+
+        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
+
+        if (!$esValidoUsuarioRol){
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_homepage'));
+        }
+
+        return $this->render($this->session->get('pathSystem') . ':Documento:reactivaIndex.html.twig', array(
+            'formBusqueda' => $this->creaFormAnulaDocumentoSerie('tramite_documento_reactiva_lista','','')->createView(),
+            'titulo' => 'Reactivar',
+            'subtitulo' => 'Documento',
+        ));
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que lista el detalle del documento requerido para su reactivación
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function reactivaListaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        if ($request->isMethod('POST')) {
+            $form = $request->get('form');
+            if ($form) {
+                $serie = $form['serie'];
+                $obs = $form['obs'];
+                try {
+                    $msgContenido = "";
+                    $valNumeroSerie = $this->getNumeroSerie($serie);
+                    if($valNumeroSerie != ""){
+                        $msgContenido = ($msgContenido=="") ? $valNumeroSerie : $msgContenido.", ".$valNumeroSerie;
+                    }
+                    $valNumeroSerieActivo = $this->validaNumeroSerieActivo($serie);
+                    if($valNumeroSerieActivo != ""){
+                        $msgContenido = ($msgContenido=="") ? $valNumeroSerieActivo : $msgContenido.", ".$valNumeroSerieActivo;
+                    }
+                    $valNumeroSerieAsignado = $this->validaNumeroSerieAsignado($serie);
+                    if($valNumeroSerieAsignado == ""){
+                        $msgContenido = ($msgContenido=="") ? "Documento ".$serie." no asignado" : $msgContenido.", "."Documento ".$serie." no asignado";
+                    }
+                    $departamentoCodigo = $this->getCodigoLugarRol($id_usuario,16);
+                    
+                    if ($departamentoCodigo == 0 ){
+                        // $msgContenido = ($msgContenido=="") ? "el usuario no cuenta con la tuisión para reactivar el documento ".$serie : $msgContenido.", "."el usuario no cuenta con tuisión para reactivar el documento ".$serie;
+                    } else {
+                        // VALIDACION DE TUICION DEL CARTON
+                        $valSerieTuicion = $this->validaNumeroSerieTuicion($serie, $departamentoCodigo);                
+                        if($valSerieTuicion != ""){
+                            $msgContenido = ($msgContenido=="") ? $valSerieTuicion : $msgContenido.", ".$valSerieTuicion;
+                        }
+                    }
+
+                    $entityDocumentoAnulado = $this->getDocumentoSerieEstado($serie,2);
+
+                    if(count($entityDocumentoAnulado)<=0){
+                        $msgContenido = ($msgContenido=="") ? "El documento con número de serie ".$serie." no esta anulado" : $msgContenido.", "."El documento con número de serie ".$serie." no esta anulado";
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenido));
+                        return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
+                    }
+
+                    // verifica tramite con documento
+                    $tramiteId = $entityDocumentoAnulado['tramite'];
+                    $documentoId = $entityDocumentoAnulado['documento'];
+                    $valTramiteDocumentoActivo = $this->getDocumentoTramite($tramiteId);
+                    if(count($valTramiteDocumentoActivo) > 0){
+                        $msgContenido = ($msgContenido=="") ? "La emisión ".$tramiteId." del documento ".$serie." cuenta con ".count($valTramiteDocumentoActivo)." documento(s) activos(s)" : $msgContenido.", "."La emisión ".$tramiteId." del documento ".$serie." cuenta con ".count($valTramiteDocumentoActivo)." documento(s) activos(s)";
+                    }
+                                     
+                    $tramiteProcesoController = new tramiteProcesoController();
+                    $tramiteProcesoController->setContainer($this->container);
+
+                    //$valUltimoProcesoFlujoTramite = $tramiteProcesoController->valUltimoProcesoFlujoTramite($tramiteId);
+
+                    $entityTramiteDetalle = $tramiteProcesoController->getTramiteDetalle($tramiteId);
+
+                    $entityDocumentoDetalle = $this->getDocumentoDetalle($tramiteId);
+
+                    
+                    $tramiteController = new tramiteController();
+                    $tramiteController->setContainer($this->container);
+                    $entityDocumento = $tramiteController->getTramite($tramiteId);
+                    if(count($entityDocumento)>0){
+                        $entityDocumento = $entityDocumento[0];
+                    }
+
+                    //dump($valUltimoProcesoFlujoTramite);dump($entityTramiteDetalle);dump($entityDocumentoDetalle );die;
+
+                    if($msgContenido != ""){
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenido." ; no será posible reactivar el documento solicitado"));
+                    }
+                    // $msgContenido = "";
+
+                    return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
+                        'formBusqueda' => $this->creaFormReactivaDocumentoSerie('tramite_documento_reactiva_guarda',$serie,$obs,$documentoId)->createView(),
+                        'titulo' => 'Reactivar',
+                        'subtitulo' => 'Documento',
+                        'msgReactivaDocumento' => $msgContenido,
+                        'listaDocumento' => $entityDocumento,
+                        'listaTramiteDetalle' => $entityTramiteDetalle,
+                        'listaDocumentoDetalle' => $entityDocumentoDetalle,
+                    ));
+                } catch (\Doctrine\ORM\NoResultException $exc) {
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                    return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
+                }
+            }  else {
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+                return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
+            }
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_reactiva_busca'));
+        }
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que registra la reactivacion de un documento
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function reactivaGuardaAction(Request $request) {
+        /*
+         * Define la zona horaria y halla la fecha actual
+         */
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $fecha = new \DateTime();
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        //validation if the user is logged
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        if ($request->isMethod('POST')) {
+            $form = $request->get('form');
+            $serie = $form['serie'];
+            $obs = $form['obs'];
+            $documentoId = base64_decode($form['documento']);
+            $tramiteId = 0;
+            $formBusqueda = array('serie'=>$serie,'obs'=>$obs);
+            if ($serie != "" and $obs != ""){
+
+                $msgContenido = "";
+
+                $em = $this->getDoctrine()->getManager();
+                $entidadDocumento = $em->getRepository('SieAppWebBundle:Documento')->find($documentoId);
+                if(count($entidadDocumento)>0){
+                    $serieSend = $entidadDocumento->getDocumentoSerie()->getId();
+                } else {
+                    $msgContenido = ($msgContenido=="") ? "No existe el documento solicitado" : $msgContenido.", "."No existe el documento solicitado";
+                }
+                
+                if($serie != $serieSend){
+                    $msgContenido = ($msgContenido=="") ? "Inconsistencia en el envio de la serie" : $msgContenido.", "."Inconsistencia en el envio de la serie";
+                } else {
+                    $tramiteId = $entidadDocumento->getTramite()->getId();
+                }
+
+                if($msgContenido != ""){
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenido));
+                    return $this->redirectToRoute('tramite_documento_reactiva_lista', ['form' => $formBusqueda], 307);
+                }
+
+                $valNumeroSerie = $this->getNumeroSerie($serie);
+                if($valNumeroSerie != ""){
+                    $msgContenido = ($msgContenido=="") ? $valNumeroSerie : $msgContenido.", ".$valNumeroSerie;
+                }
+
+                $valNumeroSerieActivo = $this->validaNumeroSerieActivo($serie);
+                if($valNumeroSerieActivo != ""){
+                    $msgContenido = ($msgContenido=="") ? $valNumeroSerieActivo : $msgContenido.", ".$valNumeroSerieActivo;
+                }
+
+                $valNumeroSerieAsignado = $this->validaNumeroSerieAsignado($serie);
+                if($valNumeroSerieAsignado == ""){
+                    $msgContenido = ($msgContenido=="") ? "Documento ".$serie." no asignado" : $msgContenido.", "."Documento ".$serie." no asignado";
+                }
+                
+                $entityDocumentoAnulado = $this->getDocumentoSerieEstado($serie,2);
+                if(count($entityDocumentoAnulado)<=0){
+                    $msgContenido = ($msgContenido=="") ? "El documento con número de serie ".$serie." no esta anulado" : $msgContenido.", "."El documento con número de serie ".$serie." no esta anulado";
+                }
+
+                $valTramiteDocumentoActivo = $this->getDocumentoTramite($tramiteId);
+                if(count($valTramiteDocumentoActivo) > 0){
+                    $msgContenido = ($msgContenido=="") ? "La emisión ".$tramiteId." del documento ".$serie." cuenta con ".count($valTramiteDocumentoActivo)." documento(s) activos(s)" : $msgContenido.", "."La emisión ".$tramiteId." del documento ".$serie." cuenta con ".count($valTramiteDocumentoActivo)." documento(s) activos(s)";
+                }
+                
+                $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->find($tramiteId);
+
+                $tramiteProcesoController = new tramiteProcesoController();
+                $tramiteProcesoController->setContainer($this->container);
+                $entityFlujoProceso = $tramiteProcesoController->getImpresionProcesoFlujo($entityTramite->getFlujoTipo()->getId());
+                $entityFlujoProcesoDetalle = $em->getRepository('SieAppWebBundle:FlujoProcesoDetalle')->findOneBy(array('id' => $entityFlujoProceso->getId()));
+                // $valUltimoProcesoFlujoTramite = $tramiteProcesoController->valUltimoProcesoFlujoTramite($tramiteId);
+
+                $entityTramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle');
+                $query = $entityTramiteDetalle->createQueryBuilder('td')
+                        ->where('td.tramite = :codTramite')
+                        ->orderBy('td.id','desc')
+                        ->setParameter('codTramite', $tramiteId)
+                        ->setMaxResults('1');
+                $entityTramiteDetalle = $query->getQuery()->getResult();
+
+                $procesosId = $entityTramiteDetalle[0]->getFlujoProceso()->getProceso()->getId();
+                $tramiteEstado = $entityTramite->getEsactivo();
+                
+                //dump($entityTramite);dump($entityFlujoProceso);dump($entityFlujoProcesoDetalle);dump($procesosId);die;
+                if($msgContenido == ""){
+                    $em->getConnection()->beginTransaction();
+                    try {   
+                        if (($procesosId == 1 and $tramiteEstado == false) or ($procesosId != 7 and $tramiteEstado == true)) {                            
+                            $obs = "DOCUMENTO REACTIVADO Y PROCESADO COMO IMPRESO (".$fecha->format('d/m/Y h:i:s')."): ".$obs; 
+                            $valProcesaTramite = $tramiteProcesoController->setProcesaTramite($tramiteId,$entityFlujoProceso->getId(),$id_usuario,$obs,$em);
+                            $documentoAnuladoId = $this->setDocumentoEstado($documentoId, 1, $em); 
+                            $retEstadoUltimoProcesoTramite = $tramiteProcesoController->setEstadoUltimoProcesoTramite($tramiteId,3,$id_usuario,$fecha,$em);
+                            $msgContenido = ($msgContenido=="") ? $retEstadoUltimoProcesoTramite : $msgContenido.", ".$retEstadoUltimoProcesoTramite;         
+                            if ($procesosId == 1 and $tramiteEstado == false) {
+                                $entityTramite->setEsactivo(true);
+                                $em->persist($entityTramite);
+                            }
+                            if ($msgContenido == ""){
+                                $em->flush();
+                                $em->getConnection()->commit();
+                                $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Se reactivó el documento y fue procesado la asignación del cartón para su respectivo envío"));
+                                
+                                $entityTramiteDetalle = $tramiteProcesoController->getTramiteDetalle($tramiteId);
+                                $entityDocumentoDetalle = $this->getDocumentoDetalle($tramiteId);                                
+                                $tramiteController = new tramiteController();
+                                $tramiteController->setContainer($this->container);
+                                $entityDocumento = $tramiteController->getTramite($tramiteId);
+                                if(count($entityDocumento)>0){
+                                    $entityDocumento = $entityDocumento[0];
+                                }
+                                return $this->render($this->session->get('pathSystem') . ':Seguimiento:tramiteDetalle.html.twig', array(
+                                    'titulo' => 'Reactivar',
+                                    'subtitulo' => 'Documento',
+                                    'listaDocumento' => $entityDocumento,
+                                    'listaTramiteDetalle' => $entityTramiteDetalle,
+                                    'listaDocumentoDetalle' => $entityDocumentoDetalle,
+                                ));
+
+                                // return $this->redirectToRoute('tramite_seguimiento_documento_detalle', ['codigo' => base64_encode($tramiteId)], 307);                                
+                            } 
+                        }
+                        // // reactivar documentos que fueron anulados por finalizar tramite (anular tramite)
+                        // if ($procesosId == 1 and $tramiteEstado == false) {
+                        //     $obs = "Documento reactivado y trámite finalizado (".$fecha->format('d/m/Y h:i:s')."): ".$obs;
+                        //     //dump("reactiva tramite anulado");die;
+                        //     $valProcesaTramite = $tramiteProcesoController->setProcesaTramiteFinaliza($tramiteId,$id_usuario,$obs,$em);
+                            
+                        //     $documentoAnuladoId = $this->setDocumentoEstado($documentoId, 1, $em);   
+
+                        //     $retEstadoUltimoProcesoTramite = $tramiteProcesoController->setEstadoUltimoProcesoTramite($tramiteId,3,$id_usuario,$fecha,$em);
+                        //     $msgContenido = ($msgContenido=="") ? $retEstadoUltimoProcesoTramite : $msgContenido.", ".$retEstadoUltimoProcesoTramite;         
+                            
+                        //     $entityTramite->setEsactivo(true);
+                        //     $em->persist($entityTramite);
+
+                        //     if ($msgContenido == ""){
+                        //         $em->flush();
+                        //         $em->getConnection()->commit();
+                        //         $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Se reactivó el documento y el trámite se finalizó exitosamente"));
+                        //         return $this->redirectToRoute('tramite_seguimiento_documento_detalle', ['codigo' => base64_encode($tramiteId)], 307);
+                        //     }        
+                        // }
+
+                        // // reactivar documentos que fueron anulados por devolucion
+                        // if (($procesosId != 7 and $tramiteEstado == true)) { 
+                        //     $obs = "Documento reactivado y trámite procesado como impreso (".$fecha->format('d/m/Y h:i:s')."): ".$obs;         
+                        //     dump("reactiva documento anulado");die;       
+                        //     $valProcesaTramite = $tramiteProcesoController->setProcesaTramite($tramiteId,$entityFlujoProceso->getId(),$id_usuario,$obs,$em);
+
+                        //     $documentoAnuladoId = $this->setDocumentoEstado($documentoId, 1, $em);  
+                            
+                        //     $retEstadoUltimoProcesoTramite = $tramiteProcesoController->setEstadoUltimoProcesoTramite($tramiteId,3,$id_usuario,$fecha,$em);
+                        //     $msgContenido = ($msgContenido=="") ? $retEstadoUltimoProcesoTramite : $msgContenido.", ".$retEstadoUltimoProcesoTramite;         
+
+                        //     if ($msgContenido == ""){
+                        //         $em->flush();
+                        //         $em->getConnection()->commit();
+                        //         $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Se reactivó el documento y el trámite fue procesado como impreso para su respectivo envío"));
+                        //         return $this->redirectToRoute('tramite_seguimiento_documento_detalle', ['codigo' => base64_encode($tramiteId)], 307);
+                        //     }    
+                        // }
+
+                        if ($msgContenido != ""){
+                            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenido));
+                        } else {
+                            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => "No se realizo ningún proceso. intente nuevamente"));
+                        } 
+                        return $this->redirectToRoute('tramite_documento_reactiva_lista', ['form' => $formBusqueda], 307);                                  
+
+                    } catch (\Doctrine\ORM\NoResultException $exc) {
+                        $em->getConnection()->rollback();
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                        return $this->redirect($this->generateUrl('tramite_documento_reactiva_lista'));
+                    }
+                } else {
+                    $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $msgContenido));
+                    return $this->redirect($this->generateUrl('tramite_documento_reactiva_lista'));
+                }
+            } else {
+                $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al procesar la información, intente nuevamente'));
+                return $this->redirect($this->generateUrl('tramite_documento_reactiva_lista'));
+            }
+        } else {
+            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
+            return $this->redirect($this->generateUrl('tramite_documento_reactiva_lista'));
+        }
+    }
+
 }

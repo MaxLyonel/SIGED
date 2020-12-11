@@ -211,10 +211,7 @@ class ReportesController extends Controller {
             // FUNCION PARA VERIFICAR SI EL CURSO DE PRIMARIA TRABAJA CON LA NUEVA CURRICULA
             // $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso);
             $primariaNuevo = $this->get('funciones')->verificarMateriasPrimariaAlternativa($idCurso);
-            if (
-                ($this->session->get('ie_gestion') == '2016') || ($this->session->get('ie_gestion') == '2017') ||
-                ($this->session->get('ie_gestion') == '2018') || ($this->session->get('ie_gestion') == '2019')
-            ) {
+            if($this->session->get('ie_gestion') >= 2016 ){
                 if ($this->session->get('ie_per_estado') == '0') {
                     //VALIDOS
                     if ($primariaNuevo ) { // VERIFICAMOS SI SE UTILIZARA EL NUEVO REPORTE 2018 
@@ -273,9 +270,7 @@ class ReportesController extends Controller {
             }    
         }
         else{//CENTRALIZADOR TECNICA
-            if (($this->session->get('ie_gestion') == '2016') || ($this->session->get('ie_gestion') == '2017') ||
-                ($this->session->get('ie_gestion') == '2018') || ($this->session->get('ie_gestion') == '2019')
-                ) {
+            if($this->session->get('ie_gestion') >= 2016 ){
                 if ($this->session->get('ie_per_estado') == '0'){
                     //VALIDOS
                     $ciclotxt = $aInfoUeducativa['ueducativaInfo']['ciclo'];
@@ -419,6 +414,71 @@ class ReportesController extends Controller {
         }
         return $response;
     }
+
+    public function printrecordcardAction($eInsId, $nivel,$sie,$gestion,$subcea,$periodo,$iecid) {
+        $em = $this->getDoctrine()->getManager();
+        $insobj = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($eInsId);      
+        $estobjid = $insobj->getEstudiante()->getId();       
+        $est = $em->getRepository('SieAppWebBundle:Estudiante')->findById($estobjid);
+        $idCurso = $insobj->getInstitucioneducativaCurso()->getId();
+
+        //get info about the course
+        $objUeducativa = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getAlterCursosBySieGestSubPerIecid($sie, $gestion, $subcea, $periodo, $idCurso);
+        
+        //get the data to do the report
+        $user= $this->session->get('userName');
+        $sie = $sie;
+        $gestion = $gestion;
+        $ciclo = $objUeducativa[0]['cicloId'];
+        $grado = $objUeducativa[0]['gradoId'];
+        $paralelo = $objUeducativa[0]['paraleloId'];
+        $turno = $objUeducativa[0]['turnoId'];
+
+        $data = $est[0]->getCodigoRude().'|'.$eInsId.'|'.$sie.'|'.$gestion.'|'.(int)$nivel.'|'.$ciclo.'|'.$grado.'|'.(int)$paralelo.'|'.$turno;
+        $link = 'http://'.$_SERVER['SERVER_NAME'].'/cen/'.$this->getLinkEncript($data);
+       
+        if ($nivel == '15'){
+            // $primariaNuevo = $this->get('funciones')->validatePrimariaCourse($idCurso);
+            $primariaNuevo = $this->get('funciones')->verificarMateriasPrimariaAlternativa($idCurso);
+            
+            if($primariaNuevo){
+                $reporte = 'alt_libreta_electronica_v1_ma.rptdesign';
+            }else{
+                $reporte = 'alt_est_LibretaElectronicaHumanistica2016_v1_hcq.rptdesign';
+            }
+
+            $arch = $this->session->get('ie_id').'_'.$est[0]->getCodigoRude().'_'.date('Ymd') . '.pdf';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));  
+
+            $link = $this->container->getParameter('urlreportweb') . $reporte . '&__format=pdf&estudiante_inscripcion_id='.$eInsId. '&lk=' . $link .'&&__format=pdf&';
+//            dump($link);
+//            die;
+            $response->setContent(file_get_contents($link));            
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');                
+        }
+        else{
+            /*
+            $arch = $this->session->get('ie_id').'_'.$est[0]->getCodigoRude().'_'.date('Ymd') . '.pdf';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            $link = $this->container->getParameter('urlreportweb') . 'alt_est_LibretaElectronicaTecnica2016_v3_vcjm.rptdesign&__format=pdf&estudiante_inscripcion_id='.$eInsId. '&lk=' . $link .'&&__format=pdf&';
+//            dump($link);
+//            die;
+            $response->setContent(file_get_contents($link));            
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0'); */
+            
+        }
+        return $response;
+    }    
     
     public function ddjjStudentWebHumAction(Request $request) {
 

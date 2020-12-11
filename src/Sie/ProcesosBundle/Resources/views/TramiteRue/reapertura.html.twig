@@ -12,6 +12,7 @@
             <meta name="description" content="Blankon is a theme fullpack admin template powered by Twitter bootstrap 3 front-end framework. Included are multiple example pages, elements styles, and javascript widgets to get your project started.">
             <meta name="keywords" content="admin, admin template, bootstrap3, clean, fontawesome4, good documentation, lightweight admin, responsive dashboard, webapp">
             <meta name="author" content="Djava UI">
+            <link href="{{asset('favicon.ico')}}" rel="shortcut icon">
             <title>SOLICITUDES | Herramienta web</title>
             <!--/ END META SECTION -->
 
@@ -26,30 +27,30 @@
             <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700" rel="stylesheet">
             <link href="http://fonts.googleapis.com/css?family=Oswald:700,400" rel="stylesheet">
             <!--/ END FONT STYLES -->
-                        <!-- START @GLOBAL MANDATORY STYLES -->
-            <link href="/webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+            <!-- START @GLOBAL MANDATORY STYLES -->
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
             <!--/ END GLOBAL MANDATORY STYLES -->
 
             <!-- START @PAGE LEVEL STYLES -->
-            <link href="/webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css" rel="stylesheet">
-            <link href="/webherramienta/assets/global/plugins/bower_components/animate.css/animate.min.css" rel="stylesheet">
-            <link href="/webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css" rel="stylesheet">
-            <link href="/webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css" rel="stylesheet">
-            <link href="/webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css" rel="stylesheet">
-            <link href="/juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css" rel="stylesheet">
-            <link href="/juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/animate.css/animate.min.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/css/jasny-bootstrap-fileinput.min.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/css/fuelux.min.css')}}" rel="stylesheet">
+            <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
             
-            <link rel="stylesheet" type="text/css" href="/webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css">
+            <link rel="stylesheet" type="text/css" href="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/css/cubeportfolio.css')}}">
             <!--/ END PAGE LEVEL STYLES -->
 
             <!-- START @THEME STYLES -->
-            <link href="/webherramienta/assets/admin/css/reset.css" rel="stylesheet">
-            <link href="/webherramienta/assets/admin/css/layout.css" rel="stylesheet">
-            <link href="/webherramienta/assets/admin/css/components.css" rel="stylesheet">
-            <link href="/webherramienta/assets/admin/css/plugins.css" rel="stylesheet">
-            <link href="/webherramienta/assets/admin/css/themes/blue-gray.theme.css" rel="stylesheet" id="theme">
-            <link href="/webherramienta/assets/admin/css/custom.css" rel="stylesheet">
-            <link href="/webherramienta/assets/admin/css/menuTree.css" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/reset.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/layout.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/components.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/plugins.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/themes/blue-gray.theme.css')}}" rel="stylesheet" id="theme">
+            <link href="{{asset('webherramienta/assets/admin/css/custom.css')}}" rel="stylesheet">
+            <link href="{{asset('webherramienta/assets/admin/css/menuTree.css')}}" rel="stylesheet">
             
             <!--/ END THEME STYLES -->
             <link href="https://openlayers.org/api/theme/default/style.css" rel="stylesheet">
@@ -57,13 +58,13 @@
             <!-- START @IE SUPPORT -->
             <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
             <!--[if lt IE 9]>
-            <script src="/webherramienta/assets/global/plugins/bower_components/html5shiv/dist/html5shiv.min.js"></script>
-            <script src="/webherramienta/assets/global/plugins/bower_components/respond-minmax/dest/respond.min.js"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/html5shiv/dist/html5shiv.min.js')}}"></script>
+            <script src="{{asset('webherramienta/assets/global/plugins/bower_components/respond-minmax/dest/respond.min.js')}}"></script>
             <![endif]-->
             <!--/ END IE SUPPORT -->
-            <link href="/bower_components/select2/dist/css/select2.min.css" rel="stylesheet" />
-            <link href="/webherramienta/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css" rel="stylesheet" />
-            <link href="/css/plugins/bootstrap-datepicker/datepicker3.css" rel="stylesheet">
+            <link href="{{asset('bower_components/select2/dist/css/select2.min.css')}}" rel="stylesheet" />
+            <link href="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css')}}" rel="stylesheet" />
+            <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
         </head>
     <!--/ END HEAD -->
     <body>
@@ -167,67 +168,69 @@
 <!--/ END BACK TOP -->            
     <!-- START JAVASCRIPT SECTION (Load javascripts at bottom to reduce load time) -->
     <!-- START @CORE PLUGINS -->
-    <script src="/webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/jquery-cookie/jquery.cookie.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/typehead.js/dist/handlebars.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/typehead.js/dist/typeahead.bundle.min.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/jquery-nicescroll/jquery.nicescroll.min.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/jquery.sparkline.min/index.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/jquery-easing-original/jquery.easing.1.3.min.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/bootbox/bootbox.js"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-cookie/jquery.cookie.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/typehead.js/dist/handlebars.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/typehead.js/dist/typeahead.bundle.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-nicescroll/jquery.nicescroll.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.sparkline.min/index.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-easing-original/jquery.easing.1.3.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/ionsound/js/ion.sound.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootbox/bootbox.js')}}"></script>
 
-        <!-- Highcharts Charts -->
-    <script src="/js/highcharts/highcharts.js"></script>
-    <script src="/js/highcharts/funnel.js"></script>
-    <script src="/js/highcharts/highcharts-3d.js"></script>
-    <script src="/js/highcharts/exporting.js"></script>
+    <!-- Highcharts Charts -->
+    <script src="{{asset('js/highcharts/highcharts.js')}}"></script>
+    <script src="{{asset('js/highcharts/funnel.js')}}"></script>
+    <script src="{{asset('js/highcharts/highcharts-3d.js')}}"></script>
+    <script src="{{asset('js/highcharts/exporting.js')}}"></script>
     <!--/ END CORE PLUGINS -->
 
-    <script src="/webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js"></script>
+    <script src="{{asset('webherramienta/assets/commercial/plugins/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js')}}"></script>
 
     <!-- START @PAGE LEVEL PLUGINS -->
-    <script src="/webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/js/jasny-bootstrap.fileinput.min.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/holderjs/holder.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/jquery-autosize/jquery.autosize.min.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js"></script>
-    <script src="/webherramienta/assets/global/plugins/bower_components/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="/juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js"></script>
-    <script src="/juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js"></script>
-    <script src="/juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js"></script>
-    <script src="/juegos/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jasny-bootstrap-fileinput/js/jasny-bootstrap.fileinput.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/holderjs/holder.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap-maxlength/bootstrap-maxlength.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-autosize/jquery.autosize.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/chosen_v1.2.0/chosen.jquery.min.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-validation/dist/jquery.validate.min.js')}}"></script>
+    <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js')}}"></script>
+    <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.js')}}"></script>
+    <script src="{{asset('juegos/assets/global/plugins/bower_components/fuelux/dist/js/fuelux.min.js')}}"></script>
 
     <!--/ END PAGE LEVEL PLUGINS -->
 
     <!-- START @PAGE LEVEL SCRIPTS -->
-    <script src="/webherramienta/assets/admin/js/apps.js"></script>
-    <script src="/webherramienta/assets/admin/js/pages/blankon.form.element.js"></script>
-    <script src="/webherramienta/assets/admin/js/pages/blankon.form.validation.js"></script>
-    <script src="/webherramienta/assets/admin/js/demo.js"></script>
-    <script src="/webherramienta/assets/admin/js/menuTree.js"></script>
+    <script src="{{asset('webherramienta/assets/admin/js/apps.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.form.element.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/admin/js/pages/blankon.form.validation.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/admin/js/demo.js')}}"></script>
+    <script src="{{asset('webherramienta/assets/admin/js/menuTree.js')}}"></script>
     <!--/ END PAGE LEVEL SCRIPTS -->
     <!--/ END JAVASCRIPT SECTION -->
 
 
-    <script src="/webherramienta/assets/global/plugins/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.min.js"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.min.js')}}"></script>
 
     <!-- START GOOGLE ANALYTICS -->
     <script>
 
     </script>
-    <script src="/bundles/fosjsrouting/js/router.js"></script>
-    <script src="/app_dev.php/js/routing?callback=fos.Router.setData"></script>
-    <script src="/bower_components/select2/dist/js/select2.min.js"></script>
-    <script src="/js/jquery.alphanum.js"></script>
+
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+    <script src="{{asset('bower_components/select2/dist/js/select2.min.js')}}"></script>
+    <script src="{{asset('js/jquery.alphanum.js')}}"></script>
     <!--/ END GOOGLE ANALYTICS -->
-    <script src="/webherramienta/assets/global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js"></script>
+    <script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/js/jquery.gritter.min.js')}}"></script>
 
-    <script src="/js/plugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+    <script src="{{asset('js/plugins/bootstrap-datepicker/bootstrap-datepicker.js')}}"></script>
 
-    <script src="/js/initialize.js"></script>
+    <script src="{{asset('js/initialize.js')}}"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <!--/ END GOOGLE ANALYTICS -->         

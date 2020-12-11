@@ -35,7 +35,7 @@
                         <form action="{{path('reporte_especial_cuatro')}}" method="post">
                             <input type="hidden" name="idInstitucion" value="{{odataUedu.id}}">
                             <input type="hidden" name="gestion" value="{{gestion}}">
-                            <button type="submit" class="btn btn-block btn-primary"><i class="fa fa-download"></i> Descargar Lista de Estudiantes</button>
+                            <button type="submit" class="btn btn-block btn-facebook"><i class="fa fa-download"></i> Descargar Lista de Estudiantes</button>
                         </form>
                         {%for turnoKey, dataTurno in aInfoUnidadEductiva%}
                             <ul>
@@ -57,7 +57,7 @@
                                                                     <li>
                                                                         <a href="#" onclick="seeStudents('{{dataParalelo.infoUe}}');">
 
-                                                                          <button class="btn btn-circle btn-primary btn-stroke" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">{{paraleloKey}}</button>
+                                                                          <button class="btn btn-circle btn-facebook btn-stroke" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">{{paraleloKey}}</button>
 
                                                                         </a>
                                                                         <!--div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripción">
@@ -447,6 +447,28 @@
             type: 'post',
             data: ({infoUe: data }),
             url: "{{ path('info_students_open_inscription') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+      };
+       var doInscriptions = function(data){
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: data }),
+            url: "{{ path('info_students_open_newinscription') }}",
             beforeSend: function () {
                 $('#modal').empty();
             },

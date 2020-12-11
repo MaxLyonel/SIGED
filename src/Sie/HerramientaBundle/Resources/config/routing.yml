@@ -246,3 +246,8 @@ sie_transfer_students:
 sie_apoderado_bono_familia:
      resource: "@SieHerramientaBundle/Resources/config/routing/apoderadoBonoFamilia.yml"
      prefix:   /sie/apoderado-bono-familia
+
+
+sie_unidadeducativa_plataforma:
+     resource: "@SieHerramientaBundle/Resources/config/routing/unidadeducativaplataforma.yml"
+     prefix:   /sie/plataforma

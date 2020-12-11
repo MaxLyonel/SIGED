@@ -220,4 +220,172 @@ class InstitucioneducativaCursoOfertaMaestro
     {
         return $this->notaTipo;
     }
+    /**
+     * @var string
+     */
+    private $item;
+
+    /**
+     * @var integer
+     */
+    private $financiamientoTipoId;
+
+    /**
+     * @var boolean
+     */
+    private $esVigenteAdministrativo;
+
+    /**
+     * @var \DateTime
+     */
+    private $asignacionFechaInicio;
+
+    /**
+     * @var \DateTime
+     */
+    private $asignacionFechaFin;
+
+
+    /**
+     * Set item
+     *
+     * @param string $item
+     * @return InstitucioneducativaCursoOfertaMaestro
+     */
+    public function setItem($item)
+    {
+        $this->item = $item;
+    
+        return $this;
+    }
+
+    /**
+     * Get item
+     *
+     * @return string 
+     */
+    public function getItem()
+    {
+        return $this->item;
+    }
+
+    /**
+     * Set financiamientoTipoId
+     *
+     * @param integer $financiamientoTipoId
+     * @return InstitucioneducativaCursoOfertaMaestro
+     */
+    public function setFinanciamientoTipoId($financiamientoTipoId)
+    {
+        $this->financiamientoTipoId = $financiamientoTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get financiamientoTipoId
+     *
+     * @return integer 
+     */
+    public function getFinanciamientoTipoId()
+    {
+        return $this->financiamientoTipoId;
+    }
+
+    /**
+     * Set esVigenteAdministrativo
+     *
+     * @param boolean $esVigenteAdministrativo
+     * @return InstitucioneducativaCursoOfertaMaestro
+     */
+    public function setEsVigenteAdministrativo($esVigenteAdministrativo)
+    {
+        $this->esVigenteAdministrativo = $esVigenteAdministrativo;
+    
+        return $this;
+    }
+
+    /**
+     * Get esVigenteAdministrativo
+     *
+     * @return boolean 
+     */
+    public function getEsVigenteAdministrativo()
+    {
+        return $this->esVigenteAdministrativo;
+    }
+
+    /**
+     * Set asignacionFechaInicio
+     *
+     * @param \DateTime $asignacionFechaInicio
+     * @return InstitucioneducativaCursoOfertaMaestro
+     */
+    public function setAsignacionFechaInicio($asignacionFechaInicio)
+    {
+        $this->asignacionFechaInicio = $asignacionFechaInicio;
+    
+        return $this;
+    }
+
+    /**
+     * Get asignacionFechaInicio
+     *
+     * @return \DateTime 
+     */
+    public function getAsignacionFechaInicio()
+    {
+        return $this->asignacionFechaInicio;
+    }
+
+    /**
+     * Set asignacionFechaFin
+     *
+     * @param \DateTime $asignacionFechaFin
+     * @return InstitucioneducativaCursoOfertaMaestro
+     */
+    public function setAsignacionFechaFin($asignacionFechaFin)
+    {
+        $this->asignacionFechaFin = $asignacionFechaFin;
+    
+        return $this;
+    }
+
+    /**
+     * Get asignacionFechaFin
+     *
+     * @return \DateTime 
+     */
+    public function getAsignacionFechaFin()
+    {
+        return $this->asignacionFechaFin;
+    }
+    /**
+     * @var \Sie\AppWebBundle\Entity\FinanciamientoTipo
+     */
+    private $financiamientoTipo;
+
+
+    /**
+     * Set financiamientoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\FinanciamientoTipo $financiamientoTipo
+     * @return InstitucioneducativaCursoOfertaMaestro
+     */
+    public function setFinanciamientoTipo(\Sie\AppWebBundle\Entity\FinanciamientoTipo $financiamientoTipo = null)
+    {
+        $this->financiamientoTipo = $financiamientoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get financiamientoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\FinanciamientoTipo 
+     */
+    public function getFinanciamientoTipo()
+    {
+        return $this->financiamientoTipo;
+    }
 }

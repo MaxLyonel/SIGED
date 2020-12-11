@@ -1,0 +1,35 @@
+requestbjp_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:RequestBJP:index }
+    options:
+       expose: true    
+
+requestbjp_look_student_data:
+    path:     /lookStudentData
+    defaults: { _controller: SieAppWebBundle:RequestBJP:lookStudentData }
+    options:
+       expose: true
+
+requestbjp_setGrado:
+    path:     /setGrado
+    defaults: { _controller: SieAppWebBundle:RequestBJP:setGrado }
+    options:
+       expose: true 
+
+requestbjp_setTurno:
+    path:     /setTurno
+    defaults: { _controller: SieAppWebBundle:RequestBJP:setTurno }
+    options:
+       expose: true 
+              
+requestbjp_setParalelo:
+    path:     /setParalelo
+    defaults: { _controller: SieAppWebBundle:RequestBJP:setParalelo }
+    options:
+       expose: true 
+               
+requestbjp_doUpdate:
+    path:     /doUpdate
+    defaults: { _controller: SieAppWebBundle:RequestBJP:doUpdate }
+    options:
+       expose: true    

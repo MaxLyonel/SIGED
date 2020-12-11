@@ -1,0 +1,99 @@
+
+	<div class="row">
+        <div class="col-lg-12">
+            {{form_start(form, { 'attr': {'role': "form", 'class': '', 'id': "formDatoPersonal"} } )}}
+                {{ form_widget(form.info) }}
+                <div class="form-body">                    
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                {{ form_label(form.carnetIdentidad, '', {'label_attr': {'class': 'control-label'}}) }}
+                                {{ form_widget(form.carnetIdentidad, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                {{ form_label(form.complemento, '', {'label_attr': {'class': 'control-label'}}) }}
+                                {{ form_widget(form.complemento, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                {{ form_label(form.expedido, '', {'label_attr': {'class': 'control-label'}}) }}
+                                {{ form_widget(form.expedido, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                {{ form_label(form.paterno, '', {'label_attr': {'class': 'control-label'}}) }}
+                                {{ form_widget(form.paterno, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                {{ form_label(form.materno, '', {'label_attr': {'class': 'control-label'}}) }}
+                                {{ form_widget(form.materno, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                {{ form_label(form.nombre, '', {'label_attr': {'class': 'control-label'}}) }}
+                                {{ form_widget(form.nombre, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                {{ form_label(form.fechaNacimiento, '', {'label_attr': {'class': 'control-label'}}) }}
+                                <div id="sandbox-container1" class="sandbox-container">
+                                {{ form_widget(form.fechaNacimiento, { 'attr': {'class': 'form-control'} }) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-footer">
+                    {{ form_widget(form.guardar, { 'label': 'Validar y Finalizar', 'attr': {'class': 'form-control btn btn-default col-sm-12'} }) }}
+                </div>
+            {{form_end(form)}}
+        </div>
+    </div>      
+	<script>
+        $('.sandbox-container input').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd-mm-yyyy',
+            language: 'es',
+        });
+
+        $( "#formDatoPersonal" ).submit(function( event ) {
+            var r = confirm("¿Desea validar y finalizar la insconsistencia del maestro?");
+            if (r == false) {
+                return false;
+            }
+            var boton = $('#form_guardar');
+            boton.hide();
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('maestroAsignacion_validar_segip_guarda'),
+                data: $('#formDatoPersonal').serialize(),
+                
+                beforeSend: function () {
+                    $("#formDatoPersonal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    if (data.estado) {
+                        alert("Correcto, "+data.msg);
+                        botonListDetalle.remove();
+                        $(".loading").remove();
+                        $("#collapseThreeTitle").empty();
+                        $("#collapseThreeBody").empty();
+                        $('#solution').removeClass('visible').addClass('invisible');
+                        $('#collapseTwo').removeClass('collapse').addClass('in');
+                    } else {
+                        $(".loading").remove();
+                        alert("Error, "+data.msg);
+                        boton.show();
+                    }                    
+                },
+                error: function(error){ 
+                    $(".loading").remove();
+                    boton.show();
+                    alert("Error, no fue posible realizar el registro, intente nuevamente");  
+                },
+            });    
+            event.preventDefault();
+        });
+
+	</script>

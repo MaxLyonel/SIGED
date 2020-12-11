@@ -279,7 +279,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Adjuntar R.A./ R.A. SEGIP</th>
+                                            <th>Adjuntar R.A./ R.A. SEGIP/Documento de Respaldo <p><i class="fa fa-eye"></i> En caso de que la/el estudiante/participante cuente con algún diploma/certificado, en ese caso adjuntar R.A.</p> </th>
                                             <td colspan="4">
                                                 {# <input type="file" > #}
                                                 <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
@@ -484,11 +484,11 @@
             delimiters: ['${', '}'],
             el: '#app',
             data: {
-                codigoRude:'',
+                codigoRude:'{{rude}}',
                 gestion:'',
                 item:'',
                 arraOptionBuscar:'',
-                rudeBuscar:'',
+                rudeBuscar:'{{rude}}',
                 optionBuscar:'',
                 studentId:'',
                 studentHistModId:false,
@@ -510,6 +510,7 @@
                 informe:'',
                 showbuttonPDF:false,
                 swCertification:false,
+                idDetalle: '{{idDetalle}}'
 
                
             },
@@ -867,6 +868,7 @@
                             var data = new FormData();
                             data.append('datos', JSON.stringify(this.dataStudentModif));
                             data.append('informe', this.informe);
+                            data.append('idDetalle', this.idDetalle);
                                                         
                              axios.post(Routing.generate('specialmodificationdata_update_student'), data)
                             .then(response => {

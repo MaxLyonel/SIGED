@@ -108,7 +108,7 @@
                 <div class="body-content animated fadeIn">
                     {% if estado is defined  %}
                         <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12">
+                            <div class="col-lg-12 col-md-12 col-sm-12" >
                                 {% if estado == false %}
                                     <div class="alert alert-danger ">
                                         <span class="alert-icon"><i class="fa fa-comments-o"></i></span>
@@ -152,12 +152,13 @@
                                                 </div>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                                                     <div class="text-right">
-                                                        <h3 class="mt-0 text-info"><strong>Trámite Nro.: </strong> {{listaDocumento.tramite}}</h3>
+                                                        <h3 class="mt-0 text-info"><strong>Nro.: </strong> {{listaDocumento.tramite}}</h3>
                                                         {% if listaDocumento.serie is not null and listaDocumento.serie != "" %}<h3 class="mt-0 text-primary"><strong>N° SERIE:</strong> {{listaDocumento.serie}}</h3>{% endif %}
                                                         <address>
                                                             {% if listaDocumento.documentotipo is not null and listaDocumento.documentotipo != "" %}<strong>Tipo documento: </strong>  {{listaDocumento.documentotipo}}{% endif %}<br>
                                                             {% if listaDocumento.emisionfecha is not null and listaDocumento.emisionfecha != "" %}<strong>Fecha de emisión: </strong> {{listaDocumento.emisionfecha}}{% endif %} <br>
                                                             {% if listaDocumento.emisiondepartamento is not null and listaDocumento.emisiondepartamento != "" %}<strong>D.D.E. Emisor: </strong> {{listaDocumento.emisiondepartamento}}{% endif %}<br>
+                                                            {% if listaDocumento.personafirma is not null and listaDocumento.personafirma != "" %}<h5 class="text-success"><strong>Firma: </strong> {{listaDocumento.personafirma}}</h5>{% endif %}
                                                         </address>
                                                     </div>
                                                 </div>

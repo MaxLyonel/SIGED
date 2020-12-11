@@ -5,6 +5,148 @@ maestroAsignacion:
 
 maestroAsignacion_asignar:
     path:     /asignar
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignar }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia:
+    path:     /asignar/materia
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateria }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_finalizar:
+    path:     /asignar/materia/finalizar
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaFinalizar }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_eliminar:
+    path:     /asignar/materia/eliminar
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaEliminar }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_modificar_cargo_comisionado_organizacion_social:
+    path:     /asignar/materia/modificar/cargo/comisionado/organizacion/social
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaModificarCargoOrganizacionSocial }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_lista_nivel:
+    path:     /asignar/materia/lista/nivel
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaListaNivel }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_lista_grado_asignatura:
+    path:     /asignar/materia/lista/grado_asignatura
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMaterialistaGradoAsignatura }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_lista_paralelo:
+    path:     /asignar/materia/lista/paralelo
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMaterialistaParalelo }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_lista_asignatura_curso:
+    path:     /asignar/materia/lista/asignatura_curso
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMaterialistaAsignaturaCurso }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_lista_curso_asignatura:
+    path:     /asignar/materia/lista/curso_asignatura
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMaterialistaCursoAsignatura }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_formulario:
+    path:     /asignar/materia/formulario
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaFormulario }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_guarda:
+    path:     /asignar/materia/guarda
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaGuarda }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_elimina:
+    path:     /asignar/materia/elimina
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaElimina }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_materia_edita:
+    path:     /asignar/materia/edita
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaEdita }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_maestro:
+    path:     /asignar/maestro
     defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestro }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_maestro_finalizar:
+    path:     /asignar/maestro/finalizar
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroFinalizar }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_fuente_financiamiento:
+    path:     /asignar/fuente/financiamiento
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarFuenteFinanciamiento }
+    options:
+        expose: true
+
+maestroAsignacion_asignar_fuente_financiamiento_guarda:
+    path:     /asignar/fuente/financiamiento/guarda
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarFuenteFinanciamientoGuarda }
+    options:
+        expose: true
+
+maestroAsignacion_omitir:
+    path:     /omitir
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:omitir }
+    options:
+        expose: true
+
+maestroAsignacion_validar_segip:
+    path:     /validar/segip
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:validarSegip }
+    options:
+        expose: true
+
+maestroAsignacion_validar_segip_guarda:
+    path:     /validar/segip/guarda
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:validarSegipGuarda }
+    options:
+        expose: true
+
+maestroAsignacion_lista:
+    path:     /asignar/maestro/lista
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroLista }
+    options:
+        expose: true
+
+maestroAsignacion_guarda:
+    path:     /asignar/maestro/guarda
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroGuarda }
+    options:
+        expose: true
+
+maestroAsignacion_index:
+    path:     /asignar/maestro/materia/index
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaIndex }
+
+maestroAsignacion_asignar_materia_maestro_dato:
+    path:     /asignar/materia/maestro/dato
+    defaults: { _controller: SieRegularBundle:MaestroAsignacion:asignarMaestroMateriaMaestroDato }
     options:
         expose: true

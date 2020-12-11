@@ -102,7 +102,7 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <div class="panel rounded shadow panel-teal">
+                <div class="panel rounded shadow panel-primary">
                     <div class="panel-heading">
                         <div class="pull-left">
                             <h3 class="panel-title">Administrativos</h3>
@@ -110,16 +110,16 @@
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
                     <div class="panel-body">
-                        <div class="panel-body panel-teal">
+                        <div class="panel-body panel-primary">
                             <div class="pull-right">
                                 {% if (personal is empty or (activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false))) and gestion == 2020 %}
-                                    <a href="{{path('herramienta_especial_info_personal_adm_find')}}" id="nuevoA" name="nuevoA" class="btn btn-teal btn-md" style="display:inline-block"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
+                                    <a href="{{path('herramienta_especial_info_personal_adm_find')}}" id="nuevoA" name="nuevoA" class="btn btn-facebook btn-md" style="display:inline-block"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
                                 {% endif %}
                                 {% if personal_no_idioma is empty and personal_no_genero is empty and contador == 1 and personal is not empty %}
                                     <form action="{{path('reporte_especial_uno')}}" method="post" style="display:inline-block">
                                         <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                         <input type="hidden" name="gestion" value="{{gestion}}">
-                                        <button type="submit" class="btn btn-md btn-primary"><i class="fa fa-save"></i> Generar Reporte</button>
+                                        <button type="submit" class="btn btn-md btn-facebook"><i class="fa fa-save"></i> Generar Reporte</button>
                                     </form>
                                 {% endif %}
                             </div>
@@ -211,7 +211,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                      {% if (app.session.get('lastOperativo') != 5 and onlyview == false and gestion == 2020) %}
+                                                        {% if (app.session.get('lastOperativo') != 5 and onlyview == false and gestion == 2020) %}
                                                         <form action="{{path('herramienta_especial_info_personal_adm_es_vigente_administrativo')}}" method="post" style="display: inline-block">
                                                             <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                                             <input type="hidden" name="gestion" value="{{gestion}}">
@@ -223,7 +223,7 @@
                                                                 <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está segura/o de continuar?');">Definir como Vigente</button>
                                                             {% endif %}
                                                         </form>
-                                                      {% else %}
+                                                        {% else %}
                                                         {% if personal.esVigenteAdministrativo %}
                                                             <span class="text-success">
                                                                 Vigente
@@ -250,7 +250,6 @@
         </div>
     </div>
 {% endblock %}
-
 {% block javascripts %}
     {{parent()}}
     <script>

@@ -32,7 +32,11 @@ herramienta_alter_reporte_sieparticipantes:
     
 herramienta_alter_libretas:
     path:     /{eInsId}/{nivel}/siealtlibretas
-    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:siealtlibretas }         
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:siealtlibretas }
+
+herramienta_alter_printrecordcard:
+    path:     /{eInsId}/{nivel}/{sie}/{gestion}/{subcea}/{periodo}/{iecid}/printrecordcard
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:printrecordcard }     
     
 herramienta_alter_reporte_observacionesoperativoinicio:
     path:     /observacionesoperativoinicio

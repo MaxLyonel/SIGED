@@ -18,6 +18,12 @@ class InfoEspecialController extends Controller{
   public function indexAction(Request $request){
     // get the data conexion
     $em = $this->getDoctrine()->getManager();
+    
+    if ($this->session->get('roluser') == 7 or $this->session->get('roluser') == 8 or $this->session->get('roluser') == 9 or $this->session->get('roluser') == 10) {
+      $request->getSession()->set('onlyview', false);
+    } else {
+      $request->getSession()->set('onlyview', true);
+    }
 
     if ($request->getMethod() == 'POST') {
         $form = $request->get('form');
@@ -25,7 +31,7 @@ class InfoEspecialController extends Controller{
         $institucion = $form['sie'];
 
         $objCentro = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $institucion, 'institucioneducativaTipo' => 4));
-
+        
         if($objCentro){
             /*
              * verificamos si tiene tuicion
@@ -41,11 +47,6 @@ class InfoEspecialController extends Controller{
                 $institucion = $form['sie'];
                 // creamos variables de sesion de la institucion educativa y gestion
                 $request->getSession()->set('ie_id', $institucion);
-                if ($this->session->get('roluser') == 7 or $this->session->get('roluser') == 8 or $this->session->get('roluser') == 9 or $this->session->get('roluser') == 10) {
-                  $request->getSession()->set('onlyview', false);
-                } else {
-                  $request->getSession()->set('onlyview', true);
-                }
             } else {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa');
                 return $this->redirect($this->generateUrl('herramienta_especial_buscar_centro'));
@@ -185,7 +186,7 @@ class InfoEspecialController extends Controller{
                       ->setAction($this->generateUrl($goToPath))
                       ->add('gestion', 'hidden', array('data' => $data['gestion']))
                       ->add('sie', 'hidden', array('data' => $this->unidadEducativa))//81880091
-                      ->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')))
+                      ->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-facebook btn-md btn-block', 'onclick'=>'closeOperativo()')))
                       ->getForm()
       ;
   }
@@ -201,7 +202,7 @@ class InfoEspecialController extends Controller{
                       ->setAction($this->generateUrl($goToPath))
                       ->add('gestion', 'hidden', array('data' => $data['gestion']))
                       ->add('sie', 'hidden', array('data' => $data['idInstitucion']))//81880091
-                      ->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
+                      ->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-facebook btn-md btn-block')))
                       ->getForm()
       ;
   }

@@ -1,0 +1,110 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaPlataforma:
+    type: entity
+    table: institucioneducativa_plataforma
+    indexes:
+        IDX_6093F2E43AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_6093F2E48F24FC0:
+            columns:
+                - director_persona_id
+        IDX_6093F2E41D17EB9:
+            columns:
+                - responsable_persona_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        plataforma:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+        dominio:
+            type: string
+            nullable: false
+            length: 170
+            fixed: false
+            comment: ''
+        ip:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+        celDirector:
+            type: string
+            nullable: false
+            length: 30
+            fixed: false
+            comment: ''
+            column: cel_director
+        celResponsable:
+            type: string
+            nullable: true
+            length: 30
+            fixed: false
+            comment: ''
+            column: cel_responsable
+        estado:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+        documento:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+        json:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        directorPersona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                director_persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        responsablePersona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                responsable_persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -71,7 +71,7 @@
                 </div>
                 <div id="panelinstitucion" class="panel-collapse collapse in">
                     <div class="portlet-body">
-                        <div class="panel-body panel-teal">
+                        <div class="panel-body panel-primary">
                             <div id="no-more-tables">
                                 <table class="table table-bordered cf">
                                     <thead class="cf">
@@ -94,7 +94,7 @@
                                 <form action="{{path('reporte_especial_cuatro')}}" method="post" style="display:inline-block">
                                     <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                     <input type="hidden" name="gestion" value="{{gestion}}">
-                                    <button type="submit" class="btn btn-md btn-primary"><i class="fa fa-save"></i> Generar Reporte</button>
+                                    <button type="submit" class="btn btn-md btn-facebook"><i class="fa fa-save"></i> Generar Reporte</button>
                                 </form>
                             </div>
                         </div>
@@ -126,7 +126,7 @@
                 </div>
                 <div id="panelmaestro" class="panel-collapse collapse in">
                     <div class="portlet-body">
-                        <div class="panel-body panel-teal">
+                        <div class="panel-body panel-primary">
                             <div id="accordion" class="panel-group">
                                 {% if inscritos is not empty %}
                                     <ul id="myPills" class="nav nav-pills">

@@ -1,0 +1,572 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+
+        [v-cloak]{
+            display: none;
+        }
+        .readData{
+            background-color: lightblue;
+            color:  #000;
+            opacity: 0.8;
+         
+
+        }
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Consulta Bono Juancito Pinto
+                    <small>de Estudiantes</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-dashboard"></i>  <a href="#">Buscar</a></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- /.row -->
+<div id="app">
+  <div v-cloak>
+    <div class="modal fade" id="modalEstudianteTwo" data-backdrop="static">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Información BJP</h4>
+                </div>
+                <div class="modal-body">
+                  
+
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div id="no-more-tables">
+                            <h5 class="text-info">Datos de la/el Estudiante</h5>
+                            <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                                <tr>
+                                    <th>Codigo Rude</th><td style="color:#0086DD">${objStudent.rude}</td>
+                                </tr>
+                                <tr>
+                                    <th>Estudiante</th><td><strong> ${objStudent.nombre} ${objStudent.paterno} ${objStudent.materno}</strong></td>
+                                </tr>
+                                <tr>
+                                    <th>Carnet de Identidad</th><td>${objStudent.carnet} ${objStudent.complemento}</td>
+                                </tr>
+                                <tr>
+                                    <th>Género</th><td>${objStudent.genero}</td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha de Nacimiento</th><td>${objStudent.fecNac}</td>
+                                </tr>
+                                <tr>
+                                    <th>Estado de matrícula</th><td>${objStudent.matricula}</td>
+                                </tr>
+                            </table>
+
+                            <div v-if="DBApoderados.length > 0">
+                            
+                                <h5 class="text-info">Apoderado(s) registrado(s)</h5>
+                                 
+                                    <table v-for="apoderado in DBApoderados" class="table table-condensed table-bordered" style="background:#EEEEEE">
+                                        <tr>
+                                            <th>Nombre(s) y Apellido(s)</th><td><strong>${apoderado.nombre} ${apoderado.paterno} ${apoderado.materno}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Carnet de Identidad</th><td>${apoderado.carnet} <div v-if = " apoderado.complemento "> - ${apoderado.complemento} </div></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Fecha de Nacimiento</th><td>${apoderado.fecNac}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Apoderado</th><td>${apoderado.apoderadoTipo}</td>
+                                        </tr>
+                                    </table>
+                                
+                            </div>                          
+                            <div v-else class="alert alert-warning" role="alert">
+                                <i class="fa fa-fw fa-warning"></i> No cuenta con apoderado(s) registrado(s) en la presente gestión
+                            </div>
+                            
+{#
+                            {% if pagoBf|length > 0 %}
+                                <h5 class="text-info">Persona que realizó el cobro</h5>
+                                <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                                    <tr>
+                                        <th>N° Transacción</th><td style="color:#0086DD">{{pagoBf.transaccion}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nombre(s) y Apellido(s)</th><td><strong>{{pagoBf.nombre}} {{pagoBf.paterno}} {{pagoBf.materno}}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Carnet de Identidad</th><td>{{pagoBf.carnet}}{% if pagoBf.complemento %} - {{pagoBf.complemento}}{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fecha de Nacimiento</th><td>{{pagoBf.fechaNacimiento|date('d-m-Y')}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fecha/Hora</th><td>{{pagoBf.fechaPago|date('d-m-Y')}} {{pagoBf.horaPago|date('H:i:s')}}</td>
+                                    </tr>
+                                </table>
+                            {% else %}
+                                <div class="alert alert-info" role="alert">
+                                    <i class="fa fa-fw fa-info-circle"></i> No se realizó el cobro
+                                </div>
+                            {% endif %}
+
+                            {% if observadoBf|length > 0 %}
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="fa fa-fw fa-info-circle"></i> La/El estudiante cuenta con observaciones
+                                </div>
+                                <h5 class="text-info">Observación</h5>
+                                <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                                    <tr>
+                                        <th>Código RUDE</th><td style="color:#0086DD">{{observadoBf.codigoRude}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Nombre(s) y Apellido(s)</th><td><strong>{{observadoBf.nombre}} {{observadoBf.paterno}} {{observadoBf.materno}}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Carnet de Identidad</th><td>{{observadoBf.carnetIdentidad}}{% if observadoBf.complemento %} - {{observadoBf.complemento}}{% endif %}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Fecha de Nacimiento</th><td>{{observadoBf.fechaNacimiento|date('d-m-Y')}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Observación</th><td>{{observadoBf.obs}}</td>
+                                    </tr>
+                                </table>
+                            {% else %}
+                                <div class="alert alert-info" role="alert">
+                                    <i class="fa fa-fw fa-info-circle"></i> La/El estudiante no cuenta con observaciones
+                                </div>
+                            {% endif %}
+#}                            
+                        </div>
+                    </div>
+                </div>                  
+
+             
+
+                </div>
+            </div>
+        </div>
+    </div> 
+
+      <div class="body-content animated fadeIn">
+            <div class="row">
+              <div class="col-xs-12 col-lg-12">
+
+
+                <div class="panel panel-default">
+                  <div class="panel-body">
+
+                    <form >
+               
+                      <div class="form-row">
+                        <div class="form-group col-md-6">
+                          <input type="text" v-model="student.codigoRude" class="form-control jupper" maxlength="18" v-on:keypress="alfanumerico" placeholder="COD. RUDE">
+                        </div>
+                      </div>
+                      
+                      <button type="button" class="btn btn-primary" @click="lookforStudentData()">Buscar</button>
+                    </form>
+
+                  </div>
+                </div>
+
+                            
+              </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12 col-lg-12">
+                    <div v-if="buscando" class="text-center">
+                        <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                    </div>
+                  <!--   <div v-if="!swresponse">
+                                        <strong>${message}</strong>
+                                    </div>   -->                  
+                </div>
+            </div>
+
+
+            <div class="row" v-if="existStudentData">
+                <div class="col-xs-12 col-lg-12">
+                  <div class="panel panel-default">
+                    <div class="panel-body">
+                      
+                      <table class="table table-dark">
+                        <thead>
+                          <tr>
+                            <th scope="col">COD. RUDE</th>
+                            <th scope="col">PATERNO</th>
+                            <th scope="col">MATERNO</th>
+                            <th scope="col">NOMBRE(S)</th>
+                            <th scope="col">FECHA NACIMIENTO</th>
+                            <th scope="col">CI COMPLEMENTO</th>  
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>${objStudent.rude}</td>
+                            <td>${objStudent.paterno}</td>
+                            <td>${objStudent.materno}</td>
+                            <td>${objStudent.nombre}</td>
+                            <td>${objStudent.fecNac}</td>
+                            <td>${objStudent.carnet} ${objStudent.complemento}</td>
+                          </tr>
+                          
+                        </tbody>
+                      </table>
+
+                    <small>
+                    <table class="table table" aria-describedby="example-table_info" style="margin-top:50px;">
+                          <thead>
+                            <tr>
+                            <td>Gestión</td>
+                            <td>SIE</td>
+                            <td>Unidad Educativa</td>
+                            <td>Nivel</td>
+                            <td>Grado</td>
+                            <td>Paralelo</td>
+                            <td>Turno</td>
+                            <td>Estado Matrícula</td>
+                            </tr>
+                            
+                          </thead>
+
+                          
+                        <tbody role="alert" aria-live="polite" aria-relevant="all"><tr class="success odd">
+                                <tr v-for="studentHistory in DBhistory">
+                                  <td class=" ">${studentHistory.gestion}</td>
+                                  <td class=" ">${studentHistory.sie}</td>
+                                  <td class=" ">${studentHistory.institucioneducativa}</td>
+                                  <td class=" ">${studentHistory.nivel}</td>
+                                  <td class=" ">${studentHistory.grado}</td>
+                                  <td class=" ">${studentHistory.paralelo}</td>
+                                  <td class=" ">${studentHistory.turno}</td>
+                                  <td class=" ">${studentHistory.estadoMatricula}</td>
+                                  <td class=" ">
+                                    <div class="col-sm" style=" text-align: right; ">
+                                    <a class="btn btn-info" data-toggle="modal" href='#modalEstudianteTwo' @click="clearIniPriVars"> <i class="fa fa-eye"></i>INFO BJP </a>
+                                    </div>
+                                  </td>
+                                </tr>
+                                
+                        </tbody>
+                    </table> 
+                    </small>
+
+
+                  </div>                    
+                </div>
+            </div>
+
+
+
+      </div>
+  </div>
+</div>  
+
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript">
+    // $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+  </script>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+      <script src="{{asset('js/inputmask.js')}}"></script>
+    <script type="text/javascript">
+// $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+    
+
+
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+
+            data: {
+              
+              DBTurno:{},
+              DBLevel:{},
+              DBGrado:{},
+              objErrors:[],
+              DBhistory:{},
+              objStudent:{},
+              DBParalelos:{},
+              DBApoderados:{},
+              currenteInscription:{},
+              messageObservaation:'',
+              student:{codigoRude:''},
+              buscando:false,
+              isShowing:false,
+              swObservation:false,
+              existStudentData:false,
+              swUpdateLevelGradoIniPri:false,
+              DBNextLevel:{'paraleloId':'','turnoId':''},
+              informe:''
+              
+              
+ 
+            },
+            methods: {
+
+              getImage: function(event){
+                  var informe = event.target.files[0];
+                  var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+                  if(!allowedExtensions.exec(event.target.value)){
+                      event.target.value = '';
+                      Swal.fire(
+                            'Archivo incorrecto!',
+                            'El archivo adjunto debe ser una imagen o un archivo pdf',
+                            'warning'
+                          );
+                      this.informe = '';
+                      return false;
+                  }else{
+                      var megas = (informe.size / 1024)/1024;
+                      if (megas > 2) {
+                          event.target.value = '';
+                          Swal.fire(
+                            'Tamaño no permitido!',
+                            'El archivo debe tener un tamaño menor a 2MB',
+                            'warning'
+                          );
+                          this.informe = '';
+                          return false;
+                      }
+                  }
+                  this.informe = event.target.files[0];
+              },                
+
+              lookforStudentData: function(){
+                this.buscando=true;
+                this.existStudentData=false;
+                this.swObservation=false;
+                this.messageObservaation='';
+                this.currenteInscription={};
+                this.DBApoderados={};
+                this.DBNextLevel={};
+                this.DBLevel={};
+                this.DBGrado={};
+                
+                axios.post(Routing.generate('requestbjp_look_student_data', this.student))
+                .then(response => {
+                  
+                  if (response.status == 200) {
+                    this.DBApoderados = response.data.arrApoderado;
+                    this.DBNextLevel = response.data.arrNextLevel;
+                    this.DBhistory = response.data.dataInscriptionR;
+                    this.objStudent = response.data.arrStudentExist;
+                    this.swObservation = response.data.swObservation;
+                    this.existStudentData = response.data.existStudentData;
+                    this.messageObservaation = response.data.messageObservaation;
+                    this.currenteInscription = response.data.arrCurrenteInscription;
+                    this.swUpdateLevelGradoIniPri = response.data.swUpdateLevelGradoIniPri;
+                    this.DBLevel = response.data.arrLevel;
+
+                  }
+                 this.buscando=false;
+                })
+                .catch(e => {
+                  Swal.fire(
+                      'Aviso',
+                      'No se pudo realizar la Busqueda',
+                      'error'
+                  )
+                  
+                });                
+        
+              },
+              clearIniPriVars: function(){
+                console.log('krlos');
+                this.isShowing= false;
+              },
+              setGrado: function(){
+                  this.DBGrado='Seleccionar...';
+                  this.DBParalelos='Seleccionar...';
+                  this.DBTurno='Seleccionar...';
+                  axios.post(Routing.generate('updateSudentLevel_setGrado', this.DBNextLevel ))
+                      .then(response => {
+                          if (response.status == 200) {
+                              this.DBGrado = response.data.arrGrado;
+                              $('[data-toggle="tooltip"]').tooltip();
+                          }
+                         
+                          this.buscandoue = false;
+                      })
+                      .catch(e => {
+                          console.log(e);
+                          // this.buscando = false;
+                      });
+
+            
+              }, 
+              setParalelo: function(){
+                this.DBParalelos='Seleccionar...';
+                  axios.post(Routing.generate('updateSudentLevel_setParalelo', this.DBNextLevel ))
+                      .then(response => {
+                          if (response.status == 200) {
+                              this.DBParalelos = response.data.arrParalelo;
+                              $('[data-toggle="tooltip"]').tooltip();
+                          }
+                         
+                          this.buscandoue = false;
+                      })
+                      .catch(e => {
+                          console.log(e);
+                          // this.buscando = false;
+                      });
+
+            
+              },                               
+              setTurno: function(newobject){
+              
+                  this.DBTurno='Seleccionar...';
+                  axios.post(Routing.generate('updateSudentLevel_setTurno', this.DBNextLevel ))
+                      .then(response => {
+                          if (response.status == 200) {
+                              this.DBTurno = response.data.arrTurno;
+                              $('[data-toggle="tooltip"]').tooltip();
+                          }
+                         
+                          this.buscandoue = false;
+                      })
+                      .catch(e => {
+                          console.log(e);
+                          // this.buscando = false;
+                      });
+
+            
+              },
+              doUpdate: function(){
+
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                        'Adjuntar Documento',
+                        'Debe adjuntar el DOCUMENTO SOLICITADO para ralizar la modificación, puede ser un archivo de imagen o PDF, no mayor a 2MB',
+                        'warning'
+                        );
+                        return;
+                    }                
+
+                    if(typeof this.DBNextLevel.paraleloId ==='undefined' ){
+                        Swal.fire(
+                        'Campo Paralelo es requerido',
+                        'Debe seleccionar un Paralelo',
+                        'warning'
+                        );
+                        return;
+                    }
+
+                    if(typeof this.DBNextLevel.turnoId ==='undefined' ){
+                        Swal.fire(
+                        'Campo Turno es requerido',
+                        'Debe seleccionar un Turno',
+                        'warning'
+                        );
+                        return;
+                    }
+
+
+
+                    Swal.fire({
+                        title: 'Realizar Actualización?',
+                        text: "esta seguro de realizar la Actualización",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                      if (result.value) {   
+                        var data = new FormData();
+                        data.append('datos', JSON.stringify(this.DBNextLevel));
+                        data.append('informe', this.informe);             
+                
+                        axios.post(Routing.generate('updateSudentLevel_doUpdate'), data)
+                            .then(response => {
+                              this.DBhistory = {};
+                                if (response.status == 200) {
+                                    this.DBhistory = response.data.dataInscriptionR;
+                                    this.swObservation = response.data.swObservation;
+                                    this.messageObservaation = response.data.messageObservaation;
+                                    this.existStudentData = response.data.existStudentData;
+
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                    $('#modalEstudianteTwo').modal('hide');
+                                }
+                               
+                                this.buscandoue = false;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                // this.buscando = false;
+                            }); 
+
+                      }
+                    })
+
+              },
+
+
+              alfanumerico: function(event){
+                  var k = event.charCode || event.keyCode;
+                  if ((k < 97 || k > 122)//letras minusculas
+                      && (k < 65 || k > 90) //letras mayusculas
+                      && (k < 48 || k > 57) //NUmeros
+                      && (k != 13) //ENTER
+                      && (k != 8) //retroceso
+                      && (k != 9) //tab
+                      && (k != 241) //ñ
+                       && (k != 209) //Ñ
+                       && (k != 32) //espacio
+                       && (k != 225) //á
+                       && (k != 233) //é
+                       && (k != 237) //í
+                       && (k != 243) //ó
+                       && (k != 250) //ú
+                       && (k != 193) //Á
+                       && (k != 201) //É
+                       && (k != 205) //Í
+                       && (k != 211) //Ó
+                       && (k != 218) //Ú
+                       && (k != 44) //coma ,
+                       && (k != 46) //punto .
+                  ){
+                    event.preventDefault();
+                    return false;
+                  }
+              },              
+
+           
+
+            },
+            mounted(){
+               
+            }
+        });
+
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $("td").focus();
+        });        
+
+
+    </script>
+{%endblock%}

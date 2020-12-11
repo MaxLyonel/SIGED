@@ -61,3 +61,15 @@ tramite_documento_serie_nuevo_guarda:
     defaults: { _controller: SieTramitesBundle:Documento:serieNuevoGuarda }
     options:
          expose: true 
+
+tramite_documento_reactiva_busca:
+    path:     /reactiva/busca
+    defaults: { _controller: SieTramitesBundle:Documento:reactivaBusca }
+
+tramite_documento_reactiva_lista:
+    path:     /reactiva/lista
+    defaults: { _controller: SieTramitesBundle:Documento:reactivaLista }
+
+tramite_documento_reactiva_guarda:
+    path:     /reactiva/guarda
+    defaults: { _controller: SieTramitesBundle:Documento:reactivaGuarda }

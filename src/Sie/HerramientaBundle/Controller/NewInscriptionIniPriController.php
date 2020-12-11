@@ -36,7 +36,46 @@ class NewInscriptionIniPriController extends Controller
     }
     // index method
     public function indexAction(Request $request){
-     return $this->redirect($this->generateUrl('principal_web'));
+      $arrWeenhayec = array(
+        61710004,
+        61710014,
+        61710021,
+        61710022,
+        61710028,
+        61710031,
+        61710036,
+        61710038,
+        61710041,
+        61710042,
+        61710043,
+        61710062,
+        61710063,
+        61710068,
+        61710076,
+        61710077,
+        61710083,
+        61710084,
+        61710085,
+        61710086,
+        61710087,
+        61710088,
+        61710089,
+        61710090,
+        61710091,
+        61710092,
+		61710093,
+		80730370,
+		81981667,
+		61710097,
+		61710098
+      );
+
+      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or $this->session->get('roluser')==7){
+        //nothing todo
+      }else{
+        return $this->redirect($this->generateUrl('principal_web'));
+      }    	
+     //return $this->redirect($this->generateUrl('principal_web'));
     	$em = $this->getDoctrine()->getManager();
         //validation if the user is logged
         if (!isset($this->userlogged)) {
@@ -832,7 +871,7 @@ class NewInscriptionIniPriController extends Controller
 			break;
 		case 2:
 			$swinscription = $this->rezagoYearValidation($yearStudent,$nivel,$grado);
-			if(!$swnewforeign){
+			if($swnewforeign){
 				$swinscription = !$this->getCurrentInscriptionsByGestoinValida($arrDatos['rude'],$this->currentyear-1);
 			}
 			break;
