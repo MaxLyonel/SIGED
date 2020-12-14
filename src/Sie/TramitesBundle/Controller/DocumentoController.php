@@ -302,7 +302,7 @@ public function getDocumentoTokenImpreso($token) {
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp.lugarTipo')
                 ->where('t.id = :codTramite')
                 ->setParameter('codTramite', $tramite)
-                ->orderBy('d.fechaImpresion', 'DESC');
+                ->orderBy('d.fechaImpresion', 'DESC', 'd.id', 'DESC');
         $entityDocumento = $query->getQuery()->getResult();
         if(count($entityDocumento)>0){
             return $entityDocumento;
