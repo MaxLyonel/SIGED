@@ -595,8 +595,19 @@ class InfoPersonalAdmController extends Controller {
         foreach ($formacion as $fr) {
             $formacionArray[$fr->getId()] = $fr->getFormacion();
         }
-        $fechaInicio = "01-01-".$gestion;
-        $fechaFin = "31-12-".$gestion;
+        
+        if ($maestroInscripcion->getAsignacionFechaInicio()){
+            $fechaInicio = $maestroInscripcion->getAsignacionFechaInicio()->format('d-m-Y');
+        } else {
+            $fechaInicio = "";
+        }
+
+        if ($maestroInscripcion->getAsignacionFechaFin()){
+            $fechaFin = $maestroInscripcion->getAsignacionFechaFin()->format('d-m-Y');
+        } else {
+            $fechaFin = "";
+        }
+        
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_info_personal_adm_update'))
                 ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
