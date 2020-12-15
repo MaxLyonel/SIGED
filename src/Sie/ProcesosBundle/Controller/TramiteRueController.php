@@ -882,19 +882,22 @@ class TramiteRueController extends Controller
             $new_name='default-2x.pdf';
         }
         return $new_name;*/
-
-        $new_name = '';
-        if(!empty($file)){
-            $new_name = date('YmdHis').rand(1,99).'.'.$file->getClientOriginalExtension();
-            $directoriomove = $this->get('kernel')->getRootDir() . $ruta;
-            $file->move($directoriomove, $new_name);
-            if (!file_exists($directoriomove.'/'.$new_name)){
-                return '';
+        try {
+            $new_name = '';
+            if(!empty($file)){
+                $new_name = date('YmdHis').rand(1,99).'.'.$file->getClientOriginalExtension();
+                $directoriomove = $this->get('kernel')->getRootDir() . $ruta;
+                $file->move($directoriomove, $new_name);
+                if (!file_exists($directoriomove.'/'.$new_name)){
+                    return '';
+                }
+            }else{
+                $new_name='';
             }
-        }else{
-            $new_name='';
+            return $new_name;
+        } catch (\Doctrine\ORM\NoResultException $ex) {
+            return '';
         }
-        return $new_name;
     }
 
     public function inicioSolicitudModificacionGuardarAction(Request $request)
@@ -1684,7 +1687,6 @@ class TramiteRueController extends Controller
             }
         }
         $datos = json_encode($datos);
-
 
         if($error_upload){
             $mensaje['dato'] = false;

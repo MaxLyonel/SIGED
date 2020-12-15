@@ -748,7 +748,11 @@ class MaestroAsignacionController extends Controller {
             $asignaturaId = $institucioneducativaCursoOfertaEntity->getAsignaturaTipo()->getId();
             if($maestroInscripcionId == 0){
                 $maestroInscripcionEntity = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('persona'=>0,'institucioneducativa'=>$institucionEducativaId));
-                $maestroInscripcionId = $maestroInscripcionEntity->getId();
+                if(count($maestroInscripcionEntity)>0){
+                    $maestroInscripcionId = $maestroInscripcionEntity->getId();
+                } else {
+                    $maestroInscripcionId = 0;
+                }
             } else {
                 $maestroInscripcionEntity = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroInscripcionId);
             }
@@ -1402,6 +1406,7 @@ class MaestroAsignacionController extends Controller {
             ->where('ie.id = :institucionEducativaId')
             ->andWhere('mi.gestionTipo = :gestionId')
             ->andWhere('mi.cargoTipo = 0')
+            ->andWhere('p.id != 0')
             ->setParameter('institucionEducativaId', $institucionEducativaId)
             ->setParameter('gestionId', $gestionId)
             ->orderBy('p.paterno', 'ASC', 'p.materno', 'ASC', 'p.nombre', 'ASC');
