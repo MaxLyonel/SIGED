@@ -70,6 +70,26 @@ class Notas{
 
         return $tipoNota;
     }
+
+    public function getTipoNotaEsp($sie,$gestion,$nivel,$grado){
+
+        if($gestion <= 2012){
+            $tipoNota = 'Trimestre';
+        }else{
+            if($gestion >= 2014){
+                $tipoNota = 'Bimestre';
+            }else{
+                if($grado == 1 and !in_array($nivel, array(1,11,403))){
+                    $tipoNota = 'Bimestre';
+                }else{
+                    $tipoNota = 'Trimestre';
+                }
+            }
+        }
+
+        return $tipoNota;
+    }
+
     /*
      * Variable opcion define si se trabajara sobre el operativo actual o regularizacion, R = regularizacion , A = actual,
      */
@@ -90,12 +110,12 @@ class Notas{
             $cantidadRegistrados = 0;
 
             $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado);
-
+            
             if($tipoNota == 'Trimestre'){
                 
                 if($gestion == 2020){
                     
-                    $operativo = ($nivel==11 or ($nivel ==12 && $grado == 1))?1:3;
+                    $operativo = ($nivel==11 or ($nivel ==12 && $grado == 1) or ($nivel ==403 && $grado == 1) or ($nivel ==404 && $grado == 1))?1:3;
 
                     //the new ini
 
@@ -189,7 +209,7 @@ class Notas{
                             break;
                         default:
                             $inicio = 6;
-                            $fin = 8;
+                            $fin = 9;
                             break;
                     }
 
@@ -243,9 +263,10 @@ class Notas{
                             for($i=$inicio;$i<=$fin;$i++){
                                 $existe = 'no';
                                 foreach ($asignaturasNotas as $an) {
-                                    //dump($an);
                                     if($i == $an['idNotaTipo']){
-                                        if($nivel != 11 and $nivel != 1 and $nivel != 403 and $nivel != 11 and ($nivel.$grado !=121)){
+                                        // dump($nivel);
+                                        // dump($grado);
+                                        if($nivel != 11 and $nivel != 1 and $nivel != 403 and $nivel != 11 and ($nivel.$grado !=121) and ($nivel.$grado !=4041)){
                                             $valorNota = $an['notaCuantitativa'];
                                             if($valorNota == 0 or $valorNota == "0"){
                                                 $cantidadFaltantes++;
@@ -275,7 +296,7 @@ class Notas{
                                         break;
                                     }
 
-                                }
+                                } //dump($valorNota);
                                 if($existe == 'no'){
                                     $cantidadFaltantes++;
                                     if($nivel != 11 and $nivel != 1 and $nivel != 403){
@@ -301,7 +322,7 @@ class Notas{
                              * PROMEDIOS
                              */
 
-                            if($nivel != 11 and $nivel != 1 and $nivel != 403 and $operativo >= 3){
+                            if($nivel != 11 and $nivel != 1 and $nivel != 403 and $nivel != 404 and $operativo >= 3){
                                 //new by krlos
                                  $idavg = ($gestion <= 2019)?"-5":"-9";
                                  
@@ -2581,18 +2602,21 @@ die;/*
             $tipo = $request->get('tipoNota');
             $nivel = $request->get('nivel');
             $idInscripcion = $request->get('idInscripcion');
+            
+            $gradoId = $request->get('grado');
 
-            $nivelesCualitativos = array(1,11,401,402,403,411);
-
-            if($tipo == 'Bimestre'){
+            $nivelesCualitativos = array(1,11,401,402,403,404,411);
+            //dump($idEstudianteNota);die;
+            if($tipo == 'Bimestre' or $tipo == 'trimestre2020'){
                 // Registro y/o modificacion de notas
                 for($i=0;$i<count($idEstudianteNota);$i++) {
+                    // dump($idEstudianteNota[$i]);
                     if($idEstudianteNota[$i] == 'nuevo'){
                         //if((!in_array($nivel, $nivelesCualitativos) and $notas[$i] != 0 ) or (in_array($nivel, $nivelesCualitativos) and $notas[$i] != "")){
                             $newNota = new EstudianteNota();
                             $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
                             $newNota->setEstudianteAsignatura($this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]));
-                            if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
+                            if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel.$gradoId == 4041 or $nivel == 411){
                                 $newNota->setNotaCuantitativa(0);
                                 $newNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
                             }else{
@@ -2640,7 +2664,7 @@ die;/*
                             $anterior['notaCualitativa'] = $updateNota->getNotaCualitativa();
                             $anterior['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
 
-                            if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
+                            if($nivel == 401 or $nivel == 402 or $nivel == 403 or ( $nivel.$gradoId == 4041 ) or $nivel == 411){
                                 $updateNota->setNotaCualitativa(mb_strtoupper($notas[$i],'utf-8'));
                             }else{
                                 $updateNota->setNotaCuantitativa($notas[$i]);
@@ -2671,7 +2695,7 @@ die;/*
                         }
                     }
                 }
-
+//die;
                 // Registro de notas cualitativas de incial primaria yo secundaria
                 for($j=0;$j<count($idEstudianteNotaCualitativa);$j++){
                     if($idEstudianteNotaCualitativa[$j] == 'nuevo'){
@@ -2751,6 +2775,7 @@ die;/*
                     }
                 }
             }
+            //die;
             if($tipo == 'Trimestre'){
                 for($i=0;$i<count($idEstudianteNota);$i++) {
                     if($idEstudianteNota[$i] == 'nuevo'){

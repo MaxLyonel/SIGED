@@ -229,18 +229,18 @@
                                 </div>
                                 <td class="text-center">
                                     {# APODERADOS #}
-                                    {% if gestion == 2020 and data.estadomatriculaId in [4] and false %}
+                                    {# {% if gestion == 2020 and data.estadomatriculaId in [4] and false %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderado('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-users"></i>
                                             </button>
                                         </div>
-                                    {% endif %}
+                                    {% endif %} #}
 
                                     {# APODERADO BONO FAMILIA #}
                                     {# {% if (gestion == 2020 or wenakeyBono) and data.estadomatriculaId in [4] and false %} #}
                                     {# PARA UES PRIVADAS #}
-                                    {% if (gestion == 2020 or wenakeyBono) and data.estadomatriculaId in [4] and true %}
+                                    {# {% if (gestion == 2020 or wenakeyBono) and data.estadomatriculaId in [4] and true %}
                                         {% if data.emitId == 19 %}
                                             <span class="badge badge-warning">Estudiante extranjero <br /> no habilitado</span>
                                         {% else %}
@@ -250,7 +250,7 @@
                                                 </button>
                                             </div>
                                         {% endif %}
-                                    {% endif %}
+                                    {% endif %} #}
 
                                     {# AREAS ESTUDIANTE #}
                                     {% if gestion >= 2019 and (data.estadomatriculaId in [4] or (data.estadomatriculaId in [5,11,28,55] and operativo < 5)) and nivel == 13 and grado >= 3 and app.session.get('ue_humanistica') == false %}
