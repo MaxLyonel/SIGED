@@ -68,8 +68,8 @@
                         </div>
                         <ul class="list-unstyled list-real-estate">
                             {% if listaDocumentoDetalle is defined  %}
+                                {% set countLegalizacion = 0  %}
                                 {% for detalle in listaDocumentoDetalle %}  
-
                                     <li>
                                         <a>
                                             <div class="pull-left">
@@ -81,7 +81,8 @@
                                                 <h3>{{ detalle.fechaemision|date('d/m/Y') }}</h3>
                                             </div>
                                             <div class="pull-right">
-                                                {% if detalle.documentoTipoId == 2 and loop.first  %}
+                                                {% if detalle.documentoTipoId == 2 and countLegalizacion == 0 %}
+                                                    {% set countLegalizacion = 1  %}
                                                     <form name="formPdf" role="form" action="{{ path('tramite_documento_legalizacion_numero_serie_pdf') }}" method="POST">
                                                         <input type="hidden" name="codigo" value="{{detalle.id|base64_encode}}"/>
                                                         <input type="hidden" name="_token" value="{{ csrf_token(detalle.id) }}">
