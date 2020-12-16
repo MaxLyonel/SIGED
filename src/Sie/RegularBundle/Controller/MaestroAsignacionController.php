@@ -1136,7 +1136,7 @@ class MaestroAsignacionController extends Controller {
         $msg = "";
         $estado = true;
         $em = $this->getDoctrine()->getManager(); 
-
+        
         if($fechaInicio > $fechaFin){
             $msg = "Rango de fechas (".date_format($fechaInicio,'d-m-Y')." al ".date_format($fechaFin,'d-m-Y').") no valido, intente nuevamente";
             return $response->setData(array('estado'=>false, 'msg'=>$msg));
@@ -1155,12 +1155,24 @@ class MaestroAsignacionController extends Controller {
         }
         $gestionId = $institucioneducativaCursoOfertaMaestroEntity->getinstitucioneducativaCursoOferta()->getInsitucioneducativaCurso()->getGestionTipo()->getId();
         $institucionEducativaId = $institucioneducativaCursoOfertaMaestroEntity->getinstitucioneducativaCursoOferta()->getInsitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $maestroInscripcionId = $institucioneducativaCursoOfertaMaestroEntity->getMaestroInscripcion()->getId();
 
         $institucioneducativaCursoOfertaId = $institucioneducativaCursoOfertaMaestroEntity->getInstitucioneducativaCursoOferta()->getId();
         $notaTipoId = $institucioneducativaCursoOfertaMaestroEntity->getNotaTipo()->getId();
         $asignaturaId = $institucioneducativaCursoOfertaMaestroEntity->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId();
         
-        $listaMaestros = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta' => $institucioneducativaCursoOfertaId, 'notaTipo' => $notaTipoId), array('asignacionFechaInicio'=>'asc'));
+        // $listaMaestros = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta' => $institucioneducativaCursoOfertaId, 'notaTipo' => $notaTipoId), array('asignacionFechaInicio'=>'asc'))->findByNot(array('maestroInscripcion' => $maestroInscripcionId));
+
+        $entityDocumento = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro');
+        $query = $entityDocumento->createQueryBuilder('iecom')                
+                ->where('iecom.institucioneducativaCursoOferta = :institucioneducativaCursoOfertaId')
+                ->andWhere('iecom.notaTipo = :notaTipoId')
+                ->andWhere('iecom.maestroInscripcion != :maestroInscripcionId')
+                ->setParameter('institucioneducativaCursoOfertaId', $institucioneducativaCursoOfertaId)
+                ->setParameter('notaTipoId', $notaTipoId)
+                ->setParameter('maestroInscripcionId', $maestroInscripcionId)
+                ->orderBy('iecom.asignacionFechaInicio');
+        $listaMaestros = $query->getQuery()->getResult();
         
         $validacionFechaSecuencial = $this->getValidacionFechaSecuencial($listaMaestros, $gestionId, $fechaInicio, $fechaFin, $institucioneducativaCursoOfertaMaestroId);
         if(!$validacionFechaSecuencial['estado']){
@@ -1230,6 +1242,7 @@ class MaestroAsignacionController extends Controller {
         $ingresa = false;
         $error = false;
         $msg = "";
+        
         if(count($listaMaestros)>0){       
             foreach ($listaMaestros as $key => $data) {
                 $dataInstitucioneducativaCursoOfertaMaestroId = $data->getId();
@@ -1251,14 +1264,17 @@ class MaestroAsignacionController extends Controller {
                     }
                     $dataFechaInicio = $data->getAsignacionFechaInicio();
                     $dataFechaFin = $data->getAsignacionFechaFin();
+                    
                     if ($dataFechaFinAnterior < $fechaInicio and $fechaFin < $dataFechaInicio){
                         $ingresa = true;
                     }   
+                    
                     if(!isset($listaMaestros[$key+1])){  
                         $dataFechaInicioAnterior = $dataFechaInicio;
                         $dataFechaFinAnterior = $dataFechaFin;
                         $dataFechaInicio = new \DateTime("01-01-".($gestionId+1));
                         $dataFechaFin = new \DateTime("01-01-".($gestionId+1));
+                        
                         if ($dataFechaFinAnterior < $fechaInicio and $fechaFin < $dataFechaInicio){
                             $ingresa = true;
                         }
@@ -1269,6 +1285,7 @@ class MaestroAsignacionController extends Controller {
                     }  
                 }       
             }
+            
         }
         if($error){
             return array('estado'=>false, 'msg'=>$msg);
