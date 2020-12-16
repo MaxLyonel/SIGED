@@ -534,7 +534,7 @@ class InfoMaestroController extends Controller {
 
         $query = $em->createQuery(
                         'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                     WHERE ct.id = 0');
+                     WHERE ct.id IN (0,70) ORDER BY ct.id');
 
         $cargos = $query->getResult();
         $cargosArray = array();
@@ -595,8 +595,8 @@ class InfoMaestroController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQuery(
-                        'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                        WHERE ct.id = 0');
+            'SELECT ct FROM SieAppWebBundle:CargoTipo ct
+         WHERE ct.id IN (0,70) ORDER BY ct.id');
 
         $cargos = $query->getResult();
         $cargosArray = array();

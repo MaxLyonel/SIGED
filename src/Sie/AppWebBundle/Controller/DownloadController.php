@@ -644,42 +644,56 @@ class DownloadController extends Controller {
             if( !in_array($this->session->get('roluser'), array(7,8,10)) ){
                 $operativo = $operativo - 1;
             }
-            if($gestion >= 2019){
+            if($gestion == 2019){
                 switch ($nivel) {
                     case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v2_rcm.rptdesign'; break;
                     case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v2_rcm.rptdesign'; break;
                     case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v2_rcm.rptdesign'; break;
                 }
             }else{
-                if($gestion == $this->session->get('currentyear') and $operativo >= 1 and $operativo <= 3){
+                if($gestion == 2020){
                     switch ($nivel) {
-                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_b'.$operativo.'_v1_rcm.rptdesign'; break;
-                        case 12: $reporte = 'reg_est_LibretaEscolar_primaria_b'.$operativo.'_v1_rcm.rptdesign'; break;
-                        case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_b'.$operativo.'_v1_rcm.rptdesign'; break;
+                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v4_rcm.rptdesign'; break;
+                        case 12: 
+                            if($grado == 1) {
+                                $reporte = 'reg_est_LibretaEscolar_primaria_v4_rcm.rptdesign';
+                            } else {
+                                $reporte = 'reg_est_LibretaEscolar_primaria_v4_1_rcm.rptdesign';
+                            }
+                            break;
+                        case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v4_rcm.rptdesign'; break;
                     }
-                }else{
-                    switch ($nivel) {
-                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v1_rcm.rptdesign'; break;
-                        case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v1_rcm.rptdesign'; break;
-                        case 13:
-                                if($sie == '80730460'){
-                                    if($gestion == 2014 and $nivel == 13 and $grado >= 4 and $paralelo >= 6){
-                                        $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
-                                    }else{
-                                        if($sie == '80730460' and $gestion == 2015 and $nivel == 13 and $grado >= 5 and $paralelo >= 6){
+                } else {
+                    if($gestion == $this->session->get('currentyear') and $operativo >= 1 and $operativo <= 3){
+                        switch ($nivel) {
+                            case 11: $reporte = 'reg_est_LibretaEscolar_inicial_b'.$operativo.'_v1_rcm.rptdesign'; break;
+                            case 12: $reporte = 'reg_est_LibretaEscolar_primaria_b'.$operativo.'_v1_rcm.rptdesign'; break;
+                            case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_b'.$operativo.'_v1_rcm.rptdesign'; break;
+                        }
+                    }else{
+                        switch ($nivel) {
+                            case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v1_rcm.rptdesign'; break;
+                            case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v1_rcm.rptdesign'; break;
+                            case 13:
+                                    if($sie == '80730460'){
+                                        if($gestion == 2014 and $nivel == 13 and $grado >= 4 and $paralelo >= 6){
                                             $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
                                         }else{
-                                            if($sie == '80730460' and $gestion == 2016 and $nivel == 13 and $grado >= 6 and $paralelo >= 6){
+                                            if($sie == '80730460' and $gestion == 2015 and $nivel == 13 and $grado >= 5 and $paralelo >= 6){
                                                 $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
                                             }else{
-                                                $reporte = 'reg_est_LibretaEscolar_secundaria_v1_rcm.rptdesign';
+                                                if($sie == '80730460' and $gestion == 2016 and $nivel == 13 and $grado >= 6 and $paralelo >= 6){
+                                                    $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
+                                                }else{
+                                                    $reporte = 'reg_est_LibretaEscolar_secundaria_v1_rcm.rptdesign';
+                                                }
                                             }
                                         }
+                                    }else{
+                                        $reporte = 'reg_est_LibretaEscolar_secundaria_v1_rcm.rptdesign';
                                     }
-                                }else{
-                                    $reporte = 'reg_est_LibretaEscolar_secundaria_v1_rcm.rptdesign';
-                                }
-                                break;
+                                    break;
+                        }
                     }
                 }
             }
@@ -693,14 +707,15 @@ class DownloadController extends Controller {
                 }
             }
         }
-        //dump($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&');die;
+        // dump($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&');die;
         // Generamos el reporte
 
         $response = new Response();
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'libreta_' . $rude . '_' . $gestion . '.pdf'));
-        if($gestion >= 2019){
+        
+        if($gestion == 2019){
             // VERIFICAMOS SI EL CURSO ES DE SEXTO DE SECUNDARIA Y CERRO OPERATIVO DE SEXTO 
             // PARA IMPRIMIR LIBRETA COMO OPERATIVO CERRADO HASTA 4TO BIMESTRE
             if($operativo == 3 and $nivel == 13 and $grado == 6){
@@ -714,6 +729,7 @@ class DownloadController extends Controller {
         }else{
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&'));
         }
+        
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -721,7 +737,7 @@ class DownloadController extends Controller {
         return $response;
     }
 
-      /**
+    /**
      * build the CUT report - cut report download pdf
      * @param Request $request
      * @return object cut report
