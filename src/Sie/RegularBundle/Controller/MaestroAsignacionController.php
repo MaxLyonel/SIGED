@@ -813,18 +813,18 @@ class MaestroAsignacionController extends Controller {
     
             $institucioneducativaCursoOfertaMaestroLista = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta' => $institucioneducativaCursoOfertaId, 'notaTipo' => $notaTipoId));
             if(count($institucioneducativaCursoOfertaMaestroLista) > 0){
-                if($asignaturaId == 1039){
-                    $institucioneducativaEspecialidadTecnicoHumanisticoEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array('institucioneducativa' => $institucionEducativaId, 'gestionTipo' => $gestionId));
-                    if(count($institucioneducativaCursoOfertaMaestroLista) >= count($institucioneducativaEspecialidadTecnicoHumanisticoEntity)){
-                        $msg = "No puede agregar mas de 1 maestro por especialidad";
-                        return $response->setData(array('estado'=>false, 'msg'=>$msg)); 
-                    }
-                } else {
-                    $validacionFechaSecuencial = $this->getValidacionFechaSecuencial($institucioneducativaCursoOfertaMaestroLista, $gestionId, $fechaInicio, $fechaFin, 0);
-                    if(!$validacionFechaSecuencial['estado']){                
+                $validacionFechaSecuencial = $this->getValidacionFechaSecuencial($institucioneducativaCursoOfertaMaestroLista, $gestionId, $fechaInicio, $fechaFin, 0);
+                if(!$validacionFechaSecuencial['estado']){                
+                    if($asignaturaId == 1039){
+                        $institucioneducativaEspecialidadTecnicoHumanisticoEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array('institucioneducativa' => $institucionEducativaId, 'gestionTipo' => $gestionId));
+                        if(count($institucioneducativaCursoOfertaMaestroLista) >= count($institucioneducativaEspecialidadTecnicoHumanisticoEntity)){
+                            $msg = "No puede agregar mas de 1 maestro por especialidad";
+                            return $response->setData(array('estado'=>false, 'msg'=>$msg)); 
+                        }
+                    } else {
                         return $response->setData(array('estado'=>$validacionFechaSecuencial['estado'], 'msg'=>$validacionFechaSecuencial['msg']));
                     }
-                }
+                }                
             } 
             //dump($maestroInscripcionId);dump($institucioneducativaCursoOfertaId);dump($notaTipoId);die;
 
@@ -1180,17 +1180,17 @@ class MaestroAsignacionController extends Controller {
         }
 
         if(count($listaMaestros) > 0){
-            if($asignaturaId == 1039){
-                $institucioneducativaEspecialidadTecnicoHumanisticoEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array('institucioneducativa' => $institucionEducativaId, 'gestionTipo' => $gestionId));
-                if(count($listaMaestros) >= count($institucioneducativaEspecialidadTecnicoHumanisticoEntity)){
-                    $msg = "No puede agregar mas de 1 maestro por especialidad";
-                    return $response->setData(array('estado'=>false, 'msg'=>$msg)); 
-                }
-            } else {
-                $validacionFechaSecuencial = $this->getValidacionFechaSecuencial($listaMaestros, $gestionId, $fechaInicio, $fechaFin, $institucioneducativaCursoOfertaMaestroId);
-                if(!$validacionFechaSecuencial['estado']){
+            $validacionFechaSecuencial = $this->getValidacionFechaSecuencial($listaMaestros, $gestionId, $fechaInicio, $fechaFin, $institucioneducativaCursoOfertaMaestroId);
+            if(!$validacionFechaSecuencial['estado']){
+                if($asignaturaId == 1039){
+                    $institucioneducativaEspecialidadTecnicoHumanisticoEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array('institucioneducativa' => $institucionEducativaId, 'gestionTipo' => $gestionId));
+                    if(count($listaMaestros) >= count($institucioneducativaEspecialidadTecnicoHumanisticoEntity)){
+                        $msg = "No puede agregar mas de 1 maestro por especialidad";
+                        return $response->setData(array('estado'=>false, 'msg'=>$msg)); 
+                    }
+                } else {
                     return $response->setData(array('estado'=>$validacionFechaSecuencial['estado'], 'msg'=>$validacionFechaSecuencial['msg']));
-                }
+                }                
             }
         } 
 
