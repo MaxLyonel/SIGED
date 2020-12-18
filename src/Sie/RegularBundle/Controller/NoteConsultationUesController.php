@@ -183,8 +183,8 @@ class NoteConsultationUesController extends Controller {
                         if ($inconsistencia) {
                           $message = 'Unidad Educativa presenta observaciones de inconsistencia';
                           $this->addFlash('warningconsultaue', $message);
-                          $exist = true;
-                          $arrValidation['observaciones_incosistencia'] = array();//$inconsistencia;                        
+                          $exist = false;
+                          $arrValidation['observaciones_incosistencia'] = $inconsistencia;                        
                         }
 
                       // this for the current year and close this task
