@@ -634,7 +634,7 @@ class MaestroAsignacionController extends Controller {
                 ->innerJoin('SieAppWebBundle:MaestroInscripcion', 'mi', 'WITH', 'mi.id = iecom.maestroInscripcion')
                 ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'p.id = mi.persona')
                 ->innerJoin('SieAppWebBundle:NotaTipo', 'nota', 'WITH', 'nota.id = iecom.notaTipo')
-                ->innerJoin('SieAppWebBundle:FinanciamientoTipo', 'ft', 'WITH', 'ft.id = iecom.financiamientoTipo')
+                ->leftJoin('SieAppWebBundle:FinanciamientoTipo', 'ft', 'WITH', 'ft.id = iecom.financiamientoTipo')
                 ->where('iecom.institucioneducativaCursoOferta = :institucionEducativaCursoOfertaId')
                 ->andWhere('nota.id = :notaTipoId')
                 ->setParameter('institucionEducativaCursoOfertaId', $institucionEducativaCursoOfertaId)
@@ -1281,11 +1281,13 @@ class MaestroAsignacionController extends Controller {
                     }
                 } else {
                     if(count($listaMaestros)==1){
-                        $ingresa = true;     
+                        $ingresa = true;   
                     }  
                 }       
             }
             
+        } else {
+            $ingresa = true;   
         }
         if($error){
             return array('estado'=>false, 'msg'=>$msg);
