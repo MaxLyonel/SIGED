@@ -587,7 +587,13 @@ class DownloadController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'Lista_Maestros_' . $ue . '_' . $nivel . '_' . trim($aDataUe[1]) . '_' . trim($aDataUe[2]) . '_' . $gestion . '.pdf'));
-        $report = $this->container->getParameter('urlreportweb') . 'reg_lst_MaestrosBoletinCentralizdor_v1.rptdesign&ue=' . $ue . '&nivel=' . $nivel . '&ciclo=' . $ciclo . '&grado=' . $grado . '&paralelo=' . $paralelo . '&turno=' . $turno . '&gestion=' . $gestion . '&&__format=pdf&';
+
+        if($gestion >= 2020) {
+            $report = $this->container->getParameter('urlreportweb') . 'reg_lst_MaestrosBoletinCentralizdor_v2.rptdesign&ue=' . $ue . '&nivel=' . $nivel . '&ciclo=' . $ciclo . '&grado=' . $grado . '&paralelo=' . $paralelo . '&turno=' . $turno . '&gestion=' . $gestion . '&&__format=pdf&';
+        } else {
+            $report = $this->container->getParameter('urlreportweb') . 'reg_lst_MaestrosBoletinCentralizdor_v1.rptdesign&ue=' . $ue . '&nivel=' . $nivel . '&ciclo=' . $ciclo . '&grado=' . $grado . '&paralelo=' . $paralelo . '&turno=' . $turno . '&gestion=' . $gestion . '&&__format=pdf&';
+        }
+
         $response->setContent(file_get_contents($report));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
