@@ -432,6 +432,7 @@ class CreacionCursosController extends Controller {
                 $this->get('session')->getFlashBag()->add('msgError', 'No se puede eliminar el curso, porque tiene estudiantes inscritos');
                 return $this->redirect($this->generateUrl('herramienta_ieducativa_index'));
             }
+
             /*
              * Verificamos si no tiene registros en curso oferta
             */ 
@@ -441,6 +442,15 @@ class CreacionCursosController extends Controller {
                 //$this->get('session')->getFlashBag()->add('msgError', 'No se puede eliminar el curso, porque cuenta con asignaturas');
                 //return $this->redirect($this->generateUrl('herramienta_ieducativa_index'));
                 foreach ($curso_oferta as $value) {
+                    $objEstAsig = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteCursoOferta' => $value, 'gestionTipo' => $gestion ));
+
+                    if($objEstAsig){
+                        foreach ($objEstAsig as $elementEA) {
+                            $em->remove($elementEA);
+                            $em->flush();
+                        }
+                    }
+
                     $curso_oferta_maestro = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta'=>$value->getId()));
                     if($curso_oferta_maestro){
                         foreach ($curso_oferta_maestro as $valueM) {
