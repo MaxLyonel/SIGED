@@ -78,6 +78,9 @@ class InfoNotasController extends Controller {
                         if($operativo >= 4 or $gestion < $gestionActual){
                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,11)));
                         }
+                        if($nivel == 404 and $grado == 1) {
+                            $actualizarMatricula = false;
+                        }
                         break;
                 case 2: // Visual
                         $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
