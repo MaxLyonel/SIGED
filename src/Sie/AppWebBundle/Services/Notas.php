@@ -2491,7 +2491,7 @@ die;/*
 
             $cualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$idInscripcion),array('notaTipo'=>'ASC'));
 
-            if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel != 411){
+            if($nivel == 401 or $nivel == 402 or $nivel == 403 or $nivel == 411){
                 // Para inicial
                 $existe = false;
                 foreach ($cualitativas as $c) {

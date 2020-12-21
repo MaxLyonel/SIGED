@@ -81,8 +81,13 @@ class InfoNotasController extends Controller {
                         break;
                 case 2: // Visual
                         $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
+                        
                         if($notas['tipoNota'] == 'Trimestre'){
-                            $template = 'especialCualitativoTrimestral';
+                            if($gestion==2020){
+                                $template = 'especialCualitativo2020';
+                            }else{
+                                $template = 'especialCualitativoTrimestral';
+                            }
                         }else{
                             $template = 'especialCualitativo';
                         }
@@ -130,6 +135,7 @@ class InfoNotasController extends Controller {
                                 }
                                 break;
                         }
+                        
                         break;
                 case 4: // Fisico -motora
                         break;
