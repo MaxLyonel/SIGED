@@ -442,7 +442,7 @@ class CreacionCursosController extends Controller {
                 //$this->get('session')->getFlashBag()->add('msgError', 'No se puede eliminar el curso, porque cuenta con asignaturas');
                 //return $this->redirect($this->generateUrl('herramienta_ieducativa_index'));
                 foreach ($curso_oferta as $value) {
-                    $objEstAsig = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteCursoOferta' => $value, 'gestionTipo' => $gestion ));
+                    $objEstAsig = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteCursoOferta' => $value, 'gestionTipo' => $curso->getGestionTipo() ));
 
                     if($objEstAsig){
                         foreach ($objEstAsig as $elementEA) {
