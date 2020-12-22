@@ -439,10 +439,9 @@ class CreacionCursosController extends Controller {
             $curso_oferta = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$request->get('idCurso')));
 
             if($curso_oferta){
-                //$this->get('session')->getFlashBag()->add('msgError', 'No se puede eliminar el curso, porque cuenta con asignaturas');
-                //return $this->redirect($this->generateUrl('herramienta_ieducativa_index'));
+                
                 foreach ($curso_oferta as $value) {
-                    $objEstAsig = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteCursoOferta' => $value, 'gestionTipo' => $curso->getGestionTipo() ));
+                    $objEstAsig = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('institucioneducativaCursoOferta' => $value, 'gestionTipo' => $curso->getGestionTipo() ));
 
                     if($objEstAsig){
                         foreach ($objEstAsig as $elementEA) {
@@ -465,8 +464,8 @@ class CreacionCursosController extends Controller {
              * Eliminamos los registros de curso oferta
              */
             $em->createQuery('DELETE FROM SieAppWebBundle:InstitucioneducativaCursoOferta ieco
-                              WHERE ieco.insitucioneducativaCurso = :idCurso')
-                              ->setParameter('idCurso',$curso->getId())->execute();
+                WHERE ieco.insitucioneducativaCurso = :idCurso')
+                ->setParameter('idCurso',$curso->getId())->execute();
             /*
              * Eliminamos el curso
              */
