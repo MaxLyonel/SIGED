@@ -1,0 +1,143 @@
+Sie\AppWebBundle\Entity\InstitucionalizacionDgesttla:
+    type: entity
+    table: institucionalizacion_dgesttla
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        carnet:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        complemento:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        apellidoEsposo:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: apellido_esposo
+        nacionalidad:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        genero:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaNacimiento:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_nacimiento
+        direccion:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        telefono:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        celular:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        correoElectronico:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: correo_electronico
+        licenciatura:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        tecnicoSuperior:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: tecnico_superior
+        tipoPostgrado:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tipo_postgrado
+        postgrado:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        departamento:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        instituto:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        cargo:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    lifecycleCallbacks: {  }
