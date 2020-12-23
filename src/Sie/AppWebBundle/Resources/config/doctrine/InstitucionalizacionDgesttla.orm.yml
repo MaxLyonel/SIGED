@@ -102,13 +102,25 @@ Sie\AppWebBundle\Entity\InstitucionalizacionDgesttla:
             fixed: false
             comment: ''
             column: tecnico_superior
-        tipoPostgrado:
-            type: integer
+        diplomado:
+            type: string
             nullable: true
-            unsigned: false
+            length: null
+            fixed: false
             comment: ''
-            column: tipo_postgrado
-        postgrado:
+        especialidad:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        maestria:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        doctorado:
             type: string
             nullable: true
             length: null
@@ -129,6 +141,11 @@ Sie\AppWebBundle\Entity\InstitucionalizacionDgesttla:
             nullable: true
             unsigned: false
             comment: ''
+        esOficial:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_oficial
         fechaRegistro:
             type: datetime
             nullable: true

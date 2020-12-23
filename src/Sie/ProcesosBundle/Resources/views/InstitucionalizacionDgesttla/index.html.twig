@@ -82,21 +82,19 @@
                 border: 1px solid #01B1E1; 
                 padding: 15px;
             }
-            #map{
-                width: 700px ;
-                height: 500px ;
-                background-color: grey;
-                position: relative;
-                outline: none;
-            }
 		
         </style>
         <section id="wrapper">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <img src="/images/logo-minedu-1.png" alt="Ministerio de Educación" style="width:35%;">
+                </div>
+            </div>
             <!-- START @HEADER -->
             <header id="header">
                 <!-- Start header left -->
                 <div class="header">
-                    <h3 align="center" style="color:grey">PROCESO DE INSTITUCIONALIZACIÓN DE CARGOS DIRECTIVOS DE LOS <br /> INSTITUTOS TÉCNICOS TECNOLÓGICOS Y ARTÍSTICOS DEL ESTADO PLURINACIONAL DE BOLIVIA 2020</h3>
+                    <h4 align="center" style="color:grey">PROCESO DE INSTITUCIONALIZACIÓN DE CARGOS DIRECTIVOS DE LOS <br /> INSTITUTOS TÉCNICOS TECNOLÓGICOS Y ARTÍSTICOS DEL ESTADO PLURINACIONAL DE BOLIVIA 2020</h4>
                     <div class="clearfix"></div>
                 </div><!-- /.header-left -->
             </header> <!-- /#header -->
@@ -180,11 +178,16 @@
                                                                                 <h4 class="page-header">
                                                                                     DATOS PERSONALES<br>
                                                                                 </h4>
+                                                                                <div class="alert alert-info" role="alert">
+                                                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                                                    <i class="fa fa-info-circle"></i> Tome en cuenta que la información que registre será validada con SEGIP
+                                                                                </div>
+                                                                                <span class="text-danger">(*) Campos obligatorios</span>
                                                                                 <div class="form-body">
                                                                                     <div class="row">
                                                                                         <div class="form-group col-md-12">
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_label(form.carnet) }}
+                                                                                                {{ form_label(form.carnet) }} <span class="text-danger">(*)</span>
                                                                                             </div>
                                                                                             <div class="col-md-4">
                                                                                                 {{ form_widget(form.carnet) }}
@@ -214,7 +217,7 @@
                                                                                         </div>
                                                                                         <div class="form-group col-md-12">
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_label(form.nombre) }}
+                                                                                                {{ form_label(form.nombre) }} <span class="text-danger">(*)</span>
                                                                                             </div>
                                                                                             <div class="col-md-6">
                                                                                                 {{ form_widget(form.nombre) }}
@@ -230,13 +233,13 @@
                                                                                         </div>
                                                                                         <div class="form-group col-md-12">
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_label(form.genero) }}
+                                                                                                {{ form_label(form.genero) }} <span class="text-danger">(*)</span>
                                                                                             </div>
                                                                                             <div class="col-md-3">
                                                                                                 {{ form_widget(form.genero, { 'attr': {'class': 'form-control'}  }) }}
                                                                                             </div>
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_label(form.fechaNacimiento) }}
+                                                                                                {{ form_label(form.fechaNacimiento) }} <span class="text-danger">(*)</span>
                                                                                             </div>
                                                                                             <div class="col-md-3">
                                                                                                 {{ form_widget(form.fechaNacimiento, { 'attr': {'class': 'form-control calendario', 'style': 'text-transform:uppercase' }  }) }}
@@ -244,7 +247,7 @@
                                                                                         </div>
                                                                                         <div class="form-group col-md-12">
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_label(form.nacionalidad) }}
+                                                                                                {{ form_label(form.nacionalidad) }} <span class="text-danger">(*)</span>
                                                                                             </div>
                                                                                             <div class="col-md-6">
                                                                                                 {{ form_widget(form.nacionalidad) }}
@@ -252,7 +255,7 @@
                                                                                         </div>
                                                                                         <div class="form-group col-md-12">
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_label(form.direccion) }}
+                                                                                                {{ form_label(form.direccion) }} <span class="text-danger">(*)</span>
                                                                                             </div>
                                                                                             <div class="col-md-6">
                                                                                                 {{ form_widget(form.direccion) }}
@@ -266,7 +269,7 @@
                                                                                                 {{ form_widget(form.telefono) }}
                                                                                             </div>
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_label(form.celular) }}
+                                                                                                {{ form_label(form.celular) }} <span class="text-danger">(*)</span>
                                                                                             </div>
                                                                                             <div class="col-md-3">
                                                                                                 {{ form_widget(form.celular) }}
@@ -274,7 +277,7 @@
                                                                                         </div>
                                                                                         <div class="form-group col-md-12">
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_label(form.correoElectronico) }}
+                                                                                                {{ form_label(form.correoElectronico) }} <span class="text-danger">(*)</span>
                                                                                             </div>
                                                                                             <div class="col-md-6">
                                                                                                 {{ form_widget(form.correoElectronico) }}
@@ -291,9 +294,9 @@
                                                                                 <h4 class="page-header">
                                                                                     DATOS ACADÉMICOS<br>
                                                                                 </h4>
+                                                                                <span class="text-danger">(*) Campos obligatorios</span>
                                                                                 <div class="form-body">
                                                                                     <div class="row">
-                                                                                        
                                                                                         <div class="form-group col-md-12">
                                                                                             <div class="col-md-3">
                                                                                                 {{ form_label(form.licenciatura) }}
@@ -312,13 +315,34 @@
                                                                                         </div>
                                                                                         <div class="form-group col-md-12">
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_label(form.postgrado) }}
+                                                                                                {{ form_label(form.especialidad) }}
                                                                                             </div>
+                                                                                            <div class="col-md-9">
+                                                                                                {{ form_widget(form.especialidad) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="form-group col-md-12">
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_widget(form.tipoPostgrado, { 'attr': {'class': 'form-control'}  }) }}
+                                                                                                {{ form_label(form.diplomado) }}
                                                                                             </div>
-                                                                                            <div class="col-md-6">
-                                                                                                {{ form_widget(form.postgrado) }}
+                                                                                            <div class="col-md-9">
+                                                                                                {{ form_widget(form.diplomado) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="form-group col-md-12">
+                                                                                            <div class="col-md-3">
+                                                                                                {{ form_label(form.maestria) }}
+                                                                                            </div>
+                                                                                            <div class="col-md-9">
+                                                                                                {{ form_widget(form.maestria) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="form-group col-md-12">
+                                                                                            <div class="col-md-3">
+                                                                                                {{ form_label(form.doctorado) }}
+                                                                                            </div>
+                                                                                            <div class="col-md-9">
+                                                                                                {{ form_widget(form.doctorado) }}
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
@@ -332,28 +356,29 @@
                                                                                 <h4 class="page-header">
                                                                                     DATOS DE POSTULACIÓN<br>
                                                                                 </h4>
+                                                                                <span class="text-danger">(*) Campos obligatorios</span>
                                                                                 <div class="form-body">
                                                                                     <div class="row">
                                                                                         
                                                                                         <div class="form-group col-md-12">
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_label(form.departamento) }}
+                                                                                                {{ form_label(form.departamento) }} <span class="text-danger">(*)</span>
                                                                                             </div>
                                                                                             <div class="col-md-9">
-                                                                                                {{ form_widget(form.departamento, { 'attr': {'class': 'form-control'}  }) }}
+                                                                                                {{ form_widget(form.departamento, { 'attr': {'class': 'form-control', 'onchange':'instituto(this.value)'}  }) }}
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="form-group col-md-12">
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_label(form.instituto) }}
+                                                                                                {{ form_label(form.instituto) }} <span class="text-danger">(*)</span>
                                                                                             </div>
                                                                                             <div class="col-md-9">
-                                                                                                {{ form_widget(form.instituto, { 'attr': {'class': 'form-control'}  }) }}
+                                                                                                {{ form_widget(form.instituto, { 'attr': {'class': 'form-control', 'onchange':'cargo(this.value)'}  }) }}
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="form-group col-md-12">
                                                                                             <div class="col-md-3">
-                                                                                                {{ form_label(form.cargo) }}
+                                                                                                {{ form_label(form.cargo) }} <span class="text-danger">(*)</span>
                                                                                             </div>
                                                                                             <div class="col-md-9">
                                                                                                 {{ form_widget(form.cargo, { 'attr': {'class': 'form-control'}  }) }}
@@ -384,18 +409,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-12 text-center">
+                                <span id="copyright-year"></span> &copy; Ministerio de Educación
+                            </div>
+                            <div class="clearfix"></div>
                         </div><!-- /.end panel -->  
                     </div>
                 </div>
             </div>
-            
         </section><!-- /#page-content -->
-        <!-- Start footer content -->
-        <footer class="footer-content">
-            2016 - <span id="copyright-year"></span> &copy; Ministerio de Educación.
-            <span class="pull-right">0.01 GB(0%) of 15 GB used</span>
-        </footer><!-- /.footer-content -->
-        <!--/ End footer content -->
     </body>
 <!--/ END PAGE CONTENT -->
 <!--/ END BACK TOP -->            
@@ -489,388 +511,54 @@
                 todayHighlight: true,
                 language: 'es'
             });
-            $('#form_tr').empty();
-            var image = L.icon({
-                iconUrl: "{{asset('images/marker23.png')}}",
-                iconSize: [40, 40]
-            });
-            initMap(image);
         });
         
         $('.date').keydown(function() {
             return false;
         });
 
-        
 
-        function buscarEdificioEscolar(idLe) {
-            if(idLe.length >= 8){
-                var formData = {idLe:idLe};
-                $.ajax({
-                    type: 'get',
-                    url: "{{path('tramite_rue_buscar_edificio')}}",
-                    data: formData,
-                    beforeSend: function () {
-                        //$("#form_departamento2012").empty();
-                        $("#form_provincia2012").empty();
-                        $("#form_municipio2012").empty();
-                        $("#form_comunidad2012").empty();
-                        //$("#form_departamento2001").empty();
-                        $("#form_provincia2001").empty();
-                        $("#form_municipio2001").empty();
-                        $("#form_canton2001").empty();
-                        $("#form_localidad2001").empty();
-                        $("#form_zona").empty();
-                        $("#form_direccion").empty();
-                        //$("#form_departamento2012").append('<option value="">Buscando...</option>');
-                        $("#form_provincia2012").append('<option value="">Buscando...</option>');
-                        $("#form_municipio2012").append('<option value="">Buscando...</option>');
-                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
-                        //$("#form_departamento2001").append('<option value="">Buscando...</option>');
-                        $("#form_provincia2001").append('<option value="">Buscando...</option>');
-                        $("#form_municipio2001").append('<option value="">Buscando...</option>');
-                        $("#form_canton2001").append('<option value="">Buscando...</option>');
-                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
-                        $("#form_distrito").append('<option value="">Buscando...</option>');
-                        $("#form_zona").val('');
-                        $("#form_direccion").val('');
-                        $("#msg").empty();
-                    },
-                    success: function (data) {
-                        //console.log(data);
-                        if(data.msg){
-                            $("#form_lejurisdiccion").val('');
-                            //$("#form_departamento2012").empty();
-                            //$("#form_departamento2012").append('<option value="">Seleccione...</option>');
-                            $("#form_provincia2012").empty();
-                            $("#form_municipio2012").empty();
-                            $("#form_comunidad2012").empty();
-                            //$("#form_departamento2001").empty();
-                            //$("#form_departamento2001").append('<option value="">Seleccione...</option>');
-                            $("#form_provincia2001").empty();
-                            $("#form_municipio2001").empty();
-                            $("#form_canton2001").empty();
-                            $("#form_localidad2001").empty();
-                            $("#form_distrito").empty();
-                            $("#form_zona").val('');
-                            $("#form_direccion").val('');
-                            /*$.each(data.lugar.c2012.dep.lista, function (i, value) {
-                                $("#form_departamento2012").append('<option value="' + i + '">' + value + '</option>');
-                            });
-                            $.each(data.lugar.c2001.dep.lista, function (i, value) {
-                                $("#form_departamento2001").append('<option value="' + i + '">' + value + '</option>');
-                            });*/
-                            $('#form_departamento2012').removeAttr( 'style' );
-                            $("#form_provincia2012").removeAttr( 'style' );
-                            $("#form_municipio2012").removeAttr( 'style' );
-                            $("#form_comunidad2012").removeAttr( 'style' );
-                            $("#form_departamento2001").removeAttr( 'style' );
-                            $("#form_provincia2001").removeAttr( 'style' );
-                            $("#form_municipio2001").removeAttr( 'style' );
-                            $("#form_canton2001").removeAttr( 'style' );
-                            $("#form_localidad2001").removeAttr( 'style' );
-                            $("#form_distrito").removeAttr( 'style' );
-                            $('#form_zona').removeAttr( 'style' );
-                            $('#form_direccion').removeAttr( 'style' );
-                            $("#msg").append('<div class="alert alert-danger"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+data.msg+'</div>');
-                        }else{
-                            /*$.each(data.lugar.c2012.dep.lista, function (i, value) {
-                                $("#form_departamento2012").append('<option value="' + i + '">' + value + '</option>');
-                            });*/
-                            $.each(data.lugar.c2012.prov.lista, function (i, value) {
-                                $("#form_provincia2012").append('<option value="' + i + '">' + value + '</option>');
-                            });
-                            $.each(data.lugar.c2012.mun.lista, function (i, value) {
-                                $("#form_municipio2012").append('<option value="' + i + '">' + value + '</option>');
-                            });
-                            $.each(data.lugar.c2012.comu.lista, function (i, value) {
-                                $("#form_comunidad2012").append('<option value="' + i + '">' + value + '</option>');
-                            });
-                            /*$.each(data.lugar.c2001.dep.lista, function (i, value) {
-                                $("#form_departamento2001").append('<option value="' + i + '">' + value + '</option>');
-                            });*/
-                            $.each(data.lugar.c2001.prov.lista, function (i, value) {
-                                $("#form_provincia2001").append('<option value="' + i + '">' + value + '</option>');
-                            });
-                            $.each(data.lugar.c2001.mun.lista, function (i, value) {
-                                $("#form_municipio2001").append('<option value="' + i + '">' + value + '</option>');
-                            });
-                            $.each(data.lugar.c2001.can.lista, function (i, value) {
-                                $("#form_canton2001").append('<option value="' + i + '">' + value + '</option>');
-                            });
-                            $.each(data.lugar.c2001.loc.lista, function (i, value) {
-                                $("#form_localidad2001").append('<option value="' + i + '">' + value + '</option>');
-                            });
-                            $.each(data.lugar.distrito.lista, function (i, value) {
-                                $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
-                            });
-                            $("#form_departamento2012").val(data.lugar.c2012.dep.id);
-                            $("#form_provincia2012").val(data.lugar.c2012.prov.id);
-                            $("#form_municipio2012").val(data.lugar.c2012.mun.id);
-                            $("#form_comunidad2012").val(data.lugar.c2012.comu.id);
-                            $("#form_departamento2001").val(data.lugar.c2001.dep.id);
-                            $("#form_provincia2001").val(data.lugar.c2001.prov.id);
-                            $("#form_municipio2001").val(data.lugar.c2001.mun.id);
-                            $("#form_canton2001").val(data.lugar.c2001.can.id);
-                            $("#form_localidad2001").val(data.lugar.c2001.loc.id);
-                            $("#form_distrito").val(data.lugar.distrito.id);
-                            $("#form_zona").val(data.lugar.zona);
-                            $("#form_direccion").val(data.lugar.direccion);
-                            $('#form_departamento2012').css('pointer-events','none');
-                            $("#form_provincia2012").css('pointer-events','none');
-                            $("#form_municipio2012").css('pointer-events','none');
-                            $("#form_comunidad2012").css('pointer-events','none');
-                            $("#form_departamento2001").css('pointer-events','none');
-                            $("#form_provincia2001").css('pointer-events','none');
-                            $("#form_municipio2001").css('pointer-events','none');
-                            $("#form_canton2001").css('pointer-events','none');
-                            $("#form_localidad2001").css('pointer-events','none');
-                            $("#form_distrito").css('pointer-events','none');
-                            $('#form_zona').css('pointer-events','none');
-                            $('#form_direccion').css('pointer-events','none');
-                        }
-                    }   
-                });
-            }else{
-                $('#ie').empty();
-                $('#org').empty();
-                $('#dependencia').empty();
-                if($('#ie').html() == '' && idLe != '-1'){
-                    $('#form_siecomparte').val('');
-                }
-                $("#form_departamento2012").val('');
-                $('#form_departamento2012 option[value=""]').text("Seleccione departamento");
-                $("#form_provincia2012").empty();
-                $("#form_municipio2012").empty();
-                $("#form_comunidad2012").empty();
-                $("#form_departamento2001").val('');
-                $('#form_departamento2001 option[value=""]').text("Seleccione departamento");
-                $("#form_provincia2001").empty();
-                $("#form_municipio2001").empty();
-                $("#form_canton2001").empty();
-                $("#form_localidad2001").empty();
-                $("#form_distrito").empty();
-                $("#form_zona").val('');
-                $("#form_direccion").val('');
-                $('#form_departamento2012').removeAttr( 'style' );
-                $("#form_provincia2012").removeAttr( 'style' );
-                $("#form_municipio2012").removeAttr( 'style' );
-                $("#form_comunidad2012").removeAttr( 'style' );
-                $("#form_departamento2001").removeAttr( 'style' );
-                $("#form_provincia2001").removeAttr( 'style' );
-                $("#form_municipio2001").removeAttr( 'style' );
-                $("#form_canton2001").removeAttr( 'style' );
-                $("#form_localidad2001").removeAttr( 'style' );
-                $("#form_distrito").removeAttr( 'style' );
-                $('#form_zona').removeAttr( 'style' );
-                $('#form_direccion').removeAttr( 'style' );
-                /*if(idLe == '40730010' ){
-                    $("#form_lejurisdiccion").val('');
-                    alert('El Código Edificio Educativo debe ser diferente al actual.')
-                }*/
-            }
-
-        }
-        function provincia(d,censo) {
-            if(censo == 2001 && $('#form_departamento2012').val()!=''){
-                if($('#form_departamento2001 option:selected').text() != $('#form_departamento2012 option:selected').text()){
-                    alert('El departamento del Censo 2001 no puede ser diferente del departamento del Censo 2012');
-                    $('#form_departamento2001').val('');
-                    return false;
-                }
-            }
-
-            if(censo == 2012 && $('#form_departamento2001').val()!=''){
-                if($('#form_departamento2001 option:selected').text() != $('#form_departamento2012 option:selected').text()){
-                    alert('El departamento del Censo 2012 no puede ser diferente del departamento del Censo 2001');
-                    $('#form_departamento2012').val('');
-                    return false;
-                }
-            }
-
-            $("#form_lejurisdiccion").val('');
-            $("#form_siecomparte").val('');
-            $('#ie').empty();
-            $('#org').empty();
-            $('#dependencia').empty();
+        function instituto(idDepartamento) {
             $.ajax({
                 type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_provincias', {'idDepartamento': d ,'censo':censo}),
+                url: Routing.generate('institucionalizacion_buscar_instituto', {'idDepartamento': idDepartamento}),
                 beforeSend: function () {
-                    $("#form_lejurisdiccion").val('');
-                    $("#form_distrito").empty();
-                    $("#form_distrito").append('<option value="">Buscando...</option>');
-                    if(censo == 2001){
-                        $("#form_provincia2001").empty();
-                        $("#form_municipio2001").empty();
-                        $("#form_canton2001").empty();
-                        $("#form_localidad2001").empty();
-                        $("#form_provincia2001").append('<option value="">Buscando...</option>');
-                        $("#form_municipio2001").append('<option value="">Buscando...</option>');
-                        $("#form_canton2001").append('<option value="">Buscando...</option>');
-                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
-                    }else if (censo == 2012){
-                        $("#form_provincia2012").empty();
-                        $("#form_municipio2012").empty();
-                        $("#form_comunidad2012").empty();
-                        $("#form_provincia2012").append('<option value="">Buscando...</option>');
-                        $("#form_municipio2012").append('<option value="">Buscando...</option>');
-                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
-                    }
-                    
+                    $("#form_instituto").empty();
+                    $("#form_instituto").append('<option value="">Buscando...</option>');
+                    $("#form_cargo").empty();
+                    $("#form_cargo").append('<option value="">Buscando...</option>');
                 },
                 success: function (data) {
-                    $("#form_distrito").empty();
-                    $("#form_distrito").append('<option value="">Seleccionar...</option>');
-                    if(censo == 2001){
-                        //console.log(data);
-                        $("#form_provincia2001").empty();
-                        $("#form_municipio2001").empty();
-                        $("#form_canton2001").empty();
-                        $("#form_localidad2001").empty();
-                        $("#form_provincia2001").append('<option value="">Seleccionar...</option>');
-                        $("#form_provincia2001").attr('required',true);
-                        $("#form_municipio2001").append('<option value="">Seleccionar...</option>');
-                        $("#form_municipio2001").attr('required',true);
-                        $("#form_canton2001").append('<option value="">Seleccionar...</option>');
-                        $("#form_canton2001").attr('required',true);
-                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
-                        $("#form_localidad2001").attr('required',true);
-                        $.each(data.provincia, function (i, value) {
-                            $("#form_provincia2001").append('<option value="' + i + '">' + value + '</option>');
-                        });
-                    }else if (censo == 2012){
-                        $("#form_provincia2012").empty();
-                        $("#form_municipio2012").empty();
-                        $("#form_comunidad2012").empty();
-                        $("#form_provincia2012").append('<option value="">Seleccionar...</option>');
-                        $("#form_provincia2012").attr('required',true);
-                        $("#form_municipio2012").append('<option value="">Seleccionar...</option>');
-                        $("#form_municipio2012").attr('required',true);
-                        $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
-                        $("#form_comunidad2012").attr('required',true);
-                        $.each(data.provincia, function (i, value) {
-                            $("#form_provincia2012").append('<option value="' + i + '">' + value + '</option>');
-                        });
-                    }
-                    $.each(data.distrito, function (i, value) {
-                        $("#form_distrito").append('<option value="' + i + '">' + value + '</option>');
+                    $("#form_instituto").empty();
+                    $("#form_instituto").append('<option value="">Seleccionar...</option>');
+                    $("#form_cargo").empty();
+                    $("#form_cargo").append('<option value="">Seleccionar...</option>');
+                    $.each(data.institutos, function (i, value) {
+                        $("#form_instituto").append('<option value="' + i + '">' + value + '</option>');
                     });
+                    
                 }
             });
         }
 
-        function municipio(p,censo) {
+        function cargo(idInstituto) {
             $.ajax({
                 type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_municipios', {'idProvincia': p,'censo':censo}),
+                url: Routing.generate('institucionalizacion_buscar_cargo', {'idInstituto': idInstituto}),
                 beforeSend: function () {
-                    if(censo == 2001){
-                        $("#form_municipio2001").empty();
-                        $("#form_canton2001").empty();
-                        $("#form_localidad2001").empty();
-                        $("#form_municipio2001").append('<option value="">Buscando...</option>');
-                        $("#form_canton2001").append('<option value="">Buscando...</option>');
-                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
-                    }else if (censo == 2012){
-                        $("#form_municipio2012").empty();
-                        $("#form_comunidad2012").empty();
-                        $("#form_municipio2012").append('<option value="">Buscando...</option>');
-                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
-                    }
+                    $("#form_cargo").empty();
+                    $("#form_cargo").append('<option value="">Buscando...</option>');
                 },
                 success: function (data) {
-                    if(censo == 2001){
-                        $("#form_municipio2001").empty();
-                        $("#form_canton2001").empty();
-                        $("#form_localidad2001").empty();
-                        $("#form_municipio2001").append('<option value="">Seleccionar...</option>');
-                        $("#form_canton2001").append('<option value="">Seleccionar...</option>');
-                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
-                        $.each(data.municipio, function (i, value) {
-                            $("#form_municipio2001").append('<option value="' + i + '">' + value + '</option>');
-                        });
-                    }else if (censo == 2012){
-                        $("#form_municipio2012").empty();
-                        $("#form_comunidad2012").empty();
-                        $("#form_municipio2012").append('<option value="">Seleccionar...</option>');
-                        $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
-                        $.each(data.municipio, function (i, value) {
-                            $("#form_municipio2012").append('<option value="' + i + '">' + value + '</option>');
-                        });
-                    }
+                    $("#form_cargo").empty();
+                    $("#form_cargo").append('<option value="">Seleccionar...</option>');
+                    $.each(data.cargos, function (i, value) {
+                        $("#form_cargo").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    
                 }
             });
         }
-
-        function comunidad(p,censo) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_comunidad', {'idMunicipio': p,'censo':censo}),
-                beforeSend: function () {
-                    if(censo == 2012){
-                        $("#form_comunidad2012").empty();
-                        $("#form_comunidad2012").append('<option value="">Buscando...</option>');
-                    }
-                },
-                success: function (data) {
-                    if(censo == 2012){
-                        $("#form_comunidad2012").empty();
-                        $("#form_comunidad2012").append('<option value="">Seleccionar...</option>');
-                        $.each(data.comunidad, function (i, value) {
-                            $("#form_comunidad2012").append('<option value="' + i + '">' + value + '</option>');
-                        });
-                    }
-                }
-            });
-        }
-        function canton(m,censo) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_cantones', {'idMunicipio': m,'censo':censo}),
-                beforeSend: function () {
-                    if(censo == 2001){
-                        $("#form_canton2001").empty();
-                        $("#form_localidad2001").empty();
-                        $("#form_canton2001").append('<option value="">Buscando...</option>');
-                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
-                    }
-                },
-                success: function (data) {
-                    if(censo == 2001){
-                        $("#form_canton2001").empty();
-                        $("#form_localidad2001").empty();
-                        $("#form_canton2001").append('<option value="">Seleccionar...</option>');
-                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
-                        $.each(data.canton, function (i, value) {
-                            $("#form_canton2001").append('<option value="' + i + '">' + value + '</option>');
-                        });
-                    }
-                }
-            });
-        }
-
-        function localidad(c,censo) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('tramite_rue_le_buscar_localidades', {'idCanton': c,'censo':censo}),
-                beforeSend: function () {
-                    if(censo == 2001){
-                        $("#form_localidad2001").empty();
-                        $("#form_localidad2001").append('<option value="">Buscando...</option>');
-                    }
-                },
-                success: function (data) {
-                    if(censo == 2001){
-                        $("#form_localidad2001").empty();
-                        $("#form_localidad2001").append('<option value="">Seleccionar...</option>');
-                        $.each(data.localidad, function (i, value) {
-                            $("#form_localidad2001").append('<option value="' + i + '">' + value + '</option>');
-                        });
-                    }
-                }
-            });
-        } 
 
         function validar(){
             if(!confirm("Verifique los datos del formulario antes de enviar.")){
@@ -893,7 +581,19 @@
             }else if($('#form_correoElectronico').val()==''){
                 alert('En el punto DATOS PERSONALES, debe ingresar el correo electrónico.');
                 return false;
-            }      
+            }else if($('#form_departamento').val()<=0){
+                alert('En el punto DATOS DE POSTULACIÓN, debe ingresar el Departamento.');
+                return false;
+            }else if($('#form_instituto').val()<=0){
+                alert('En el punto DATOS DE POSTULACIÓN, debe ingresar el Intituto.');
+                return false;
+            }else if($('#form_cargo').val()<=0){
+                alert('En el punto DATOS DE POSTULACIÓN, debe ingresar el Cargo.');
+                return false;
+            }else if($('#form_licenciatura').val()=='' && $('#form_tecnicoSuperior').val()=='' && $('#form_especialidad').val()=='' && $('#form_maestria').val()=='' && $('#form_diplomado').val()=='' && $('#form_doctorado').val()==''){
+                alert('En el punto DATOS ACADÉMICOS, debe ingresar su Formación.');
+                return false;
+            }
         }
 
         $('.calendario').datepicker({
