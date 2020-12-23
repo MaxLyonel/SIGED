@@ -4,6 +4,7 @@ namespace Sie\ProcesosBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\InstitucionalizacionDgesttla;
@@ -45,26 +46,36 @@ class InstitucionalizacionDgesttlaController extends Controller
         
         $form=$form
             ->setAction($this->generateUrl('institucionalizacion_new'))
-            ->add('carnet','text',array('label'=>'Carnet de Identidad:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '15')))
-            ->add('complemento','text',array('label'=>'Complemento:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '2')))
-            ->add('paterno','text',array('label'=>'Apellido Paterno:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '100')))
-            ->add('materno','text',array('label'=>'Apellido Materno:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '100')))
-            ->add('nombre','text',array('label'=>'Nombre(s):','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '180')))
-            ->add('apellidoEsposo','text',array('label'=>'Apellido de casada:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '100')))
-            ->add('nacionalidad','text',array('label'=>'Nacionalidad:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '100')))
+            ->add('carnet','text',array('label'=>'Carnet de Identidad:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '15', 'placeholder' => 'INGRESAR EL NRO DE C.I.')))
+            ->add('complemento','text',array('label'=>'Complemento:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '2', 'placeholder' => '(OPCIONAL)')))
+            ->add('paterno','text',array('label'=>'Apellido Paterno:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '100', 'placeholder' => 'INGRESAR EL APELLIDO PATERNO')))
+            ->add('materno','text',array('label'=>'Apellido Materno:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '100', 'placeholder' => 'INGRESAR EL APELLIDO MATERNO')))
+            ->add('nombre','text',array('label'=>'Nombre(s):','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '180', 'placeholder' => 'INGRESAR EL/LOS NOMBRE/S')))
+            ->add('apellidoEsposo','text',array('label'=>'Apellido de casada:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '100', 'placeholder' => '(OPCIONAL)')))
+            ->add('nacionalidad','text',array('label'=>'Nacionalidad:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '100', 'placeholder' => 'INGRESAR LA NACIONALIDAD')))
             ->add('genero', 'choice', array('label' => 'Género:', 'required' => true, 'choices' => [1 => 'Masculino', 2 => 'Femenino', 3 => 'Otro']))
             ->add('fechaNacimiento', 'date', array('label' => 'Fecha de nacimiento:', 'widget' => 'single_text','format' => 'dd-mm-yyyy', 'required' => true, 'attr' => array('class' => 'form-control')))
-            ->add('direccion', 'text', array('label' => 'Dirección actual:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200')))
-            ->add('telefono', 'text', array('label' => 'Telefono fijo:','required'=>false,'attr' => array('class' => 'form-control', 'maxlength' => '10')))
-            ->add('celular', 'text', array('label' => 'Telefono celular:','required'=>true,'attr' => array('class' => 'form-control', 'maxlength' => '10')))
-            ->add('correoElectronico', 'text', array('label' => 'Correo Electrónico:','required'=>true,'attr' => array('class' => 'form-control', 'maxlength' => '100')))
-            ->add('licenciatura', 'text', array('label' => 'Licenciatura en:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200')))
-            ->add('tecnicoSuperior', 'text', array('label' => 'Técnico Superior en:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200')))
-            ->add('tipoPostgrado', 'choice', array('label' => 'Postgrado', 'required' => false, 'choices' => [1 => 'Diplomado', 2 => 'Especialidad', 3 => 'Maestría', 4 => 'Doctorado']))
-            ->add('postgrado', 'textarea', array('label' => 'Post Grado:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '400')))
-            ->add('departamento', 'choice', array('label' => 'Departamento', 'required' => true, 'choices' => [1 => 'CHUQUISACA', 2 => 'LA PAZ', 3 => 'COCHABAMBA', 4 => 'ORURO']))
-            ->add('instituto', 'choice', array('label' => 'Instituto', 'required' => true, 'choices' => [1 => 'ITT1', 2 => 'ITT2', 3 => 'ITT3', 4 => 'ITT4']))
-            ->add('cargo', 'choice', array('label' => 'Cargo', 'required' => true, 'choices' => [1 => 'C1', 2 => 'C2', 3 => 'Maestría', 4 => 'C3']))
+            ->add('direccion', 'text', array('label' => 'Dirección actual:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200', 'placeholder' => 'INGRESAR LA DIRECCIÓN ACTUAL')))
+            ->add('telefono', 'text', array('label' => 'Telefono fijo:','required'=>false,'attr' => array('class' => 'form-control', 'maxlength' => '10', 'placeholder' => 'INGRESAR EL TELÉFONO FIJO')))
+            ->add('celular', 'text', array('label' => 'Telefono celular:','required'=>true,'attr' => array('class' => 'form-control', 'maxlength' => '10', 'placeholder' => 'INGRESAR EL TELÉFONO CELULAR')))
+            ->add('correoElectronico', 'text', array('label' => 'Correo Electrónico:','required'=>true,'attr' => array('class' => 'form-control', 'maxlength' => '100', 'placeholder' => 'INGRESAR EL CORREO ELECTRÓNICO')))
+            ->add('licenciatura', 'text', array('label' => 'Licenciatura en:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200', 'placeholder' => 'INGRESAR SU LICENCIATURA (SI CORRESPONDE)')))
+            ->add('tecnicoSuperior', 'text', array('label' => 'Técnico Superior en:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200', 'placeholder' => 'INGRESAR SU TÉCNICO SUPERIOR (SI CORRESPONDE)')))
+            ->add('diplomado', 'text', array('label' => 'Diplomado en:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200', 'placeholder' => 'INGRESAR SU DIPLOMADO (SI CORRESPONDE)')))
+            ->add('especialidad', 'text', array('label' => 'Especialidad en:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200', 'placeholder' => 'INGRESAR SU ESPECIALIDAD (SI CORRESPONDE)')))
+            ->add('maestria', 'text', array('label' => 'Maestría en:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200', 'placeholder' => 'INGRESAR SU MAESTRÍA (SI CORRESPONDE)')))
+            ->add('doctorado', 'text', array('label' => 'Doctorado en:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200', 'placeholder' => 'INGRESAR SU DOCTORADO (SI CORRESPONDE)')))
+            // ->add('departamento', 'choice', array('label' => 'Departamento', 'required' => true, 'choices' => [0 => 'Seleccionar...', 1 => 'CHUQUISACA', 2 => 'LA PAZ', 3 => 'COCHABAMBA', 4 => 'ORURO', 5 => 'POTOSÍ', 6 => 'TARIJA', 7 => 'SANTA CRUZ', 8 => 'BENI', 9 => 'PANDO']))
+            ->add('departamento', 'entity', array(
+                'class' => 'Sie\AppWebBundle\Entity\InstitucionalizacionDepartamento',
+                'mapped' => false,
+                'required' => true,
+                'property' => 'departamento',
+                'label' => 'Departamento:',
+                'empty_value' => 'Seleccionar...'
+            ))
+            ->add('instituto', 'choice', array('label' => 'Instituto', 'required' => true, 'choices' => [0 => 'Seleccionar...', 1 => 'ITT1', 2 => 'ITT2', 3 => 'ITT3', 4 => 'ITT4']))
+            ->add('cargo', 'choice', array('label' => 'Cargo', 'required' => true, 'choices' => [0 => 'Seleccionar...', 1 => 'C1', 2 => 'C2', 3 => 'Maestría', 4 => 'C3']))
             ->add('guardar','submit',array('label'=>'Enviar formulario'))
             ->getForm();
 
@@ -91,8 +102,10 @@ class InstitucionalizacionDgesttlaController extends Controller
         $correoElectronico = $form['correoElectronico'];
         $licenciatura = $form['licenciatura'];
         $tecnicoSuperior = $form['tecnicoSuperior'];
-        $tipoPostgrado = $form['tipoPostgrado'] ? intval($form['tipoPostgrado']) : 0;
-        $postgrado = $form['postgrado'];
+        $especialidad = $form['especialidad'];
+        $diplomado = $form['diplomado'];
+        $maestria = $form['maestria'];
+        $doctorado = $form['doctorado'];
         $departamento = $form['departamento'];
         $instituto = $form['instituto'];
         $cargo = $form['cargo'];
@@ -104,51 +117,99 @@ class InstitucionalizacionDgesttlaController extends Controller
             'nombre'=>$nombre,
             'fecha_nacimiento'=>$fechaNacimiento
         );
-        
-        $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnet, $persona, 'prod', 'academico');
-        
-        if($resultado) {
-            $em->getConnection()->beginTransaction();
-            try{
-                $institucionalizacion = new InstitucionalizacionDgesttla();
-                $institucionalizacion->setFechaRegistro(new \DateTime('now'));
-                $institucionalizacion->setCarnet(mb_strtoupper($carnet, 'UTF-8'));
-                $institucionalizacion->setComplemento(mb_strtoupper($complemento, 'UTF-8'));
-                $institucionalizacion->setPaterno(mb_strtoupper($paterno, 'UTF-8'));
-                $institucionalizacion->setMaterno(mb_strtoupper($materno, 'UTF-8'));
-                $institucionalizacion->setNombre(mb_strtoupper($nombre, 'UTF-8'));
-                $institucionalizacion->setApellidoEsposo(mb_strtoupper($apellidoEsposo, 'UTF-8'));
-                $institucionalizacion->setGenero($genero);
-                $institucionalizacion->setFechaNacimiento(new \DateTime($fechaNacimiento));
-                $institucionalizacion->setNacionalidad(mb_strtoupper($nacionalidad, 'UTF-8'));
-                $institucionalizacion->setDireccion(mb_strtoupper($direccion, 'UTF-8'));
-                $institucionalizacion->setTelefono($telefono);
-                $institucionalizacion->setCelular($celular);
-                $institucionalizacion->setCorreoElectronico($correoElectronico);
-                $institucionalizacion->setLicenciatura(mb_strtoupper($licenciatura, 'UTF-8'));
-                $institucionalizacion->setTecnicoSuperior(mb_strtoupper($tecnicoSuperior, 'UTF-8'));
-                $institucionalizacion->setTipoPostgrado($tipoPostgrado);
-                $institucionalizacion->setPostgrado(mb_strtoupper($postgrado, 'UTF-8'));
-                $institucionalizacion->setDepartamento($departamento);
-                $institucionalizacion->setInstituto($instituto);
-                $institucionalizacion->setCargo($cargo);
-                
-                $em->persist($institucionalizacion);
-                $em->flush();
-                $em->getConnection()->commit();   
 
-                $this->get('session')->getFlashBag()->add('success', 'Los datos fueron registrados correctamente.');
-                return $this->redirectToRoute('institucionalizacion_index');
-                
-            }catch (\Exception $ex) {
-                $em->getConnection()->rollback();
-                $this->get('session')->getFlashBag()->add('error', 'No se realizó el registro.'.$ex);
+        $registro = $em->getRepository('SieAppWebBundle:InstitucionalizacionDgesttla')->findOneBy(array('carnet' => $carnet, 'complemento' => $complemento, 'esOficial' => true));
+        if($registro) {
+            $this->get('session')->getFlashBag()->add('error', 'Se encontró un registro previo para la persona. No se realizó el registro.');
+            return $this->redirectToRoute('institucionalizacion_index');
+        } else {
+            $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnet, $persona, 'prod', 'academico');
+        
+            if($resultado) {
+                $em->getConnection()->beginTransaction();
+                try{
+                    $institucionalizacion = new InstitucionalizacionDgesttla();
+                    $institucionalizacion->setFechaRegistro(new \DateTime('now'));
+                    $institucionalizacion->setCarnet(mb_strtoupper($carnet, 'UTF-8'));
+                    $institucionalizacion->setComplemento(mb_strtoupper($complemento, 'UTF-8'));
+                    $institucionalizacion->setPaterno(mb_strtoupper($paterno, 'UTF-8'));
+                    $institucionalizacion->setMaterno(mb_strtoupper($materno, 'UTF-8'));
+                    $institucionalizacion->setNombre(mb_strtoupper($nombre, 'UTF-8'));
+                    $institucionalizacion->setApellidoEsposo(mb_strtoupper($apellidoEsposo, 'UTF-8'));
+                    $institucionalizacion->setGenero($genero);
+                    $institucionalizacion->setFechaNacimiento(new \DateTime($fechaNacimiento));
+                    $institucionalizacion->setNacionalidad(mb_strtoupper($nacionalidad, 'UTF-8'));
+                    $institucionalizacion->setDireccion(mb_strtoupper($direccion, 'UTF-8'));
+                    $institucionalizacion->setTelefono($telefono);
+                    $institucionalizacion->setCelular($celular);
+                    $institucionalizacion->setCorreoElectronico($correoElectronico);
+                    $institucionalizacion->setLicenciatura(mb_strtoupper($licenciatura, 'UTF-8'));
+                    $institucionalizacion->setTecnicoSuperior(mb_strtoupper($tecnicoSuperior, 'UTF-8'));
+                    $institucionalizacion->setEspecialidad(mb_strtoupper($especialidad, 'UTF-8'));
+                    $institucionalizacion->setDiplomado(mb_strtoupper($diplomado, 'UTF-8'));
+                    $institucionalizacion->setMaestria(mb_strtoupper($maestria, 'UTF-8'));
+                    $institucionalizacion->setDoctorado(mb_strtoupper($doctorado, 'UTF-8'));
+                    $institucionalizacion->setDepartamento($departamento);
+                    $institucionalizacion->setInstituto($instituto);
+                    $institucionalizacion->setCargo($cargo);
+                    $institucionalizacion->setEsOficial(true);
+                    
+                    $em->persist($institucionalizacion);
+                    $em->flush();
+                    $em->getConnection()->commit();   
+
+                    $this->get('session')->getFlashBag()->add('success', 'Los datos fueron registrados correctamente.');
+                    return $this->redirectToRoute('institucionalizacion_index');
+                    
+                }catch (\Exception $ex) {
+                    $em->getConnection()->rollback();
+                    $this->get('session')->getFlashBag()->add('error', 'No se realizó el registro.'.$ex);
+                    return $this->redirectToRoute('institucionalizacion_index');
+                }
+            } else {
+                $this->get('session')->getFlashBag()->add('noSegip', 'Los datos no fueron validados con SEGIP. No se realizó el registro.');
                 return $this->redirectToRoute('institucionalizacion_index');
             }
-        } else {
-            $this->get('session')->getFlashBag()->add('noSegip', 'Los datos no fueron validados con SEGIP. No se realizó el registro.');
-            return $this->redirectToRoute('institucionalizacion_index');
         }
+    }
+
+    public function institutosAction($idDepartamento){
+        $em = $this->getDoctrine()->getManager();
+
+        $departamento = $em->getRepository('SieAppWebBundle:InstitucionalizacionDepartamento')->findOneById($idDepartamento);
+        $institutos = $em->getRepository('SieAppWebBundle:InstitucionalizacionInstituto')->findBy(array('departamento' => $departamento));
+
+        $institutosArray = array();
+        foreach($institutos as $itt) {
+            $institutosArray[$itt->getId()] = $itt->getInstituto();
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('institutos' => $institutosArray));
+    }
+
+    public function cargosAction($idInstituto){
+        $em = $this->getDoctrine()->getManager();
+
+        $instituto = $em->getRepository('SieAppWebBundle:InstitucionalizacionInstituto')->findOneById($idInstituto);
+
+        $entity = $em->getRepository('SieAppWebBundle:InstitucionalizacionInstitutoCargo');
+        $query = $entity->createQueryBuilder('a')
+            ->select('b')
+            ->innerjoin('SieAppWebBundle:InstitucionalizacionCargo', 'b', 'WITH', 'a.cargo=b.id')
+            ->where('a.instituto = :instituto')
+            ->setParameter('instituto', $instituto)
+            ->getQuery();
+
+        $cargos = $query->getResult();
+
+        $cargosArray = array();
+        foreach($cargos as $cargo) {
+            $cargosArray[$cargo->getId()] = $cargo->getCargo();
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('cargos' => $cargosArray));
     }
 
     // public function recepcionDistritoGuardarAction(Request $request)
@@ -1784,23 +1845,6 @@ class InstitucionalizacionDgesttlaController extends Controller
     // 	}
     // 	$response = new JsonResponse();
     // 	return $response->setData(array('canton' => $canton));
-    // }
-
-    // public function localidadesAction($idCanton,$censo){
-    //     $em = $this->getDoctrine()->getManager();
-    //     if($censo == 2001){
-    //         $nivel = 5;
-    //     }
-    // 	$loc = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => $nivel, 'lugarTipo' => $idCanton));
-    // 	$localidad = array();
-    // 	foreach($loc as $l) {
-    //         $localidad[$l->getid()] = $l->getlugar();
-    //         /* if($l->getLugar() != "NO EXISTE EN CNPV 2001"){
-    // 		    $localidad[$l->getid()] = $l->getlugar();
-    //         } */
-    // 	}
-    // 	$response = new JsonResponse();
-    // 	return $response->setData(array('localidad' => $localidad));
     // }
 
     // public function tramiteTareaRitt($tarea_ant,$tarea_actual,$flujotipo,$usuario,$rol)

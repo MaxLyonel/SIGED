@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\InstitucionalizacionCargo:
+    type: entity
+    table: institucionalizacion_cargo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cargo:
+            type: string
+            nullable: true
+            length: 300
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,40 @@
+Sie\AppWebBundle\Entity\InstitucionalizacionInstituto:
+    type: entity
+    table: institucionalizacion_instituto
+    indexes:
+        IDX_BB8EDC345A91C08D:
+            columns:
+                - departamento_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        instituto:
+            type: string
+            nullable: true
+            length: 300
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+    manyToOne:
+        departamento:
+            targetEntity: InstitucionalizacionDepartamento
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                departamento_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

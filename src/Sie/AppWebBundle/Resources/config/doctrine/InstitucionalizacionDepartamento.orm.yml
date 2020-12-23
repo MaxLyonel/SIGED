@@ -1,0 +1,26 @@
+Sie\AppWebBundle\Entity\InstitucionalizacionDepartamento:
+    type: entity
+    table: institucionalizacion_departamento
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        departamento:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

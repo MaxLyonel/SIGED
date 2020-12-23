@@ -6,6 +6,17 @@ institucionalizacion_new:
     path:     /registro/nuevo
     defaults: { _controller: "SieProcesosBundle:InstitucionalizacionDgesttla:registroNuevo" }
 
+institucionalizacion_buscar_instituto:
+    path:    /buscar/instituto/{idDepartamento}/
+    defaults: { _controller: "SieProcesosBundle:InstitucionalizacionDgesttla:institutos" }
+    options:
+        expose: true
+
+institucionalizacion_buscar_cargo:
+    path:    /buscar/cargo/{idInstituto}/
+    defaults: { _controller: "SieProcesosBundle:InstitucionalizacionDgesttla:cargos" }
+    options:
+        expose: true
 # tramite_rue_buscar_edificio:
 #     path:     /buscaredificio
 #     defaults: { _controller: "SieProcesosBundle:TramiteRue:buscaredificio" }
@@ -21,11 +32,7 @@ institucionalizacion_new:
 #      defaults: { _controller: "SieProcesosBundle:TramiteRue:municipios" }
 #      options:
 #          expose: true
-# tramite_rue_le_buscar_comunidad:
-#      path:    /comunidades/{idMunicipio}/{censo}/
-#      defaults: { _controller: "SieProcesosBundle:TramiteRue:comunidad" }
-#      options:
-#          expose: true
+
 
 # tramite_rue_le_buscar_cantones:
 #      path:    /cantones/{idMunicipio}/{censo}/
