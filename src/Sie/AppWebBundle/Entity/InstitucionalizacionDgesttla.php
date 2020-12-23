@@ -87,12 +87,12 @@ class InstitucionalizacionDgesttla
     /**
      * @var string
      */
-    private $tecnicosuperior;
+    private $tecnicoSuperior;
 
     /**
      * @var integer
      */
-    private $tipopostgrado;
+    private $tipoPostgrado;
 
     /**
      * @var string
@@ -458,49 +458,49 @@ class InstitucionalizacionDgesttla
     }
 
     /**
-     * Set tecnicosuperior
+     * Set tecnicoSuperior
      *
-     * @param string $tecnicosuperior
+     * @param string $tecnicoSuperior
      * @return InstitucionalizacionDgesttla
      */
-    public function setTecnicosuperior($tecnicosuperior)
+    public function setTecnicoSuperior($tecnicoSuperior)
     {
-        $this->tecnicosuperior = $tecnicosuperior;
+        $this->tecnicoSuperior = $tecnicoSuperior;
     
         return $this;
     }
 
     /**
-     * Get tecnicosuperior
+     * Get tecnicoSuperior
      *
      * @return string 
      */
-    public function getTecnicosuperior()
+    public function getTecnicoSuperior()
     {
-        return $this->tecnicosuperior;
+        return $this->tecnicoSuperior;
     }
 
     /**
-     * Set tipopostgrado
+     * Set tipoPostgrado
      *
-     * @param integer $tipopostgrado
+     * @param integer $tipoPostgrado
      * @return InstitucionalizacionDgesttla
      */
-    public function setTipopostgrado($tipopostgrado)
+    public function setTipoPostgrado($tipoPostgrado)
     {
-        $this->tipopostgrado = $tipopostgrado;
+        $this->tipoPostgrado = $tipoPostgrado;
     
         return $this;
     }
 
     /**
-     * Get tipopostgrado
+     * Get tipoPostgrado
      *
      * @return integer 
      */
-    public function getTipopostgrado()
+    public function getTipoPostgrado()
     {
-        return $this->tipopostgrado;
+        return $this->tipoPostgrado;
     }
 
     /**

@@ -102,6 +102,28 @@
             </header> <!-- /#header -->
             <div class="body-content animated fadeIn">
                 <div class="row">
+                    <div class="col-md-12">
+                        {% for flashMessage in app.session.flashbag.get('error') %}
+                            <div class="alert alert-danger" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                        {% for flashMessage in app.session.flashbag.get('noSegip') %}
+                            <div class="alert alert-danger" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                        {% for flashMessage in app.session.flashbag.get('success') %}
+                            <div class="alert alert-success" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-12">
                         <div class="panel" style="max-width:1000px;margin-left:auto;margin-right:auto;">
                             <div class="row">
@@ -305,7 +327,42 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="tab-pane fade inner-all" id="tab1-3">
-                                                                        
+                                                                        <div class="row">
+                                                                            <div class="col-md-12">
+                                                                                <h4 class="page-header">
+                                                                                    DATOS DE POSTULACIÓN<br>
+                                                                                </h4>
+                                                                                <div class="form-body">
+                                                                                    <div class="row">
+                                                                                        
+                                                                                        <div class="form-group col-md-12">
+                                                                                            <div class="col-md-3">
+                                                                                                {{ form_label(form.departamento) }}
+                                                                                            </div>
+                                                                                            <div class="col-md-9">
+                                                                                                {{ form_widget(form.departamento, { 'attr': {'class': 'form-control'}  }) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="form-group col-md-12">
+                                                                                            <div class="col-md-3">
+                                                                                                {{ form_label(form.instituto) }}
+                                                                                            </div>
+                                                                                            <div class="col-md-9">
+                                                                                                {{ form_widget(form.instituto, { 'attr': {'class': 'form-control'}  }) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="form-group col-md-12">
+                                                                                            <div class="col-md-3">
+                                                                                                {{ form_label(form.cargo) }}
+                                                                                            </div>
+                                                                                            <div class="col-md-9">
+                                                                                                {{ form_widget(form.cargo, { 'attr': {'class': 'form-control'}  }) }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div><!-- /.panel-body -->
                                                                 <!--/ End tabs content -->
@@ -815,114 +872,28 @@
             });
         } 
 
-        $(function(){
-            $(".validar").keydown(function(event){
-                if((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !==190  && event.keyCode !==110 && event.keyCode !==8 && event.keyCode !==9  ){
-                    return false;
-                }
-            });
-        });
-        
         function validar(){
             if(!confirm("Verifique los datos del formulario antes de enviar.")){
-               return false;
-            }else if($('#form_institucioneducativa').val()==''){
-                alert('En el punto DATOS GENERALES, debe ingresar el nombre de la nueva Unidad Educativa.');
                 return false;
-            }else if($('#form_fechafundacion').val()==''){
-                alert('En el punto DATOS GENERALES, debe ingresar la fecha de fundación.');
+            }else if($('#form_carnet').val()==''){
+                alert('En el punto DATOS PERSONALES, debe ingresar el número de Carnet de Identidad.');
                 return false;
-            }else if($('#form_telefono').val()==''){
-                alert('En el punto DATOS GENERALES, debe ingresar el Telefono de Referencia.');
+            }else if($('#form_nombre').val()==''){
+                alert('En el punto DATOS PERSONALES , debe ingresar el Nombre.');
                 return false;
-            }else if($('#form_director').val()==''){
-                alert('En el punto DATOS GENERALES, debe ingresar los Datos del Director/Encargado/Propietario.');
-                return false;
-            }else if($('#form_departamento2001').val()==''){
-                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el departamento de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
-                return false;
-            }else if($('#form_provincia2001').val()==''){
-                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la provincia de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
-                return false;
-            }else if($('#form_municipio2001').val()==''){
-                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el municipio de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
-                return false;
-            }else if($('#form_canton2001').val()==''){
-                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el canton de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
-                return false;
-            }else if($('#form_localidad2001').val()==''){
-                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la localidad de la Ubicación Geográfica(Censo 2001 - R.U.E.).');
-                return false;
-            }else if($('#form_departamento2012').val()==''){
-                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el departamento de la Ubicación Geográfica(Censo 2012 - información referencial).');
-                return false;
-            }else if($('#form_provincia2012').val()==''){
-                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la provincia de la Ubicación Geográfica(Censo 2012 - información referencial).');
-                return false;
-            }else if($('#form_municipio2012').val()==''){
-                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el municipio de la Ubicación Geográfica(Censo 2012 - información referencial).');
-                return false;
-            }else if($('#form_comunidad2012').val()==''){
-                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar la comunidad de la Ubicación Geográfica(Censo 2012 - información referencial).');
-                return false;
-            }else if($('#form_distrito').val()==''){
-                alert('En el punto UBICACIÓN GEOGRÁFICA, debe seleccionar el distrito educativo.');
-                return false;
-            }else if($('#form_zona').val()==''){
-                alert('En el punto UBICACIÓN GEOGRÁFICA, debe ingresar la zona.');
+            }else if($('#form_nacionalidad').val()==''){
+                alert('En el punto DATOS PERSONALES, debe ingresar la Nacionalidad.');
                 return false;
             }else if($('#form_direccion').val()==''){
-                alert('En el punto UBICACIÓN GEOGRÁFICA, debe ingresar la direccion.');
+                alert('En el punto DATOS PERSONALES, debe ingresar la Dirección actual.');
                 return false;
-            }else if($('#form_dependencia').val()==''){
-                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar la Dependencia.');
+            }else if($('#form_celular').val()==''){
+                alert('En el punto DATOS PERSONALES, debe ingresar el número de celular.');
                 return false;
-            }else if($('#form_dependencia').val() == 2 && $('#form_conveniotipo').val() == ''){
-                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar el tipo de convenio.');
+            }else if($('#form_correoElectronico').val()==''){
+                alert('En el punto DATOS PERSONALES, debe ingresar el correo electrónico.');
                 return false;
-            }else if($('#form_dependencia').val() == 3 && $('#form_constitucion').val() == ''){
-                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar la Constitución de la Unidad Educativa.');
-                return false;
-            }else if($('.nivel').is(':checked') == false){
-                alert('En el punto DEPENDENCIA NIVEL, debe seleccionar el o los niveles de organización curricular.');
-                return false;
-            }else if($('.nivel').is(':checked') == true){
-                $('.nivel').each(function() {
-                    if ($(this).is(':checked') ) {
-                        if($(this).val() == 11 && ($('#form_cantidad_11_1').val()=='' || $('#form_cantidad_11_2').val()=='')){
-                            alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Inicial en Familia Comunitaria.');
-                            return false;            
-                        }
-                        if($(this).val() == 12 && ($('#form_cantidad_12_1').val()=='' || $('#form_cantidad_12_2').val()=='' || $('#form_cantidad_12_3').val()=='')){
-                            alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Primaria Comunitaria Vocacional.');
-                            return false;            
-                        }
-                        if($(this).val() == 13 && ($('#form_cantidad_13_1').val()=='' || $('#form_cantidad_13_2').val()=='' || $('#form_cantidad_13_3').val()=='')){
-                            alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Secundaria Comunitaria Productiva.');
-                            return false;            
-                        }
-                    }
-                });
-            }
-            if($('#form_cantidad_adm').val() == ''){
-                alert('En el punto CANTIDAD DE PERSONAL, debe ingresar la cantidad de personal administrativo.');
-                return false;
-            }else if($('#form_cantidad_maestro').val() == ''){
-                alert('En el punto CANTIDAD DE PERSONAL, debe ingresar la cantidad de Docente (Maestros).');
-                return false;
-            }else if($('#form_latitud').val() == -16.50626 || $('#form_longitud').val() == -68.12794){
-                alert('Debe seleccionar la informacion georeferencial.');
-                return false;
-            }else if($('#modal_requisitos_54').length == 0){
-                alert('Ingrese los requisitos de la solicitud de Apertura de Unidad Educativa');
-                return false;
-            }else if($('#validar54').val() == 0){
-                alert('Debe validar los requisitos de la nueva Unidad Educativa');
-                return false;
-            }else{
-                $('#form_guardar').prop('disabled',true);
-                return true;
-            }
+            }      
         }
 
         $('.calendario').datepicker({

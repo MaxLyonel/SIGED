@@ -95,17 +95,19 @@ Sie\AppWebBundle\Entity\InstitucionalizacionDgesttla:
             length: null
             fixed: false
             comment: ''
-        tecnicosuperior:
+        tecnicoSuperior:
             type: string
             nullable: true
             length: null
             fixed: false
             comment: ''
-        tipopostgrado:
+            column: tecnico_superior
+        tipoPostgrado:
             type: integer
             nullable: true
             unsigned: false
             comment: ''
+            column: tipo_postgrado
         postgrado:
             type: string
             nullable: true
