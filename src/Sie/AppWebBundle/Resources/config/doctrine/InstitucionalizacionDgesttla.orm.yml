@@ -157,4 +157,11 @@ Sie\AppWebBundle\Entity\InstitucionalizacionDgesttla:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        nroDeposito:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: nro_deposito
     lifecycleCallbacks: {  }

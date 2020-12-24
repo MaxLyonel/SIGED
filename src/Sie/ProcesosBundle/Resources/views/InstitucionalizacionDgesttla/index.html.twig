@@ -87,7 +87,7 @@
         <section id="wrapper">
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <img src="/images/logo-minedu-1.png" alt="Ministerio de Educación" style="width:35%;">
+                    <img src="/images/logo-n-minedu-2021.png" alt="Ministerio de Educación" style="width:30%;">
                 </div>
             </div>
             <!-- START @HEADER -->
@@ -384,6 +384,14 @@
                                                                                                 {{ form_widget(form.cargo, { 'attr': {'class': 'form-control'}  }) }}
                                                                                             </div>
                                                                                         </div>
+                                                                                        <div class="form-group col-md-12">
+                                                                                            <div class="col-md-3">
+                                                                                                {{ form_label(form.nroDeposito) }} <span class="text-danger">(*)</span>
+                                                                                            </div>
+                                                                                            <div class="col-md-9">
+                                                                                                {{ form_widget(form.nroDeposito, { 'attr': {'class': 'form-control'}  }) }}
+                                                                                            </div>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
@@ -592,6 +600,9 @@
                 return false;
             }else if($('#form_licenciatura').val()=='' && $('#form_tecnicoSuperior').val()=='' && $('#form_especialidad').val()=='' && $('#form_maestria').val()=='' && $('#form_diplomado').val()=='' && $('#form_doctorado').val()==''){
                 alert('En el punto DATOS ACADÉMICOS, debe ingresar su Formación.');
+                return false;
+            }else if($('#form_nroDeposito').val()==''){
+                alert('En el punto DATOS DE POSTULACIÓN, debe ingresar el número de depósito bancario.');
                 return false;
             }
         }
