@@ -780,4 +780,32 @@ class InstitucionalizacionDgesttla
     {
         return $this->doctorado;
     }
+    /**
+     * @var string
+     */
+    private $nroDeposito;
+
+
+    /**
+     * Set nroDeposito
+     *
+     * @param string $nroDeposito
+     * @return InstitucionalizacionDgesttla
+     */
+    public function setNroDeposito($nroDeposito)
+    {
+        $this->nroDeposito = $nroDeposito;
+    
+        return $this;
+    }
+
+    /**
+     * Get nroDeposito
+     *
+     * @return string 
+     */
+    public function getNroDeposito()
+    {
+        return $this->nroDeposito;
+    }
 }
