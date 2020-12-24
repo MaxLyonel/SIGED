@@ -427,9 +427,10 @@
                             <span class="arrow"></span>
                         </a>
                         <ul>
-                        {# {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %}
+                        {# {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %} #}
+                        {% if app.session.get('roluser') == 8 %}
                            <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
-                        {% endif %} #}
+                        {% endif %}
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
                             {# <li><a href="{{ path('bach_exc_completar_informacion_lista')}}">Completar Información</a></li> #}
                         </ul>
