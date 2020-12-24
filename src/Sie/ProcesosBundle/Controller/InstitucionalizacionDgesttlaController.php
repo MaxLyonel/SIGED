@@ -65,7 +65,6 @@ class InstitucionalizacionDgesttlaController extends Controller
             ->add('especialidad', 'text', array('label' => 'Especialidad en:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200', 'placeholder' => 'INGRESAR SU ESPECIALIDAD (SI CORRESPONDE)')))
             ->add('maestria', 'text', array('label' => 'Maestría en:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200', 'placeholder' => 'INGRESAR SU MAESTRÍA (SI CORRESPONDE)')))
             ->add('doctorado', 'text', array('label' => 'Doctorado en:','required'=>false,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '200', 'placeholder' => 'INGRESAR SU DOCTORADO (SI CORRESPONDE)')))
-            // ->add('departamento', 'choice', array('label' => 'Departamento', 'required' => true, 'choices' => [0 => 'Seleccionar...', 1 => 'CHUQUISACA', 2 => 'LA PAZ', 3 => 'COCHABAMBA', 4 => 'ORURO', 5 => 'POTOSÍ', 6 => 'TARIJA', 7 => 'SANTA CRUZ', 8 => 'BENI', 9 => 'PANDO']))
             ->add('departamento', 'entity', array(
                 'class' => 'Sie\AppWebBundle\Entity\InstitucionalizacionDepartamento',
                 'mapped' => false,
@@ -74,8 +73,9 @@ class InstitucionalizacionDgesttlaController extends Controller
                 'label' => 'Departamento:',
                 'empty_value' => 'Seleccionar...'
             ))
-            ->add('instituto', 'choice', array('label' => 'Instituto', 'required' => true, 'choices' => [0 => 'Seleccionar...', 1 => 'ITT1', 2 => 'ITT2', 3 => 'ITT3', 4 => 'ITT4']))
-            ->add('cargo', 'choice', array('label' => 'Cargo', 'required' => true, 'choices' => [0 => 'Seleccionar...', 1 => 'C1', 2 => 'C2', 3 => 'Maestría', 4 => 'C3']))
+            ->add('instituto', 'choice', array('label' => 'Instituto', 'required' => true, 'choices' => [0 => 'Seleccionar...']))
+            ->add('cargo', 'choice', array('label' => 'Cargo', 'required' => true, 'choices' => [0 => 'Seleccionar...']))
+            ->add('nroDeposito','text',array('label'=>'Número de depósito bancario:','required'=>true,'attr' => array('class' => 'form-control','style' => 'text-transform:uppercase', 'maxlength' => '100', 'placeholder' => 'INGRESAR EL NÚMERO DE DEPÓSITO BANCARIO')))
             ->add('guardar','submit',array('label'=>'Enviar formulario'))
             ->getForm();
 
@@ -109,6 +109,7 @@ class InstitucionalizacionDgesttlaController extends Controller
         $departamento = $form['departamento'];
         $instituto = $form['instituto'];
         $cargo = $form['cargo'];
+        $nroDeposito = $form['nroDeposito'];
 
         $persona = array(
             'complemento'=>$complemento,
@@ -152,6 +153,7 @@ class InstitucionalizacionDgesttlaController extends Controller
                     $institucionalizacion->setDepartamento($departamento);
                     $institucionalizacion->setInstituto($instituto);
                     $institucionalizacion->setCargo($cargo);
+                    $institucionalizacion->setNroDeposito(mb_strtoupper($nroDeposito, 'UTF-8'));
                     $institucionalizacion->setEsOficial(true);
                     
                     $em->persist($institucionalizacion);
