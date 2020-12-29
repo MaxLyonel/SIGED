@@ -772,7 +772,7 @@ class InfoEstudianteController extends Controller {
         $imprimirLibreta = false;
         $estadosPermitidosImprimir = array(4,5,11,55,28);
 
-        if($gestion = 2020){
+        if($gestion == 2020){
             $estadosPermitidosImprimir = array(5,55);
         }
 

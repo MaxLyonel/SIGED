@@ -368,7 +368,7 @@
                             <li><a href="{{ path('herramienta_info_estudiante_bjp_index')}}">Validar Estudiantes</a></li>
                         </ul>
                     </li> #}
-                    {# {% if app.session.get('roluser') != 20 %}
+                    {% if app.session.get('roluser') != 20 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -376,15 +376,15 @@
                                 <span class="arrow"></span>
                             </a>
                             <ul>
-                                {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 %}
+                                {# {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 %}
                                     <li><a href="{{ path('herramienta_especial_habilitar_gestion_search')}}">Habilitar gestión</a></li>
-                                {% endif %}
+                                {% endif %} #}
                                 {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 %}
                                     <li><a href="{{ path('herramienta_especial_infoconsolidation_gestion_index')}}">Seguimiento operativos</a></li>
                                 {% endif %}
                             </ul>
                         </li>
-                    {% endif %} #}
+                    {% endif %}
                     <li class="">
                         <a href="{{path('wf_tramite_index')}}">
                             <span class="icon"><i class="fa fa-list-alt"></i></span>

@@ -214,6 +214,33 @@ class InstitucionalizacionDgesttlaController extends Controller
         return $response->setData(array('cargos' => $cargosArray));
     }
 
+    public function indexPrintAction(Request $request) {
+        return $this->render('SieProcesosBundle:InstitucionalizacionDgesttla:index_print.html.twig');
+    }
+
+    public function printInscAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $formulario = $request->get("formulario");
+
+        $persona = $em->getRepository('SieAppWebBundle:InstitucionalizacionDgesttla')->findOneByCarnet($formulario['carnet']);
+        
+        if($persona) {
+            $arch = 'DGESTTLA_INSTITUCIONALIZACION_' . $persona->getCarnet() . '_' . date('YmdHis') . '.pdf';
+            $response = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'dgesttla_insc_Institucionalizacion_v1_afv.rptdesign&__format=pdf&&carnet='.$persona->getCarnet().'&&__format=pdf&'));
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+            return $response;
+        } else {
+            $this->get('session')->getFlashBag()->add('error', 'No se encontró el registro para el Número de Carnet de Identidad: '.$formulario['carnet'].'. No es posible generar el formulario de inscripción.');
+            return $this->redirectToRoute('institucionalizacion_index_print');
+        }
+    }
+
     // public function recepcionDistritoGuardarAction(Request $request)
     // {
     //     //variable de control para el cargado de adjunto
