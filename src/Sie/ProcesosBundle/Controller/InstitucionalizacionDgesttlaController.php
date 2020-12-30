@@ -119,9 +119,10 @@ class InstitucionalizacionDgesttlaController extends Controller
             'fecha_nacimiento'=>$fechaNacimiento
         );
 
-        $registro = $em->getRepository('SieAppWebBundle:InstitucionalizacionDgesttla')->findOneBy(array('carnet' => $carnet, 'complemento' => $complemento, 'esOficial' => true));
-        if($registro) {
-            $this->get('session')->getFlashBag()->add('error', 'Se encontró un registro previo para la persona. No se realizó el registro.');
+        $registro = $em->getRepository('SieAppWebBundle:InstitucionalizacionDgesttla')->findBy(array('carnet' => $carnet, 'complemento' => $complemento, 'esOficial' => true));
+        
+        if(count($registro)>=2) {
+            $this->get('session')->getFlashBag()->add('error', 'Se encontraron 2 registros previos para la persona. No se realizó el registro.');
             return $this->redirectToRoute('institucionalizacion_index');
         } else {
             $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnet, $persona, 'prod', 'academico');
