@@ -129,28 +129,64 @@
                                     <div class="panel panel-primary">
                                         <div class="panel-heading">
                                             <div class="pull-left">
-                                                <h3 class="panel-title">DESCARGAR FORMULARIO DE INSCRIPCIÓN</h3>
+                                                <h3 class="panel-title">GENERAR FORMULARIO DE INSCRIPCIÓN</h3>
                                             </div>
                                             <div class="clearfix"></div>
                                         </div><!-- /.panel-heading -->
                                         <div class="panel-body">                                            
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <form action="{{path('institucionalizacion_print_insc')}}" name="formulario" id="formulario" method="post">
-                                                        <div class="form-group col-md-12">
-                                                            <div class="col-md-4">
-                                                                <label for="formulario_carnet">Carnet de Identidad: <span class="text-danger">(*)</span></label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" id="formulario_carnet" name="formulario[carnet]" required="required" class="form-control" style="text-transform:uppercase" maxlength="15" placeholder="INGRESAR EL NRO DE C.I.">
+                                                    {{ form_start(form,{ 'attr': {'id':'form','onsubmit':'return validar();'}}) }}
+                                                        <span class="text-danger">(*) Campos obligatorios</span>
+                                                        <div class="form-body">
+                                                            <div class="row">
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-3">
+                                                                        {{ form_label(form.carnet) }} <span class="text-danger">(*)</span>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        {{ form_widget(form.carnet) }}
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        {{ form_label(form.complemento) }}
+                                                                    </div>
+                                                                    <div class="col-md-2">
+                                                                        {{ form_widget(form.complemento) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-3">
+                                                                        {{ form_label(form.departamento) }} <span class="text-danger">(*)</span>
+                                                                    </div>
+                                                                    <div class="col-md-9">
+                                                                        {{ form_widget(form.departamento, { 'attr': {'class': 'form-control', 'onchange':'instituto(this.value)'}  }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-3">
+                                                                        {{ form_label(form.instituto) }} <span class="text-danger">(*)</span>
+                                                                    </div>
+                                                                    <div class="col-md-9">
+                                                                        {{ form_widget(form.instituto, { 'attr': {'class': 'form-control', 'onchange':'cargo(this.value)'}  }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-3">
+                                                                        {{ form_label(form.cargo) }} <span class="text-danger">(*)</span>
+                                                                    </div>
+                                                                    <div class="col-md-9">
+                                                                        {{ form_widget(form.cargo, { 'attr': {'class': 'form-control'}  }) }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-md-12">
+                                                                    <div class="col-md-9 col-md-offset-3">
+                                                                        {{ form_widget(form.buscar, {'attr':{'class':'btn btn-primary'} }) }}
+                                                                        <a href="{{path('institucionalizacion_index_print')}}" class="btn btn-danger"> <i class="fa fa-ban"></i> Cancelar</a>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                        <div class="form-group col-md-12">
-                                                            <div class="col-md-8 col-md-offset-4">
-                                                                <button type="submit" class="btn btn-success"> <i class="fa fa-print"></i> Descargar</button>
-                                                            </div>
-                                                        </div>
-                                                    </form>
+                                                    {{ form_end(form) }}
                                                 </div>
                                             </div>
                                         </div>
@@ -239,6 +275,67 @@
     <script src="{{asset('webprocesos/js/mapa.js')}}"></script>
     <!--/ END GOOGLE ANALYTICS -->     
 
+    <script>
+        function instituto(idDepartamento) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('institucionalizacion_buscar_instituto', {'idDepartamento': idDepartamento}),
+                beforeSend: function () {
+                    $("#form_instituto").empty();
+                    $("#form_instituto").append('<option value="">Buscando...</option>');
+                    $("#form_cargo").empty();
+                    $("#form_cargo").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_instituto").empty();
+                    $("#form_instituto").append('<option value="">Seleccionar...</option>');
+                    $("#form_cargo").empty();
+                    $("#form_cargo").append('<option value="">Seleccionar...</option>');
+                    $.each(data.institutos, function (i, value) {
+                        $("#form_instituto").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    
+                }
+            });
+        }
+
+        function cargo(idInstituto) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('institucionalizacion_buscar_cargo', {'idInstituto': idInstituto}),
+                beforeSend: function () {
+                    $("#form_cargo").empty();
+                    $("#form_cargo").append('<option value="">Buscando...</option>');
+                },
+                success: function (data) {
+                    $("#form_cargo").empty();
+                    $("#form_cargo").append('<option value="">Seleccionar...</option>');
+                    $.each(data.cargos, function (i, value) {
+                        $("#form_cargo").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    
+                }
+            });
+        }
+
+        function validar(){
+            if(!confirm("Verifique los datos del formulario antes de enviar.")){
+                return false;
+            }else if($('#form_carnet').val()==''){
+                alert('Debe ingresar el número de Carnet de Identidad.');
+                return false;
+            }else if($('#form_departamento').val()<=0){
+                alert('Debe ingresar el Departamento.');
+                return false;
+            }else if($('#form_instituto').val()<=0){
+                alert('Debe ingresar el Intituto.');
+                return false;
+            }else if($('#form_cargo').val()<=0){
+                alert('Debe ingresar el Cargo.');
+                return false;
+            }
+        }
+    </script>
 </body>
     <!--/ END BODY -->
 
