@@ -272,7 +272,7 @@
                                     {% endif %}
                                     
                                     {# REPORTE NAATS SOLO PARA GESTION 2018 Y NIVELES DE PRIMARIA Y SECUNDARIA #}
-                                    {% if gestion == 2018 and nivel != 11 and data.estadomatriculaId in [4,5,11,55] %}
+                                    {% if gestion > 2019 and nivel != 11 and data.estadomatriculaId in [4,5,11,55] %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Trabajo del estudiante">
                                             <button type="button" class="btn btn-circle btn-primary " data-toggle="modal" data-target=".bs-example-modal-table" onclick="trabajo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-edit"></i>
@@ -302,13 +302,13 @@
                                                 </div>
                                             {% else %}
                                                 {# PARA TODAS LAS DEMAS GESTIONES #}
-                                                
+                                                {% if gestion > 2019 %}
                                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                         <i class="fa fa-list"></i>
                                                     </button>
                                                 </div>
-                                                
+                                                {% endif %}
                                             {% endif %}
 
                                         {% endif %}
