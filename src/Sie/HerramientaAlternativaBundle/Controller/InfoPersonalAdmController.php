@@ -60,8 +60,8 @@ class InfoPersonalAdmController extends Controller {
 
         $query = $em->createQuery(
                         'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                        WHERE ct.rolTipo IN (:id) ORDER BY ct.id')
-                ->setParameter('id', array(5, 9));
+                        WHERE ct.id NOT IN (:id) ORDER BY ct.id')
+                ->setParameter('id', array(0, 70));
         $cargosArray = $query->getResult();
 
         $query = $em->createQuery(
