@@ -106,8 +106,10 @@ class InfoMaestroController extends Controller {
          */
         //$cargos = $em->getRepository('SieAppWebBundle:CargoTipo')->findBy(array('rolTipo'=>2));
         $queryCargos = $em->createQuery(
-                'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                     WHERE ct.rolTipo = 2');
+            'SELECT ct FROM SieAppWebBundle:CargoTipo ct
+            WHERE ct.id IN (:id) ORDER BY ct.id')
+            ->setParameter('id', array(0,70));
+
         $cargos = $queryCargos->getResult();
         $cargosArray = array();
 

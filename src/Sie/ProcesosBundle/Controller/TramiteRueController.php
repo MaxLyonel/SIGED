@@ -932,12 +932,12 @@ class TramiteRueController extends Controller
         
         $query = $em->getConnection()->prepare('SELECT ie.id,ie.institucioneducativa,ie.area_municipio,ie.fecha_fundacion,ie.le_juridicciongeografica_id,ie.estadoinstitucion_tipo_id,et.estadoinstitucion,ie.dependencia_tipo_id,dt.dependencia,ie.convenio_tipo_id,ct.convenio,ies.telefono1, ie.fecha_resolucion, ie.nro_resolucion
                 FROM institucioneducativa ie
-                left join institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id
+                left join institucioneducativa_sucursal ies on ie.id=ies.institucioneducativa_id and ies.gestion_tipo_id=' . $gestionActual .' 
                 join estadoinstitucion_tipo et on ie.estadoinstitucion_tipo_id=et.id
                 join dependencia_tipo dt on dt.id=ie.dependencia_tipo_id
                 left join convenio_tipo ct on ct.id=ie.convenio_tipo_id
-                where ies.gestion_tipo_id=' . $gestionActual .'
-                and ie.id='. $form['idrue']);
+                where -- ies.gestion_tipo_id=' . $gestionActual .' and 
+                ie.id='. $form['idrue']);
                 $query->execute();
         $institucioneducativa = $query->fetchAll();
 
