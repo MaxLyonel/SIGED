@@ -26,6 +26,8 @@ class InstitucionalizacionDgesttlaController extends Controller
      */
     public function __construct() {
         $this->session = new Session();
+        $this->fechaActual = new \DateTime('now');
+        $this->fechaCorte = new \DateTime('2021-01-09');
     }
 
     /***
@@ -33,11 +35,20 @@ class InstitucionalizacionDgesttlaController extends Controller
      */
     public function indexAction(Request $request) {
         $form = $this->createRegistroNuevoForm();
-        $data = array(
-            'form' => $form->createView(),
-        );
+        
+        if($this->fechaActual > $this->fechaCorte) {
+            $data = array(
+                'form' => $form->createView(),
+                'fin_inscripcion' => true
+            );
+        } else {
+            $data = array(
+                'form' => $form->createView(),
+                'fin_inscripcion' => false
+            );
+        }
 
-        return $this->render('SieProcesosBundle:InstitucionalizacionDgesttla:index.html.twig', $data);        
+        return $this->render('SieProcesosBundle:InstitucionalizacionDgesttla:index.html.twig', $data);
     }
 
     public function createRegistroNuevoForm()
