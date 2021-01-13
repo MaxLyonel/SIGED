@@ -213,7 +213,7 @@ class InboxController extends Controller {
 
         $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
         //get the current year
-        $gestionOpeUnidadEducativa = (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 4)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
+        $gestionOpeUnidadEducativa = (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 3)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
 
 
         $objValidateUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
@@ -298,7 +298,7 @@ class InboxController extends Controller {
 
         $this->operativoUe = $operativoPerUe;
         //get the current year
-        $arrSieInfo[0]['gestion']= (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 4)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
+        $arrSieInfo[0]['gestion']= (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 3)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
         $arrSieInfo[0]['id'] = $this->session->get('ie_id');
         //get the fuill ue info
         $arrFullUeInfo=array();
