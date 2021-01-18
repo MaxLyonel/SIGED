@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 use Sie\AppWebBundle\Entity\EstudianteHistorialModificacion; 
 use Sie\AppWebBundle\Entity\EstudianteInscripcion; 
+
 use Sie\AppWebBundle\Entity\Estudiante; 
 use Sie\AppWebBundle\Entity\EstudianteInscripcionExtranjero; 
 use Symfony\Component\Validator\Constraints\DateTime;
@@ -721,6 +722,40 @@ class NewInscriptionExtranjeroController extends Controller{
     }
 
     /**
+     * to add the areas to the student
+     * @param type $studentInscrId
+     * @param type $newCursoId
+     * @return boolean
+     */
+    private function addAreasToStudent($studentInscrId, $newCursoId) {
+        $em = $this->getDoctrine()->getManager();
+        $areasEstudiante = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array(
+            'estudianteInscripcion' => $studentInscrId,
+            'gestionTipo' => $this->session->get('currentyear')
+        ));
+        //if doesnt have areas we'll fill these
+        if (!$areasEstudiante) {
+            $objAreas = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array(
+                'insitucioneducativaCurso' => $newCursoId
+            ));
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');");
+            $query->execute();
+            foreach ($objAreas as $areas) {
+                //print_r($areas->getAsignaturaTipo()->getId());
+                $studentAsignatura = new EstudianteAsignatura();
+                $studentAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
+                $studentAsignatura->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscrId));
+                $studentAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($areas->getId()));
+                $studentAsignatura->setFechaRegistro(new \DateTime('now'));
+                $em->persist($studentAsignatura);
+                $em->flush();
+                //echo "<hr>";
+            }
+        }
+        return true;
+    }     
+
+    /**
      * todo the registration of traslado
      * @param Request $request
      *
@@ -919,6 +954,13 @@ class NewInscriptionExtranjeroController extends Controller{
 
 	            $em->persist($studentInscription);
 	            $em->flush();  
+
+              //add the areas to the student
+              //$responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId());    
+              $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+              $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+              $query->execute();
+                  
 
 	            if($swnewforeign == 1 or $swnewforeign==0){
 	            	 // save the file in case if exists

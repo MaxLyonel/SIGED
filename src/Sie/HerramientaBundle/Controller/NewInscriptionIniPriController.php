@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 use Sie\AppWebBundle\Entity\EstudianteHistorialModificacion; 
 use Sie\AppWebBundle\Entity\EstudianteInscripcion; 
+use Sie\AppWebBundle\Entity\EstudianteAsignatura; 
 use Sie\AppWebBundle\Entity\Estudiante; 
 use Sie\AppWebBundle\Entity\EstudianteDocumento; 
 use Symfony\Component\Validator\Constraints\DateTime;
@@ -784,6 +785,40 @@ class NewInscriptionIniPriController extends Controller
     }
 
     /**
+     * to add the areas to the student
+     * @param type $studentInscrId
+     * @param type $newCursoId
+     * @return boolean
+     */
+    private function addAreasToStudent($studentInscrId, $newCursoId) {
+        $em = $this->getDoctrine()->getManager();
+        $areasEstudiante = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array(
+            'estudianteInscripcion' => $studentInscrId,
+            'gestionTipo' => $this->session->get('currentyear')
+        ));
+        //if doesnt have areas we'll fill these
+        if (!$areasEstudiante) {
+            $objAreas = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array(
+                'insitucioneducativaCurso' => $newCursoId
+            ));
+            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_asignatura');");
+            $query->execute();
+            foreach ($objAreas as $areas) {
+                //print_r($areas->getAsignaturaTipo()->getId());
+                $studentAsignatura = new EstudianteAsignatura();
+                $studentAsignatura->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
+                $studentAsignatura->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($studentInscrId));
+                $studentAsignatura->setInstitucioneducativaCursoOferta($em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($areas->getId()));
+                $studentAsignatura->setFechaRegistro(new \DateTime('now'));
+                $em->persist($studentAsignatura);
+                $em->flush();
+                //echo "<hr>";
+            }
+        }
+        return true;
+    }    
+
+    /**
      * todo the registration of traslado
      * @param Request $request
      *
@@ -791,7 +826,7 @@ class NewInscriptionIniPriController extends Controller
     public function doInscriptioninipriAction(Request $request) {
     	
     	$arrDatos = json_decode($request->get('datos'), true);
-//  	dump($arrDatos);die;
+  	// dump($arrDatos);die;
     	 // ini vars
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
@@ -821,7 +856,7 @@ class NewInscriptionIniPriController extends Controller
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
             
 	$swinscription=true;
-            if($operativo >= 4){
+            if($operativo >= 3){
                 $status = 'error';
 				$code = 400;
 				$message = "No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos";
@@ -872,7 +907,7 @@ class NewInscriptionIniPriController extends Controller
 		case 2:
 			$swinscription = $this->rezagoYearValidation($yearStudent,$nivel,$grado);
 			if($swnewforeign){
-				$swinscription = !$this->getCurrentInscriptionsByGestoinValida($arrDatos['rude'],$this->currentyear-1);
+				//$swinscription = !$this->getCurrentInscriptionsByGestoinValida($arrDatos['rude'],$this->currentyear-1);
 			}
 			break;
 		default:
@@ -1000,6 +1035,8 @@ die;*/
 			            $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
 			            $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(59));
 
+
+
 			            $arrStudent = array(
 				            	'rude'=>$oldstudentCodigoRude,
 				            	'nombre'=>$nombre,
@@ -1075,6 +1112,12 @@ die;*/
 
 			            $em->persist($studentInscription);
 			            $em->flush();          
+                        //add the areas to the student
+                        //$responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId());    
+                        $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+                        $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+                        $query->execute();
+                          
 
 			            // Registro de materia curso oferta en el log
 			            $this->get('funciones')->setLogTransaccion(
