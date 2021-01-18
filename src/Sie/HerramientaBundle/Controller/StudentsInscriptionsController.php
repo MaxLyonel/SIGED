@@ -165,6 +165,10 @@ class StudentsInscriptionsController extends Controller {
         $studentInscription->setCodUeProcedenciaId(0);
         $em->persist($studentInscription);
         $em->flush();
+        //add the areas to the student
+        $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+        $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+        $query->execute();        
         //to do the submit data into DB
         //do the commit in DB
         $em->getConnection()->commit();
