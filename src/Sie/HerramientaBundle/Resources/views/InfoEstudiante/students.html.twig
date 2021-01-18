@@ -62,13 +62,14 @@
                                 </td>
 
                                 <td data-title="Opcion" class="success" >
+                                    {#
                                     <div >
                                         <label>
                                             <input type="checkbox" id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}][student]"   value='{{data.id}}'>
                                             <input type="hidden" id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}][matricula]"   value='{{data.estadomatriculaId}}'>
                                         </label>
                                     </div>
-
+                                    #}
                                 </td>
                             </tr>
                         {%endfor%}
