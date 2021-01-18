@@ -140,6 +140,8 @@ class StudentsInscriptionsController extends Controller {
       $em->getConnection()->beginTransaction();
       //get the send values
       $form= $request->get('form');
+      $infoUe = $form['data'];
+      
       $aInfoUeducativa = unserialize($form['data']);
 //dump($aInfoUeducativa);die;
     //set the validate year
@@ -168,8 +170,11 @@ class StudentsInscriptionsController extends Controller {
         $em->getConnection()->commit();
         $this->session->getFlashBag()->add('goodinscription', 'Estudiante inscrito');
 
+        $response = new JsonResponse();
+        return $response->setData(array('status'=>'success','infoUe'=>$infoUe));
+
         //reload the students list
-        $exist = true;
+        /*$exist = true;
         $objStudents = array();
 
         $objStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseAlter($aInfoUeducativa['ueducativaInfoId']['iecId']);
@@ -183,9 +188,10 @@ class StudentsInscriptionsController extends Controller {
                     'dataUe'=> $dataUe['ueducativaInfo'],
                     'paraleloname' => $aInfoUeducativa['ueducativaInfo']['paralelo'],
                     'gradoname' => $aInfoUeducativa['ueducativaInfo']['grado']
-        ));
+        ));*/
       } catch (Exception $e) {
         $em->getConnection()->rollback();
+        return $response->setData(array('status'=>'error', 'msg'=>'error'));
         echo 'Excepción capturada: ', $ex->getMessage(), "\n";
       }
     }

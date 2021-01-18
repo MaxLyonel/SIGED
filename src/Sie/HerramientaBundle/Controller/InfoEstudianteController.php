@@ -242,7 +242,7 @@ class InfoEstudianteController extends Controller {
             ));
 
             //get the turno for grado
-            $objTurnos = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getTurnoBySieInfo($sie, $nivel, $turno, $grado, $gestion + 1);
+            $objTurnos = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getTurnoBySieInfo($sie, $nivel, $turno, $grado, $gestion);
             if ($objParalelos) {
 
                 //get the student to do the inscription
