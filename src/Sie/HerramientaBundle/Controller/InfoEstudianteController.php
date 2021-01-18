@@ -581,7 +581,7 @@ class InfoEstudianteController extends Controller {
      */
     private function createFormStudentInscription($data) {
         return $this->createFormBuilder()
-                        ->add('inscription', 'button', array('label' => 'Inscribir', 'attr' => array('class' => 'btn btn-primary', 'onclick' => 'doInscription()')))
+                        //->add('inscription', 'button', array('label' => 'Inscribir', 'attr' => array('class' => 'btn btn-primary', 'onclick' => 'doInscription()')))
                         ->add('infoUe', 'hidden', array('data' => $data))
                         ->getForm();
     }
