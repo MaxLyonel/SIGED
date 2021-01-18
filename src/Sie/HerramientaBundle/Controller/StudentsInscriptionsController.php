@@ -140,6 +140,8 @@ class StudentsInscriptionsController extends Controller {
       $em->getConnection()->beginTransaction();
       //get the send values
       $form= $request->get('form');
+      $infoUe = $form['data'];
+      
       $aInfoUeducativa = unserialize($form['data']);
 //dump($aInfoUeducativa);die;
     //set the validate year
@@ -163,13 +165,20 @@ class StudentsInscriptionsController extends Controller {
         $studentInscription->setCodUeProcedenciaId(0);
         $em->persist($studentInscription);
         $em->flush();
+        //add the areas to the student
+        $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+        $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+        $query->execute();        
         //to do the submit data into DB
         //do the commit in DB
         $em->getConnection()->commit();
         $this->session->getFlashBag()->add('goodinscription', 'Estudiante inscrito');
 
+        $response = new JsonResponse();
+        return $response->setData(array('status'=>'success','infoUe'=>$infoUe));
+
         //reload the students list
-        $exist = true;
+        /*$exist = true;
         $objStudents = array();
 
         $objStudents = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->getListStudentPerCourseAlter($aInfoUeducativa['ueducativaInfoId']['iecId']);
@@ -183,9 +192,10 @@ class StudentsInscriptionsController extends Controller {
                     'dataUe'=> $dataUe['ueducativaInfo'],
                     'paraleloname' => $aInfoUeducativa['ueducativaInfo']['paralelo'],
                     'gradoname' => $aInfoUeducativa['ueducativaInfo']['grado']
-        ));
+        ));*/
       } catch (Exception $e) {
         $em->getConnection()->rollback();
+        return $response->setData(array('status'=>'error', 'msg'=>'error'));
         echo 'Excepción capturada: ', $ex->getMessage(), "\n";
       }
     }

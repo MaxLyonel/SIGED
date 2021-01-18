@@ -160,14 +160,19 @@ class InfoStudentsController extends Controller {
         ->getQuery()
         ->getResult();
       
+      $operativo_fin = false;
       if ($gestion >= 2020){
+        if($objRegistroConsolidacion){
           if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0){
             $operativo_fin = true;
           }
+        }
       } else {
+        if($objRegistroConsolidacion){
           if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0 and $objRegistroConsolidacion[0]['bim4'] > 0){
             $operativo_fin = true;
           }
+        }
       }
 
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
@@ -430,14 +435,19 @@ class InfoStudentsController extends Controller {
         ->getQuery()
         ->getResult();
       
+      $operativo_fin = false;
       if ($gestion >= 2020){
+        if($objRegistroConsolidacion){
           if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0){
             $operativo_fin = true;
           }
+        }
       } else {
+        if($objRegistroConsolidacion){
           if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0 and $objRegistroConsolidacion[0]['bim4'] > 0){
             $operativo_fin = true;
           }
+        }
       }
 
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
@@ -656,14 +666,19 @@ class InfoStudentsController extends Controller {
         ->getQuery()
         ->getResult();
       
+      $operativo_fin = false;
       if ($gestion >= 2020){
+        if($objRegistroConsolidacion){
           if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0){
             $operativo_fin = true;
           }
+        }
       } else {
+        if($objRegistroConsolidacion){
           if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0 and $objRegistroConsolidacion[0]['bim4'] > 0){
             $operativo_fin = true;
           }
+        }
       }
 
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(

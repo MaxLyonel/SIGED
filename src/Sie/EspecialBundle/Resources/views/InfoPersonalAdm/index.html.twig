@@ -112,7 +112,7 @@
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
                             <div class="pull-right">
-                                {% if (personal is empty or (activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false))) and gestion == 2020 %}
+                                {% if (personal is empty or (activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false))) %}
                                     <a href="{{path('herramienta_especial_info_personal_adm_find')}}" id="nuevoA" name="nuevoA" class="btn btn-facebook btn-md" style="display:inline-block"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
                                 {% endif %}
                                 {% if personal_no_idioma is empty and personal_no_genero is empty and contador == 1 and personal is not empty %}
