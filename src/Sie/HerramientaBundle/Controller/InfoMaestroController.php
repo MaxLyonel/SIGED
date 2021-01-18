@@ -106,8 +106,10 @@ class InfoMaestroController extends Controller {
          */
         //$cargos = $em->getRepository('SieAppWebBundle:CargoTipo')->findBy(array('rolTipo'=>2));
         $queryCargos = $em->createQuery(
-                'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                     WHERE ct.rolTipo = 2');
+            'SELECT ct FROM SieAppWebBundle:CargoTipo ct
+            WHERE ct.id IN (:id) ORDER BY ct.id')
+            ->setParameter('id', array(0,70));
+
         $cargos = $queryCargos->getResult();
         $cargosArray = array();
 
@@ -534,7 +536,7 @@ class InfoMaestroController extends Controller {
 
         $query = $em->createQuery(
                         'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                     WHERE ct.id = 0');
+                     WHERE ct.id IN (0,70) ORDER BY ct.id');
 
         $cargos = $query->getResult();
         $cargosArray = array();
@@ -595,8 +597,8 @@ class InfoMaestroController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->createQuery(
-                        'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                        WHERE ct.id = 0');
+            'SELECT ct FROM SieAppWebBundle:CargoTipo ct
+         WHERE ct.id IN (0,70) ORDER BY ct.id');
 
         $cargos = $query->getResult();
         $cargosArray = array();

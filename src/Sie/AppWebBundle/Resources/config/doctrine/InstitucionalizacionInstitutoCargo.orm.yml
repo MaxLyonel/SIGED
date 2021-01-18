@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\InstitucionalizacionInstitutoCargo:
+    type: entity
+    table: institucionalizacion_instituto_cargo
+    indexes:
+        IDX_A6B5BCF7813AC380:
+            columns:
+                - cargo_id
+        IDX_A6B5BCF76C6EF28:
+            columns:
+                - instituto_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        esactivo:
+            type: boolean
+            nullable: false
+            comment: ''
+        obs:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+    manyToOne:
+        cargo:
+            targetEntity: InstitucionalizacionCargo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cargo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        instituto:
+            targetEntity: InstitucionalizacionInstituto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                instituto_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

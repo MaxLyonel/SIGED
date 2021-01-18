@@ -242,7 +242,7 @@ class InfoEstudianteController extends Controller {
             ));
 
             //get the turno for grado
-            $objTurnos = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getTurnoBySieInfo($sie, $nivel, $turno, $grado, $gestion + 1);
+            $objTurnos = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getTurnoBySieInfo($sie, $nivel, $turno, $grado, $gestion);
             if ($objParalelos) {
 
                 //get the student to do the inscription
@@ -771,6 +771,10 @@ class InfoEstudianteController extends Controller {
 
         $imprimirLibreta = false;
         $estadosPermitidosImprimir = array(4,5,11,55,28);
+
+        if($gestion == 2020){
+            $estadosPermitidosImprimir = array(5,55);
+        }
 
         if($tipoUE){
             /*

@@ -96,3 +96,7 @@ bach_exc_completar_informacion_reset_expedido:
     defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:resetExpedidoMaestroCuentabancaria" }
     options:
         expose: true
+
+bach_exc_imprime_reporte_general:
+    path:     /imprime-reporte-general-ibd
+    defaults: { _controller: "SieAppWebBundle:BachillerExcelencia:impresionReporteGeneral" }

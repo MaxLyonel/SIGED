@@ -59,9 +59,10 @@ class InfoMaestroController extends Controller {
          */
 
         $query = $em->createQuery(
-                        'SELECT ct FROM SieAppWebBundle:CargoTipo ct
-                        WHERE ct.rolTipo IN (:id) ORDER BY ct.id')
-                ->setParameter('id', array(2));
+            'SELECT ct FROM SieAppWebBundle:CargoTipo ct
+            WHERE ct.id IN (:id) ORDER BY ct.id')
+            ->setParameter('id', array(0,70));
+        
         $cargosArray = $query->getResult();
 
         $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcion');

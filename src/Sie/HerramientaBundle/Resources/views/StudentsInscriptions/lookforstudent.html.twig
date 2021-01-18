@@ -102,6 +102,9 @@
               $('#modal').modal('hide');
               $("#idstudents").empty();
               $("#idstudents").append(data);
+              if (data.status == 'success') {
+                  seeStudents(data.infoUe);
+              }
           },
           error: function (data) {
 

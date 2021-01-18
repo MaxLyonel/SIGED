@@ -49,7 +49,7 @@ class InfoNotasController extends Controller {
             $grado = $curso->getgradoTipo()->getId();
             $gestionActual = $this->session->get('currentyear');
 
-            $operativo = $this->operativo($sie,$gestion);
+            $operativo = ($gestion == 2020)?'4':$this->operativo($sie,$gestion);
 
             $notas = null;
             $vista = 1;
@@ -60,10 +60,15 @@ class InfoNotasController extends Controller {
                 case 1: // Auditiva
                         if($nivel != 405){
                             $notas = $this->get('notas')->regular($idInscripcion,$operativo);
-                            if($notas['tipoNota'] == 'Trimestre'){
-                                $template = 'trimestral';
+                            if($notas['tipoNota'] == 'trimestre2020'){
+                                $template = 'trimestral2020';
                             }else{
-                                $template = 'regular';
+
+                                if($notas['tipoNota'] == 'Trimestre'){
+                                    $template = 'trimestral';
+                                }else{
+                                    $template = 'regular';
+                                }
                             }
                             $actualizarMatricula = true;
                         }
@@ -73,11 +78,19 @@ class InfoNotasController extends Controller {
                         if($operativo >= 4 or $gestion < $gestionActual){
                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,11)));
                         }
+                        if($nivel == 404 and $grado == 1) {
+                            $actualizarMatricula = false;
+                        }
                         break;
                 case 2: // Visual
                         $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
+                        
                         if($notas['tipoNota'] == 'Trimestre'){
-                            $template = 'especialCualitativoTrimestral';
+                            if($gestion==2020){
+                                $template = 'especialCualitativo2020';
+                            }else{
+                                $template = 'especialCualitativoTrimestral';
+                            }
                         }else{
                             $template = 'especialCualitativo';
                         }
@@ -97,7 +110,12 @@ class InfoNotasController extends Controller {
                                         $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(70,71,72,73)));
                                     }
                                     if($notas['tipoNota'] == 'Trimestre'){
-                                        $template = 'especialCualitativoTrimestral';
+                                        if($gestion==2020){
+                                            $template = 'especialCualitativo2020';
+                                        }else{
+                                            $template = 'especialCualitativoTrimestral';
+                                        }
+                                        
                                     }else{
                                         $template = 'especialCualitativo';
                                     }
@@ -113,13 +131,14 @@ class InfoNotasController extends Controller {
                                         $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(70,71,72,73)));
                                     }
                                     if($notas['tipoNota'] == 'Trimestre'){
-                                        $template = 'especialCualitativoTrimestral';
+                                        $template = 'especialCualitativo2020';
                                     }else{
                                         $template = 'especialCualitativo';
                                     }
                                 }
                                 break;
                         }
+                        
                         break;
                 case 4: // Fisico -motora
                         break;

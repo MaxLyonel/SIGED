@@ -104,6 +104,7 @@ class Areas {
         $matsece2019 = array(1031,1032,1033,1034,1035,1036,1037,1040,1041,1042,1043,1044);
         $matsecf2019 = array(1031,1032,1033,1034,1035,1036,1037,1040,1041,1042,1043,1044);
         $matsecg2019 = array(1031,1032,1033,1034,1035,1036,1037,1040,1041,1042,1043,1044);
+
         // Plenas
         $matsecf2019plena = array(1031,1032,1033,1034,1035,1036,1037,1038,1040,1041,1042,1043,1044);
         $matsecg2019plena = array(1031,1032,1033,1034,1035,1036,1037,1039,1040,1041,1042,1043,1044);
@@ -207,6 +208,45 @@ class Areas {
                             case 5:
                             case 6:
                                 $idsAsignaturas = $matsecf;
+                                break;
+                        }
+                        break;
+                }
+                break;
+            case 2020:
+                $secundaria1 = array(1032,1054,1033,1058,1038,1035,1037,1031,1034,1036,1044);
+                $secundaria2 = array(1034,1032,1038,1036,1058,1031,1044,1037,1054,1033,1035);
+                $secundaria3 = array(1059,1034,1033,1035,1042,1036,1054,1031,1044,1037,1041,1032,1038);
+                $secundaria4 = array(1037,1035,1059,1036,1042,1031,1054,1044,1041,1034,1033,1032,1038);
+                $secundaria5 = array(1041,1034,1054,1035,1055,1032,1056,1059,1042,1031,1044,1036,1057,1037,1039);
+                $secundaria6 = array(1056,1044,1034,1037,1057,1059,1035,1055,1032,1036,1042,1031,1041,1054,1039);
+
+                switch ($nivel) {
+                    case 11:
+                        $idsAsignaturas = $matinia;
+                        break;
+                    case 12:
+                        $idsAsignaturas = $matpria;
+                        break;
+                    case 13:
+                        switch ($grado) {
+                            case 1:
+                                $idsAsignaturas = $secundaria1;
+                                break;
+                            case 2:
+                                $idsAsignaturas = $secundaria2;
+                                break;
+                            case 3:
+                                $idsAsignaturas = $secundaria3;
+                                break;
+                            case 4:
+                                $idsAsignaturas = $secundaria4;
+                                break;
+                            case 5:
+                                $idsAsignaturas = $secundaria5;
+                                break;
+                            case 6:
+                                $idsAsignaturas = $secundaria6;
                                 break;
                         }
                         break;
@@ -319,11 +359,7 @@ class Areas {
 
                         // Para todas las ues que puedan eliminar materias tecnica general y especializada
                         if(in_array($tipoUE['id'], array(1,2,3,4,5)) and $grado > 2){
-                            $posiblesEliminar = array(1038,1039,1033);
-                        }
-
-                        if(in_array($tipoUE['id'], array(1,2,3,4,5)) and $grado >= 1 and $grado <= 4){
-                            $posiblesEliminar = array(1055,1056,1057);
+                            $posiblesEliminar = array(1038,1039);
                         }
                         
                         // Posibles a eliminar para ues nocturanas (6)
@@ -386,6 +422,24 @@ class Areas {
                 if($tipoUE['id'] == 2){
                     $posiblesEliminar = $actuales;
                 }
+
+                $aux = array(1031,1032,1033,1034,1035,1036,1037,1038,1041,1042,1044,1054,1055,1056,1057,1058,1059);
+                if($gestion == 2020 and $nivel == 13){
+                    $asignaturas_aux = $this->em->createQueryBuilder()
+                        ->select('at.id')
+                        ->from('SieAppWebBundle:AsignaturaTipo','at')
+                        ->where('at.id between 1031 and 1059')
+                        ->andWhere('at.id not in (:aux)')
+                        ->setParameter('aux',$aux)
+                        ->orderBy('at.id','ASC')
+                        ->getQuery()
+                        ->getResult();
+
+                    $posiblesEliminar = array();
+                    foreach ($asignaturas_aux as $a) {
+                        $posiblesEliminar[] = $a['id'];
+                    }
+                }
                 
                 if(count($actuales)==0){
                   $actuales[]=1;
@@ -394,11 +448,8 @@ class Areas {
                 $faltantes = $this->em->createQueryBuilder()
                                     ->select('at')
                                     ->from('SieAppWebBundle:AsignaturaTipo','at')
-                                    //->innerJoin('SieAppWebBundle:AsignaturaNivelTipo','ant','WITH','at.asignaturaNivel = ant.id')
-                                    //->where('ant.id = :idNivel')
                                     ->where('at.id IN (:idAsignaturas)')
                                     ->andWhere('at.id NOT IN (:cursoOferta)')
-                                    //->setParameter('idNivel',$nivel)
                                     ->setParameter('idAsignaturas',$asignaturas)
                                     ->setParameter('cursoOferta',$actuales)
                                     ->getQuery()

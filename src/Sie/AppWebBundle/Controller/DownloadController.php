@@ -428,7 +428,7 @@ class DownloadController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = $fechaActual->format('Y');
-
+        $em=$this->getDoctrine()->getManager();
         $aDataUe = explode(',', $itemsUe);
 
         $response = new Response();
@@ -439,27 +439,73 @@ class DownloadController extends Controller {
         $sie = $ue;
         $data = $user.'|'.$sie.'|'.$gestion.'|'.$nivel.'|'.$ciclo.'|'.$grado.'|'.$paralelo.'|'.$turno;
         $link = 'http://'.$_SERVER['SERVER_NAME'].'/cen/'.$this->getLinkEncript($data);
+        $boletin_oficial = false;
+
+        $objRegistroConsolidacion = $em->createQueryBuilder()
+            ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
+            ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
+            ->where('rc.unidadEducativa = :ue')
+            ->andWhere('rc.gestion = :gestion')
+            ->setParameter('ue',$sie)
+            ->setParameter('gestion',$gestion)
+            ->getQuery()
+            ->getResult();
         
+        if ($gestion >= 2020){
+            if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0){
+                $boletin_oficial = true;
+            }
+        } else {
+            if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0 and $objRegistroConsolidacion[0]['bim4'] > 0){
+                $boletin_oficial = true;
+            }
+        }
+
         switch ($nivel) {
             case 1:
             case 11:
-                if($gestion == $gestionActual){
-                    $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_inicial_v2_no_valido.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                if($gestion == $gestionActual and !$boletin_oficial){
+                    if($gestion >= 2020){
+                        $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_inicial_v3_no_valido.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                    } else {
+                        $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_inicial_v2_no_valido.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                    }
                 } else {
-                    $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_inicial_v2.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                    if($gestion >= 2020){
+                        $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_inicial_v3.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                    } else {
+                        $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_inicial_v2.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';                        
+                    }
                 }
                 break;
             case 2:
             case 3:
             case 12:
             case 13:
-                if($gestion == $gestionActual){
-                    $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_v2_no_valido.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                if($gestion == $gestionActual and !$boletin_oficial){
+                    if($gestion == 2020) {
+                        if ($nivel == 12 and $grado == 1) {
+                            $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_inicial_v3_no_valido.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                        } else  {
+                            $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_v3_no_valido.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                        }
+                    } else {
+                        $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_v2_no_valido.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                    }
                 } else {
-                    $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_v2.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                    if($gestion == 2020) {
+                        if ($nivel == 12 and $grado == 1) {
+                            $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_inicial_v3.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                        } else {
+                            $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_v3.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                        }
+                    } else {
+                        $report = $this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesBoletinPromocion_v2.rptdesign&usuario=' . $user . '&lk=' . $link .'&institucioneducativa_id='. $sie .'&nivel_tipo_id=' . $nivel . '&ciclo_tipo_id=' . $ciclo . '&grado_tipo_id=' . $grado . '&paralelo_tipo_id=' . $paralelo . '&turno_tipo_id=' . $turno . '&gestion_tipo_id=' . $gestion . '&&__format=pdf&';
+                    }                    
                 }
                 break;
-          }
+        }
+
         $response->setContent(file_get_contents($report));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -541,7 +587,13 @@ class DownloadController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'Lista_Maestros_' . $ue . '_' . $nivel . '_' . trim($aDataUe[1]) . '_' . trim($aDataUe[2]) . '_' . $gestion . '.pdf'));
-        $report = $this->container->getParameter('urlreportweb') . 'reg_lst_MaestrosBoletinCentralizdor_v1.rptdesign&ue=' . $ue . '&nivel=' . $nivel . '&ciclo=' . $ciclo . '&grado=' . $grado . '&paralelo=' . $paralelo . '&turno=' . $turno . '&gestion=' . $gestion . '&&__format=pdf&';
+
+        if($gestion >= 2020) {
+            $report = $this->container->getParameter('urlreportweb') . 'reg_lst_MaestrosBoletinCentralizdor_v2.rptdesign&ue=' . $ue . '&nivel=' . $nivel . '&ciclo=' . $ciclo . '&grado=' . $grado . '&paralelo=' . $paralelo . '&turno=' . $turno . '&gestion=' . $gestion . '&&__format=pdf&';
+        } else {
+            $report = $this->container->getParameter('urlreportweb') . 'reg_lst_MaestrosBoletinCentralizdor_v1.rptdesign&ue=' . $ue . '&nivel=' . $nivel . '&ciclo=' . $ciclo . '&grado=' . $grado . '&paralelo=' . $paralelo . '&turno=' . $turno . '&gestion=' . $gestion . '&&__format=pdf&';
+        }
+
         $response->setContent(file_get_contents($report));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
@@ -644,42 +696,56 @@ class DownloadController extends Controller {
             if( !in_array($this->session->get('roluser'), array(7,8,10)) ){
                 $operativo = $operativo - 1;
             }
-            if($gestion >= 2019){
+            if($gestion == 2019){
                 switch ($nivel) {
                     case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v2_rcm.rptdesign'; break;
                     case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v2_rcm.rptdesign'; break;
                     case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v2_rcm.rptdesign'; break;
                 }
             }else{
-                if($gestion == $this->session->get('currentyear') and $operativo >= 1 and $operativo <= 3){
+                if($gestion == 2020){
                     switch ($nivel) {
-                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_b'.$operativo.'_v1_rcm.rptdesign'; break;
-                        case 12: $reporte = 'reg_est_LibretaEscolar_primaria_b'.$operativo.'_v1_rcm.rptdesign'; break;
-                        case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_b'.$operativo.'_v1_rcm.rptdesign'; break;
+                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v4_rcm.rptdesign'; break;
+                        case 12: 
+                            if($grado == 1) {
+                                $reporte = 'reg_est_LibretaEscolar_primaria_v4_rcm.rptdesign';
+                            } else {
+                                $reporte = 'reg_est_LibretaEscolar_primaria_v4_1_rcm.rptdesign';
+                            }
+                            break;
+                        case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v4_rcm.rptdesign'; break;
                     }
-                }else{
-                    switch ($nivel) {
-                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v1_rcm.rptdesign'; break;
-                        case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v1_rcm.rptdesign'; break;
-                        case 13:
-                                if($sie == '80730460'){
-                                    if($gestion == 2014 and $nivel == 13 and $grado >= 4 and $paralelo >= 6){
-                                        $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
-                                    }else{
-                                        if($sie == '80730460' and $gestion == 2015 and $nivel == 13 and $grado >= 5 and $paralelo >= 6){
+                } else {
+                    if($gestion == $this->session->get('currentyear') and $operativo >= 1 and $operativo <= 3){
+                        switch ($nivel) {
+                            case 11: $reporte = 'reg_est_LibretaEscolar_inicial_b'.$operativo.'_v1_rcm.rptdesign'; break;
+                            case 12: $reporte = 'reg_est_LibretaEscolar_primaria_b'.$operativo.'_v1_rcm.rptdesign'; break;
+                            case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_b'.$operativo.'_v1_rcm.rptdesign'; break;
+                        }
+                    }else{
+                        switch ($nivel) {
+                            case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v1_rcm.rptdesign'; break;
+                            case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v1_rcm.rptdesign'; break;
+                            case 13:
+                                    if($sie == '80730460'){
+                                        if($gestion == 2014 and $nivel == 13 and $grado >= 4 and $paralelo >= 6){
                                             $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
                                         }else{
-                                            if($sie == '80730460' and $gestion == 2016 and $nivel == 13 and $grado >= 6 and $paralelo >= 6){
+                                            if($sie == '80730460' and $gestion == 2015 and $nivel == 13 and $grado >= 5 and $paralelo >= 6){
                                                 $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
                                             }else{
-                                                $reporte = 'reg_est_LibretaEscolar_secundaria_v1_rcm.rptdesign';
+                                                if($sie == '80730460' and $gestion == 2016 and $nivel == 13 and $grado >= 6 and $paralelo >= 6){
+                                                    $reporte = 'reg_est_CertificadoNotas_UnidadesEducativasTecnologicas2016_v1_ivg.rptdesign';
+                                                }else{
+                                                    $reporte = 'reg_est_LibretaEscolar_secundaria_v1_rcm.rptdesign';
+                                                }
                                             }
                                         }
+                                    }else{
+                                        $reporte = 'reg_est_LibretaEscolar_secundaria_v1_rcm.rptdesign';
                                     }
-                                }else{
-                                    $reporte = 'reg_est_LibretaEscolar_secundaria_v1_rcm.rptdesign';
-                                }
-                                break;
+                                    break;
+                        }
                     }
                 }
             }
@@ -693,14 +759,15 @@ class DownloadController extends Controller {
                 }
             }
         }
-        //dump($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&');die;
+        // dump($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&');die;
         // Generamos el reporte
 
         $response = new Response();
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'libreta_' . $rude . '_' . $gestion . '.pdf'));
-        if($gestion >= 2019){
+        
+        if($gestion == 2019){
             // VERIFICAMOS SI EL CURSO ES DE SEXTO DE SECUNDARIA Y CERRO OPERATIVO DE SEXTO 
             // PARA IMPRIMIR LIBRETA COMO OPERATIVO CERRADO HASTA 4TO BIMESTRE
             if($operativo == 3 and $nivel == 13 and $grado == 6){
@@ -714,6 +781,7 @@ class DownloadController extends Controller {
         }else{
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&'));
         }
+        
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -721,7 +789,7 @@ class DownloadController extends Controller {
         return $response;
     }
 
-      /**
+    /**
      * build the CUT report - cut report download pdf
      * @param Request $request
      * @return object cut report

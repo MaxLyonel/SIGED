@@ -105,7 +105,7 @@ class InfoPersonalAdmController extends Controller {
         $query = $em->createQuery(
                         'SELECT ct FROM SieAppWebBundle:CargoTipo ct
                         WHERE ct.id NOT IN (:id) ORDER BY ct.id')
-                ->setParameter('id', array(0, 86, 993, 650, 992, 994, 120, 100, 1000, 651, 14));
+                ->setParameter('id', array(0, 70));
 
         $cargos = $query->getResult();
         $cargosArray = array();
@@ -595,8 +595,19 @@ class InfoPersonalAdmController extends Controller {
         foreach ($formacion as $fr) {
             $formacionArray[$fr->getId()] = $fr->getFormacion();
         }
-        $fechaInicio = "01-01-".$gestion;
-        $fechaFin = "31-12-".$gestion;
+        
+        if ($maestroInscripcion->getAsignacionFechaInicio()){
+            $fechaInicio = $maestroInscripcion->getAsignacionFechaInicio()->format('d-m-Y');
+        } else {
+            $fechaInicio = "";
+        }
+
+        if ($maestroInscripcion->getAsignacionFechaFin()){
+            $fechaFin = $maestroInscripcion->getAsignacionFechaFin()->format('d-m-Y');
+        } else {
+            $fechaFin = "";
+        }
+        
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_info_personal_adm_update'))
                 ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))

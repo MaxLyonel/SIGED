@@ -1863,7 +1863,7 @@ class Funciones {
             left join documento as d on d.tramite_id = t.id and documento_tipo_id in (1,9) and d.documento_estado_id = 1
             left join estudiante_inscripcion_diplomatico as eid on eid.estudiante_inscripcion_id = ei.id
             where ie.id = ".$institucioneducativa_id."
-            and ies.gestion_tipo_id = ".$gestion_id."
+            and ies.gestion_tipo_id = ".$gestion_id."::DOUBLE PRECISION
             and gt.id = ".$genero_id."        
             and sfat.codigo in (15) and sat.codigo in (3) and sest.codigo in (2)
             and ei.estadomatricula_tipo_id in (4,5,55)

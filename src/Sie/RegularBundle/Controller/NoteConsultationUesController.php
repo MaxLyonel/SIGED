@@ -90,12 +90,21 @@ class NoteConsultationUesController extends Controller {
                   // if(in_array($this->session->get('roluser'), array(7,8,10)) ){
                   //     $operativo = $operativo - 1;
                   // }
-                  if($operativo <= 3){
+                  
+                  if($gestion == 2020){
+                    if($operativo <= 2){
+                      $message = 'Unidad Educativa no cerro el operativo 3er trimestre';
+                      $this->addFlash('warningconsultaue', $message);
+                      $exist = false;
+                    }
+                  } else {
+                    if($operativo <= 3){
                       $message = 'Unidad Educativa no cerro el operativo 4to bimestre';
-                        $this->addFlash('warningconsultaue', $message);
-                        $exist = false;
+                      $this->addFlash('warningconsultaue', $message);
+                      $exist = false;
+                    }
                   }
-
+                  
                       /***********************************\
                       * *
                       * Validacion tipo de Unidad Educativa
@@ -133,10 +142,11 @@ class NoteConsultationUesController extends Controller {
                         $arrDataVal = array(
                           'sie' => $sie,
                           'gestion' => $gestion,
-                          'reglas' => '1,2,3,4,5,6,7,8,10,11,12,13,16,20,27,37,48'
-                        );
+                          'reglas' => '2,3,6,8,10,11,12,13,15,16,20,24,25,26'
+                        );//'1,2,3,4,5,6,7,8,10,11,12,13,16,20,27,37,48'
                       
-                        $objObsQA = $this->get('funciones')->appValidationQuality($arrDataVal);
+                        // $objObsQA = $this->get('funciones')->appValidationQuality($arrDataVal);
+                        $objObsQA = array();
                         
                         // dump($objObsQA);die;
                         if ($objObsQA) {  
@@ -154,20 +164,27 @@ class NoteConsultationUesController extends Controller {
                         * return type of UE *
                           * *
                         \************************************/
-                        $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
-                        $query->bindValue(':gestion', $gestion);
-                        $query->bindValue(':sie', $sie);
-                        $query->bindValue(':periodo', 4);
-                        $query->execute();
-                        $inconsistencia = $query->fetchAll();
+                        if($gestion == 2020) {
+                          $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web_2020(:gestion, :sie, :periodo)');
+                          $query->bindValue(':gestion', $gestion);
+                          $query->bindValue(':sie', $sie);
+                          $query->bindValue(':periodo', 1);
+                          $query->execute();
+                          $inconsistencia = $query->fetchAll();
+                        } else {
+                          $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
+                          $query->bindValue(':gestion', $gestion);
+                          $query->bindValue(':sie', $sie);
+                          $query->bindValue(':periodo', 4);
+                          $query->execute();
+                          $inconsistencia = $query->fetchAll();
+                        }
 
-                        // dump($inconsistencia);
-                        // die;
                         if ($inconsistencia) {
-                           $message = 'Unidad Educativa presenta observaciones de inconsistencia';
-                            $this->addFlash('warningconsultaue', $message);
-                            $exist = false;
-                            $arrValidation['observaciones_incosistencia'] = $inconsistencia;                        
+                          $message = 'Unidad Educativa presenta observaciones de inconsistencia';
+                          $this->addFlash('warningconsultaue', $message);
+                          $exist = false;
+                          $arrValidation['observaciones_incosistencia'] = $inconsistencia;                        
                         }
 
                       // this for the current year and close this task

@@ -29,7 +29,7 @@ class BachillerExcelenciaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2020-12-13');
+        $this->fechaCorte = new \DateTime('2020-12-25');
         $this->gestionOperativo = $this->session->get('currentyear');
     }
 
@@ -1049,7 +1049,7 @@ class BachillerExcelenciaController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_EstudianteExcelencia_unidadeducativa_regular_v1_afv.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_EstudianteExcelencia_unidadeducativa_regular_v2_afv.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1145,7 +1145,7 @@ class BachillerExcelenciaController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_DirectorEstudianteExcelencia_unidadeducativa_regular_v1_afv.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_DirectorEstudianteExcelencia_unidadeducativa_regular_v2_afv.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1367,5 +1367,27 @@ class BachillerExcelenciaController extends Controller {
             'estado' => $estado,
             'expedido' => $expedido
         ));
+    }
+
+    public function impresionReporteGeneralAction() {
+        $id_usuario = $this->session->get('userId');
+        $username = $this->session->get('userName');
+
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $gestion = $this->gestionOperativo;
+
+        $arch = 'REPORTE_GENERAL_' . $username . '_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'ger_bach_exc_estudiantes_v1_afv.rptdesign&__format=pdf&&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
     }
 }

@@ -150,27 +150,53 @@ class InfoStudentsController extends Controller {
 
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
 
+      $objRegistroConsolidacion = $em->createQueryBuilder()
+        ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
+        ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
+        ->where('rc.unidadEducativa = :ue')
+        ->andWhere('rc.gestion = :gestion')
+        ->setParameter('ue',$sie)
+        ->setParameter('gestion',$gestion)
+        ->getQuery()
+        ->getResult();
+      
+      $operativo_fin = false;
+      if ($gestion >= 2020){
+        if($objRegistroConsolidacion){
+          if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0){
+            $operativo_fin = true;
+          }
+        }
+      } else {
+        if($objRegistroConsolidacion){
+          if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0 and $objRegistroConsolidacion[0]['bim4'] > 0){
+            $operativo_fin = true;
+          }
+        }
+      }
+
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
-                  'objStudents' => $objStudents,
-                  'sie' => $sie,
-                  'turno' => $turno,
-                  'nivel' => $nivel,
-                  'grado' => $grado,
-                  'paralelo' => $paralelo,
-                  'gestion' => $gestion,
-                  'aData' => $aData,
-                  'gradoname' => $gradoname,
-                  'paraleloname' => $paraleloname,
-                  'nivelname' => $nivelname,
-                  'turnoname' => $turnoname,
-                  'form' => $this->createFormStudentInscription($infoUe)->createView(),
-                  'infoUe' => $infoUe,
-                  'exist' => $exist,
-                  'itemsUe'=>$itemsUe,
-                  'ciclo'=>$ciclo,
-                  'operativo'=>$operativo,
-                  'arrDataLibreta'=> $arrDataLibreta,
-                  'areaEspecial' => $objArea->getAreaEspecial()
+        'operativo_fin' => $operativo_fin,
+        'objStudents' => $objStudents,
+        'sie' => $sie,
+        'turno' => $turno,
+        'nivel' => $nivel,
+        'grado' => $grado,
+        'paralelo' => $paralelo,
+        'gestion' => $gestion,
+        'aData' => $aData,
+        'gradoname' => $gradoname,
+        'paraleloname' => $paraleloname,
+        'nivelname' => $nivelname,
+        'turnoname' => $turnoname,
+        'form' => $this->createFormStudentInscription($infoUe)->createView(),
+        'infoUe' => $infoUe,
+        'exist' => $exist,
+        'itemsUe'=>$itemsUe,
+        'ciclo'=>$ciclo,
+        'operativo'=>$operativo,
+        'arrDataLibreta'=> $arrDataLibreta,
+        'areaEspecial' => $objArea->getAreaEspecial()
       ));
   }
   /**
@@ -399,27 +425,53 @@ class InfoStudentsController extends Controller {
       $dataUe=(unserialize($form['data']));
       $objArea = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($aInfoUeducativa['ueducativaInfoId']['areaEspecialId']);
 
+      $objRegistroConsolidacion = $em->createQueryBuilder()
+        ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
+        ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
+        ->where('rc.unidadEducativa = :ue')
+        ->andWhere('rc.gestion = :gestion')
+        ->setParameter('ue',$sie)
+        ->setParameter('gestion',$gestion)
+        ->getQuery()
+        ->getResult();
+      
+      $operativo_fin = false;
+      if ($gestion >= 2020){
+        if($objRegistroConsolidacion){
+          if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0){
+            $operativo_fin = true;
+          }
+        }
+      } else {
+        if($objRegistroConsolidacion){
+          if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0 and $objRegistroConsolidacion[0]['bim4'] > 0){
+            $operativo_fin = true;
+          }
+        }
+      }
+
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
-                  'objStudents' => $objStudents,
-                  'sie' => $sie,
-                  'turno' => $turno,
-                  'nivel' => $nivel,
-                  'grado' => $grado,
-                  'paralelo' => $paralelo,
-                  'gestion' => $gestion,
-                  'infoUe' => $form['data'],
-                  'aData' => $form['data'],
-                  'gradoname' => $gradoname,
-                  'paraleloname' => $paraleloname,
-                  'nivelname' => $nivelname,
-                  'turnoname' => $turnoname,
-                  'form' => $this->createFormStudentInscription($form['data'])->createView(),
-                  'exist' => $exist,
-                  'itemsUe'=>$itemsUe,
-                  'ciclo'=>$ciclo,
-                  'operativo'=>$operativo,
-                  'areaEspecial' => $objArea->getAreaEspecial()
-                  // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
+        'operativo_fin' => $operativo_fin,
+        'objStudents' => $objStudents,
+        'sie' => $sie,
+        'turno' => $turno,
+        'nivel' => $nivel,
+        'grado' => $grado,
+        'paralelo' => $paralelo,
+        'gestion' => $gestion,
+        'infoUe' => $form['data'],
+        'aData' => $form['data'],
+        'gradoname' => $gradoname,
+        'paraleloname' => $paraleloname,
+        'nivelname' => $nivelname,
+        'turnoname' => $turnoname,
+        'form' => $this->createFormStudentInscription($form['data'])->createView(),
+        'exist' => $exist,
+        'itemsUe'=>$itemsUe,
+        'ciclo'=>$ciclo,
+        'operativo'=>$operativo,
+        'areaEspecial' => $objArea->getAreaEspecial()
+        // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
 
     } catch (Exception $e) {
@@ -604,27 +656,53 @@ class InfoStudentsController extends Controller {
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
       $objArea = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($aInfoUeducativa['ueducativaInfoId']['areaEspecialId']);
 
+      $objRegistroConsolidacion = $em->createQueryBuilder()
+        ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
+        ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
+        ->where('rc.unidadEducativa = :ue')
+        ->andWhere('rc.gestion = :gestion')
+        ->setParameter('ue',$sie)
+        ->setParameter('gestion',$gestion)
+        ->getQuery()
+        ->getResult();
+      
+      $operativo_fin = false;
+      if ($gestion >= 2020){
+        if($objRegistroConsolidacion){
+          if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0){
+            $operativo_fin = true;
+          }
+        }
+      } else {
+        if($objRegistroConsolidacion){
+          if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0 and $objRegistroConsolidacion[0]['bim4'] > 0){
+            $operativo_fin = true;
+          }
+        }
+      }
+
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
-                  'objStudents' => $objStudents,
-                  'sie' => $sie,
-                  'turno' => $turno,
-                  'nivel' => $nivel,
-                  'grado' => $grado,
-                  'paralelo' => $paralelo,
-                  'gestion' => $gestion,
-                  'aData' => $aData,
-                  'gradoname' => $gradoname,
-                  'paraleloname' => $paraleloname,
-                  'nivelname' => $nivelname,
-                  'turnoname' => $turnoname,
-                  'form' => $this->createFormStudentInscription($infoUe)->createView(),
-                  'infoUe' => $infoUe,
-                  'exist' => $exist,
-                  'itemsUe'=>$itemsUe,
-                  'ciclo'=>$ciclo,
-                  'operativo'=>$operativo,
-                  'areaEspecial' => $objArea->getAreaEspecial()
-                  // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
+        'operativo_fin' => $operativo_fin,
+        'objStudents' => $objStudents,
+        'sie' => $sie,
+        'turno' => $turno,
+        'nivel' => $nivel,
+        'grado' => $grado,
+        'paralelo' => $paralelo,
+        'gestion' => $gestion,
+        'aData' => $aData,
+        'gradoname' => $gradoname,
+        'paraleloname' => $paraleloname,
+        'nivelname' => $nivelname,
+        'turnoname' => $turnoname,
+        'form' => $this->createFormStudentInscription($infoUe)->createView(),
+        'infoUe' => $infoUe,
+        'exist' => $exist,
+        'itemsUe'=>$itemsUe,
+        'ciclo'=>$ciclo,
+        'operativo'=>$operativo,
+        'areaEspecial' => $objArea->getAreaEspecial()
+        // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
   }
 
