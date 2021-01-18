@@ -332,13 +332,14 @@
                                     {# ELIMINAR INSCRIPCION #}
                                     {# commented to BJP by krlos
                                     {% if  app.session.get('removeInscriptionAllowed')  or app.session.get('ie_id') == '81981478' %}
+                                    
+                                    {% endif %} 
+                                    #}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                             <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionAca('{{infoUe}}','{{jsnInfoStudent}}');" >
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </div>
-                                    {% endif %} 
-                                    #}
 
 
 
