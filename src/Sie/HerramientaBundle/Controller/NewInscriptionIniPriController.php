@@ -70,11 +70,11 @@ class NewInscriptionIniPriController extends Controller
 		61710098
       );
 
-      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or $this->session->get('roluser')==7){
-        //nothing todo
-      }else{
-        return $this->redirect($this->generateUrl('principal_web'));
-      }    	
+    //   if( in_array($this->session->get('ie_id'), $arrWeenhayec) or $this->session->get('roluser')==7){
+    //     //nothing todo
+    //   }else{
+    //     return $this->redirect($this->generateUrl('principal_web'));
+    //   }    	
      //return $this->redirect($this->generateUrl('principal_web'));
     	$em = $this->getDoctrine()->getManager();
         //validation if the user is logged
@@ -84,19 +84,19 @@ class NewInscriptionIniPriController extends Controller
 			$enableoption = true; 
 			$message = ''; 
         // this is to check if the ue has registro_consolidacion
-        if($this->session->get('roluser')==9){
+        // if($this->session->get('roluser')==9){
 
-        	$objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-        		'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
-        	));
+        // 	$objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+        // 		'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
+        // 	));
         	
-	        if(!$objRegConsolidation){
-	            $status = 'error';
-				$code = 400;
-				$message = "No se puede realizar la inscripción debido a que la Unidad Educativa no se consolido el operativo Inscripciones";
-				$enableoption = false; 
-	        }
-        }       
+	    //     if(!$objRegConsolidation){
+	    //         $status = 'error';
+		// 		$code = 400;
+		// 		$message = "No se puede realizar la inscripción debido a que la Unidad Educativa no se consolido el operativo Inscripciones";
+		// 		$enableoption = false; 
+	    //     }
+        // }       
         
         $arrExpedido = array();
          // this is to the new person
