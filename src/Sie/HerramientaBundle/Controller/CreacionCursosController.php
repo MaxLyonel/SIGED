@@ -211,7 +211,7 @@ class CreacionCursosController extends Controller {
                 $query = $em->createQuery(
                                         'SELECT n FROM SieAppWebBundle:NivelTipo n
                                         WHERE n.id IN (:id)'
-                                        )->setParameter('id',array(3,11,12,13));
+                                        )->setParameter('id',array(11,12,13));
                 $niveles_result = $query->getResult();
                 $niveles = array();
                 foreach ($niveles_result as $n){
@@ -368,6 +368,22 @@ class CreacionCursosController extends Controller {
 
                 $em->persist($nuevo_curso);
                 $em->flush();
+
+                /*
+                * verificamos si tiene tuicion
+                */
+                $query = $em->getConnection()->prepare('SELECT sp_genera_institucioneducativa_curso_oferta(:institucioneducativa_curso_id::VARCHAR)');
+                $query->bindValue(':institucioneducativa_curso_id', $nuevo_curso->getId());
+                $query->execute();
+                $malla_curricular = $query->fetchAll();
+
+                // if ($aTuicion[0]['get_ue_tuicion']){
+                //     $institucion = $form['institucioneducativa'];
+                //     $gestion = $form['gestion'];
+                // }else{
+                //     $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa');
+                //     return $this->render('SieHerramientaBundle:CreacionCursos:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
+                // }
 
                 /**
                  * Obtenemos las asignaturas humanisticas en funcion al nivel

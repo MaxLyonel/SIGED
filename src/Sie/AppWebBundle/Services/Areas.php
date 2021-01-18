@@ -359,11 +359,7 @@ class Areas {
 
                         // Para todas las ues que puedan eliminar materias tecnica general y especializada
                         if(in_array($tipoUE['id'], array(1,2,3,4,5)) and $grado > 2){
-                            $posiblesEliminar = array(1038,1039,1033);
-                        }
-
-                        if(in_array($tipoUE['id'], array(1,2,3,4,5)) and $grado >= 1 and $grado <= 4){
-                            $posiblesEliminar = array(1055,1056,1057);
+                            $posiblesEliminar = array(1038,1039);
                         }
                         
                         // Posibles a eliminar para ues nocturanas (6)
