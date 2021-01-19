@@ -88,7 +88,7 @@
                 </div>
             {# endif #}
             {# commented by krlos 15.04.2020 app.session.get('ie_gestion') == app.session.get('currentyear') or #}
-            {% if app.session.get('ie_id') == 80730796 or  app.session.get('roluser') == 7 or (app.session.get('ie_per_cod') == 3 and  app.session.get('ie_gestion') >= 2020 ) or app.session.get('ie_gestion') <= 2019 %}
+            {% if app.session.get('ie_id') == 80730796 or  app.session.get('roluser') == 7 or (app.session.get('ie_per_cod') == 3 and  app.session.get('ie_gestion') == app.session.get('currentyear') ) %}
             <div class="col-md-3">
                 <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}', {{iecId}}, ' {{etapaespecialidad}}', '{{dataUe['paralelo']}}');" >
                     <i class="fa fa-user"></i> Inscripción con CI
@@ -215,7 +215,7 @@
                                                     {% endif %} #}
 
                                                     {#SE CONTROLA EL ACESSO EN LA PANTALLA DE NOTAS POR ESO ESTA ACTIVO PARA TODOS LO ESTADOS MENOS INCRIPCIONES#}
-                                                    {% if (app.session.get('ie_gestion') <= 2020 and  ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') ) )%}
+                                                    {% if (app.session.get('ie_gestion') <= app.session.get('currentyear') and  ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') or (app.session.get('ie_per_estado') == '0') ) )%}
                                                     {# commented by krlos 07.07.2020  #}
                                                         {% if primariaNuevo %}
                                                             <li>
@@ -235,7 +235,7 @@
                                                     {% endif %}
 
                                                     {#LIBRETAS SOLO EN MODO LECTURA Y AÑOS 2015,2016,2017#}
-                                                    {% if (app.session.get('ie_per_estado') == '0') and ((app.session.get('ie_gestion') == '2015') or (app.session.get('ie_gestion') == '2016') or (app.session.get('ie_gestion') == '2017') or (app.session.get('ie_gestion') == '2018') or (app.session.get('ie_gestion') == '2019') or (app.session.get('ie_gestion') == '2020')) %}
+                                                    {% if (app.session.get('ie_per_estado') == '0') and (app.session.get('ie_gestion') <= app.session.get('currentyear') ) %}
                                                         <li>
                                                           <a href="{{path('herramienta_alter_libretas', {'eInsId': data.eInsId, 'nivel': data.nivelId})}}">
                                                               <span class="label label-warning"> <i class="fa fa-credit-card"></i> Imprimir Libreta</span>
@@ -275,7 +275,7 @@
                                                     {#ACTIVO ELIMINACION SOLO EN INSCRIPCIONES Y REGULARIZAION#}
                                                     {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3') %} 
                                                     {# commented by krlos 07.07.2020#}
-                                                        {% if app.session.get('ie_id') == 80730796 or  app.session.get('roluser') == 7 or (app.session.get('ie_per_cod') == 3 and  app.session.get('ie_gestion') >= 2020 ) %}
+                                                        {% if app.session.get('ie_id') == 80730796 or  app.session.get('roluser') == 7 or (app.session.get('ie_per_cod') == 3 and  app.session.get('ie_gestion') >= app.session.get('currentyear') ) %}
                                                         <li>
                                                             <a href="#" type="link"  class="" onclick="removeInscriptionStudent('{{infoUe}}', '{{ jsnInfoStudent }}');" >
                                                               <span class="label label-danger"><i class="fa fa-remove"></i>Eliminar Inscripción</span>
@@ -287,7 +287,7 @@
                                                     {% endif %}
 
                                                     {#ACTIVO TOMA DE AREAS SOLO EN NOTAS Y REGULARIZAION#}
-                                                    {% if (app.session.get('ie_gestion') <= 2020 and ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') )) %}      
+                                                    {% if (app.session.get('ie_gestion') <= app.session.get('currentyear') and ((app.session.get('ie_per_estado') == '2') or (app.session.get('ie_per_estado') == '3') )) %}      
                                                     {# commented by krlos 07.07.2020 #}                                                     
                                                         <li>
                                                           <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudeent('{{infoUe}}', '{{jsnInfoStudent}}');" >
