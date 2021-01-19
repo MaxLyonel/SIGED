@@ -100,7 +100,6 @@
                                                 <th>Nombre(s)</th>
                                                 <th>Fecha de Nacimiento</th>
                                                 <th>Cargo</th>
-                                                <th>Formación</th>
                                                 <th>Fecha Registro</th>
                                             </tr>
                                         </thead>
@@ -111,12 +110,12 @@
                                                 <tr>
                                                     <td data-title="N°">{{ loop.index }}</td>
                                                     <td data-title="Carnet">{{ persona.carnet }}</td>
+                                                    <td data-title="Carnet">{{ persona.complemento }}</td>
                                                     <td data-title="Paterno">{{ persona.paterno }}</td>
                                                     <td data-title="Materno">{{ persona.materno }}</td>
                                                     <td data-title="Nombre(s)">{{ persona.nombre }}</td>
                                                     <td data-title="FechaNac">{{ persona.fechaNacimiento|date('d-m-Y') }}</td>
                                                     <td data-title="Cargo">{{ personal.cargoTipo }}</td>
-                                                    <td data-title="Formación">{{ formacion.formacion }}</td>
                                                     <td data-title="FechReg">{% if personal.fechaRegistro %}{{ personal.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                 </tr>
                                             {% endfor %}
