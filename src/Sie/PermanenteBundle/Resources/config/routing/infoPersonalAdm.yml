@@ -63,3 +63,13 @@ permanente_listaridiomasleehablaescribe_edit:
      defaults: { _controller: SiePermanenteBundle:InfoMaestro:listaridiomasleehablaescribeedit }
      options:
          expose: true
+
+permanente_info_personal_adm_segip_verificar_persona:
+    path:     /permverificarPersona
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:verificarPersona" }
+    options:
+        expose: true
+
+permanente_info_personal_adm_persona_datos:
+    path:     /permregistrarPersona
+    defaults: { _controller: "SiePermanenteBundle:InfoPersonalAdm:registrarPersona" }

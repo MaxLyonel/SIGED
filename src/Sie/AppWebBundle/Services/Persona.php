@@ -103,11 +103,11 @@ class Persona {
 
     public function BuscarPersonaPorCarnetComplemento($form) {
         $carnet = $form['carnet'];
-        $complemento = ($form['complemento'] != "") ? mb_strtoupper($form['complemento'], 'utf-8') : 0;
+        $complemento = ($form['complemento'] != "") ? mb_strtoupper($form['complemento'], 'utf-8') : '';
         
         $repository = $this->em->getRepository('SieAppWebBundle:Persona');
 
-        if($complemento == '0'){
+        if($complemento == ''){
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
                 ->where('p.carnet = :carnet AND p.segipId > :valor')
