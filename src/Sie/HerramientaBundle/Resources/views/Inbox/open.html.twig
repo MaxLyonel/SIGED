@@ -22,96 +22,107 @@
 
     {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Menú Principal', 'gestion': data.gestion,'sie': data.ieducativa.id, 'ieducativa': data.ieducativa.institucioneducativa, 'opcion': 'Acceso a Módulos'} %}
     {% include 'SieHerramientaBundle:Principal:onlyview.html.twig'%}
-
-    <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-            <div class="thumbnail">
-                <img src="{{asset('img/unidad-educativa300.jpg')}}" alt="Unidad Educativa">
-                <div class="caption text-center">
-                    <h4>Unidad Educativa</h4>
-                    <div class="thumbnail-action">
-                        {{form_start(uEducativaform)}}
-                            {{form_widget(uEducativaform.next)}}
-                        {{form_end(uEducativaform)}}
+    {% if tuicion %}
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/unidad-educativa300.jpg')}}" alt="Unidad Educativa">
+                    <div class="caption text-center">
+                        <h4>Unidad Educativa</h4>
+                        <div class="thumbnail-action">
+                            {{form_start(uEducativaform)}}
+                                {{form_widget(uEducativaform.next)}}
+                            {{form_end(uEducativaform)}}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-            <div class="thumbnail">
-                <img src="{{asset('img/maestros300.jpg')}}" alt="Personal Administrativo">
-                <div class="caption text-center">
-                    <h4>Personal Administrativo</h4>
-                    <div class="thumbnail-action">
-                        {{form_start(personalAdmform)}}
-                            {{form_widget(personalAdmform.next)}}
-                        {{form_end(personalAdmform)}}
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/maestros300.jpg')}}" alt="Personal Administrativo">
+                    <div class="caption text-center">
+                        <h4>Personal Administrativo</h4>
+                        <div class="thumbnail-action">
+                            {{form_start(personalAdmform)}}
+                                {{form_widget(personalAdmform.next)}}
+                            {{form_end(personalAdmform)}}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-            <div class="thumbnail">
-                <img src="{{asset('img/estudiantes300.jpg')}}" alt="Personal Docente">
-                <div class="caption text-center">
-                    <h4>Personal Docente</h4>
-                    <div class="thumbnail-action">
-                        {{form_start(infoMaestroform)}}
-                            {{form_widget(infoMaestroform.next)}}
-                        {{form_end(infoMaestroform)}}
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/estudiantes300.jpg')}}" alt="Personal Docente">
+                    <div class="caption text-center">
+                        <h4>Personal Docente</h4>
+                        <div class="thumbnail-action">
+                            {{form_start(infoMaestroform)}}
+                                {{form_widget(infoMaestroform.next)}}
+                            {{form_end(infoMaestroform)}}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-            <div class="thumbnail">
-                <img src="{{asset('img/estudiantes300Alter.jpg')}}" alt="Estudiantes">
-                <div class="caption text-center">
-                    <h4>Estudiantes</h4>
-                    <div class="thumbnail-action">
-                        {{form_start(infotStudentform)}}
-                            {{form_widget(infotStudentform.next)}}
-                        {{form_end(infotStudentform)}}
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/estudiantes300Alter.jpg')}}" alt="Estudiantes">
+                    <div class="caption text-center">
+                        <h4>Estudiantes</h4>
+                        <div class="thumbnail-action">
+                            {{form_start(infotStudentform)}}
+                                {{form_widget(infotStudentform.next)}}
+                            {{form_end(infotStudentform)}}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        {% if app.session.get('lastOperativo') != 5%}
-            {% if app.session.get('ie_id') == '81981478' %}
+            {% if app.session.get('lastOperativo') != 5%}
+                {% if app.session.get('ie_id') == '81981478' %}
+                    <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                        <div class="thumbnail">
+                            <img src="{{asset('img/administrativo300.jpg')}}" alt="Cambio de Paralelo">
+                            <div class="caption text-center">
+                                <h4>Cambio de Paralelo</h4>
+                                <div class="thumbnail-action">
+                                    {{form_start(mallaCurricularform)}}
+                                        {{form_widget(mallaCurricularform.next)}}
+                                    {{form_end(mallaCurricularform)}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                {#
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
-                        <img src="{{asset('img/administrativo300.jpg')}}" alt="Cambio de Paralelo">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
                         <div class="caption text-center">
-                            <h4>Cambio de Paralelo</h4>
+                            <h4>Cerrar Operativo</h4>
                             <div class="thumbnail-action">
-                                {{form_start(mallaCurricularform)}}
-                                    {{form_widget(mallaCurricularform.next)}}
-                                {{form_end(mallaCurricularform)}}
+                                {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
+                                    {{form_widget(closeOperativoform.next)}}
+                                {{form_end(closeOperativoform)}}
                             </div>
                         </div>
                     </div>
                 </div>
+                #}
             {% endif %}
-            {#
-            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-                <div class="thumbnail">
-                    <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
-                    <div class="caption text-center">
-                        <h4>Cerrar Operativo</h4>
-                        <div class="thumbnail-action">
-                            {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
-                                {{form_widget(closeOperativoform.next)}}
-                            {{form_end(closeOperativoform)}}
-                        </div>
-                    </div>
+        </div>
+        <div class="row">
+            <div id="answerClose" style="overflow: scroll; width: 100%; height:300px" class="col-lg-3 col-md-6 col-sm-12 col-xs-12"></div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-danger text-center" role="alert">
+                    <h2><i class="fa fa-info-circle"></i></h2>
+                    <h3>¡USUARIO NO AUTORIZADO PARA EL REPORTE DE LA INFORMACIÓN!</h3>
+                    <p>El Técnico SIE Distrital debe registrar a la Directora o al Director de la Unidad Educativa, a través de la opción "Personal Administrativo".</p>
                 </div>
             </div>
-            #}
-        {% endif %}
-    </div>
-    <div class="row">
-        <div id="answerClose" style="overflow: scroll; width: 100%; height:300px" class="col-lg-3 col-md-6 col-sm-12 col-xs-12"></div>
-    </div>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
 {% block javascripts%}
