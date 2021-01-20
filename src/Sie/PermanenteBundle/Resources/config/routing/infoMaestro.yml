@@ -75,4 +75,14 @@ permanente_verificar_existe_persona:
 permanente_info_maestro_es_vigente_maestro:
     path:     /maestroVigente/
     defaults: { _controller: "SiePermanenteBundle:InfoMaestro:esVigenteMaestro" }
-    methods:  [POST, PUT]         
+    methods:  [POST, PUT]
+
+permanente_info_maestro_segip_verificar_persona:
+    path:     /verificarPersonaperm
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:verificarPersona" }
+    options:
+        expose: true
+
+permanente_info_maestro_persona_datos:
+    path:     /registrarPersonaperm
+    defaults: { _controller: "SiePermanenteBundle:InfoMaestro:registrarPersona" }
