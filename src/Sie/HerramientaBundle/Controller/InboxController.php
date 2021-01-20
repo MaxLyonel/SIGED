@@ -560,6 +560,21 @@ class InboxController extends Controller {
         $form = $request->get('form');
         $data = json_decode($form['data'], true);
 
+        /*
+        * verificamos si tiene tuicion
+        */
+        $tuicion = false;
+        $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+        $query->bindValue(':user_id', $this->session->get('userId'));
+        $query->bindValue(':sie', $data['id']);
+        $query->bindValue(':rolId', $this->session->get('roluser'));
+        $query->execute();
+        $aTuicion = $query->fetchAll();
+
+        if ($aTuicion[0]['get_ue_tuicion']) {
+          $tuicion = true;
+        }
+
         $objValidateUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
           'institucioneducativaId' => $data['id'],
           'gestionTipoId' => $data['gestion']
@@ -687,7 +702,8 @@ class InboxController extends Controller {
           'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
           'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo',$data)->createView(),
           'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
-          'data'=>$dataInfo
+          'data'=>$dataInfo,
+          'tuicion'=>$tuicion
         ));
       }
     }
