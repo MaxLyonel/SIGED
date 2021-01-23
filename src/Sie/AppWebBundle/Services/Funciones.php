@@ -1218,7 +1218,7 @@ class Funciones {
                 ->getQuery()
                 ->getResult();
 
-        if(sizeof($regConsol)>0 ){
+        if(!sizeof($regConsol)>0 ){
             return false;
         }else{
             return true;
