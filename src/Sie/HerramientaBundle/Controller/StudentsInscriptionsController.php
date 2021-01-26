@@ -33,7 +33,35 @@ class StudentsInscriptionsController extends Controller {
     public function __construct() {
         //init the session values
         $this->session = new Session();
+        $this->aCursos = $this->fillCursos();
     }
+
+    /**
+     * build the cursos in a array
+     * @param type $limitA
+     * @param type $limitB
+     * @param type $limitC
+     * return array with the courses
+     */
+    private function fillCursos() {
+        $this->aCursos = array(
+            ('11-1-1'),
+            ('11-1-2'),
+            ('12-1-1'),
+            ('12-1-2'),
+            ('12-1-3'),
+            ('12-2-4'),
+            ('12-2-5'),
+            ('12-2-6'),
+            ('13-1-1'),
+            ('13-1-2'),
+            ('13-2-3'),
+            ('13-2-4'),
+            ('13-3-5'),
+            ('13-3-6')
+        );
+        return($this->aCursos);
+    }    
 
     public function indexAction(Request $request){
         //get the send values
@@ -54,6 +82,93 @@ class StudentsInscriptionsController extends Controller {
               ->getForm();
       return $form;
     }
+
+    /**
+     * obtiene el nivel, ciclo y grado
+     * @param type $nivel
+     * @param type $ciclo
+     * @param type $grado
+     * @param type $matricula
+     * @return type return nivel, ciclo grado del estudiante
+     */
+    private function getCourse($nivel, $ciclo, $grado, $matricula) {
+        //get the array of courses
+        $cursos = $this->aCursos;
+        //this is a switch to find the courses
+        $sw = 1;
+        //loof for the courses of student
+        while (( $acourses = current($cursos)) !== FALSE && $sw) {
+            if (current($cursos) == $nivel . '-' . $ciclo . '-' . $grado) {
+                $ind = key($cursos);
+                $currentCurso = current($cursos);
+                $sw = 0;
+            }
+            next($cursos);
+        }
+        if ($matricula == 5 || $matricula == 56 || $matricula == 57 || $matricula == 58) {
+            $ind = $ind + 1;
+        }
+
+        return $ind;
+    }    
+
+    /**
+     * get the stutdents inscription - the record
+     * @param type $id
+     * @return \Sie\AppWebBundle\Controller\Exception
+     */
+    private function oldInscription($id) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        $query = $entity->createQueryBuilder('ei')
+                ->select('ei.id as inscriptionId, IDENTITY(iec.nivelTipo) as nivelTipo', 'IDENTITY(iec.cicloTipo) as cicloTipo, IDENTITY(iec.gradoTipo) as gradoTipo', 'IDENTITY(ei.estadomatriculaTipo) as estadomatriculaTipo, IDENTITY(iec.gestionTipo) as gestion, ei.fechaInscripcion as fechaInscripcion, ei.fechaRegistro as fechaRegistro')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->where('ei.estudiante = :id')
+                ->setParameter('id', $id)
+                //->orderBy('ei.fechaInscripcion ', 'DESC')
+                ->orderBy('iec.gestionTipo', 'DESC')
+                ->addorderBy('iec.nivelTipo', 'DESC')
+                ->addorderBy('iec.gradoTipo', 'DESC')
+                ->getQuery();
+        $resutlQuery = $query->getResult();
+        //look for the next inscription depend the historial
+        if ($resutlQuery) {
+
+            reset($resutlQuery);
+            $sw = true;
+            while ($sw && $val = current($resutlQuery)) {
+                if ($val['estadomatriculaTipo'] == '5' || $val['estadomatriculaTipo'] == '37' || $val['estadomatriculaTipo'] == '56' || $val['estadomatriculaTipo'] == '57' || $val['estadomatriculaTipo'] == '58') {
+                    $keyCorrect = key($resutlQuery);
+                    $sw = false;
+                }
+                next($resutlQuery);
+            }
+            if ($sw) {
+                if ($resutlQuery) {
+
+                    reset($resutlQuery);
+                    $sw1 = true;
+                    while ($sw1 && $val = current($resutlQuery)) {
+                        $keyCorrect = key($resutlQuery);
+                        $sw1 = false;
+                        next($resutlQuery);
+                    }
+                } else {
+                    //there is no key
+                    $keyCorrect = 'krlos';
+                }
+            }
+        }
+
+        $resutlQuery = ($resutlQuery) ? $resutlQuery[$keyCorrect] : '0';
+
+        try {
+            return $resutlQuery;
+        } catch (Exception $ex) {
+            return $ex;
+        }
+    }    
+
     /**
     *find student method
     **/
@@ -65,51 +180,74 @@ class StudentsInscriptionsController extends Controller {
       $form =  $request->get('form');
       $dataUe = unserialize($form['data']);
 
+
       //get the student info by rudeal
       $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['rudeal']));
+
+
+
+
       //check if the student exist
       if($objStudent){
-        $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
-        $query = $inscription2->createQueryBuilder('ei')
-                ->select('ei.id as id')
-                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
-                ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
-                ->leftJoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
-                ->where('ei.estudiante = :id')
-                ->andwhere('iec.gestionTipo = :gestion')
-                ->andwhere('it.id = :ietipo')
-                ->andwhere('ei.estadomatriculaTipo IN (:mat)')
-                ->setParameter('id', $objStudent->getId())
-                ->setParameter('gestion', $dataUe['requestUser']['gestion'])
-                ->setParameter('mat', array(4,5))
-                //->setParameter('mat2', '5')
-                ->setParameter('ietipo', 1)
-                ->getQuery();
 
-        $selectedInscriptionStudent = $query->getResult();
+        // validate the current inscriptino to the next level
+        $inscriptionOld = $this->oldInscription($objStudent->getId());
+        $newCourse = $this->aCursos[$this->getCourse($inscriptionOld['nivelTipo'], $inscriptionOld['cicloTipo'], $inscriptionOld['gradoTipo'], $inscriptionOld['estadomatriculaTipo'])];
+        $strNewCourse = str_replace('-', '', $newCourse);
+        $currentSelectedCourse = $dataUe['ueducativaInfoId']['nivelId'].$dataUe['ueducativaInfoId']['cicloId'].$dataUe['ueducativaInfoId']['gradoId'];
+        if($strNewCourse == $currentSelectedCourse){
 
-        //check if the student has an inscription on this year sesion->get('ie_gestion');
-        //$selectedInscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getInscriptionStudentByYear($objStudent->getId(), $dataUe['requestUser']['gestion'],$dataUe['ueducativaInfoId']['iecId']);
-        if(!$selectedInscriptionStudent){
-          //check if the level and grado is correct to the student//the next step is do it
-            $objStudentInscriptions = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getInscriptionAlternativaStudent($objStudent->getId());
-            //dump($objStudentInscriptions);die;
+            $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+            $query = $inscription2->createQueryBuilder('ei')
+                    ->select('ei.id as id')
+                    ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
+                    ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+                    ->leftJoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
+                    ->where('ei.estudiante = :id')
+                    ->andwhere('iec.gestionTipo = :gestion')
+                    ->andwhere('it.id = :ietipo')
+                    ->andwhere('ei.estadomatriculaTipo IN (:mat)')
+                    ->setParameter('id', $objStudent->getId())
+                    ->setParameter('gestion', $dataUe['requestUser']['gestion'])
+                    ->setParameter('mat', array(4,5))
+                    //->setParameter('mat2', '5')
+                    ->setParameter('ietipo', 1)
+                    ->getQuery();
 
-            return $this->render($this->session->get('pathSystem').':StudentsInscriptions:inscriptions.html.twig', array(
-              'objStudent'=>$objStudent,
-              'objStudentInscriptions'=>$objStudentInscriptions,
-              'form'=>$this->doInscriptionForm($form['data'], $objStudent->getId())->createView(),
-              'exist'=>true
+            $selectedInscriptionStudent = $query->getResult();
 
-            ));
+            //check if the student has an inscription on this year sesion->get('ie_gestion');
+            //$selectedInscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getInscriptionStudentByYear($objStudent->getId(), $dataUe['requestUser']['gestion'],$dataUe['ueducativaInfoId']['iecId']);
+            if(!$selectedInscriptionStudent){
+              //check if the level and grado is correct to the student//the next step is do it
+                $objStudentInscriptions = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getInscriptionAlternativaStudent($objStudent->getId());
+                //dump($objStudentInscriptions);die;
 
+                return $this->render($this->session->get('pathSystem').':StudentsInscriptions:inscriptions.html.twig', array(
+                  'objStudent'=>$objStudent,
+                  'objStudentInscriptions'=>$objStudentInscriptions,
+                  'form'=>$this->doInscriptionForm($form['data'], $objStudent->getId())->createView(),
+                  'exist'=>true
+
+                ));
+
+            }else{
+                //the student has an inscription on the same level
+                $this->session->getFlashBag()->add('noinscription', 'Estudiante ya cuenta con inscripcion...');
+                return $this->render($this->session->get('pathSystem').':StudentsInscriptions:inscriptions.html.twig', array(
+                  'exist'=>false
+                ));
+            }
         }else{
             //the student has an inscription on the same level
-            $this->session->getFlashBag()->add('noinscription', 'Estudiante ya cuenta con inscripcion...');
+            $this->session->getFlashBag()->add('noinscription', 'No corresponde nivel, ni grado ...');
             return $this->render($this->session->get('pathSystem').':StudentsInscriptions:inscriptions.html.twig', array(
               'exist'=>false
             ));
         }
+
+
+
       }else{
         //the student doesn't exist
         $this->session->getFlashBag()->add('noinscription', 'Estudiante no registrado');
