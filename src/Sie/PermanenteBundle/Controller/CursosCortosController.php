@@ -738,7 +738,7 @@ class CursosCortosController extends Controller {
               select a.id, a.institucioneducativa_id,a.duracionhoras,
                     y.cursocorto,
                     b.id as idoferta,b.horasmes,
-                    c.id as idofermaes,
+                    c.id as idofermaes,c.horas_mes,
                     d.id as idmaestro, d.persona_id, d.institucioneducativa_id,d.gestion_tipo_id,d.es_vigente_administrativo,
                     e.id as idformacion, e.formacion,
                     f.paterno,f.materno,f.nombre,f.carnet
@@ -814,15 +814,31 @@ class CursosCortosController extends Controller {
          $form = $request->get('form');
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
 
-            $institucioncursoferta = new InstitucioneducativaCursoOferta();
-            $institucioncursoferta ->setInsitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $form['cursoscortos'])));
-            $institucioncursoferta ->setHorasmes($horas);
-            $institucioncursoferta ->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(1));
+            //VER
+            $institucioncursoferta=NULL;
+            //$institucioncursoferta=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findOneBy(array('id' => $form['cursoscortos']));
+            $institucioncursoferta=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByInsitucioneducativaCurso($form['cursoscortos']);
+            dump($institucioncursoferta);
+            //die();
+            if(count($institucioncursoferta)==0)
+            {
+                $institucioncursoferta = new InstitucioneducativaCursoOferta();
+                $institucioncursoferta ->setInsitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $form['cursoscortos'])));
+                $institucioncursoferta ->setHorasmes($horas);
+                $institucioncursoferta ->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(1));
 
-            $em->persist($institucioncursoferta);
-           // dump($institucioncursoferta);die;
-            $em->flush($institucioncursoferta);
-            //dump($institucioncurso);die;
+                $em->persist($institucioncursoferta);
+               // dump($institucioncursoferta);die;
+                $em->flush($institucioncursoferta);
+                //dump($institucioncurso);die;
+                $em->getConnection()->commit();
+            }
+            else
+            {
+                $institucioncursoferta=$institucioncursoferta[0];
+            }
+            
+            
 
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta_maestro');")->execute();
             $institucioncursofermaestro = new InstitucioneducativaCursoOfertaMaestro();
@@ -871,7 +887,7 @@ class CursosCortosController extends Controller {
               select a.id, a.institucioneducativa_id,a.duracionhoras,
                     y.cursocorto,
                     b.id as idoferta,b.horasmes,
-                    c.id as idofermaes,
+                    c.id as idofermaes,c.horas_mes,
                     d.id as idmaestro, d.persona_id, d.institucioneducativa_id,d.gestion_tipo_id,d.es_vigente_administrativo,
                     e.id as idformacion, e.formacion,
                     f.paterno,f.materno,f.nombre,f.carnet
@@ -956,7 +972,7 @@ class CursosCortosController extends Controller {
 
             $em->remove($iecoma);
 
-            $em->remove($iecoen);
+            //$em->remove($iecoen);
 
             $em->flush();
 
@@ -994,7 +1010,7 @@ class CursosCortosController extends Controller {
               select a.id, a.institucioneducativa_id,a.duracionhoras,
                     y.cursocorto,
                     b.id as idoferta,b.horasmes,
-                    c.id as idofermaes,
+                    c.id as idofermaes,c.horas_mes,
                     d.id as idmaestro, d.persona_id, d.institucioneducativa_id,d.gestion_tipo_id,d.es_vigente_administrativo,
                     e.id as idformacion, e.formacion,
                     f.paterno,f.materno,f.nombre,f.carnet
