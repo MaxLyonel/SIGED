@@ -19,7 +19,6 @@
 
 
 <div class="body-content animated fadeIn">
-
     {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Menú Principal', 'gestion': data.gestion,'sie': data.ieducativa.id, 'ieducativa': data.ieducativa.institucioneducativa, 'opcion': 'Acceso a Módulos'} %}
     {% include 'SieHerramientaBundle:Principal:onlyview.html.twig'%}
     {% if tuicion %}
