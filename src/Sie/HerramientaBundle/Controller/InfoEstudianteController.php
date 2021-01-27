@@ -594,7 +594,7 @@ class InfoEstudianteController extends Controller {
      */
     private function gettheInscriptionStudent($id, $gestion) {
         $em = $this->getDoctrine()->getManager();
-        $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        /*$inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
         $query = $inscription2->createQueryBuilder('ei')
                 ->select('ei.id as id, IDENTITY(ei.estadomatriculaTipo) as estadomatriculaTipo')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
@@ -607,6 +607,17 @@ class InfoEstudianteController extends Controller {
                 ->getQuery();
 
         $studentInscription = $query->getResult();
+        */
+        $queryInscription = "
+           select ei.id as id, ei.estadomatricula_tipo_id as estadomatriculaTipo
+           from estudiante_inscripcion ei
+           left join institucioneducativa_curso iec on (ei.institucioneducativa_curso_id=iec.id)
+           where ei.estudiante_id = ".$id." and gestion_tipo_id::double precision = ".$gestion."
+        ";
+        $query = $em->getConnection()->prepare($queryInscription);
+        $query->execute();
+        $studentInscription = $query->fetchAll();        
+        
         return $studentInscription;
     }
 

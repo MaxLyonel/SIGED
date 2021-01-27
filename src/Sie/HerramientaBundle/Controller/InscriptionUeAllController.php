@@ -260,7 +260,7 @@ class InscriptionUeAllController extends Controller {
     }
 
     private function gettheInscriptionStudent($id, $gestion) {
-        $em = $this->getDoctrine()->getManager();
+        /*$em = $this->getDoctrine()->getManager();
         $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
         $query = $inscription2->createQueryBuilder('ei')
                 ->select('ei.id as id, IDENTITY(ei.estadomatriculaTipo) as estadomatriculaTipo')
@@ -274,7 +274,8 @@ class InscriptionUeAllController extends Controller {
                 ->getQuery();
 
         $studentInscription = $query->getResult();
-        return $studentInscription;
+        return $studentInscription;*/
+        return false;
     }
 
     public function inscriptionAction(Request $request) {
