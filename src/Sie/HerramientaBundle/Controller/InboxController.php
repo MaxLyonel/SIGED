@@ -1159,13 +1159,21 @@ class InboxController extends Controller {
           $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
           if($registroConsol)
           {
+
+            return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+            'observation' => false,
+            'institucion' =>  $form['sie'],
+            'gestion' => $form['gestion'],
+            'periodo' => 0));            
+
+            /*
             $registroConsol->setFecha(new \DateTime("now"));
             switch ($periodo)
             {
                 case 1: $registroConsol->setBim1('2'); break;//VOLVERLO DINAMICO
             }
             $em->persist($registroConsol);
-            $em->flush();
+            $em->flush();*/
           }
           else
           {
