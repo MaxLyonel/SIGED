@@ -21,7 +21,7 @@ class BuscarPersonaType extends AbstractType {
         $builder
             ->setAction($options['action'])
             ->add('ci', 'text', array("attr" => array("class" => "form-control input-sm numericOnly",'maxlength' => '10','minlenght'=>'4'), "label_attr" => array("class" => "help-block","id"=>"l_ci"), 'label' => 'Número de carnet :', 'max_length' => '12', 'required' => true))
-            ->add('complemento', 'text', array("attr" => array("class" => "form-control input-sm",'maxlength' => '2','pattern'=>'[0-9]{1}[A-Z]{1}','style'=>'text-transform:uppercase','onkeyup'=>'javascript:this.value=this.value.toUpperCase();'), "label_attr" => array("class" => "help-block",'id'=>'l_complemento'), 'label' => 'Complemento :', 'required' => false))
+            ->add('complemento', 'text', array("attr" => array("class" => "form-control input-sm",'maxlength' => '2','style'=>'text-transform:uppercase','onkeyup'=>'javascript:this.value=this.value.toUpperCase();'), "label_attr" => array("class" => "help-block",'id'=>'l_complemento'), 'label' => 'Complemento :', 'required' => false))
             ->add('extranjero', 'hidden', array("attr" => array("class" => "form-control input-sm numericOnly"), "label_attr" => array("class" => "help-block"), 'label' => 'extranjero :', 'max_length' => '1'))
             ->add('buscar', 'submit', array("attr" => array("id" => "submit", "type" => "button", "class" => "btn btn-success btn-large glyphicon glyphicon-ok-sign"), 'label' => ' Buscar'))
         ;
