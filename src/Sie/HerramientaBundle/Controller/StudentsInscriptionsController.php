@@ -195,7 +195,7 @@ class StudentsInscriptionsController extends Controller {
         $newCourse = $this->aCursos[$this->getCourse($inscriptionOld['nivelTipo'], $inscriptionOld['cicloTipo'], $inscriptionOld['gradoTipo'], $inscriptionOld['estadomatriculaTipo'])];
         $strNewCourse = str_replace('-', '', $newCourse);
         $currentSelectedCourse = $dataUe['ueducativaInfoId']['nivelId'].$dataUe['ueducativaInfoId']['cicloId'].$dataUe['ueducativaInfoId']['gradoId'];
-        if($strNewCourse == $currentSelectedCourse){
+        if($strNewCourse == $currentSelectedCourse or in_array($strNewCourse, array(1111,1112))){
 
             /*$inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
             $query = $inscription2->createQueryBuilder('ei')
