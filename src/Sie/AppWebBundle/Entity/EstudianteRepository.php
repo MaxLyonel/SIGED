@@ -708,8 +708,12 @@ class EstudianteRepository extends EntityRepository {
                 ->leftJoin('SieAppWebBundle:EstudianteInscripcionObservacion', 'eo', 'WITH', 'ei.id = eo.estudianteInscripcion')
                 ->leftJoin('SieAppWebBundle:ObservacionInscripcionTipo', 'oi', 'WITH', 'eo.observacionInscripcionTipo = oi.id')
                 ->where('e.codigoRude = :rude')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('ei.estadomatriculaTipo = :matricula')
                 //->andwhere('it.id = :ittipo')
                 ->setParameter('rude', $rude)
+                ->setParameter('gestion', 2021)
+                ->setParameter('matricula', 9)
                 //->setParameter('ittipo', 1)
                 ->orderBy('iec.gestionTipo', 'DESC')
         ;
