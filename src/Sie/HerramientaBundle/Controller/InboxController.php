@@ -1213,6 +1213,13 @@ class InboxController extends Controller {
               }
               $em->persist($registroConsol);
               $em->flush();
+
+              return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+              'observation' => false,
+              'institucion' =>  $form['sie'],
+              'gestion' => $form['gestion'],
+              'periodo' => $periodo));            
+
               
           }
           
