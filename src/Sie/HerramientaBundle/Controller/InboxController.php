@@ -1119,7 +1119,14 @@ class InboxController extends Controller {
           }
       }
 
-      $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web_2021_ini(:gestion, :sie, :periodo)');
+      if($form['gestion']>2020){
+        $queryClose = 'select * from sp_validacion_regular_web_2021_ini(:gestion, :sie, :periodo)';
+      }else{
+        $queryClose = 'select * from sp_validacion_regular_web_2020(:gestion, :sie, :periodo)';
+      }
+
+
+      $query = $em->getConnection()->prepare($queryClose);
       $query->bindValue(':gestion', $form['gestion']);
       $query->bindValue(':sie', $form['sie']);
       $query->bindValue(':periodo', $periodo);
@@ -1156,50 +1163,59 @@ class InboxController extends Controller {
       }
       else
       {
+        if($form['gestion']>2020){
           $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
-          if($registroConsol)
-          {
+            if($registroConsol){
 
-            return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
-            'observation' => false,
-            'institucion' =>  $form['sie'],
-            'gestion' => $form['gestion'],
-            'periodo' => 0));            
+              return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+              'observation' => false,
+              'institucion' =>  $form['sie'],
+              'gestion' => $form['gestion'],
+              'periodo' => 0));            
 
-            /*
-            $registroConsol->setFecha(new \DateTime("now"));
-            switch ($periodo)
-            {
-                case 1: $registroConsol->setBim1('2'); break;//VOLVERLO DINAMICO
+
+
+            }else{
+              $rconsol = new RegistroConsolidacion();
+              $rconsol->setTipo(1);
+              $rconsol->setGestion($form['gestion']);
+              $rconsol->setUnidadEducativa($form['sie']);
+              $rconsol->setTabla('**');
+              $rconsol->setIdentificador('**');
+              $rconsol->setCodigo('**');
+              $rconsol->setDescripcionError('Consolidado exitosamente!!');
+              $rconsol->setFecha(new \DateTime("now"));
+              $rconsol->setusuario('0');
+              $rconsol->setConsulta('**');
+              $rconsol->setBim1('0');
+              $rconsol->setBim2('0');
+              $rconsol->setBim3('0');
+              $rconsol->setBim4('0');
+              $rconsol->setPeriodoId(1);
+              $rconsol->setSubCea(0);
+              $rconsol->setBan(1);
+              $rconsol->setEsonline('t');
+              $rconsol->setInstitucioneducativaTipoId(1);
+              $em->persist($rconsol);
+              $em->flush();
+               return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+              'observation' => false,
+              'institucion' =>  $form['sie'],
+              'gestion' => $form['gestion'],
+              'periodo' => 0));  
             }
-            $em->persist($registroConsol);
-            $em->flush();*/
+          }else{
+                          
+              $registroConsol->setFecha(new \DateTime("now"));
+              switch ($periodo)
+              {
+                  case 1: $registroConsol->setBim1('2'); break;//VOLVERLO DINAMICO
+              }
+              $em->persist($registroConsol);
+              $em->flush();
+              
           }
-          else
-          {
-            $rconsol = new RegistroConsolidacion();
-            $rconsol->setTipo(1);
-            $rconsol->setGestion($form['gestion']);
-            $rconsol->setUnidadEducativa($form['sie']);
-            $rconsol->setTabla('**');
-            $rconsol->setIdentificador('**');
-            $rconsol->setCodigo('**');
-            $rconsol->setDescripcionError('Consolidado exitosamente!!');
-            $rconsol->setFecha(new \DateTime("now"));
-            $rconsol->setusuario('0');
-            $rconsol->setConsulta('**');
-            $rconsol->setBim1('0');
-            $rconsol->setBim2('0');
-            $rconsol->setBim3('0');
-            $rconsol->setBim4('0');
-            $rconsol->setPeriodoId(1);
-            $rconsol->setSubCea(0);
-            $rconsol->setBan(1);
-            $rconsol->setEsonline('t');
-            $rconsol->setInstitucioneducativaTipoId(1);
-            $em->persist($rconsol);
-            $em->flush();
-          }
+          
           $em->getConnection()->commit();
       }
 
