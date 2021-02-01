@@ -1198,7 +1198,8 @@ class InboxController extends Controller {
               $rconsol->setInstitucioneducativaTipoId(1);
               $em->persist($rconsol);
               $em->flush();
-               return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+              $em->getConnection()->commit();
+              return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
               'observation' => false,
               'institucion' =>  $form['sie'],
               'gestion' => $form['gestion'],
@@ -1213,6 +1214,7 @@ class InboxController extends Controller {
               }
               $em->persist($registroConsol);
               $em->flush();
+              $em->getConnection()->commit();
 
               return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
               'observation' => false,
@@ -1222,8 +1224,6 @@ class InboxController extends Controller {
 
               
           }
-          
-          $em->getConnection()->commit();
       }
 
 
