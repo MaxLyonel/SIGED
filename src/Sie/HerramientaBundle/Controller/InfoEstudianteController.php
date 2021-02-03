@@ -829,7 +829,11 @@ class InfoEstudianteController extends Controller {
             $mostrarSextoCerrado = true;
         }
     }
-//
+
+    $this->session->set('optionRemove', false);
+    if($operativo){
+        $this->session->set('optionRemove',true);
+    }
 
   $this->session->set('removeInscriptionAllowed', false);
   if(in_array($this->session->get('ie_id'),$aRemovesUeAllowed))
