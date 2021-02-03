@@ -59,7 +59,7 @@ class InscriptionIniPriTrueController extends Controller {
         $enableoption = true; 
         $message = ''; 
         // this is to check if the ue has registro_consolidacion
-        if( in_array($this->session->get('roluser'), array(7,8,9,10))  ){
+        /*if( in_array($this->session->get('roluser'), array(7,8,9,10))  ){
 
           $objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
             'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
@@ -71,7 +71,7 @@ class InscriptionIniPriTrueController extends Controller {
               $message = "No se puede realizar la inscripción debido a que la Unidad Educativa no se consolido el operativo Inscripciones";
               $enableoption = false; 
           }
-        }      
+        } */     
 
 
 
