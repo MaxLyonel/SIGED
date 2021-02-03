@@ -213,10 +213,12 @@ class PrincipalController extends Controller {
                 }
             }
         //    dump($dptoNacArray);die;
-        //    
-        $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id')));
-        $cantidadModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalModalidadAtencion')->findby(array('institucioneducativaSucursal'=>$objIesucursal->getId()));
-
+        //
+        $cantidadModalidadAtencion = array();
+        if($this->sesion->get('roluser') == 9){
+            $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id')));
+            $cantidadModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalModalidadAtencion')->findby(array('institucioneducativaSucursal'=>$objIesucursal->getId()));
+        }
 
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
           'userData' => $userData,
@@ -573,49 +575,54 @@ class PrincipalController extends Controller {
         
         //get the sucursal info
         $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id')));
-        
+
         $tipos=array();
         $cantidad=0;
-        if($objIesucursal)
-        {
-            $objInstitucioneducativaSucursalModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalModalidadAtencion')->findby(array('institucioneducativaSucursal'=>$objIesucursal->getId()));
-            if($objInstitucioneducativaSucursalModalidadAtencion)
+        try {
+                    
+            if($objIesucursal)
             {
-                foreach ($objInstitucioneducativaSucursalModalidadAtencion as $value)
+                $objInstitucioneducativaSucursalModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalModalidadAtencion')->findby(array('institucioneducativaSucursal'=>$objIesucursal->getId()));
+                if($objInstitucioneducativaSucursalModalidadAtencion)
                 {
-                    $em->remove($value);
+                    foreach ($objInstitucioneducativaSucursalModalidadAtencion as $value)
+                    {
+                        $em->remove($value);
+                    }
+                    $em->flush();
                 }
-                $em->flush();
-            }
-            if($form !==NULL && count($form)>0)
-            {
-                foreach ($form as $value)
+                if($form !==NULL && count($form)>0)
                 {
-                    try
+                    foreach ($form as $value)
                     {
-                        $value=filter_var($value,FILTER_VALIDATE_INT);
-                        $modalidadAtencion= new InstitucioneducativaSucursalModalidadAtencion();
-                        $modalidadAtencion->setFechaRegistro(new \DateTime());
-                        $modalidadAtencion->setObservacion('no');
-                        $modalidadAtencion->setInstitucioneducativaSucursal($objIesucursal);
-                        $modalidadAtencion->setModalidadAtencionTipo($em->getRepository('SieAppWebBundle:ModalidadAtencionTipo')->find($value));
-                        $em->persist($modalidadAtencion);
-                        $tipos[]=$value;
+                            $value=filter_var($value,FILTER_VALIDATE_INT);
+                            $modalidadAtencion= new InstitucioneducativaSucursalModalidadAtencion();
+                            $modalidadAtencion->setFechaRegistro(new \DateTime());
+                            $modalidadAtencion->setObservacion('no');
+                            $modalidadAtencion->setInstitucioneducativaSucursal($objIesucursal);
+                            $modalidadAtencion->setModalidadAtencionTipo($em->getRepository('SieAppWebBundle:ModalidadAtencionTipo')->find($value));
+                            $em->persist($modalidadAtencion);
+                            $tipos[]=$value;
+                        
                     }
-                    catch(Exception $e)
-                    {
-
-                    }
+                    $em->flush();
                 }
-                $em->flush();
+                $cantidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalModalidadAtencion')->findby(array('institucioneducativaSucursal'=>$objIesucursal->getId()));
             }
-            $cantidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalModalidadAtencion')->findby(array('institucioneducativaSucursal'=>$objIesucursal->getId()));
+            $response = new Response(json_encode(array(
+                'tipos' => $tipos,
+                'cantidad'=>count($cantidad),
+            )));
+            $response->headers->set('Content-Type', 'application/json');            
+            
+        } catch (Exception $e) {
+            $response = new Response(json_encode(array(
+                'tipos' => $tipos,
+                'cantidad'=>count($cantidad),
+            )));
+            echo 'this the error'.$e;
         }
-        $response = new Response(json_encode(array(
-            'tipos' => $tipos,
-            'cantidad'=>count($cantidad),
-        )));
-        $response->headers->set('Content-Type', 'application/json');
+
         //return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array());
         return $response;
     }
