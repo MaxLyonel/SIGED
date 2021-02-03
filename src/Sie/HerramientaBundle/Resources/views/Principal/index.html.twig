@@ -2,6 +2,60 @@
 
 {% block contentoption %}
 
+    <!--Modal para asignar los tipos de atencion que tiene la unidad educativa-->
+    <div class="modal fade" id="modalTipoAtencion" tabindex="-1">
+        <form action="" method="POST" id="form-actualizar-tipo" autocomplete="off">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header bg-info">
+                <h5 class="modal-title">Modalidades de atención educativa</h5>
+                <!--
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                -->
+              </div>
+              <div class="modal-body">
+                      <div class="form-group row">
+                        <div class="col-sm-10 offset-sm-2">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="opcion[]" id="opcion_0" value="1">
+                            <label class="form-check-label" for="opcion_0">
+                              Presencial
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-sm-10 offset-sm-2">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="opcion[]" id="opcion_1" value="2">
+                            <label class="form-check-label" for="opcion_1">
+                              Semipresencial
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <div class="col-sm-10 offset-sm-2">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="opcion[]" id="opcion_2" value="3">
+                            <label class="form-check-label" for="opcion_2">
+                              A distancia
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-sm btn-info">Actualizar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+    </div>
+
     <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-list-alt"></i> Principal <span>Menú principal</span></h2>
@@ -328,51 +382,175 @@
                 </div>
             {% endif %}
  #}
- 
+        <!--Detalle de los TIPOS DE EDUACION que dispione la unidad educatio-->
+
+                <div class="col-md-6">
+                    <!-- Start input fields - basic form -->
+                    <div class="panel rounded shadow">
+                        <div class="panel panel-lilac shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Tipos de atención</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body no-padding">
+                                <div class="col-md-12">
+
+                                        La unidad educativa tiene los siguientes tipos de atención:
+                                        <a href="#" class="badge badge-info actualizar-form-tipo-atencion" data-toggle="modal" data-target="#modalTipoAtencion">Ver/Cambiar</a>
+    
+                                    <div class="div-mostrar-tipos"></div>
+                                </div>
+                                <br>
+                            </div><!-- /.panel-body --> 
+                        </div>
+                    </div>
+                </div>
+
         </div>
     </div>
+
+
+
+
+
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
 
 <script>
-   $(document).ready(function(){
-            cargatablas();
+   $(document).ready(function()
+   {
+        cargatablas();
+        
+        abrirModalTipoEducacion();
+        $('#form-actualizar-tipo').on('submit', function (event)
+        {
+            event.preventDefault();
+            actualizarTipoEducacion();
         });
 
-        var cargatablas = function (identif){
+        $('.actualizar-form-tipo-atencion').on('click',function (event) {
+            getTipoEducacion();
+            
+        });
+    });
 
-
+        var cargatablas = function (identif)
+        {
             // DataTable
             var table = $('#encuestados').DataTable( {
                     "order": [[ 0, "asc" ]],
                 }
             );
-
             // Apply the search
-           
         };
-    var downOperativoRudeup = function(){
-    var formData = $('#downOperativoRudeId').serialize();
-
-     $.ajax({
-            type: 'post',
-            url: Routing.generate('herramienta_inbox_downoperativorude'),
-            data: formData,
-            beforeSend: function () {
-                $("#downoperativoId").empty();
-                $("#downoperativoId").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
-            },
-            success: function (data) {
-                $("#downoperativoId").empty();
-                $("#downoperativoId").html(data);
-            },
-            error: function (data) {
-                $("#downoperativoId").empty();
-                $("#downoperativoId").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
-            }
-        });
+    var downOperativoRudeup = function()
+    {
+        var formData = $('#downOperativoRudeId').serialize();
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('herramienta_inbox_downoperativorude'),
+                data: formData,
+                beforeSend: function () {
+                    $("#downoperativoId").empty();
+                    $("#downoperativoId").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#downoperativoId").empty();
+                    $("#downoperativoId").html(data);
+                },
+                error: function (data) {
+                    $("#downoperativoId").empty();
+                    $("#downoperativoId").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
     };
  
+
+    var abrirModalTipoEducacion=function()
+    {
+        var yaSeleccionoTipo=false;
+        if(!yaSeleccionoTipo)
+        {
+            $('#modalTipoAtencion').modal('show');
+        }
+    };
+    var actualizarTipoEducacion=function ()
+    {
+        var form=$('#form-actualizar-tipo').serialize();
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('siged_seleccionar_modalidad_tipo'),
+                data: form,
+                beforeSend: function () {
+                    //$("#downoperativoId").empty();
+                    //$("#downoperativoId").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    //$("#downoperativoId").empty();
+                    //$("#downoperativoId").html(data);
+                    console.log(data.tipos);
+                    var tipos='';
+                    for(t in data.tipos)
+                    {
+                        if(data.tipos[t]==1)
+                            tipos=tipos +' PRESENCIAL, ';
+                        if(data.tipos[t]==2)
+                            tipos=tipos +' SEMI-PRESENCIAL, ';
+                        if(data.tipos[t]==3)
+                            tipos=tipos +' A-DISTANCIA, ';
+
+
+                        console.log(t);
+                    }
+                    //getTipoEducacion();
+                     setTimeout(function () {
+                        $('#modalTipoAtencion').modal('toggle');
+                    },2000);
+                       
+
+                        //var presencial=data.tipos.find(1);
+                        //var semipresencial=data.tipos.find(2);
+                        //var a_dist=data.tipos.find(3);
+
+                    $(".div-mostrar-tipos").html('');
+                    $(".div-mostrar-tipos").html(tipos);
+                },
+                error: function (data) {
+                    $("#downoperativoId").empty();
+                    $("#downoperativoId").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
+    };
+
+
+    var getTipoEducacion=function ()
+    {
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('siged_get_modalidad_tipo'),
+                //data: form,
+                beforeSend: function () {
+                    //$("#downoperativoId").empty();
+                    //$("#downoperativoId").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    var form=$('#form-actualizar-tipo');
+
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").html(data);
+                    
+                },
+                error: function (data) {
+                    $("#downoperativoId").empty();
+                    $("#downoperativoId").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
+    }
 </script>
 {% endblock %}
