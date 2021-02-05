@@ -15,7 +15,7 @@ class InstitucioneducativaSucursalRiesgoMes
     private $id;
 
     /**
-     * @var \DateTime
+     * @var integer
      */
     private $mes;
 
@@ -73,7 +73,7 @@ class InstitucioneducativaSucursalRiesgoMes
     /**
      * Set mes
      *
-     * @param \DateTime $mes
+     * @param integer $mes
      * @return InstitucioneducativaSucursalRiesgoMes
      */
     public function setMes($mes)
@@ -86,7 +86,7 @@ class InstitucioneducativaSucursalRiesgoMes
     /**
      * Get mes
      *
-     * @return \DateTime 
+     * @return integer 
      */
     public function getMes()
     {

@@ -24,8 +24,9 @@ Sie\AppWebBundle\Entity\InstitucioneducativaSucursalRiesgoMes:
                 strategy: SEQUENCE
     fields:
         mes:
-            type: date
+            type: integer
             nullable: false
+            unsigned: false
             comment: ''
         fechaInicio:
             type: date
