@@ -187,15 +187,20 @@
                                 <td>{{data.nombre}}</td>
                                 <td>{{data.fechaNacimiento|date('d-m-Y')}}</td>
                                 <td>
-                                    {% if gestion == 2020 %}
+                                    {% if gestion == app.session.get('currentyear') %}
                                         {# {% if data.cambioEstadoMatricula == true and 1 == 0 %}
                                             <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                 {{data.estadomatricula}}
                                             </button>
                                         {% else %} #}
-                                            <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
-                                                {{data.estadomatricula}}
-                                            </button>
+                                            {% if data.estadomatriculaId == 4%}
+                                                <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
+                                                    {{data.estadomatricula}}
+                                                </button>                                            
+                                            {% else %}
+                                                <strong style="color:#000;border:2px;"> {{data.estadomatricula}}</strong>
+                                            {% endif %}
+                                            
                                         {# {% endif %} #}
                                     {% else %}
                                         {% if app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4)  %}
