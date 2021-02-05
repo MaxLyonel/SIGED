@@ -1,0 +1,81 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaSucursalRiesgoMes:
+    type: entity
+    table: institucioneducativa_sucursal_riesgo_mes
+    indexes:
+        IDX_488A5ED7779E06F5:
+            columns:
+                - riesgo_unidadeducativa_tipo_id
+        IDX_488A5ED77A322B24:
+            columns:
+                - institucioneducativa_sucursal_id
+    uniqueConstraints:
+        institucioneducativa_sucursal_riesgo_mes_idx:
+            columns:
+                - institucioneducativa_sucursal_id
+                - mes
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        mes:
+            type: date
+            nullable: false
+            comment: ''
+        fechaInicio:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        otros:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        riesgoUnidadeducativaTipo:
+            targetEntity: RiesgoUnidadeducativaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                riesgo_unidadeducativa_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaSucursal:
+            targetEntity: InstitucioneducativaSucursal
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_sucursal_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
