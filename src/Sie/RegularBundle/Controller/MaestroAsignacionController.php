@@ -2205,11 +2205,20 @@ class MaestroAsignacionController extends Controller {
   
         $rolId = $this->session->get('roluser');
         $institucionEducativaId = 0;
+
+        $em = $this->getDoctrine()->getManager();
+
         if($rolId == 9){
             $institucionEducativaId = $this->session->get('ie_id');
+
+            // $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
+            $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $institucionEducativaId, 'gestion'=>$this->session->get('currentyear')-1));
+            
+            //get the current year
+            $arrSieInfo['gestion'] = (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 3)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
+            $arrSieInfo['id'] = $this->session->get('ie_id');
+            $gestionId = $arrSieInfo['gestion'];
         }
-        
-        $em = $this->getDoctrine()->getManager();
         
         $turnoTipoEntidad = $this->getTurnoInstitucionEducativaCurso($institucionEducativaId,$gestionId);
 
