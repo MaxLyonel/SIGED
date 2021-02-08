@@ -1,0 +1,56 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion:
+    type: entity
+    table: institucioneducativa_curso_modalidad_atencion
+    indexes:
+        IDX_21768A42E43F4BE9:
+            columns:
+                - modalidad_atencion_tipo_id
+        IDX_21768A429E4EDBFE:
+            columns:
+                - institucioneducativa_curso_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        modalidadAtencionTipo:
+            targetEntity: ModalidadAtencionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modalidad_atencion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaCurso:
+            targetEntity: InstitucioneducativaCurso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

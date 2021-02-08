@@ -19,3 +19,10 @@ siged_get_modalidad_tipo:
     defaults: { _controller: SieAppWebBundle:Principal:getTipoModalidad }
     options:
          expose: true
+
+
+siged_get_inicio_clases:
+    path:    /get_inicio_clases
+    defaults: { _controller: SieAppWebBundle:Principal:getInicioClases }
+    options:
+         expose: true
