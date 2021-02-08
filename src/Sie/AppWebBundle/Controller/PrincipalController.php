@@ -587,54 +587,43 @@ class PrincipalController extends Controller {
         //get the sucursal info
         $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id')));
 
-        $datoInicioClases=1;
-
         //guardado de datos del no incio de clases
         try
         {
             //verificamos si ya registro este mes
-            $institucioneducativaSucursalRiesgoMes=$em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalRiesgoMes')->findby(
+            $institucioneducativaSucursalRiesgoMes=$em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalRiesgoMes')->findOneBy(
                 array('institucioneducativaSucursal'=>$objIesucursal->getId(),'mes'=>date('m')
             ));
-            $inicio_clases=filter_var($request->get('inicio_clases'),FILTER_VALIDATE_INT);
 
-            if(!$institucioneducativaSucursalRiesgoMes && $inicio_clases==0)
+            $inicio_clases=filter_var($request->get('inicio_clases'),FILTER_VALIDATE_INT);
+            $noInicioRazon=filter_var($request->get('no_inicio_razon'),FILTER_VALIDATE_INT);
+            $noIncioRazonOtros='';
+            if($institucioneducativaSucursalRiesgoMes)//actualizamos
             {
-                $noInicioRazon=filter_var($request->get('no_inicio_razon'),FILTER_VALIDATE_INT);
-                $noIncioRazonOtros='';
-                if($noInicioRazon==1)
+                if(isset($noInicioRazon) && $noInicioRazon==1)
                 {
                     $noIncioRazonOtros=filter_var($request->get('no_inicio_razon'),FILTER_SANITIZE_STRING);
                 }
                 $riesgoUnidadeducativaTipo=$em->getRepository('SieAppWebBundle:RiesgoUnidadeducativaTipo')->find($noInicioRazon);
 
-                if($riesgoUnidadeducativaTipo)//verificamos que exista
+                $noInicioRazonOtros=filter_var($request->get('no_incio_razon_otros'),FILTER_SANITIZE_STRING);
+                
+                $institucioneducativaSucursalRiesgoMes->setMes(date('m'));
+                //$institucioneducativaSucursalRiesgoMes->setFechaInicio();
+                //$institucioneducativaSucursalRiesgoMes->setFechaFin();
+                //$institucioneducativaSucursalRiesgoMes->setFechaRegistro(new \DateTime());
+                $institucioneducativaSucursalRiesgoMes->setFechaModificacion(new \DateTime());
+                //$institucioneducativaSucursalRiesgoMes->setOtros();
+                if(isset($noInicioRazon) && $noInicioRazon==1)
                 {
-                    $noInicioRazonOtros=filter_var($request->get('no_incio_razon_otros'),FILTER_SANITIZE_STRING);
-                    
-                    $institucioneducativaSucursalRiesgoMes=new InstitucioneducativaSucursalRiesgoMes();
-                    $institucioneducativaSucursalRiesgoMes->setMes(date('m'));
-                    //$institucioneducativaSucursalRiesgoMes->setFechaInicio();
-                    //$institucioneducativaSucursalRiesgoMes->setFechaFin();
-                    $institucioneducativaSucursalRiesgoMes->setFechaRegistro(new \DateTime());
-                    //$institucioneducativaSucursalRiesgoMes->setFechaModificacion();
-                    //$institucioneducativaSucursalRiesgoMes->setOtros();
-                    if($noInicioRazon==1)
-                    {
-                        $institucioneducativaSucursalRiesgoMes->setObservacion($noInicioRazonOtros);
-                    }
-                    $institucioneducativaSucursalRiesgoMes->setRiesgoUnidadeducativaTipo($riesgoUnidadeducativaTipo);
-                    $institucioneducativaSucursalRiesgoMes->setInstitucioneducativaSucursal($objIesucursal);
-                    $em->persist($institucioneducativaSucursalRiesgoMes);
-                    //$em->flush();
-                    $datoInicioClases=0;
+                    $institucioneducativaSucursalRiesgoMes->setObservacion($noInicioRazonOtros);
                 }
-                else
-                {
-                    $datoInicioClases=-1;
-                }
+                $institucioneducativaSucursalRiesgoMes->setRiesgoUnidadeducativaTipo($riesgoUnidadeducativaTipo);
+                $institucioneducativaSucursalRiesgoMes->setInstitucioneducativaSucursal($objIesucursal);
+                $em->persist($institucioneducativaSucursalRiesgoMes);
+                //$em->flush();
             }
-            else if($inicio_clases==1)
+            else  //creamos
             {
                 $institucioneducativaSucursalRiesgoMes=new InstitucioneducativaSucursalRiesgoMes();
                 $institucioneducativaSucursalRiesgoMes->setMes(date('m'));
@@ -643,14 +632,14 @@ class PrincipalController extends Controller {
                 $institucioneducativaSucursalRiesgoMes->setFechaRegistro(new \DateTime());
                 //$institucioneducativaSucursalRiesgoMes->setFechaModificacion();
                 //$institucioneducativaSucursalRiesgoMes->setOtros();
+                if(isset($noInicioRazon) && $noInicioRazon==1)
+                {
+                    $institucioneducativaSucursalRiesgoMes->setObservacion($noInicioRazonOtros);
+                }
                 //$institucioneducativaSucursalRiesgoMes->setObservacion();
                 $institucioneducativaSucursalRiesgoMes->setRiesgoUnidadeducativaTipo(NULL);
                 $institucioneducativaSucursalRiesgoMes->setInstitucioneducativaSucursal($objIesucursal);
                 $em->persist($institucioneducativaSucursalRiesgoMes);
-            }
-            else
-            {
-                $datoInicioClases=-1;
             }
             $em->flush();
         }

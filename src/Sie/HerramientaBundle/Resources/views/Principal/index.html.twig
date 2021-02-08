@@ -3,7 +3,7 @@
 {% block contentoption %}
 
     <!--Modal para asignar los tipos de atencion que tiene la unidad educativa-->
-    <div class="modal fade" id="modalTipoAtencion" tabindex="-1">
+    <div class="modal fade" id="modalInicioClases" tabindex="-1">
         <form action="" method="POST" id="form-actualizar-tipo" autocomplete="off">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -450,13 +450,8 @@
                             </div><!-- /.panel-heading -->
                             <div class="panel-body no-padding">
                                 <div class="col-md-12">
-                                    {#
-                                    <a href="#" class="badge badge-info" data-toggle="modal" data-target="#modalTipoAtencion">Ver/Cambiar</a>
-                                    #}
-
-
+                                    <a href="#" class="badge badge-info" data-toggle="modal" data-target="#modalInicioClases">Ver/Cambiar</a>
                                         La unidad educativa:
-    
                                     <div class="div-mostrar-tipos">
                                     </div>
                                 </div>
@@ -559,7 +554,7 @@
         var registroInicioDeClases={{registroInicioDeClases}}>0?true:false;
         if(!registroInicioDeClases)
         {
-            $('#modalTipoAtencion').modal('show');
+            $('#modalInicioClases').modal('show');
         }
     };
     {#
@@ -586,7 +581,7 @@
                             tipos=tipos +' DISTANCIA, ';
                     }
                      setTimeout(function () {
-                        $('#modalTipoAtencion').modal('toggle');
+                        $('#modalInicioClases').modal('toggle');
                     },1000);
                     tipos=tipos.length>0?tipos:'<span class="text-danger">Ningún tipo seleccionado</span>';
                     $(".div-mostrar-tipos").html('');
@@ -649,7 +644,7 @@
 
                      setTimeout(function ()
                     {
-                        $('#modalTipoAtencion').modal('toggle');
+                        $('#modalInicioClases').modal('toggle');
                     },1000);
 
                     var debido_a,text='';
