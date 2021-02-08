@@ -9,3 +9,15 @@ herramienta_infoEstudianteDatosCurso_save:
     defaults: { _controller: "SieHerramientaBundle:InfoEstudianteDatosCurso:save"}
     options:
          expose: true
+
+herramienta_modalidadCurso_index:
+    path:     /indexModalidad
+    defaults: { _controller: "SieHerramientaBundle:ModalidadCurso:index"}
+    options:
+         expose: true
+
+herramienta_modalidadCurso_save:
+    path:     /saveModalidad
+    defaults: { _controller: "SieHerramientaBundle:ModalidadCurso:save"}
+    options:
+         expose: true

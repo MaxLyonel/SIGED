@@ -3,12 +3,12 @@
 {% block contentoption %}
 
     <!--Modal para asignar los tipos de atencion que tiene la unidad educativa-->
-    <div class="modal fade" id="modalTipoAtencion" tabindex="-1">
+    <div class="modal fade" id="modalInicioClases" tabindex="-1">
         <form action="" method="POST" id="form-actualizar-tipo" autocomplete="off">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header bg-info">
-                <h5 class="modal-title">Inicio de la gestión escolar</h5>
+                <h5 class="modal-title">Reporte de actividades</h5>
                 {#
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
@@ -16,6 +16,7 @@
                 #}
               </div>
               <div class="modal-body text--center pb-0">
+               {#
                <fieldset class="form-group">
                     <div class="row">
                         <legend class="col-md-3 col-form-label pt-0">Modalidades de atención</legend>
@@ -56,6 +57,7 @@
                         </div>
                     </div>
                 </fieldset>
+                #}
 
     <fieldset class="form-group">
         <div class="row">
@@ -63,7 +65,7 @@
             <div class="col-md-9">
 
                 <div class="form-group mb-0">
-                    <label class="form-check-label">¿La unidad educativa inició clases?</label>
+                    <label class="form-check-label">¿La unidad educativa inició sus actividades?</label>
                 </div>
                 <div class="form-check pr-3" style="display:inline-block;padding-right:1.3rem;">
                     <input class="form-check-input radio-inicio-clases" type="radio" name="inicio_clases" id="inicio_clases_1" value="1" checked="checked">
@@ -439,7 +441,7 @@
                         <div class="panel panel-lilac shadow">
                             <div class="panel-heading">
                                 <div class="pull-left">
-                                    <h3 class="panel-title">Tipos de atención</h3>
+                                    <h3 class="panel-title">Reporte de actividades</h3>
                                 </div>
                                 <div class="pull-right">
                                     <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
@@ -448,11 +450,13 @@
                             </div><!-- /.panel-heading -->
                             <div class="panel-body no-padding">
                                 <div class="col-md-12">
-
-                                        La unidad educativa tiene los siguientes tipos de atención:
-                                        <a href="#" class="badge badge-info" data-toggle="modal" data-target="#modalTipoAtencion">Ver/Cambiar</a>
-    
-                                    <div class="div-mostrar-tipos"></div>
+                                        La unidad educativa:
+                                    <div class="div-mostrar-tipos">
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center ">
+                                    <br>
+                                    <a href="#" class="badge badge-info" data-toggle="modal" data-target="#modalInicioClases">Modificar</a>
                                 </div>
                                 <br>
                             </div><!-- /.panel-body --> 
@@ -476,17 +480,17 @@
    {
         cargatablas();
         //abre el modal con el formulario
-        abrirModalTipoEducacion();
+        abrirModalInicioClases();
         $('#form-actualizar-tipo').on('submit', function (event)
         {
             event.preventDefault();
-            actualizarTipoEducacion();
+            actualizarInicioClases();
         });
 
         //carga los datos del tipo de eduacion cuando carga la pagina
-        getTipoEducacion();
+        getInicioClases();
         $('.actualizar-form-tipo-atencion').on('click',function (event) {
-            getTipoEducacion();
+            //getInicioClases();
         });
 
         //muestra el checkbox 'porque no incio clases' si responde No
@@ -548,15 +552,16 @@
     };
  
 
-    var abrirModalTipoEducacion=function()
+    var abrirModalInicioClases=function()
     {
-        var yaSeleccionoTipo={{cantidadModalidadAtencion}}>0?true:false;
-        if(!yaSeleccionoTipo)
+        var registroInicioDeClases={{registroInicioDeClases}}>0?true:false;
+        if(!registroInicioDeClases)
         {
-            $('#modalTipoAtencion').modal('show');
+            $('#modalInicioClases').modal('show');
         }
     };
-    var actualizarTipoEducacion=function ()
+    {#
+    var actualizar7TipoEducacion7=function ()
     {
         var form=$('#form-actualizar-tipo').serialize();
         $.ajax({
@@ -579,7 +584,7 @@
                             tipos=tipos +' DISTANCIA, ';
                     }
                      setTimeout(function () {
-                        $('#modalTipoAtencion').modal('toggle');
+                        $('#modalInicioClases').modal('toggle');
                     },1000);
                     tipos=tipos.length>0?tipos:'<span class="text-danger">Ningún tipo seleccionado</span>';
                     $(".div-mostrar-tipos").html('');
@@ -592,8 +597,7 @@
             });
     };
 
-
-    var getTipoEducacion=function ()
+    var getTipo7Educacion=function7 ()
     {
         $.ajax({
                 type: 'post',
@@ -617,6 +621,79 @@
                     tipos=tipos.length>0?tipos:'<span class="text-danger">Ningún tipo seleccionado</span>';
                     $(".div-mostrar-tipos").empty();
                     $(".div-mostrar-tipos").html(tipos);
+                    
+                },
+                error: function (data) {
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
+    }
+    #}
+
+    var actualizarInicioClases=function ()
+    {
+        var form=$('#form-actualizar-tipo').serialize();
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('siged_seleccionar_modalidad_tipo'),
+                data: form,
+                beforeSend: function () {
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data)
+                {
+
+                     setTimeout(function ()
+                    {
+                        $('#modalInicioClases').modal('toggle');
+                    },1000);
+
+                    var debido_a,text='';
+                    debido_a=(data.riesgo=='Otros')?data.detallesInicio.observacion:data.riesgo;
+
+                    if(data.riesgo==null)
+                        text='La U.E. <b>SI</b> inicio sus actividades';
+                    else
+                        text='La U.E. <b>NO</b> inicio sus actividades, debido a: <b>'+debido_a+'</b>';
+                    if(data.riesgo==null && data.detallesInicio==null)
+                        text='No registro si inicio sus actividades';
+
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").html(text);
+                },
+                error: function (data) {
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
+    };
+
+    var getInicioClases=function ()
+    {
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('siged_get_inicio_clases'),
+                //data: form,
+                beforeSend: function () {
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data)
+                {
+                    var debido_a,text='';
+                    debido_a=(data.riesgo=='Otros')?data.detallesInicio.observacion:data.riesgo;
+
+                    if(data.riesgo==null)
+                        text='La U.E. <b>SI</b> inicio sus actividades';
+                    else
+                        text='La U.E. <b>NO</b> inicio sus actividades, debido a: <b>'+debido_a+'</b>';
+                    if(data.riesgo==null && data.detallesInicio==null)
+                        text='No registro si inicio sus actividades';
+
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").html(text);
                     
                 },
                 error: function (data) {
