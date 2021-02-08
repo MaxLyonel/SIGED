@@ -8,7 +8,7 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header bg-info">
-                <h5 class="modal-title">Inicio de la gestión escolar</h5>
+                <h5 class="modal-title">Reporte de actividades</h5>
                 {#
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
@@ -65,7 +65,7 @@
             <div class="col-md-9">
 
                 <div class="form-group mb-0">
-                    <label class="form-check-label">¿La unidad educativa inició clases?</label>
+                    <label class="form-check-label">¿La unidad educativa inició sus actividades?</label>
                 </div>
                 <div class="form-check pr-3" style="display:inline-block;padding-right:1.3rem;">
                     <input class="form-check-input radio-inicio-clases" type="radio" name="inicio_clases" id="inicio_clases_1" value="1" checked="checked">
@@ -450,10 +450,13 @@
                             </div><!-- /.panel-heading -->
                             <div class="panel-body no-padding">
                                 <div class="col-md-12">
-                                    <a href="#" class="badge badge-info" data-toggle="modal" data-target="#modalInicioClases">Ver/Cambiar</a>
                                         La unidad educativa:
                                     <div class="div-mostrar-tipos">
                                     </div>
+                                </div>
+                                <div class="col-md-12 text-center ">
+                                    <br>
+                                    <a href="#" class="badge badge-info" data-toggle="modal" data-target="#modalInicioClases">Modificar</a>
                                 </div>
                                 <br>
                             </div><!-- /.panel-body --> 
@@ -651,11 +654,11 @@
                     debido_a=(data.riesgo=='Otros')?data.detallesInicio.observacion:data.riesgo;
 
                     if(data.riesgo==null)
-                        text='La U.E. <b>SI</b> inicio clases';
+                        text='La U.E. <b>SI</b> inicio sus actividades';
                     else
-                        text='La U.E. <b>NO</b> inicio clases, debido a: <b>'+debido_a+'</b>';
+                        text='La U.E. <b>NO</b> inicio sus actividades, debido a: <b>'+debido_a+'</b>';
                     if(data.riesgo==null && data.detallesInicio==null)
-                        text='No definió si inicio clases';
+                        text='No registro si inicio sus actividades';
 
                     $(".div-mostrar-tipos").empty();
                     $(".div-mostrar-tipos").html(text);
@@ -683,11 +686,11 @@
                     debido_a=(data.riesgo=='Otros')?data.detallesInicio.observacion:data.riesgo;
 
                     if(data.riesgo==null)
-                        text='La U.E. <b>SI</b> inicio clases';
+                        text='La U.E. <b>SI</b> inicio sus actividades';
                     else
-                        text='La U.E. <b>NO</b> inicio clases, debido a: <b>'+debido_a+'</b>';
+                        text='La U.E. <b>NO</b> inicio sus actividades, debido a: <b>'+debido_a+'</b>';
                     if(data.riesgo==null && data.detallesInicio==null)
-                        text='No definió si inicio clases';
+                        text='No registro si inicio sus actividades';
 
                     $(".div-mostrar-tipos").empty();
                     $(".div-mostrar-tipos").html(text);
