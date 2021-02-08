@@ -215,10 +215,11 @@ class PrincipalController extends Controller {
             }
         //    dump($dptoNacArray);die;
         //
-        $cantidadModalidadAtencion = array();
+        $registroInicioDeClases = array();
         if($this->sesion->get('roluser') == 9){
             $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id')));
-            $cantidadModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalModalidadAtencion')->findby(array('institucioneducativaSucursal'=>$objIesucursal->getId()));
+            //$registroInicioDeClases = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalModalidadAtencion')->findby(array('institucioneducativaSucursal'=>$objIesucursal->getId()));
+            $registroInicioDeClases=$this->getInicioClasesInstitucioneducativaSucursal();
         }
 
 
@@ -242,7 +243,7 @@ class PrincipalController extends Controller {
           'dataEncuesta' => $dataEncuesta,
           'existe' => $existe,
           'depto' => $dptoNacArray,
-          'cantidadModalidadAtencion'=>count($cantidadModalidadAtencion),
+          'registroInicioDeClases'=>count($registroInicioDeClases),
 
           'unidadEducativaTipoData'=>$unidadEducativaTipo,
         ));
@@ -575,10 +576,10 @@ class PrincipalController extends Controller {
 
 
 
-    public function actualizarTipoModalidadAction(Request $request){
-
+    public function actualizarTipoModalidadAction(Request $request)
+    {
+        //riesgo_unidadeducativa_tipo_id --> cambio a permitir null en la BD
         //dump($request->request->all());die();
-
         $em = $this->getDoctrine()->getManager();
         //get the send values
         $form = $request->get('opcion');
@@ -586,65 +587,15 @@ class PrincipalController extends Controller {
         //get the sucursal info
         $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id')));
 
-        $tipos=array();
-        $cantidad=0;
         $datoInicioClases=1;
-        try
-        {
-            if($objIesucursal)
-            {
-                $objInstitucioneducativaSucursalModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalModalidadAtencion')->findby(array('institucioneducativaSucursal'=>$objIesucursal->getId()));
-                if($objInstitucioneducativaSucursalModalidadAtencion)
-                {
-                    foreach ($objInstitucioneducativaSucursalModalidadAtencion as $value)
-                    {
-                        $em->remove($value);
-                    }
-                    $em->flush();
-                }
-                if($form !==NULL && count($form)>0)
-                {
-                    foreach ($form as $value)
-                    {
-                            $value=filter_var($value,FILTER_VALIDATE_INT);
-                            $modalidadAtencion= new InstitucioneducativaSucursalModalidadAtencion();
-                            $modalidadAtencion->setFechaRegistro(new \DateTime());
-                            $modalidadAtencion->setObservacion('no');
-                            $modalidadAtencion->setInstitucioneducativaSucursal($objIesucursal);
-                            $modalidadAtencion->setModalidadAtencionTipo($em->getRepository('SieAppWebBundle:ModalidadAtencionTipo')->find($value));
-                            $em->persist($modalidadAtencion);
-                            $tipos[]=$value;
-                        
-                    }
-                    $em->flush();
-                }
-                $cantidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalModalidadAtencion')->findby(array('institucioneducativaSucursal'=>$objIesucursal->getId()));
-            }
-            /*
-            $response = new Response(json_encode(array(
-                'tipos' => $tipos,
-                'cantidad'=>count($cantidad),
-            )));
-            $response->headers->set('Content-Type', 'application/json');
-            */
-        }
-        catch (Exception $e)
-        {
-            /*
-            $response = new Response(json_encode(array(
-                'tipos' => $tipos,
-                'cantidad'=>count($cantidad),
-            )));
-            */
-            echo 'this the error'.$e;
-        }
 
         //guardado de datos del no incio de clases
         try
         {
             //verificamos si ya registro este mes
             $institucioneducativaSucursalRiesgoMes=$em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalRiesgoMes')->findby(
-                array('institucioneducativaSucursal'=>$objIesucursal->getId()));
+                array('institucioneducativaSucursal'=>$objIesucursal->getId(),'mes'=>date('m')
+            ));
             $inicio_clases=filter_var($request->get('inicio_clases'),FILTER_VALIDATE_INT);
 
             if(!$institucioneducativaSucursalRiesgoMes && $inicio_clases==0)
@@ -660,6 +611,7 @@ class PrincipalController extends Controller {
                 if($riesgoUnidadeducativaTipo)//verificamos que exista
                 {
                     $noInicioRazonOtros=filter_var($request->get('no_incio_razon_otros'),FILTER_SANITIZE_STRING);
+                    
                     $institucioneducativaSucursalRiesgoMes=new InstitucioneducativaSucursalRiesgoMes();
                     $institucioneducativaSucursalRiesgoMes->setMes(date('m'));
                     //$institucioneducativaSucursalRiesgoMes->setFechaInicio();
@@ -674,25 +626,39 @@ class PrincipalController extends Controller {
                     $institucioneducativaSucursalRiesgoMes->setRiesgoUnidadeducativaTipo($riesgoUnidadeducativaTipo);
                     $institucioneducativaSucursalRiesgoMes->setInstitucioneducativaSucursal($objIesucursal);
                     $em->persist($institucioneducativaSucursalRiesgoMes);
-                    $em->flush();
+                    //$em->flush();
                     $datoInicioClases=0;
                 }
-
+                else
+                {
+                    $datoInicioClases=-1;
+                }
             }
+            else if($inicio_clases==1)
+            {
+                $institucioneducativaSucursalRiesgoMes=new InstitucioneducativaSucursalRiesgoMes();
+                $institucioneducativaSucursalRiesgoMes->setMes(date('m'));
+                //$institucioneducativaSucursalRiesgoMes->setFechaInicio();
+                //$institucioneducativaSucursalRiesgoMes->setFechaFin();
+                $institucioneducativaSucursalRiesgoMes->setFechaRegistro(new \DateTime());
+                //$institucioneducativaSucursalRiesgoMes->setFechaModificacion();
+                //$institucioneducativaSucursalRiesgoMes->setOtros();
+                //$institucioneducativaSucursalRiesgoMes->setObservacion();
+                $institucioneducativaSucursalRiesgoMes->setRiesgoUnidadeducativaTipo(NULL);
+                $institucioneducativaSucursalRiesgoMes->setInstitucioneducativaSucursal($objIesucursal);
+                $em->persist($institucioneducativaSucursalRiesgoMes);
+            }
+            else
+            {
+                $datoInicioClases=-1;
+            }
+            $em->flush();
         }
         catch (Exception $e)
         {
             echo 'this the error'.$e;
         }
-            $response = new Response(json_encode(array(
-                'tipos' => $tipos,
-                'cantidad'=>count($cantidad),
-                'datoInicioClases'=>$datoInicioClases,
-            )));
-            $response->headers->set('Content-Type', 'application/json');
-
-        //return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array());
-        return $response;
+        return $this->getInicioClasesAction();
     }
 
     public function getTipoModalidadAction()
@@ -711,5 +677,46 @@ class PrincipalController extends Controller {
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
+    public function getInicioClasesAction()
+    {
+        $datos=NULL;
+        $em = $this->getDoctrine()->getManager();
+        $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id')));
 
+        $detallesInicio=$this->getInicioClasesInstitucioneducativaSucursal();
+
+
+        $riesgo=NULL;
+        //dump($detallesInicio);die();
+        if($detallesInicio)
+        {
+            $datos=array(
+                'mes'=>$detallesInicio->getMes(),
+                'observacion'=>$detallesInicio->getObservacion(),
+                //'riesgoUnidadeducativaTipo'=>$detallesInicio->getRiesgoUnidadeducativaTipo(),
+            );
+            $riesgoTmp=$detallesInicio->getRiesgoUnidadeducativaTipo();
+            if($riesgoTmp)
+            {
+                $riesgo = $em->getRepository('SieAppWebBundle:RiesgoUnidadeducativaTipo')->find($detallesInicio->getRiesgoUnidadeducativaTipo());
+                $riesgo=$riesgo->getRiesgoUnidadeducativa();
+            }
+        }
+        $response = new Response(json_encode(array('detallesInicio' => ($datos),'riesgo'=>$riesgo)));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+    }
+    private function getInicioClasesInstitucioneducativaSucursal()
+    {
+        //return NULL;
+        $detallesInicioDeClases=NULL;
+        $em = $this->getDoctrine()->getManager();
+        $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id')));
+        $detallesInicioDeClases = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalRiesgoMes')->findOneBy(
+            array('institucioneducativaSucursal'=>$objIesucursal->getId(),'mes'=>date('m')
+        ));
+        
+
+        return $detallesInicioDeClases;
+    }
 }
