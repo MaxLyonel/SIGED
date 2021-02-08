@@ -5,3 +5,24 @@ principal_web:
 siged_director_seleccionar_unidad_educativa:
     path:    /{ue}/dirseluniedu
     defaults: { _controller: SieAppWebBundle:Login:dirseluniedu }    
+    
+siged_seleccionar_modalidad_tipo:
+    path:    /seleccionar_modalidad_tipo
+    defaults: { _controller: SieAppWebBundle:Principal:actualizarTipoModalidad }
+    options:
+         expose: true
+
+
+
+siged_get_modalidad_tipo:
+    path:    /get_modalidad_tipo
+    defaults: { _controller: SieAppWebBundle:Principal:getTipoModalidad }
+    options:
+         expose: true
+
+
+siged_get_inicio_clases:
+    path:    /get_inicio_clases
+    defaults: { _controller: SieAppWebBundle:Principal:getInicioClases }
+    options:
+         expose: true

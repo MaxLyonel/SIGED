@@ -2,6 +2,111 @@
 
 {% block contentoption %}
 
+    <!--Modal para asignar los tipos de atencion que tiene la unidad educativa-->
+    <div class="modal fade" id="modalInicioClases" tabindex="-1">
+        <form action="" method="POST" id="form-actualizar-tipo" autocomplete="off">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header bg-info">
+                <h5 class="modal-title">Reporte de actividades</h5>
+                {#
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+                #}
+              </div>
+              <div class="modal-body text--center pb-0">
+               {#
+               <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-md-3 col-form-label pt-0">Modalidades de atención</legend>
+                        <div class="col-md-9">
+                        <div class="form-group mb-0">
+                            <label class="form-check-label">Que tipos de atención tiene la U.E.</label>
+                        </div>
+                          <div class="form-group row mb-0" style="display:inline-block">
+                            <div class="col-sm-12">
+                              <div class="form-check">
+                                <input class="form-check-input input-modalidad-atencion-1" type="checkbox" name="opcion[]" id="opcion_1" value="1">
+                                <label class="form-check-label" for="opcion_1">
+                                  Presencial
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group row mb-0" style="display:inline-block">
+                            <div class="col-sm-12">
+                              <div class="form-check">
+                                <input class="form-check-input input-modalidad-atencion-2" type="checkbox" name="opcion[]" id="opcion_2" value="2">
+                                <label class="form-check-label" for="opcion_2">
+                                  Semipresencial
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group row mb-0" style="display:inline-block">
+                            <div class="col-sm-12">
+                              <div class="form-check">
+                                <input class="form-check-input input-modalidad-atencion-3" type="checkbox" name="opcion[]" id="opcion_3" value="3">
+                                <label class="form-check-label" for="opcion_3">
+                                  Distancia
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </fieldset>
+                #}
+
+    <fieldset class="form-group">
+        <div class="row">
+            <legend class="col-md-3 col-form-label pt-0">Información de la U.E.</legend>
+            <div class="col-md-9">
+
+                <div class="form-group mb-0">
+                    <label class="form-check-label">¿La unidad educativa continua con sus actividades?</label>
+                </div>
+                <div class="form-check pr-3" style="display:inline-block;padding-right:1.3rem;">
+                    <input class="form-check-input radio-inicio-clases" type="radio" name="inicio_clases" id="inicio_clases_1" value="1" checked="checked">
+                    <label class="form-check-label" for="inicio_clases_1">Si</label>
+                </div>
+                <div class="form-check pr-3" style="display:inline-block;padding-right:1.3rem;">
+                    <input class="form-check-input radio-inicio-clases" type="radio" name="inicio_clases" id="inicio_clases_0" value="0">
+                    <label class="form-check-label" for="inicio_clases_0">No</label>
+                </div>
+
+                  <div class="form-group mb-0 mt-2 div-no-inicio-razon" style="display:none">
+                    <label for="no_inicio_razon">¿Por qué no continuo con las actividades?</label>
+                    <select class="form-control select-no-inicio-razon" name="no_inicio_razon" id="no_inicio_razon">
+                        {% for ruet in unidadEducativaTipoData %}
+                        {% if ruet.id>1 %}
+                        <option value="{{ruet.id}}">{{ruet.riesgoUnidadeducativa}}</option>
+                        {% endif %}
+                        {% endfor %}
+                        <option value="1">Otros</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group mt-2 div-no-inicio-razon-otros" style="display:none">
+                    <label for="no_incio_razon_otros">Por favor describa brevemente por que no inició clases</label>
+                    <textarea class="form-control" name="no_incio_razon_otros" id="no_incio_razon_otros" rows="3"></textarea>
+                  </div>
+
+            </div>
+        </div>
+    </fieldset>
+            
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-sm btn-info">Actualizar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+    </div>
+
     <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-list-alt"></i> Principal <span>Menú principal</span></h2>
@@ -328,51 +433,274 @@
                 </div>
             {% endif %}
  #}
- 
+        <!--Detalle de los TIPOS DE EDUACION que dispione la unidad educatio-->
+            
+                <div class="col-md-6">
+                    <!-- Start input fields - basic form -->
+                    <div class="panel rounded shadow">
+                        <div class="panel panel-lilac shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Reporte de actividades</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body no-padding">
+                                <div class="col-md-12">
+                                        La unidad educativa:
+                                    <div class="div-mostrar-tipos">
+                                    </div>
+                                </div>
+                                <div class="col-md-12 text-center ">
+                                    <br>
+                                    <a href="#" class="badge badge-info" data-toggle="modal" data-target="#modalInicioClases">Modificar</a>
+                                </div>
+                                <br>
+                            </div><!-- /.panel-body --> 
+                        </div>
+                    </div>
+                </div>
+            
         </div>
     </div>
+
+
+
+
+
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
 
 <script>
-   $(document).ready(function(){
-            cargatablas();
+   $(document).ready(function()
+   {
+        cargatablas();
+        //abre el modal con el formulario
+        abrirModalInicioClases();
+        $('#form-actualizar-tipo').on('submit', function (event)
+        {
+            event.preventDefault();
+            actualizarInicioClases();
         });
 
-        var cargatablas = function (identif){
+        //carga los datos del tipo de eduacion cuando carga la pagina
+        getInicioClases();
+        $('.actualizar-form-tipo-atencion').on('click',function (event) {
+            //getInicioClases();
+        });
 
+        //muestra el checkbox 'porque no incio clases' si responde No
+        $('.radio-inicio-clases').on('change',function(){
+            if (this.checked)
+            {
+                if(this.value==0)
+                {
+                    $(".div-no-inicio-razon").show();
+                }
+                else
+                {
+                    $(".div-no-inicio-razon").hide();
+                    $(".div-no-inicio-razon-otros").hide();
+                    $(".select-no-inicio-razon").val(0);
+                    $("#no_incio_razon_otros").val('');
+                }
+            }
+          });
 
+        //muestra el textarea descrpcion de la razon si seleciono el checkbox otros
+        $('.select-no-inicio-razon').on('change',function(){
+            if(this.value==1)
+                $(".div-no-inicio-razon-otros").show();
+            else
+                $(".div-no-inicio-razon-otros").hide();
+        });
+    });
+
+        var cargatablas = function (identif)
+        {
             // DataTable
             var table = $('#encuestados').DataTable( {
                     "order": [[ 0, "asc" ]],
                 }
             );
-
             // Apply the search
-           
         };
-    var downOperativoRudeup = function(){
-    var formData = $('#downOperativoRudeId').serialize();
-
-     $.ajax({
-            type: 'post',
-            url: Routing.generate('herramienta_inbox_downoperativorude'),
-            data: formData,
-            beforeSend: function () {
-                $("#downoperativoId").empty();
-                $("#downoperativoId").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
-            },
-            success: function (data) {
-                $("#downoperativoId").empty();
-                $("#downoperativoId").html(data);
-            },
-            error: function (data) {
-                $("#downoperativoId").empty();
-                $("#downoperativoId").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
-            }
-        });
+    var downOperativoRudeup = function()
+    {
+        var formData = $('#downOperativoRudeId').serialize();
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('herramienta_inbox_downoperativorude'),
+                data: formData,
+                beforeSend: function () {
+                    $("#downoperativoId").empty();
+                    $("#downoperativoId").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#downoperativoId").empty();
+                    $("#downoperativoId").html(data);
+                },
+                error: function (data) {
+                    $("#downoperativoId").empty();
+                    $("#downoperativoId").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
     };
  
+
+    var abrirModalInicioClases=function()
+    {
+        var registroInicioDeClases={{registroInicioDeClases}}>0?true:false;
+        if(!registroInicioDeClases)
+        {
+            $('#modalInicioClases').modal('show');
+        }
+    };
+    {#
+    var actualizar7TipoEducacion7=function ()
+    {
+        var form=$('#form-actualizar-tipo').serialize();
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('siged_seleccionar_modalidad_tipo'),
+                data: form,
+                beforeSend: function () {
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    var tipos='';
+                    for(t in data.tipos)
+                    {
+                        if(data.tipos[t]==1)
+                            tipos=tipos +' PRESENCIAL, ';
+                        if(data.tipos[t]==2)
+                            tipos=tipos +' SEMIPRESENCIAL, ';
+                        if(data.tipos[t]==3)
+                            tipos=tipos +' DISTANCIA, ';
+                    }
+                     setTimeout(function () {
+                        $('#modalInicioClases').modal('toggle');
+                    },1000);
+                    tipos=tipos.length>0?tipos:'<span class="text-danger">Ningún tipo seleccionado</span>';
+                    $(".div-mostrar-tipos").html('');
+                    $(".div-mostrar-tipos").html(tipos);
+                },
+                error: function (data) {
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
+    };
+
+    var getTipo7Educacion=function7 ()
+    {
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('siged_get_modalidad_tipo'),
+                //data: form,
+                beforeSend: function () {
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    var form=$('#form-actualizar-tipo');
+                    var tipos='';
+                    var checkbox='';
+                    for(t in data.datos)
+                    {
+                        tipos=tipos +data.datos[t].toUpperCase()+', ';
+                        checkbox=data.items[t];
+                        $('.input-modalidad-atencion-'+checkbox).attr('checked',true);
+                        $('.input-modalidad-atencion-'+checkbox).prop('checked',true);
+                    }
+                    tipos=tipos.length>0?tipos:'<span class="text-danger">Ningún tipo seleccionado</span>';
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").html(tipos);
+                    
+                },
+                error: function (data) {
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
+    }
+    #}
+
+    var actualizarInicioClases=function ()
+    {
+        var form=$('#form-actualizar-tipo').serialize();
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('siged_seleccionar_modalidad_tipo'),
+                data: form,
+                beforeSend: function () {
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data)
+                {
+
+                     setTimeout(function ()
+                    {
+                        $('#modalInicioClases').modal('toggle');
+                    },1000);
+
+                    var debido_a,text='';
+                    debido_a=(data.riesgo=='Otros')?data.detallesInicio.observacion:data.riesgo;
+
+                    if(data.riesgo==null)
+                        text='La U.E. <b>SI</b> continuo con las actividades';
+                    else
+                        text='La U.E. <b>NO</b> continuo con las actividades, debido a: <b>'+debido_a+'</b>';
+                    if(data.riesgo==null && data.detallesInicio==null)
+                        text='No registro si la información';
+
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").html(text);
+                },
+                error: function (data) {
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
+    };
+
+    var getInicioClases=function ()
+    {
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('siged_get_inicio_clases'),
+                //data: form,
+                beforeSend: function () {
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data)
+                {
+                    var debido_a,text='';
+                    debido_a=(data.riesgo=='Otros')?data.detallesInicio.observacion:data.riesgo;
+
+                    if(data.riesgo==null)
+                        text='La U.E. <b>SI</b> continuo con las actividades';
+                    else
+                        text='La U.E. <b>NO</b> continuo con las actividades, debido a: <b>'+debido_a+'</b>';
+                    if(data.riesgo==null && data.detallesInicio==null)
+                        text='No registro si la información';
+
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").html(text);
+                    
+                },
+                error: function (data) {
+                    $(".div-mostrar-tipos").empty();
+                    $(".div-mostrar-tipos").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
+    }
 </script>
 {% endblock %}

@@ -2080,6 +2080,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 $nuevoApoderado->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($form['apoderadoTipo']));
                 $nuevoApoderado->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($idPersona));
                 $nuevoApoderado->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['idInscripcion']));
+                $nuevoApoderado->setFechaRegistro(new \DateTime('now'));
                 $em->persist($nuevoApoderado);
                 $em->flush();
 

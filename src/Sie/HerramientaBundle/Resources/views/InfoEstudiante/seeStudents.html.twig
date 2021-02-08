@@ -187,15 +187,20 @@
                                 <td>{{data.nombre}}</td>
                                 <td>{{data.fechaNacimiento|date('d-m-Y')}}</td>
                                 <td>
-                                    {% if gestion == 2020 %}
+                                    {% if gestion == app.session.get('currentyear') %}
                                         {# {% if data.cambioEstadoMatricula == true and 1 == 0 %}
                                             <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                 {{data.estadomatricula}}
                                             </button>
                                         {% else %} #}
-                                            <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
-                                                {{data.estadomatricula}}
-                                            </button>
+                                            {% if data.estadomatriculaId == 4%}
+                                                <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
+                                                    {{data.estadomatricula}}
+                                                </button>                                            
+                                            {% else %}
+                                                <strong style="color:#000;border:2px;"> {{data.estadomatricula}}</strong>
+                                            {% endif %}
+                                            
                                         {# {% endif %} #}
                                     {% else %}
                                         {% if app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 and nivel == 13 and grado == 6 and operativo == 4)  %}
@@ -337,9 +342,9 @@
                                     
                                     {% endif %} 
                                     #}
-                                    {% if  gestion == app.session.get('currentyear') and data.estadomatriculaId == 4 %}
-                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
-                                            <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionAca('{{infoUe}}','{{jsnInfoStudent}}');" >
+                                    {% if  gestion == app.session.get('currentyear') and data.estadomatriculaId == 4 and app.session.get('optionRemove') == false %}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción" id="delInscriptionId_{{data.codigoRude}}">
+                                            <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionAca('{{infoUe}}','{{jsnInfoStudent}}','{{data.codigoRude}}');" >
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </div>
@@ -855,7 +860,7 @@
         });
     };   
 
-    var removeInscriptionAca = function (infoUe, infoStudent) {
+    var removeInscriptionAca = function (infoUe, infoStudent, codigoRude) {
       if(confirm('¿Esta completamente seguro de eliminar la Inscripción? \nPresione en Ok para continuar')){
 
           $.ajax({
@@ -863,12 +868,14 @@
               data: ({infoUe: infoUe, infoStudent: infoStudent}),
               url: Routing.generate('herramienta_info_estudiante_remove_inscription_aca'),
               beforeSend: function () {
-                  $("#idstudents").empty();
-                  $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                $('#delInscriptionId_'+codigoRude).empty();
+                $('#delInscriptionId_'+codigoRude).html('Cargando...');
               },
               success: function (data) {
-                  $("#idstudents").empty();
-                  $("#idstudents").append(data);
+                $('#delInscriptionId_'+codigoRude).empty();
+                $('#delInscriptionId_'+codigoRude).removeClass('text-danger').addClass('text-success');
+                $('#delInscriptionId_'+codigoRude).html('<span class="badge badge-danger"><i class="fa fa-fw fa-check"></i> Eliminado</span>');                
+                
                   $('.tooltips').tooltip();
               },
               statusCode: {

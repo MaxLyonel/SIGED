@@ -465,7 +465,7 @@ class InfoEstudianteRequestController extends Controller {
      * @return type - get the student info
      */
     private function gettheInscriptionStudent($id, $gestion) {
-        $em = $this->getDoctrine()->getManager();
+        /*$em = $this->getDoctrine()->getManager();
         $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
         $query = $inscription2->createQueryBuilder('ei')
                 ->select('ei.id as id, IDENTITY(ei.estadomatriculaTipo) as estadomatriculaTipo')
@@ -479,7 +479,8 @@ class InfoEstudianteRequestController extends Controller {
                 ->getQuery();
 
         $studentInscription = $query->getResult();
-        return $studentInscription;
+        return $studentInscription;*/
+        return false;
     }
 
     public function seeStudentsAction(Request $request) {

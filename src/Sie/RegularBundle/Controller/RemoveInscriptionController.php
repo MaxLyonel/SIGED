@@ -43,7 +43,7 @@ class RemoveInscriptionController extends Controller {
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
             //verificamos si existe el estudiante y si es menor a 15
             if ($student) {
-                $dataInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getInscriptionHistoryEstudenWhitObservation($form['codigoRude']);
+                $dataInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getInscriptionHistoryEstudenWhitObservation($form['codigoRude'], $this->session->get('roluser'));
             }
             $sw = true;
             //check if the result has some value

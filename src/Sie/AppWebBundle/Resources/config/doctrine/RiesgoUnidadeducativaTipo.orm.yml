@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\RiesgoUnidadeducativaTipo:
+    type: entity
+    table: riesgo_unidadeducativa_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        riesgoUnidadeducativa:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+            column: riesgo_unidadeducativa
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

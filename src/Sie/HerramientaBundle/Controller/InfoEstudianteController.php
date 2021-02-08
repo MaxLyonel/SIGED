@@ -594,7 +594,7 @@ class InfoEstudianteController extends Controller {
      */
     private function gettheInscriptionStudent($id, $gestion) {
         $em = $this->getDoctrine()->getManager();
-        $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        /*$inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
         $query = $inscription2->createQueryBuilder('ei')
                 ->select('ei.id as id, IDENTITY(ei.estadomatriculaTipo) as estadomatriculaTipo')
                 ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
@@ -607,6 +607,17 @@ class InfoEstudianteController extends Controller {
                 ->getQuery();
 
         $studentInscription = $query->getResult();
+        */
+        $queryInscription = "
+           select ei.id as id, ei.estadomatricula_tipo_id as estadomatriculaTipo
+           from estudiante_inscripcion ei
+           left join institucioneducativa_curso iec on (ei.institucioneducativa_curso_id=iec.id)
+           where ei.estudiante_id = ".$id." and gestion_tipo_id::double precision = ".$gestion."
+        ";
+        $query = $em->getConnection()->prepare($queryInscription);
+        $query->execute();
+        $studentInscription = $query->fetchAll();        
+        
         return $studentInscription;
     }
 
@@ -667,52 +678,6 @@ class InfoEstudianteController extends Controller {
 
             $objStudents = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getListStudentPerCourse($sie, $gestion, $nivel, $grado, $paralelo, $turno);
             $aData = serialize(array('sie' => $sie, 'nivel' => $nivel, 'grado' => $grado, 'paralelo' => $paralelo, 'turno' => $turno, 'gestion' => $gestion, 'iecId' => $iecId, 'ciclo' => $ciclo, 'iecNextLevl' => $objNextCurso->getId()));
-            
-            
-            /*========================================================
-            =            VALIDACION PARA CAMBIO DE ESTADO            =
-            ========================================================*/
-            // SE COMENTO PARA MEJORAR EL RENDIMIENTO
-            // if ($gestion == 2020) {
-            //     for ($i=0; $i < count($objStudents); $i++) {
-            //         // OBTENEMOS LA INSCRIPCION ACTUAL
-            //         $inscripcionActual = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($objStudents[0]['eInsId']);
-            //         $gestionActual = $inscripcionActual->getInstitucioneducativaCurso()->getGestionTipo()->getId();
-            //         $nivelActual = $inscripcionActual->getInstitucioneducativaCurso()->getNivelTipo()->getId();
-            //         $gradoActual = $inscripcionActual->getInstitucioneducativaCurso()->getGradoTipo()->getId();
-            //         $estudianteId = $inscripcionActual->getEstudiante()->getId();
-
-            //         $inscripcionesSimilares = $em->createQueryBuilder()
-            //                             ->select('ei')
-            //                             ->from('SieAppWebBundle:EstudianteInscripcion','ei')
-            //                             ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
-            //                             ->where('ei.estadomatriculaTipo = 4')
-            //                             ->andWhere('ei.estudiante = :estudiante')
-            //                             ->andWhere('iec.gestionTipo = :gestion')
-            //                             ->andWhere('iec.nivelTipo = :nivel')
-            //                             ->andWhere('iec.gradoTipo = :grado')
-            //                             ->setParameter('estudiante', $estudianteId)
-            //                             ->setParameter('gestion', $gestionActual)
-            //                             ->setParameter('nivel',  $nivelActual)
-            //                             ->setParameter('grado',  $gradoActual)
-            //                             ->getQuery()
-            //                             ->getResult();
-
-            //         // PREGUNTAMOS SI TIEN MAS DE UNA INSCRIPCION
-            //         if (count($inscripcionesSimilares) > 1) {
-            //             $objStudents[$i]['cambioEstadoMatricula'] = false;   
-            //         }else{
-            //             // VERIFICAMOS SI EL ESTUDIANTE TIENE ESTADO EFECTIVO
-            //             if ($objStudents[$i]['estadomatriculaId'] == 4) {
-            //                 $objStudents[$i]['cambioEstadoMatricula'] = true;    
-            //             }else{
-            //                 $objStudents[$i]['cambioEstadoMatricula'] = false;
-            //             }
-            //         }
-            //     }
-            // }
-            
-            /*=====  End of VALIDACION PARA CAMBIO DE ESTADO  ======*/
 
         } else {
             $message = 'No existen estudiantes inscritos...';
@@ -864,7 +829,11 @@ class InfoEstudianteController extends Controller {
             $mostrarSextoCerrado = true;
         }
     }
-//
+
+    $this->session->set('optionRemove', false);
+    if($operativo){
+        $this->session->set('optionRemove',true);
+    }
 
   $this->session->set('removeInscriptionAllowed', false);
   if(in_array($this->session->get('ie_id'),$aRemovesUeAllowed))
@@ -1059,6 +1028,7 @@ class InfoEstudianteController extends Controller {
   public function removeInscriptionAcaAction(Request $request) {
 
         //get the info ue
+    $response = new JsonResponse();
     $infoUe = $request->get('infoUe');
     $aInfoUeducativa = unserialize($infoUe);
 
@@ -1216,11 +1186,14 @@ class InfoEstudianteController extends Controller {
       $em->getConnection()->commit();
       $message = "Proceso realizado exitosamente.";
       $this->addFlash('successremoveins', $message);
+
+      return $response->setData(array('status'=>'success','infoUe'=>$infoUe));
       // return $this->redirectToRoute('remove_inscription_sie_index');
     } catch (Exception $e) {
       $em->getConnection()->rollback();
       $message = "Proceso detenido! Se ha detectado inconsistencia de datos. \n".$ex->getMessage();
       $this->addFlash('warningremoveins', $message);
+      return $response->setData(array('status'=>'error', 'msg'=>'error'));
     }
 
     //end removeInscription

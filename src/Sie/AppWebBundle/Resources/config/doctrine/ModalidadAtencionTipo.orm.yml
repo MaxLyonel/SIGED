@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\ModalidadAtencionTipo:
+    type: entity
+    table: modalidad_atencion_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        modalidadAtencion:
+            type: string
+            nullable: false
+            length: 45
+            fixed: false
+            comment: ''
+            column: modalidad_atencion
+        obs:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

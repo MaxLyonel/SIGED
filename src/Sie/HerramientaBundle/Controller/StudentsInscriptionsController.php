@@ -195,9 +195,9 @@ class StudentsInscriptionsController extends Controller {
         $newCourse = $this->aCursos[$this->getCourse($inscriptionOld['nivelTipo'], $inscriptionOld['cicloTipo'], $inscriptionOld['gradoTipo'], $inscriptionOld['estadomatriculaTipo'])];
         $strNewCourse = str_replace('-', '', $newCourse);
         $currentSelectedCourse = $dataUe['ueducativaInfoId']['nivelId'].$dataUe['ueducativaInfoId']['cicloId'].$dataUe['ueducativaInfoId']['gradoId'];
-        if($strNewCourse == $currentSelectedCourse){
+        if($strNewCourse == $currentSelectedCourse or in_array($strNewCourse, array(1111,1112))){
 
-            $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+            /*$inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
             $query = $inscription2->createQueryBuilder('ei')
                     ->select('ei.id as id')
                     ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
@@ -214,7 +214,19 @@ class StudentsInscriptionsController extends Controller {
                     ->setParameter('ietipo', 1)
                     ->getQuery();
 
-            $selectedInscriptionStudent = $query->getResult();
+            $selectedInscriptionStudent = $query->getResult();*/
+
+            $queryInscription = "
+               select ei.id as id
+               from estudiante_inscripcion ei
+               left join institucioneducativa_curso iec on (ei.institucioneducativa_curso_id=iec.id)
+               left join institucioneducativa i on (iec.institucioneducativa_id = i.id)
+               left join institucioneducativa_tipo it on (i.institucioneducativa_tipo_id = it.id)
+               where ei.estudiante_id = ".$objStudent->getId()." and it.id = 1 and ei.estadomatricula_tipo_id in (4,5)  and gestion_tipo_id::double precision = ".$dataUe['requestUser']['gestion']."
+            ";
+            $query = $em->getConnection()->prepare($queryInscription);
+            $query->execute();
+            $selectedInscriptionStudent = $query->fetchAll();
 
             //check if the student has an inscription on this year sesion->get('ie_gestion');
             //$selectedInscriptionStudent = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getInscriptionStudentByYear($objStudent->getId(), $dataUe['requestUser']['gestion'],$dataUe['ueducativaInfoId']['iecId']);

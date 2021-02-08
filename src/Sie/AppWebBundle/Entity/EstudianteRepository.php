@@ -689,7 +689,7 @@ class EstudianteRepository extends EntityRepository {
      * * HISTORIAL DEL ALUMNO INCLUYENDO OBSERVACIONES
      * * HISTORIAL DEL ALUMNO INCLUYENDO OBSERVACIONES
      */
-    public function getInscriptionHistoryEstudenWhitObservation($rude) {
+    public function getInscriptionHistoryEstudenWhitObservation($rude, $roluser) {
 /**/
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb
@@ -708,10 +708,19 @@ class EstudianteRepository extends EntityRepository {
                 ->leftJoin('SieAppWebBundle:EstudianteInscripcionObservacion', 'eo', 'WITH', 'ei.id = eo.estudianteInscripcion')
                 ->leftJoin('SieAppWebBundle:ObservacionInscripcionTipo', 'oi', 'WITH', 'eo.observacionInscripcionTipo = oi.id')
                 ->where('e.codigoRude = :rude')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('ei.estadomatriculaTipo IN (:matricula)')
                 //->andwhere('it.id = :ittipo')
                 ->setParameter('rude', $rude)
-                //->setParameter('ittipo', 1)
-                ->orderBy('iec.gestionTipo', 'DESC')
+                ->setParameter('gestion', 2021)
+                ;
+            if($roluser == 8){
+                $arrMat = array(4,9);
+            }else{
+                $arrMat = array(9);
+            }
+            $qb = $qb ->setParameter('matricula', $arrMat);
+            $qb = $qb ->orderBy('iec.gestionTipo', 'DESC')
         ;
         return $qb->getQuery()->getResult();
     }
