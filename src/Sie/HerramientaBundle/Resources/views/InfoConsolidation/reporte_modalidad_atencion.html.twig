@@ -100,12 +100,6 @@
 
 <script>
 
-
-    (function($){
-       $('#dataTable-modalidad').DataTable( {});
-       
-    })(jQuery);
-
     var mostrarResultadosReporte=function (form)
     {
         var formData = $(form).serialize();
@@ -122,6 +116,7 @@
                 {
                     $(".div-mostrar-resultados-reporte-modalidad-atencion").empty();
                     $(".div-mostrar-resultados-reporte-modalidad-atencion").html(data);
+                    $('#dataTable-modalidad').DataTable( {});
                     
                 },
                 error: function (data) {
