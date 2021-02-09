@@ -131,36 +131,13 @@ class InfoEspecialController extends Controller{
         }
     }
 
-    /*if(!$objInfoCentro){
-      try {
-        $objNewRegistroConsolidation = new RegistroConsolidacion();
+    $periodo = $this->operativo($data['idInstitucion'], $data['gestion']);
+    if ($periodo != 0) {
+      $request->getSession()->set('onlyview', true);
+    } else {
+      $request->getSession()->set('onlyview', false);
+    }
 
-        $objNewRegistroConsolidation->setTipo(1);
-        $objNewRegistroConsolidation->setGestion($data['gestion']);
-        $objNewRegistroConsolidation->setUnidadEducativa($data['idInstitucion']);
-        $objNewRegistroConsolidation->setPeriodoId(1);
-        $objNewRegistroConsolidation->setBim1(0);
-        $objNewRegistroConsolidation->setBim2(0);
-        $objNewRegistroConsolidation->setBim3(0);
-        $objNewRegistroConsolidation->setBim4(0);
-        $objNewRegistroConsolidation->setDescripcionError('Consolidado exitosamente (web)!!');
-        $objNewRegistroConsolidation->setFecha(new \DateTime('now'));
-        $objNewRegistroConsolidation->setUsuario(0);
-        $objNewRegistroConsolidation->setSubCea(0);
-        $objNewRegistroConsolidation->setBan(1);
-        $objNewRegistroConsolidation->setEsonline(1);
-        $objNewRegistroConsolidation->setInstitucioneducativaTipoId($data['institucioneducativaTipoId']);
-        $em->persist($objNewRegistroConsolidation);
-        $em->flush();
-        $em->getConnection()->commit();
-
-      } catch (Exception $e) {
-        $em->getConnection()->rollback();
-        echo 'Excepción capturada: ', $ex->getMessage(), "\n";
-      }
-    }*/
-
-    //dump($data);die;
     $dataInfo = array('id' => $data['idInstitucion'], 'gestion' => $data['gestion'], 'institucioneducativa' => $data['institucioneducativa']);
     return $this->render($this->session->get('pathSystem') . ':InfoEspecial:open.html.twig', array(
                 'centroform' => $this->InfoStudentForm('herramienta_especial_info_centro_index', 'Centro Educativo', $data)->createView(),
@@ -208,125 +185,170 @@ class InfoEspecialController extends Controller{
   }
 
   public function closeOperativoAction (Request $request){
-      //crete conexion DB
-      $em = $this->getDoctrine()->getManager();
-      $em->getConnection()->beginTransaction();
-      //get the values
-      $form = $request->get('form');
+    //crete conexion DB
+    $em = $this->getDoctrine()->getManager();
+    $em->getConnection()->beginTransaction();
+    //get the values
+    $form = $request->get('form');
 
-      //get the current operativo
-      $objOperativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
+    $periodo = $this->operativo($form['sie'], $form['gestion']);
 
-      //update the close operativo to registro consolido table
-      $objRegistroConsolidado = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-        'unidadEducativa' => $form['sie'],
-        'gestion'         => $form['gestion']
-      ));
+    $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+      'unidadEducativa' => $form['sie'], 
+      'gestion' => $form['gestion']
+    ));
 
-      $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-          'unidadEducativa' => $form['sie'], 
-          'gestion' => $form['gestion']
-        ));
-
+    if($form['gestion'] == 2020) {
       if(!$registroConsol){
-          $rconsol = new RegistroConsolidacion();
-          $rconsol->setTipo(1);
-          $rconsol->setGestion($form['gestion']);
-          $rconsol->setUnidadEducativa($form['sie']);
-          $rconsol->setTabla('**');
-          $rconsol->setIdentificador('**');
-          $rconsol->setCodigo('**');
-          $rconsol->setDescripcionError('Consolidado exitosamente!!');
-          $rconsol->setFecha(new \DateTime("now"));
-          $rconsol->setusuario('0');
-          $rconsol->setConsulta('**');
-          $rconsol->setBim1('0');
-          $rconsol->setBim2('0');
-          $rconsol->setBim3('0');
-          $rconsol->setBim4('0');
-          $rconsol->setPeriodoId(1);
-          $rconsol->setSubCea(0);
-          $rconsol->setBan(1);
-          $rconsol->setEsonline('t');
-          $rconsol->setInstitucioneducativaTipoId(4);
-          $em->persist($rconsol);
-          $em->flush();
-          $em->getConnection()->commit();
-      }
-
-      if($form['gestion'] >= 2020) {
-        $inconsistencia = null;
-        $periodo = 3;
-        $registroConsol->setBim1('2');
-        $registroConsol->setBim2('2');
-        $registroConsol->setBim3('2');
-
-        $em->persist($registroConsol);
+        $rconsol = new RegistroConsolidacion();
+        $rconsol->setTipo(1);
+        $rconsol->setGestion($form['gestion']);
+        $rconsol->setUnidadEducativa($form['sie']);
+        $rconsol->setTabla('**');
+        $rconsol->setIdentificador('**');
+        $rconsol->setCodigo('**');
+        $rconsol->setDescripcionError('Consolidado exitosamente!!');
+        $rconsol->setFecha(new \DateTime("now"));
+        $rconsol->setusuario('0');
+        $rconsol->setConsulta('**');
+        $rconsol->setBim1('0');
+        $rconsol->setBim2('0');
+        $rconsol->setBim3('0');
+        $rconsol->setBim4('0');
+        $rconsol->setPeriodoId(1);
+        $rconsol->setSubCea(0);
+        $rconsol->setBan(1);
+        $rconsol->setEsonline('t');
+        $rconsol->setInstitucioneducativaTipoId(4);
+        $em->persist($rconsol);
         $em->flush();
-        $em->getConnection()->commit();
-
-      } else {
-        $periodo = $this->operativo($form['sie'], $form['gestion']);
-        $query = $em->getConnection()->prepare('select * from sp_validacion_especial_web(:igestion_id, :icod_ue, :ibimestre)');
-        $query->bindValue(':igestion_id', $form['gestion']);
-        $query->bindValue(':icod_ue', $form['sie']);
-        $query->bindValue(':ibimestre', $periodo);
-        $query->execute();
-        $inconsistencia = $query->fetchAll();
-
-        if(!$inconsistencia) {
-            $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
-            $registroConsol->setFecha(new \DateTime("now"));
-
-            switch ($periodo) {
-                case 1: $registroConsol->setBim1('2'); break;
-                case 2: $registroConsol->setBim2('2'); break;
-                case 3: $registroConsol->setBim3('2'); break;
-                case 4: $registroConsol->setBim4('2'); break;
-            }
-
-            $em->persist($registroConsol);
-            $em->flush();
-            $em->getConnection()->commit();
-        }
-        
       }
 
-      return $this->render($this->session->get('pathSystem') . ':InfoEspecial:list_inconsistencia.html.twig', array('inconsistencia' => $inconsistencia, 'institucion' =>  $form['sie'], 'gestion' => $form['gestion'], 'periodo' => $periodo));
-    }
+      $inconsistencia = null;
+      $periodo = 3;
+      $registroConsol->setBim1('2');
+      $registroConsol->setBim2('2');
+      $registroConsol->setBim3('2');
 
-    public function operativo($sie,$gestion){
-        $em = $this->getDoctrine()->getManager();
-        // Obtenemos el operativo para bloquear los controles
-        $registroOperativo = $em->createQueryBuilder()
-                        ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
-                        ->from('SieAppWebBundle:RegistroConsolidacion','rc')
-                        ->where('rc.unidadEducativa = :ue')
-                        ->andWhere('rc.gestion = :gestion')
-                        ->setParameter('ue',$sie)
-                        ->setParameter('gestion',$gestion)
-                        ->getQuery()
-                        ->getResult();
-        if(!$registroOperativo){
-            // Si no existe es operativo inicio de gestion
-            $operativo = 0;
-        }else{
-            if($registroOperativo[0]['bim1'] == 0 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 1; // Primer Bimestre
+      $em->persist($registroConsol);
+      $em->flush();
+
+    } else {
+      $query = $em->getConnection()->prepare('select * from sp_validacion_especial_web(:igestion_id, :icod_ue, :ibimestre)');
+      $query->bindValue(':igestion_id', $form['gestion']);
+      $query->bindValue(':icod_ue', $form['sie']);
+      $query->bindValue(':ibimestre', $periodo);
+      $query->execute();
+      $inconsistencia = $query->fetchAll();
+
+      if(!$inconsistencia) {
+        $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
+        switch ($periodo) {
+          case 0:
+            if(!$registroConsol){
+              $rconsol = new RegistroConsolidacion();
+              $rconsol->setTipo(1);
+              $rconsol->setGestion($form['gestion']);
+              $rconsol->setUnidadEducativa($form['sie']);
+              $rconsol->setTabla('**');
+              $rconsol->setIdentificador('**');
+              $rconsol->setCodigo('**');
+              $rconsol->setDescripcionError('Consolidado exitosamente!!');
+              $rconsol->setFecha(new \DateTime("now"));
+              $rconsol->setusuario('0');
+              $rconsol->setConsulta('**');
+              $rconsol->setBim1('0');
+              $rconsol->setBim2('0');
+              $rconsol->setBim3('0');
+              $rconsol->setBim4('0');
+              $rconsol->setPeriodoId(1);
+              $rconsol->setSubCea(0);
+              $rconsol->setBan(1);
+              $rconsol->setEsonline('t');
+              $rconsol->setInstitucioneducativaTipoId(4);
+              $em->persist($rconsol);
+              $em->flush();
             }
-            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 2; // Segundo Bimestre
+            break;
+          case 1:
+            if($form['gestion'] != 2021) {
+              $registroConsol->setBim1('2');
+              $registroConsol->setFecha(new \DateTime("now"));
+              $em->persist($registroConsol);
+              $em->flush();
+            } else {
+              $periodo = 0;
             }
-            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 3; // Tercer Bimestre
+            break;
+          case 2:
+            if($form['gestion'] != 2021) {
+              $registroConsol->setBim2('2');
+              $registroConsol->setFecha(new \DateTime("now"));
+              $em->persist($registroConsol);
+              $em->flush();
+            } else {
+              $periodo = 0;
             }
-            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 4; // Cuarto Bimestre
+            break;
+          case 3:
+            if($form['gestion'] != 2021) {
+              $registroConsol->setBim3('2');
+              $registroConsol->setFecha(new \DateTime("now"));
+              $em->persist($registroConsol);
+              $em->flush();
+            } else {
+              $periodo = 0;
             }
-            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] >= 1){
-                $operativo = 5; // Fin de gestion o cerrado
+            break;
+          case 4:
+            if($form['gestion'] != 2021) {
+              $registroConsol->setBim4('2');
+              $registroConsol->setFecha(new \DateTime("now"));
+              $em->persist($registroConsol);
+              $em->flush();
+            } else {
+              $periodo = 0;
             }
+            break;
         }
-        return $operativo;
+      }
     }
+    $em->getConnection()->commit();
+    return $this->render($this->session->get('pathSystem') . ':InfoEspecial:list_inconsistencia.html.twig', array('inconsistencia' => $inconsistencia, 'institucion' =>  $form['sie'], 'gestion' => $form['gestion'], 'periodo' => $periodo));
+  }
+
+  public function operativo($sie,$gestion){
+      $em = $this->getDoctrine()->getManager();
+      // Obtenemos el operativo para bloquear los controles
+      $registroOperativo = $em->createQueryBuilder()
+                      ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
+                      ->from('SieAppWebBundle:RegistroConsolidacion','rc')
+                      ->where('rc.unidadEducativa = :ue')
+                      ->andWhere('rc.gestion = :gestion')
+                      ->setParameter('ue',$sie)
+                      ->setParameter('gestion',$gestion)
+                      ->getQuery()
+                      ->getResult();
+      if(!$registroOperativo){
+          // Si no existe es operativo inicio de gestion
+          $operativo = 0;
+      }else{
+          if($registroOperativo[0]['bim1'] == 0 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
+              $operativo = 1; // Primer Bimestre
+          }
+          if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
+              $operativo = 2; // Segundo Bimestre
+          }
+          if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
+              $operativo = 3; // Tercer Bimestre
+          }
+          if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] == 0){
+              $operativo = 4; // Cuarto Bimestre
+          }
+          if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] >= 1){
+              $operativo = 5; // Fin de gestion o cerrado
+          }
+      }
+      return $operativo;
+  }
 }
