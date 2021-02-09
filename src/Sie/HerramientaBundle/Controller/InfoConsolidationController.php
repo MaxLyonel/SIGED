@@ -510,4 +510,14 @@ class InfoConsolidationController extends Controller {
 
   }
 
+
+
+
+
+  public function reporteModalidadAtencionAction(Request $request)
+  {
+    
+    return $this->render($this->session->get('pathSystem') . ':InfoConsolidation:reporte_modalidad_atencion.html.twig', array());
+  }
+
 }

@@ -1,0 +1,35 @@
+
+
+	<div class="table-responsive">
+		<table class="table">
+		  <thead class="thead-dark">
+		    <tr>
+		      <th scope="col">#</th>
+		      <th scope="col">Departamento</th>
+		      <th scope="col">Distrito</th>
+		      <th scope="col">Institución educativa</th>
+		      <th scope="col">Modalidad de atención</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  	{% if (datosReporte)  %}
+			  	{% for dato in datosReporte %}
+			    <tr>
+			      <td scope="row">{{loop.index}}</td>
+			      <td scope="row">{{ dato.des_dep }}</td>
+			      <td scope="row">{{ dato.des_dis }}</td>
+			      <td scope="row">{{ dato.institucioneducativa }}</td>
+			      <td scope="row">{{ dato.modalidad_atencion }}</td>
+			    </tr>
+			  	{% endfor %}
+		  	{% else %}
+			    <tr>
+			      <th scope="row" colspan="6">No existen datos</th>
+			    </tr>
+		  	{% endif %}
+
+
+		  </tbody>
+		</table>
+	</div>
+
