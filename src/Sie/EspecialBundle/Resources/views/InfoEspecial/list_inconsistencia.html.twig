@@ -1,41 +1,61 @@
 <div class="panel panel-info">
 	<div class="panel-heading">
-	    <div class="pull-left">
-	        <h3 class="panel-title">Inconsistencias / Observaciones</h3>
-	    </div>
-	    <div class="clearfix"></div>
-	</div><!-- /.panel-heading -->
+		<div class="pull-left">
+			<h3 class="panel-title">Inconsistencias / Observaciones</h3>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	<!-- /.panel-heading -->
 	<div class="panel-body no-padding">
 		{% if inconsistencia %}
-		<div class="alert alert-danger alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-			<strong>¡Error!</strong> Se han encontrado inconsistencias, la información no será consolidada para la Unidad Educativa: {{ institucion }}; Gestión: {{ gestion }}; Operativo: 
-			{% if periodo == 0 %}
-				Inicio de Gestión
-			{% elseif periodo == 1 %}
-				Primer Bimestre
-			{% elseif periodo == 2 %}
-				Segundo Bimestre
-			{% elseif periodo == 3 %}
-				Tercer Bimestre
-			{% elseif periodo == 4 %}
-				Cuarto Bimestre
-			{% elseif periodo == 5 %}
-				Fin de Gestión
-			{% endif %}
-    </div>
-		{% for logs in inconsistencia %}
+			<div class="alert alert-danger alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<strong>¡Error!</strong>
+				Se han encontrado inconsistencias, la información no será consolidada para la Institución Educativa:
+				{{ institucion }}; Gestión:
+				{{ gestion }}; Operativo:
+				{% if periodo == 0 %}
+					Inicio de Gestión
+				{% elseif periodo == 1 %}
+					Primer Bimestre
+				{% elseif periodo == 2 %}
+					Segundo Bimestre
+				{% elseif periodo == 3 %}
+					Tercer Bimestre
+				{% elseif periodo == 4 %}
+					Cuarto Bimestre
+				{% elseif periodo == 5 %}
+					Fin de Gestión
+				{% endif %}
+			</div>
+			{% for logs in inconsistencia %}
 
-			<ul>
-				<li><code>{{ logs.observacion }}</code></li>
-			</ul>
+				<ul>
+					<li>
+						<code>{{ logs.observacion }}</code>
+					</li>
+				</ul>
 
-		{% endfor %}
+			{% endfor %}
 		{% else %}
 			<div class="alert alert-success alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                <strong>¡Bien!</strong> No se han encontrado inconsistencias, la información se ha consolidado exitosamente para la Unidad Educativa: {{ institucion }}; Gestión: {{ gestion }}; Operativo: {{ periodo }}.
-            </div>
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<strong>¡Bien!</strong>
+				No se han encontrado inconsistencias, la información se ha consolidado exitosamente para la Institución Educativa:
+				{% if periodo == 0 %}
+					Inicio de Gestión
+				{% elseif periodo == 1 %}
+					Primer Bimestre
+				{% elseif periodo == 2 %}
+					Segundo Bimestre
+				{% elseif periodo == 3 %}
+					Tercer Bimestre
+				{% elseif periodo == 4 %}
+					Cuarto Bimestre
+				{% elseif periodo == 5 %}
+					Fin de Gestión
+				{% endif %}
+			</div>
 		{% endif %}
 	</div>
 </div>

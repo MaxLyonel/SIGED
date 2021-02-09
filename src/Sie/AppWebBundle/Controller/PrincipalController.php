@@ -708,4 +708,28 @@ class PrincipalController extends Controller {
 
         return $detallesInicioDeClases;
     }
+
+    public function mostrarResultadosReporteModalidadAtencionAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        //get the send values
+
+        $departamento=filter_var($request->get('departamento'),FILTER_VALIDATE_INT);
+        $distrito=filter_var($request->get('distrito'),FILTER_VALIDATE_INT);
+        $gestion=filter_var($request->get('gestion'),FILTER_VALIDATE_INT);
+
+        
+        $query = 'select * from sp_genera_reporte_modalidad_atencion(?,?,?);';
+        $stmt = $db->prepare($query);
+        $params = array($gestion,$departamento,$distrito);
+        $stmt->execute($params);
+        $datosReporte=$stmt->fetchAll();
+        
+
+        return $this->render($this->sesion->get('pathSystem') . ':Principal:reporte_modalidad_atencion.html.twig', array
+        (
+        'datosReporte' => $datosReporte
+        ));
+    }
 }
