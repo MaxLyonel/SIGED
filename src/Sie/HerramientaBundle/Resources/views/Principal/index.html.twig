@@ -434,7 +434,7 @@
             {% endif %}
  #}
         <!--Detalle de los TIPOS DE EDUACION que dispione la unidad educatio-->
-            
+            {% if app.session.get('roluser') == 9 %}
                 <div class="col-md-6">
                     <!-- Start input fields - basic form -->
                     <div class="panel rounded shadow">
@@ -463,6 +463,7 @@
                         </div>
                     </div>
                 </div>
+            {% endif %}
             
         </div>
     </div>
@@ -480,7 +481,12 @@
    {
         cargatablas();
         //abre el modal con el formulario
-        abrirModalInicioClases();
+        if({{app.session.get('roluser')}}==9)
+        {
+            abrirModalInicioClases();
+            getInicioClases();
+        }
+
         $('#form-actualizar-tipo').on('submit', function (event)
         {
             event.preventDefault();
@@ -488,7 +494,6 @@
         });
 
         //carga los datos del tipo de eduacion cuando carga la pagina
-        getInicioClases();
         $('.actualizar-form-tipo-atencion').on('click',function (event) {
             //getInicioClases();
         });
@@ -658,7 +663,7 @@
                     else
                         text='La U.E. <b>NO</b> continuo con las actividades, debido a: <b>'+debido_a+'</b>';
                     if(data.riesgo==null && data.detallesInicio==null)
-                        text='No registro si la información';
+                        text='No registro la información';
 
                     $(".div-mostrar-tipos").empty();
                     $(".div-mostrar-tipos").html(text);
@@ -690,7 +695,7 @@
                     else
                         text='La U.E. <b>NO</b> continuo con las actividades, debido a: <b>'+debido_a+'</b>';
                     if(data.riesgo==null && data.detallesInicio==null)
-                        text='No registro si la información';
+                        text='No registro la información';
 
                     $(".div-mostrar-tipos").empty();
                     $(".div-mostrar-tipos").html(text);
