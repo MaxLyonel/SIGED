@@ -9,3 +9,7 @@ herramienta_infoconsolidation_find:
 herramienta_infoconsolidation_gestion_index:
     path:     /consolgestion
     defaults: { _controller: SieHerramientaBundle:InfoConsolidation:consolidacionGestion }
+
+herramienta_inforeporte_modalidad_atencion:
+    path:     /reporte_modalidad_atencion
+    defaults: { _controller: SieHerramientaBundle:InfoConsolidation:reporteModalidadAtencion }
