@@ -516,8 +516,17 @@ class InfoConsolidationController extends Controller {
 
   public function reporteModalidadAtencionAction(Request $request)
   {
+    $em = $this->getDoctrine()->getManager();
+    $objDepto =  $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findAll();
+    $arrDepto = array();
+    foreach ($objDepto as $value) {
+      $arrDepto[] = array('id'=>$value->getId(),'codigo'=>$value->getCodigo(),'depto'=>$value->getDepartamento());
+    }
     
-    return $this->render($this->session->get('pathSystem') . ':InfoConsolidation:reporte_modalidad_atencion.html.twig', array());
+    return $this->render($this->session->get('pathSystem') . ':InfoConsolidation:reporte_modalidad_atencion.html.twig', array(
+      'arrDepto' => $arrDepto,
+
+    ));
   }
 
 }

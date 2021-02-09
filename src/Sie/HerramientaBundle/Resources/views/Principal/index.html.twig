@@ -469,54 +469,7 @@
         </div>
 
         <!--Seccion del reporte de incio de actividades-->
-        <div class="col-sm-12">
 
-                <div class="panel rounded shadow">
-                    <div class="panel panel-lilac shadow">
-                        <div class="panel-heading">
-                            <div class="pull-left">
-                                <h3 class="panel-title">Reporte de inicio de actividades</h3>
-                            </div>
-                            <div class="pull-right">
-                                <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-body ">
-                            <div class="col-md-12 p-3">
-                                <div class="col-sm-12">
-                                    <i class="fa fa-search"></i> Presionando el boton <strong>"Buscar"</strong>  se desplegar un reporte con de las U.E que iniciaron actividades
-                                </div>
-                                <form method ="POST" id="form-mostrar-resultados-reporte-modalidad-atencion" onsubmit="mostrarResultadosReporte(this); return false;">
-                                  <div class="form-row">
-                                    <div class="form-group col-md-3 col-sm-6 ">
-                                      <input type="text" class="form-control" name="departamento" id="departamento" placeholder="Departamento">
-                                    </div>
-
-                                    <div class="form-group col-md-3 col-sm-6 ">
-                                      <input type="text" class="form-control" name="distrito" id="distrito" placeholder="Distrito">
-                                    </div>
-
-                                    <div class="form-group col-md-3 col-sm-6 ">
-                                        <select class="form-control" name="gestion" id="gestion">
-                                            {% for fecha in range(app.session.get('currentyear'),(app.session.get('currentyear')-3))  %}
-                                                 <option value="{{fecha}}">{{fecha}}</option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-3 col-sm-6 ">
-                                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-                                    </div>
-                                  </div>
-
-                                </form>
-
-                            </div>
-                        </div><!-- /.panel-body --> 
-                        <div class="div-mostrar-resultados-reporte-modalidad-atencion" style="padding:1rem;"></div>
-                    </div>
-                </div>
-        </div>
     </div>
 
 
