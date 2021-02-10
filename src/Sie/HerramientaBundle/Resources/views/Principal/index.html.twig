@@ -59,48 +59,48 @@
                 </fieldset>
                 #}
 
-        <fieldset class="form-group">
-            <div class="row">
-                <legend class="col-md-3 col-form-label pt-0">Información de la U.E.</legend>
-                <div class="col-md-9">
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-md-3 col-form-label pt-0">Información de la U.E.</legend>
+                        <div class="col-md-9">
 
-                    <div class="form-group mb-0">
-                        <label class="form-check-label">¿La unidad educativa continua con sus actividades?</label>
+                            <div class="form-group mb-0">
+                                <label class="form-check-label">¿La unidad educativa continua con sus actividades?</label>
+                            </div>
+                            <div class="form-check pr-3" style="display:inline-block;padding-right:1.3rem;">
+                                <input class="form-check-input radio-inicio-clases" type="radio" name="inicio_clases" id="inicio_clases_1" value="1">
+                                <label class="form-check-label" for="inicio_clases_1">Si</label>
+                            </div>
+                            <div class="form-check pr-3" style="display:inline-block;padding-right:1.3rem;">
+                                <input class="form-check-input radio-inicio-clases" type="radio" name="inicio_clases" id="inicio_clases_0" value="0">
+                                <label class="form-check-label" for="inicio_clases_0">No</label>
+                            </div>
+
+                              <div class="form-group mb-0 mt-2 div-no-inicio-razon" style="display:none">
+                                <label for="no_inicio_razon">¿Por qué no continuo con las actividades?</label>
+                                <select class="form-control select-no-inicio-razon" name="no_inicio_razon" id="no_inicio_razon">
+                                    {% for ruet in unidadEducativaTipoData %}
+                                    {% if ruet.id>1 %}
+                                    <option value="{{ruet.id}}">{{ruet.riesgoUnidadeducativa}}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                    <option value="1">Otros</option>
+                                </select>
+                              </div>
+
+                              <div class="form-group mt-2 div-no-inicio-razon-otros" style="display:none">
+                                <label for="no_incio_razon_otros">Por favor describa brevemente por que no inició clases</label>
+                                <textarea class="form-control" name="no_incio_razon_otros" id="no_incio_razon_otros" rows="3"></textarea>
+                              </div>
+
+                        </div>
                     </div>
-                    <div class="form-check pr-3" style="display:inline-block;padding-right:1.3rem;">
-                        <input class="form-check-input radio-inicio-clases" type="radio" name="inicio_clases" id="inicio_clases_1" value="1" checked="checked">
-                        <label class="form-check-label" for="inicio_clases_1">Si</label>
-                    </div>
-                    <div class="form-check pr-3" style="display:inline-block;padding-right:1.3rem;">
-                        <input class="form-check-input radio-inicio-clases" type="radio" name="inicio_clases" id="inicio_clases_0" value="0">
-                        <label class="form-check-label" for="inicio_clases_0">No</label>
-                    </div>
-
-                      <div class="form-group mb-0 mt-2 div-no-inicio-razon" style="display:none">
-                        <label for="no_inicio_razon">¿Por qué no continuo con las actividades?</label>
-                        <select class="form-control select-no-inicio-razon" name="no_inicio_razon" id="no_inicio_razon">
-                            {% for ruet in unidadEducativaTipoData %}
-                            {% if ruet.id>1 %}
-                            <option value="{{ruet.id}}">{{ruet.riesgoUnidadeducativa}}</option>
-                            {% endif %}
-                            {% endfor %}
-                            <option value="1">Otros</option>
-                        </select>
-                      </div>
-
-                      <div class="form-group mt-2 div-no-inicio-razon-otros" style="display:none">
-                        <label for="no_incio_razon_otros">Por favor describa brevemente por que no inició clases</label>
-                        <textarea class="form-control" name="no_incio_razon_otros" id="no_incio_razon_otros" rows="3"></textarea>
-                      </div>
-
-                </div>
-            </div>
-        </fieldset>
+                </fieldset>
             
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-sm btn-info">Actualizar</button>
+                <button type="submit" class="btn btn-sm btn-info btn-actividades-actualizar">Actualizar</button>
               </div>
             </div>
           </div>
@@ -648,15 +648,19 @@
                 url: Routing.generate('siged_seleccionar_modalidad_tipo'),
                 data: form,
                 beforeSend: function () {
+                    $(".btn-actividades-actualizar").attr("disabled", true);
                     $(".div-mostrar-tipos").empty();
                     $(".div-mostrar-tipos").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
                 },
                 success: function (data)
                 {
-
                      setTimeout(function ()
                     {
                         $('#modalInicioClases').modal('toggle');
+                        $(".btn-actividades-actualizar").attr("disabled", false);
+                        $('#form-actualizar-tipo')[0].reset();
+                        $(".div-no-inicio-razon").hide();
+                        $(".div-no-inicio-razon-otros").hide();
                     },1000);
 
                     var debido_a,text='';
@@ -671,8 +675,10 @@
 
                     $(".div-mostrar-tipos").empty();
                     $(".div-mostrar-tipos").html(text);
+
                 },
                 error: function (data) {
+                    $(".btn-actividades-actualizar").attr("disabled", false);
                     $(".div-mostrar-tipos").empty();
                     $(".div-mostrar-tipos").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
                 }
