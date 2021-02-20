@@ -1,0 +1,165 @@
+Sie\AppWebBundle\Entity\EstudianteQuipus:
+    type: entity
+    table: estudiante_quipus
+    indexes:
+        IDX_E72DDD363AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_E72DDD36179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_E72DDD36A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_E72DDD3659590C39:
+            columns:
+                - estudiante_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+        codigoRude:
+            type: string
+            nullable: true
+            length: 18
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        nombre:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        carnetIdentidad:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: carnet_identidad
+        complemento:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        orgcurricularTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: orgcurricular_tipo_id
+        fechaNacimiento:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_nacimiento
+        estado:
+            type: boolean
+            nullable: true
+            comment: ''
+        cicloTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: ciclo_tipo_id
+        gradoTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: grado_tipo_id
+        paraleloTipoId:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+            column: paralelo_tipo_id
+        nivelTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nivel_tipo_id
+        turnoTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: turno_tipo_id
+        generoTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: genero_tipo_id
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

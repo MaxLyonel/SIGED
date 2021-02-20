@@ -1448,5 +1448,22 @@ class DownloadController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
 
-    }    
+    }
+
+    public function ddjjStudentsQuipusAction(Request $request, $sie){
+
+        $response = new Response();
+
+        $data = $this->session->get('userId').'|'.$this->session->get('currentyear').'|'.$sie;
+        $link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($data);
+
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'mod_student_'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_EstudianteQuipus_unidadeducativa_regular_v1_afv.rptdesign&codue=' . $sie.'&gestion='. $this->session->get('currentyear').'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }       
 }
