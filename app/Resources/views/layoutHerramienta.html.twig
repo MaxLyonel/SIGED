@@ -582,6 +582,7 @@
                             </ul>
                         </li>
                     {% endif %}
+                    {#
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -599,7 +600,24 @@
                             {% endif %}
                         </li>
                     {% endif %}
-
+                    #}
+                    {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 8   %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Situacion de Vulneravidad</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('selected_students_index')}}">Registro</a></li>
+                            </ul>
+                            {% if  app.session.get('roluser') in [8,20]   %}
+                                <ul>
+                                    <li><a href="{{ path('cdlseguimiento')}}">Seguimiento</a></li>
+                                </ul>
+                            {% endif %}
+                        </li>
+                    {% endif %}                    
                     {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
