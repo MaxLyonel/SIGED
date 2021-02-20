@@ -601,11 +601,12 @@
                         </li>
                     {% endif %}
                     #}
+                    {# commented by krlos 19.02.2021
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 8   %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
-                                <span class="text">Situación de Vulneravidad</span>
+                                <span class="text">Situación de Vulnerabilidad</span>
                                 <span class="arrow"></span>
                             </a>
                             <ul>
@@ -618,6 +619,7 @@
                             {% endif %}
                         </li>
                     {% endif %}                    
+                    #}
                     {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
