@@ -818,7 +818,7 @@ class CursosCortosController extends Controller {
             $institucioncursoferta=NULL;
             //$institucioncursoferta=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findOneBy(array('id' => $form['cursoscortos']));
             $institucioncursoferta=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByInsitucioneducativaCurso($form['cursoscortos']);
-            dump($institucioncursoferta);
+            //dump($institucioncursoferta);
             //die();
             if(count($institucioncursoferta)==0)
             {
