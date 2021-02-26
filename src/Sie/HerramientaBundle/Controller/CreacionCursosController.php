@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
+use Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion;
 
 /**
  * EstudianteInscripcion controller.
@@ -475,6 +476,20 @@ class CreacionCursosController extends Controller {
                     }
                 }
             }
+            //eliminamos los datos de la tabla "institucioneducativa_curso_modalidad_atencion" 
+            //para corregir el bug encontrado el jueves 25/02/2021
+            //puesto que esta tabla fue creada a mediados de febrero del 2021
+            $institucioneducativaCursoModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoModalidadAtencion')->findBy(array('institucioneducativaCurso'=>$request->get('idCurso')));
+            if($institucioneducativaCursoModalidadAtencion)
+            {
+                foreach ($institucioneducativaCursoModalidadAtencion as $value)
+                {
+                    $em->remove($value);
+                }
+                $em->flush();
+                $em->getConnection()->commit();
+            }
+
             
             /**
              * Eliminamos los registros de curso oferta
