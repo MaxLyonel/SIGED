@@ -75,7 +75,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         61710098
       );
 
-      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or $this->session->get('roluser')==7){
+      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or in_array($this->session->get('roluser'), array(7,8))   ){
         //nothing todo
       }else{
         return $this->redirect($this->generateUrl('principal_web'));
@@ -103,11 +103,12 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
      */
     private function createSearchForm() {
         $estudiante = new Estudiante();
-
+        
+        $arrYears = ($this->session->get('roluser')==8)?array($this->session->get('currentyear')-1=>$this->session->get('currentyear')-1,$this->session->get('currentyear')=>$this->session->get('currentyear')):array($this->session->get('currentyear')=>$this->session->get('currentyear'));
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('inscription_reza_omi_exten_result'))
                 ->add('codigoRude', 'text', array('mapped' => false, 'label' => 'Rude', 'required' => true, 'invalid_message' => 'campo obligatorio', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9a-zA-Z\sñÑ]{10,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($this->session->get('currentyear')=>$this->session->get('currentyear')), 'attr' => array('class' => 'form-control')))
+                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => $arrYears, 'attr' => array('class' => 'form-control')))
                 ->add('buscar', 'submit', array('label' => 'Buscar'))
                 ->getForm();
         return $form;
