@@ -222,10 +222,13 @@ class PrincipalController extends Controller {
             $registroInicioDeClases=$this->getInicioClasesInstitucioneducativaSucursal();
         }
 
-
         //Obtenemos los datos de la tabla riesgo_unidadeducativa_riesgo
         $unidadEducativaTipo =  $em->getRepository('SieAppWebBundle:RiesgoUnidadeducativaTipo')->findAll();
-        
+
+        //Aqui obtenemos un historial de los ultimos 3 meses del incio de actividades
+        $historialInicioActividadesData=array();
+        $historialInicioActividadesData=$this->getHistorialInicioDeActividades();
+
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
           'userData' => $userData,
           'entities' => $entities,
@@ -246,6 +249,8 @@ class PrincipalController extends Controller {
           'registroInicioDeClases'=>count($registroInicioDeClases),
 
           'unidadEducativaTipoData'=>$unidadEducativaTipo,
+
+          'historialInicioActividadesData'=>$historialInicioActividadesData,
         ));
     }
 
@@ -698,16 +703,64 @@ class PrincipalController extends Controller {
     private function getInicioClasesInstitucioneducativaSucursal()
     {
         //return NULL;
-        $detallesInicioDeClases=NULL;
+        $detallesInicioDeClases=array();
         $em = $this->getDoctrine()->getManager();
         $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id')));
         $detallesInicioDeClases = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalRiesgoMes')->findOneBy(
             array('institucioneducativaSucursal'=>$objIesucursal->getId(),'mes'=>date('m')
         ));
         
-
         return $detallesInicioDeClases;
     }
+
+    private function getHistorialInicioDeActividades($limit=3)
+    {
+        $historialInicioActividadesData=array();
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->sesion->get('ie_id')));
+        $query = '
+select 
+ie_srm.id,
+ie_srm.institucioneducativa_sucursal_id,
+ie_srm.mes,
+CASE 
+      WHEN ie_srm.mes=1  THEN \'Enero\'
+      WHEN ie_srm.mes=2  THEN \'Febrero\'
+      WHEN ie_srm.mes=3  THEN \'Marzo\'
+      WHEN ie_srm.mes=4  THEN \'Abril\'
+      WHEN ie_srm.mes=5  THEN \'Mayo\'
+      WHEN ie_srm.mes=6  THEN \'Junio\'
+      WHEN ie_srm.mes=7  THEN \'Julio\'
+      WHEN ie_srm.mes=8  THEN \'Agosto\'
+      WHEN ie_srm.mes=9  THEN \'Septiembre\'
+      WHEN ie_srm.mes=10  THEN \'Octubre\'
+      WHEN ie_srm.mes=11  THEN \'Noviembre\'
+      WHEN ie_srm.mes=12  THEN \'Diciembre\'
+END as nombre_mes,
+coalesce(ie_srm.riesgo_unidadeducativa_tipo_id,-1) AS riesgo_unidadeducativa_tipo_id,
+ie_srm.fecha_inicio,
+ie_srm.fecha_fin,
+ie_srm.fecha_registro,
+ie_srm.fecha_modificacion,
+ie_srm.otros,
+ie_srm.observacion,
+r_udt.riesgo_unidadeducativa,
+r_udt.obs
+from
+Institucioneducativa_Sucursal_Riesgo_mes ie_srm 
+left JOIN riesgo_unidadeducativa_tipo r_udt on ie_srm.riesgo_unidadeducativa_tipo_id =r_udt.id
+where institucioneducativa_sucursal_id =?
+ORDER BY mes DESC
+LIMIT ?';
+        $stmt = $db->prepare($query);
+        $params = array($objIesucursal->getId(),$limit);
+        $stmt->execute($params);
+        $historialInicioActividadesData=$stmt->fetchAll();
+
+        return $historialInicioActividadesData;
+    }
+
 
     public function mostrarResultadosReporteModalidadAtencionAction(Request $request)
     {
