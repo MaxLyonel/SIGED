@@ -227,7 +227,8 @@ class PrincipalController extends Controller {
 
         //Aqui obtenemos un historial de los ultimos 3 meses del incio de actividades
         $historialInicioActividadesData=array();
-        $historialInicioActividadesData=$this->getHistorialInicioDeActividades();
+        if ($rol_usuario==9)
+            $historialInicioActividadesData=$this->getHistorialInicioDeActividades();
 
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
           'userData' => $userData,
