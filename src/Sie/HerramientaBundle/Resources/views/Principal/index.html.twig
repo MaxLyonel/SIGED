@@ -91,7 +91,7 @@
 
                               <div class="form-group mt-2 div-no-inicio-razon-otros" style="display:none">
                                 <label for="no_incio_razon_otros">Por favor describa brevemente por que no inició clases</label>
-                                <textarea class="form-control" name="no_incio_razon_otros" id="no_incio_razon_otros" rows="3"></textarea>
+                                <textarea class="form-control" name="no_incio_razon_otros" id="no_incio_razon_otros" rows="3" maxlength="250"></textarea>
                               </div>
 
                         </div>
@@ -559,8 +559,8 @@
                                 <div class="clearfix"></div>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body no-padding">
-                                <div class="col-md-12">
-                                    <div class="div-mostrar-tipos">
+                                <div class="col-md-12" >
+                                    <div class="div-mostrar-tipos" style="overflow:hidden; text-overflow: ellipsis;">
                                     </div>
                                 </div>
                                 <div class="col-md-12 text-center ">
@@ -589,6 +589,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                             {% for historial in historialInicioActividadesData|reverse %}
+
                             {% set color = '#6c757d' %}
                             {% set text = ' white ' %}
                     <div class="col-md-4" style="padding-top: 10px;">
@@ -601,9 +602,13 @@
                                     <div class="clearfix"></div>
                                 </div><!-- /.panel-heading -->
                                 <div class="panel-body no-padding">
-                                    <div class="col-md-12">
+                                    <div class="col-md-12" style="overflow:hidden; text-overflow: ellipsis;">
                                         {% if historial.riesgo_unidadeducativa_tipo_id >0 %}
-                                            La U.E. <b>NO</b> inicio actividades debido a: <b>{{historial.riesgo_unidadeducativa}}</b>.
+                                            {% set riesgo_id=historial.riesgo_id %}
+                                            {% set riesgo_ue=historial.riesgo_unidadeducativa %}
+                                            {% set riesgo_otro=historial.observacion %}
+                                            {% set riesgo=(riesgo_id==1)? riesgo_otro : riesgo_ue %}
+                                            La U.E. <b>NO</b> inicio actividades debido a: <b>{{riesgo}}</b>.
                                         {% else %}
                                             La U.E. <b>SI</b> inicio actividades.
                                         {% endif %}
