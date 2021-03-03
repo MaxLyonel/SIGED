@@ -604,7 +604,7 @@ class PrincipalController extends Controller {
 
             $inicio_clases=filter_var($request->get('inicio_clases'),FILTER_VALIDATE_INT);
             $noInicioRazon=filter_var($request->get('no_inicio_razon'),FILTER_VALIDATE_INT);
-            $noInicioRazonOtros=filter_var($request->get('no_incio_razon_otros'),FILTER_SANITIZE_STRING);
+            $noInicioRazonOtros=filter_var($request->get('no_inicio_razon_otros'),FILTER_SANITIZE_STRING);
 
             if(strlen($noInicioRazonOtros)>250)
                 $noInicioRazonOtros= substr($noInicioRazonOtros, 0, 249);
