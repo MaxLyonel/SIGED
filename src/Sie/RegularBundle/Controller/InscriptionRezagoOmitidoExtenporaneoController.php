@@ -182,7 +182,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
                 # code...
                 reset($inscriptions);
                 while($sw &&  ($inscription = current($inscriptions))){
-                    if($inscription['gestion']==$this->session->get('currentyear')-$cc){
+                    if($inscription['gestion']==$form['gestion']-$cc){
                       $infoInscription = $inscription;
                       $sw=false;
                     }
@@ -483,7 +483,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
              'paraleloTipo' => $form['paralelo'],
              'turnoTipo' => $form['turno'],
              'institucioneducativa' => $form['institucionEducativa'],
-             'gestionTipo' => $this->session->get('currentyear')
+             'gestionTipo' => $form['gestionIns']
          ));
          //$student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['codigoRude']));
           //Recupero el CodUE de procedencia $form['codigoRude']
