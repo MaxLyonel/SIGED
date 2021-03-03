@@ -516,7 +516,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
          $em->flush();
 
          //add the areas to the student
-         $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
+         //$responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
 
          // obtenemos las notas
          //$arrayNotas = $em->getRepository('SieAppWebBundle:EstudianteNota')->getArrayNotas($studentInscription->getId());
