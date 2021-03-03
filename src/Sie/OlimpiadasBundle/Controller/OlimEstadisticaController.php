@@ -74,7 +74,6 @@ class OlimEstadisticaController extends Controller{
 		}
 		
 		$inscritos = $this->getRegistradosEtapa1($nivel,$codigo,$gestionActual);
-		//dump($inscritos);die;
 
 		return $this->render('SieOlimpiadasBundle:OlimEstadistica:registrados.html.twig', array(
 			'estadistica'=>$inscritos,
@@ -376,15 +375,15 @@ class OlimEstadisticaController extends Controller{
 				from (select * from lugar_tipo where lugar_nivel_id = 1) as dep
 				left join (
 				select lt4.id as departamento_id
-				, SUM(case omt.id when 10 then 1 else 0 end) as area1
-				, SUM(case omt.id when 11 then 1 else 0 end) as area2
-				, SUM(case omt.id when 12 then 1 else 0 end) as area3
-				, SUM(case omt.id when 13 then 1 else 0 end) as area4
-				, SUM(case omt.id when 14 then 1 else 0 end) as area5
-				, SUM(case omt.id when 15 then 1 else 0 end) as area6
-				, SUM(case omt.id when 16 then 1 else 0 end) as area7
-				, SUM(case omt.id when 17 then 1 else 0 end) as area8
-				, SUM(case omt.id when 18 then 1 else 0 end) as area9
+				, SUM(case omt.id when 19 then 1 else 0 end) as area1
+				, SUM(case omt.id when 20 then 1 else 0 end) as area2
+				, SUM(case omt.id when 21 then 1 else 0 end) as area3
+				, SUM(case omt.id when 22 then 1 else 0 end) as area4
+				, SUM(case omt.id when 23 then 1 else 0 end) as area5
+				, SUM(case omt.id when 24 then 1 else 0 end) as area6
+				, SUM(case omt.id when 25 then 1 else 0 end) as area7
+				, SUM(case omt.id when 26 then 1 else 0 end) as area8
+				, SUM(case omt.id when 27 then 1 else 0 end) as area9
 				, count(*) as cantidad 
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
@@ -402,15 +401,15 @@ class OlimEstadisticaController extends Controller{
 				) as oli on oli.departamento_id = dep.id
 				union all 
 				select 1 as id, '0' as codigo, 'Bolivia' as nombre
-				, SUM(case omt.id when 10 then 1 else 0 end) as area1
-				, SUM(case omt.id when 11 then 1 else 0 end) as area2
-				, SUM(case omt.id when 12 then 1 else 0 end) as area3
-				, SUM(case omt.id when 13 then 1 else 0 end) as area4
-				, SUM(case omt.id when 14 then 1 else 0 end) as area5
-				, SUM(case omt.id when 15 then 1 else 0 end) as area6
-				, SUM(case omt.id when 16 then 1 else 0 end) as area7
-				, SUM(case omt.id when 17 then 1 else 0 end) as area8
-				, SUM(case omt.id when 18 then 1 else 0 end) as area9
+				, SUM(case omt.id when 19 then 1 else 0 end) as area1
+				, SUM(case omt.id when 20 then 1 else 0 end) as area2
+				, SUM(case omt.id when 21 then 1 else 0 end) as area3
+				, SUM(case omt.id when 22 then 1 else 0 end) as area4
+				, SUM(case omt.id when 23 then 1 else 0 end) as area5
+				, SUM(case omt.id when 24 then 1 else 0 end) as area6
+				, SUM(case omt.id when 25 then 1 else 0 end) as area7
+				, SUM(case omt.id when 26 then 1 else 0 end) as area8
+				, SUM(case omt.id when 27 then 1 else 0 end) as area9
 				, count(*) as cantidad 
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
@@ -428,15 +427,15 @@ class OlimEstadisticaController extends Controller{
 				from (select distinct lt.* from lugar_tipo as lt inner join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id inner join jurisdiccion_geografica as jg on jg.lugar_tipo_id_distrito = lt.id where lt.lugar_nivel_id = 7 and lt1.codigo = '".$codigo."') as dis
 				left join (
 				select lt5.id
-				, SUM(case omt.id when 10 then 1 else 0 end) as area1
-				, SUM(case omt.id when 11 then 1 else 0 end) as area2
-				, SUM(case omt.id when 12 then 1 else 0 end) as area3
-				, SUM(case omt.id when 13 then 1 else 0 end) as area4
-				, SUM(case omt.id when 14 then 1 else 0 end) as area5
-				, SUM(case omt.id when 15 then 1 else 0 end) as area6
-				, SUM(case omt.id when 16 then 1 else 0 end) as area7
-				, SUM(case omt.id when 17 then 1 else 0 end) as area8
-				, SUM(case omt.id when 18 then 1 else 0 end) as area9
+				, SUM(case omt.id when 19 then 1 else 0 end) as area1
+				, SUM(case omt.id when 20 then 1 else 0 end) as area2
+				, SUM(case omt.id when 21 then 1 else 0 end) as area3
+				, SUM(case omt.id when 22 then 1 else 0 end) as area4
+				, SUM(case omt.id when 23 then 1 else 0 end) as area5
+				, SUM(case omt.id when 24 then 1 else 0 end) as area6
+				, SUM(case omt.id when 25 then 1 else 0 end) as area7
+				, SUM(case omt.id when 26 then 1 else 0 end) as area8
+				, SUM(case omt.id when 27 then 1 else 0 end) as area9
 				, count(*) as cantidad 
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
@@ -455,15 +454,15 @@ class OlimEstadisticaController extends Controller{
 				) as oli on oli.id = dis.id
 				union all 
 				select lt4.id, lt4.codigo, UPPER(lt4.lugar) as nombre
-				, SUM(case omt.id when 10 then 1 else 0 end) as area1
-				, SUM(case omt.id when 11 then 1 else 0 end) as area2
-				, SUM(case omt.id when 12 then 1 else 0 end) as area3
-				, SUM(case omt.id when 13 then 1 else 0 end) as area4
-				, SUM(case omt.id when 14 then 1 else 0 end) as area5
-				, SUM(case omt.id when 15 then 1 else 0 end) as area6
-				, SUM(case omt.id when 16 then 1 else 0 end) as area7
-				, SUM(case omt.id when 17 then 1 else 0 end) as area8
-				, SUM(case omt.id when 18 then 1 else 0 end) as area9
+				, SUM(case omt.id when 19 then 1 else 0 end) as area1
+				, SUM(case omt.id when 20 then 1 else 0 end) as area2
+				, SUM(case omt.id when 21 then 1 else 0 end) as area3
+				, SUM(case omt.id when 22 then 1 else 0 end) as area4
+				, SUM(case omt.id when 23 then 1 else 0 end) as area5
+				, SUM(case omt.id when 24 then 1 else 0 end) as area6
+				, SUM(case omt.id when 25 then 1 else 0 end) as area7
+				, SUM(case omt.id when 26 then 1 else 0 end) as area8
+				, SUM(case omt.id when 27 then 1 else 0 end) as area9
 				, count(*) as cantidad 
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
@@ -498,15 +497,15 @@ class OlimEstadisticaController extends Controller{
 				) as ue
 				left join (
 				select ie.id
-				, SUM(case omt.id when 10 then 1 else 0 end) as area1
-				, SUM(case omt.id when 11 then 1 else 0 end) as area2
-				, SUM(case omt.id when 12 then 1 else 0 end) as area3
-				, SUM(case omt.id when 13 then 1 else 0 end) as area4
-				, SUM(case omt.id when 14 then 1 else 0 end) as area5
-				, SUM(case omt.id when 15 then 1 else 0 end) as area6
-				, SUM(case omt.id when 16 then 1 else 0 end) as area7
-				, SUM(case omt.id when 17 then 1 else 0 end) as area8
-				, SUM(case omt.id when 18 then 1 else 0 end) as area9
+				, SUM(case omt.id when 19 then 1 else 0 end) as area1
+				, SUM(case omt.id when 20 then 1 else 0 end) as area2
+				, SUM(case omt.id when 21 then 1 else 0 end) as area3
+				, SUM(case omt.id when 22 then 1 else 0 end) as area4
+				, SUM(case omt.id when 23 then 1 else 0 end) as area5
+				, SUM(case omt.id when 24 then 1 else 0 end) as area6
+				, SUM(case omt.id when 25 then 1 else 0 end) as area7
+				, SUM(case omt.id when 26 then 1 else 0 end) as area8
+				, SUM(case omt.id when 27 then 1 else 0 end) as area9
 				, count(*) as cantidad 
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
@@ -520,15 +519,15 @@ class OlimEstadisticaController extends Controller{
 				) as oli on oli.id = ue.id
 				union all 
 				select lt.id, lt.codigo, UPPER(lt.lugar) as nombre
-				, SUM(case omt.id when 10 then 1 else 0 end) as area1
-				, SUM(case omt.id when 11 then 1 else 0 end) as area2
-				, SUM(case omt.id when 12 then 1 else 0 end) as area3
-				, SUM(case omt.id when 13 then 1 else 0 end) as area4
-				, SUM(case omt.id when 14 then 1 else 0 end) as area5
-				, SUM(case omt.id when 15 then 1 else 0 end) as area6
-				, SUM(case omt.id when 16 then 1 else 0 end) as area7
-				, SUM(case omt.id when 17 then 1 else 0 end) as area8
-				, SUM(case omt.id when 18 then 1 else 0 end) as area9
+				, SUM(case omt.id when 19 then 1 else 0 end) as area1
+				, SUM(case omt.id when 20 then 1 else 0 end) as area2
+				, SUM(case omt.id when 21 then 1 else 0 end) as area3
+				, SUM(case omt.id when 22 then 1 else 0 end) as area4
+				, SUM(case omt.id when 23 then 1 else 0 end) as area5
+				, SUM(case omt.id when 24 then 1 else 0 end) as area6
+				, SUM(case omt.id when 25 then 1 else 0 end) as area7
+				, SUM(case omt.id when 26 then 1 else 0 end) as area8
+				, SUM(case omt.id when 27 then 1 else 0 end) as area9
 				, count(*) as cantidad 
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
@@ -704,7 +703,6 @@ class OlimEstadisticaController extends Controller{
 			} 	
 		}
 		
-		//dump($codigo);die;
 		$entity = $this->getRegistradosAreaGradoEtapa1($nivel,$codigo,$gestionActual);
 		$aInfo = array();
 		$dDato = array();
@@ -715,7 +713,7 @@ class OlimEstadisticaController extends Controller{
 			$aInfo[$dato['codigo']]['codigo'] = $dato['codigo'];
 			$aInfo[$dato['codigo']]['dato'][$dato['nombre']][$dato['materia']] = $aDato;
 		}
-		//dump($aInfo);die;
+
 		$inscritos = $aInfo;
 		return $this->render('SieOlimpiadasBundle:OlimEstadistica:registradosAreaGrado.html.twig', array(
 			'estadistica'=>$inscritos,
@@ -1114,6 +1112,7 @@ class OlimEstadisticaController extends Controller{
 		}
 
 		$entity = $this->getRegistradosAreaCategoriaEtapa1($nivel,$codigo,$gestionActual);
+
 		$aInfo = array();
 		foreach ($entity as $key => $dato) {
 			//send the values to the next steps
@@ -1123,6 +1122,7 @@ class OlimEstadisticaController extends Controller{
 			// $aInfo[$dato['codigo']][$dato['nombre']][$dato['materia']][$dato['categoria']] = $dato['cantidad'];
 		}
 		$inscritos = $aInfo;
+		
 		return $this->render('SieOlimpiadasBundle:OlimEstadistica:registradosAreaCategoria.html.twig', array(
 			'estadistica'=>$inscritos,
 			'nivel'=>$nivel,

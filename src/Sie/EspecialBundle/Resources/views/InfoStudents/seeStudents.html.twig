@@ -33,20 +33,20 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        {% if onlyview == false and gestion >= app.session.get('currentyear') and app.session.get('roluser') == 9 and operativo_fin == true %}
-                        <button type="button" class="btn btn-md btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
-                            <i class="fa fa-user"></i> Inscripción
-                        </button>
+                        {% if gestion >= app.session.get('currentyear') and app.session.get('roluser') == 9 %}
+                            <button type="button" class="btn btn-md btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
+                                <i class="fa fa-user"></i> Inscripción
+                            </button>
                         {% endif %}
-                            {% if onlyview == false and operativo_fin == true and gestion >= app.session.get('currentyear') and (app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10) %}
-                                <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}');" >
-
-                                    <i class="fa fa-user"></i> Inscripción sin RUDE
-                                </button>
-                            {% endif %}                        
+                        {% if gestion >= app.session.get('currentyear') and (app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10) %}
+                            <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}');" >
+                                <i class="fa fa-user"></i> Inscripción sin RUDE
+                            </button>
+                        {% endif %}
                     </div>
                     <hr />
                 </div>
+                <div class="clearfix"></div>
                 <div class="row">
                     <div id="no-more-tables" class="col-md-12 table-responsive">
                         <table class="table table-bordered table-hover cf">
@@ -110,7 +110,7 @@
                                                 </button>
                                             </div>
                                         {% endif %}
-                                        {% if onlyview == false and gestion == app.session.get('currentyear') and gestion >= 2020 and operativo_fin == true %}
+                                        {% if gestion == app.session.get('currentyear') and gestion >= 2020 %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                                 <button type="button" class="btn btn-circle btn-danger" data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
                                                     <i class="fa fa-trash"></i>

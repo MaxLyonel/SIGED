@@ -24,7 +24,7 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel shadow">
                     <div class="panel-heading">
-                        {% if estadistica is defined  %}
+                        {% if estadistica is defined and estadistica|length > 0 %}
                             <div class="pull-left">                                
                                 {% if nivel == 0 %}
                                     <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Departamento</h3>
@@ -59,7 +59,7 @@
                     </div>  
                     <div class="panel-sub-heading inner-all">
                         <small>
-                            {% if estadistica is defined  %}
+                            {% if estadistica is defined and estadistica|length > 0 %}
                                 {% set porcentaje1 = (( estadistica[0]['area1'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
                                 {% set porcentaje2 = (( estadistica[0]['area2'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
                                 {% set porcentaje3 = (( estadistica[0]['area3'] * 100 ) / estadistica[0]['cantidad'])|number_format(1,'.',',') %}
@@ -96,7 +96,7 @@
                         </small>
                     </div>             
                     <div class="panel-body">
-                        {% if estadistica is defined  %}
+                        {% if estadistica is defined and estadistica|length > 0 %}
                             {% set count = 0 %}
                             {% set cantidadTotalGeneral = 0 %}
                             {% for data in estadistica %}
@@ -204,6 +204,14 @@
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}
+                        {% else %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="alert alert-primary" role="alert">
+                                        <i class="fa fa-fw fa-info-circle"></i> No se encontraron resultados.
+                                    </div>
+                                </div>
+                            </div>
                         {% endif %}
                     </div><!-- /.panel-body -->
                 </div>
