@@ -300,6 +300,7 @@ class DefaultController extends Controller {
             case '172.20.196.9:8030':
             // case '172.20.196.7':
             case 'inscripcionocepb.minedu.gob.bo':
+            case 'olimpiada.sie.gob.bo':
                 $sysname = 'olimpiadas';
                 $sysporlet = 'blue';
                 $sysbutton = true;
