@@ -103,7 +103,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        {% if onlyview == false and areaEspecial in ['Intelectual','Auditiva','Visual'] and gestion == 2020 and operativo_fin == false %}
+                                        {% if areaEspecial in ['Intelectual','Auditiva','Visual'] and gestion == 2020 and operativo_fin == false %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                                 <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
                                                     <i class="fa fa-list"></i>

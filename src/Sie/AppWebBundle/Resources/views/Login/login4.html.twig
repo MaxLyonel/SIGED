@@ -217,6 +217,11 @@
                                     <a href="{{path('tramite_rue_reapertura')}}" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Reapertura RUE</a>
                                 </div></br>
                             {% endif %}
+                            {% if app.session.get('pathSystem') == 'SieOlimpiadasBundle' %}
+                                <div class="pull-center">
+                                    <a href="http://olimpiada.minedu.gob.bo/public/files/8va/manual_8vaocepb.pdf" target="_blank" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Manual OCEPB</a>
+                                </div></br>                            
+                            {% endif %}
 
 
                             {# <a href="{{path('consulta_bono_familia_index')}}" style="color:#455A64; font-size:1em; margin-top:20px;">Consulta si eres beficiario del bono familia</a> #}
