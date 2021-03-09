@@ -72,7 +72,7 @@
 	        </div>
 	        <div class="modal-footer">
 	            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-	            {% if notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and onlyview == false %}
+	            {% if notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 %}
 		            <button type="submit" class="btn btn-success">Guardar Cambios</button>
 		        {% endif %}
 	        </div>

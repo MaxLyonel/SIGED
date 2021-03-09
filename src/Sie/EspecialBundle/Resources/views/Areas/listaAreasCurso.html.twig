@@ -5,7 +5,7 @@
 </div>
 <div class="col-lg-12">
     <div class="pull-right">
-        {% if onlyview == false %}
+        {% if true %}
             <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas')" class="btn btn-facebook btn-md"><i class="fa fa-plus-circle text-white"></i> Adicionar Área para especial </button>
         {% endif %}
     </div> 
@@ -57,7 +57,7 @@
                             {% if cursoOferta.idAsignatura == 1038 and curso.gradoTipo.id >= 5 and curso.gestionTipo.id == 2015 and app.session.get('roluser') != 9 and app.session.get('roluser') != 5 %}
                                     <button type="button" class="btn-link" onclick="eliminarArea({{cursoOferta.id}})" title="Eliminar"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
                             {% else %}
-                                {% if true and onlyview == false %}
+                                {% if true %}
                                         <button type="button" class="btn-link" onclick="eliminarArea({{cursoOferta.id}})" title="Eliminar"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
                                 {% endif %}
                             {% endif %}
