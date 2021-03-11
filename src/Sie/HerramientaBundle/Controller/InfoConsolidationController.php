@@ -705,16 +705,16 @@ class InfoConsolidationController extends Controller {
         sum(case when i.id= 0 then 1 else 0 end)  as "inicio",
         sum(case when i.id <> 0 then 1 else 0 end)  as "no_inicio",
         
-        SUM (CASE WHEN i.id=9  THEN 1 ELSE 0 END ) AS "helada"  ,
-        SUM (CASE WHEN i.id=8  THEN 1 ELSE 0 END ) AS "granizada" ,
-        SUM (CASE WHEN i.id=7  THEN 1 ELSE 0 END ) AS "sismo" ,
-        SUM (CASE WHEN i.id=6  THEN 1 ELSE 0 END ) AS "riada" ,
-        SUM (CASE WHEN i.id=5  THEN 1 ELSE 0 END ) AS "deslizamiento" ,
-        SUM (CASE WHEN i.id=4  THEN 1 ELSE 0 END ) AS "sequia"  ,
-        SUM (CASE WHEN i.id=3  THEN 1 ELSE 0 END ) AS "incendio"  ,
-        SUM (CASE WHEN i.id=2  THEN 1 ELSE 0 END ) AS "inundación"  ,
+        SUM (CASE WHEN i.id=9  THEN 1 ELSE 0 END ) AS "riesgo_sanitario"  ,
+        SUM (CASE WHEN i.id=8  THEN 1 ELSE 0 END ) AS "helada" ,
+        SUM (CASE WHEN i.id=7  THEN 1 ELSE 0 END ) AS "granizada" ,
+        SUM (CASE WHEN i.id=6  THEN 1 ELSE 0 END ) AS "sismo" ,
+        SUM (CASE WHEN i.id=5  THEN 1 ELSE 0 END ) AS "riada" ,
+        SUM (CASE WHEN i.id=4  THEN 1 ELSE 0 END ) AS "deslizamiento"  ,
+        SUM (CASE WHEN i.id=3  THEN 1 ELSE 0 END ) AS "sequia"  ,
+        SUM (CASE WHEN i.id=2  THEN 1 ELSE 0 END ) AS "incendio"  ,
+        SUM (CASE WHEN i.id=10 THEN 1 ELSE 0 END ) AS "inundacion",
         SUM (CASE WHEN i.id=1  THEN 1 ELSE 0 END ) AS "otros" ,
-        SUM (CASE WHEN i.id=10 THEN 1 ELSE 0 END ) AS "riesgo_sanitario",
         SUM (CASE WHEN i.id=0  THEN 1 ELSE 0 END ) AS "sin_riesgo" 
 
         from  institucioneducativa d 
@@ -759,16 +759,16 @@ class InfoConsolidationController extends Controller {
         sum(case when i.id= 0 then 1 else 0 end)  as "inicio",
         sum(case when i.id <> 0 then 1 else 0 end)  as "no_inicio",
 
-        SUM (CASE WHEN i.id=9  THEN 1 ELSE 0 END ) AS "helada"  ,
-        SUM (CASE WHEN i.id=8  THEN 1 ELSE 0 END ) AS "granizada" ,
-        SUM (CASE WHEN i.id=7  THEN 1 ELSE 0 END ) AS "sismo" ,
-        SUM (CASE WHEN i.id=6  THEN 1 ELSE 0 END ) AS "riada" ,
-        SUM (CASE WHEN i.id=5  THEN 1 ELSE 0 END ) AS "deslizamiento" ,
-        SUM (CASE WHEN i.id=4  THEN 1 ELSE 0 END ) AS "sequia"  ,
-        SUM (CASE WHEN i.id=3  THEN 1 ELSE 0 END ) AS "incendio"  ,
-        SUM (CASE WHEN i.id=2  THEN 1 ELSE 0 END ) AS "inundación"  ,
+        SUM (CASE WHEN i.id=9  THEN 1 ELSE 0 END ) AS "riesgo_sanitario"  ,
+        SUM (CASE WHEN i.id=8  THEN 1 ELSE 0 END ) AS "helada" ,
+        SUM (CASE WHEN i.id=7  THEN 1 ELSE 0 END ) AS "granizada" ,
+        SUM (CASE WHEN i.id=6  THEN 1 ELSE 0 END ) AS "sismo" ,
+        SUM (CASE WHEN i.id=5  THEN 1 ELSE 0 END ) AS "riada" ,
+        SUM (CASE WHEN i.id=4  THEN 1 ELSE 0 END ) AS "deslizamiento"  ,
+        SUM (CASE WHEN i.id=3  THEN 1 ELSE 0 END ) AS "sequia"  ,
+        SUM (CASE WHEN i.id=2  THEN 1 ELSE 0 END ) AS "incendio"  ,
+        SUM (CASE WHEN i.id=10 THEN 1 ELSE 0 END ) AS "inundacion",
         SUM (CASE WHEN i.id=1  THEN 1 ELSE 0 END ) AS "otros" ,
-        SUM (CASE WHEN i.id=10 THEN 1 ELSE 0 END ) AS "riesgo_sanitario",
         SUM (CASE WHEN i.id=0  THEN 1 ELSE 0 END ) AS "sin_riesgo" 
 
         from  institucioneducativa d 
@@ -820,16 +820,16 @@ class InfoConsolidationController extends Controller {
         sum(case when i.id= 0 then 1 else 0 end)  as "inicio",
         sum(case when i.id <> 0 then 1 else 0 end)  as "no_inicio",
 
-        SUM (CASE WHEN i.id=9  THEN 1 ELSE 0 END ) AS "helada"  ,
-        SUM (CASE WHEN i.id=8  THEN 1 ELSE 0 END ) AS "granizada" ,
-        SUM (CASE WHEN i.id=7  THEN 1 ELSE 0 END ) AS "sismo" ,
-        SUM (CASE WHEN i.id=6  THEN 1 ELSE 0 END ) AS "riada" ,
-        SUM (CASE WHEN i.id=5  THEN 1 ELSE 0 END ) AS "deslizamiento" ,
-        SUM (CASE WHEN i.id=4  THEN 1 ELSE 0 END ) AS "sequia"  ,
-        SUM (CASE WHEN i.id=3  THEN 1 ELSE 0 END ) AS "incendio"  ,
-        SUM (CASE WHEN i.id=2  THEN 1 ELSE 0 END ) AS "inundación"  ,
+        SUM (CASE WHEN i.id=9  THEN 1 ELSE 0 END ) AS "riesgo_sanitario"  ,
+        SUM (CASE WHEN i.id=8  THEN 1 ELSE 0 END ) AS "helada" ,
+        SUM (CASE WHEN i.id=7  THEN 1 ELSE 0 END ) AS "granizada" ,
+        SUM (CASE WHEN i.id=6  THEN 1 ELSE 0 END ) AS "sismo" ,
+        SUM (CASE WHEN i.id=5  THEN 1 ELSE 0 END ) AS "riada" ,
+        SUM (CASE WHEN i.id=4  THEN 1 ELSE 0 END ) AS "deslizamiento"  ,
+        SUM (CASE WHEN i.id=3  THEN 1 ELSE 0 END ) AS "sequia"  ,
+        SUM (CASE WHEN i.id=2  THEN 1 ELSE 0 END ) AS "incendio"  ,
+        SUM (CASE WHEN i.id=10 THEN 1 ELSE 0 END ) AS "inundacion",
         SUM (CASE WHEN i.id=1  THEN 1 ELSE 0 END ) AS "otros" ,
-        SUM (CASE WHEN i.id=10 THEN 1 ELSE 0 END ) AS "riesgo_sanitario",
         SUM (CASE WHEN i.id=0  THEN 1 ELSE 0 END ) AS "sin_riesgo" 
 
         from  institucioneducativa d 
@@ -880,16 +880,16 @@ class InfoConsolidationController extends Controller {
         sum(case when i.id= 0 then 1 else 0 end)  as "inicio",
         sum(case when i.id <> 0 then 1 else 0 end)  as "no_inicio",
 
-        SUM (CASE WHEN i.id=9  THEN 1 ELSE 0 END ) AS "helada"  ,
-        SUM (CASE WHEN i.id=8  THEN 1 ELSE 0 END ) AS "granizada" ,
-        SUM (CASE WHEN i.id=7  THEN 1 ELSE 0 END ) AS "sismo" ,
-        SUM (CASE WHEN i.id=6  THEN 1 ELSE 0 END ) AS "riada" ,
-        SUM (CASE WHEN i.id=5  THEN 1 ELSE 0 END ) AS "deslizamiento" ,
-        SUM (CASE WHEN i.id=4  THEN 1 ELSE 0 END ) AS "sequia"  ,
-        SUM (CASE WHEN i.id=3  THEN 1 ELSE 0 END ) AS "incendio"  ,
-        SUM (CASE WHEN i.id=2  THEN 1 ELSE 0 END ) AS "inundación"  ,
+        SUM (CASE WHEN i.id=9  THEN 1 ELSE 0 END ) AS "riesgo_sanitario"  ,
+        SUM (CASE WHEN i.id=8  THEN 1 ELSE 0 END ) AS "helada" ,
+        SUM (CASE WHEN i.id=7  THEN 1 ELSE 0 END ) AS "granizada" ,
+        SUM (CASE WHEN i.id=6  THEN 1 ELSE 0 END ) AS "sismo" ,
+        SUM (CASE WHEN i.id=5  THEN 1 ELSE 0 END ) AS "riada" ,
+        SUM (CASE WHEN i.id=4  THEN 1 ELSE 0 END ) AS "deslizamiento"  ,
+        SUM (CASE WHEN i.id=3  THEN 1 ELSE 0 END ) AS "sequia"  ,
+        SUM (CASE WHEN i.id=2  THEN 1 ELSE 0 END ) AS "incendio"  ,
+        SUM (CASE WHEN i.id=10 THEN 1 ELSE 0 END ) AS "inundacion",
         SUM (CASE WHEN i.id=1  THEN 1 ELSE 0 END ) AS "otros" ,
-        SUM (CASE WHEN i.id=10 THEN 1 ELSE 0 END ) AS "riesgo_sanitario",
         SUM (CASE WHEN i.id=0  THEN 1 ELSE 0 END ) AS "sin_riesgo" 
 
         from  institucioneducativa d 
@@ -935,7 +935,7 @@ class InfoConsolidationController extends Controller {
         $deslizamiento = $i['deslizamiento'];
         $sequia = $i['sequia'];
         $incendio = $i['incendio'];
-        $inundación = $i['inundación'];
+        $inundación = $i['inundacion'];
         $otros = $i['otros'];
         $riesgo_sanitario = $i['riesgo_sanitario'];
         $sin_riesgo = $i['sin_riesgo'];
