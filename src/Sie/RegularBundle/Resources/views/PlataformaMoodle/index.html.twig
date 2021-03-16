@@ -8,23 +8,23 @@
     </style>
 {% endblock %}
 {% block contentoption %}
-    <div class="body-content animated fadeIn">
-        <div class="header-content">
-            <h2><i class="fa fa-table"></i> Plataformas Moodle</h2>
-            <div class="breadcrumb-wrapper hidden-xs">
-                <span class="label">Usted esta aquí:</span>
-                <ol class="breadcrumb">
-                    <li>
-                        <i class="fa fa-home"></i>
-                        <a href="#">Recibidos</a>
-                        <i class="fa fa-angle-right"></i>
-                    </li>
-                    <li class="active">Restablecer Contraseña</li>
-                </ol>
-            </div>
+    
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Plataformas Moodle</h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Restablecer Contraseña</li>
+            </ol>
         </div>
+    </div>
         
-
+    <div class="body-content animated fadeIn">
         <div id="app">
             <div v-cloak>
                 <div class="row">
@@ -34,7 +34,7 @@
                                 <i class="fa fa-search"></i> Restablecer Contraseña
                             </div>
                             <div class="panel-body">
-                                <div v-if="resultado == null">
+                                <div v-if="resultadoUsuario == null">
                                     <div class="form-group">
                                         <label for="subsistema">Subsistema:</label>
                                         <select v-model="subsistema" id="subsistema" class="form-control" @change='getDepartamentos()' required>
@@ -67,13 +67,28 @@
                                         <input v-model="usuario" id="usuario" class="form-control" />
                                     </div>
                                     <div class="form-group">
-                                        <button v-on:click="limpiarCampos()" class="btn btn-md btn-prymary">Limpiar Campos</button>
-                                        <button v-on:click="actualizarContrasenia()" class="btn btn-md btn-success" :disabled="esValido">Actualizar Contraseña</button>
+                                        <button v-on:click="limpiarCampos()" class="btn btn-md btn-default">Limpiar Campos</button>
+                                        <button v-on:click="verificarUsuario()" class="btn btn-md btn-success" :disabled="esValido">Verificar Usuario</button>
                                     </div>
                                 </div>
                                 <div v-else>
-                                    <pre>${ resultado }</pre>
-                                    <button v-on:click="limpiarCampos()" class="btn btn-md btn-primary">Atrás</button>
+                                    <div v-if="resultado == null">
+                                        <div class="alert alert-success" v-if="resultadoUsuario.estado == 200">
+                                            <strong>¡${ resultadoUsuario.mensaje }!</strong> Usuario encontrado.
+                                        </div>
+                                        <div class="alert alert-danger" v-else>
+                                            <strong>¡${ resultadoUsuario.mensaje }!</strong> Usuario no encontrado.
+                                        </div>
+                                        <div v-if="resultadoUsuario.estado == 200">
+                                            <pre>${ resultadoUsuario }</pre>
+                                            <button v-on:click="actualizarContrasenia()" class="btn btn-md btn-success" v-if="resultadoUsuario.estado == 200">Actualizar Contraseña</button>
+                                        </div>
+                                        <button v-on:click="limpiarCampos()" class="btn btn-md btn-danger">Cancelar</button>
+                                    </div>
+                                    <div v-else>
+                                        <pre>${ resultado }</pre>
+                                        <button v-on:click="limpiarCampos()" class="btn btn-md btn-default">Nueva consulta</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -83,11 +98,11 @@
         </div>
     </div>
 {% endblock %}
-{% block javascripts%}
+{% block javascripts %}
     {{parent()}}
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script type="text/javascript">
         var app = new Vue({
             delimiters: ['${', '}'],
@@ -102,6 +117,7 @@
                 distrito: '',
                 distritos: [],
                 usuario: '',
+                resultadoUsuario: null,
                 resultado: null
             },
             methods: {
@@ -111,7 +127,7 @@
                     this.departamentos = [];
                     this.distritos = [];
                     this.usuario = '',
-                    axios.get('http://190.129.122.33:5000/plataforma/getDepartamentos/'+this.subsistema)
+                    axios.get('http://172.20.196.4:5000/plataforma/getDepartamentos/'+this.subsistema)
                     .then(response => {
                         if(response.data.estado == 200) {
                             this.departamentos = response.data.resultado;
@@ -125,7 +141,7 @@
                     this.distrito = '',
                     this.distritos = [];
                     this.usuario = '',
-                    axios.get('http://190.129.122.33:5000/plataforma/getDistritos/'+this.subsistema+'/'+this.departamento)
+                    axios.get('http://172.20.196.4:5000/plataforma/getDistritos/'+this.subsistema+'/'+this.departamento)
                     .then(response => {
                         if(response.data.estado == 200) {
                             this.distritos = response.data.resultado;
@@ -134,6 +150,23 @@
                     .catch(e => {
                         console.log(e);
                     });
+            	},
+                verificarUsuario: function() {
+                    let parametros = {
+                        "subsistema": this.subsistema,
+                        "departamento_id": this.departamento,
+                        "distrito_id": this.distrito,
+                        "username": this.usuario
+                    };
+
+                    axios.post('http://172.20.196.4:5000/plataforma/verificarUsuarioExiste', parametros)
+                    .then(response => {
+                        this.resultadoUsuario = response.data;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.error = true
+                    });    
             	},
                 actualizarContrasenia: function() {
                     Swal.fire({
@@ -154,17 +187,14 @@
                                 "username": this.usuario
                             };
 
-                            axios.post('http://190.129.122.33:5000/plataforma/actualizarContrasenia', parametros)
+                            axios.post('http://172.20.196.4:5000/plataforma/actualizarContrasenia', parametros)
                             .then(response => {
                                 this.resultado = response.data;
                             })
                             .catch(e => {
                                 console.log(e);
                                 this.error = true
-                            })
-                            .finally(() => this.cargando = false);
-
-                            this.limpiarCampos();
+                            });
                         }
                     });
             	},
@@ -175,6 +205,7 @@
                     this.departamentos = [];
                     this.distritos = [];
                     this.usuario = '';
+                    this.resultadoUsuario = null;
                     this.resultado = null;
                 }
             },
