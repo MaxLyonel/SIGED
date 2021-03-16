@@ -424,3 +424,7 @@ sie_regular_notasMigrationttgtte:
 sie_regular_migrateNotasModular:
     resource: "@SieRegularBundle/Resources/config/routing/migrateNotasModular.yml"
     prefix:   /sie/migrationsmodular
+
+sie_regular_plataformaMoodle:
+    resource: "@SieRegularBundle/Resources/config/routing/plataformaMoodle.yml"
+    prefix:   /sie/plataformaMoodle

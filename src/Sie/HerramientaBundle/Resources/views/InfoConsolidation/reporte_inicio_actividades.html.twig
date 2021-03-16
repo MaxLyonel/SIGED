@@ -141,8 +141,12 @@
                                     {% endif %}
 
                                     <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit-{{id}}').click();">
-                                         <span class="pull-right" style="width:50px; text-align:right"><b><small>{{subtotal|raw}}</small></b></span><span class="">{{nombre}}</span>
+                                         <span class="pull-right" style="width:50px; text-align:right">
+                                            <b><small>{{subtotal|raw}}</small></b>
+                                         </span>
+                                         <span class="">{{nombre}}</span>
                                     </a>
+
                                     <div class="progress progress-xs" style="width: 100%;">
                                         {% if d.total>0 %}
                                         {% set porcentaje = (d.inicio*100)/d.total %}
@@ -162,6 +166,61 @@
 
             <!---Graficos del lado derecho-->
             <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                {% if url=='#' %}
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div class="table-responsive">
+                              <table class="table">
+                                <tr>
+                                    <th>Unidad educativa</th>
+                                    <th>Inicio actividad</th>
+                                    <th>Helada</th>
+                                    <th>Granizada</th>
+                                    <th>Sismo</th>
+                                    <th>Riada</th>
+                                    <th>Deslizamiento</th>
+                                    <th>Sequia</th>
+                                    <th>Incendio</th>
+                                    <th>Inundación</th>
+                                    <th>Otros</th>
+                                    <th>Riesgo sanitario</th>
+                                    <th>Sin riesgo</th>
+                                </tr>
+                                {% set iniciaron=1 %}
+                                {% for ue in datos %}
+                                    {% if ue.inicio==0 %}
+                                    <tr>
+                                        {% set iniciaron=0 %}
+                                        {% set bg_color= (ue.inicio==1)?'bg-success':'bg-danger' %}
+                                        <td>{{ue.ue_nom}}</td>
+                                        <td class='text-white text-center {{bg_color}}'>{{(ue.inicio==1)?'Si':'No'}}</td>
+                                        <td class="{{(ue.helada==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.granizada==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.sismo==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.riada==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.deslizamiento==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.sequia==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.incendio==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.inundacion==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.otros==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.riesgo_sanitario==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.sin_riesgo==1)?'bg-primary':''}}"> </td>
+                                    </tr>
+                                    {% endif %}
+                                {% endfor %}
+                                    {% if iniciaron==1 %}
+                                    <tr>
+                                        <td colspan="15">Todas la unidades educativas iniciaron actividades</td>
+                                    </tr>
+                                    {% endif %}
+
+                              </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default shadow">
@@ -176,6 +235,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
