@@ -33,7 +33,7 @@
                             <div class="panel-heading">
                                 <i class="fa fa-search"></i> Restablecer Contraseña
                             </div>
-                            <div class="panel-body">
+                            <div class="panel-body" v-if="!error">
                                 <div class="row" v-if="resultadoUsuario == null">
                                     <div class="col-md-12">
                                         <div class="form-group">
@@ -155,6 +155,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="panel-body" v-else>
+                                <div class="alert alert-danger">
+                                    <strong>¡Error!</strong> Ocurrió un error inesperado.
+                                </div>
+                                <button v-on:click="limpiarCampos()" class="btn btn-md btn-default">Nueva consulta</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -184,16 +190,18 @@
                 distritos: [],
                 usuario: '',
                 resultadoUsuario: null,
-                resultado: null
+                resultado: null,
+                error: false
             },
             methods: {
             	getDepartamentos: function() {
-                    this.departamento = '',
-                    this.distrito = '',
+                    this.departamento = '';
+                    this.distrito = '';
                     this.departamentos = [];
                     this.distritos = [];
-                    this.usuario = '',
-                    axios.get('https://190.129.122.33:5000/plataforma/getDepartamentos/'+this.subsistema)
+                    this.usuario = '';
+                    
+                    axios.get(Routing.generate('plataforma_moodle_get_departamentos', { subsistema: this.subsistema } ))
                     .then(response => {
                         if(response.data.estado == 200) {
                             this.departamentos = response.data.resultado;
@@ -201,13 +209,15 @@
                     })
                     .catch(e => {
                         console.log(e);
+                        this.error = true;
                     });
             	},
                 getDistritos: function() {
-                    this.distrito = '',
+                    this.distrito = '';
                     this.distritos = [];
-                    this.usuario = '',
-                    axios.get('https://190.129.122.33:5000/plataforma/getDistritos/'+this.subsistema+'/'+this.departamento)
+                    this.usuario = '';
+                    
+                    axios.get(Routing.generate('plataforma_moodle_get_distritos', { subsistema: this.subsistema, departamento: this.departamento } ))
                     .then(response => {
                         if(response.data.estado == 200) {
                             this.distritos = response.data.resultado;
@@ -215,6 +225,7 @@
                     })
                     .catch(e => {
                         console.log(e);
+                        this.error = true;
                     });
             	},
                 verificarUsuario: function() {
@@ -225,14 +236,14 @@
                         "username": this.usuario
                     };
 
-                    axios.post('https://190.129.122.33:5000/plataforma/verificarUsuarioExiste', parametros)
+                    axios.post(Routing.generate('plataforma_moodle_verificar_usuario', parametros ))
                     .then(response => {
                         this.resultadoUsuario = response.data;
                     })
                     .catch(e => {
                         console.log(e);
-                        this.error = true
-                    });    
+                        this.error = true;
+                    });
             	},
                 actualizarContrasenia: function() {
                     Swal.fire({
@@ -253,13 +264,13 @@
                                 "username": this.usuario
                             };
 
-                            axios.post('https://190.129.122.33:5000/plataforma/actualizarContrasenia', parametros)
+                            axios.post(Routing.generate('plataforma_moodle_actualizar_contrasenia', parametros ))
                             .then(response => {
                                 this.resultado = response.data;
                             })
                             .catch(e => {
                                 console.log(e);
-                                this.error = true
+                                this.error = true;
                             });
                         }
                     });
@@ -273,6 +284,7 @@
                     this.usuario = '';
                     this.resultadoUsuario = null;
                     this.resultado = null;
+                    this.error = false;
                 }
             },
             computed: {
