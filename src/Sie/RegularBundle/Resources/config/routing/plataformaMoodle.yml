@@ -1,0 +1,3 @@
+plataforma_moodle_index:
+    path:    /
+    defaults: { _controller: SieRegularBundle:PlataformaMoodle:index }

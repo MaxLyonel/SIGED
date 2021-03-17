@@ -1,0 +1,285 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        [v-cloak]{
+            display: none;
+        }
+    </style>
+{% endblock %}
+{% block contentoption %}
+    
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Plataformas Moodle</h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Recibidos</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Restablecer Contraseña</li>
+            </ol>
+        </div>
+    </div>
+        
+    <div class="body-content animated fadeIn">
+        <div id="app">
+            <div v-cloak>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <div class="panel panel-icon panel-primary">
+                            <div class="panel-heading">
+                                <i class="fa fa-search"></i> Restablecer Contraseña
+                            </div>
+                            <div class="panel-body">
+                                <div class="row" v-if="resultadoUsuario == null">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="subsistema">Subsistema:</label>
+                                            <select v-model="subsistema" id="subsistema" class="form-control" @change='getDepartamentos()' required>
+                                                <option disabled value="">Seleccione un elemento</option>
+                                                <option v-for="subsistema in subsistemas" v-bind:value="subsistema.value">
+                                                    ${ subsistema.text }
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="departamento">Departamento:</label>
+                                            <select v-model="departamento" id="departamento" class="form-control" @change='getDistritos()' required>
+                                                <option disabled value="">Seleccione un elemento</option>
+                                                <option v-for="departamento in departamentos" v-bind:value="departamento.departamento_id">
+                                                    ${ departamento.departamento }
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="distrito">Distrito:</label>
+                                            <select v-model="distrito" id="distrito" class="form-control">
+                                                <option disabled value="">Seleccione un elemento</option>
+                                                <option v-for="distrito in distritos" v-bind:value="distrito.distrito_id">
+                                                    ${ distrito.distrito_id } | ${ distrito.distrito }
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="usuario">Usuario:</label>
+                                            <input v-model="usuario" id="usuario" class="form-control" />
+                                        </div>
+                                        <div class="form-group">
+                                            <button v-on:click="limpiarCampos()" class="btn btn-md btn-default">Limpiar Campos</button>
+                                            <button v-on:click="verificarUsuario()" class="btn btn-md btn-success" :disabled="esValido">Verificar Usuario</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" v-else>
+                                    <div class="col-md-12" v-if="resultado == null">
+                                        <div class="alert alert-info" v-if="resultadoUsuario.estado == 200">
+                                            <strong>¡${ resultadoUsuario.mensaje }!</strong> Usuario encontrado.
+                                        </div>
+                                        <div class="alert alert-danger" v-else>
+                                            <strong>¡${ resultadoUsuario.mensaje }!</strong> Usuario no encontrado.
+                                        </div>
+                                        <div v-if="resultadoUsuario.estado == 200">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-striped">
+                                                    <tr>
+                                                        <th>Nombre(s):</th>
+                                                        <td>${ resultadoUsuario.resultado.firstname }</td>                                                
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Apellido(s):</th>
+                                                        <td>${ resultadoUsuario.resultado.lastname }</td>                                                
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Usuario:</th>
+                                                        <td>${ resultadoUsuario.resultado.username }</td>                                                
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Correo electrónico:</th>
+                                                        <td>${ resultadoUsuario.resultado.email }</td>                                                
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Último acceso:</th>
+                                                        <td>${ resultadoUsuario.resultado.lastaccess }</td>                                                
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Último ingreso (login):</th>
+                                                        <td>${ resultadoUsuario.resultado.lastlogin }</td>                                                
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <button v-on:click="limpiarCampos()" class="btn btn-md btn-danger">Cancelar</button>
+                                        <button v-on:click="actualizarContrasenia()" class="btn btn-md btn-success" v-if="resultadoUsuario.estado == 200">Actualizar Contraseña</button>
+                                    </div>
+                                    <div class="col-md-12" v-else>
+                                        <div class="alert alert-success" v-if="resultado.estado == 200">
+                                            <strong>¡${ resultado.mensaje }!</strong> La contraseña fue restablecida.
+                                        </div>
+                                        <div class="alert alert-danger" v-else>
+                                            <strong>¡${ resultado.mensaje }!</strong> La contraseña no fue restablecida.
+                                        </div>
+                                        <div v-if="resultado.estado == 200">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover table-striped">
+                                                    <tr>
+                                                        <th>Nombre(s):</th>
+                                                        <td>${ resultado.resultado.firstname }</td>                                                
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Apellido(s):</th>
+                                                        <td>${ resultado.resultado.lastname }</td>                                                
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Usuario:</th>
+                                                        <td>${ resultado.resultado.username }</td>                                                
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Correo electrónico:</th>
+                                                        <td>${ resultado.resultado.email }</td>                                                
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Último acceso:</th>
+                                                        <td>${ resultado.resultado.lastaccess }</td>                                                
+                                                    </tr>
+                                                    <tr>
+                                                        <th>Último ingreso (login):</th>
+                                                        <td>${ resultado.resultado.lastlogin }</td>                                                
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <button v-on:click="limpiarCampos()" class="btn btn-md btn-default">Nueva consulta</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script type="text/javascript">
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                subsistema: '',
+                subsistemas: [
+                    { text: 'Regular', value: 'Regular' },
+                    { text: 'Alternativa', value: 'Alternativa' },
+                    { text: 'Especial', value: 'Especial' }
+                ],
+                departamento: '',
+                departamentos: [],
+                distrito: '',
+                distritos: [],
+                usuario: '',
+                resultadoUsuario: null,
+                resultado: null
+            },
+            methods: {
+            	getDepartamentos: function() {
+                    this.departamento = '',
+                    this.distrito = '',
+                    this.departamentos = [];
+                    this.distritos = [];
+                    this.usuario = '',
+                    axios.get('https://190.129.122.33:5000/plataforma/getDepartamentos/'+this.subsistema)
+                    .then(response => {
+                        if(response.data.estado == 200) {
+                            this.departamentos = response.data.resultado;
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            	},
+                getDistritos: function() {
+                    this.distrito = '',
+                    this.distritos = [];
+                    this.usuario = '',
+                    axios.get('https://190.129.122.33:5000/plataforma/getDistritos/'+this.subsistema+'/'+this.departamento)
+                    .then(response => {
+                        if(response.data.estado == 200) {
+                            this.distritos = response.data.resultado;
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+            	},
+                verificarUsuario: function() {
+                    let parametros = {
+                        "subsistema": this.subsistema,
+                        "departamento_id": this.departamento,
+                        "distrito_id": this.distrito,
+                        "username": this.usuario
+                    };
+
+                    axios.post('https://190.129.122.33:5000/plataforma/verificarUsuarioExiste', parametros)
+                    .then(response => {
+                        this.resultadoUsuario = response.data;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.error = true
+                    });    
+            	},
+                actualizarContrasenia: function() {
+                    Swal.fire({
+                        title: 'Restablecer contraseña',
+                        text: "¿Está segura(o) de restablecer la contraseña?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sí, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.value) {
+                            let parametros = {
+                                "subsistema": this.subsistema,
+                                "departamento_id": this.departamento,
+                                "distrito_id": this.distrito,
+                                "username": this.usuario
+                            };
+
+                            axios.post('https://190.129.122.33:5000/plataforma/actualizarContrasenia', parametros)
+                            .then(response => {
+                                this.resultado = response.data;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                this.error = true
+                            });
+                        }
+                    });
+            	},
+                limpiarCampos: function() {
+                    this.subsistema = '',
+                    this.departamento = '',
+                    this.distrito = '',
+                    this.departamentos = [];
+                    this.distritos = [];
+                    this.usuario = '';
+                    this.resultadoUsuario = null;
+                    this.resultado = null;
+                }
+            },
+            computed: {
+                esValido: function(){
+                    return (this.subsistema != '' && this.departamento != '' && this.distrito != '' && this.usuario != '') ? false : true;
+                }
+            }
+        });  
+    </script>
+{% endblock %}
