@@ -311,6 +311,11 @@
                                     <li><a href="{{ path('herramienta_inforeporte_inicio_actividades_distrito_colegio')}}">Distrital Reporte de inicio de actividades</a></li>
                                 {% endif %}
 
+                                {# Reporte de unidades de frontera #}
+                                {% if true and app.session.get('roluser') in [7,10,10]  %}<!--Tecnnico departamental y distrital-->
+                                    <li><a href="{{ path('herramienta_inforeporte_estudiantes_en_situacion_de_vulnerabilidad')}}">Reporte de estudiantes en situación de Vulnerabilidad</a></li>
+                                {% endif %}
+
                             </ul>
                         </li>
 

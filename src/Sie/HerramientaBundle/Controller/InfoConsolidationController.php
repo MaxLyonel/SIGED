@@ -1073,4 +1073,77 @@ class InfoConsolidationController extends Controller {
         $objColegio=NULL;
       return $objColegio;
     }
+
+      //Reporte estudiantes en situacio de vulnerabilidad
+    function reporteEstudiantesSituacionVulnerabilidadAction(Request $request)
+    {
+      $departamento=-1;
+      $distrito=-1;
+      $userId=$this->session->get('userId');
+      $userRol=$this->session->get('roluser');
+      $datosUser=$this->getDatosUsuario($userId,$userRol);
+      if($datosUser)
+      {
+        $departamentoDistrito=$datosUser['cod_dis'];
+        list($departamento,$distrito)=$this->getDepartamentoDistrito($departamentoDistrito);
+      }
+      else
+      {
+        return $this->redirect($this->generateUrl('login'));
+      }
+      $datos=$this->getUESituacionVulnerabilidad($departamento,$distrito);
+
+      return $this->render($this->session->get('pathSystem') . ':InfoConsolidation:reporte_estudiantes_situacion_vulnerabilidad.html.twig', array(
+        'departamento'=> $departamento,
+        'distrito'=> $distrito,
+        'departamento_nom'=>$this->getNombreDepartamento($departamento),
+        'distrito_nom'=>$this->getNombreDistrito($distrito),
+        'datos' => $datos,
+      ));
+    }
+
+    private function getUESituacionVulnerabilidad($departamento=-1,$distrito=-1)
+    {
+        $operadorDepartamento=($departamento==-1)?' <> ':' = ';
+        $operadorDistrito=($distrito==-1)?' <> ':' = ';
+
+        $departamentos=array();
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = '
+        select 
+        j.id as departamento_id,
+        j.departamento as departamento_nom,
+        f.cod_dis as distrito_id,
+        f.des_dis as distrito_nom,
+        d.id as ue_id,
+        d.institucioneducativa ue_nom,
+        COALESCE(i.id_registro, -1) as registro
+        
+        from  institucioneducativa d 
+        inner join jurisdiccion_geografica e on d.le_juridicciongeografica_id=e.id
+        inner join (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo where lugar_nivel_id=7) f on e.lugar_tipo_id_distrito=f.id
+        inner JOIN institucioneducativa_sucursal g on g.institucioneducativa_id=d.id
+        
+        RIGHT JOIN (
+        select a.institucioneducativa_id, eq.id_registro from  institucioneducativa_frontera_vulnerabilidad a left JOIN (SELECT institucioneducativa_id as id_registro, count(institucioneducativa_id) nro_estudiantes from  estudiante_quipus GROUP BY institucioneducativa_id having count(institucioneducativa_id)>1) eq on a.institucioneducativa_id=eq.id_registro
+        ) i on i.institucioneducativa_id =d.id
+        
+        INNER JOIN departamento_tipo j on j.id=CAST(substring(f.cod_dis,1,1) as INTEGER)
+    
+        WHERE j.id '.$operadorDepartamento.' ? 
+        and f.cod_dis '.$operadorDistrito.' ?
+
+        GROUP BY j.id,j.departamento,f.cod_dis,f.des_dis,d.id, i.id_registro
+        ORDER BY j.id asc,j.departamento asc,f.cod_dis asc,d.institucioneducativa ASC
+        ';
+
+        $stmt = $db->prepare($query);
+        $params = array($departamento,$distrito);
+        $stmt->execute($params);
+        $colegios=$stmt->fetchAll();
+
+        return $colegios;
+    }
+
 }
