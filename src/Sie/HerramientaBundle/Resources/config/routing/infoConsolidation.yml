@@ -29,3 +29,8 @@ herramienta_inforeporte_inicio_actividades_distrito_colegio:
     defaults: { _controller: SieHerramientaBundle:InfoConsolidation:reporteInicioActividadesColegio }
     methods:  ['GET','POST']
     
+herramienta_inforeporte_estudiantes_en_situacion_de_vulnerabilidad:
+    path:     /reporte-estudiantes-situacion-vulnerabilidad
+    defaults: { _controller: SieHerramientaBundle:InfoConsolidation:reporteEstudiantesSituacionVulnerabilidad }
+    methods:  ['GET','POST']
+    
