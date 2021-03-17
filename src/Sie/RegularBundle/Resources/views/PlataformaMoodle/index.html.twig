@@ -193,7 +193,7 @@
                     this.departamentos = [];
                     this.distritos = [];
                     this.usuario = '',
-                    axios.get('http://190.129.122.33:5000/plataforma/getDepartamentos/'+this.subsistema)
+                    axios.get('https://190.129.122.33:5000/plataforma/getDepartamentos/'+this.subsistema)
                     .then(response => {
                         if(response.data.estado == 200) {
                             this.departamentos = response.data.resultado;
@@ -207,7 +207,7 @@
                     this.distrito = '',
                     this.distritos = [];
                     this.usuario = '',
-                    axios.get('http://190.129.122.33:5000/plataforma/getDistritos/'+this.subsistema+'/'+this.departamento)
+                    axios.get('https://190.129.122.33:5000/plataforma/getDistritos/'+this.subsistema+'/'+this.departamento)
                     .then(response => {
                         if(response.data.estado == 200) {
                             this.distritos = response.data.resultado;
@@ -225,7 +225,7 @@
                         "username": this.usuario
                     };
 
-                    axios.post('http://190.129.122.33:5000/plataforma/verificarUsuarioExiste', parametros)
+                    axios.post('https://190.129.122.33:5000/plataforma/verificarUsuarioExiste', parametros)
                     .then(response => {
                         this.resultadoUsuario = response.data;
                     })
@@ -253,7 +253,7 @@
                                 "username": this.usuario
                             };
 
-                            axios.post('http://190.129.122.33:5000/plataforma/actualizarContrasenia', parametros)
+                            axios.post('https://190.129.122.33:5000/plataforma/actualizarContrasenia', parametros)
                             .then(response => {
                                 this.resultado = response.data;
                             })
