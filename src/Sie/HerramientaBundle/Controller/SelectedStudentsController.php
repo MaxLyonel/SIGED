@@ -324,7 +324,7 @@ class SelectedStudentsController extends Controller{
         $em = $this->getDoctrine()->getManager();    	
 
         foreach ($estudiantes as $value) {
-        	dump($value);
+        	
         	$objStudentQuipus = $em->getRepository('SieAppWebBundle:EstudianteQuipus')->find($value['id']);
             if($objStudentQuipus){
               $objStudentQuipus->setEstado('t');            
