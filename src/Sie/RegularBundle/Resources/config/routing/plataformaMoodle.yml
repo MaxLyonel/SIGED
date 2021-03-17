@@ -1,9 +1,3 @@
 plataforma_moodle_index:
     path:    /
     defaults: { _controller: SieRegularBundle:PlataformaMoodle:index }
-
-# plataforma_moodle_savetraslado_student:
-#     path:     /savetraslado_student
-#     defaults: { _controller: "SieRegularBundle:Traslado:saveTraslado" }
-#     options:
-#        expose: true
