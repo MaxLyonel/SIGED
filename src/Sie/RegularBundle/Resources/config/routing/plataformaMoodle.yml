@@ -2,8 +2,26 @@ plataforma_moodle_index:
     path:    /
     defaults: { _controller: SieRegularBundle:PlataformaMoodle:index }
 
-# plataforma_moodle_savetraslado_student:
-#     path:     /savetraslado_student
-#     defaults: { _controller: "SieRegularBundle:Traslado:saveTraslado" }
-#     options:
-#        expose: true
+plataforma_moodle_get_departamentos:
+    path:     /getDepartamentos
+    defaults: { _controller: SieRegularBundle:PlataformaMoodle:getDepartamentos }
+    options:
+        expose: true
+
+plataforma_moodle_get_distritos:
+    path:     /getDistritos
+    defaults: { _controller: SieRegularBundle:PlataformaMoodle:getDistritos }
+    options:
+        expose: true
+
+plataforma_moodle_verificar_usuario:
+    path:     /verificarUsuario
+    defaults: { _controller: SieRegularBundle:PlataformaMoodle:verificarUsuario }
+    options:
+        expose: true
+
+plataforma_moodle_actualizar_contrasenia:
+    path:     /actualizarContrasenia
+    defaults: { _controller: SieRegularBundle:PlataformaMoodle:actualizarContrasenia }
+    options:
+        expose: true

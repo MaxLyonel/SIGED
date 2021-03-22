@@ -239,7 +239,7 @@ class InscriptionSpecialNewController extends Controller
                 //check if the user can do the inscription
                 //validate allow access
                   $arrAllowAccessOption = array(7,8);
-                  if(!in_array($this->session->get('roluser'),$arrAllowAccessOption)){
+                  /*if(!in_array($this->session->get('roluser'),$arrAllowAccessOption)){
                     $defaultController = new DefaultCont();
                     $defaultController->setContainer($this->container);
 
@@ -250,7 +250,7 @@ class InscriptionSpecialNewController extends Controller
                       $this->addFlash('notiext', $message);
                       return $this->redirect($this->generateUrl('inscriptionSpecialNew_index'));
                     }
-                  }
+                  }*/
 
 
                   //insert a new record with the new selected variables and put matriculaFinID like 5
