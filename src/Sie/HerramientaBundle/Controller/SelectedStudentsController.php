@@ -104,6 +104,7 @@ class SelectedStudentsController extends Controller{
 		            'institucioneducativaId'=>$value->getInstitucioneducativa()->getId(),
 		            'institucioneducativa'=>$em->getRepository('SieAppWebBundle:Institucioneducativa')->find($value->getInstitucioneducativa()->getId())->getInstitucioneducativa() ,
 		            'codigoRude' => $value->getCodigoRude(),
+                           'fechaNac' => $value->>getFechaNacimiento(),
 		            'nivel'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($value->getNivelTipoId())->getNivel(),
 		            'grado'=>$em->getRepository('SieAppWebBundle:GradoTipo')->find($value->getGradoTipoId())->getGrado() ,
 		            'paralelo'=>$em->getRepository('SieAppWebBundle:ParaleloTipo')->find($value->getParaleloTipoId())->getParalelo()  ,
@@ -257,8 +258,8 @@ class SelectedStudentsController extends Controller{
         $objStudentQuipus->setCarnetIdentidad($estudiante['carnet']);
         $objStudentQuipus->setComplemento($estudiante['complemento']);
         $objStudentQuipus->setOrgcurricularTipoId(1);
-        //$objStudentQuipus->setFechaNacimiento(new \DateTime($estudiante['fechaNac']));
-        $objStudentQuipus->setFechaNacimiento(new \DateTime('now'));
+        $objStudentQuipus->setFechaNacimiento(new \DateTime($estudiante['fechaNac']));
+        //$objStudentQuipus->setFechaNacimiento(new \DateTime('now'));
         $objStudentQuipus->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($estudiante['institucioneducativaId']) );
         $objStudentQuipus->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')) );
         $objStudentQuipus->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estudiante['estInsId']) );
