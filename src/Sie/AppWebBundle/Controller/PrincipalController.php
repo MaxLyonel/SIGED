@@ -746,23 +746,39 @@ LIMIT ?';
     {
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
-        //get the send values
 
         $departamento=filter_var($request->get('departamento'),FILTER_VALIDATE_INT);
         $distrito=filter_var($request->get('distrito'),FILTER_VALIDATE_INT);
         $gestion=filter_var($request->get('gestion'),FILTER_VALIDATE_INT);
+        $mes=filter_var($request->get('mes'),FILTER_VALIDATE_INT);
 
-        
-        $query = 'select * from sp_genera_reporte_modalidad_atencion(?,?,?);';
+        $query = 'select * from sp_genera_reporte_modalidad_atencion(?,?,?,?);';
         $stmt = $db->prepare($query);
-        $params = array($gestion,$departamento,$distrito);
+        $params = array($gestion,$departamento,$distrito,$mes);
         $stmt->execute($params);
         $datosReporte=$stmt->fetchAll();
         
-
         return $this->render($this->sesion->get('pathSystem') . ':Principal:reporte_modalidad_atencion.html.twig', array
         (
-        'datosReporte' => $datosReporte
+        'datosReporte' => $datosReporte,
+        'mes' =>$mes
         ));
+    }
+
+    public function getDistritosAction(Request $request)
+    {
+        $departamento=filter_var($request->get('departamento'),FILTER_SANITIZE_NUMBER_INT);
+        $distritos_array=array();
+        $em = $this->getDoctrine()->getManager();
+        $distritos = $em->getRepository('SieAppWebBundle:DistritoTipo')->findBy(array('departamentoTipo'=>$departamento));
+        
+        foreach ($distritos as $d)
+        {
+            $distritos_array[]=array('id' =>$d->getId(),'distrito'=>$d->getDistrito());
+        }
+        $response = new Response(json_encode($distritos_array));
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
+
     }
 }

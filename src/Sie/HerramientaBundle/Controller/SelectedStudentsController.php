@@ -104,7 +104,7 @@ class SelectedStudentsController extends Controller{
 		            'institucioneducativaId'=>$value->getInstitucioneducativa()->getId(),
 		            'institucioneducativa'=>$em->getRepository('SieAppWebBundle:Institucioneducativa')->find($value->getInstitucioneducativa()->getId())->getInstitucioneducativa() ,
 		            'codigoRude' => $value->getCodigoRude(),
-                           'fechaNac' => $value->>getFechaNacimiento(),
+                    'fechaNac' => $value->getFechaNacimiento(),
 		            'nivel'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($value->getNivelTipoId())->getNivel(),
 		            'grado'=>$em->getRepository('SieAppWebBundle:GradoTipo')->find($value->getGradoTipoId())->getGrado() ,
 		            'paralelo'=>$em->getRepository('SieAppWebBundle:ParaleloTipo')->find($value->getParaleloTipoId())->getParalelo()  ,
