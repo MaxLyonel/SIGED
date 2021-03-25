@@ -41,7 +41,6 @@ class InscriptionIniPriTrueController extends Controller {
      *
      */
     public function indexAction() {
-        return $this->redirect($this->generateUrl('login'));
       /*
       $arrUser = array('6478217','7861595','3558624');
 
