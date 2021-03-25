@@ -262,6 +262,7 @@
                                     {% endif %} #}
 
                                     {# AREAS ESTUDIANTE #}
+                                    {# commented by krlos 25.03.21
                                     {% if gestion >= 2019 and (data.estadomatriculaId in [4] or (data.estadomatriculaId in [5,11,28,55] and operativo < 5)) and nivel == 13 and grado >= 3 and app.session.get('ue_humanistica') == false %}
                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas estudiante">
                                             <button type="button" class="btn btn-circle btn-warning" data-toggle="modal" data-target=".bs-example-modal-table" onclick="areasEstudiante('{{infoUe}}','{{jsnInfoStudent}}');" >
@@ -269,7 +270,7 @@
                                             </button>
                                         </div>
                                     {% endif %}
-                                    
+                                    #}
                                     {# RUDE #}
                                     {% if 1 == 2 and gestion >= 2018 and data.estadomatriculaId in [4,5,55,28,11] and (app.session.get('ue_plena') or app.session.get('ue_modular')) %}
 
