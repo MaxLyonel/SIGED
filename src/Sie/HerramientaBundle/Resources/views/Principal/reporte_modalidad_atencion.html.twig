@@ -1,7 +1,10 @@
 
-
+	{% set meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] %}
 	<div class="table-responsive">
 		<table class="table" id="dataTable-modalidad">
+			{% if mes > 0 and mes <=12 %}
+				<caption class="text-center h3">Mes: {{meses[mes-1]}}</caption>
+			{% endif %}
 		  <thead class="thead-dark">
 		    <tr>
 		      <th scope="col">#</th>
@@ -27,7 +30,6 @@
 			      <th scope="row" colspan="6">No existen datos</th>
 			    </tr>
 		  	{% endif %}
-
 
 		  </tbody>
 		</table>

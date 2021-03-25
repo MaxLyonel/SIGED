@@ -12,7 +12,7 @@
 			{% for mco in maestrosCursoOferta %}
 				<tr>
 					{# {% if operativo == mco.idNotaTipo or (operativo == 5 and mco.idNotaTipo == 4) %} #}
-					{% if onlyview == false %}
+					{% if true %}
 						<td>{{mco.periodo}}</td>
 						<td>
 							<input type="hidden" name="ieco[]" value="{{mco.idco}}">
@@ -54,7 +54,7 @@
 	</table>
 	<div style="background:#EEEEEE; text-align:right; padding:5px; margin-top:-10px">
 		<button type="button" class="btn btn-default" onclick="cerrarMaestros({{ieco}})">Cerrar</button>
-		{% if onlyview == false %}
+		{% if true %}
 			<button type="button" class="btn btn-success" onclick="asignarMaestro();">Guardar Cambios</button>
 		{% endif %}
 	</div>

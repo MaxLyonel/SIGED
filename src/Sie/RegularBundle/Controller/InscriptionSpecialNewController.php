@@ -25,7 +25,7 @@ class InscriptionSpecialNewController extends Controller
     public function indexAction()
     {
         
-        return $this->render('SieRegularBundle:InscriptionSpecialNew:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':InscriptionSpecialNew:index.html.twig', array(
                 // ...
                   'form' => $this->createSearchForm()->createView(),
             ));
@@ -74,7 +74,7 @@ class InscriptionSpecialNewController extends Controller
           //     ));
         $message = 'Estudiante no se encuentra registrado en el Sistema De Educacion Especial.';
         $this->addFlash('notiext', $message);
-        return $this->render('SieRegularBundle:InscriptionSpecialNew:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':InscriptionSpecialNew:index.html.twig', array(
                   'form' => $this->createSearchForm()->createView(),
             ));
       }
@@ -85,7 +85,7 @@ class InscriptionSpecialNewController extends Controller
       $form['idStudent'] = $datastudent->getId();
       $formExtranjeros = $this->createFormNewExtranjeros($datastudent->getId(), $sw, $form);
       // dump($form);die;
-        return $this->render('SieRegularBundle:InscriptionSpecialNew:find.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':InscriptionSpecialNew:find.html.twig', array(
           'datastudent' => $datastudent,
           'formExtranjeros' => $formExtranjeros->createView(),
           'infoStudent' => $form
@@ -239,7 +239,7 @@ class InscriptionSpecialNewController extends Controller
                 //check if the user can do the inscription
                 //validate allow access
                   $arrAllowAccessOption = array(7,8);
-                  if(!in_array($this->session->get('roluser'),$arrAllowAccessOption)){
+                  /*if(!in_array($this->session->get('roluser'),$arrAllowAccessOption)){
                     $defaultController = new DefaultCont();
                     $defaultController->setContainer($this->container);
 
@@ -250,7 +250,7 @@ class InscriptionSpecialNewController extends Controller
                       $this->addFlash('notiext', $message);
                       return $this->redirect($this->generateUrl('inscriptionSpecialNew_index'));
                     }
-                  }
+                  }*/
 
 
                   //insert a new record with the new selected variables and put matriculaFinID like 5
@@ -285,11 +285,11 @@ class InscriptionSpecialNewController extends Controller
 
                   $message = 'Datos Registrados Correctamente';
                   $this->addFlash('goodext', $message);
-                  //return $this->redirect($this->generateUrl('inscription_extranjeros_index'));
+                  return $this->redirect($this->generateUrl('inscriptionSpecialNew_find'));
 
-                  return $this->forward('SieRegularBundle:RegularizarNotas:show',array(
+                  /*return $this->forward('SieRegularBundle:RegularizarNotas:show',array(
                     'idInscripcion'=>$studentInscription->getId()
-                    ));
+                    ));*/
 
               } catch (Exception $ex) {
                   $em->getConnection()->rollback();
@@ -337,7 +337,7 @@ class InscriptionSpecialNewController extends Controller
 
     public function resultAction()
     {
-        return $this->render('SieRegularBundle:InscriptionSpecialNew:result.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':InscriptionSpecialNew:result.html.twig', array(
                 // ...
             ));    }
 

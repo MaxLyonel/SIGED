@@ -24,7 +24,7 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel shadow">
                     <div class="panel-heading">
-                        {% if estadistica is defined  %}
+                        {% if estadistica is defined and estadistica|length > 0 %}
                             <div class="pull-left">                             
                                 {% if nivel == 0 %}
                                     <h3 class="panel-title text-primary"><i class="fa fa-bar-chart-o"></i> Cantidad de inscritos por Departamento</h3>
@@ -57,8 +57,8 @@
                             <div class="clearfix"></div>
                         {% endif %}
                     </div>            
-                    <div class="panel-body no-padding">
-                        {% if estadistica is defined %}
+                    <div class="panel-body">
+                        {% if estadistica is defined and estadistica|length > 0 %}
                             {% set count = 0 %}
                             {%for datoKey, datos in estadistica %}
                                 {% for lugarKey, lugares in datos['dato'] %}  
@@ -111,6 +111,14 @@
                                     <div class="line no-margin"></div>
                                 {% endfor %}
                             {% endfor %}
+                        {% else %}
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="alert alert-primary" role="alert">
+                                        <i class="fa fa-fw fa-info-circle"></i> No se encontraron resultados.
+                                    </div>
+                                </div>
+                            </div>
                         {% endif %}
                     </div><!-- /.panel-body -->
                 </div>

@@ -68,17 +68,18 @@
                                 <label class="form-check-label">¿La unidad educativa continua con sus actividades?</label>
                             </div>
                             <div class="form-check pr-3" style="display:inline-block;padding-right:1.3rem;">
-                                <input class="form-check-input radio-inicio-clases" type="radio" name="inicio_clases" id="inicio_clases_1" value="1">
+                                <input class="form-check-input radio-inicio-clases" type="radio" name="inicio_clases" id="inicio_clases_1" value="1" required="required">
                                 <label class="form-check-label" for="inicio_clases_1">Si</label>
                             </div>
                             <div class="form-check pr-3" style="display:inline-block;padding-right:1.3rem;">
-                                <input class="form-check-input radio-inicio-clases" type="radio" name="inicio_clases" id="inicio_clases_0" value="0">
+                                <input class="form-check-input radio-inicio-clases" type="radio" name="inicio_clases" id="inicio_clases_0" value="0" required="required">
                                 <label class="form-check-label" for="inicio_clases_0">No</label>
                             </div>
 
                               <div class="form-group mb-0 mt-2 div-no-inicio-razon" style="display:none">
                                 <label for="no_inicio_razon">¿Por qué no continuo con las actividades?</label>
                                 <select class="form-control select-no-inicio-razon" name="no_inicio_razon" id="no_inicio_razon">
+                                    <option selected value="-1">Seleccione una razón</option>
                                     {% for ruet in unidadEducativaTipoData %}
                                     {% if ruet.id>1 %}
                                     <option value="{{ruet.id}}">{{ruet.riesgoUnidadeducativa}}</option>
@@ -89,8 +90,8 @@
                               </div>
 
                               <div class="form-group mt-2 div-no-inicio-razon-otros" style="display:none">
-                                <label for="no_incio_razon_otros">Por favor describa brevemente por que no inició clases</label>
-                                <textarea class="form-control" name="no_incio_razon_otros" id="no_incio_razon_otros" rows="3"></textarea>
+                                <label for="no_inicio_razon_otros">Por favor describa brevemente por que no inició actividades</label>
+                                <textarea class="form-control textarea-no-inicio-razon-otros" name="no_inicio_razon_otros" id="no_inicio_razon_otros" rows="3" maxlength="250"></textarea>
                               </div>
 
                         </div>
@@ -98,6 +99,7 @@
                 </fieldset>
             
               </div>
+              <div class="modal-body text-danger div-errors"></div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Cerrar</button>
                 <button type="submit" class="btn btn-sm btn-info btn-actividades-actualizar">Actualizar</button>
@@ -434,9 +436,116 @@
                 </div>
             {% endif %}
          #}
+        </div>
+
+        <div class="row">
+            {#
+            <div class="col-md-6">
+                <div class="panel panel-danger shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Encuesta Internet - pisos tecnológicos</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body">
+                        La siguiente encuesta debe ser llenada 
+                        por los directores de cada Unidad Educativa.
+                        <br>
+                        <br>
+                        <div class='text-center'>
+                            <a href="{{ path('encuestaUe_index')}} " class="btn btn-success btn-lg" title="ir a la encuesta" >LLenar Encuesta</a>
+                        </div> <br>
+                    {% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 10) %} 
+                         {{ form_start(form2, { 'attr': {'data-toggle': 'validator','role': 'form'} } ) }}
+                            <div class="row">
+                                <div class="form-group col-md-3">
+                                    {{ form_label(form2.dpto) }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ form_widget(form2.dpto) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-3">
+                                    {{ form_widget(form2.getReporte ) }}
+                                </div>
+                            </div>
+                        {{ form_end(form2) }}
+                      
+                        
+                    {% endif %}
+                      
+                        <br>
+                         {% if existe %}
+                            <div id="listaencuesta">
+                                <div class="table-responsive col-md-12" >
+                                    <table class="table table-bordered table-striped" id="encuestados" >
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center border-right" style="width:50px; min-width: 50px;">N°</th>
+                                                    <th class="text-center border-right">Departamento</th>
+                                                    <th class="text-center border-right">Distrito</th>
+                                                    <th class="text-center border-right">SIE</th>
+                                                    <th class="text-center border-right">Unidad Educativa</th>
+                                                </tr>
+                                            </thead>
+                                     
+                                            <tbody>
+                                            {% for dataEncuesta in dataEncuesta %}
+                                                <tr >
+                                                    <td data-title="N°" class="text-center">{{ loop.index }}</td>
+                                                    <td data-title="Departamento" >{{ dataEncuesta.departamento }}</td>
+                                                    <td data-title="Distrito" class="text-center">{{ dataEncuesta.distrito}}</td>
+                                                    <td data-title="Departamento" >{{ dataEncuesta.sie }}</td>
+                                                    <td data-title="Distrito" class="text-center">{{ dataEncuesta.ue }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+
+                                    </table>
+                                </div> 
+                                </div>
+                        {% else %}
+                                <p> NINUGNA UNIDAD EDUCATIVA REALIZO LA ENCUESTA.</p>
+                        {% endif %}
+                        
+                    </div>
+                </div>                
+            </div>
+           
+            {% if app.session.get('ie_id') > 0 %}
+                <div class="col-md-3">
+                    <!-- Start input fields - basic form -->
+                    <div class="panel rounded shadow">
+                        <div class="panel panel-primary shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Descarga Archivo Rude</h3>
+                                </div>
+                                <div class="pull-right">
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body">
+                            
+                                {{form_start(formOperativoRude, { 'attr':{'id':'downOperativoRudeId'} })}}
+                                {{form_widget(formOperativoRude.downOperativoRude)}}
+                                {{form_end(formOperativoRude)}}
+                            
+                                
+                                <div id="downoperativoId">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+         #}
         <!--Detalle si la U.E.continuo con las actividades-->
             {% if app.session.get('roluser') == 9 %}
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <!-- Start input fields - basic form -->
                     <div class="panel rounded shadow">
                         <div class="panel panel-lilac shadow">
@@ -450,9 +559,8 @@
                                 <div class="clearfix"></div>
                             </div><!-- /.panel-heading -->
                             <div class="panel-body no-padding">
-                                <div class="col-md-12">
-                                        La unidad educativa:
-                                    <div class="div-mostrar-tipos">
+                                <div class="col-md-12" >
+                                    <div class="div-mostrar-tipos" style="overflow:hidden; text-overflow: ellipsis;">
                                     </div>
                                 </div>
                                 <div class="col-md-12 text-center ">
@@ -464,6 +572,60 @@
                         </div>
                     </div>
                 </div>
+                <!--Muestra en un historia de reporte de actividades -->
+                <div class="col-md-9">
+                    <div class="panel rounded shadow">
+                        <div class="panel panel-lilac shadow">
+                            <div class="panel-heading">
+                                <div class="pull-left">
+                                    <h3 class="panel-title">Historial de reporte de inicio de actividades</h3>
+                                </div>
+                                <div class="pull-right">
+                                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div><!-- /.panel-heading -->
+                            <div class="panel-body no-padding">
+                                <div class="row">
+                                    <div class="col-md-12">
+                            {% for historial in historialInicioActividadesData|reverse %}
+
+                            {% set color = '#6c757d' %}
+                            {% set text = ' white ' %}
+                    <div class="col-md-4" style="padding-top: 10px;">
+                        <div class="panel rounded shadow">
+                            <div class="panel panel-lilac shadow">
+                                <div class="panel-heading" style="background:{{ color }}; border:1px solid {{color}}">
+                                    <div class="pull-left">
+                                        <h4 class="panel-title7" style="color :{{text}}">{{historial.nombre_mes}}</h4>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body no-padding">
+                                    <div class="col-md-12" style="overflow:hidden; text-overflow: ellipsis;">
+                                        {% if historial.riesgo_unidadeducativa_tipo_id >0 %}
+                                            {% set riesgo_id=historial.riesgo_id %}
+                                            {% set riesgo_ue=historial.riesgo_unidadeducativa %}
+                                            {% set riesgo_otro=historial.observacion %}
+                                            {% set riesgo=(riesgo_id==1)? riesgo_otro : riesgo_ue %}
+                                            La U.E. <b>NO</b> inicio actividades debido a: <b>{{riesgo}}</b>.
+                                        {% else %}
+                                            La U.E. <b>SI</b> inicio actividades.
+                                        {% endif %}
+                                    </div>
+                                </div><!-- /.panel-body --> 
+                            </div>
+                        </div>
+                    </div>
+                            {% endfor %}
+                                    </div>
+                                </div>
+                            </div><!-- /.panel-body --> 
+                        </div>
+                    </div>
+                </div>
+
+
             {% endif %}
             
         </div>
@@ -514,8 +676,8 @@
                 {
                     $(".div-no-inicio-razon").hide();
                     $(".div-no-inicio-razon-otros").hide();
-                    $(".select-no-inicio-razon").val(0);
-                    $("#no_incio_razon_otros").val('');
+                    $(".select-no-inicio-razon").val('');
+                    $(".no_inicio_razon_otros").val('');
                 }
             }
           });
@@ -523,10 +685,30 @@
         //muestra el textarea descrpcion de la razon si seleciono el checkbox otros
         $('.select-no-inicio-razon').on('change',function(){
             if(this.value==1)
+            {
                 $(".div-no-inicio-razon-otros").show();
+                $('.textarea-no-inicio-razon-otros').attr('required',true);
+            }
             else
+            {
                 $(".div-no-inicio-razon-otros").hide();
+                $('.textarea-no-inicio-razon-otros').attr('required',false);
+            }
         });
+
+        $('.radio-inicio-clases').on('change', function()
+        {
+            if(this.value==1)
+            {
+                $('.select-no-inicio-razon').attr('required',false);
+                $('.textarea-no-inicio-razon-otros').attr('required',false);
+            }
+            else
+            {
+                $('.select-no-inicio-razon').attr('required',true);
+            }
+        });
+        $('.div-errors').html('');
     });
 
         var cargatablas = function (identif)
@@ -640,9 +822,65 @@
     }
     #}
 
+
+
     var actualizarInicioClases=function ()
     {
         var form=$('#form-actualizar-tipo').serialize();
+        var inicio_clases=parseInt($('input[name=inicio_clases]:checked', '#form-actualizar-tipo').val());
+        var incompleto=false;
+        if(inicio_clases==0)
+        {
+            //No  inicio
+            $('.select-no-inicio-razon').attr('required',true);
+
+            no_inicio_razon=parseInt($('.select-no-inicio-razon').val());
+            no_inicio_razon_otros=$('.textarea-no-inicio-razon-otros').val();
+
+            if(isNaN(no_inicio_razon))
+            {
+                incompleto=true;
+                $('.div-errors').html('Debe seleccionar una razón de por que no inicio actividades.');
+            }
+            else
+            {
+                if(no_inicio_razon<0)
+                {
+                    incompleto=true;
+                    $('.div-errors').html('Debe seleccionar una razón de por que no inicio actividades.');
+
+                }
+                if(no_inicio_razon==1)
+                {
+                    $('.textarea-no-inicio-razon-otros').attr('required',true);
+                    if($('.textarea-no-inicio-razon-otros').val().length==0)
+                    {
+                        $('.div-errors').html('Debe describir brevemente por que no inició actividades.');
+                        incompleto=true;
+                    }
+                }
+            }
+        }
+        else if (inicio_clases==1)
+        {
+            //Inicio
+            $('.select-no-inicio-razon').removeAttr('required');
+            $('.textarea-no-inicio-razon-otros').removeAttr('required');
+        }
+        else
+        {
+            incompleto=true;
+            $('.div-errors').html('Por favor debe seleccionar si inicio o no actividades.');
+        }
+        if(incompleto)
+            return;
+        else
+        {
+            $('.div-errors').html('');
+            $('.select-no-inicio-razon').removeAttr('required');
+            $('.textarea-no-inicio-razon-otros').removeAttr('required');
+        }
+
         $.ajax({
                 type: 'post',
                 url: Routing.generate('siged_seleccionar_modalidad_tipo'),
@@ -677,16 +915,19 @@
                     $(".div-mostrar-tipos").html(text);
 
                 },
-                error: function (data) {
+                error: function (data)
+                {
                     $(".btn-actividades-actualizar").attr("disabled", false);
                     $(".div-mostrar-tipos").empty();
                     $(".div-mostrar-tipos").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
                 }
             });
+        return false;
     };
 
     var getInicioClases=function ()
     {
+        $('.div-errors').html('');
         $.ajax({
                 type: 'post',
                 url: Routing.generate('siged_get_inicio_clases'),
@@ -721,7 +962,6 @@
     var mostrarResultadosReporte=function (form)
     {
         var formData = $(form).serialize();
-
         $.ajax({
                 type: 'post',
                 url: Routing.generate('siged_mostrar_resultados_reporte_modalidad_atencion'),

@@ -13,3 +13,24 @@ herramienta_infoconsolidation_gestion_index:
 herramienta_inforeporte_modalidad_atencion:
     path:     /reporte_modalidad_atencion
     defaults: { _controller: SieHerramientaBundle:InfoConsolidation:reporteModalidadAtencion }
+
+herramienta_inforeporte_inicio_actividades:
+    path:     /reporte_inicio_actividades/
+    defaults: { _controller: SieHerramientaBundle:InfoConsolidation:reporteInicioActividades }
+    methods:  ['GET','POST']
+
+herramienta_inforeporte_inicio_actividades_distrito:
+    path:     /reporte_inicio_actividades/distrito/
+    defaults: { _controller: SieHerramientaBundle:InfoConsolidation:reporteInicioActividadesDistrito }
+    methods:  ['GET','POST']
+
+herramienta_inforeporte_inicio_actividades_distrito_colegio:
+    path:     /reporte_inicio_actividades/distrito/colegio/
+    defaults: { _controller: SieHerramientaBundle:InfoConsolidation:reporteInicioActividadesColegio }
+    methods:  ['GET','POST']
+    
+herramienta_inforeporte_estudiantes_en_situacion_de_vulnerabilidad:
+    path:     /reporte-estudiantes-situacion-vulnerabilidad
+    defaults: { _controller: SieHerramientaBundle:InfoConsolidation:reporteEstudiantesSituacionVulnerabilidad }
+    methods:  ['GET','POST']
+    
