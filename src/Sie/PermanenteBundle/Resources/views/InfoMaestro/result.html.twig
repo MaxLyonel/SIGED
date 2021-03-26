@@ -56,14 +56,14 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td data-title="N°">{{ loop.index }}</td>
-                                                <td data-title="Carnet">{{ persona.carnet }}&nbsp;</td>
-                                                <td data-title="Paterno">{{ persona.paterno }}&nbsp;</td>
-                                                <td data-title="Materno">{{ persona.materno }}&nbsp;</td>
-                                                <td data-title="Nombre(s)">{{ persona.nombre }}&nbsp;</td>
+                                                <td data-title="N°">{#{ loop.index }#}</td>
+                                                <td data-title="Carnet">{{ persona.personaCarnet }}&nbsp;</td>
+                                                <td data-title="Paterno">{{ persona.personaPaterno }}&nbsp;</td>
+                                                <td data-title="Materno">{{ persona.personaMaterno }}&nbsp;</td>
+                                                <td data-title="Nombre(s)">{{ persona.personaNombre }}&nbsp;</td>
                                                 <td data-title="Acciones">
                                                     <form action="{{path('permanente_info_maestro_new')}}" method="post" style="display:inline-block">
-                                                        <input type="hidden"  name="form[idPersona]" id="form_idPersona" value="{{persona.id}}">
+                                                        <input type="hidden"  name="form[idPersona]" id="form_idPersona" value="{{persona.personaId}}">
                                                         <input type="hidden" name="form[idInstitucion]" id="form_idInstitucion"  value="{{institucion.id}}">
                                                         <input type="hidden" name="form[gestion]" id="form_gestion" value="{{gestion}}">
                                                         <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Inscribir</button>
