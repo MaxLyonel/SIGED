@@ -25,7 +25,7 @@ class RemoveInscriptionController extends Controller {
      * @return type
      */
     public function indexAction(Request $request) {
-        
+        return $this->redirect($this->generateUrl('login'));
         $em = $this->getDoctrine()->getManager();
         //check if the user is logged
         $id_usuario = $this->session->get('userId');

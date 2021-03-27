@@ -37,7 +37,7 @@ class NewInscriptionIniPriController extends Controller
     }
     // index method
     public function indexAction(Request $request){
-
+		return $this->redirect($this->generateUrl('login'));
       $arrWeenhayec = array(
         61710004,
         61710014,
