@@ -98,7 +98,7 @@ var saveNewMultigrado = function(){
     $.ajax({
                   type: 'post',
                   data: formData,
-                  url: "{{ path('reg_multigrado_saveNewMultigrado') }}",
+                  url: "{{ path('aca_multigrado_saveNewMultigrado') }}",
                   beforeSend: function () {
                     $("#responseId").empty();
                     $("#responseId").css('display','block');
