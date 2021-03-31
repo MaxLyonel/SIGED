@@ -44,12 +44,12 @@ class ModalidadCursoController extends Controller {
 
         $form = $this->createFormCurso($entity);
 		$form->handleRequest($request);
-
+        //array('mon'=>getDate()['mon'], 'today' => date("M/Y"))
     	return $this->render('SieHerramientaBundle:ModalidadCurso:index.html.twig', array(
     		'curso' => $entity,
             'form' => $form->createView(),
             'arrModalidades'=>$arrModalidades,
-    		'arrDate' => array('mon'=>getDate()['mon'], 'today' => date("M/Y"))
+    		'arrDate' => array('mon'=>3, 'today' => 'Marzo/2021')
     	));
     }
 
