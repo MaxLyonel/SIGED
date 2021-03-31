@@ -94,7 +94,25 @@ function eliminarFila(id){
 var saveNewMultigrado = function(){
 
   var formData = $('#newMultigradoForm').serialize();
-  if(confirm('Esta seguro de realizar el cambio?\n click en OK para continuar')){
+  var aulas=$('#newMultigradoForm').find('input[name ^="form[multi]"]');
+  var cantidad=0;
+  //verifica que la cantidad de aulas seleccionadas sea al menos 2
+  $.each(aulas,function(index, el)
+  {
+    if($(el).is(":checked"))
+    {
+      cantidad++;
+    }
+  });
+
+  if(cantidad <2)
+  {
+    alert('Debe seleccionar al menos 2 cursos');
+    return false;
+  }
+
+  if(confirm('Esta seguro de realizar el cambio?\n click en OK para continuar'))
+  {
     $.ajax({
                   type: 'post',
                   data: formData,
@@ -124,7 +142,9 @@ var saveNewMultigrado = function(){
                   }
               });
               return true;
-  }else {
+  }
+  else
+  {
     return false;
   }
 
