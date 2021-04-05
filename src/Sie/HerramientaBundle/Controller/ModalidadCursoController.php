@@ -34,7 +34,8 @@ class ModalidadCursoController extends Controller {
         	$entity = new InstitucioneducativaCurso();
         }
         
-        $objInstitucioneducativaCursoModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoModalidadAtencion')->findby(array('institucioneducativaCurso'=>$cursoId, 'mes'=>getDate()['mon']));
+        //$objInstitucioneducativaCursoModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoModalidadAtencion')->findby(array('institucioneducativaCurso'=>$cursoId, 'mes'=>getDate()['mon']));
+        $objInstitucioneducativaCursoModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoModalidadAtencion')->findby(array('institucioneducativaCurso'=>$cursoId, 'mes'=>3));
         $arrModalidades = array('option_1'=>false,'option_2'=>false,'option_3'=>false);
         if($objInstitucioneducativaCursoModalidadAtencion){
             foreach($objInstitucioneducativaCursoModalidadAtencion as $value){
