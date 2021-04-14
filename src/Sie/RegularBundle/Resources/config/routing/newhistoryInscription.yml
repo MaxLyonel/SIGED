@@ -11,3 +11,7 @@ student_main_history_perm:
     defaults: { _controller: "SieRegularBundle:NewHistoryInscription:historyalt" }
     options:
         expose: true
+
+evaluar_estado:
+    path:    /evaluarEstado/{inscripcionId}
+    defaults: { _controller: SieRegularBundle:NewHistoryInscription:evaluarEstado }
