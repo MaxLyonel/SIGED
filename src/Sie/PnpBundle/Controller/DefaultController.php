@@ -2245,9 +2245,9 @@ public function pnp_indexAction()
 
             try {
                 // id de la tabla maestro_inscripcion
-                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
+                /*$result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
                 $maestroinscripcion_id=$result->getMaestroInscripcionAsesor()->getId();
-
+*/
                 // id de la tabla institucion_curso_oferta
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByinsitucioneducativaCurso($institucioneducativa_curso_id);
                 $institucioneducativa_curso_oferta_id = array();
@@ -2878,9 +2878,10 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
 
             try {
                 // id de la tabla maestro_inscripcion
-                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
+                /*$result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
                 if($result)
                         $maestroinscripcion_id=$result->getMaestroInscripcionAsesor()->getId();
+                */
                 // id de la tabla institucion_curso_oferta
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByinsitucioneducativaCurso($institucioneducativa_curso_id);
                 $institucioneducativa_curso_oferta_id = array();
