@@ -245,28 +245,38 @@ class NewHistoryInscriptionController extends Controller {
                 if($igrado_tipo_id == 1) {
                     $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
                 } else {
-                    $complementario = "'(1,2)','(1,2,3,4)','(5)','36'";
+                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
                 }
             } else if($inivel_tipo_id == 13) {
                 if($igrado_tipo_id == 1) {
                     $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
                 } else {
-                    $complementario = "'(1,2)','(1,2,3,4)','(5)','36'";
+                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
                 }
             }
         } else if($igestion < 2013) {
-            $complementario = "'(1,2)','(1,2,3,4)','(5)','36'";
-        } else if($igestion > 2013 && $igestion < 2020){
+            $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+        } else if($igestion > 2013 && $igestion < 2020) {
             $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
+        } else if($igestion = 2020) {
+            if($inivel_tipo_id == 12) {
+                if($igrado_tipo_id > 1) {
+                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                }
+            } else if($inivel_tipo_id == 13) {
+                if($igrado_tipo_id >= 1) {
+                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                }
+            }
         }
 
         $query = $em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
-        $query->execute();
+        $query->execute();        
         $resultado = $query->fetchAll();
 
         $message = "La evaluación del estado de matrícula para el código RUDE: ".$icodigo_rude.", fue satisfactoria.";
         $this->addFlash('goodhistory', $message);
 
-        return $this->redirectToRoute('history_new_inscription_index');        
+        return $this->redirectToRoute('history_new_inscription_index');
     }
 }
