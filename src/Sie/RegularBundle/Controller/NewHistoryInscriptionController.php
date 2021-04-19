@@ -219,4 +219,64 @@ class NewHistoryInscriptionController extends Controller {
             'sw' => $sw
         ));
     }
+
+    public function evaluarEstadoAction(Request $request, $inscripcionId) {
+        $em = $this->getDoctrine()->getManager();
+        
+        $id_usuario = $this->session->get('userId');
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionId);
+        
+        $igestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+        $iinstitucioneducativa_id = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+        $inivel_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+        $igrado_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        $iturno_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
+        $iparalelo_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getParaleloTipo()->getId();
+        $icodigo_rude = $inscripcion->getEstudiante()->getCodigoRude();
+        $complementario = "";
+        $estado_inicial = $inscripcion->getEstadomatriculaTipo()->getEstadomatricula();
+
+        if($igestion == 2013) {
+            if($inivel_tipo_id == 12) {
+                if($igrado_tipo_id == 1) {
+                    $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
+                } else {
+                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                }
+            } else if($inivel_tipo_id == 13) {
+                if($igrado_tipo_id == 1) {
+                    $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
+                } else {
+                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                }
+            }
+        } else if($igestion < 2013) {
+            $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+        } else if($igestion > 2013 && $igestion < 2020) {
+            $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
+        } else if($igestion = 2020) {
+            if($inivel_tipo_id == 12) {
+                if($igrado_tipo_id > 1) {
+                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                }
+            } else if($inivel_tipo_id == 13) {
+                if($igrado_tipo_id >= 1) {
+                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                }
+            }
+        }
+
+        $query = $em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+        $query->execute();        
+        $resultado = $query->fetchAll();
+
+        $message = "La evaluación del estado de matrícula para el código RUDE: ".$icodigo_rude.", fue satisfactoria.";
+        $this->addFlash('goodhistory', $message);
+
+        return $this->redirectToRoute('history_new_inscription_index');
+    }
 }

@@ -143,7 +143,7 @@
             var formData = $('#formMultigrado').serialize();
                 $.ajax({
                     type: 'post',
-                    url: Routing.generate('reg_multigrado_save'),
+                    url: Routing.generate('aca_multigrado_save'),
                     data: formData,
                     beforeSend: function () {
                         $("#responseId").empty();
@@ -158,7 +158,7 @@
                       $("#responseId").addClass('alert-'+data.typeMessage)
                       $("#responseId").append('<p>'+data.mensaje+'</p>');
 
-                      $("#responseId").append('<p><a class="btn btn-md btn-danger" href="{{ path('ccalidad_list', {id: 5, gestion:arrData.gestion}) }}">Finalizar</a></p>');
+                      /*$("#responseId").append('<p><a class="btn btn-md btn-danger" href="{{ path('ccalidad_list', {id: 5, gestion:arrData.gestion}) }}">Finalizar</a></p>');*/
 
                     },
                     statusCode: {

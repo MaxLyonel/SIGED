@@ -53,14 +53,17 @@ var cont = 0;
 function agregarFila(jsonMulti){
   //  objMul = JSON.parse(jsonMulti);
     cont++;
-    if(cont>5){
+      var form=$('#newMultigradoForm');
+      var tr=form.find('#multiId tr');
+    if(tr.length>5)
+    {
       alert('Limite de creación de cursos multigrados alcanzado');
       return false;
     }
         var parsed = JSON.parse(jsonMulti);
         var arr = [];
         var tableMulti = '<tr id="'+cont+'">\n\
-            <td>Aulta '+cont+'<button type="button" onclick="eliminarFila('+cont+')"> <i class="fa fa-trash-o text-danger"></i></button></td>\n\
+            <td>Aula <button type="button" onclick="eliminarFila('+cont+')"> <i class="fa fa-trash-o text-danger"></i></button></td>\n\
             ';
         for(var dmulti in parsed){
           tableMulti = tableMulti+'<td><input type="checkbox" id="form_'+dmulti+'_'+cont+'" name="form[multi]['+dmulti+'_'+cont+']" class="" value="1"></td>\n\
@@ -86,7 +89,7 @@ function agregarFila(jsonMulti){
 }
 
 function eliminarFila(id){
-    cont--;
+    //cont--;
     $("#" + id).remove();
 }
 
@@ -94,11 +97,60 @@ function eliminarFila(id){
 var saveNewMultigrado = function(){
 
   var formData = $('#newMultigradoForm').serialize();
-  if(confirm('Esta seguro de realizar el cambio?\n click en OK para continuar')){
+
+  var form=$('#newMultigradoForm');
+  var tr=form.find('#multiId tr');
+  var cantidad=0;
+  var verificadorCantidad=new Array();
+  var error=0;
+  //verifica que la cantidad de cursos seleccionado por aula sea al menos 2
+  
+  $.each(tr,function(index0, trs)
+  {
+    if(index0>0)
+    {
+      cantidad=0;
+      aulas=$(trs).find('input[name ^="form[multi]"]');
+      $.each(aulas,function(index1, checkbox)
+      {
+        if($(checkbox).is(":checked"))
+        {
+          cantidad++;
+        }
+      });
+      if(cantidad <2)
+      {
+        verificadorCantidad.push(1);
+      }
+      else
+      {
+        verificadorCantidad.push(0);
+      }
+    }
+  });
+
+  if(tr.length==1)
+  {
+    verificadorCantidad.push(1);
+  }
+
+  $.each(verificadorCantidad,function(index, el)
+  {
+    error=error+el;
+  });
+
+  if(error>0)
+  {
+    alert('Debe seleccionar al menos 2 cursos por aula');
+    return false;
+  }
+
+  if(confirm('Esta seguro de realizar el cambio?\n click en OK para continuar'))
+  {
     $.ajax({
                   type: 'post',
                   data: formData,
-                  url: "{{ path('reg_multigrado_saveNewMultigrado') }}",
+                  url: "{{ path('aca_multigrado_saveNewMultigrado') }}",
                   beforeSend: function () {
                     $("#responseId").empty();
                     $("#responseId").css('display','block');
@@ -124,7 +176,9 @@ var saveNewMultigrado = function(){
                   }
               });
               return true;
-  }else {
+  }
+  else
+  {
     return false;
   }
 
