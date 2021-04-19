@@ -27,8 +27,8 @@ class BachillerExcelenciaAlternativaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2020-12-25');
-        $this->gestionOperativo = $this->session->get('currentyear');
+        $this->fechaCorte = new \DateTime('2021-04-15');
+        $this->gestionOperativo = '2020';
     }
 
     /*
@@ -151,6 +151,22 @@ class BachillerExcelenciaAlternativaController extends Controller {
             } else {
                 $this->get('session')->getFlashBag()->add('searchIe', 'No tiene tuición sobre la Institución Educativa');
             return $this->redirect($this->generateUrl('bach_exc_alt_dir'));
+            }
+
+            /* Verificar si la UE ya ha registrado al director */
+            $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
+
+            $query = $repository->createQueryBuilder('m')
+                    ->where('m.institucioneducativa = :institucion')
+                    ->andWhere('m.gestionTipo = :gestion')
+                    ->setParameter('institucion', $formulario['institucioneducativa'])
+                    ->setParameter('gestion', $formulario['gestion'])
+                    ->getQuery();
+
+            $registrado = $query->getResult();
+
+            if(count($registrado) <= 0) {
+                return $this->redirect($this->generateUrl('principal_web'));
             }
 
             /*

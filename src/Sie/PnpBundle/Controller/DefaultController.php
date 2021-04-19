@@ -84,8 +84,7 @@ class DefaultController extends Controller
         
         return $this->render('SiePnpBundle:Default:index.html.twig', array('form' => $form->createView()));
     }
-
-    public function pnp_indexAction()
+public function pnp_indexAction()
     {   
         return $this->render('SiePnpBundle:Default:pnp_index.html.twig');
     }
@@ -2246,9 +2245,9 @@ class DefaultController extends Controller
 
             try {
                 // id de la tabla maestro_inscripcion
-                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
+                /*$result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
                 $maestroinscripcion_id=$result->getMaestroInscripcionAsesor()->getId();
-
+*/
                 // id de la tabla institucion_curso_oferta
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByinsitucioneducativaCurso($institucioneducativa_curso_id);
                 $institucioneducativa_curso_oferta_id = array();
@@ -2261,12 +2260,14 @@ class DefaultController extends Controller
                 foreach ($result as $results) {
                     $institucioneducativa_curso_datos_id[]=$results->getId();
                 }
+                
                 //id de la tabla institucioneducativa_curso_oferta_maestro
-                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('maestroInscripcion' => $maestroinscripcion_id, 'institucioneducativaCursoOferta' => $institucioneducativa_curso_oferta_id )); 
+                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta' => $institucioneducativa_curso_oferta_id )); 
                 $institucioneducativa_curso_oferta_maestro_id = array();
                 foreach ($result as $results) {
                     $institucioneducativa_curso_oferta_maestro_id[]=$results->getId();
                 }
+                
                 // id de la tabla estudiante_inscripcion
                 $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findByinstitucioneducativaCurso($institucioneducativa_curso_id);
                 $estudiante_inscripcion_id = array();
@@ -2291,6 +2292,7 @@ class DefaultController extends Controller
                 foreach ($result as $results) {
                     $estudiante_nota_id[]=$results->getId();
                 }
+                
                  //PLAN 2
                 //id alt_moduloemergente
                 $query = "SELECT ico.id from institucioneducativa_curso ic
@@ -2407,7 +2409,8 @@ class DefaultController extends Controller
                 }          
                 $em->flush();
                 // Eliminar Institucioneducativa Curso Oferta Maestro
-                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findById($institucioneducativa_curso_oferta_maestro_id);
+                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findById($institucioneducativa_curso_oferta_maestro_id);
+
                 foreach ($result as $element) {
                     $em->remove($element);
                 }          
@@ -2434,7 +2437,7 @@ class DefaultController extends Controller
                /* $result=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findById($maestroinscripcion_id);
                 foreach ($result as $element) {
                     $em->remove($element);
-                }   */        
+                }*/          
                 $em->flush();    
                 $this->get('session')->getFlashBag()->add(
                     'notice',
@@ -2620,7 +2623,7 @@ order by t2.fecha_inicio";
                     $institucioneducativa_curso_oferta_id[]=$results->getId();
                 }
                 //id de la tabla institucioneducativa_curso_oferta_maestro
-                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('maestroInscripcion' => $maestroinscripcion_id, 'institucioneducativaCursoOferta' => $institucioneducativa_curso_oferta_id )); 
+                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta' => $institucioneducativa_curso_oferta_id )); 
                 $institucioneducativa_curso_oferta_maestro_id = array();
                 foreach ($result as $results) {
                     $institucioneducativa_curso_oferta_maestro_id[]=$results->getId();
@@ -2875,9 +2878,10 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
 
             try {
                 // id de la tabla maestro_inscripcion
-                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
+                /*$result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
                 if($result)
                         $maestroinscripcion_id=$result->getMaestroInscripcionAsesor()->getId();
+                */
                 // id de la tabla institucion_curso_oferta
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByinsitucioneducativaCurso($institucioneducativa_curso_id);
                 $institucioneducativa_curso_oferta_id = array();

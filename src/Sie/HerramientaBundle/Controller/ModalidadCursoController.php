@@ -35,6 +35,7 @@ class ModalidadCursoController extends Controller {
         }
         
         $objInstitucioneducativaCursoModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoModalidadAtencion')->findby(array('institucioneducativaCurso'=>$cursoId, 'mes'=>getDate()['mon']));
+        //$objInstitucioneducativaCursoModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoModalidadAtencion')->findby(array('institucioneducativaCurso'=>$cursoId, 'mes'=>3));
         $arrModalidades = array('option_1'=>false,'option_2'=>false,'option_3'=>false);
         if($objInstitucioneducativaCursoModalidadAtencion){
             foreach($objInstitucioneducativaCursoModalidadAtencion as $value){
@@ -44,7 +45,7 @@ class ModalidadCursoController extends Controller {
 
         $form = $this->createFormCurso($entity);
 		$form->handleRequest($request);
-
+        //array('mon'=>getDate()['mon'], 'today' => date("M/Y"))
     	return $this->render('SieHerramientaBundle:ModalidadCurso:index.html.twig', array(
     		'curso' => $entity,
             'form' => $form->createView(),
