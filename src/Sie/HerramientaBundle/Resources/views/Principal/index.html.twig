@@ -1,14 +1,15 @@
 {% extends 'layoutHerramienta.html.twig' %}
 
 {% block contentoption %}
-
+{% set meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] %}
+{% set mesActual="now"|date("n") %}
     <!--Modal para asignar los tipos de atencion que tiene la unidad educativa-->
     <div class="modal fade" id="modalInicioClases" tabindex="-1">
         <form action="" method="POST" id="form-actualizar-tipo" autocomplete="off">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header bg-info">
-                <h5 class="modal-title">Reporte de actividades</h5>
+                <h5 class="modal-title">Reporte de actividades del mes de: {{meses[mesActual-1]|upper}}</h5>
                 {#
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
