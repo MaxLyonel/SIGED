@@ -602,8 +602,8 @@ class PrincipalController extends Controller {
                 $existe=false;
             }
 
-            $inicio_clases=filter_var($request->get('inicio_clases'),FILTER_VALIDATE_INT);
-            $noInicioRazon=filter_var($request->get('no_inicio_razon'),FILTER_VALIDATE_INT);
+            $inicio_clases=filter_var($request->get('inicio_clases'),FILTER_SANITIZE_NUMBER_INT);
+            $noInicioRazon=filter_var($request->get('no_inicio_razon'),FILTER_SANITIZE_NUMBER_INT);
             $noInicioRazonOtros=filter_var($request->get('no_inicio_razon_otros'),FILTER_SANITIZE_STRING);
 
             if(strlen($noInicioRazonOtros)>250)
@@ -747,11 +747,11 @@ LIMIT ?';
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
 
-        $departamento=filter_var($request->get('departamento'),FILTER_VALIDATE_INT);
-        $distrito=filter_var($request->get('distrito'),FILTER_VALIDATE_INT);
+        $departamento=filter_var($request->get('departamento'),FILTER_SANITIZE_NUMBER_INT);
+        $distrito=filter_var($request->get('distrito'),FILTER_SANITIZE_NUMBER_INT);
         $distritoTmp=($distrito==-1)?'':$distrito;
-        $gestion=filter_var($request->get('gestion'),FILTER_VALIDATE_INT);
-        $mes=filter_var($request->get('mes'),FILTER_VALIDATE_INT);
+        $gestion=filter_var($request->get('gestion'),FILTER_SANITIZE_NUMBER_INT);
+        $mes=filter_var($request->get('mes'),FILTER_SANITIZE_NUMBER_INT);
 
         $query = 'select * from sp_genera_reporte_modalidad_atencion(?,?,?,?);';
         $stmt = $db->prepare($query);
@@ -786,8 +786,8 @@ LIMIT ?';
         $response->headers->set('Content-type', 'application/xlsx');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'Reporte-modalidades_v1.rptdesign&__format=xlsx&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distrito.'&mes='.$mes));
-        //$response->setContent(file_get_contents('http://127.0.0.1:62395/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-modalidades-atencion\Reporte-modalidades_v1.rptdesign&__format=xlsx'.'&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distritoTmp.'&mes='.$mes));
+        //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'Reporte-modalidades_v1.rptdesign&__format=xlsx&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distrito.'&mes='.$mes));
+        $response->setContent(file_get_contents('http://127.0.0.1:62395/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-modalidades-atencion\Reporte-modalidades_v1.rptdesign&__format=xlsx'.'&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distritoTmp.'&mes='.$mes));
         
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
