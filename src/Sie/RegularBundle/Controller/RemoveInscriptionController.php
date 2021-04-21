@@ -32,7 +32,7 @@ class RemoveInscriptionController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        if ($this->session->get('roluser') != 8 ) {
+        if (in_array($this->session->get('roluser'), array(7,8.10)) ) {
             return $this->redirect($this->generateUrl('login'));
         }
         //set the student and inscriptions data
