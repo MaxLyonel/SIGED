@@ -526,13 +526,14 @@ class InscriptionGestionesPasadasController extends Controller {
                 $validacionIniConsolidation = $this->get('funciones')->getConsolidationInitioOpe($id, $gestionselected);
                 
                 if($validacionIniConsolidation){
-                    if($gestionselected == 2020){
+                    //if($gestionselected == 2020){
                         $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";  
-                    }else{
+                    /*}else{
                         $nombreIE = ($institucion) ? ' La Institución Educativa '. $institucion->getInstitucioneducativa().' no tiene su información consolidada' : "";      
-                    }
+                    }*/
                 }else{
-                    $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";  
+                    $nombreIE = ($institucion) ? ' La Institución Educativa '. $institucion->getInstitucioneducativa().' no tiene su información consolidada' : "";      
+                    //$nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";  
                 }
 
 

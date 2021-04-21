@@ -40,7 +40,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
      *
      */
     public function indexAction() {
-
+      
       $arrWeenhayec = array(
         61710004,
         61710014,
@@ -75,7 +75,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         61710098
       );
 
-      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or in_array($this->session->get('roluser'), array(7,8))   ){
+      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or in_array($this->session->get('roluser'), array(7,8,10))   ){
         //nothing todo
       }else{
         return $this->redirect($this->generateUrl('principal_web'));
