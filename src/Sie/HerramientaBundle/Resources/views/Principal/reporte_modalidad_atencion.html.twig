@@ -1,6 +1,12 @@
 
 	{% set meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] %}
 	<div class="table-responsive">
+		<div class="row">
+			<div class="col-md-12">
+				<a href="{{ path('siged_exportar_excel_resultados_reporte_modalidad_atencion', { 'gestionInput': gestion,'departamentoInput':departamento,'distritoInput':distrito,'mesInput':mes}) }}" role="button"><img width="50px" src="{{ asset('img/excel-xls-icon.png') }}"> Descargar reporte </a>
+			</div>
+		</div>
+		<br>
 		<table class="table" id="dataTable-modalidad">
 			{% if mes > 0 and mes <=12 %}
 				<caption class="text-center h3">Mes: {{meses[mes-1]}}</caption>
