@@ -171,6 +171,8 @@ class RudeUnificationController extends Controller{
                 'paterno' => $studenta->getPaterno(),
                 'materno' => $studenta->getMaterno(),
                 'nombre' => $studenta->getNombre(),
+                'ci' => $studenta->getCarnetIdentidad(),
+                'complemento' => $studenta->getNombre(),
                 'fechaNac' => $studenta->getfechaNacimiento()->format('d-m-Y'),
                 
             );
@@ -197,6 +199,8 @@ class RudeUnificationController extends Controller{
                 'paterno' => $studentb->getPaterno(),
                 'materno' => $studentb->getMaterno(),
                 'nombre' => $studentb->getNombre(),
+                'ci' => $studentb->getCarnetIdentidad(),
+                'complemento' => $studentb->getComplemento(),
                 'fechaNac' => $studentb->getfechaNacimiento()->format('d-m-Y'),
             );
         }
@@ -806,6 +810,9 @@ class RudeUnificationController extends Controller{
             }   
             $arrApoderadoInscripcionDato = array();
             if(($inscripinco) && ($studentcor)){
+                /*dump($unificationIniPri);
+                dump($request);
+                die;*/
                 foreach ($inscripinco as $inscrip) {
 
                     $arrInscriptionsWrong[] = array(
