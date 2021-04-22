@@ -918,7 +918,16 @@ class RudeUnificationController extends Controller{
                     } 
 
                     if($unificationIniPri){ 
-                        $em->remove($inscrip);  
+                        $em->remove($inscrip);
+                        //if the student has oferta
+                        $objOferta = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion'=>$inscrip->getId()));
+                        if(sizeof($objOferta)>0){
+                            foreach ($objOferta as $value) {
+                                $em->remove($value);
+                            }
+                        }
+
+                        $em->remove($inscrip);                          
                     }else{
                         $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscrip->getInstitucioneducativaCurso());                        
 
