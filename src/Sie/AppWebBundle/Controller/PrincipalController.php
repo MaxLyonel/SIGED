@@ -786,7 +786,7 @@ LIMIT ?';
         $response->headers->set('Content-type', 'application/xlsx');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'Reporte-modalidades_v1.rptdesign&__format=xlsx&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distrito.'&mes='.$mes));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'Reporte-modalidades_v1.rptdesign&__format=xlsx&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distritoTmp.'&mes='.$mes));
         //$response->setContent(file_get_contents('http://127.0.0.1:62395/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-modalidades-atencion\Reporte-modalidades_v1.rptdesign&__format=xlsx'.'&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distritoTmp.'&mes='.$mes));
         
         $response->setStatusCode(200);
