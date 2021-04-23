@@ -185,10 +185,10 @@ class InstitucioneducativaController extends Controller {
                 ->innerJoin('SieAppWebBundle:Persona', 'per', 'WITH', 'mins.persona = per.id')
                 ->where('mins.institucioneducativa = :idInstitucion')
                 ->andWhere('mins.gestionTipo = :gestion')
-                ->andWhere('mins.cargoTipo = :cargo')
+                ->andWhere('mins.cargoTipo in (:cargo)')
                 ->setParameter('idInstitucion', $institucion)
                 ->setParameter('gestion', $gestion)
-                ->setParameter('cargo', '1')
+                ->setParameter('cargo', array_values(array(1,12)))
                 ->setMaxResults(1)
                 ->getQuery();
 
