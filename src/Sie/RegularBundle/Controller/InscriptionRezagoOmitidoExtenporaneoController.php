@@ -41,7 +41,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
      */
     public function indexAction() {
       
-        return $this->redirect($this->generateUrl('principal_web'));
+        //return $this->redirect($this->generateUrl('principal_web'));  
       $arrWeenhayec = array(
         61710004,
         61710014,
