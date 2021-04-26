@@ -13,7 +13,7 @@
 
 {% block contentoption %}
 
-
+{% set meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] %}
     <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-globe animated flip"></i> Bucar Información Consolidado <span></span></h2>
@@ -54,20 +54,32 @@
                         <div class="panel-body ">
                             <div class="col-md-12 p-3">
                                 <div class="col-sm-12">
-                                    <i class="fa fa-search"></i> Presionando el boton <strong>"Buscar"</strong>  se desplegará un reporte con los tipos de modalidades de atención que poseen las U.E
+                                    <i class="fa fa-search"></i> Presionando el boton <strong>"Buscar"</strong> se desplegará un reporte con los tipos de modalidades de atención que poseen las U.E
                                 </div>
                                 <form method ="POST" id="form-mostrar-resultados-reporte-modalidad-atencion" onsubmit="mostrarResultadosReporte(this); return false;">
                                   <div class="form-row">
                                     <div class="form-group col-md-3 col-sm-6 ">
-                                        <select class="form-control" name="departamento" id="departamento">
+                                        <select class="form-control" name="departamento" id="departamento" onchange="getDistritos(this.value); return false;" required>
                                             {% for depto in arrDepto  %}
                                                  <option value="{{depto.id}}">{{depto.depto}}</option>
                                             {% endfor %}
-                                        </select>                                      
+                                        </select>
                                     </div>
 
                                     <div class="form-group col-md-3 col-sm-6 ">
-                                      <input type="text" class="form-control" name="distrito" id="distrito" placeholder="Distrito">
+                                      <!--<input type="text" class="form-control" name="distrito" id="distrito" placeholder="Distrito">-->
+                                      <select class="form-control select-distrito" name="distrito" id="distrito">
+                                        <option>Primero seleccione un departamento</option>
+                                      </select>
+                                    </div>
+
+                                    
+                                    <div class="form-group col-md-3 col-sm-6 ">
+                                        <select class="form-control" name="mes" id="mes">
+                                            {% for m in meses  %}
+                                                 <option value="{{loop.index}}">{{m}}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
 
                                     <div class="form-group col-md-3 col-sm-6 ">
@@ -125,5 +137,49 @@
                 }
             });
     }
+
+    var getDistritos= function(d)
+    {
+        if(d.length>0)
+        {
+            $.ajax({
+                    type: 'post',
+                    url: Routing.generate('siged_get_distritos_modalidad_atencion'),
+                    data: {departamento:d},
+                    beforeSend: function () {
+                        $(".select-distrito").empty();
+                        $(".select-distrito").append('<option>Obteniendo distritos ...</option>');
+                    },
+                    success: function (data)
+                    {
+                        try
+                        {
+                            var len= data.length;
+                            var option='<option value="-1" selected>Todos los distritos</option>';
+                            for(i in data)
+                            {
+                                option+='<option value="'+data[i].id+'">'+data[i].id+' | '+data[i].distrito+'</option>';
+                            }
+                            if(len==0)
+                            {
+                                option='<option>El departamento no tiene distritos</option>';
+                            }
+                            $(".select-distrito").empty();
+                            $(".select-distrito").html(option);
+                        }
+                        catch(e)
+                        {
+                            $(".select-distrito").html('<option>El departamento no tiene distritos</option>');
+                        }
+                    },
+                    error: function (data) {
+                        $(".select-distrito").empty();
+                        $(".select-distrito").append('<option>Ocurrio un error, por favor intente nuevamente.</option>');
+                    }
+                });
+        }
+
+    }
+
 </script>
 {% endblock %}

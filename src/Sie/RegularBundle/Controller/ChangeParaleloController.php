@@ -129,7 +129,7 @@ class ChangeParaleloController extends Controller {
                         ->add('eiId', 'hidden', array('data' => $oInscription[0]['eiId']))
                         ->add('paraleloOld', 'hidden', array('data' => $oInscription[0]['paraleloId']))
                         ->add('turnoOld', 'hidden', array('data' => $oInscription[0]['turnoId']))
-                        ->add('paralelo', 'entity', array('label' => 'Paralelo', 'empty_value' => 'seleccionar...', 'attr' => array('class' => 'form-control'),
+                        ->add('paralelo', 'entity', array('label' => 'Paralelo', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control'),
                             'class' => 'SieAppWebBundle:ParaleloTipo',
                             'query_builder' => function (EntityRepository $e) {
                         return $e->createQueryBuilder('p')

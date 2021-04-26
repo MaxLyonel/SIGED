@@ -132,6 +132,7 @@ class InfoEspecialController extends Controller{
     }
 
     $periodo = $this->operativo($data['idInstitucion'], $data['gestion']);
+    
     if ($periodo != 0) {
       $request->getSession()->set('onlyview', true);
     } else {

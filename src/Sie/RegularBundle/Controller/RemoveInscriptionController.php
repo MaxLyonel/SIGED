@@ -25,10 +25,14 @@ class RemoveInscriptionController extends Controller {
      * @return type
      */
     public function indexAction(Request $request) {
+        
         $em = $this->getDoctrine()->getManager();
         //check if the user is logged
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        if (in_array($this->session->get('roluser'), array(7,8.10)) ) {
             return $this->redirect($this->generateUrl('login'));
         }
         //set the student and inscriptions data

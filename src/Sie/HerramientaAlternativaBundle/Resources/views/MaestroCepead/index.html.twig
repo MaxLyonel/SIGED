@@ -1,0 +1,104 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+<!-- Start page header -->
+<div class="header-content">
+    <h2><i class="glyphicon glyphicon-leaf"></i> Bienvenido/a <span>Usted a ingresado al sistemas academico de educación alternativa.</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida/o</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+        </ol>
+    </div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+
+<!-- Start body content -->
+<div class="body-content animated fadeIn">
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-4">
+        <div class="panel rounded shadow">
+            <div class="panel-body">
+                <div class="inner-all">
+                    <ul class="list-unstyled">
+                        <li class="text-center">
+                            
+                            {% if app.session.get('userfoto') is not null %}
+                                <img src="{{asset('uploads/personasfotos/' ~ app.session.get('userfoto'))}}" class="img-circle img-bordered-primary" alt="{{app.session.get('name')}} {{app.session.get('lastname')}}" height="150" width="150">
+                            {% else %}
+                                <img src="{{asset('img/photo.png')}}" class="img-circle img-bordered-primary" alt="{{app.session.get('name')}} {{app.session.get('lastname')}}" height="150" width="150">
+                                
+                            {% endif %}
+
+                        </li>
+                        <li class="text-center">
+                            <h4 class="text-capitalize">{{app.session.get('name')}} {{app.session.get('lastname')}}</h4>
+                            <p class="text-muted text-capitalize">{{app.session.get('cuentauser')}}</p>
+                        </li>                                        
+                        <li><br/></li>
+                        <li>
+                            <div class="btn-group-vertical btn-block">
+                                <a href="{{path('sie_usuarios_homepage')}}" class="btn btn-default"><i class="fa fa-cog pull-right"></i>Editar Cuenta - Gestión de Usuarios</a>                                
+                                <a href="{{path('logout')}}" class="btn btn-default"><i class="fa fa-sign-out pull-right"></i>Salir</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div><!-- /.panel -->                            
+    </div>
+    <div class="col-lg-9 col-md-9 col-sm-8">
+        <div class="profile-cover">
+            <div class="cover rounded shadow no-overflow">
+                <div class="inner-cover">
+                    <!-- Start offcanvas btn group menu: This menu will take position at the top of profile cover (mobile only). -->
+                    <div class="btn-group cover-menu-mobile hidden-lg hidden-md">
+                        <button type="button" class="btn btn-theme btn-sm dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right no-border" role="menu">                                                
+                            {% if app.session.get('ie_id') != -1 %}
+                                {#<li class="active"><a onclick="selgessubsemFormShow();"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>#}
+                                <li class="active"><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>
+                                <li><a href="{{path('herramienta_alter_galeria_fotos_centro')}}"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small></small></a></li>
+                                <li><a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}"><i class="fa fa-pencil"></i> <span>Editar Fotos</span> <small></small></a></li>
+                                {#<li><a href="{{ path('herramientalt_ceducativa_estadistiscas_departamento')}}"><i class="fa fa-fw fa-edit"></i> <span>Estadísticas</span></a></li>#}
+                            {% endif %}
+                        </ul>
+                    </div>
+                    
+                </div>
+                {% if app.session.get('ie_id') != -1 %}
+                <div class="col-xs-12 col-sm-9 col-md-9">
+                    {#<a href="{{path('herramienta_ceducativa_seleccionar_cea')}}" class="btn btn-success" ><i class="fa fa-history"></i> <span>Gestionar C.E.A.</span></a>#}
+                    <a href="{{path('herramienta_alter_galeria_fotos_centro')}}" class="btn btn-lilac" ><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span></a>
+                    <a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}" class="btn btn-warning" ><i class="fa fa-pencil"></i> <span>Editar Fotos</span></a>
+                </div>
+                {# <img data-no-retina height="50" width="150" src="/uploads/institutoseducativos/{{app.session.get('ie_id')}}_Fondo" class="img-responsive full-width" alt="                "> #}
+                {% endif %}
+                {#<ul class="list no-padding hidden-sm hidden-xs cover-menu">                                        
+                    {% if app.session.get('ie_id') != -1 %}
+                        <li class="active"><a href="{{path('herramienta_ceducativa_seleccionar_cea')}}"><i class="fa fa-history"></i> <span>Historial del Centro.</span></a></li>
+                        <li><a href="{{path('herramienta_alter_galeria_fotos_centro')}}"><i class="fa fa-fw fa-photo"></i> <span>Galeria de Fotos</span> <small></small></a></li>
+                        <li><a href="{{path('herramienta_alter_galeria_fotos_centro_editar_foto')}}"><i class="fa fa-pencil"></i> <span>Editar Fotos</span> <small></small></a></li>                                                           
+                    {% endif %}
+                </ul>#}
+            </div><!-- /.cover -->
+        </div><!-- /.profile-cover -->
+        <div class="divider">
+        </div>
+    </div>
+</div><!-- /.row -->                    
+</div><!-- /.body-content -->
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+        <script>
+        
+    </script>
+{% endblock %}
+    

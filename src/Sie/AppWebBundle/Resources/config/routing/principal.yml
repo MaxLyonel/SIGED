@@ -33,3 +33,16 @@ siged_mostrar_resultados_reporte_modalidad_atencion:
     defaults: { _controller: SieAppWebBundle:Principal:mostrarResultadosReporteModalidadAtencion }
     options:
          expose: true
+
+
+siged_get_distritos_modalidad_atencion:
+    path:    /get_distritos_modalidad_atencion
+    defaults: { _controller: SieAppWebBundle:Principal:getDistritos }
+    options:
+         expose: true
+
+siged_exportar_excel_resultados_reporte_modalidad_atencion:
+    path:    /export_excel_resultados_reporte_modalidad_atencion/{gestionInput}/{departamentoInput}/{distritoInput}/{mesInput}
+    defaults: { _controller: SieAppWebBundle:Principal:mostrarResultadosReporteModalidadAtencionExcel }
+    options:
+         expose: true

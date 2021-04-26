@@ -1,0 +1,274 @@
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+
+{% block contentoption %}
+<!-- Start page header -->
+<div class="header-content">
+    <h2><i class="glyphicon glyphicon-leaf"></i> Bienvenido/a <span>Usted a ingresado al sistemas academico de educación alternativa.</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Usted esta aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="glyphicon glyphicon-leaf"></i>
+                    <a href="{{path('principal_web')}}">Bienvenida/o</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+        </ol>
+    </div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
+
+<!-- Start body content -->
+<div class="body-content animated fadeIn">
+<div class="row">
+   
+    <div class="col-lg-12 col-md-12 col-sm-8">
+        <div class="profile-cover">
+            <div class="cover rounded shadow no-overflow">
+
+
+
+
+ <div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Participantes con RDA asignado en un CEA</a>
+        </h4>
+      </div>
+      <div id="collapse1" class="panel-collapse collapse in">
+        <div class="panel-body">
+        
+        <div class="inner-cover">
+                    
+                    
+                    <div class="table-responsive">
+                        <table class="table-condensed">
+                         <table class="table table-bordered">
+                         
+                <thead>
+                                    <tr>
+                    <th>#</th>
+                    <th>PATERNO</th>
+                    <th>MATERNO</th>
+                    <th>NOMBRES</th>
+                     <th>CI</th>
+                     <th>RUDEAL</th>
+                    <th>FECHA DE <BR> NACIMIENTO</th>
+                    <th>RDA</th>
+                   
+                    <th>NIVEL</th>
+                    <th>ESPECIALIDAD</th>
+
+                </tr>
+                </thead>
+                        
+                      
+                    
+                    
+                    
+                    <tr>
+                    
+                    {% for persona in personas %}
+                    <td class="text-center">{{ loop.index }}</td>
+                    <td>{{persona.paterno}} </td>
+                    <td>{{persona.materno}} </td>
+                    <td> {{persona.nombre}}  </td>
+                    <td>{{persona.carnet_identidad}}</td>
+                    <td>{{persona.codigo_rude}}</td>
+                    <td>{{persona.fecha_nacimiento}}</td>
+                    <td>{{persona.rda}}</td>
+                   
+                    <td>{{persona.grado}}</td>
+                    <td>{{persona.ciclo}}</td>
+                     
+                   
+                    </tr>
+
+                             {% endfor %}
+                      </table>
+                      
+                      </table>
+                    </div>
+                </div>
+        
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Participantes Maestros inscritos en el CEPEAD</a>
+        </h4>
+      </div>
+      <div id="collapse2" class="panel-collapse collapse">
+        <div class="panel-body">
+        
+        <div class="table-responsive">
+                        <table class="table-condensed">
+                         <table class="table table-bordered">
+                         
+                <thead>
+                                    <tr>
+                    <th>#</th>
+                    <th>PATERNO</th>
+                    <th>MATERNO</th>
+                    <th>NOMBRES</th>
+                     <th>CI</th>
+                     <th>RUDEAL</th>
+                    <th>FECHA DE <BR> NACIMIENTO</th>
+                    <th>RDA</th>
+                    <th>NORMALISTA</th>
+                  
+                    <th>NIVEL</th>
+                    <th>ESPECIALIDAD</th>
+
+                </tr>
+                </thead>
+                        
+                      
+                    
+                    
+                    
+                    <tr>
+                    
+                    {% for persona2 in personas2 %}
+                  <td class="text-center">{{ loop.index }}</td>
+                    <td>{{persona2.paterno}} </td>
+                    <td>{{persona2.materno}} </td>
+                    <td> {{persona2.nombre}}  </td>
+                    <td>{{persona2.carnet_identidad}}</td>
+                    <td>{{persona2.codigo_rude}}</td>
+                    <td>{{persona2.fecha_nacimiento}}</td>
+                    <td>{{persona2.rda}}</td>
+                    <td>{{persona2.normalista}}</td>
+                    
+                    <td>{{persona2.grado}}</td>
+                    <td>{{persona2.ciclo}}</td>
+                     
+                   
+                    </tr>
+
+                             {% endfor %}
+                      </table>
+                      
+                      </table>
+                    </div>
+                </div>
+
+
+
+
+
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">
+          <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Participantes con doble registro, en el CEPEAD y un CEA de Bolivia</a>
+        </h4>
+      </div>
+      <div id="collapse3" class="panel-collapse collapse">
+        <div class="panel-body">
+        
+        
+        
+    <div class="table-responsive">
+                        <table class="table-condensed">
+                         <table class="table table-bordered">
+                         
+                <thead>
+                                    <tr>
+                    <th>#</th>
+                    <th>PATERNO</th>
+                    <th>MATERNO</th>
+                    <th>NOMBRES</th>
+                     <th>CI</th>
+                     <th>RUDEAL</th>
+                 
+                    <th>RDA</th>
+                    <th>FECHA DE <BR> NACIMIENTO</th>        
+                    <th>CODIGO CEA</th>
+                    <th>SUBSISTEMA</th>
+                    <th>NIVEL</th>
+                    <th>ETAPA</th>
+                   
+                    <th>SEMESTRE</th>
+                    <th>TURNO</th>
+                    <th>GESTIÓN</th>
+                
+
+
+                </tr>
+                </thead>
+                        
+                      
+                    
+                    
+                    
+                    <tr>
+                    
+                    {% for persona3 in personas3 %}
+                  <td class="text-center">{{ loop.index }}</td>
+                    <td>{{persona3.paterno}} </td>
+                    <td>{{persona3.materno}} </td>
+                    <td>{{persona3.nombre}}  </td>
+                    <td>{{persona3.carnet_identidad}}</td>
+                    <td>{{persona3.codigo_rude}}</td>
+                    
+                    <td>{{persona3.rda}}</td>
+                    <td>{{persona3.fecha_nacimiento}}</td>
+                    <td>{{persona3.institucioneducativa_id}}</td>
+                    <td>{{persona3.nivel}}</td> 
+                    <td>{{persona3.grado}}</td>
+                    <td>{{persona3.ciclo}}</td> 
+
+
+
+
+
+                    <td>{{persona3.periodo}}</td>
+                    <td>{{persona3.turno}}</td>
+                      <td>{{persona3.gestion_tipo_id}}</td>
+                     
+                   
+                    </tr>
+
+                             {% endfor %}
+                      </table>
+                      
+                      </table>
+                    </div>
+                </div>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      </div>
+    </div>
+  </div> 
+           
+               
+               
+                
+            </div><!-- /.cover -->
+        </div><!-- /.profile-cover -->
+        <div class="divider">
+        </div>
+    </div>
+</div><!-- /.row -->                    
+</div><!-- /.body-content -->
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+        <script>
+        
+    </script>
+{% endblock %}
+    
