@@ -41,10 +41,12 @@ class InscriptionIniPriTrueController extends Controller {
      *
      */
     public function indexAction() {
+      //disabled option by krlos
+      return $this->redirect($this->generateUrl('login'));
       //enable to departamento user
-      if($this->session->get('userName')!='1897494'){
+      /*if($this->session->get('userName')!='1897494'){
         return $this->redirect($this->generateUrl('login'));
-      }
+      }*/
       
       /*
       $arrUser = array('6478217','7861595','3558624');

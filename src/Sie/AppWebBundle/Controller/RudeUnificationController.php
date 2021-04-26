@@ -171,6 +171,8 @@ class RudeUnificationController extends Controller{
                 'paterno' => $studenta->getPaterno(),
                 'materno' => $studenta->getMaterno(),
                 'nombre' => $studenta->getNombre(),
+                'ci' => $studenta->getCarnetIdentidad(),
+                'complemento' => $studenta->getNombre(),
                 'fechaNac' => $studenta->getfechaNacimiento()->format('d-m-Y'),
                 
             );
@@ -197,6 +199,8 @@ class RudeUnificationController extends Controller{
                 'paterno' => $studentb->getPaterno(),
                 'materno' => $studentb->getMaterno(),
                 'nombre' => $studentb->getNombre(),
+                'ci' => $studentb->getCarnetIdentidad(),
+                'complemento' => $studentb->getComplemento(),
                 'fechaNac' => $studentb->getfechaNacimiento()->format('d-m-Y'),
             );
         }
@@ -806,6 +810,9 @@ class RudeUnificationController extends Controller{
             }   
             $arrApoderadoInscripcionDato = array();
             if(($inscripinco) && ($studentcor)){
+                /*dump($unificationIniPri);
+                dump($request);
+                die;*/
                 foreach ($inscripinco as $inscrip) {
 
                     $arrInscriptionsWrong[] = array(
@@ -911,7 +918,16 @@ class RudeUnificationController extends Controller{
                     } 
 
                     if($unificationIniPri){ 
-                        $em->remove($inscrip);  
+                        $em->remove($inscrip);
+                        //if the student has oferta
+                        $objOferta = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion'=>$inscrip->getId()));
+                        if(sizeof($objOferta)>0){
+                            foreach ($objOferta as $value) {
+                                $em->remove($value);
+                            }
+                        }
+
+                        $em->remove($inscrip);                          
                     }else{
                         $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscrip->getInstitucioneducativaCurso());                        
 

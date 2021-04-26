@@ -602,8 +602,8 @@ class PrincipalController extends Controller {
                 $existe=false;
             }
 
-            $inicio_clases=filter_var($request->get('inicio_clases'),FILTER_VALIDATE_INT);
-            $noInicioRazon=filter_var($request->get('no_inicio_razon'),FILTER_VALIDATE_INT);
+            $inicio_clases=filter_var($request->get('inicio_clases'),FILTER_SANITIZE_NUMBER_INT);
+            $noInicioRazon=filter_var($request->get('no_inicio_razon'),FILTER_SANITIZE_NUMBER_INT);
             $noInicioRazonOtros=filter_var($request->get('no_inicio_razon_otros'),FILTER_SANITIZE_STRING);
 
             if(strlen($noInicioRazonOtros)>250)
@@ -747,22 +747,53 @@ LIMIT ?';
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
 
-        $departamento=filter_var($request->get('departamento'),FILTER_VALIDATE_INT);
-        $distrito=filter_var($request->get('distrito'),FILTER_VALIDATE_INT);
-        $gestion=filter_var($request->get('gestion'),FILTER_VALIDATE_INT);
-        $mes=filter_var($request->get('mes'),FILTER_VALIDATE_INT);
+        $departamento=filter_var($request->get('departamento'),FILTER_SANITIZE_NUMBER_INT);
+        $distrito=filter_var($request->get('distrito'),FILTER_SANITIZE_NUMBER_INT);
+        $distritoTmp=($distrito==-1)?'':$distrito;
+        $gestion=filter_var($request->get('gestion'),FILTER_SANITIZE_NUMBER_INT);
+        $mes=filter_var($request->get('mes'),FILTER_SANITIZE_NUMBER_INT);
 
         $query = 'select * from sp_genera_reporte_modalidad_atencion(?,?,?,?);';
         $stmt = $db->prepare($query);
-        $params = array($gestion,$departamento,$distrito,$mes);
+        $params = array($gestion,$departamento,$distritoTmp,$mes);
         $stmt->execute($params);
         $datosReporte=$stmt->fetchAll();
         
         return $this->render($this->sesion->get('pathSystem') . ':Principal:reporte_modalidad_atencion.html.twig', array
         (
         'datosReporte' => $datosReporte,
-        'mes' =>$mes
+        'mes' =>$mes,
+
+        'gestion'=>$gestion,
+        'departamento'=>$departamento,
+        'distrito'=>$distrito,
         ));
+    }
+
+    public function mostrarResultadosReporteModalidadAtencionExcelAction($gestionInput,$departamentoInput,$distritoInput,$mesInput)
+    {
+        date_default_timezone_set('America/La_Paz');
+        $gestion        = $gestionInput;
+        $departamento   = $departamentoInput;
+        $distrito       = $distritoInput;
+        $distritoTmp    = ($distrito==-1)?'':$distrito;
+        $mes            = $mesInput;
+
+        $meses=array('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');
+
+        $arch = 'Reporte-Modalidades-de-Atención-'.$meses[$mes-1].'-'.date('Y').'_'.date('YmdHis').'.xlsx';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/xlsx');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'Reporte-modalidades_v1.rptdesign&__format=xlsx&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distritoTmp.'&mes='.$mes));
+        //$response->setContent(file_get_contents('http://127.0.0.1:62395/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-modalidades-atencion\Reporte-modalidades_v1.rptdesign&__format=xlsx'.'&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distritoTmp.'&mes='.$mes));
+        
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
     }
 
     public function getDistritosAction(Request $request)

@@ -356,7 +356,7 @@
                     {% endif %} #}
 
                     {% if app.session.get('roluser') == 9 %}
-                    {# <li class="submenu">
+                    <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bachiller de Excelencia</span>
@@ -365,10 +365,10 @@
                         <ul>
                             <li><a href="{{ path('bach_exc_dir')}}">Paso 1.- Actualizar datos Directora/Director</a></li>
                             <li><a href="{{ path('bach_exc_ddjj_dir')}}">Paso 2.- Declaración Jurada (Directora/Director)</a></li>
-                            <li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
-                            <li><a href="{{ path('bach_exc_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li>
+                            {# <li><a href="{{ path('bach_exc')}}">Paso 3.- Registrar Bachiller de Excelencia</a></li>
+                            <li><a href="{{ path('bach_exc_ddjj')}}">Paso 4.- Declaración Jurada (Bachilleres)</a></li> #}
                         </ul>
-                    </li> #}
+                    </li>
                     <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
@@ -432,11 +432,11 @@
                         </li>#}
                     {% endif %}
 
-                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10  or app.session.get('roluser') == 20  %}
+                    {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10  %}
                     {#
                     #}
                     
-                    {# <li class="submenu">
+                    <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Bachiller de Excelencia</span>
@@ -444,15 +444,16 @@
                         </a>
                         <ul>
                         {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 or app.session.get('roluser') == 10 %}
-                        {% if app.session.get('roluser') == 8 %}
-                           <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
-                        {% endif %}
                             <li><a href="{{ path('bach_exc_rep_dis')}}">Generar Reporte</a></li>
-                            <li><a href="{{ path('bach_exc_completar_informacion_lista')}}">Completar Información</a></li>
+                            {# <li><a href="{{ path('bach_exc_completar_informacion_lista')}}">Completar Información</a></li> #}
+                        {% endif %}
+                        {# {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 7 %}
+                            <li><a href="{{ path('bach_exc_rst')}}">Restablecer registros</a></li>
+                        {% endif %} #}
                         </ul>
-                    </li> #}
+                    </li>
                     
-                    <li class="submenu">
+                    {# <li class="submenu">
                         <a href="javascript:void(0);">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Equipamiento</span>
@@ -465,7 +466,7 @@
                             <li><a href="{{ path('herramienta_reportelabofisquim_index')}}">Reportes</a></li>
                         </ul>
                     </li>
-                   
+                    #}
                         {#<li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
