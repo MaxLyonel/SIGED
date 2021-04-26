@@ -40,6 +40,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
      *
      */
     public function indexAction() {
+      //disabled option by krlos
       return $this->redirect($this->generateUrl('login'));
       $arrWeenhayec = array(
         61710004,
