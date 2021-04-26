@@ -232,12 +232,12 @@ class MaestroCepeadController extends Controller {
                                                                                                                 where f.gestion_tipo_id=".$form['gestion']." 
                                                                                                                 and f.institucioneducativa_id=".$form['codsie']."
                                                                                                                 and f.sucursal_tipo_id=".$form['subcea']." 
-                                                                                                                and f.periodo_tipo_id=".$form['semestre']." 
+                                                                                                              
                                             and p.rda!=0
                                         
                                         
                                             
-                                            ORDER BY b.especialidad, d.acreditacion,j.paterno, j.materno, j.nombre";
+                                            ORDER BY periodo, b.especialidad, d.acreditacion,j.paterno, j.materno, j.nombre";
                   
                   
                                 $stmt = $db->prepare($query);
@@ -279,11 +279,11 @@ class MaestroCepeadController extends Controller {
                                                                                         where f.gestion_tipo_id=".$form['gestion']." 
                                                                                         and f.institucioneducativa_id=".$form['codsie']."
                                                                                         and f.sucursal_tipo_id=".$form['subcea']." 
-                                                                                        and f.periodo_tipo_id=".$form['semestre']." 
+                                                                                       
                                                                                         and m.cargo_tipo_id=0
                             
                                       
-                                                                                        ORDER BY b.especialidad, d.acreditacion,j.paterno, j.materno, j.nombre";
+                                                                                        ORDER BY periodo, b.especialidad, d.acreditacion,j.paterno, j.materno, j.nombre";
                                       
                   
 
@@ -345,7 +345,7 @@ INNER JOIN maestro_inscripcion m on m.persona_id=p.id
 where f.gestion_tipo_id=".$form['gestion']."
 and f.institucioneducativa_id='80730796' 
 and f.sucursal_tipo_id=".$form['subcea']."
-and f.periodo_tipo_id=".$form['semestre']." 
+
 
 ) n on j.codigo_rude=n.codigo_rude and e.institucioneducativa_id<>n.institucioneducativa_id
 where 

@@ -1,0 +1,93 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content primary">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Lista de Observaciones del operativo</h4>
+        </div>
+        <div class="modal-body">
+            <div class="panel-body">
+                {% if observacion|length == 0 %}
+                    <div class="alert alert-success">
+                        <span class="alert-icon"><i class="fa fa-bell-o"></i></span>
+                        <div class="notification-info">
+                            <ul class="clearfix notification-meta">
+                                <li class="pull-left notification-sender">El CEA no presenta observaciones, contactese con el/la Director/a del Centro de Educacion Alternativa <strong>para que cierre el operativo automáticamente,</strong> ingresando al menu principal de la gestion y sucursal correspondiente.</li>
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="row col-md-6">
+                    <div><div class="col-md-3"><b>Cod. CEA:</b></div> {{entity.institucioneducativa.id}} </div>
+                    <div><div class="col-md-3"><b>CEA:</b></div> {{entity.institucioneducativa.institucioneducativa}} </div>
+                    <div><div class="col-md-3"><b>Sucursal:</b></div> {{entity.sucursalTipo.id}} </div>                   
+                    <div><div class="col-md-3"><b>Gestión</b></div> {{entity.gestionTipo.id}} </div>
+                </div>
+                <div class="row col-md-6">
+                    <div><div class="col-md-5"><b>Periodo:</b></div>{% if entity.periodoTipoId == 2 %} PRIMER SEMESTRE {% elseif entity.periodoTipoId == 3 %} SEGUNDO SEMESTRE {% else %} ANUAL {% endif %} </div>
+                    <div><div class="col-md-5"><b>OPERATIVO:</b></div>{% if periodo_estado == 1 %} INSCRIPCIONES {% else %} NOTAS {% endif %} </div>
+                    <div><div class="col-md-5"><b>Total Observaciones:</b></div> <spam>{{observacion|length}} </spam></div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="table-responsive col-md-12">
+                    <table class="table table-bordered table-striped" id="datatable">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="min-width:5px">No.</th>
+                                <th>Observación</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th class="text-center" style="min-width:5px">No.</th>
+                                <th>Observación</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            {% for obs in observacion %}
+                                <tr>
+                                    <td class="text-center">{{ loop.index }}</td>
+                                    <td>{{ obs.observacion }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var cargatablas1 = function (identif){
+        // Setup - add a text input to each footer cell
+        $('#datatable tfoot th').each( function () {
+            var title = $(this).text();
+            if(title.trim() === "" || title === "No."){
+                $(this).html('');
+            } else {
+                $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+            }
+        } );
+        // DataTable
+        var table = $('#datatable').DataTable({
+            "order": [[ 0, "asc" ]],
+            "columnDefs": [
+                        { "orderable": false}
+                        //{ "orderable": false, "targets": [9] }
+                        ],
+        });
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                    .search( this.value )
+                    .draw();
+                }
+            });
+        });
+    };
+</script>
