@@ -197,7 +197,7 @@ class MaestroCepeadController extends Controller {
         die;*/
         
 
-       dump($this->session->get('ie_gestion'));
+       //dump($this->session->get('ie_gestion'));
                // die;
                 $form = $request->get('form');
               //  if ( ($this->session->get('ie_gestion')) && ($form['Inputrude']) ){
