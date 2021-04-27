@@ -1,0 +1,13 @@
+sie_herramienta_alternativa_cepead_ind:
+  path:     /
+  defaults: { _controller: "SieHerramientaAlternativaBundle:MaestroCepead:index"}
+
+sie_herramienta_alternativa_cepead_profes_observados:
+  path:     /ProfesObservados
+  defaults: { _controller: "SieHerramientaAlternativaBundle:MaestroCepead:ProfesObservados"}
+
+sie_herramienta_alternativa_cepead_obs:
+  path:     /observados
+  defaults: { _controller: "SieHerramientaAlternativaBundle:MaestroCepead:observados"}
+
+
