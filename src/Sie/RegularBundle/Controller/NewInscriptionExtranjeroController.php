@@ -37,7 +37,11 @@ class NewInscriptionExtranjeroController extends Controller{
 
     public function indexAction(Request $request){
       //disabled option by krlos
-      return $this->redirect($this->generateUrl('login'));
+     if (in_array($this->session->get('roluser'), array(8,7))){
+
+     }else{
+      return $this->redirect($this->generateUrl('login'));  
+     }
 
     	$em = $this->getDoctrine()->getManager();
         //validation if the user is logged
