@@ -293,8 +293,22 @@ class InboxController extends Controller {
         // }
 
 
-        // $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
-        $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
+        $ie_id=$this->session->get('ie_id');
+        $_gestion=$this->session->get('currentyear');
+        $esGuanawek=$this->esGuanawek($ie_id,$gestion=2020);
+        if($esGuanawek)
+        {
+          $operativoPerUe=1;
+          $_gestion=2020;
+          $this->session->set('esGuanawek',1);
+        }
+        else
+        {
+          // $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
+          $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
+          $_gestion=$this->session->get('currentyear');
+          $this->session->set('esGuanawek',0);
+        }
 
         $this->operativoUe = $operativoPerUe;
         //get the current year
@@ -330,12 +344,49 @@ class InboxController extends Controller {
         return $this->render($this->session->get('pathSystem') . ':Inbox:index.html.twig', array(
             'objValidateUePlena'=>($objValidateUePlena)?1:0,
             'arrSieInfo'=>$arrSieInfo[0],
-            'gestion'=>$this->session->get('currentyear'),
+            //'gestion'=>$this->session->get('currentyear'),
+            'gestion'=>$_gestion,
             'form'=> $this->formUePlena(json_encode($arrFullUeInfo),$objTypeOfUE)->createView(),
             'formOperativoRude'=> $this->formOperativoRude(json_encode($arrFullUeInfo),$objTypeOfUE)->createView(),
             'consolidationform'=> $this->infoConsolidationForm(json_encode($arrFullUeInfo))->createView(),
-            'entities' => $entities
+            'entities' => $entities,
+
+            'esGuanawek' => $esGuanawek,
         ));
+    }
+
+    /**
+     * Funcion que determina si una Institucion Educativa, es tipo Guanawek
+     *
+     * @param institucioneducativa_id, gestion
+     * @return true o flase
+     * @author lnina
+     **/
+    private function esGuanawek($ie_id,$gestion)
+    {
+      $return=false;
+      $tecnico_humanistico=4; //institucioneducativa_humanistico_tecnico_tipo_id 
+      $departamentos=array();
+      $em = $this->getDoctrine()->getManager();
+      $db = $em->getConnection();
+      $query = '
+      select * 
+      from 
+      institucioneducativa_humanistico_tecnico 
+      where 
+      institucioneducativa_humanistico_tecnico_tipo_id = ? 
+      and gestion_tipo_id = ?
+      and institucioneducativa_id = ?';
+
+      $stmt = $db->prepare($query);
+      $params = array($tecnico_humanistico,$gestion,$ie_id);
+      $stmt->execute($params);
+      $guanawek=$stmt->fetchAll();
+
+      if($guanawek)
+        $return=true;
+
+      return $return;
     }
 
     // this is fot the RUDE Operativo
