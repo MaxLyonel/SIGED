@@ -77,7 +77,6 @@
                             <label for="form-gestion">Seleccione la gestión</label>
                             <select class="form-control select-gestion" id="select-gestion" >
                               <option value='{{"now"|date("Y")}}'>{{"now"|date("Y")}}</option>
-                              <option value="-1">-1</option>
                             </select>
                           </div>
                         </div>
@@ -117,7 +116,6 @@
                                     <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
                                     </div>
                                 </div><!-- /.progress -->   
-
                                 {% for d in datos %}
                                     {% set departamento = (d.departamento_id is defined)? d.departamento_id:-1 %}
                                     {% set distrito = (d.distrito_id is defined)? d.distrito_id:-1 %}
@@ -171,8 +169,9 @@
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="panel panel-default shadow">
                             <div class="table-responsive">
-                              <table class="table">
+                              <table class="table table-condensed">
                                 <tr>
+                                    <th>#</th>
                                     <th>Unidad educativa</th>
                                     <th>Inicio actividad</th>
                                     <th>Helada</th>
@@ -188,13 +187,15 @@
                                     <th>Sin riesgo</th>
                                 </tr>
                                 {% set iniciaron=1 %}
+                                {% set i=1 %}
                                 {% for ue in datos %}
                                     {% if ue.inicio==0 %}
                                     <tr>
                                         {% set iniciaron=0 %}
                                         {% set bg_color= (ue.inicio==1)?'bg-success':'bg-danger' %}
+                                        <th>{{i}}</th>
                                         <td>{{ue.ue_nom}}</td>
-                                        <td class='text-white text-center {{bg_color}}'>{{(ue.inicio==1)?'Si':'No'}}</td>
+                                        <td class='text-center'>{{(ue.inicio==1)?'<span class="label label-success">Si</span>':'<span class="label label-danger">No</span>'}}</td>
                                         <td class="{{(ue.helada==1)?'bg-primary':''}}"> </td>
                                         <td class="{{(ue.granizada==1)?'bg-primary':''}}"> </td>
                                         <td class="{{(ue.sismo==1)?'bg-primary':''}}"> </td>
@@ -207,6 +208,7 @@
                                         <td class="{{(ue.riesgo_sanitario==1)?'bg-primary':''}}"> </td>
                                         <td class="{{(ue.sin_riesgo==1)?'bg-primary':''}}"> </td>
                                     </tr>
+                                    {% set i = i+1 %}
                                     {% endif %}
                                 {% endfor %}
                                     {% if iniciaron==1 %}
@@ -299,7 +301,7 @@ Highcharts.chart('inicio', {
             cursor: 'pointer',
             dataLabels: {
                 enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %  ({point.label:,.0f} E.U.)'
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %  ({point.label:.0f} Unidades Educativas)'
             }
         }
     },
@@ -321,7 +323,7 @@ Highcharts.chart('riesgos', {
         text: 'Riesgos que presenta las unidades educativas'
     },
     tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.label:,.0f} E.U.)'
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.label:.0f} Unidades Educativas)'
     },
     accessibility: {
         point: {
@@ -334,7 +336,7 @@ Highcharts.chart('riesgos', {
             cursor: 'pointer',
             dataLabels: {
                 enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} % ({point.label:,.0f} E.U.)'
+                format: '<b>{point.name}</b>: {point.percentage:.1f} % ({point.label:.0f} Unidades Educativas)'
             }
         }
     },
