@@ -3,7 +3,11 @@
 {% block contentoption %}
 {% set meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] %}
 {% set mesActual="now"|date("n") %}
+{% set fechaInicioReporte=1 %}
+{% set fechaFinReporte=9 %}
+
     <!--Modal para asignar los tipos de atencion que tiene la unidad educativa-->
+    {% if "now"|date('j')|number_format>=fechaInicioReporte and "now"|date('j')|number_format<=fechaFinReporte %}
     <div class="modal fade" id="modalInicioClases" tabindex="-1">
         <form action="" method="POST" id="form-actualizar-tipo" autocomplete="off">
           <div class="modal-dialog">
@@ -109,6 +113,7 @@
           </div>
         </form>
     </div>
+    {% endif %}
 
     <!-- Start page header -->
     <div class="header-content">
@@ -546,33 +551,35 @@
          #}
         <!--Detalle si la U.E.continuo con las actividades-->
             {% if app.session.get('roluser') == 9 %}
-                <div class="col-md-3">
-                    <!-- Start input fields - basic form -->
-                    <div class="panel rounded shadow">
-                        <div class="panel panel-lilac shadow">
-                            <div class="panel-heading">
-                                <div class="pull-left">
-                                    <h3 class="panel-title">Reporte de actividades</h3>
-                                </div>
-                                <div class="pull-right">
-                                    <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div><!-- /.panel-heading -->
-                            <div class="panel-body no-padding">
-                                <div class="col-md-12" >
-                                    <div class="div-mostrar-tipos" style="overflow:hidden; text-overflow: ellipsis;">
+                {% if "now"|date('j')|number_format>=fechaInicioReporte and "now"|date('j')|number_format<=fechaFinReporte %}
+                    <div class="col-md-3">
+                        <!-- Start input fields - basic form -->
+                        <div class="panel rounded shadow">
+                            <div class="panel panel-lilac shadow">
+                                <div class="panel-heading">
+                                    <div class="pull-left">
+                                        <h3 class="panel-title">Reporte de actividades</h3>
                                     </div>
-                                </div>
-                                <div class="col-md-12 text-center ">
+                                    <div class="pull-right">
+                                        <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div><!-- /.panel-heading -->
+                                <div class="panel-body no-padding">
+                                    <div class="col-md-12" >
+                                        <div class="div-mostrar-tipos" style="overflow:hidden; text-overflow: ellipsis;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 text-center ">
+                                        <br>
+                                        <a href="#" class="badge badge-info" data-toggle="modal" data-target="#modalInicioClases">Modificar</a>
+                                    </div>
                                     <br>
-                                    <a href="#" class="badge badge-info" data-toggle="modal" data-target="#modalInicioClases">Modificar</a>
-                                </div>
-                                <br>
-                            </div><!-- /.panel-body --> 
+                                </div><!-- /.panel-body --> 
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% endif %}
                 <!--Muestra en un historia de reporte de actividades -->
                 <div class="col-md-9">
                     <div class="panel rounded shadow">
