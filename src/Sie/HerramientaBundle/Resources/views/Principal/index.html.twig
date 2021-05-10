@@ -4,7 +4,7 @@
 {% set meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] %}
 {% set mesActual="now"|date("n") %}
 {% set fechaInicioReporte=1 %}
-{% set fechaFinReporte=9 %}
+{% set fechaFinReporte=10 %}
 
     <!--Modal para asignar los tipos de atencion que tiene la unidad educativa-->
     {% if "now"|date('j')|number_format>=fechaInicioReporte and "now"|date('j')|number_format<=fechaFinReporte %}
