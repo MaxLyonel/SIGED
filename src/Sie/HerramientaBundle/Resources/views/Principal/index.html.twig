@@ -5,9 +5,13 @@
 {% set mesActual="now"|date("n") %}
 {% set fechaInicioReporte=1 %}
 {% set fechaFinReporte=10 %}
+{% set fecha = "now"|date('j')|number_format %}
 
+{% if "now"|date('j/n/Y')=='11/5/2021' %}
+{% set fecha=10 %}
+{% endif %}
     <!--Modal para asignar los tipos de atencion que tiene la unidad educativa-->
-    {% if "now"|date('j')|number_format>=fechaInicioReporte and "now"|date('j')|number_format<=fechaFinReporte %}
+    {% if fecha >=fechaInicioReporte and fecha <=fechaFinReporte %}
     <div class="modal fade" id="modalInicioClases" tabindex="-1">
         <form action="" method="POST" id="form-actualizar-tipo" autocomplete="off">
           <div class="modal-dialog">
@@ -551,7 +555,7 @@
          #}
         <!--Detalle si la U.E.continuo con las actividades-->
             {% if app.session.get('roluser') == 9 %}
-                {% if "now"|date('j')|number_format>=fechaInicioReporte and "now"|date('j')|number_format<=fechaFinReporte %}
+                {% if fecha >= fechaInicioReporte and fecha <= fechaFinReporte %}
                     <div class="col-md-3">
                         <!-- Start input fields - basic form -->
                         <div class="panel rounded shadow">
