@@ -7,9 +7,10 @@
 {% set fechaFinReporte=10 %}
 {% set fecha = "now"|date('j')|number_format %}
 
-{% if "now"|date('j/n/Y')=='11/5/2021' %}
+{# if "now"|date('j/n/Y')=='11/5/2021' %}
 {% set fecha=10 %}
-{% endif %}
+{% endif #}
+
     <!--Modal para asignar los tipos de atencion que tiene la unidad educativa-->
     {% if fecha >=fechaInicioReporte and fecha <=fechaFinReporte %}
     <div class="modal fade" id="modalInicioClases" tabindex="-1">
@@ -27,7 +28,7 @@
               <div class="modal-body text--center pb-0">
                {#
                <fieldset class="form-group">
-                    <div class="row">
+                    <div class="row">a
                         <legend class="col-md-3 col-form-label pt-0">Modalidades de atención</legend>
                         <div class="col-md-9">
                         <div class="form-group mb-0">
