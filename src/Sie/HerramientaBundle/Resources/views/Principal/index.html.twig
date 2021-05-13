@@ -7,9 +7,9 @@
 {% set fechaFinReporte=10 %}
 {% set fecha = "now"|date('j')|number_format %}
 
-{# if "now"|date('j/n/Y')=='11/5/2021' %}
+{% if "now"|date('j/n/Y') in ['13/5/2021','14/5/2021'] %}
 {% set fecha=10 %}
-{% endif #}
+{% endif %}
 
     <!--Modal para asignar los tipos de atencion que tiene la unidad educativa-->
     {% if fecha >=fechaInicioReporte and fecha <=fechaFinReporte %}
