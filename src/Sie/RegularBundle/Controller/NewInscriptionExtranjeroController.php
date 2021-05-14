@@ -37,7 +37,7 @@ class NewInscriptionExtranjeroController extends Controller{
 
     public function indexAction(Request $request){
       //disabled option by krlos
-     if (in_array($this->session->get('roluser'), array(8,7))){
+     if (in_array($this->session->get('roluser'), array(8,7,10))){
 
      }else{
       return $this->redirect($this->generateUrl('login'));  
