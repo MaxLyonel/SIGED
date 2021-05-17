@@ -41,7 +41,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
      */
     public function indexAction() {
       //deshabilitado el 15/5/2021
-      return $this->redirect($this->generateUrl('login'));
+      //return $this->redirect($this->generateUrl('login'));
 
      if (in_array($this->session->get('roluser'), array(8,7,10))){
 

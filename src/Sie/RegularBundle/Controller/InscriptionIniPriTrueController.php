@@ -42,7 +42,7 @@ class InscriptionIniPriTrueController extends Controller {
      */
     public function indexAction() {
       //disabled option by krlos
-      return $this->redirect($this->generateUrl('login'));
+      //return $this->redirect($this->generateUrl('login'));
      if (in_array($this->session->get('roluser'), array(8,7,10))){
 
      }else{
