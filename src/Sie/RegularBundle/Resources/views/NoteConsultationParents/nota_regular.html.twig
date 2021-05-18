@@ -105,7 +105,7 @@
             </table>
         {% endif %}
     {% endif %}
-{% elseif inscripcion.institucioneducativaCurso.nivelTipo.id == 12 and inscripcion.institucioneducativaCurso.gradoTipo.id == 1 %}
+{% elseif inscripcion.institucioneducativaCurso.nivelTipo.id == 12 and inscripcion.institucioneducativaCurso.gradoTipo.id == 1 and notas|length <= 0 %}
     {% if cualitativo2020 %}
         <h5 class="text-info">Notas</h5>
         <table class="table table-bordered table-striped cf" style="backgroud:#FFFFFF; font-size: 9pt">
