@@ -182,13 +182,13 @@
                                                                                 <i class="fa fa-list"></i>
                                                                             </button>
                                                                         </div>
-                                                                        {% if "now"|date('j')|number_format in range(1,14) %}
-                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modalidad">
-                                                                                <button class="btn btn-circle btn-primary btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getDatosModalidad('{{dataParalelo.infoUe}}');">
-                                                                                    <i class="fa fa-home"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        {% endif %}
+                                                                        {# {% if "now"|date('j')|number_format in range(1,14) %} #}
+                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modalidad">
+                                                                            <button class="btn btn-circle btn-primary btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getDatosModalidad('{{dataParalelo.infoUe}}');">
+                                                                                <i class="fa fa-home"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                        {# {% endif %} #}
                                                                         {% if arrLevelandGrado.operativo in allowOperativo and arrLevelandGrado.gestion >= 2019 %}
                                                                             {% if estado == true and app.session.get('currentyear') == 2019 %}
                                                                                 {% if dataParalelo.nivelId == 13 and dataParalelo.gradoId in app.session.get('gradoTipoBth') %}
