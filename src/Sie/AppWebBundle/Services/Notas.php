@@ -1187,7 +1187,7 @@ class Notas{
                         $fin = 3;
                         if( in_array($gestion, array(2020,2021)) ){
                             $inicio = 6;
-                            $fin = 9;
+                            $fin = 8;
                         }                        
                     }
                     //to validate info consolidation
