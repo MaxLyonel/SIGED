@@ -212,7 +212,7 @@
                                         <i class="fa fa-print"></i>
                                         <div>
                                             <span class="text-strong">VI</span>
-                                            <span><small>FINALIZAR E IMPRIMIR</small></span>
+                                            <span><small>FINALIZAR</small></span>
                                         </div>
                                     </a>
                                 </li>
@@ -321,29 +321,29 @@
                                                 <div class="row form-group">
                                                     <label class="col-md-4 col-sm-4">Oficialia Nº:</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        {# {{ form_widget(formEstudiante.oficialia, {'attr':{'class':'form-control readonly'} }) }} #}
-                                                        <b>{{ formEstudiante.oficialia.vars.value }}</b>
+                                                         {{ form_widget(formEstudiante.oficialia, {'attr':{'class':'form-control '} , 'value': formEstudiante.oficialia.vars.value  }) }} 
+                                                        {#<b>{{ formEstudiante.oficialia.vars.value }}</b>#}
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
                                                     <label class="col-md-4 col-sm-4">Libro Nº:</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        {# {{ form_widget(formEstudiante.libro, {'attr':{'class':'form-control readonly'} }) }} #}
-                                                        <b>{{ formEstudiante.libro.vars.value }}</b>
+                                                         {{ form_widget(formEstudiante.libro, {'attr':{'class':'form-control '} , 'value': formEstudiante.libro.vars.value  }) }} 
+                                                        {#<b>{{ formEstudiante.libro.vars.value }}</b>#}
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
                                                     <label class="col-md-4 col-sm-4">Partida Nº:</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        {# {{ form_widget(formEstudiante.partida, {'attr':{'class':'form-control readonly'} }) }} #}
-                                                        <b>{{ formEstudiante.partida.vars.value }}</b>
+                                                         {{ form_widget(formEstudiante.partida, {'attr':{'class':'form-control '} , 'value': formEstudiante.partida.vars.value  }) }} 
+                                                        {#<b>{{ formEstudiante.partida.vars.value }}</b>#}
                                                     </div>
                                                 </div>
                                                 <div class="row form-group">
                                                     <label class="col-md-4 col-sm-4">Folio Nº:</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        {# {{ form_widget(formEstudiante.folio, {'attr':{'class':'form-control readonly'} }) }} #}
-                                                        <b>{{ formEstudiante.folio.vars.value }}</b>
+                                                         {{ form_widget(formEstudiante.folio, {'attr':{'class':'form-control '} , 'value': formEstudiante.folio.vars.value  }) }} 
+                                                        {#<b>{{ formEstudiante.folio.vars.value }}</b>#}
                                                     </div>
                                                 </div>
                                             </div>
@@ -835,7 +835,7 @@
                                         <div class="panel-body">
                                             <div class="tab-content">
                                                 <div class="tab-pane fade active in" id="tab1-11">
-                                                    <form id="formPadre" onsubmit="saveFormPadre(); return false;" method="post">
+                                                    <form id="formPadre" onsubmit="saveFormPadre(); return false;" method="post" {{ form_enctype(formPadre) }}>
                                                         <div id="p_divTienePadre" style="text-align:center">
                                                             <div class="radio">
                                                                 ¿Registrar datos del padre?&nbsp;&nbsp;
@@ -971,14 +971,23 @@
                                                                             <button type="button" class="btn btn-warning btn-block" onclick="p_cambiar();">Cambiar datos padre</button>
                                                                         </div>
                                                                         <div id="p_top2" style="padding:10px; border:1px solid #cccccc; display:none">
-                                                                            <p>Para buscar datos del padre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
+                                                                            <p>Para buscar datos del padre, debe introducir los siguientes campos.</p>
                                                                             {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
                                                                                 <p class="sinCarnet">
                                                                                     <label><input type="checkbox" id="pb_sinCarnet" autocomplete="off"> El padre no cuenta con carnet</label>
                                                                                 </p>
                                                                             {% endif %}
-                                                                            <input type="text" name="pb_carnet" autocomplete="off" id="pb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
-                                                                            <input type="text" name="pb_complemento" autocomplete="off" id="pb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <div class="form-check form-check-inline">
+                                                                              <input class="form-check-input" type="checkbox" name="pb_es_extranjero" id="pb_es_extranjero" value="1">
+                                                                              <label class="form-check-label" for="pb_es_extranjero">Diplomático/Extranjero <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si inscribe a una persona extranjera o diplomática."></i></label>
+                                                                            </div>
+                                                                            <div class="div-identificacion-extranjeros" style="display:none">
+                                                                                <input type="text" name="pb_nro_identidad" autocomplete="off" id="pb_nro_identidad" autocomplete="off" class="form-control jupper" placeholder="Nro de identidad">
+                                                                            </div>
+                                                                            <div class="div-identificacion-nacionales">
+                                                                                <input type="text" name="pb_carnet" autocomplete="off" id="pb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
+                                                                                <input type="text" name="pb_complemento" autocomplete="off" id="pb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            </div>
                                                                             <input type="text" name="pb_paterno" autocomplete="off" id="pb_paterno" autocomplete="off" class="form-control jupper" placeholder="Paterno" value="">
                                                                             <input type="text" name="pb_materno" autocomplete="off" id="pb_materno" autocomplete="off" class="form-control jupper" placeholder="Materno" value="">
                                                                             <input type="text" name="pb_nombre" autocomplete="off" id="pb_nombre" autocomplete="off" class="form-control jupper" placeholder="Nombre" value="">
@@ -987,14 +996,23 @@
                                                                         </div>
                                                                     {% else %}
                                                                         <div id="p_top2" style="padding:10px; border:1px solid #cccccc">
-                                                                            <p>Para buscar datos del padre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
+                                                                            <p>Para buscar datos del padre, debe introducir los siguientes campos.</p>
                                                                             {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
                                                                                 <p class="sinCarnet">
                                                                                     <label><input type="checkbox" id="pb_sinCarnet" autocomplete="off"> El padre no cuenta con carnet</label>
                                                                                 </p>
                                                                             {% endif %}
-                                                                            <input type="text" name="pb_carnet" autocomplete="off" id="pb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
-                                                                            <input type="text" name="pb_complemento" autocomplete="off" id="pb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            <div class="form-check form-check-inline">
+                                                                              <input class="form-check-input" type="checkbox" name="pb_es_extranjero" id="pb_es_extranjero" value="1">
+                                                                              <label class="form-check-label" for="pb_es_extranjero">Diplomático/Extranjero <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si inscribe a una persona extranjera o diplomática."></i></label>
+                                                                            </div>
+                                                                            <div class="div-identificacion-extranjeros" style="display:none">
+                                                                                <input type="text" name="pb_nro_identidad" autocomplete="off" id="pb_nro_identidad" autocomplete="off" class="form-control jupper" placeholder="Nro de identidad">
+                                                                            </div>
+                                                                            <div class="div-identificacion-nacionales">
+                                                                                <input type="text" name="pb_carnet" autocomplete="off" id="pb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
+                                                                                <input type="text" name="pb_complemento" autocomplete="off" id="pb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            </div>
                                                                             <input type="text" name="pb_paterno" autocomplete="off" id="pb_paterno" autocomplete="off" class="form-control jupper" placeholder="Paterno" value="">
                                                                             <input type="text" name="pb_materno" autocomplete="off" id="pb_materno" autocomplete="off" class="form-control jupper" placeholder="Materno" value="">
                                                                             <input type="text" name="pb_nombre" autocomplete="off" id="pb_nombre" autocomplete="off" class="form-control jupper" placeholder="Nombre" value="">
@@ -1054,6 +1072,26 @@
                                                                             {{ form_widget(formMadre.expedido, {'id':'m_expedido','attr':{'class':'form-control jupper'} }) }}
                                                                         </div>
                                                                     </div>
+
+                                                                   <div class="form-group row">
+                                                                        <label class="col-md-6">Estado civil</label>
+                                                                        <div class="col-md-6 col-sm-6">
+                                                                            <select id="m_estado_civil" name="form[estado_civil]" class="form-control jupper" >
+                                                                                <option value="">Seleccionar...</option>
+                                                                                {% for e in estadoCivilData %}
+                                                                                    {% set selected = (e.id==madre.estado_civil)?'selected':'' %}
+                                                                                    <option value="{{e.id}}" {{selected}}>{{e.estadoCivil}}</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row div-m_apellido_esposo" style="display:none7">
+                                                                        <label class="col-md-6">Apellido esposo</label>
+                                                                        <div class="col-md-6 col-sm-6">
+                                                                            <input type="text" id="m_apellido_esposo" name="form[apellido_esposo]" class="form-control  jupper" value="{{madre.apellidoEsposo}}">
+                                                                        </div>
+                                                                    </div>
+
                                                                     <div class="form-group row">
                                                                         <label class="col-md-6">Apellido paterno</label>
                                                                         <div class="col-md-6 col-sm-6">
@@ -1152,14 +1190,27 @@
                                                                             <button type="button" class="btn btn-warning btn-block" onclick="m_cambiar();">Cambiar datos madre</button>
                                                                         </div>
                                                                         <div id="m_top2" style="padding:10px; border:1px solid #cccccc; display:none">
-                                                                            <p>Para buscar datos de la madre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarla.</p>
+                                                                            <p>Para buscar datos de la madre, debe introducir los siguientes campos.</p>
                                                                             {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
                                                                                 <p class="sinCarnet">
                                                                                     <label><input type="checkbox" id="mb_sinCarnet" autocomplete="off"> La madre no cuenta con carnet</label>
                                                                                 </p>
                                                                             {% endif %}
+                                                                            <div class="form-check form-check-inline">
+                                                                              <input class="form-check-input" type="checkbox" name="mb_es_extranjero" id="mb_es_extranjero" value="1">
+                                                                              <label class="form-check-label" for="mb_es_extranjero">Diplomático/Extranjero <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si inscribe a una persona extranjera o diplomática."></i></label>
+                                                                            </div>
+                                                                            <div class="mdiv-identificacion-extranjeros" style="display:none">
+                                                                                <input type="text" name="mb_nro_identidad" autocomplete="off" id="mb_nro_identidad" autocomplete="off" class="form-control jupper" placeholder="Nro de identidad">
+                                                                            </div>
+                                                                            <div class="mdiv-identificacion-nacionales">
+                                                                                <input type="text" name="mb_carnet" autocomplete="off" id="mb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
+                                                                                <input type="text" name="mb_complemento" autocomplete="off" id="mb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            </div>
+                                                                            <!--
                                                                             <input type="text" name="mb_carnet" autocomplete="off" id="mb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
                                                                             <input type="text" name="mb_complemento" autocomplete="off" id="mb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            -->
                                                                             <input type="text" name="mb_paterno" autocomplete="off" id="mb_paterno" autocomplete="off" class="form-control jupper" placeholder="Paterno" value="">
                                                                             <input type="text" name="mb_materno" autocomplete="off" id="mb_materno" autocomplete="off" class="form-control jupper" placeholder="Materno" value="">
                                                                             <input type="text" name="mb_nombre" autocomplete="off" id="mb_nombre" autocomplete="off" class="form-control jupper" placeholder="Nombre" value="">
@@ -1168,14 +1219,27 @@
                                                                         </div>
                                                                     {% else %}
                                                                         <div id="m_top2" style="padding:10px; border:1px solid #cccccc">
-                                                                            <p>Para buscar datos de la madre, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarla.</p>
+                                                                            <p>Para buscar datos de la madre, debe introducir los siguientes campos.</p>
                                                                             {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
                                                                                 <p class="sinCarnet">
                                                                                     <label><input type="checkbox" id="mb_sinCarnet" autocomplete="off"> La madre no cuenta con carnet</label>
                                                                                 </p>
                                                                             {% endif %}
+                                                                            <div class="form-check form-check-inline">
+                                                                              <input class="form-check-input" type="checkbox" name="mb_es_extranjero" id="mb_es_extranjero" value="1">
+                                                                              <label class="form-check-label" for="mb_es_extranjero">Diplomático/Extranjero <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si inscribe a una persona extranjera o diplomática."></i></label>
+                                                                            </div>
+                                                                            <div class="mdiv-identificacion-extranjeros" style="display:none">
+                                                                                <input type="text" name="mb_nro_identidad" autocomplete="off" id="mb_nro_identidad" autocomplete="off" class="form-control jupper" placeholder="Nro de identidad">
+                                                                            </div>
+                                                                            <div class="mdiv-identificacion-nacionales">
+                                                                                <input type="text" name="mb_carnet" autocomplete="off" id="mb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
+                                                                                <input type="text" name="mb_complemento" autocomplete="off" id="mb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            </div>
+                                                                            <!--
                                                                             <input type="text" name="mb_carnet" autocomplete="off" id="mb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
                                                                             <input type="text" name="mb_complemento" autocomplete="off" id="mb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            -->
                                                                             <input type="text" name="mb_paterno" autocomplete="off" id="mb_paterno" autocomplete="off" class="form-control jupper" placeholder="Paterno" value="">
                                                                             <input type="text" name="mb_materno" autocomplete="off" id="mb_materno" autocomplete="off" class="form-control jupper" placeholder="Materno" value="">
                                                                             <input type="text" name="mb_nombre" autocomplete="off" id="mb_nombre" autocomplete="off" class="form-control jupper" placeholder="Nombre" value="">
@@ -1235,6 +1299,26 @@
                                                                             {{ form_widget(formTutor.expedido, {'id':'t_expedido','attr':{'class':'form-control jupper'} }) }}
                                                                         </div>
                                                                     </div>
+
+                                                                    <div class="form-group row">
+                                                                        <label class="col-md-6">Estado civil</label>
+                                                                        <div class="col-md-6 col-sm-6">
+                                                                            <select id="t_estado_civil" name="form[estado_civil]" class="form-control jupper" >
+                                                                                <option value="">Seleccionar...</option>
+                                                                                {% for e in estadoCivilData %}
+                                                                                    {% set selected = (e.id==tutor.estado_civil)?'selected':'' %}
+                                                                                    <option value="{{e.id}}" {{selected}}>{{e.estadoCivil}}</option>
+                                                                                {% endfor %}
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row div-m_apellido_esposo" style="display:none7">
+                                                                        <label class="col-md-6">Apellido esposo</label>
+                                                                        <div class="col-md-6 col-sm-6">
+                                                                            <input type="text" id="t_apellido_esposo" name="form[apellido_esposo]" class="form-control  jupper" value="{{tutor.apellidoEsposo}}">
+                                                                        </div>
+                                                                    </div>
+
                                                                     {# {% endif %} #}
                                                                     <div class="form-group row">
                                                                         <label class="col-md-6">Apellido paterno</label>
@@ -1334,14 +1418,27 @@
                                                                             <button type="button" class="btn btn-warning btn-block" onclick="t_cambiar();">Cambiar datos tutor</button>
                                                                         </div>
                                                                         <div id="t_top2" style="padding:10px; border:1px solid #cccccc; display:none">
-                                                                            <p>Para buscar datos del tutor, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
+                                                                            <p>Para buscar datos del tutor, debe introducir los siguientes campos.</p>
                                                                             {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
                                                                                 <p class="sinCarnet">
                                                                                     <label><input type="checkbox" id="tb_sinCarnet" autocomplete="off"> El tutor no cuenta con carnet</label>
                                                                                 </p>
                                                                             {% endif %}
+                                                                            <div class="form-check form-check-inline">
+                                                                              <input class="form-check-input" type="checkbox" name="tb_es_extranjero" id="tb_es_extranjero" value="1">
+                                                                              <label class="form-check-label" for="tb_es_extranjero">Diplomático/Extranjero <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si inscribe a una persona extranjera o diplomática."></i></label>
+                                                                            </div>
+                                                                            <div class="tdiv-identificacion-extranjeros" style="display:none">
+                                                                                <input type="text" name="tb_nro_identidad" autocomplete="off" id="tb_nro_identidad" autocomplete="off" class="form-control jupper" placeholder="Nro de identidad">
+                                                                            </div>
+                                                                            <div class="tdiv-identificacion-nacionales">
+                                                                                <input type="text" name="tb_carnet" autocomplete="off" id="tb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
+                                                                                <input type="text" name="tb_complemento" autocomplete="off" id="tb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            </div>
+                                                                            <!--
                                                                             <input type="text" name="tb_carnet" autocomplete="off" id="tb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
                                                                             <input type="text" name="tb_complemento" autocomplete="off" id="tb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            -->
                                                                             <input type="text" name="tb_paterno" autocomplete="off" id="tb_paterno" autocomplete="off" class="form-control jupper" placeholder="Paterno" value="">
                                                                             <input type="text" name="tb_materno" autocomplete="off" id="tb_materno" autocomplete="off" class="form-control jupper" placeholder="Materno" value="">
                                                                             <input type="text" name="tb_nombre" autocomplete="off" id="tb_nombre" autocomplete="off" class="form-control jupper" placeholder="Nombre" value="">
@@ -1350,14 +1447,27 @@
                                                                         </div>
                                                                     {% else %}
                                                                         <div id="t_top2" style="padding:10px; border:1px solid #cccccc">
-                                                                            <p>Para buscar datos del tutor, debe introducir los siguientes campos. Si no se encuentra a la persona puede registrarlo.</p>
+                                                                            <p>Para buscar datos del tutor, debe introducir los siguientes campos.</p>
                                                                             {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
                                                                                 <p class="sinCarnet">
                                                                                     <label><input type="checkbox" id="tb_sinCarnet" autocomplete="off"> El tutor no cuenta con carnet</label>
                                                                                 </p>
                                                                             {% endif %}
+                                                                            <div class="form-check form-check-inline">
+                                                                              <input class="form-check-input" type="checkbox" name="tb_es_extranjero" id="tb_es_extranjero" value="1">
+                                                                              <label class="form-check-label" for="tb_es_extranjero">Diplomático/Extranjero <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si inscribe a una persona extranjera o diplomática."></i></label>
+                                                                            </div>
+                                                                            <div class="tdiv-identificacion-extranjeros" style="display:none">
+                                                                                <input type="text" name="tb_nro_identidad" autocomplete="off" id="tb_nro_identidad" autocomplete="off" class="form-control jupper" placeholder="Nro de identidad">
+                                                                            </div>
+                                                                            <div class="tdiv-identificacion-nacionales">
+                                                                                <input type="text" name="tb_carnet" autocomplete="off" id="tb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
+                                                                                <input type="text" name="tb_complemento" autocomplete="off" id="tb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            </div>
+                                                                            <!--
                                                                             <input type="text" name="tb_carnet" autocomplete="off" id="tb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
                                                                             <input type="text" name="tb_complemento" autocomplete="off" id="tb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
+                                                                            -->
                                                                             <input type="text" name="tb_paterno" autocomplete="off" id="tb_paterno" autocomplete="off" class="form-control jupper" placeholder="Paterno" value="">
                                                                             <input type="text" name="tb_materno" autocomplete="off" id="tb_materno" autocomplete="off" class="form-control jupper" placeholder="Materno" value="">
                                                                             <input type="text" name="tb_nombre" autocomplete="off" id="tb_nombre" autocomplete="off" class="form-control jupper" placeholder="Nombre" value="">
@@ -1484,6 +1594,13 @@
         validarOtroAbandono();
         $("#form_fecha").inputmask({ "alias": "dd-mm-yyyy" });
         $("#form_fechaRegistroRude").inputmask({ "alias": "dd-mm-yyyy", "placeholder": "dd-mm-aaaa" });
+
+        $('[data-toggle="tooltip"]').tooltip();
+        //estadoCivil();
+        //
+        mostrarTipoIdentificacion();
+        mostrarTipoIdentificacionMadre();
+        mostrarTipoIdentificacionTutor();
     });
 
     $(".js-example-basic-multiple").select2({
@@ -2147,4 +2264,20 @@
         });
     }
 
+   function estadoCivil()
+    {
+        $('#m_estado_civil').on('change',function(){
+            if (false)//(this.value==1 || this.value==2 )
+            {
+                $(".div-m_apellido_esposo").show();
+                $("#m_apellido_esposo").val('');
+            }
+            else
+            {
+                $(".div-m_apellido_esposo").hide();
+            }
+          });
+    }
+
+    
 </script>

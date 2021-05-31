@@ -252,6 +252,20 @@ sie_unidadeducativa_plataforma:
      resource: "@SieHerramientaBundle/Resources/config/routing/unidadeducativaplataforma.yml"
      prefix:   /sie/plataforma
 
+sie_registerforeignerperson:
+     resource: "@SieHerramientaBundle/Resources/config/routing/registerforeignerperson.yml"
+     prefix:   /sie/registerforeignerperson
+
 sie_unidadeducativa_selectedStudents:
      resource: "@SieHerramientaBundle/Resources/config/routing/selectedstudents.yml"
      prefix:   /sie/selectedstudents
+
+#sie_unidadeducativa_regularizacionGestionesPasadas:
+#     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionGestionesPasadas.yml"
+#     prefix:   /sie/regularizacion-gestiones-pasadas
+
+
+#caso 3 regularizaion de notas gestion pasada
+sie_regularizacion_regularizacionEstudiantesPostBachillerato:
+     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionEstudiantesPostBachillerato.yml"
+     prefix:   /sie/regularizacion-estudiantes-post-bachillerato
