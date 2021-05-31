@@ -266,6 +266,6 @@ sie_unidadeducativa_selectedStudents:
 
 
 #caso 3 regularizaion de notas gestion pasada
-sie_regularizacion_regularizacionEstudiantesPostBachillerato:
-     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionEstudiantesPostBachillerato.yml"
-     prefix:   /sie/regularizacion-estudiantes-post-bachillerato
+#sie_regularizacion_regularizacionEstudiantesPostBachillerato:
+#     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionEstudiantesPostBachillerato.yml"
+#     prefix:   /sie/regularizacion-estudiantes-post-bachillerato
