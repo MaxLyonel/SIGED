@@ -1,0 +1,24 @@
+Sie\AppWebBundle\Entity\EstadosaludTipo:
+    type: entity
+    table: estadosalud_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estadosalud:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }

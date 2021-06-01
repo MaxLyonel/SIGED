@@ -830,9 +830,18 @@ class InfoEstudianteController extends Controller {
         }
     }
 
-    $this->session->set('optionRemove', false);
-    if($operativo){
-        $this->session->set('optionRemove',true);
+    $this->session->set('optionFormRude', false);
+    $this->session->set('optionReporteRude', false);
+
+    if($operativo)
+    {
+        $this->session->set('optionFormRude',true);
+    }
+    // if the rude operative was closed, so hidden the form rude option
+    $registroConsolRude = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $sie, 'gestion' => $gestion, 'rude' => 1));
+    if($registroConsolRude){
+        $this->session->set('optionFormRude', false);
+        $this->session->set('optionReporteRude', true);
     }
 
   $this->session->set('removeInscriptionAllowed', false);
@@ -1426,15 +1435,15 @@ class InfoEstudianteController extends Controller {
            ));
           }
 
-          dump($objinstitucioneducativaOperativoLog);
+          //dump($objinstitucioneducativaOperativoLog);
         }else{
           // return new Response('Proceso anteriormente realizado... ');
           $response = new Response('Proceso anteriormente realizado... '.$sie, Response::HTTP_OK);
 
           return $response;
-          die;
+          //die;
         }
-        die('...');
+        //die('...');
 
     }
 

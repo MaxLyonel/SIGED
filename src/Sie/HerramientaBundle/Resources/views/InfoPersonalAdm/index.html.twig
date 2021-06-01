@@ -113,7 +113,7 @@
                                         <a href="{{path('herramienta_info_personal_adm_find')}}" id="nuevoA" name="nuevoA" class="btn btn-primary btn-md" style="display:inline-block"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
                                     {% endif %}
                                 {% endif %}
-                                {% if personal_no_idioma is empty and personal_no_genero is empty and contador == 2 and personal is not empty and app.session.get('roluser') == 9 %}
+                                {% if personal_no_idioma is empty and personal_no_genero is empty and contador == 1 and personal is not empty and app.session.get('roluser') == 9 %}
                                     <form method ="POST" action="{{path('herramienta_info_personal_adm_ddjj')}}" name="form" id="form" style="display:inline-block" onsubmit="return validaDatos()">
                                           <input type="hidden" id="ddjjMaestro_sie" name="ddjjMaestro[sie]" value="{{institucion.id}}">
                                           <input type="hidden" id="ddjjMaestro_gestion" name="ddjjMaestro[gestion]" value="{{gestion}}">
@@ -157,7 +157,7 @@
                                     <strong>¡Error!</strong> Debe registrar el género para los administrativos resaltados en rojo. Ingese a la acción "Editar" por cada administrativo observado.
                                 </div>
                             {% endif %}
-                            {% if contador > 2 %}
+                            {% if contador > 1 %}
                                 <div class="callout callout-danger">
                                     <strong>¡Advertencia!</strong> La Unidad Educativa cuenta con más de un(a) Director(a), verifique esta información.
                                 </div>

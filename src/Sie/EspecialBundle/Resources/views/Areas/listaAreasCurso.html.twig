@@ -5,7 +5,8 @@
 </div>
 <div class="col-lg-12">
     <div class="pull-right">
-        {% if onlyview == false and app.session.get('roluser') == 9 and gestion >= app.session.get('currentyear') %}
+        {% if true %}
+        {#{% if onlyview == false and app.session.get('roluser') == 9 and gestion >= app.session.get('currentyear') %}#}
             <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}} , 'divAreas')" class="btn btn-facebook btn-md"><i class="fa fa-plus-circle text-white"></i> Adicionar Área para especial </button>
         {% endif %}
     </div> 

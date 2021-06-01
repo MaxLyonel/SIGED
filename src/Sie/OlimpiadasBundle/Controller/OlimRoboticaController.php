@@ -94,11 +94,11 @@ class OlimRoboticaController extends Controller{
                     ->setParameter('idPersona', $tutor->getId())
                     ->setParameter('gestion', date('Y'))
                     ->setParameter('inscripcion', $inscripcionActual)
-                    ->setParameter('materia', 17)
+                    ->setParameter('materia', 26)
                     ->setMaxResults(1)
                     ->getQuery()
                     ->getResult();
-
+                    
                     if($grupoProyecto){
                         // OBTENEMOS LAS INSCRIPCIONES EN OLIMPIADAS
                         $inscripcionesOlim = $em->createQueryBuilder()
@@ -109,7 +109,7 @@ class OlimRoboticaController extends Controller{
                             ->where('ogp.id = :grupoProyecto')
                             ->andWhere('ogp.materiaTipo = :materia')
                             ->setParameter('grupoProyecto', $grupoProyecto[0]['id'])
-                            ->setParameter('materia', 17)
+                            ->setParameter('materia', 26)
                             ->getQuery()
                             ->getResult();
                     } else {
@@ -241,7 +241,7 @@ class OlimRoboticaController extends Controller{
                     ));
                 }
 
-                $reglasTipo = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->findBy(array('olimMateriaTipo' => 17));
+                $reglasTipo = $em->getRepository('SieAppWebBundle:OlimReglasOlimpiadasTipo')->findBy(array('olimMateriaTipo' => 26));
 
                 $categorias = array();
                 foreach ($reglasTipo as $key => $value) {

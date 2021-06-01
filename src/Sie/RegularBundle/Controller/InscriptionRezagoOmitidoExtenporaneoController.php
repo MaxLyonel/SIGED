@@ -40,8 +40,14 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
      *
      */
     public function indexAction() {
-      //disabled option by krlos
-      return $this->redirect($this->generateUrl('login'));
+      //deshabilitado el 15/5/2021
+      //return $this->redirect($this->generateUrl('login'));
+
+     if (in_array($this->session->get('roluser'), array(8,7,10))){
+
+     }else{
+      return $this->redirect($this->generateUrl('login'));  
+     }
       $arrWeenhayec = array(
         61710004,
         61710014,

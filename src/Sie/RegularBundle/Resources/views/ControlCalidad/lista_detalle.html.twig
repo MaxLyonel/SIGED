@@ -19,8 +19,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% set TIPO_REGLA = -1 %}
+                            {% set titulo = '' %}
+                            {% set idioma1 = '' %}
+                            {% set idioma2 = '' %}
+                            {% set idioma3 = '' %}
+
                             {% for detalle in lista_detalle %}
-                                <tr id="rowListaDetalle{{ loop.index }}">
+                                <tr id="rowListaDetalle{{ loop.index }}" class="tr-observacion-{{detalle.id}}">
                                     <td data-title="No.">{{ loop.index }}</td>
                                     <td data-title="Gestion">{{detalle.gestionTipo}}</td>
                                     <td data-title="Observacion">{{detalle.obs}}</td>
@@ -137,6 +143,27 @@
                                                 <button type="submit" class="btn btn-link" onclick="justificarSinCarnet({{detalle.id}})"><i class="fa fa-edit"></i> Omitir C.I.</button>
                                             </div>
                                         {% endif %}
+
+
+                                        {% if regla.id == 17 %}{# Validacion para la regla "Grados sin desayuno escolar respecto a la gestion 2014" #}
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-desayuno',{{detalle.id}})">Solucionar observación</button>
+                                        {% endif %}
+                                        {% if regla.id == 19 %}{# Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" #}
+                                            {% set TIPO_REGLA = 19 %}
+                                            {% set titulo = 'LENGUA EN LOS PROCESOS PEDAGÓGICOS' %}
+                                            {% set idioma1 = '1. Lengua del proceso pedagógico (primera lengua)' %}
+                                            {% set idioma2 = '2. Lengua del proceso pedagógico (segunda lengua)' %}
+                                            {% set idioma3 = '3. Lengua extranjera de apoyo en los procesos pedagógicos' %}
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
+                                        {% endif %}
+                                        {% if regla.id == 18 %}{# Inconsistencias respecto a Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 " #}
+                                            {% set TIPO_REGLA = 18 %}
+                                            {% set titulo = 'PRESENCIA DE LENGUAS EN EL AMBITO ESCOLAR' %}
+                                            {% set idioma1 = '1. Lengua más hablada (más frecuente)' %}
+                                            {% set idioma2 = '2. Lengua regularmente hablada (menos frecuente)' %}
+                                            {% set idioma3 = '3. Lengua menos hablada (poco frecuente)' %}
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
+                                        {% endif %}
                                     {% endif %}
                                     {# Para Distritos #}
                                     {% if app.session.get('roluser') == 10 %}
@@ -247,6 +274,27 @@
                                                 </form>
                                             {% endif %}
                                         {% endif %}
+
+
+                                        {% if regla.id == 17 %}{# Validacion para la regla "Grados sin desayuno escolar respecto a la gestion 2014" #}
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-desayuno',{{detalle.id}})">Solucionar observación</button>
+                                        {% endif %}
+                                        {% if regla.id == 19 %}{# Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" #}
+                                            {% set TIPO_REGLA = 19 %}
+                                            {% set titulo = 'LENGUA EN LOS PROCESOS PEDAGÓGICOS' %}
+                                            {% set idioma1 = '1. Lengua del proceso pedagógico (primera lengua)' %}
+                                            {% set idioma2 = '2. Lengua del proceso pedagógico (segunda lengua)' %}
+                                            {% set idioma3 = '3. Lengua extranjera de apoyo en los procesos pedagógicos' %}
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
+                                        {% endif %}
+                                        {% if regla.id == 18 %}{# Inconsistencias respecto a Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 " #}
+                                            {% set TIPO_REGLA = 18 %}
+                                            {% set titulo = 'PRESENCIA DE LENGUAS EN EL AMBITO ESCOLAR' %}
+                                            {% set idioma1 = '1. Lengua más hablada (más frecuente)' %}
+                                            {% set idioma2 = '2. Lengua regularmente hablada (menos frecuente)' %}
+                                            {% set idioma3 = '3. Lengua menos hablada (poco frecuente)' %}
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
+                                        {% endif %}
                                     {% endif %}
                                     </td>
                                 </tr>
@@ -351,6 +399,157 @@
 
     </div>
 </div>
+
+{# Modal solucion al caso Inconsistencias respecto a Grados sin desayuno escolar respecto a la gestion 2014 #}
+<div class="modal fade" id="modal-inconsistencia-sin-desayuno" tabindex="-1" role="dialog" aria-labelledby="modal-inconsistencia-sin-desayuno">
+        <form action="#" method="POST" class="form-resolve-inconsistency-desayuno">
+            <input type="hidden" name="token" value="{{ csrf_token('form-resolve-inconsistency-desayuno') }}">
+            <input type="hidden" id="form_id" name="id" value="">
+            <input type="hidden" id="form_inconsistencia" name="inconsistencia" value="">
+            <input type="hidden" id="form_ue" name="ue" value="">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modal-inconsistencia-sin-desayuno">Desayuno Escolar</h4>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="row" style="padding-top:1rem">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="col-xs-12 col-sm-6 control-label">¿Se proporciona desayuno escolar al curso?</label>
+                                            <div class="col-xs-12 col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <input type="radio" id="form_desayunoEscolar_1" name="desayunoEscolar" class="request-desayuno" required="required" value="1" autocomplete="off">
+                                                        <label for="form_desayunoEscolar_1" class="required">Si</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="radio" id="form_desayunoEscolar_0" name="desayunoEscolar" class="request-desayuno" required="required" value="0" autocomplete="off">
+                                                        <label for="form_desayunoEscolar_0" class="required">No</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row tiene-financiamiento" style="padding-top:1rem; display:none">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="col-xs-12 col-sm-6 control-label"> Fuente de financiamiento del Desayuno Escolar </label>
+                                            <div class="col-xs-12 col-sm-6">
+                                                <select id="form_finDesEscolarTipo" name="finDesEscolarTipo" class="form-control chosen-select" autocomplete="off">
+                                                    <option value> Seleccione una opción </option>
+                                                    <option value="1">MINISTERIO DE EDUCACION</option>
+                                                    <option value="2">ONG</option>
+                                                    <option value="3">IGLESIA</option>
+                                                    <option value="4">GOBIERNO MUNICIPAL</option>
+                                                    <option value="5">PREFECTURA</option>
+                                                    <option value="6">COMUNAL (TODA LA COMUNIDAD)</option>
+                                                    <option value="7">AD HONOREM</option>
+                                                    <option value="8">RECURSOS PROPIOS</option>
+                                                    <option value="9">GOBIERNO DEPARTAMENTAL</option>
+                                                    <option value="10">PADRES DE FAMILIA</option>
+                                                    <option value="11">TGN OTROS</option>
+                                                    <option value="12">FUNDACION</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success btn-resolver-inconsistencia">Registrar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+</div>
+
+{# 
+    Modal solución al caso Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015 
+    Modal solucion al caso Inconsistencias de Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 
+ #}
+<div class="modal fade" id="modal-inconsistencia-sin-idioma-ensenanza-aula" tabindex="-1" role="dialog" aria-labelledby="modal-inconsistencia-sin-idioma-ensenanza-aula">
+    <form action="#" method="POST" class="form-resolve-inconsistency-idioma-aula">
+        <input type="hidden" name="token" value="{{ csrf_token('form-resolve-inconsistency-idioma-aula') }}">
+        <input type="hidden" id="form_id" name="id" value="">
+        <input type="hidden" id="form_inconsistencia" name="inconsistencia" value="">
+        <input type="hidden" id="form_ue" name="ue" value="">
+        <input type="hidden" id="form_tipo" name="tipo" value="{{TIPO_REGLA}}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-inconsistencia-sin-idioma-ensenanza-aula"> {{titulo}}</h4>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row" style="padding-top:1rem">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> {{idioma1}} </label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <select id="form_priLenEnsenanzaTipo" name="priLenEnsenanzaTipo" required="required" class="form-control chosen-select" autocomplete="off">
+                                                <option value="" selected="selected">Seleccionar...</option>
+                                                {% for idioma in idiomas %}
+                                                    <option value="{{idioma.id}}"> {{idioma.idioma}} </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem;">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> {{idioma2}} </label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <select id="form_segLenEnsenanzaTipo" name="segLenEnsenanzaTipo" required="required" class="form-control chosen-select" autocomplete="off">
+                                                <option value="" selected="selected">Seleccionar...</option>
+                                                {% for idioma in idiomas %}
+                                                    <option value="{{idioma.id}}"> {{idioma.idioma}} </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem;">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> {{idioma3}} </label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <select id="form_terLenEnsenanzaTipo" name="terLenEnsenanzaTipo" required="required" class="form-control chosen-select" autocomplete="off">
+                                                <option value="" selected="selected">Seleccionar...</option>
+                                                {% for idioma in idiomas %}
+                                                    <option value="{{idioma.id}}"> {{idioma.idioma}} </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success btn-resolver-inconsistencia-idioma-aula">Registrar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
 {% block javascripts %}
     <script>
 
@@ -608,5 +807,338 @@
         $('#myModalSolucionHomonimoGemelo').modal('show');
     }
 
+    {# Resolver inconsistencia desayuno escolar #}
+
+    $('.request-desayuno').on('change',function(e)
+    {
+        if (this.checked)
+        {
+            var estadosDesayuno=$('.request-desayuno');
+            if(typeof(estadosDesayuno)!='undefined')
+            {
+                var cambio=desayunoEstaSeleccionado(estadosDesayuno);
+                if(cambio.valor==0)//si tiene desayuno
+                {
+                    $('.tiene-financiamiento').hide();
+                }
+                else if(cambio.valor == 1)//no tiene desayuno
+                {
+                    $('.tiene-financiamiento').show();
+                }
+            }
+        }
+    });
+
+    $('.form-resolve-inconsistency-desayuno').on('submit',function(e)
+    {
+        resolverInconsistenciaDesayuno(this,e);
+    });
+    $('.form-resolve-inconsistency-idioma-aula').on('submit',function(e)
+    {
+        resolverInconsistenciaIdiomaAula(this,e);
+    });
+
+    $('.modal').on('hidden.bs.modal', function ()
+    {
+      var form=$(this).find('.form-resolve-inconsistency-desayuno');
+      if(typeof(form)!='undefined')
+      {
+        form.find('#form_id').val('');
+        form.find('#form_inconsistencia').val('');
+        form.find('#form_ue').val('');
+        var checks=form.find('.request-desayuno');
+        if(typeof(checks)!='undefined')
+        {
+            $.each(checks,function(i, item)
+            {
+                $(item).attr("checked", false);
+                $(item).prop("checked", false);
+            });
+        }
+        $('.tiene-financiamiento').hide();
+        form.find('#form_finDesEscolarTipo').val('');
+      }
+    });
+    var seleccionarInconsistencia= function(_ue,_id,_form,_inconsistencia)
+    {
+        var form=$('#'+_form);
+        if(typeof(form)!='undefined')
+        {
+            var input    = form.find('#form_ue');
+            var input1   = form.find('#form_id');
+            var input2   = form.find('#form_inconsistencia');
+            if(typeof(input)!='undefined' && typeof(input1)!='undefined' && typeof(input2)!='undefined')
+            {
+                input.val(_ue);
+                input1.val(_id);
+                input2.val(_inconsistencia);
+                abrirModal(_form);
+            }
+            else
+                alert('Acaba de ocurrir un error, por favor vuelva a interntarlo');
+        }
+        else
+            alert('Acaba de ocurrir un error, por favor vuelva a interntarlo');
+    }
+    var desayunoEstaSeleccionado = function (desayunoEstados)
+    {
+        var seleccionado    = true;
+        var valor           =-1;
+        var cantidadEstados = desayunoEstados.length;
+        if(typeof(desayunoEstados)!='undefined')
+        {
+            if(cantidadEstados==2)
+            {
+                for(var i =0;i<cantidadEstados;i++)
+                {
+                    if( $(desayunoEstados[i]).is(':checked') == true)
+                    {
+                        valor=$(desayunoEstados[i]).val();
+                    }
+                }
+            }
+            else
+                seleccionado =false;
+        }
+        else
+            seleccionado =false;
+        if(valor==-1)
+            seleccionado=false;
+        return {'seleccionado':seleccionado,'valor':valor};
+    }
+    var abrirModal=function(_nombreModal)
+    {
+        var modal=$("#"+_nombreModal);
+        if(typeof(modal)!=null)
+            modal.modal('show');
+    }
+    var cerrarModal=function(_nombreModal)
+    {
+        var modal=$("#"+_nombreModal);
+        if(typeof(modal)!=null)
+        {
+            modal.modal('hide');
+            {#limpiarModal(_nombreModal)#}
+        }
+    }
+    var ejecutandoAccion=function (_con,_ele,_text)
+    {
+        var ele=$('.'+_con).find('.'+_ele);
+        if(typeof(ele)!=null)
+        {
+            ele.text(_text);
+        }
+    }
+    var habilitarElemento=function(_con,_ele)
+    {
+        var ele=$(_con).find('.'+_ele);
+        if(typeof(ele)!=null)
+        {
+            ele.removeAttr('disabled');
+        }
+    }
+    var deshabilitarElemento=function(_con,_ele)
+    {
+        var ele=$(_con).find('.'+_ele);
+        if(typeof(ele)!=null)
+        {
+            ele.attr('disabled',true);
+        }
+    }
+    var resolverInconsistenciaDesayuno = function (_form,e)
+    {
+        e.preventDefault();
+        var form=$(_form);
+        var desayunoSeleccionado =desayunoEstaSeleccionado($('.request-desayuno'));
+        if(desayunoSeleccionado.valor<0 || desayunoSeleccionado.seleccionado==false)
+        {
+            alert('Debe seleccionar SI se proporciona o NO desayuno escolar al curso');
+            return
+        }
+        if(desayunoSeleccionado.valor==1)
+        {
+            var financiamiento=form.find('#form_finDesEscolarTipo');
+            if(typeof(financiamiento)!='undefined')
+            {
+                if(financiamiento.val()=='')
+                {
+                    alert('Debe seleccionar una fuente de financiamiento del desayuno');
+                    return;
+                }
+            }
+            else
+            {
+                alert('Acaba de ocurrir uun error, por favor vuelva a intentarlo');
+                return;
+            }
+        }
+        else
+        {
+            var financiamiento=form.find('#form_finDesEscolarTipo');
+            if(typeof(financiamiento)!='undefined')
+            {
+                financiamiento.val('');
+            }
+        }
+        var q=confirm('¿Está seguro de proceder?');
+        if(q==false)
+        {
+            return;
+        }
+        var _btn_submit='btn-resolver-inconsistencia';
+        $.ajax({
+                type: 'POST',
+                url: '{{url("ccalidad_resolver_inconsistencias_grados_sin_desayuno")}}',
+                data: form.serialize(),
+                {#
+                /*dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData:false,*/
+                #}
+                beforeSend: function()
+                {
+                    deshabilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-desayuno',_btn_submit,'Solucionando observación ...');
+                },
+                success: function(data)
+                {
+                    var status  = data.status;
+                    var msj     = data.msj;
+                    var id      = data.data;
+                    if(status==200)
+                    {
+                        if(id!=null && msj!=null)
+                        {
+                            cerrarModal('modal-inconsistencia-sin-desayuno');
+                            $('.tr-observacion-'+id).fadeOut();
+                            $('.tr-observacion-'+id).remove();
+                            alert(msj);
+                        }
+                        else
+                        {
+                            alert('Acaba de ocurrir un error por favor vuelva a intentarlo.');
+                        }
+                    }
+                    else
+                    {
+                        alert(msj);
+                    }
+                    habilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-desayuno',_btn_submit,'Solucionar observación');
+                },
+                error:function (xhr)
+                {
+                    habilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-desayuno',_btn_submit,'Solucionar observación');
+                    try
+                    {
+                        var data    = JSON.parse(xhr.responseText);
+                        var msj     = data.msj;
+                        var status  = data.status;
+                        if(status== 404)
+                            alert(data.msj);
+                        else
+                            alert('Acaba de ocurrir un error por favor vuelva a intentarlo');
+                    }
+                    catch(e)
+                    {
+                        alert('Acaba de ocurrir un error por favor vuelva a intentarlo');
+                    }
+                }
+        });
+    }
+    var resolverInconsistenciaIdiomaAula = function (_form,e)
+    {
+        e.preventDefault();
+        var form=$(_form);
+        var idioma1=form.find('#form_priLenEnsenanzaTipo');
+        var idioma2=form.find('#form_segLenEnsenanzaTipo');
+        var idioma3=form.find('#form_terLenEnsenanzaTipo');
+
+        if(typeof(idioma1)=='undefined' || (typeof(idioma1)!='undefined' && idioma1.val()=='' ) )
+        {
+            alert('Debe seleccionar la primera lengua');
+            return;
+        }
+        if(typeof(idioma2)=='undefined' || (typeof(idioma2)!='undefined' && idioma2.val()=='' ) )
+        {
+            alert('Debe seleccionar la segunda lengua');
+            return;
+        }
+        if(typeof(idioma3)=='undefined' || (typeof(idioma3)!='undefined' && idioma3.val()=='' ) )
+        {
+            alert('Debe seleccionar la tercera lengua');
+            return;
+        }
+        var q=confirm('¿Está seguro de proceder?');
+        if(q==false)
+        {
+            return;
+        }
+        var _btn_submit='btn-resolver-inconsistencia-idioma-aula';
+        $.ajax({
+                type: 'POST',
+                url: '{{url("ccalidad_resolver_inconsistencias_grados_sin_idioma_ensenanza_aula")}}',
+                data: form.serialize(),
+                {#
+                /*dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData:false,*/
+                #}
+                beforeSend: function()
+                {
+                    deshabilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-idioma-aula',_btn_submit,'Solucionando observación ...');
+                },
+                success: function(data)
+                {
+                    var status  = data.status;
+                    var msj     = data.msj;
+                    var id      = data.data;
+                    if(status==200)
+                    {
+                        if(id!=null && msj!=null)
+                        {
+                            cerrarModal('modal-inconsistencia-sin-idioma-ensenanza-aula');
+                            $('.tr-observacion-'+id).fadeOut();
+                            $('.tr-observacion-'+id).remove();
+                            $(form)[0].reset();
+                            alert(msj);
+                        }
+                        else
+                        {
+                            alert('Acaba de ocurrir un error por favor vuelva a intentarlo.');
+                        }
+                    }
+                    else
+                    {
+                        alert(msj);
+                    }
+                    habilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-idioma-aula',_btn_submit,'Solucionar observación');
+                },
+                error:function (xhr)
+                {
+                    habilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-idioma-aula',_btn_submit,'Solucionar observación');
+                    try
+                    {
+                        var data    = JSON.parse(xhr.responseText);
+                        var msj     = data.msj;
+                        var status  = data.status;
+                        if(status== 404)
+                            alert(data.msj);
+                        else
+                            alert('Acaba de ocurrir un error por favor vuelva a intentarlo');
+                    }
+                    catch(e)
+                    {
+                        alert('Acaba de ocurrir un error por favor vuelva a intentarlo');
+                    }
+                }
+        });
+    }
     </script>
 {% endblock %}

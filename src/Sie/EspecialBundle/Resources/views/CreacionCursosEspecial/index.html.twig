@@ -85,7 +85,8 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="pull-right">
-                {% if onlyview == false and app.session.get('roluser') == 9 and gestion >= app.session.get('currentyear') %}
+                {% if app.session.get('roluser') == 9 and gestion >= app.session.get('currentyear') %}
+                {# {% if onlyview == false and app.session.get('roluser') == 9 and gestion >= app.session.get('currentyear') %} #}
                     <form action="{{path('creacioncursos_especial_new')}}" style="display: inline-block" method="post">
                         <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                         <input type="hidden" name="idGestion" value="{{gestion}}">
@@ -188,7 +189,8 @@
                                                 <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                 <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
                                                 <td data-title="Acciones">
-                                                     {% if onlyview == false and app.session.get('roluser') == 9 %}
+                                                    {% if app.session.get('roluser') == 9 %}
+                                                    {# {% if onlyview == false and app.session.get('roluser') == 9 %} #}
                                                         <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
                                                             <input type="hidden" name="idCurso" value="{{c.id}}">
                                                             <button type="submit" class="btn-link" onclick="return confirm('Se eliminará el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>
@@ -208,7 +210,6 @@
                                                     class="info"
                                                 {% endif %}
                                                 {% endif %}>
-
                                                     <td data-title="Area">{{c.especialAreaTipo.areaEspecial}}</td>
                                                     <td data-title="Nivel">{{c.institucioneducativaCurso.nivelTipo.nivel}}</td>
                                                     <td data-title="Grado">{{c.institucioneducativaCurso.gradoTipo.grado|upper}}</td>
@@ -218,7 +219,8 @@
                                                     <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                                     <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
                                                     <td data-title="Acciones">
-                                                        {% if onlyview == false and app.session.get('roluser') == 9 %}
+                                                        {% if app.session.get('roluser') == 9 %}
+                                                        {# {% if onlyview == false and app.session.get('roluser') == 9 %} #}
                                                             <form action="{{path('creacioncursos_especial_delete')}}" style="display: inline-block;" method="post">
                                                                 <input type="hidden" name="idCurso" value="{{c.id}}">
                                                                 <button type="submit" class="btn-link" onclick="return confirm('Se eliminará el registro!. ¿Desea continuar?');"><i class="fa fa-eraser text-danger"></i> Eliminar</button>

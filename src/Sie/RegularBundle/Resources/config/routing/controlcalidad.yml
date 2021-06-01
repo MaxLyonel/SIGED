@@ -63,3 +63,20 @@ ccalidad_justificar_estudiante_segip:
 ccalidad_justificar_homonimo_gemelo:
     path:     /justificarHomonimoGemelo
     defaults: { _controller: "SieRegularBundle:ControlCalidad:justificarHomonimoGemelo" }
+
+
+#calidad: "Inconsistencias respecto a Grados sin desayuno escolar respecto a la gestion 2014" (validacion_tipo_regla_id=17)
+ccalidad_resolver_inconsistencias_grados_sin_desayuno:
+    path:     /calidad/resolver-inconsistencias-grados-sin-desayuno
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:calidad_resolverInconsistenciasGradosSinDesayuno"}
+    options:
+         expose: true
+
+
+
+#calidad: "Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" (validacion_tipo_regla_id=19 y validacion_tipo_regla_id=18 )
+ccalidad_resolver_inconsistencias_grados_sin_idioma_ensenanza_aula:
+    path:     /calidad/resolver-inconsistencias-grados-sin-idioma-ensenanza-aula
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:calidad_resolverInconsistenciasGradosSinEnsenanzaAula"}
+    options:
+         expose: true

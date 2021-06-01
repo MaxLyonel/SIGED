@@ -817,10 +817,11 @@ class MaestroAsignacionController extends Controller {
                 if(!$validacionFechaSecuencial['estado']){                
                     if($asignaturaId == 1039){
                         $institucioneducativaEspecialidadTecnicoHumanisticoEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->findBy(array('institucioneducativa' => $institucionEducativaId, 'gestionTipo' => $gestionId));
-                        if(count($institucioneducativaCursoOfertaMaestroLista) >= count($institucioneducativaEspecialidadTecnicoHumanisticoEntity)){
+                        /*if(count($institucioneducativaCursoOfertaMaestroLista) >= count($institucioneducativaEspecialidadTecnicoHumanisticoEntity)){
                             $msg = "No puede agregar mas de 1 maestro por especialidad";
                             return $response->setData(array('estado'=>false, 'msg'=>$msg)); 
-                        }
+                        }*/
+                        
                     } else {
                         return $response->setData(array('estado'=>$validacionFechaSecuencial['estado'], 'msg'=>$validacionFechaSecuencial['msg']));
                     }

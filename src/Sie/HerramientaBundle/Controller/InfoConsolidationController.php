@@ -699,41 +699,54 @@ class InfoConsolidationController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
-        $query = '
-        select 
-        sum(case when i.id is not null then 1 else 0 end)  as "total",
-        sum(case when i.id= 0 then 1 else 0 end)  as "inicio",
-        sum(case when i.id <> 0 then 1 else 0 end)  as "no_inicio",
-        
-        SUM (CASE WHEN i.id=9  THEN 1 ELSE 0 END ) AS "riesgo_sanitario"  ,
-        SUM (CASE WHEN i.id=8  THEN 1 ELSE 0 END ) AS "helada" ,
-        SUM (CASE WHEN i.id=7  THEN 1 ELSE 0 END ) AS "granizada" ,
-        SUM (CASE WHEN i.id=6  THEN 1 ELSE 0 END ) AS "sismo" ,
-        SUM (CASE WHEN i.id=5  THEN 1 ELSE 0 END ) AS "riada" ,
-        SUM (CASE WHEN i.id=4  THEN 1 ELSE 0 END ) AS "deslizamiento"  ,
-        SUM (CASE WHEN i.id=3  THEN 1 ELSE 0 END ) AS "sequia"  ,
-        SUM (CASE WHEN i.id=2  THEN 1 ELSE 0 END ) AS "incendio"  ,
-        SUM (CASE WHEN i.id=10 THEN 1 ELSE 0 END ) AS "inundacion",
-        SUM (CASE WHEN i.id=1  THEN 1 ELSE 0 END ) AS "otros" ,
-        SUM (CASE WHEN i.id=0  THEN 1 ELSE 0 END ) AS "sin_riesgo" 
+        $query =" 
+          select 
+          --cod_dep,des_dep,cod_dis,des_dis,institucioneducativa_id,ue_nom,riesgo_unidadeducativa,dependencia,
+          total,inicio, no_inicio,
+          riesgo_sanitario,helada,granizada,sismo,riada,deslizamiento,sequia,incendio,inundacion,otros,sin_riesgo
 
-        from  institucioneducativa d 
-        inner join jurisdiccion_geografica e on d.le_juridicciongeografica_id=e.id
-        inner join (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo where lugar_nivel_id=7) f on e.lugar_tipo_id_distrito=f.id
-        inner JOIN institucioneducativa_sucursal g on g.institucioneducativa_id=d.id
-        inner JOIN institucioneducativa_sucursal_riesgo_mes h on h.institucioneducativa_sucursal_id = g.id
-        left join riesgo_unidadeducativa_tipo i on i.id = h.riesgo_unidadeducativa_tipo_id
-        INNER JOIN departamento_tipo j on j.id=CAST(substring(f.cod_dis,1,1) as INTEGER)
-    
-        WHERE j.id '.$operadorDepartamento.' ? 
-        and f.cod_dis '.$operadorDistrito.' ?
-        and g.gestion_tipo_id '.$operadorGestion.' ?
-        and h.mes '.$operadorMes.' ?
+          from 
+          (
+            select 
+            --substring(cod_dis,1,1) as cod_dep,  case substring(cod_dis,1,1)   when '1' then 'CHUQUISACA'  when '2' then 'LA PAZ'  when '3' then 'COCHABAMBA'  when '4' then 'ORURO'   when '5' then 'POTOSI'  when '6' then 'TARIJA'  when '7' then 'SANTA CRUZ'  when '8' then 'BENI'  when '9' then 'PANDO'   end des_dep,
+            --cod_dis,des_dis,institucioneducativa_id,institucioneducativa ue_nom,dependencia,string_agg(riesgo_unidadeducativa, ', ' ORDER BY riesgo_unidadeducativa) as riesgo_unidadeducativa,
 
-        ';
+                    sum(case when institucioneducativa_id is not null then 1 else 0 end)  as \"total\",
+                    sum(case when riesgo_unidadeducativa is not null then 1 else 0 end)  as \"inicio\",
+                    sum(case when riesgo_unidadeducativa is null then 1 else 0 end)  as \"no_inicio\",
 
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riesgo Sanitario'  THEN 1 ELSE 0 END ) AS \"riesgo_sanitario\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Helada'  THEN 1 ELSE 0 END ) AS \"helada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Granizada'  THEN 1 ELSE 0 END ) AS \"granizada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sismo'  THEN 1 ELSE 0 END ) AS \"sismo\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riada'  THEN 1 ELSE 0 END ) AS \"riada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Deslizamiento'  THEN 1 ELSE 0 END ) AS \"deslizamiento\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sequia'  THEN 1 ELSE 0 END ) AS \"sequia\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Incendio'  THEN 1 ELSE 0 END ) AS \"incendio\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Inundación' THEN 1 ELSE 0 END ) AS \"inundacion\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Otros'  THEN 1 ELSE 0 END ) AS \"otros\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sin riesgo'  THEN 1 ELSE 0 END ) AS \"sin_riesgo\"
+
+            from 
+            (
+              select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as institucioneducativa_id,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id) as dependencia
+              ,(select riesgo_unidadeducativa from riesgo_unidadeducativa_tipo where id=f.riesgo_unidadeducativa_tipo_id) as riesgo_unidadeducativa
+              from (institucioneducativa c 
+                  inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
+                    inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
+                      left join (select a.riesgo_unidadeducativa_tipo_id,b.institucioneducativa_id
+                          from institucioneducativa_sucursal_riesgo_mes  a
+                            inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id=b.id
+                        where b.gestion_tipo_id ".$operadorGestion." ? and a.mes ".$operadorMes." ?) f on c.id=f.institucioneducativa_id 
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1
+            ) a
+          where 
+          cod_dis ".$operadorDistrito." ?
+          and substring(cod_dis,1,1) ".$operadorDepartamento." ?
+          --group by cod_dis,des_dis,institucioneducativa_id,institucioneducativa,dependencia
+          ) a;";
         $stmt = $db->prepare($query);
-        $params = array($departamento,$distrito,$gestion,$mes);
+        $params = array($gestion,$mes,$distrito,$departamento);
         $stmt->execute($params);
         $general=$stmt->fetchAll();
 
@@ -751,45 +764,56 @@ class InfoConsolidationController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->session->get('ie_id')));
-        $query = '
-        select 
-        j.id as departamento_id,
-        j.departamento as departamento_nom,
-        sum(case when i.id is not null then 1 else 0 end)  as "total",
-        sum(case when i.id= 0 then 1 else 0 end)  as "inicio",
-        sum(case when i.id <> 0 then 1 else 0 end)  as "no_inicio",
+        $query =" 
+          select 
+          cod_dep as departamento_id,
+          des_dep as departamento_nom,
 
-        SUM (CASE WHEN i.id=9  THEN 1 ELSE 0 END ) AS "riesgo_sanitario"  ,
-        SUM (CASE WHEN i.id=8  THEN 1 ELSE 0 END ) AS "helada" ,
-        SUM (CASE WHEN i.id=7  THEN 1 ELSE 0 END ) AS "granizada" ,
-        SUM (CASE WHEN i.id=6  THEN 1 ELSE 0 END ) AS "sismo" ,
-        SUM (CASE WHEN i.id=5  THEN 1 ELSE 0 END ) AS "riada" ,
-        SUM (CASE WHEN i.id=4  THEN 1 ELSE 0 END ) AS "deslizamiento"  ,
-        SUM (CASE WHEN i.id=3  THEN 1 ELSE 0 END ) AS "sequia"  ,
-        SUM (CASE WHEN i.id=2  THEN 1 ELSE 0 END ) AS "incendio"  ,
-        SUM (CASE WHEN i.id=10 THEN 1 ELSE 0 END ) AS "inundacion",
-        SUM (CASE WHEN i.id=1  THEN 1 ELSE 0 END ) AS "otros" ,
-        SUM (CASE WHEN i.id=0  THEN 1 ELSE 0 END ) AS "sin_riesgo" 
+          total,inicio, no_inicio,
+          riesgo_sanitario,helada,granizada,sismo,riada,deslizamiento,sequia,incendio,inundacion,otros,sin_riesgo
 
-        from  institucioneducativa d 
-        inner join jurisdiccion_geografica e on d.le_juridicciongeografica_id=e.id
-        inner join (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo where lugar_nivel_id=7) f on e.lugar_tipo_id_distrito=f.id
-        inner JOIN institucioneducativa_sucursal g on g.institucioneducativa_id=d.id
-        inner JOIN institucioneducativa_sucursal_riesgo_mes h on h.institucioneducativa_sucursal_id = g.id
-        left join riesgo_unidadeducativa_tipo i on i.id = h.riesgo_unidadeducativa_tipo_id
-        INNER JOIN departamento_tipo j on j.id=CAST(substring(f.cod_dis,1,1) as INTEGER)
-    
-        WHERE j.id '.$operadorDepartamento.' ? 
-        and f.cod_dis '.$operadorDistrito.' ?
-        and g.gestion_tipo_id '.$operadorGestion.' ?
-        and h.mes '.$operadorMes.' ?
+          from 
+          (
+            select 
+            substring(cod_dis,1,1) as cod_dep,  case substring(cod_dis,1,1)   when '1' then 'CHUQUISACA'  when '2' then 'LA PAZ'  when '3' then 'COCHABAMBA'  when '4' then 'ORURO'   when '5' then 'POTOSI'  when '6' then 'TARIJA'  when '7' then 'SANTA CRUZ'  when '8' then 'BENI'  when '9' then 'PANDO'   end des_dep,
 
-        GROUP BY  j.id,j.departamento
-        having sum(case when i.id is not null then 1 else 0 end) >0
-        ORDER BY j.departamento asc';
+                    sum(case when institucioneducativa_id is not null then 1 else 0 end)  as \"total\",
+                    sum(case when riesgo_unidadeducativa is not null then 1 else 0 end)  as \"inicio\",
+                    sum(case when riesgo_unidadeducativa is null then 1 else 0 end)  as \"no_inicio\",
 
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riesgo Sanitario'  THEN 1 ELSE 0 END ) AS \"riesgo_sanitario\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Helada'  THEN 1 ELSE 0 END ) AS \"helada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Granizada'  THEN 1 ELSE 0 END ) AS \"granizada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sismo'  THEN 1 ELSE 0 END ) AS \"sismo\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riada'  THEN 1 ELSE 0 END ) AS \"riada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Deslizamiento'  THEN 1 ELSE 0 END ) AS \"deslizamiento\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sequia'  THEN 1 ELSE 0 END ) AS \"sequia\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Incendio'  THEN 1 ELSE 0 END ) AS \"incendio\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Inundación' THEN 1 ELSE 0 END ) AS \"inundacion\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Otros'  THEN 1 ELSE 0 END ) AS \"otros\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sin riesgo'  THEN 1 ELSE 0 END ) AS \"sin_riesgo\"
+
+            from 
+            (
+              select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as institucioneducativa_id,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id) as dependencia
+              ,(select riesgo_unidadeducativa from riesgo_unidadeducativa_tipo where id=f.riesgo_unidadeducativa_tipo_id) as riesgo_unidadeducativa
+              from (institucioneducativa c 
+                  inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
+                    inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
+                      left join (select a.riesgo_unidadeducativa_tipo_id,b.institucioneducativa_id
+                          from institucioneducativa_sucursal_riesgo_mes  a
+                            inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id=b.id
+                        where b.gestion_tipo_id ".$operadorGestion." ? and a.mes ".$operadorMes." ?) f on c.id=f.institucioneducativa_id 
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1
+            ) a
+          where 
+          cod_dis ".$operadorDistrito." ?
+          and substring(cod_dis,1,1) ".$operadorDepartamento." ?
+          GROUP BY  cod_dep,des_dep
+          ) a;
+        ";
         $stmt = $db->prepare($query);
-        $params = array($departamento,$distrito,$gestion,$mes);
+        $params = array($gestion,$mes,$distrito,$departamento);
         $stmt->execute($params);
         $departamentos=$stmt->fetchAll();
 
@@ -810,47 +834,58 @@ class InfoConsolidationController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->session->get('ie_id')));
-        $query = '
-        select 
-        j.id as departamento_id,
-        j.departamento as departamento_nom,
-        f.cod_dis as distrito_id,
-        f.des_dis as distrito_nom,
-        sum(case when i.id is not null then 1 else 0 end)  as "total",
-        sum(case when i.id= 0 then 1 else 0 end)  as "inicio",
-        sum(case when i.id <> 0 then 1 else 0 end)  as "no_inicio",
+        $query =" 
+          select 
+          cod_dep as departamento_id,
+          des_dep as departamento_nom,
+          cod_dis as distrito_id,
+          des_dis as distrito_nom,
 
-        SUM (CASE WHEN i.id=9  THEN 1 ELSE 0 END ) AS "riesgo_sanitario"  ,
-        SUM (CASE WHEN i.id=8  THEN 1 ELSE 0 END ) AS "helada" ,
-        SUM (CASE WHEN i.id=7  THEN 1 ELSE 0 END ) AS "granizada" ,
-        SUM (CASE WHEN i.id=6  THEN 1 ELSE 0 END ) AS "sismo" ,
-        SUM (CASE WHEN i.id=5  THEN 1 ELSE 0 END ) AS "riada" ,
-        SUM (CASE WHEN i.id=4  THEN 1 ELSE 0 END ) AS "deslizamiento"  ,
-        SUM (CASE WHEN i.id=3  THEN 1 ELSE 0 END ) AS "sequia"  ,
-        SUM (CASE WHEN i.id=2  THEN 1 ELSE 0 END ) AS "incendio"  ,
-        SUM (CASE WHEN i.id=10 THEN 1 ELSE 0 END ) AS "inundacion",
-        SUM (CASE WHEN i.id=1  THEN 1 ELSE 0 END ) AS "otros" ,
-        SUM (CASE WHEN i.id=0  THEN 1 ELSE 0 END ) AS "sin_riesgo" 
+          total,inicio, no_inicio,
+          riesgo_sanitario,helada,granizada,sismo,riada,deslizamiento,sequia,incendio,inundacion,otros,sin_riesgo
 
-        from  institucioneducativa d 
-        inner join jurisdiccion_geografica e on d.le_juridicciongeografica_id=e.id
-        inner join (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo where lugar_nivel_id=7) f on e.lugar_tipo_id_distrito=f.id
-        inner JOIN institucioneducativa_sucursal g on g.institucioneducativa_id=d.id
-        inner JOIN institucioneducativa_sucursal_riesgo_mes h on h.institucioneducativa_sucursal_id = g.id
-        left join riesgo_unidadeducativa_tipo i on i.id = h.riesgo_unidadeducativa_tipo_id
-        INNER JOIN departamento_tipo j on j.id=CAST(substring(f.cod_dis,1,1) as INTEGER)
-    
-        WHERE j.id '.$operadorDepartamento.' ? 
-        and f.cod_dis '.$operadorDistrito.' ?
-        and g.gestion_tipo_id '.$operadorGestion.' ?
-        and h.mes '.$operadorMes.' ?
+          from 
+          (
+            select 
+            substring(cod_dis,1,1) as cod_dep,  case substring(cod_dis,1,1)   when '1' then 'CHUQUISACA'  when '2' then 'LA PAZ'  when '3' then 'COCHABAMBA'  when '4' then 'ORURO'   when '5' then 'POTOSI'  when '6' then 'TARIJA'  when '7' then 'SANTA CRUZ'  when '8' then 'BENI'  when '9' then 'PANDO'   end des_dep,
+            cod_dis,des_dis,
 
-        GROUP BY  j.id,j.departamento,f.cod_dis,f.des_dis
-        having sum(case when i.id is not null then 1 else 0 end) >0
-        ORDER BY f.des_dis asc';
+                    sum(case when institucioneducativa_id is not null then 1 else 0 end)  as \"total\",
+                    sum(case when riesgo_unidadeducativa is not null then 1 else 0 end)  as \"inicio\",
+                    sum(case when riesgo_unidadeducativa is null then 1 else 0 end)  as \"no_inicio\",
 
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riesgo Sanitario'  THEN 1 ELSE 0 END ) AS \"riesgo_sanitario\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Helada'  THEN 1 ELSE 0 END ) AS \"helada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Granizada'  THEN 1 ELSE 0 END ) AS \"granizada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sismo'  THEN 1 ELSE 0 END ) AS \"sismo\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riada'  THEN 1 ELSE 0 END ) AS \"riada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Deslizamiento'  THEN 1 ELSE 0 END ) AS \"deslizamiento\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sequia'  THEN 1 ELSE 0 END ) AS \"sequia\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Incendio'  THEN 1 ELSE 0 END ) AS \"incendio\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Inundación' THEN 1 ELSE 0 END ) AS \"inundacion\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Otros'  THEN 1 ELSE 0 END ) AS \"otros\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sin riesgo'  THEN 1 ELSE 0 END ) AS \"sin_riesgo\"
+
+            from 
+            (
+              select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as institucioneducativa_id,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id) as dependencia
+              ,(select riesgo_unidadeducativa from riesgo_unidadeducativa_tipo where id=f.riesgo_unidadeducativa_tipo_id) as riesgo_unidadeducativa
+              from (institucioneducativa c 
+                  inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
+                    inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
+                      left join (select a.riesgo_unidadeducativa_tipo_id,b.institucioneducativa_id
+                          from institucioneducativa_sucursal_riesgo_mes  a
+                            inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id=b.id
+                        where b.gestion_tipo_id ".$operadorGestion." ? and a.mes ".$operadorMes." ?) f on c.id=f.institucioneducativa_id 
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1
+            ) a
+          where 
+          cod_dis ".$operadorDistrito." ?
+          and substring(cod_dis,1,1) ".$operadorDepartamento." ?
+          group by cod_dep,des_dep,cod_dis,des_dis
+          ) a;";
         $stmt = $db->prepare($query);
-        $params = array($departamento,$distrito,$gestion,$mes);
+        $params = array($gestion,$mes,$distrito,$departamento);
         $stmt->execute($params);
         $distritos=$stmt->fetchAll();
 
@@ -868,50 +903,64 @@ class InfoConsolidationController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->session->get('ie_id')));
-        $query = '
-        select 
-        j.id as departamento_id,
-        j.departamento as departamento_nom,
-        f.cod_dis as distrito_id,
-        f.des_dis as distrito_nom,
-        d.id as ue_id,
-        d.institucioneducativa ue_nom,
-        sum(case when i.id is not null then 1 else 0 end)  as "total",
-        sum(case when i.id= 0 then 1 else 0 end)  as "inicio",
-        sum(case when i.id <> 0 then 1 else 0 end)  as "no_inicio",
 
-        SUM (CASE WHEN i.id=9  THEN 1 ELSE 0 END ) AS "riesgo_sanitario"  ,
-        SUM (CASE WHEN i.id=8  THEN 1 ELSE 0 END ) AS "helada" ,
-        SUM (CASE WHEN i.id=7  THEN 1 ELSE 0 END ) AS "granizada" ,
-        SUM (CASE WHEN i.id=6  THEN 1 ELSE 0 END ) AS "sismo" ,
-        SUM (CASE WHEN i.id=5  THEN 1 ELSE 0 END ) AS "riada" ,
-        SUM (CASE WHEN i.id=4  THEN 1 ELSE 0 END ) AS "deslizamiento"  ,
-        SUM (CASE WHEN i.id=3  THEN 1 ELSE 0 END ) AS "sequia"  ,
-        SUM (CASE WHEN i.id=2  THEN 1 ELSE 0 END ) AS "incendio"  ,
-        SUM (CASE WHEN i.id=10 THEN 1 ELSE 0 END ) AS "inundacion",
-        SUM (CASE WHEN i.id=1  THEN 1 ELSE 0 END ) AS "otros" ,
-        SUM (CASE WHEN i.id=0  THEN 1 ELSE 0 END ) AS "sin_riesgo" 
+        $query =" 
+          select 
+          cod_dep as departamento_id,
+          des_dep as departamento_nom,
+          cod_dis as distrito_id,
+          des_dis as distrito_nom,
+          institucioneducativa_id ue_id,
+          institucioneducativa as ue_nom,
+          riesgo_unidadeducativa,
+          dependencia,
 
-        from  institucioneducativa d 
-        inner join jurisdiccion_geografica e on d.le_juridicciongeografica_id=e.id
-        inner join (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo where lugar_nivel_id=7) f on e.lugar_tipo_id_distrito=f.id
-        inner JOIN institucioneducativa_sucursal g on g.institucioneducativa_id=d.id
-        inner JOIN institucioneducativa_sucursal_riesgo_mes h on h.institucioneducativa_sucursal_id = g.id
-        left join riesgo_unidadeducativa_tipo i on i.id = h.riesgo_unidadeducativa_tipo_id
-        INNER JOIN departamento_tipo j on j.id=CAST(substring(f.cod_dis,1,1) as INTEGER)
-    
-        WHERE j.id '.$operadorDepartamento.' ? 
-        and f.cod_dis '.$operadorDistrito.' ?
-        and g.gestion_tipo_id '.$operadorGestion.' ?
-        and h.mes '.$operadorMes.' ?
+          total,inicio, no_inicio,
+          riesgo_sanitario,helada,granizada,sismo,riada,deslizamiento,sequia,incendio,inundacion,otros,sin_riesgo
 
-        GROUP BY j.id,j.departamento,f.cod_dis,f.des_dis,d.id
-        having sum(case when i.id is not null then 1 else 0 end) >0
-        ORDER BY d.institucioneducativa ASC
-        ';
+          from 
+          (
+            select 
+            substring(cod_dis,1,1) as cod_dep,  case substring(cod_dis,1,1)   when '1' then 'CHUQUISACA'  when '2' then 'LA PAZ'  when '3' then 'COCHABAMBA'  when '4' then 'ORURO'   when '5' then 'POTOSI'  when '6' then 'TARIJA'  when '7' then 'SANTA CRUZ'  when '8' then 'BENI'  when '9' then 'PANDO'   end des_dep,
+            cod_dis,des_dis,institucioneducativa_id,institucioneducativa,dependencia,string_agg(riesgo_unidadeducativa, ', ' ORDER BY riesgo_unidadeducativa) as riesgo_unidadeducativa,
+
+                    sum(case when institucioneducativa_id is not null then 1 else 0 end)  as \"total\",
+                    sum(case when riesgo_unidadeducativa is not null then 1 else 0 end)  as \"inicio\",
+                    sum(case when riesgo_unidadeducativa is null then 1 else 0 end)  as \"no_inicio\",
+
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riesgo Sanitario'  THEN 1 ELSE 0 END ) AS \"riesgo_sanitario\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Helada'  THEN 1 ELSE 0 END ) AS \"helada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Granizada'  THEN 1 ELSE 0 END ) AS \"granizada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sismo'  THEN 1 ELSE 0 END ) AS \"sismo\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riada'  THEN 1 ELSE 0 END ) AS \"riada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Deslizamiento'  THEN 1 ELSE 0 END ) AS \"deslizamiento\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sequia'  THEN 1 ELSE 0 END ) AS \"sequia\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Incendio'  THEN 1 ELSE 0 END ) AS \"incendio\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Inundación' THEN 1 ELSE 0 END ) AS \"inundacion\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Otros'  THEN 1 ELSE 0 END ) AS \"otros\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sin riesgo'  THEN 1 ELSE 0 END ) AS \"sin_riesgo\"
+
+            from 
+            (
+              select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as institucioneducativa_id,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id) as dependencia
+              ,(select riesgo_unidadeducativa from riesgo_unidadeducativa_tipo where id=f.riesgo_unidadeducativa_tipo_id) as riesgo_unidadeducativa
+              from (institucioneducativa c 
+                  inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
+                    inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
+                      left join (select a.riesgo_unidadeducativa_tipo_id,b.institucioneducativa_id
+                          from institucioneducativa_sucursal_riesgo_mes  a
+                            inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id=b.id
+                        where b.gestion_tipo_id=? and a.mes=?) f on c.id=f.institucioneducativa_id 
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1
+            ) a
+          where 
+          cod_dis=?
+          and substring(cod_dis,1,1)=?
+          group by cod_dis,des_dis,institucioneducativa_id,institucioneducativa,dependencia
+          ) a;";
 
         $stmt = $db->prepare($query);
-        $params = array($departamento,$distrito,$gestion,$mes);
+        $params = array($gestion,$mes,$distrito,$departamento);
         $stmt->execute($params);
         $colegios=$stmt->fetchAll();
 
@@ -958,6 +1007,7 @@ class InfoConsolidationController extends Controller {
             array('name'=>'Otros',              'y'=>round(($otros*100)/($total), 1),             'label'=>$otros ),
             array('name'=>'Riesgo sanitario',   'y'=>round(($riesgo_sanitario*100)/($total), 1),  'label'=>$riesgo_sanitario ),
             array('name'=>'Sin riesgo',         'y'=>round(($sin_riesgo*100)/($total), 1),        'label'=>$sin_riesgo ),
+            array('name'=>'No inicio',          'y'=>round(($no_inicio*100)/($total), 1),         'label'=>$no_inicio ),
           );
         }
 
