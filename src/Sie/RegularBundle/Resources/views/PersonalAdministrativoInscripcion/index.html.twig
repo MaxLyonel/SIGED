@@ -118,14 +118,16 @@
                                             <th>Materno</th>
                                             <th>Nombre(s)</th>
                                             <th>Tipo</th>
+                                            <th>Salud</th>
                                             <th>Acciones</th>
-                                            <th>Es vigente</th>
+                                            {#<th>Es vigente</th>#}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for personal in personal %}
                                             {% set persona = personal.persona %}
                                             {% set tipo = personal.personaAdministrativoInscripcionTipo %}
+                                            {% set health = personal.estadosaludTipo %}
                                             <tr>
                                                 <td data-title="N°">{{ loop.index }}</td>
                                                 <td data-title="Carnet">{{ persona.carnet }}</td>
@@ -133,6 +135,7 @@
                                                 <td data-title="Materno">{{ persona.materno }}</td>
                                                 <td data-title="Nombre(s)">{{ persona.nombre }}</td>
                                                 <td data-title="Tipo">{{ tipo.personaAdministrativoInscripcion }}</td>
+                                                <td data-title="Saludo">{{ health.estadosalud }}</td>
                                                 <td data-title="Acciones">
                                                     <form action="{{path('personaladministrativoinscripcion_edit')}}" method="post" style="display:inline-block">
                                                         <input type="hidden" name="idPersona" value="{{persona.id}}">
@@ -149,6 +152,7 @@
                                                         <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
                                                     </form>
                                                 </td>
+                                                {#
                                                 <td>
                                                     <form action="{{path('personaladministrativoinscripcion_es_vigente_administrativo')}}" method="post" style="display: inline-block">
                                                         <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
@@ -161,6 +165,7 @@
                                                         {% endif %}
                                                     </form>  
                                                 </td>
+                                                #}
                                             </tr>
                                         {% endfor %}
                                     </tbody>
