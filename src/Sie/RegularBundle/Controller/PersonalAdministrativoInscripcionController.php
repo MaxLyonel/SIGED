@@ -17,6 +17,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
 
     public $session;
     public $idInstitucion;
+    public $codDistrito;
 
     /**
      * the class constructor
@@ -24,6 +25,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
     public function __construct() {
         //init the session values
         $this->session = new Session();
+        $this->codDistrito = 0;
     }
 
     /**
@@ -34,6 +36,9 @@ class PersonalAdministrativoInscripcionController extends Controller {
         $id_usuario = $this->session->get('userId');
         $id_rol = $this->session->get('roluser');
 
+        $datosUser=$this->getDatosUsuario($id_usuario,$id_rol);
+        $this->codDistrito=$datosUser['cod_dis'];
+        
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
@@ -42,6 +47,43 @@ class PersonalAdministrativoInscripcionController extends Controller {
                     'form' => $this->formSearch($request->getSession()->get('currentyear'))->createView(),
         ));
     }
+
+    private function getDatosUsuario($userId,$userRol)
+    {
+        $userId=($userId)?$userId:-1;
+        $userRol=($userRol)?$userRol:-1;
+
+        $user=NULL;
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = '
+        select *
+        from (
+        select b.rol_tipo_id,(select rol from rol_tipo where id=b.rol_tipo_id) as rol,a.persona_id,c.codigo as cod_dis,a.esactivo,a.id as user_id
+        from usuario a 
+          inner join usuario_rol b on a.id=b.usuario_id 
+            inner join lugar_tipo c on b.lugar_tipo_id=c.id
+        where codigo not in (\'04\') and b.rol_tipo_id not in (2,3,9,29,26,21,14,39,6) and a.esactivo=\'t\'
+        union all
+        select f.rol_tipo_id,(select rol from rol_tipo where id=f.rol_tipo_id) as rol,a.persona_id,d.codigo as cod_dis,e.esactivo,e.id as user_id
+        from maestro_inscripcion a
+          inner join institucioneducativa b on a.institucioneducativa_id=b.id
+            inner join jurisdiccion_geografica c on b.le_juridicciongeografica_id=c.id
+              inner join lugar_tipo d on d.lugar_nivel_id=7 and c.lugar_tipo_id_distrito=d.id
+                inner join usuario e on a.persona_id=e.persona_id
+                  inner join usuario_rol f on e.id=f.usuario_id
+        where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and e.esactivo=\'t\') a
+        where user_id = ?
+        and rol_tipo_id = ?
+        ORDER BY cod_dis
+        LIMIT 1
+        ';
+        $stmt = $db->prepare($query);
+        $params = array($userId,$userRol);
+        $stmt->execute($params);
+        $user=$stmt->fetch();
+        return $user;
+    }    
 
     /**
      * list of request
@@ -459,9 +501,17 @@ class PersonalAdministrativoInscripcionController extends Controller {
         $gestiones = array($gestionactual => $gestionactual);
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('personaladministrativoinscripcion_list'))
-                ->add('institucioneducativa', 'text', array('required' => true, 'attr' => array('autocomplete' => 'on', 'maxlength' => 4)))
                 ->add('gestion', 'choice', array('required' => true, 'choices' => $gestiones))
-                ->add('buscar', 'submit', array('label' => 'Buscar'))
+                ->add('buscar', 'submit', array('label' => 'Buscar'));
+        if($this->codDistrito != 0){
+            $form = $form 
+                    ->add('institucioneducativa', 'text', array('required' => true, 'attr' => array('autocomplete' => 'on','readonly'=>true,'value'=>$this->codDistrito, 'maxlength' => 4)));
+        }else{
+            $form = $form 
+                    ->add('institucioneducativa', 'text', array('required' => true, 'attr' => array('autocomplete' => 'on', 'maxlength' => 4)));            
+
+        }
+        $form = $form 
                 ->getForm();
         return $form;
     }
