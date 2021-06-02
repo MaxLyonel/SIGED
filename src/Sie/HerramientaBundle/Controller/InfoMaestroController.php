@@ -142,8 +142,8 @@ class InfoMaestroController extends Controller {
                 ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
                 ->innerJoin('SieAppWebBundle:FormacionTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
 
-                ->innerJoin('SieAppWebBundle:MaestroInscripcionEstadosalud', 'mies', 'WITH', 'mi.id =mies.maestroInscripcion')
-                ->innerJoin('SieAppWebBundle:EstadoSaludTipo', 'est', 'WITH', 'mies.estadosaludTipo = est.id')
+                ->leftJoin('SieAppWebBundle:MaestroInscripcionEstadosalud', 'mies', 'WITH', 'mi.id =mies.maestroInscripcion')
+                ->leftJoin('SieAppWebBundle:EstadoSaludTipo', 'est', 'WITH', 'mies.estadosaludTipo = est.id')
 
                 ->where('mi.institucioneducativa = :idInstitucion')
                 ->andWhere('mi.gestionTipo = :gestion')
@@ -158,6 +158,7 @@ class InfoMaestroController extends Controller {
                 ->getQuery();
 
         $maestro = $query->getResult();
+
 
         $query = $repository->createQueryBuilder('mi')
             ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')

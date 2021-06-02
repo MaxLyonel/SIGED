@@ -122,9 +122,13 @@ class InfoPersonalAdmController extends Controller {
 
         /*
         $query = $em->createQuery(
-                        'SELECT mi, per, ft FROM SieAppWebBundle:MaestroInscripcion mi
+                    'SELECT mies, mi, per, ft FROM SieAppWebBundle:MaestroInscripcionEstadosalud  mies
+                    inner join mies.estadosaludTipo est
+                    inner join mies.maestroInscripcion mi
+                    
                     INNER JOIN mi.persona per
                     INNER JOIN mi.formacionTipo ft
+                    
                     WHERE mi.institucioneducativa = :idInstitucion
                     AND mi.gestionTipo = :gestion
                     AND mi.cargoTipo IN (:cargos)
@@ -133,6 +137,7 @@ class InfoPersonalAdmController extends Controller {
                 ->setParameter('gestion', $gestion)
                 ->setParameter('cargos', $cargosArray);
         $personal = $query->getResult();
+
         */
         /*
         $dql = $result->select('c','p')
@@ -141,14 +146,11 @@ class InfoPersonalAdmController extends Controller {
         ->getQuery()
         ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         */
+
         $query = $em->createQuery(
-                    'SELECT mies, mi, per, ft FROM SieAppWebBundle:MaestroInscripcionEstadosalud  mies
-                    inner join mies.estadosaludTipo est
-                    inner join mies.maestroInscripcion mi
-                    
+                        'SELECT mi, per, ft FROM SieAppWebBundle:MaestroInscripcion mi
                     INNER JOIN mi.persona per
                     INNER JOIN mi.formacionTipo ft
-                    
                     WHERE mi.institucioneducativa = :idInstitucion
                     AND mi.gestionTipo = :gestion
                     AND mi.cargoTipo IN (:cargos)
