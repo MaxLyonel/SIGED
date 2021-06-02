@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\PersonaAdministrativoInscripcion;
 use Sie\AppWebBundle\Entity\MaestroInscripcion;
 use Sie\AppWebBundle\Entity\Persona;
+use Sie\AppWebBundle\Entity\DistritoControlOperativoMenus;
 
 /**
  * PersonalAdministrativoGestion controller.
@@ -19,6 +20,8 @@ class PersonalAdministrativoInscripcionController extends Controller {
     public $idInstitucion;
     public $codDistrito;
 
+    public $lugarInfo;
+
     /**
      * the class constructor
      */
@@ -26,6 +29,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
         //init the session values
         $this->session = new Session();
         $this->codDistrito = 0;
+        $this->lugarInfo = 0;
     }
 
     /**
@@ -37,6 +41,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
         $id_rol = $this->session->get('roluser');
 
         $datosUser=$this->getDatosUsuario($id_usuario,$id_rol);
+        $this->lugarInfo = $datosUser;
         $this->codDistrito=$datosUser['cod_dis'];
         
         if (!isset($id_usuario)) {
@@ -48,8 +53,8 @@ class PersonalAdministrativoInscripcionController extends Controller {
         ));
     }
 
-    private function getDatosUsuario($userId,$userRol)
-    {
+    private function getDatosUsuario($userId,$userRol){
+        
         $userId=($userId)?$userId:-1;
         $userRol=($userRol)?$userRol:-1;
 
@@ -59,19 +64,23 @@ class PersonalAdministrativoInscripcionController extends Controller {
         $query = '
         select *
         from (
-        select b.rol_tipo_id,(select rol from rol_tipo where id=b.rol_tipo_id) as rol,a.persona_id,c.codigo as cod_dis,a.esactivo,a.id as user_id
+        select b.rol_tipo_id,(select rol from rol_tipo where id=b.rol_tipo_id) as rol,a.persona_id,c.codigo as cod_dis,dt2.id as cod_dep,a.esactivo,a.id as user_id
         from usuario a 
           inner join usuario_rol b on a.id=b.usuario_id 
             inner join lugar_tipo c on b.lugar_tipo_id=c.id
-        where codigo not in (\'04\') and b.rol_tipo_id not in (2,3,9,29,26,21,14,39,6) and a.esactivo=\'t\'
+               inner join distrito_tipo dt on c.codigo::INTEGER = dt.id
+                inner join departamento_tipo dt2 on dt.departamento_tipo_id = dt2.id                
+        where c.codigo not in (\'04\') and b.rol_tipo_id not in (2,3,9,29,26,21,14,39,6) and a.esactivo=\'t\'
         union all
-        select f.rol_tipo_id,(select rol from rol_tipo where id=f.rol_tipo_id) as rol,a.persona_id,d.codigo as cod_dis,e.esactivo,e.id as user_id
+        select f.rol_tipo_id,(select rol from rol_tipo where id=f.rol_tipo_id) as rol,a.persona_id,d.codigo as cod_dis,dt2.id as cod_dep,e.esactivo,e.id as user_id
         from maestro_inscripcion a
           inner join institucioneducativa b on a.institucioneducativa_id=b.id
             inner join jurisdiccion_geografica c on b.le_juridicciongeografica_id=c.id
               inner join lugar_tipo d on d.lugar_nivel_id=7 and c.lugar_tipo_id_distrito=d.id
                 inner join usuario e on a.persona_id=e.persona_id
                   inner join usuario_rol f on e.id=f.usuario_id
+                    inner join distrito_tipo dt on d.codigo::INTEGER = dt.id
+                      inner join departamento_tipo dt2 on dt.departamento_tipo_id = dt2.id                  
         where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and e.esactivo=\'t\') a
         where user_id = ?
         and rol_tipo_id = ?
@@ -105,6 +114,11 @@ class PersonalAdministrativoInscripcionController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
+        $id_usuario = $this->session->get('userId');
+        $id_rol = $this->session->get('roluser');
+
+        $this->lugarInfo=$this->getDatosUsuario($id_usuario,$id_rol); 
+        
         ////////////////////////////////////////////////////
         $em = $this->getDoctrine()->getManager();
 
@@ -123,6 +137,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
         }
 
         $institucioneducativa = $em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($institucion);
+        
         if (!$institucioneducativa) {
             $this->get('session')->getFlashBag()->add('noSearch', 'El codigo ingresado no es válido');
             return $this->render('SieRegularBundle:PersonalAdministrativoInscripcion:index.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
@@ -139,10 +154,19 @@ class PersonalAdministrativoInscripcionController extends Controller {
                 ->setParameter('gestion', $gestion);
         $personal = $query->getResult();
 
+        
+        $objDistritoControlOperativoMenus = $em->getRepository('SieAppWebBundle:DistritoControlOperativoMenus')->findOneBy(array('departamentoTipoId'=>$this->lugarInfo['cod_dep'],'distritoTipo'=>$this->lugarInfo['cod_dis'],'gestionTipoId'=>$gestion));
+        $swCloseOperative = false;
+        if(sizeof($objDistritoControlOperativoMenus) > 0){
+            $swCloseOperative = true;
+        }
+
         return $this->render('SieRegularBundle:PersonalAdministrativoInscripcion:index.html.twig', array(
                     'personal' => $personal,
                     'institucion' => $institucioneducativa,
                     'gestion' => $gestion,
+                    'swCloseOperative' => $swCloseOperative,
+                    'lugarInfo' => $this->lugarInfo
         ));
     }
 
@@ -859,5 +883,48 @@ class PersonalAdministrativoInscripcionController extends Controller {
             $em->getConnection()->rollback();
         }
     }
+
+    /*
+     * registramos el nuevo maestro
+     */
+
+    public function closeOperativeAction(Request $request) {
+        
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        
+        $idDepto =  $request->get('idDepto');
+        $idDistrito =  $request->get('idDistrito');
+        $gestion =  $request->get('gestion');
+
+        try {
+
+
+            $objDistritoControlOperativoMenus = $em->getRepository('SieAppWebBundle:DistritoControlOperativoMenus')->findOneBy(array('departamentoTipoId'=>$idDepto,'distritoTipo'=>$idDistrito,'gestionTipoId'=>$gestion));
+
+            if(sizeof($objDistritoControlOperativoMenus) > 0){
+                // do update
+            }else{
+                // do new insert
+                $objDistritoControlOperativoMenus = new DistritoControlOperativoMenus();
+                $objDistritoControlOperativoMenus->setDepartamentoTipoId($idDepto);
+                $objDistritoControlOperativoMenus->setGestionTipoId($gestion);
+                $objDistritoControlOperativoMenus->setEstadoMenu(0);
+                $objDistritoControlOperativoMenus->setDistritoTipo($em->getRepository('SieAppWebBundle:DistritoTipo')->find($idDistrito));
+                $objDistritoControlOperativoMenus->setNotaTipo($em->getRepository('SieAppWebBundle:notaTipo')->find(0));
+                $em->persist($objDistritoControlOperativoMenus);
+                $em->flush();
+                $em->getConnection()->commit();
+
+            }
+
+            $this->get('session')->getFlashBag()->add('newOk', 'Cierre Exitoso');
+            return $this->redirect($this->generateUrl('personaladministrativoinscripcion_list'));
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+        }
+    }
+
 
 }
