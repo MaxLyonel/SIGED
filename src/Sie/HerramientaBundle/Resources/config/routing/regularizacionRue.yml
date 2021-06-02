@@ -1,0 +1,15 @@
+regularizacion_rue_index:
+  path:     /
+  defaults: { _controller: SieHerramientaBundle:RegularizacionRue:index }
+
+regularizacion_rue_result:
+  path:     /result/
+  defaults: { _controller: SieHerramientaBundle:RegularizacionRue:result }
+
+regularizacion_rue_save:
+  path:     /save/
+  defaults: { _controller: SieHerramientaBundle:RegularizacionRue:save }
+
+regularizacion_rue_impresionDDJJ:
+  path:     /impresionDDJJ/
+  defaults: { _controller: SieHerramientaBundle:RegularizacionRue:impresionDDJJ }

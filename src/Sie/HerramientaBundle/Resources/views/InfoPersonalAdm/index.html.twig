@@ -237,12 +237,15 @@
                                         </thead>
                                         <tbody class='tbody-data'>
                                             {% for personal in personal %}
-                                                {# set persona = personal.persona #}
-                                                {# set formacion = personal.formacionTipo #}
-                                                {% set salud = personal.EstadosaludTipo  %}
+
+                                                {# set salud = personal.EstadosaludTipo  %}
                                                 {% set persona = personal.MaestroInscripcion.persona %}
                                                 {% set formacion = personal.MaestroInscripcion.formacionTipo %}
-                                                {% set personal = personal.MaestroInscripcion %}
+                                                {% set personal = personal.MaestroInscripcion #}
+
+                                                {% set persona = personal.persona %}
+                                                {% set formacion = personal.formacionTipo %}
+
                                                 <tr {% if persona.id in personal_no_idioma|keys or persona.id in personal_no_genero|keys %}class="danger text-danger"{% endif %}>
                                                     <td data-title="N°">{{ loop.index }}</td>
                                                     <td data-title="Carnet">{{ persona.carnet }}</td>
@@ -254,7 +257,7 @@
                                                     <td data-title="FechReg">{% if personal.fechaRegistro %}{{ personal.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     <td data-title="FechMod">{% if personal.fechaModificacion %}{{ personal.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     
-                                                    <td data-title="EstadoSalud" id="salud_{{personal.id}}" >{{salud.estadosalud}}</td>
+                                                    <td data-title="EstadoSalud" id="salud_{{personal.id}}" ></td>
                                                     
                                                     <td data-title="Observacion" {% if persona.id in personal_no_idioma|keys or persona.id in personal_no_genero|keys %}class="text-danger"{% else %}class="text-success"{% endif %}>
                                                         {% if persona.id in personal_no_idioma|keys %}<i class="fa fa-fw fa-warning" aria-hidden="true"></i>No tiene idiomas{% else %}<i class="fa fa-fw fa-check" aria-hidden="true"></i>(Idiomas) Correcto{% endif %}<br />
