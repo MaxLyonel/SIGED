@@ -160,7 +160,7 @@
                                     </div>
                                 {% endif %}
 
-                                {% if operativoSalud %}
+                                {# if operativoSalud %}
                                     <br>
                                     <div class="pull-right div-operativo-salud" style="margin-top:1rem">
                                         <form method ="POST" action="#" name="form" id="form-end-requests" style="display:inline-block" onsubmit="finalizarOperativoSalud(this); return false;">
@@ -170,7 +170,7 @@
                                               <input type="submit" class="btn btn-md btn-lilac" value="Finalizar operativo Estado Salud" onclick="return confirm('¿Está segura/o de continuar? Recuerde que posteriormente no podrá realizar más cambios hasta el siguiente operativo.')">
                                         </form>
                                     </div>
-                                {% endif %}
+                                {% endif #}
                                 <br>
                                 <div class="pull-right" style="margin-top:1rem">
                                     <a href="{{path('herramienta_info_personal_adm_seguimientoOperativo_estadosalud')}}" class="btn btn-primary" target="_blank">Seguimiento Operativo Salud</a>
