@@ -1,0 +1,25 @@
+personalhealth_index:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:PersonalHealth:index" }
+
+personalhealth_lookforDepto:
+    path:    /lookforDepto
+    defaults: { _controller: "SieAppWebBundle:PersonalHealth:lookforDepto" }
+    options:
+        expose: true
+
+personalhealth_buscar_cargo:
+    path:    /buscar/cargo/{idInstituto}/
+    defaults: { _controller: "SieAppWebBundle:PersonalHealth:cargos" }
+    options:
+        expose: true
+
+personalhealth_index_print:
+    path:     /print
+    defaults: { _controller: "SieAppWebBundle:PersonalHealth:indexPrint" }
+
+personalhealth_print_insc:
+    path:    /print/insc
+    defaults: { _controller: "SieAppWebBundle:PersonalHealth:printInsc" }
+    options:
+        expose: true

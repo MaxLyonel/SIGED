@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaRueRegularizacion:
+    type: entity
+    table: institucioneducativa_rue_regularizacion
+    indexes:
+        IDX_DD0C6FA83AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaFundacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_fundacion
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+        rutaAdjunto:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: ruta_adjunto
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

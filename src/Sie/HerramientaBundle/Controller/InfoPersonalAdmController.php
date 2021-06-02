@@ -12,6 +12,13 @@ use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Form\VerificarPersonaSegipType;
 use Sie\AppWebBundle\Form\PersonaDatosType;
 
+use Sie\AppWebBundle\Entity\EstadosaludTipo;
+use Sie\AppWebBundle\Entity\MaestroInscripcionEstadosalud;
+use Sie\AppWebBundle\Entity\InstitucioneducativaControlOperativoMenus;
+use Sie\AppWebBundle\Entity\NotaTipo;
+
+
+
 /**
  * EstudianteInscripcion controller.
  *
@@ -113,6 +120,33 @@ class InfoPersonalAdmController extends Controller {
             $cargosArray[$c->getId()] = $c->getId();
         }
 
+        /*
+        $query = $em->createQuery(
+                    'SELECT mies, mi, per, ft FROM SieAppWebBundle:MaestroInscripcionEstadosalud  mies
+                    inner join mies.estadosaludTipo est
+                    inner join mies.maestroInscripcion mi
+                    
+                    INNER JOIN mi.persona per
+                    INNER JOIN mi.formacionTipo ft
+                    
+                    WHERE mi.institucioneducativa = :idInstitucion
+                    AND mi.gestionTipo = :gestion
+                    AND mi.cargoTipo IN (:cargos)
+                    ORDER BY per.paterno, per.materno, per.nombre')
+                ->setParameter('idInstitucion', $institucion)
+                ->setParameter('gestion', $gestion)
+                ->setParameter('cargos', $cargosArray);
+        $personal = $query->getResult();
+
+        */
+        /*
+        $dql = $result->select('c','p')
+        ->from('ACMETestBundle:Contact', 'c')
+        ->leftJoin('c.person', 'p', \Doctrine\ORM\Query\Expr\Join::ON, 'p.contact_id = c.id')
+        ->getQuery()
+        ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+        */
+
         $query = $em->createQuery(
                         'SELECT mi, per, ft FROM SieAppWebBundle:MaestroInscripcion mi
                     INNER JOIN mi.persona per
@@ -125,6 +159,7 @@ class InfoPersonalAdmController extends Controller {
                 ->setParameter('gestion', $gestion)
                 ->setParameter('cargos', $cargosArray);
         $personal = $query->getResult();
+
 
         $query = $em->createQuery(
                         'SELECT count(mi.id) FROM SieAppWebBundle:MaestroInscripcion mi
@@ -268,7 +303,9 @@ class InfoPersonalAdmController extends Controller {
                 'personal_no_idioma' => $arrayNoIdioma,
                 'personal_no_genero' => $arrayNoGenero,
                 'activar_acciones' => $activar_acciones,
-                'habilitar_ddjj' => $habilitar_ddjj
+                'habilitar_ddjj' => $habilitar_ddjj,
+
+                'operativoSalud' => $this->verificarEstadoOperativoSaludo($institucion->getId(),$gestion,0)
         ));
     }
 
@@ -1060,5 +1097,215 @@ class InfoPersonalAdmController extends Controller {
             return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
         }
     }
+
+    /**
+     * Esta funcion edita el estado de saludo de una persona, en la tabla 'maestro_inscripcion_estadosalud'
+     *
+     * @return 
+     * @author lnina
+     **/
+    public function editarEstadoSaludAction(Request $request)
+    {
+        $esAjax=$request->isXmlHttpRequest();
+
+        $request_personaInscripcion = $request->get('personaId');
+        $request_personaInscripcion = filter_var($request_personaInscripcion,FILTER_SANITIZE_NUMBER_INT);
+        $request_personaInscripcion = is_numeric($request_personaInscripcion)?$request_personaInscripcion:-1;
+
+        if($esAjax && $request_personaInscripcion>0)
+        {
+            $em = $this->getDoctrine()->getManager();
+            $estadosSalud = $em->getRepository('SieAppWebBundle:EstadosaludTipo')->findBy(array('esactivo' => 't'));
+            if($estadosSalud==null)
+            {
+                $estadosSalud=array();
+            }
+
+            return $this->render($this->session->get('pathSystem').':InfoPersonalAdm:estadoSalud.html.twig',array(
+                'estadosSalud'=>$estadosSalud,
+                'inscripcion_id' => $request_personaInscripcion
+            ));
+        }
+        else
+        {
+            $data=null;
+            $status = 404;
+            $msj = 'La dirección solicitada no existe.';
+            $response = new JsonResponse($data,$status);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+        }
+    }
+
+    /**
+     * Esta funcion actualiza el estado de salud de una persona, en la tabla 'maestro_inscripcion_estadosalud'
+     *
+     * @return void
+     * @author lnina
+     **/
+    public function actualizarEstadoSaludAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $esAjax=$request->isXmlHttpRequest();
+
+        $request_inscription = $request->get('request_inscription');
+        $request_inscription = filter_var($request_inscription,FILTER_SANITIZE_NUMBER_INT);
+        $request_inscription = is_numeric($request_inscription)?$request_inscription:-1;
+
+        $request_estadoSalud = $request->get('request_estado_salud');
+        $request_estadoSalud = filter_var($request_estadoSalud,FILTER_SANITIZE_NUMBER_INT);
+        $request_estadoSalud = is_numeric($request_estadoSalud)?$request_estadoSalud:-1;
+
+        $request_gestion = date('Y'); //Obtenemos la gestion actual
+
+        $data=null;
+        $status= 404;
+        $msj='Ocurrio un error, por favor vuelva a intentarlo';
+
+        if($esAjax && $request_inscription >0 && $request_estadoSalud >0)
+        {
+            $em = $this->getDoctrine()->getManager();
+            
+            $estadosaludTipo = $em->getRepository('SieAppWebBundle:EstadosaludTipo')->findOneBy(array('id'=>$request_estadoSalud));
+            $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('id'=>$request_inscription,'gestionTipo'=>$request_gestion));
+
+            if($estadosaludTipo && $maestroInscripcion)
+            {
+                $maestroInscripcionEstadosalud = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneBy(array('maestroInscripcion'=>$maestroInscripcion->getId()));
+
+                if($maestroInscripcionEstadosalud==null)//Si no existe lo creamos
+                    $maestroInscripcionEstadosalud = new MaestroInscripcionEstadosalud();
+
+                $maestroInscripcionEstadosalud->setEstadosaludTipo($estadosaludTipo);
+                $maestroInscripcionEstadosalud->setMaestroInscripcion($maestroInscripcion);
+
+                $em->persist($maestroInscripcionEstadosalud);
+                $em->flush();
+
+                $data=$estadosaludTipo->getEstadosalud();
+                $status= 200;
+                $msj='Los datos fueron actualizados correctamente';
+            }
+            else
+            {
+                $data=null;
+                $status= 404;
+                $msj='Ocurrio un error, los datos enviados no son correctos, por favor vuelva a intentarlo';
+            }
+        }
+        else
+        {
+            $data=null;
+            $status= 404;
+            $msj='Ocurrio un error, por favor vuelva a intentarlo';
+        }
+        $response = new JsonResponse($data,$status);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+    }
+
+
+    /**
+     * Esta funcion cierra el operativo de estado de salud
+     *
+     * @return void
+     * @author lnina
+     **/
+    public function cerrarOperativoEstadoSaludAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $esAjax=$request->isXmlHttpRequest();
+
+        $request_sie = $request->get('request_sie');
+        $request_sie = filter_var($request_sie,FILTER_SANITIZE_NUMBER_INT);
+        $request_sie = is_numeric($request_sie)?$request_sie:-1;
+
+        $request_gestion = $request->get('request_estado_salud');
+        $request_gestion = filter_var($request_gestion,FILTER_SANITIZE_NUMBER_INT);
+        $request_gestion = is_numeric($request_gestion)?$request_gestion:-1;
+
+        $request_tipo = $request->get('request_tipo'); //con esto se determina a quien pertence 0 cierre operativo administrativo y 1 cierre opertivo maestros
+        $request_tipo = filter_var($request_tipo,FILTER_SANITIZE_NUMBER_INT);
+        $request_tipo = is_numeric($request_tipo)?$request_tipo:-1;
+
+        $request_gestion = date('Y'); //Obtenemos la gestion actual
+
+        $data=null;
+        $status= 404;
+        $msj='Ocurrio un error, por favor vuelva a intentarlo';
+
+        if($esAjax && $request_sie >0 && $request_gestion >0 && ($request_tipo==0 || $request_tipo==1))
+        {
+            $em = $this->getDoctrine()->getManager();
+            $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request_sie);
+            if($institucioneducativa)
+            {
+                $operativoSalud = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa' => $institucioneducativa,'gestionTipoId'=>$request_gestion,'estadoMenu'=>$request_tipo));
+                if($operativoSalud==null)//no existe, lo creamos el cierre del operatiovo
+                {
+                    $operativoSalud = new InstitucioneducativaControlOperativoMenus();
+                    $operativoSalud->setGestionTipoId($request_gestion);
+                    $operativoSalud->setEstadoMenu($request_tipo);
+                    $operativoSalud->setFecharegistro(new \DateTime('now'));
+                    $operativoSalud->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->findOneById(0));
+                    $operativoSalud->setInstitucioneducativa($institucioneducativa);
+
+                    $em->persist($operativoSalud);
+                    $em->flush();
+
+                    $data='ok';
+                    $status= 200;
+                    $msj='Los datos fueron guardados correctamente';
+                }
+                else//si existe
+                {
+                    $operativoSalud->setEstadoMenu($request_tipo);
+                    $operativoSalud->setFecharegistro(new \DateTime('now'));
+                    $em->persist($operativoSalud);
+                    $em->flush();
+
+                    $data='ok';
+                    $status= 200;
+                    $msj='Los datos fueron guardados correctamente';
+                }
+            }
+            else
+            {
+                $data=null;
+                $status= 404;
+                $msj='Ocurrio un error, por favor vuelva a intentarlo';
+            }
+        }
+        else
+        {
+            $data=null;
+            $status= 404;
+            $msj='Ocurrio un error, por favor vuelva a intentarlo';
+        }
+        $response = new JsonResponse($data,$status);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+    }
+
+    public function verificarEstadoOperativoSaludo($request_sie,$request_gestion,$request_tipo)
+    {
+        //1 abierto
+        //0 cerrado
+        $em = $this->getDoctrine()->getManager();
+        $estadoOperativoSalud=true;
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request_sie);
+        if($institucioneducativa)
+        {
+            $operativoSalud = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa' => $institucioneducativa,'gestionTipoId'=>$request_gestion,'estadoMenu'=>$request_tipo));
+
+            if($operativoSalud)
+            {
+                $estadoOperativoSalud=false;
+            }
+        }
+        return $estadoOperativoSalud;
+    }
+
+
 
 }
