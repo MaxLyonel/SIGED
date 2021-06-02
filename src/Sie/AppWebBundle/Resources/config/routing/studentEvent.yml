@@ -1,0 +1,15 @@
+studentEvent_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:StudentEvent:index }
+
+studentEvent_buscar:
+    path:     /buscar
+    defaults: { _controller: SieAppWebBundle:StudentEvent:buscar }
+    options:
+         expose: true
+
+studentEvent_toregister:
+    path:     /registryClaim
+    defaults: { _controller: SieAppWebBundle:StudentEvent:toregister }
+    options:
+         expose: true         

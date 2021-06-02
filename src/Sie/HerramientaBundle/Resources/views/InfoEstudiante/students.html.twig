@@ -1,11 +1,12 @@
+{#
 <small>
     <div class='row'>
         <div class="col-lg-3 col-lg-offset-9">
-            <a href="#" onclick="inscriptionWithRude('{{aData}}');" ><span class="fa fa-newspaper-o"></span>Inscripción con Rude </a>
+            <a href="#" onclick="inscriptionWithRude('{{aData}}');" ><span class="fa fa-newspaper-o"></span>Inscripción con Rude krlos</a>
         </div>
     </div>
 </small>
-
+#}
 {% if exist == true %}
     <small>
         <div class="row">
@@ -62,13 +63,14 @@
                                 </td>
 
                                 <td data-title="Opcion" class="success" >
+                                    {#
                                     <div >
                                         <label>
                                             <input type="checkbox" id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}][student]"   value='{{data.id}}'>
                                             <input type="hidden" id="form_datasend_{{data.id}}" name="form[datasend_{{data.id}}][matricula]"   value='{{data.estadomatriculaId}}'>
                                         </label>
                                     </div>
-
+                                    #}
                                 </td>
                             </tr>
                         {%endfor%}

@@ -31,24 +31,24 @@
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body">
-                {# <div class="row">
+                <div class="row">
                     <div class="col-md-12 text-center">
-                        {% if onlyview == false and gestion >= app.session.get('currentyear') and app.session.get('roluser') == 9 %}
-                        <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
-                            <i class="fa fa-user"></i> Inscripción
-                        </button>
-                        <hr />
+                        {% if gestion >= app.session.get('currentyear') and app.session.get('roluser') == 9 %}
+                        {# {% if onlyview == false and gestion >= app.session.get('currentyear') and app.session.get('roluser') == 9 %} #}
+                            <button type="button" class="btn btn-md btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
+                                <i class="fa fa-user"></i> Inscripción
+                            </button>
                         {% endif %}
-                           {% if onlyview == false and gestion >= app.session.get('currentyear') and (app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10) %}
+                        {% if gestion >= app.session.get('currentyear') and (app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10) %}
+                        {# {% if onlyview == false and gestion >= app.session.get('currentyear') and (app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10) %} #}
                             <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptions('{{infoUe}}');" >
-
                                 <i class="fa fa-user"></i> Inscripción sin RUDE
                             </button>
-                            {% endif %}
-                        
-                        <hr />                          
+                        {% endif %}
                     </div>
-                </div> #}
+                    <hr />
+                </div>
+                <div class="clearfix"></div>
                 <div class="row">
                     <div id="no-more-tables" class="col-md-12 table-responsive">
                         <table class="table table-bordered table-hover cf">
@@ -105,27 +105,26 @@
                                         </div>
                                     </td>
                                     <td>
-                                        {# <td class="text-center">
-                                            {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
+                                        {% if areaEspecial in ['Intelectual','Auditiva','Visual'] and gestion == 2020 and operativo_fin == false %}
+                                        {# {% if onlyview == false and areaEspecial in ['Intelectual','Auditiva','Visual'] and gestion >= app.session.get('currentyear') and operativo_fin == false %} #}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                                <button type="button" class="btn btn-circle btn-teal" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
+                                                <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
                                                     <i class="fa fa-list"></i>
                                                 </button>
                                             </div>
-                                            {% endif %}
-                                            {% if onlyview == false and gestion == app.session.get('currentyear') %}
+                                        {% endif %}
+                                        {% if gestion == app.session.get('currentyear') and gestion >= 2020 %}
+                                        {# {% if onlyview == false and gestion >= app.session.get('currentyear') %} #}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                                 <button type="button" class="btn btn-circle btn-danger" data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </div>
-                                            {% endif %}
-                                        </td> #}
-
+                                        {% endif %}
                                         {# APODERADO BONO FAMILIA #}
                                         {# {% if gestion == 2020 and true %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado Bono Familia">
-                                                <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderadoBonoFamilia({{data.estInsId}});" >
+                                                <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="apoderadoBonoFamilia({{data.estInsId}});" >
                                                     <i class="fa fa-user"></i>
                                                 </button>
                                             </div>

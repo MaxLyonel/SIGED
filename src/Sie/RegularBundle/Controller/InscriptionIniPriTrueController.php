@@ -41,6 +41,18 @@ class InscriptionIniPriTrueController extends Controller {
      *
      */
     public function indexAction() {
+      //disabled option by krlos
+      //return $this->redirect($this->generateUrl('login'));
+     if (in_array($this->session->get('roluser'), array(8,7,10))){
+
+     }else{
+      return $this->redirect($this->generateUrl('login'));  
+     }
+      //enable to departamento user
+      /*if($this->session->get('userName')!='1897494'){
+        return $this->redirect($this->generateUrl('login'));
+      }*/
+      
       /*
       $arrUser = array('6478217','7861595','3558624');
 
@@ -59,19 +71,19 @@ class InscriptionIniPriTrueController extends Controller {
         $enableoption = true; 
         $message = ''; 
         // this is to check if the ue has registro_consolidacion
-        if($this->session->get('roluser')==9){
+        /*if( in_array($this->session->get('roluser'), array(7,8,9,10))  ){
 
           $objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
             'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
           ));
           
-          if(!$objRegConsolidation){
+          if($objRegConsolidation){
               $status = 'error';
-        $code = 400;
-        $message = "No se puede realizar la inscripción debido a que la Unidad Educativa no se consolido el operativo Inscripciones";
-        $enableoption = false; 
+              $code = 400;
+              $message = "No se puede realizar la inscripción debido a que la Unidad Educativa no se consolido el operativo Inscripciones";
+              $enableoption = false; 
           }
-        }      
+        } */     
 
 
 
@@ -442,7 +454,7 @@ class InscriptionIniPriTrueController extends Controller {
 
       // validation if the ue is over 4 operativo
       $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$form['gestionIns']);
-      if($operativo >= 4){
+      if($operativo >= 3){
         $message = 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos';
         $this->addFlash('idNoInscription', $message);
         return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
@@ -658,6 +670,12 @@ class InscriptionIniPriTrueController extends Controller {
          $studentInscription->setNumMatricula(0);
          $em->persist($studentInscription);
          $em->flush();
+
+          //add the areas to the student
+          //$responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId());    
+          $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+          $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+          $query->execute();         
 
         /*=============================================================
         =            ACTUALIZACION DEL ESTADO DE MATRICULA            =

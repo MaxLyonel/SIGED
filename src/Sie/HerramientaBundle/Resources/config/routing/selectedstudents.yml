@@ -1,0 +1,33 @@
+selected_students_index:
+    path:     /
+    defaults: { _controller: SieHerramientaBundle:SelectedStudents:index }
+
+selected_students_buscar:
+    path:     /buscar
+    defaults: { _controller: SieHerramientaBundle:SelectedStudents:buscar }
+    options:
+         expose: true
+
+selected_students_registryStudent:
+    path:     /registryStudent
+    defaults: { _controller: SieHerramientaBundle:SelectedStudents:registryStudent }
+    options:
+         expose: true         
+
+selected_students_loadData:
+    path:     /loadData
+    defaults: { _controller: SieHerramientaBundle:SelectedStudents:loadData }
+    options:
+         expose: true
+
+selected_students_removeStudent:
+    path:     /removeStudent
+    defaults: { _controller: SieHerramientaBundle:SelectedStudents:removeStudent }
+    options:
+         expose: true         
+
+selected_students_closeRegistry:
+    path:     /closeRegistry
+    defaults: { _controller: SieHerramientaBundle:SelectedStudents:closeRegistry }
+    options:
+         expose: true

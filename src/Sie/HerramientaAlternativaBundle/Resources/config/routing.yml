@@ -103,4 +103,12 @@ sie_herramienta_alternativa_operativos:
 sie_herramienta_alternativa_rudeal:
     resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/estudianteRudeal.yml"
     prefix:   /altsie/rudeal
-    
+
+sie_herramienta_alternativa_print_record_card:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/printRecordCard.yml"
+    prefix:   /altsie/printrecordcard 
+
+
+sie_herramienta_alternativa_cepead:
+    resource: "@SieHerramientaAlternativaBundle/Resources/config/routing/cepead.yml"
+    prefix:   /altsie/cepead/uno

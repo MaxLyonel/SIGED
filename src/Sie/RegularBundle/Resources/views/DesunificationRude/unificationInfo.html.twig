@@ -95,7 +95,7 @@
                                                             </td> 
                                                             <td>{{data.gestion_tipo_id}}</td>                                                            
                                                             <td>{{data.institucioneducativa_titulo}}|{{data.institucioneducativa}}</td>
-                                                            <td>{{data.nivel|e }}|{{data.grado|e}}</td>                                                            
+                                                            <td>{{data.nivel|e }}|{{data.grado|e}}|{{data.paralelo|e}}</td>                                                            
                                                             <td class="text-center"><a href="#" onclick="seeNotaNew('{{data.eiid}}', '{{data.eid}}', '{{data.nivel_tipo_id}}', '{{data.grado_tipo_id}}', '{{data.pid}}', '{{data.turno_tipo_id}}', '{{data.gestion_tipo_id}}', '{{data.institucioneducativa_id}}');" ><span class="glyphicon glyphicon-eye-open"></span></a> {{data.em}}</td>                                                                                                                                                                                  
                                                         </tr>
                                                     {% endfor %}
@@ -179,7 +179,7 @@
                                                         <tr>
                                                             <td>{{data.gestion_tipo_id}}</td>                                                            
                                                             <td>{{data.institucioneducativa_titulo}}|{{data.institucioneducativa}}</td>
-                                                            <td>{{data.nivel|e }}|{{data.grado|e}}</td>                                                            
+                                                            <td>{{data.nivel|e }}|{{data.grado|e}}|{{data.paralelo|e}}</td>                                                            
                                                             {#<td>{{data.turno}} </td>
                                                             <td>{{data.paralelo|e}}</td>#}                                                            
                                                             <td data-title="VerNota" class="text-center">

@@ -559,7 +559,7 @@ class AcaMultigradoController extends Controller {
         //get Multigrado per SIE and GESTION
         $objMultigradoArr = $this->getMultigradoPerUeAndGestion($arrData);
         // dump($message);die;
-        return $this->render('SieRegularBundle:Multigrado:showNewMultigrado.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':AcaMultigrado:showNewMultigrado.html.twig', array(
           'objMultigradoArr' => $objMultigradoArr,
           'jsonDataMultigrado' => json_encode($arrData),
           'arrData'=>$arrData,

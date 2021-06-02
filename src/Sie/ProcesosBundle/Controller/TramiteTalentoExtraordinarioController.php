@@ -45,9 +45,10 @@ class TramiteTalentoExtraordinarioController extends Controller {
         $rol = $request->getSession()->get('roluser');
         if ($rol != 9 || $flujotipo_id==null) {
             return $this->redirect($this->generateUrl('wf_tramite_index'));
-        }//dump($request->getSession()->get('pathSystem'));die;
+        }
+        // dump($request->getSession()->get('pathSystem'));die;
         // $acreditados = ['82230104', '80480250', '80980495', '80980579', '80900074', '40730256', '80730696', '81220087', '81230262', '82480035', '61470053', '81480136', '81480196', '81410158', '71980052', '81980780', '61900026', '81730091', '61710057', '81710072'];
-        $acreditados = ['82230104', '40730256', '81220087', '81480196', '81410158', '71980052', '81980780', '61900026', '81720098', '80900074'];
+        // $acreditados = ['82230104', '40730256', '81220087', '81480196', '81410158', '71980052', '81980780', '61900026', '81720098', '80900074', '81680097'];
         if ($request->getSession()->get('pathSystem') == "SieHerramientaBundle") {
             $dpto_unidadeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->getSession()->get('ie_id'));
             $departamento_id = $dpto_unidadeducativa->getLeJuridicciongeografica()->getDistritoTipo()->getDepartamentoTipo()->getId();
@@ -63,10 +64,10 @@ class TramiteTalentoExtraordinarioController extends Controller {
                 ->andWhere('ie.institucioneducativaAcreditacionTipo=1')//Autorizado
                 ->andWhere('ie.estadoinstitucionTipo=10')//Autorizado
                 ->andWhere('ieaea.especialAreaTipo=7')//Autorizado
-                ->andWhere('ie.id in (:acreditados)')//Autorizado
+                // ->andWhere('ie.id in (:acreditados)')//Autorizado
                 ->andWhere('dt.departamentoTipo = :dptoTipo')//Autorizado
                 ->setParameter('gestion', $request->getSession()->get('currentyear'))
-                ->setParameter('acreditados', $acreditados)//Autorizado
+                // ->setParameter('acreditados', $acreditados)//Autorizado
                 ->setParameter('dptoTipo', $departamento_id)//Autorizado
                 ->distinct('ie.id')
                 ->orderBy("ie.institucioneducativa")
@@ -86,10 +87,10 @@ class TramiteTalentoExtraordinarioController extends Controller {
                 ->andWhere('ie.institucioneducativaAcreditacionTipo=1')//Autorizado
                 ->andWhere('ie.estadoinstitucionTipo=10')//Autorizado
                 ->andWhere('ieaea.especialAreaTipo=7')//Autorizado
-                ->andWhere('ie.id in (:acreditados)')//Autorizado
+                // ->andWhere('ie.id in (:acreditados)')//Autorizado
                 ->setParameter('codigo', $request->getSession()->get('ie_id'))
                 ->setParameter('gestion', $request->getSession()->get('currentyear'))
-                ->setParameter('acreditados', $acreditados)//Autorizado
+                // ->setParameter('acreditados', $acreditados)//Autorizado
                 ->distinct('ie.id')
                 ->getQuery()
                 ->getResult();
@@ -116,7 +117,7 @@ class TramiteTalentoExtraordinarioController extends Controller {
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'eins.institucioneducativaCurso = iec.id')
                 ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'with', 'iec.institucioneducativa = ie.id')
                 ->where('eins.estudiante='.$estudiante_result->getId())
-                ->andWhere('eins.estadomatriculaTipo=4')
+                ->andWhere('eins.estadomatriculaTipo in (4,5)')
                 ->andWhere('ie.institucioneducativaTipo=1')
                 ->orderBy("eins.id", "DESC")
                 ->getQuery()
@@ -186,7 +187,7 @@ class TramiteTalentoExtraordinarioController extends Controller {
                 ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'eins.institucioneducativaCurso = iec.id')
                 ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'with', 'iec.institucioneducativa = ie.id')
                 ->where('eins.estudiante='.$estudiante_result->getId())
-                ->andWhere('eins.estadomatriculaTipo=4')
+                ->andWhere('eins.estadomatriculaTipo in (4,5)')
                 ->andWhere('ie.institucioneducativaTipo=1')
                 ->orderBy("eins.id", "DESC")
                 ->getQuery()

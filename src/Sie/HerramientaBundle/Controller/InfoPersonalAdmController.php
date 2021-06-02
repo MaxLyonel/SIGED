@@ -91,7 +91,7 @@ class InfoPersonalAdmController extends Controller {
 
         $institucionregular = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $institucion, 'institucioneducativaTipo' => 1));
 
-        if(!$institucionregular){
+        if(!is_object($institucionregular)){
             $this->get('session')->getFlashBag()->add('noTuicion', 'La Unidad Educativa no corresponde al Subsistema de Educación Regular');
             if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
                 return $this->redirect($this->generateUrl('herramienta_info_personal_adm_tsie_index'));
@@ -105,7 +105,7 @@ class InfoPersonalAdmController extends Controller {
         $query = $em->createQuery(
                         'SELECT ct FROM SieAppWebBundle:CargoTipo ct
                         WHERE ct.id NOT IN (:id) ORDER BY ct.id')
-                ->setParameter('id', array(0, 86, 993, 650, 992, 994, 120, 100, 1000, 651, 14));
+                ->setParameter('id', array(0, 70));
 
         $cargos = $query->getResult();
         $cargosArray = array();
@@ -199,9 +199,15 @@ class InfoPersonalAdmController extends Controller {
         $rolTipo = $em->getRepository('SieAppWebBundle:RolTipo')->findOneById(9);
         $ueplena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array('gestionTipoId' => $gestion, 'institucioneducativaId' => $institucion->getId(), 'institucioneducativaHumanisticoTecnicoTipo' => 1));
 
-        $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '1'));
-        $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '2'));
-        $consol_gest_pasada3 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '3'));
+        if($request->getSession()->get('currentyear')<2020) {
+            $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '1'));
+            $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '2'));
+            $consol_gest_pasada3 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim4' => '3'));
+        } else {
+            $consol_gest_pasada = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim3' => '1'));
+            $consol_gest_pasada2 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim3' => '2'));
+            $consol_gest_pasada3 = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('gestion' => $gestion , 'unidadEducativa' => $institucion, 'bim3' => '3'));
+        }
         
         if(!($consol_gest_pasada or $consol_gest_pasada2 or $consol_gest_pasada3)){
             $activar_acciones = true;
@@ -271,7 +277,10 @@ class InfoPersonalAdmController extends Controller {
      */
 
     public function newAction(Request $request) {
-
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        
+        $gestionId = $fechaActual->format('Y');
         // Verificamos si no ha caducado la session
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
@@ -282,12 +291,13 @@ class InfoPersonalAdmController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['idPersona']);
-
+        $arrayRangoFecha = array('inicio'=>"01-01-".$gestionId,'final'=>"31-12-".$gestionId);
         return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:new.html.twig', array(
                     'form' => $this->newForm($form['idInstitucion'], $form['gestion'], $form['idPersona'])->createView(),
                     'institucion' => $institucion,
                     'gestion' => $request->getSession()->get('idGestion'),
-                    'persona' => $persona
+                    'persona' => $persona,
+                    'rangoFecha'=>$arrayRangoFecha 
         ));
     }
 
@@ -332,6 +342,9 @@ class InfoPersonalAdmController extends Controller {
 
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($idPersona);
 
+        $fechaInicio = "01-01-".$gestion;
+        $fechaFin = "31-12-".$gestion;
+
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_info_personal_adm_create'))
                 ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
@@ -349,6 +362,8 @@ class InfoPersonalAdmController extends Controller {
                 ->add('item', 'text', array('label' => 'Número de Item', 'data' => '0', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
                 ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => $em->getReference('SieAppWebBundle:IdiomaMaterno', 97), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'form-control')))
                 ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille'))
+                ->add('fechaInicio', 'text', array('label' => 'Fecha inicio de asignación (ej.: 01-01-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaInicio, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha inicio de asignación' , 'maxlength' => 10, 'required' => true)))
+                ->add('fechaFin', 'text', array('label' => 'Fecha fin de asignación (ej.: 31-12-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaFin, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha fin de asignación' , 'maxlength' => 10, 'required' => true)))
                 ->add('guardar', 'submit', array('label' => 'Guardar', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
 
@@ -364,6 +379,27 @@ class InfoPersonalAdmController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
             $form = $request->get('form');
+
+            if($form['fechaInicio'] == ""){
+                $msg = "Debe ingresar la fecha inicial de la asignación";
+                return $response->setData(array('estado'=>false, 'msg'=>$msg));
+            } else {
+                $fechaInicio = new \DateTime($form['fechaInicio']);
+            }
+            if($form['fechaFin'] == ""){
+                $msg = "Debe ingresar la fecha final de la asignación";
+                return $response->setData(array('estado'=>false, 'msg'=>$msg));
+            } else {
+                $fechaFin = new \DateTime($form['fechaFin']);
+            }           
+    
+            if($fechaInicio > $fechaFin){
+                $msg = "Rango de fechas (".date_format($fechaInicio,'d-m-Y')." al ".date_format($fechaFin,'d-m-Y').") no valido, intente nuevamente";
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('newError', $msg);
+                return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
+            }
+
             // Registrar sucursal
             $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'gestionTipo' => $form['gestion']));
 
@@ -422,6 +458,8 @@ class InfoPersonalAdmController extends Controller {
             $maestroinscripcion->setItem($form['item']);
             $maestroinscripcion->setFechaRegistro(new \DateTime('now'));
             $maestroinscripcion->setEsVigenteAdministrativo(1);
+            $maestroinscripcion->setAsignacionFechaInicio($fechaInicio);
+            $maestroinscripcion->setAsignacionFechaFin($fechaFin);
             $em->persist($maestroinscripcion);
             $em->flush();
 
@@ -504,7 +542,10 @@ class InfoPersonalAdmController extends Controller {
      */
 
     public function editAction(Request $request) {
-
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        
+        $gestionId = $fechaActual->format('Y');
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 
@@ -513,12 +554,13 @@ class InfoPersonalAdmController extends Controller {
         $idiomas = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion' => $request->get('idMaestroInscripcion')));
         $em->getConnection()->commit();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->getSession()->get('idInstitucion'));
-
+        $arrayRangoFecha = array('inicio'=>"01-01-".$gestionId,'final'=>"31-12-".$gestionId);
         return $this->render($this->session->get('pathSystem') . ':InfoPersonalAdm:edit.html.twig', array(
                     'form' => $this->editForm($request->getSession()->get('idInstitucion'), $request->getSession()->get('idGestion'), $persona, $maestroInscripcion, $idiomas)->createView(),
                     'institucion' => $institucion,
                     'gestion' => $request->getSession()->get('idGestion'),
-                    'persona' => $persona
+                    'persona' => $persona,
+                    'rangoFecha'=>$arrayRangoFecha
         ));
     }
 
@@ -559,7 +601,19 @@ class InfoPersonalAdmController extends Controller {
         foreach ($formacion as $fr) {
             $formacionArray[$fr->getId()] = $fr->getFormacion();
         }
+        
+        if ($maestroInscripcion->getAsignacionFechaInicio()){
+            $fechaInicio = $maestroInscripcion->getAsignacionFechaInicio()->format('d-m-Y');
+        } else {
+            $fechaInicio = "";
+        }
 
+        if ($maestroInscripcion->getAsignacionFechaFin()){
+            $fechaFin = $maestroInscripcion->getAsignacionFechaFin()->format('d-m-Y');
+        } else {
+            $fechaFin = "";
+        }
+        
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_info_personal_adm_update'))
                 ->add('institucionEducativa', 'hidden', array('data' => $idInstitucion))
@@ -578,6 +632,8 @@ class InfoPersonalAdmController extends Controller {
                 ->add('item', 'text', array('label' => 'Número de Item', 'required' => true, 'data' => $maestroInscripcion->getItem() ? $maestroInscripcion->getItem() : 0, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'pattern' => '[0-9]{1,10}')))
                 ->add('idiomaOriginario', 'entity', array('class' => 'SieAppWebBundle:IdiomaMaterno', 'data' => ($maestroInscripcion->getEstudiaiomaMaterno()), 'label' => 'Actualmente que idioma originario esta estudiando', 'required' => false, 'attr' => array('class' => 'form-control')))
                 ->add('leeEscribeBraile', 'checkbox', array('required' => false, 'label' => 'Lee y Escribe en Braille', 'attr' => array('checked' => $maestroInscripcion->getLeeescribebraile())))
+                ->add('fechaInicio', 'text', array('label' => 'Fecha inicio de asignación (ej.: 01-01-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaInicio, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha inicio de asignación' , 'maxlength' => 10, 'required' => true)))
+                ->add('fechaFin', 'text', array('label' => 'Fecha fin de asignación (ej.: 31-12-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaFin, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha fin de asignación' , 'maxlength' => 10, 'required' => true)))
                 ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-primary')))
                 ->getForm();
 
@@ -593,6 +649,28 @@ class InfoPersonalAdmController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
             $form = $request->get('form');
+
+            if($form['fechaInicio'] == ""){
+                $msg = "Debe ingresar la fecha inicial de la asignación";
+                $this->get('session')->getFlashBag()->add('newError', $msg);
+                return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
+            } else {
+                $fechaInicio = new \DateTime($form['fechaInicio']);
+            }
+            if($form['fechaFin'] == ""){
+                $msg = "Debe ingresar la fecha final de la asignación";
+                $this->get('session')->getFlashBag()->add('newError', $msg);
+                return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
+            } else {
+                $fechaFin = new \DateTime($form['fechaFin']);
+            }           
+    
+            if($fechaInicio > $fechaFin){
+                $msg = "Rango de fechas (".date_format($fechaInicio,'d-m-Y')." al ".date_format($fechaFin,'d-m-Y').") no valido, intente nuevamente";
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('newError', $msg);
+                return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
+            }
 
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['idPersona']);
             $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['genero']));
@@ -615,6 +693,8 @@ class InfoPersonalAdmController extends Controller {
             $maestroinscripcion->setLeeescribebraile((isset($form['leeEscribeBraile'])) ? 1 : 0);
             $maestroinscripcion->setNormalista((isset($form['normalista'])) ? 1 : 0);
             $maestroinscripcion->setItem($form['item']);
+            $maestroinscripcion->setAsignacionFechaInicio($fechaInicio);
+            $maestroinscripcion->setAsignacionFechaFin($fechaFin);
             $maestroinscripcion->setFechaModificacion(new \DateTime('now'));
             $em->persist($maestroinscripcion);
             $em->flush();

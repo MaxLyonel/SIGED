@@ -7,8 +7,9 @@
 	 		<input type="hidden" name="actualizar" value="{{actualizar}}">
 	 		<input type="hidden" name="operativo" value="{{operativo}}">
 	 		<input type="hidden" name="discapacidad" value="{{discapacidad}}">
+			 <input type="hidden" name="grado" value="{{inscripcion.institucioneducativaCurso.gradoTipo.id}}">
 
-	        <div class="panel panel-teal">
+	        <div class="panel panel-primary">
 	            <div class="panel-heading">
 	                <div class="pull-left">
 	                    <h3 class="panel-title">Notas del Estudiante</h3>
@@ -17,7 +18,7 @@
 	            </div>
 	            <div class="panel-body no-padding" id="modal-body">
 	            	<div class="alert " style="padding:10px">
-					    <h5 class="text-teal">Datos del Curso</h5>
+					    <h5 class="text-primary">Datos del Curso</h5>
 					    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
 					        <tr>
 					            <th>Nivel</th><td>{{inscripcion.institucioneducativaCurso.nivelTipo.nivel|upper}}</td>
@@ -71,7 +72,7 @@
 	        </div>
 	        <div class="modal-footer">
 	            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-	            {% if notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and onlyview == false %}
+	            {% if notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 %}
 		            <button type="submit" class="btn btn-success">Guardar Cambios</button>
 		        {% endif %}
 	        </div>

@@ -236,6 +236,13 @@ class NoteConsultationParentsController extends Controller {
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudianteid);
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
         $cuali = $em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion' => $inscripcionid), array('notaTipo' => 'ASC'));
+        $cuali2020 = $em->getRepository('SieAppWebBundle:EstudianteNota')->createQueryBuilder('a')
+        ->select('a')
+        ->innerJoin('SieAppWebBundle:EstudianteAsignatura', 'b', 'with', 'b.id = a.estudianteAsignatura')
+        ->where('b.estudianteInscripcion='.$inscripcionid)
+        ->orderBy("b.institucioneducativaCursoOferta", "ASC")
+        ->getQuery()
+        ->getResult();
 
         $tuicion = false;
 
@@ -251,7 +258,7 @@ class NoteConsultationParentsController extends Controller {
                 $tuicion = true;
             }
         }
-
+        
         return $this->render('SieRegularBundle:NoteConsultationParents:nota.html.twig', array(
             'cabeceras' => $cabeceraArray,
             'indices' => $indicesArray,
@@ -261,6 +268,7 @@ class NoteConsultationParentsController extends Controller {
             'gestion' => $gestion,
             'subsistema' => $subsistema,
             'cualitativo' => $cuali,
+            'cualitativo2020' => $cuali2020,
             'asignaturasInicial' => $asignaturasInicial,
             'setNotasForm' => $this->setNotasForm(array())->createView(),
             'tuicion' => $tuicion

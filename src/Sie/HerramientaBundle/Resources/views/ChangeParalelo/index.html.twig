@@ -4,7 +4,7 @@
 
   <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Cambio de Paralelo  <span> Busqueda</span></h2>
+        <h2><i class="fa fa-list-alt"></i> Cambio de Paralelo  <span> Búsqueda</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -106,7 +106,7 @@
 </div>
 
 {% endblock %}
-{% block javascripts%}
+{% block javascripts %}
     {{parent()}}
     <script>
 
@@ -143,27 +143,29 @@
         }
 
         function getTurno(paralelo) {
+            $("#form_turno").empty();
 
             sie = $('#form_ueid').val();
             nivel = $('#form_nivelid').val();
             grado = $('#form_gradoid').val();
 
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('change_paralelo_sie_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel, 'grado': grado}),
-                beforeSend: function () {
-                    $("#form_turno").empty();
-                },
-                success: function (data) {
-                    $("#form_turno").empty();
-                    $("#form_turno").append('<option value="">Seleccionar</option>');
-                    $.each(data.aturnos, function (i, value) {
-                        $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
-                    });
-                }
-            });
-
+            if(sie != '' && nivel != '' && grado != '' && paralelo != '') {
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('change_paralelo_sie_findturno', {'paralelo': paralelo, 'sie': sie, 'nivel': nivel, 'grado': grado}),
+                    beforeSend: function () {
+                        $("#form_turno").empty();
+                    },
+                    success: function (data) {
+                        $("#form_turno").empty();
+                        $("#form_turno").append('<option value="">Seleccionar...</option>');
+                        $.each(data.aturnos, function (i, value) {
+                            $("#form_turno").append('<option value="' + i + '">' + value + '</option>');
+                        });
+                    }
+                });
+            }
         }
 
     </script>
-{%endblock%}
+{% endblock %}

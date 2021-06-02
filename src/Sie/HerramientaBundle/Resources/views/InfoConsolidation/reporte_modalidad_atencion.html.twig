@@ -1,0 +1,185 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+
+    <link href="{{asset('css/bootstrap-fileupload.min.css')}}" rel="stylesheet">
+    <link href="{{asset('css/bootstrap-fileupload.css')}}" rel="stylesheet">
+
+{% endblock %}
+
+
+
+{% block contentoption %}
+
+{% set meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] %}
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-globe animated flip"></i> Bucar Información Consolidado <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-globe"></i>
+                    <a href="#">
+                    Bucar Información Consolidado
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+
+    <!-- /.row -->
+  <div class="body-content animated fadeIn">
+    <div class="row">
+        <div class="col-sm-12">
+
+                <div class="panel rounded shadow">
+                    <div class="panel panel-lilac shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">Reporte de modalidades de atención</h3>
+                            </div>
+                            <div class="pull-right">
+                                <button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-body ">
+                            <div class="col-md-12 p-3">
+                                <div class="col-sm-12">
+                                    <i class="fa fa-search"></i> Presionando el boton <strong>"Buscar"</strong> se desplegará un reporte con los tipos de modalidades de atención que poseen las U.E
+                                </div>
+                                <form method ="POST" id="form-mostrar-resultados-reporte-modalidad-atencion" onsubmit="mostrarResultadosReporte(this); return false;">
+                                  <div class="form-row">
+                                    <div class="form-group col-md-3 col-sm-6 ">
+                                        <select class="form-control" name="departamento" id="departamento" onchange="getDistritos(this.value); return false;" required>
+                                            {% for depto in arrDepto  %}
+                                                 <option value="{{depto.id}}">{{depto.depto}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-3 col-sm-6 ">
+                                      <!--<input type="text" class="form-control" name="distrito" id="distrito" placeholder="Distrito">-->
+                                      <select class="form-control select-distrito" name="distrito" id="distrito">
+                                        <option>Primero seleccione un departamento</option>
+                                      </select>
+                                    </div>
+
+                                    
+                                    <div class="form-group col-md-3 col-sm-6 ">
+                                        <select class="form-control" name="mes" id="mes">
+                                            {% for m in meses  %}
+                                                 <option value="{{loop.index}}">{{m}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-3 col-sm-6 ">
+                                        <select class="form-control" name="gestion" id="gestion">
+                                            {% for fecha in range(app.session.get('currentyear'),(app.session.get('currentyear')))  %}
+                                                 <option value="{{fecha}}">{{fecha}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-3 col-sm-6 ">
+                                        <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                    </div>
+                                  </div>
+
+                                </form>
+
+                            </div>
+                        </div><!-- /.panel-body --> 
+                        <div class="div-mostrar-resultados-reporte-modalidad-atencion" style="padding:1rem;"></div>
+                    </div>
+                </div>
+        </div>        
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block javascripts%}
+    {{parent()}}
+
+<script>
+
+    var mostrarResultadosReporte=function (form)
+    {
+        var formData = $(form).serialize();
+
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('siged_mostrar_resultados_reporte_modalidad_atencion'),
+                data: formData,
+                beforeSend: function () {
+                    $(".div-mostrar-resultados-reporte-modalidad-atencion").empty();
+                    $(".div-mostrar-resultados-reporte-modalidad-atencion").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data)
+                {
+                    $(".div-mostrar-resultados-reporte-modalidad-atencion").empty();
+                    $(".div-mostrar-resultados-reporte-modalidad-atencion").html(data);
+                    $('#dataTable-modalidad').DataTable( {});
+                    
+                },
+                error: function (data) {
+                    $(".div-mostrar-resultados-reporte-modalidad-atencion").empty();
+                    $(".div-mostrar-resultados-reporte-modalidad-atencion").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
+    }
+
+    var getDistritos= function(d)
+    {
+        if(d.length>0)
+        {
+            $.ajax({
+                    type: 'post',
+                    url: Routing.generate('siged_get_distritos_modalidad_atencion'),
+                    data: {departamento:d},
+                    beforeSend: function () {
+                        $(".select-distrito").empty();
+                        $(".select-distrito").append('<option>Obteniendo distritos ...</option>');
+                    },
+                    success: function (data)
+                    {
+                        try
+                        {
+                            var len= data.length;
+                            var option='<option value="-1" selected>Todos los distritos</option>';
+                            for(i in data)
+                            {
+                                option+='<option value="'+data[i].id+'">'+data[i].id+' | '+data[i].distrito+'</option>';
+                            }
+                            if(len==0)
+                            {
+                                option='<option>El departamento no tiene distritos</option>';
+                            }
+                            $(".select-distrito").empty();
+                            $(".select-distrito").html(option);
+                        }
+                        catch(e)
+                        {
+                            $(".select-distrito").html('<option>El departamento no tiene distritos</option>');
+                        }
+                    },
+                    error: function (data) {
+                        $(".select-distrito").empty();
+                        $(".select-distrito").append('<option>Ocurrio un error, por favor intente nuevamente.</option>');
+                    }
+                });
+        }
+
+    }
+
+</script>
+{% endblock %}

@@ -605,8 +605,33 @@ class CursosController extends Controller {
             $em->getConnection()->beginTransaction();
 
             // check if the student has record in tramite table
+            $removeit = true;
             $objTramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneBy(array('estudianteInscripcion'=>$arrInfoStudent['eInsId']));
-            if(!$objTramite){
+            if($objTramite){
+
+                $objDocumento = $em->getRepository('SieAppWebBundle:Documento')->find($objTramite->getId());
+
+                if(is_object($objDocumento)){
+                    $removeit = false;
+                }else{
+                    $objTramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->findBy(array('tramite' =>  $objTramite->getId() ), array('id' => 'DESC'));
+                    if ($objTramiteDetalle){
+                        foreach ($objTramiteDetalle as $element) {
+                            $em->remove($element);
+                        }
+
+                    }
+
+                    $em->remove($objTramite);
+                    $em->flush();
+
+                    $removeit = true;
+                }
+              
+
+            }
+
+            if($removeit){
 
                  //step 1 remove the inscription observado
                 $objStudentInscriptionObservados = $em->getRepository('SieAppWebBundle:EstudianteInscripcionObservacion')->findBy(array('estudianteInscripcion' => $arrInfoStudent['eInsId']));

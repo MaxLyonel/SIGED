@@ -295,8 +295,8 @@
 	                     	</td>
 	                     </tr>
 	                    <tr v-if="!swCompleteRequest" >
-	                    	<td><label><input type="radio" id="swInscriptionA" value="swInscriptionA" name="swInscription" :class="{active: opcion == 1}" @click="opcion = 1" checked="true"> La Institución Educativa tiene PLATAFORMA</label>										
-	                    	<td><label><input type="radio" id="swInscriptionB" value="swInscriptionB" name="swInscription" :class="{active: opcion == 2}" @click="opcion = 2"> La Institución Educativa requiere PLATAFORMA</label></td>
+	                    	<td><label><input type="radio" id="swInscriptionA" value="swInscriptionA" name="swInscription" :class="{active: opcion == 1}" @click="opcion = 1" checked="true"> La Institución Educativa que PLATAFORMA va utilizar:</label>										
+	                    	{#<td><label><input type="radio" id="swInscriptionB" value="swInscriptionB" name="swInscription" :class="{active: opcion == 2}" @click="opcion = 2"> La Institución Educativa requiere PLATAFORMA</label></td>#}
 	                    </tr>
 	                    <tr v-if="!swCompleteRequest">
 	                    	<td colspan="2">
@@ -343,6 +343,25 @@
 											<div class="tab-content">
 												<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
 													<div class="row">
+														<div class="form-group col-md-4">
+															<label>Plataforma<span class="requerido">*</span></label></br>
+															<label style="color:#D2691E"> <input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="selectPlataforma(2)" ><img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/moodle.png') }}"> Moodle </label></br>	
+															<label style="color:#228B22"><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="selectPlataforma(3)" > <img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/classroom.png') }}"> classroom</label></br>	
+															<label style="color:#00008B"><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="selectPlataforma(4)" > <img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/msteams.png') }}">  Microsoft Teams</label>																
+														</div>
+														<div class="form-group col-md-8">
+															{#<label>Su Plataforma Web solicitada es:<span class="requerido"></span></label>#}
+															{#<input id="complemento" name="complemento" type="text" placeholder="complemento" class="form-control" v-model="dataPlataforma.dataDominio.requestSite" readonly="true">#}
+															<label>Dominio <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="Registre nombre del dominio web" data-trigger="hover"></i> <span class="requerido">*</span> </label>
+															<input id="dominio" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.dominio"  v-bind:readonly="is_readonly">															
+															<label>IP <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="registre dirección de IP" data-trigger="hover"></i> </label>
+															<input id="ip" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.ip" v-bind:readonly="is_readonly">															
+														</div>
+													</div>
+												</div>
+												{#
+												<div role="tabpanel" :class="['tab-pane', {active: opcion == 2}]">
+													<div class="row">
 														<p>Registre la siguiente información solicitada:</p>
 														<div class="form-group col-md-8">
 															<label>Dominio <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="Registre nombre del dominio web" data-trigger="hover"></i> <span class="requerido">*</span> </label>
@@ -351,23 +370,11 @@
 														<div class="form-group col-md-4">
 															<label>IP <i class="fa fa-info-circle" data-toggle="popover" data-placement="rigth" data-content="registre dirección de IP" data-trigger="hover"></i> </label>
 															<input id="ip" name="name" type="text" placeholder="" class="form-control" v-model="dataPlataforma.dataDominio.ip">
-														</div>														
-													</div>
-												</div>
-												<div role="tabpanel" :class="['tab-pane', {active: opcion == 2}]">
-													<div class="row">
-														<div class="form-group col-md-4">
-															<label>Plataforma<span class="requerido">*</span></label></br>
-															<label style="color:#D2691E"> <input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 2" ><img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/moodle.png') }}"> Moodle </label></br>	
-															<label style="color:#228B22"><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 3" > <img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/classroom.png') }}"> classroom</label></br>	
-															<label style="color:#00008B"><input type="radio" id="swInscriptionA" value="swRequirement" name="swRequirement" @click="opcionreqdomi = 4" > <img style='height: 10%; width: 10%; object-fit: contain' src="{{asset('img/requestPlataforma/msteams.png') }}">  Microsoft Teams</label>																
-														</div>
-														<div class="form-group col-md-8">
-														<label>Su Plataforma Web solicitada es:<span class="requerido"></span></label>
-															<input id="complemento" name="complemento" type="text" placeholder="complemento" class="form-control" v-model="dataPlataforma.dataDominio.requestSite" readonly="true">
 														</div>
 													</div>
+
 												</div>
+												#}
 												{#
 												<div role="tabpanel" :class="['tab-pane', {active: opcion == 3}]">
 													<div class="row">
@@ -391,7 +398,8 @@
 	                    <tr v-else> 
 	                    	<td> 
 	                    		<div class="alert alert-success" role="alert">
-								  Solicitud realizada con exito, en proceso de atención
+								  Solicitud realizada con exito
+								  <!--, en proceso de atención-->
 								</div>
 	                    	</td>
 	                    </tr>
@@ -399,34 +407,39 @@
 	                    <tr v-if="swattach">
 	                     	<td colspan="2">
 
+
+
 	                    		<fieldset>
-
-			                        <div class="form-group" style="font-size:15px; text-align: center;">
-			                        	
-
-			                        	<a  target="_blank" class="btn btn-inverse btn-stroke" href="{{path('plataforma_generateRequestDominioPDF', {'sie':app.session.get('ie_id')})}}" style=""><span class="glyphicon glyphicon-list-alt" ></span>Generar/Descargar Carta de Solicitud</a>
-			                        	{#
+									<div class="form-group" style="font-size:15px; text-align: center;">
+										<div class="alert alert-success" role="alert">
+										 Datos registrados correctamente, confirmar envío de solicitud.
+										</div>
+									</div>
+									{#
 	                                    <form action="{{path('plataforma_generateRequestDominioPDF')}}" method="post" style="display:inline-block">
 	                                       <input type="hidden" name="requestdata" id="requestdata" value="">
 	                                       <button type="submit" class="btn-link"><i class="fa fa-edit"></i>Generar/Descargar Carta de Solicitud</button>
 	                                    </form>	#}		                        				                           
-
+									{#
+			                        <div class="form-group" style="font-size:15px; text-align: center;">
+			                        	<a  target="_blank" class="btn btn-inverse btn-stroke" href="{{path('plataforma_generateRequestDominioPDF', {'sie':app.session.get('ie_id')})}}" style=""><span class="glyphicon glyphicon-list-alt" ></span>Generar/Descargar Carta de Compromiso</a>
+			                        	
 			                        </div>
 			                        <div class="form-group">
 			                            <div class="col-md-6">
 
-                                         <label for="genero">Adjuntar Documento: CARTA DE SOLICITUD FIRMADA</label>
+                                         <label for="genero">Adjuntar Documento: CARTA DE COMPROMISO FIRMADA</label>
                                          <input type="file" name="image" @change="getDocSolictud" accept="file/*" class="form-control" id="archivoAdjuntoId1">
                                        
 			                            </div>
 			                            <div class="col-md-6">
-                                         <label for="genero">Adjuntar Documento: ACREDITACIÓN DE IDONEIDAD </label>
+                                         <label for="genero">Adjuntar Documento: FOTOCOPIA CEDULA DE IDENTIDAD RESPONSABLE </label>
                                          <input type="file" name="image" @change="getAcreditacionIdoneidad" accept="file/*" class="form-control" id="archivoAdjuntoId2">
 			                            </div>
 			                        </div>
 			                        <div class="form-group">
 			                            <div class="col-md-6">
-                                         <label for="genero">Adjuntar Documento: FOTOCOPIA CEDULA DE IDENTIDAD </label>
+                                         <label for="genero">Adjuntar Documento: FOTOCOPIA CEDULA DE IDENTIDAD DIRECTOR </label>
                                          <input type="file" name="image" @change="getCarnet" accept="file/*" class="form-control" id="archivoAdjuntoId3">
 			                            </div>
 			                            <div class="col-md-6">
@@ -434,6 +447,7 @@
                                          <input type="file" name="image" @change="getfotocopiarm" accept="file/*" class="form-control" id="archivoAdjuntoId4">
 			                            </div>
 			                        </div>
+									#}
 			                    </br>
 
 		                        <div class="form-group">		                           
@@ -548,7 +562,8 @@
               	documentocartaSolicitud:'',
               	documentocarnet:'',
               	documentoidoneidad:'',
-              	documentofotcopiaRM:'',              	
+              	documentofotcopiaRM:'',
+				is_readonly : false,              	
             
             },
             methods: {
@@ -586,10 +601,19 @@
                       'No se pudo realizar la Busqueda',
                       'error'
                   )
-                  
                 });                
         
               },
+			  selectPlataforma: function(valueSelected){
+				  this.opcionreqdomi = valueSelected;
+				  if(this.opcionreqdomi == 2){
+					  this.is_readonly = true;
+					  this.dataPlataforma.dataDominio.dominio = '';
+					  this.dataPlataforma.dataDominio.ip = '';
+				  }else{
+					  this.is_readonly = false;
+				  }
+			  },
               enterDataRequest: function(){
               	this.swattach=false;
               	this.buscando = true;
@@ -601,7 +625,7 @@
 
                 if(this.swresponse ){
 
-	              	if(this.opcion == 1){
+	              	if(this.opcionreqdomi == 3 || this.opcionreqdomi == 4){
 	              		
 	              		if(this.dataPlataforma.dataDominio.dominio==''){
 	              			Swal.fire(
@@ -615,19 +639,19 @@
 
 	              		}
 	              	}
-	              	if(this.opcion == 2){
+	              	//if(this.opcion == 2){
 	              		
-	              		if(this.opcionreqdomi==0){
-	              			Swal.fire(
-		                      'Aviso',
-		                      'Debe seleccionar la plataforma',
-		                      'error'
-		                  	)
-		                  	this.swattach =false; 
-	              			this.buscando =false;
-		                  	return;
-	              		}
-	              	}
+					if(this.opcionreqdomi==0){
+						Swal.fire(
+							'Aviso',
+							'Debe seleccionar la plataforma',
+							'error'
+						)
+						this.swattach =false; 
+						this.buscando =false;
+						return;
+					}
+	              	//}
 
                     Swal.fire({
                         title: 'Realizar Actualización?',
@@ -694,7 +718,7 @@
               },
             sendRequest: function(){
 
-            	if(typeof this.documentocartaSolicitud != 'object'){
+            	/*if(typeof this.documentocartaSolicitud != 'object'){
             		Swal.fire(
                         'Adjuntar CARTA SOLICITUD',
                         'Debe adjuntar el documento CARTA SOLICITUD para ralizar la solicitud, puede ser un archivo de imagen o PDF',
@@ -725,7 +749,7 @@
                         'warning'
                         );
                         return;
-            	}            	
+            	}*/            	
 
                     Swal.fire({
                         title: 'Realizar Solicitud?',

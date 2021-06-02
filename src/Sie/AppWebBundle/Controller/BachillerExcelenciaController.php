@@ -22,9 +22,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class BachillerExcelenciaController extends Controller {
 
     public $session;
+    public $fechaActual;
+    public $fechaCorte;
+    public $gestionOperativo;
 
     public function __construct() {
         $this->session = new Session();
+        $this->fechaActual = new \DateTime('now');
+        $this->fechaCorte = new \DateTime('2021-04-23');
+        $this->gestionOperativo = '2020';
     }
 
     /*
@@ -40,10 +46,7 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -83,10 +86,7 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -121,10 +121,7 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -153,6 +150,22 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('bach_exc_dir'));
             }
 
+            /* Verificar si la UE ya ha registrado al director */
+            $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
+
+            $query = $repository->createQueryBuilder('m')
+                    ->where('m.institucioneducativa = :institucion')
+                    ->andWhere('m.gestionTipo = :gestion')
+                    ->setParameter('institucion', $formulario['institucioneducativa'])
+                    ->setParameter('gestion', $formulario['gestion'])
+                    ->getQuery();
+
+            $registrado = $query->getResult();
+
+            if(count($registrado) <= 0) {
+                return $this->redirect($this->generateUrl('principal_web'));
+            }
+
             /*
              * Verificar si la UE cuenta con sexto de secundaria
              * SELECT
@@ -164,7 +177,7 @@ class BachillerExcelenciaController extends Controller {
               "public".institucioneducativa
               INNER JOIN "public".institucioneducativa_curso ON "public".institucioneducativa_curso.institucioneducativa_id = "public".institucioneducativa."id"
               WHERE
-              "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = 2019 and "public".institucioneducativa_curso.grado_tipo_id = 6
+              "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = $this->gestionOperativo and "public".institucioneducativa_curso.grado_tipo_id = 6
              */
 
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
@@ -296,10 +309,7 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -312,7 +322,6 @@ class BachillerExcelenciaController extends Controller {
                 'primer_apellido'=>$form_aux['paterno'],
                 'segundo_apellido'=>$form_aux['materno'],
                 'nombre'=>$form_aux['nombre'],
-                // 'apellido_esposo'=>$form_aux['apellidoEsposo'],
                 'fecha_nacimiento'=>$form_aux['fechaNacimiento']
             );
             
@@ -331,12 +340,15 @@ class BachillerExcelenciaController extends Controller {
             $nombre = $form_aux['nombre'];
             $apellidoEsposo = $form_aux['apellidoEsposo'];
             $fechaNacimiento = $form_aux['fechaNacimiento'];
+            $expedido = $form_aux['expedido'];
+            $nacionalidad = $form_aux['nacionalidad'];
+            $enlazador = $form_aux['enlazador'];
 
             $personaId = $form_aux['persona'];
             $maestroinscripcionId = $form_aux['maestroInscripcion'];
             $institucioneducativaId = $form_aux['institucioneducativa'];
             $cargoTipoId = $form_aux['cargoTipo'];
-            $gestion = 2019;
+            $gestion = $this->gestionOperativo;
 
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -405,6 +417,9 @@ class BachillerExcelenciaController extends Controller {
             $maestrocuenta->setEsoficial('t');
             $maestrocuenta->setGestionTipo($gestion);
             $maestrocuenta->setFechaRegistro(new \DateTime('now'));
+            $maestrocuenta->setEsExtranjero($nacionalidad);
+            $maestrocuenta->setEnlazadorApellido($enlazador);
+            $maestrocuenta->setExpedido($expedido);
             $em->persist($maestrocuenta);
             $em->flush();
             $em->getConnection()->commit();
@@ -429,10 +444,7 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -468,10 +480,7 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -511,7 +520,7 @@ class BachillerExcelenciaController extends Controller {
               "public".institucioneducativa
               INNER JOIN "public".institucioneducativa_curso ON "public".institucioneducativa_curso.institucioneducativa_id = "public".institucioneducativa."id"
               WHERE
-              "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = 2019 and "public".institucioneducativa_curso.grado_tipo_id = 6
+              "public".institucioneducativa."id" = 80730808 and "public".institucioneducativa_curso.nivel_tipo_id = 13 and "public".institucioneducativa_curso.gestion_tipo_id = $this->gestionOperativo and "public".institucioneducativa_curso.grado_tipo_id = 6
              */
 
             $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
@@ -653,10 +662,7 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -733,10 +739,7 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -748,7 +751,7 @@ class BachillerExcelenciaController extends Controller {
                 ->where('m.institucioneducativa = :institucion')
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $ie)
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->getQuery();
 
         $directores = $query->getResult();
@@ -772,10 +775,7 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -789,7 +789,7 @@ class BachillerExcelenciaController extends Controller {
                 ->andWhere('ed.id = :destacado')
                 ->andWhere('ed.generoTipo = :genero')
                 ->setParameter('institucion', $ie)
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->setParameter('destacado', $ed)
                 ->setParameter('genero', $g)
                 ->getQuery();
@@ -817,7 +817,7 @@ class BachillerExcelenciaController extends Controller {
                 ->andWhere('ed.gestionTipo = :gestion')
                 ->andWhere('ed.generoTipo = :genero')
                 ->setParameter('institucion', $ie)
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->setParameter('genero', $g)
                 ->getQuery();
 
@@ -845,10 +845,7 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -890,10 +887,7 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2020-02-13');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -919,7 +913,7 @@ class BachillerExcelenciaController extends Controller {
                     ->andWhere('e.generoTipo = :genero')
                     ->andWhere('e.esoficial = :esoficial')
                     ->setParameter('institucion', $institucioneducativaId)
-                    ->setParameter('gestion', 2019)
+                    ->setParameter('gestion', $this->gestionOperativo)
                     ->setParameter('genero', $generoTipoId)
                     ->setParameter('esoficial', 't')
                     ->getQuery();
@@ -934,7 +928,7 @@ class BachillerExcelenciaController extends Controller {
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estudianteInscripcionId);
             $ieducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucioneducativaId);
             $genero = $em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoTipoId);
-            $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find(2019);
+            $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->find($this->gestionOperativo);
 
             $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(55));
 
@@ -998,7 +992,7 @@ class BachillerExcelenciaController extends Controller {
                 ->setParameter('institucion', $arrSieInfo['id'])
                 ->setParameter('nivel', 13)
                 ->setParameter('grado', 6)
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->getQuery();
 
         $sexto = $query->getResult();
@@ -1017,7 +1011,7 @@ class BachillerExcelenciaController extends Controller {
                 ->andWhere('m.gestionTipo = :gestion')
                 ->andWhere('m.esoficial = :esoficial')
                 ->setParameter('institucion', $arrSieInfo['id'])
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->setParameter('esoficial', 't')
                 ->getQuery();
 
@@ -1033,7 +1027,7 @@ class BachillerExcelenciaController extends Controller {
                 ->andWhere('ed.gestionTipo = :gestion')
                 ->andWhere('ed.esoficial = :esoficial')
                 ->setParameter('institucion', $arrSieInfo['id'])
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->setParameter('esoficial', 't')
                 ->getQuery();
 
@@ -1054,7 +1048,7 @@ class BachillerExcelenciaController extends Controller {
         }
 
         $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
-        $gestion = 2019;
+        $gestion = $this->gestionOperativo;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1071,7 +1065,7 @@ class BachillerExcelenciaController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_EstudianteExcelencia_unidadeducativa_regular_v1_afv.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_EstudianteExcelencia_unidadeducativa_regular_v2_afv.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1103,7 +1097,7 @@ class BachillerExcelenciaController extends Controller {
                 ->setParameter('institucion', $arrSieInfo['id'])
                 ->setParameter('nivel', 13)
                 ->setParameter('grado', 6)
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->getQuery();
 
         $sexto = $query->getResult();
@@ -1123,7 +1117,7 @@ class BachillerExcelenciaController extends Controller {
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $arrSieInfo['id'])
                 ->setParameter('esoficial', 't')
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->getQuery();
 
         $director = $query->getOneOrNullResult();
@@ -1144,7 +1138,7 @@ class BachillerExcelenciaController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         $arrSieInfo = array('id'=>$this->session->get('ie_id'), 'datainfo'=>$this->session->get('ie_nombre'));
-        $gestion = 2019;
+        $gestion = $this->gestionOperativo;
 
         $repository = $em->getRepository('SieAppWebBundle:MaestroCuentabancaria');
 
@@ -1152,7 +1146,7 @@ class BachillerExcelenciaController extends Controller {
                 ->where('m.institucioneducativa = :institucion')
                 ->andWhere('m.gestionTipo = :gestion')
                 ->setParameter('institucion', $arrSieInfo['id'])
-                ->setParameter('gestion', 2019)
+                ->setParameter('gestion', $this->gestionOperativo)
                 ->getQuery();
 
         $directores = $query->getResult();
@@ -1167,7 +1161,7 @@ class BachillerExcelenciaController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_DirectorEstudianteExcelencia_unidadeducativa_regular_v1_afv.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_DirectorEstudianteExcelencia_unidadeducativa_regular_v2_afv.rptdesign&__format=pdf&&codue=' . $arrSieInfo['id'] . '&gestion='.$gestion.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
@@ -1207,7 +1201,7 @@ class BachillerExcelenciaController extends Controller {
     public function resultSearchDistRepAction(Request $request) {
         $id_usuario = $this->session->get('userId');
         $username = $this->session->get('userName');
-        $gestion_reporte = 2019;
+        $gestion_reporte = $this->gestionOperativo;
 
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -1239,13 +1233,10 @@ class BachillerExcelenciaController extends Controller {
         $roluserlugarid = $this->session->get('roluserlugarid');
         $roluser = $this->session->get('roluser');
         $username = $this->session->get('userName');
-        $gestion_reporte = 2019;
+        $gestion_reporte = $this->gestionOperativo;
         $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid)->getCodigo();
 
-        $fechaActual = new \DateTime('now');
-        $fechaCorte = new \DateTime('2019-12-02');
-
-        if($fechaActual > $fechaCorte) {
+        if($this->fechaActual > $this->fechaCorte) {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -1300,8 +1291,8 @@ class BachillerExcelenciaController extends Controller {
             WHERE
             maestro_cuentabancaria.esoficial = 't'
             and estudiante_destacado.esoficial = 't'
-            and maestro_cuentabancaria.gestion_tipo_id = 2019
-            and estudiante_destacado.gestion_tipo_id = 2019
+            and maestro_cuentabancaria.gestion_tipo_id = $this->gestionOperativo
+            and estudiante_destacado.gestion_tipo_id = $this->gestionOperativo
             and dependencia_tipo.id = 3
             and ".$where."
             ORDER BY
@@ -1392,5 +1383,27 @@ class BachillerExcelenciaController extends Controller {
             'estado' => $estado,
             'expedido' => $expedido
         ));
+    }
+
+    public function impresionReporteGeneralAction() {
+        $id_usuario = $this->session->get('userId');
+        $username = $this->session->get('userName');
+
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
+        $gestion = $this->gestionOperativo;
+
+        $arch = 'REPORTE_GENERAL_' . $username . '_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'ger_bach_exc_estudiantes_v1_afv.rptdesign&__format=pdf&&gestion='.$gestion.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
     }
 }

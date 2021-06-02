@@ -185,3 +185,7 @@ donwload_boletinNivelacionTTGBth:
 donwload_boletinNivelacionTTEBth:
     path:     /boletinNivelacionTTEBth/{iecId}/{codue}
     defaults: { _controller: SieAppWebBundle:Download:boletinNivelacionTTEBth }    
+
+donwload_ddjjStudentsQuipus:
+    path:     /ddjjStudentsQuipus/{sie}
+    defaults: { _controller: SieAppWebBundle:Download:ddjjStudentsQuipus }

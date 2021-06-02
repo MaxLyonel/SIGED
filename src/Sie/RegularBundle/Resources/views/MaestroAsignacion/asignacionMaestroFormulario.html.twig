@@ -41,11 +41,17 @@
                     <input type="hidden" value="{% if formEnable == true %}true{% else %}false{% endif %}" id="form_enabled"/>
                     {{ form_widget(formNuevo.ofertaMaestro) }}
                     <div class="form-group">
+                        {{ form_label(formNuevo.maestro) }}
                         {{ form_widget(formNuevo.maestro, { 'attr': {'class': 'form-control'} }) }}
                     </div>
                     <div class="form-group">
-                        {{ form_label(formNuevo.item) }}
-                        {{ form_widget(formNuevo.item, { 'attr': {'class': 'form-control'} }) }}
+                        <div class="row">
+                            {{ form_label(formNuevo.item,'', { 'label_attr': {'class': 'col-sm-12'} }) }}
+                            <div class="col-sm-6">
+                            {{ form_widget(formNuevo.item, { 'attr': {'class': 'form-control', 'oninput': 'validaItem()'} }) }}
+                            </div>
+                            <label class="col-sm-6 btn btn-default" id="form_item_detalle">&nbsp;</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         {{ form_label(formNuevo.financiamiento) }}
@@ -79,6 +85,13 @@
         </div>
     {% endif %}
     </div>
+    {% if formCalidad is defined %}
+        <div class="col-lg-12 col-md-12">
+            <div class="btn-group btn-group-justified">                    
+                <a class="btn btn-default" role="button" onclick="finalizar()">Finalizar inconsistencia</a>               
+            </div>
+        </div>
+    {% endif %}
 </div> 
 
 
@@ -122,6 +135,9 @@
 
     var setFormMaestro = function(item, fechaInicio, fechaFin, financiamiento){   
         $('#form_item').val(item);
+        if(item == 0){
+            $('#form_item_detalle').html('ACÉFALO');
+        }
         $('#form_financiamiento').val(financiamiento);
         $('#form_fechaInicio').val(fechaInicio);
         $('#form_fechaFin').val(fechaFin);       
@@ -249,7 +265,7 @@
             $('#form_item').focus();
             return false;
         }
-        if($('#form_financiamiento').val() == "0" || $('#form_financiamiento').val() == ""){
+        if($('#form_financiamiento').val() == ""){
             alert("Debe seleccionar el financiamiento del item");
             $('#form_financiamiento').focus();
             return false;
@@ -389,6 +405,15 @@
                     alert("Error, no fue posible realizar el registro, intente nuevamente");  
                 },
             });    
+        }
+
+        var validaItem = function(){
+            var item = parseInt($('#form_item').val());
+            if(item == 0){
+                $('#form_item_detalle').html("ACÉFALO");
+            } else {
+                $('#form_item_detalle').html("&nbsp;");
+            }
         }
 
 

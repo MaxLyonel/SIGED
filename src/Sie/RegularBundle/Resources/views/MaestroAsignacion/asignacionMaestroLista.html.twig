@@ -11,7 +11,10 @@
                                 <tr>
                                     {% if lista.contenido is defined %}
                                         {% for key, data in lista.cabecera %}
-                                            <th class="text-center" id="{{data}}">{{data}}</th>                                                            
+                                            {% if data == '' or data == 'B1' or data == 'B2' or data == 'B3' or data == 'B4' or data == 'T1' or data == 'T2' or data == 'T3' %}
+                                            {% else %}
+                                            <th class="text-center" id="{{data}}">{{data}}</th> 
+                                            {% endif %}                                                           
                                         {% endfor %}  
                                     {% endif %}
                                 </tr>
@@ -33,20 +36,7 @@
                                                             <td rowspan="{{paralelo|length}}">{{keyp}}</td>
                                                         {% endif %}
                                                             <td>{{keya}}</td>
-                                                        {% for keype, periodo in asignatura %}
-                                                            {% if periodo != "" %}
-                                                                {% set botonColorClase = "btn-green" %}
-                                                                {% set botonNombre = "SI" %}
-                                                            {% else %}
-                                                                {% set botonColorClase = "btn-default" %}
-                                                                {% set botonNombre = "NO" %}
-                                                            {% endif %}
-                                                            <td class="text-center">
-                                                                <button type="button" class="btn {{ botonColorClase }} btn-block" onclick='formulario("{{ periodo }}", this)' data-toggle="modal" data-target="#popup">
-                                                                    {{ botonNombre }}
-                                                                </button>
-                                                            </td>
-                                                        {% endfor %}
+                                                        
                                                     </tr>
                                                     {% endfor %}
                                                 {% endfor %}

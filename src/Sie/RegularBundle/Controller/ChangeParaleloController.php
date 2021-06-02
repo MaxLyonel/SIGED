@@ -129,7 +129,7 @@ class ChangeParaleloController extends Controller {
                         ->add('eiId', 'hidden', array('data' => $oInscription[0]['eiId']))
                         ->add('paraleloOld', 'hidden', array('data' => $oInscription[0]['paraleloId']))
                         ->add('turnoOld', 'hidden', array('data' => $oInscription[0]['turnoId']))
-                        ->add('paralelo', 'entity', array('label' => 'Paralelo', 'empty_value' => 'seleccionar...', 'attr' => array('class' => 'form-control'),
+                        ->add('paralelo', 'entity', array('label' => 'Paralelo', 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control'),
                             'class' => 'SieAppWebBundle:ParaleloTipo',
                             'query_builder' => function (EntityRepository $e) {
                         return $e->createQueryBuilder('p')
@@ -192,7 +192,7 @@ class ChangeParaleloController extends Controller {
     public function changeAction(Request $request) {
 
         $form = $request->get('form');
-        
+
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         try {
@@ -208,7 +208,7 @@ class ChangeParaleloController extends Controller {
             );
             //get the old paralelo info
             $objCourseOld = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($oldCondition);
-            
+
             //new condition query
             $newCondition = array(
                 'institucioneducativa' => $form['ueid'],
@@ -221,45 +221,35 @@ class ChangeParaleloController extends Controller {
             );
             //get the new paralelo info
             $objCourse = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($newCondition);
-            $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($form['eiId']);
-            $estudianteInscripcion->setInstitucioneducativaCurso($objCourse);
-            $em->flush($estudianteInscripcion);
 
-            /*$query = $em->getConnection()->prepare('SELECT sp_cambio_paralelo_estudiante_2018(:igestion, :icodue, :irude, :inivel, :igrado, :iturno, :iparalelo, :iturnonuevo, :iparalelonuevo )');
+            if($objCourseOld and $objCourse) {
+                $query = $em->getConnection()->prepare('SELECT sp_genera_cambio_paralelo_estudiante(:igestion, :iestudiante_id, :icoicodueo, :inivelo, :igradoo, :iparaleloo, :iturnoo, :iturnod, :iparalelod)');
+                $query->bindValue(':igestion', $this->session->get('currentyear'));
+                $query->bindValue(':iestudiante_id', $form['idStudent']);
+                $query->bindValue(':icoicodueo', $form['ueid']);
+                $query->bindValue(':inivelo', $form['nivelid']);
+                $query->bindValue(':igradoo', $form['gradoid']);
+                $query->bindValue(':iparaleloo', $form['paraleloOld']);
+                $query->bindValue(':iturnoo', $form['turnoOld']);
+                $query->bindValue(':iturnod', $form['turno']);
+                $query->bindValue(':iparalelod', $form['paralelo']);
+                $query->execute();
 
-            $query->bindValue(':igestion', $this->session->get('currentyear'));
-            $query->bindValue(':icodue', $form['ueid']);
-            $query->bindValue(':irude', $form['rude']);
-            $query->bindValue(':inivel', $form['nivelid']);
-            $query->bindValue(':igrado', $form['gradoid']);
-            $query->bindValue(':iturno', $form['turnoOld']);
-            $query->bindValue(':iparalelo', $form['paraleloOld']);
-            $query->bindValue(':iturnonuevo', $form['turno']);
-            $query->bindValue(':iparalelonuevo', $form['paralelo']);
+                $sqlResponse = $query->fetchAll();
 
-            $query->execute();
-
-            $sqlResponse = $query->fetchAll();
-
-            if($sqlResponse[0]['sp_cambio_paralelo_estudiante_2018']=='true'){
-                //get old areas
-                //$objAreasOld = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->getAsignaturasPerCourse
-                //check if is possible to do the change
-                //get the last inscription to modify
-                $objInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['eiId']);
-                //to do the update with the new paralelo
-                $objInscription->setInstitucioneducativaCurso($objCourse);
-                $em->flush();
-                // Try and commit the transaction
-                $em->getConnection()->commit();
-                //get the success message
-                $message = "Cambio de paralelo realizado...";
-                
-            } else{
+                if($sqlResponse){
+                    $em->getConnection()->commit();
+                    $message = "Cambio de paralelo realizado...";
+                } else{
+                    $em->getConnection()->rollback();
+                    $message = "Cambio de paralelo NO realizado...";
+                }
+            } else {
+                $em->getConnection()->rollback();
                 $message = "Cambio de paralelo NO realizado...";
-            }*/
-            $em->getConnection()->commit();
-            $message = "Cambio de paralelo realizado...";
+            }
+            
+            
             $this->addFlash('successchangeparalelo', $message);
             //go the index page
             return $this->redirectToRoute('change_paralelo_sie_index');

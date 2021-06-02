@@ -35,8 +35,6 @@ class DefaultController extends Controller {
      */
     public function indexAction(Request $request) {
 
-        //return $this->render('SieAppWebBundle:Default:sie.html.twig');
-
         $this->session = $request->getSession();
 
         //$this->session->clear();
@@ -71,7 +69,7 @@ class DefaultController extends Controller {
                 $this->session->set('color', 'primary');
                 break;
             case 'academico.sie.gob.bo':
-            case 'academicolb.sie.gob.bo':
+            case 'academico.local':
             case '172.20.196.9:8013':
             case '172.20.0.53:8013':
                 $sysname = 'Sistema Académico Educación Regular';
@@ -141,13 +139,13 @@ class DefaultController extends Controller {
                 $layout = 'layoutPermanente.html.twig';
                 $this->session->set('pathSystem', "SiePermanenteBundle");
                 break;
-            case 'diplomas2015.sie.gob.bo':
-                $sysname = 'DIPLOMAS';
-                $sysporlet = 'dpl';
-                $sysbutton = false;
-                $layout = 'layoutDiplomas.html.twig';
-                $this->session->set('pathSystem', "SieDiplomaBundle");
-                break;
+            // case 'diplomas2015.sie.gob.bo':
+            //     $sysname = 'DIPLOMAS';
+            //     $sysporlet = 'dpl';
+            //     $sysbutton = false;
+            //     $layout = 'layoutDiplomas.html.twig';
+            //     $this->session->set('pathSystem', "SieDiplomaBundle");
+            //     break;
             case '172.20.16.239a':
             case 'diplomas2015.local':
                 $sysname = 'DIPLOMAS';
@@ -156,13 +154,13 @@ class DefaultController extends Controller {
                 $layout = 'layoutDiplomas.html.twig';
                 $this->session->set('pathSystem', "SieDiplomaBundle");
                 break;
-            case 'diplomas.sie.gob.bo':
-                $sysname = 'DIPLOMAS';
-                $sysporlet = 'dpl';
-                $sysbutton = false;
-                $layout = 'layoutDiplomas.html.twig';
-                $this->session->set('pathSystem', "SieDiplomaBundle");
-                break;
+            // case 'diplomas.sie.gob.bo':
+            //     $sysname = 'DIPLOMAS';
+            //     $sysporlet = 'dpl';
+            //     $sysbutton = false;
+            //     $layout = 'layoutDiplomas.html.twig';
+            //     $this->session->set('pathSystem', "SieDiplomaBundle");
+            //     break;
             case 'reportes.sie.gob.bo':
             case 'reportes':
                 $sysname = 'REPORTES';
@@ -195,14 +193,40 @@ class DefaultController extends Controller {
                 $layout = 'layoutJuegos.html.twig';
                 $this->session->set('pathSystem', "SieJuegosBundle");
                 break;
-            case '172.20.196.17':
-                $sysname = 'TRAMITE';
-                $sysporlet = 'green';
-                $sysbutton = false;
-                $layout = 'layoutTramites.html.twig';
-                $this->session->set('pathSystem', "SieTramitesBundle");
+            case '172.20.196.17':                
+                // $sysname = 'TRAMITE';
+                // $sysporlet = 'green';
+                // $sysbutton = false;
+                // $layout = 'layoutTramites.html.twig';
+                // $this->session->set('pathSystem', "SieTramitesBundle");
+                // break;
+                $sysname = 'Sistema Siged';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutRegular.html.twig';
+                $this->session->set('pathSystem', "SieRegularBundle");
+                $this->session->set('sistemaid', 1);
+                $this->session->set('color', 'blue');
                 break;
+                // $sysname = 'Sistema Académico Educación Regular';
+                // $sysporlet = 'blue';
+                // $sysbutton = true;
+                // $layout = 'layoutHerramienta.html.twig';
+                // $this->session->set('pathSystem', "SieHerramientaBundle");
+                // $this->session->set('color', 'primary');
+                // $this->session->set('sistemaid', 6);
+                // break;
+                // $sysname = 'Sistema Académico Educación Alternativa';
+                // $sysporlet = 'blue';
+                // $sysbutton = true;
+                // $layout = 'layoutHerramientaAlternativa.html.twig';
+                // $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
+                // $this->session->set('color', 'success');
+                // $this->session->set('sistemaid', 2);
+                // break;
             case 'tramite.sie.gob.bo':
+            case 'diplomas.sie.gob.bo':
+            case 'diplomas2015.sie.gob.bo':
                     $sysname = 'TRAMITE';
                     $sysporlet = 'green';
                     $sysbutton = false;
@@ -275,6 +299,7 @@ class DefaultController extends Controller {
                 break;
             case '172.20.196.9:8030':
             // case '172.20.196.7':
+            case 'inscripcionocepb.minedu.gob.bo':
             case 'olimpiada.sie.gob.bo':
                 $sysname = 'olimpiadas';
                 $sysporlet = 'blue';

@@ -24,7 +24,7 @@
                         <th>Teléfono</th>
                         <th>Correo Electrónico</th>
                         <th>Discapacidad</th>
-                        {% if app.session.get('roluser') == 35 %}
+                        {% if app.session.get('roluser') in [9,35] %}
                             <th>Acción</th>
                         {% endif %}
                     </tr>
@@ -41,7 +41,7 @@
                         <td>{{inscrito.telefono_estudiante}}</td>
                         <td>{{inscrito.correo_estudiante}}</td>
                         <td>{{inscrito.discapacidad}}</td>
-                        {% if app.session.get('roluser') == 35 %}
+                        {% if app.session.get('roluser') in [9,35] %}
                             <td>
                                 <form id="studentDeleteId_{{inscrito.olimestudianteid}}" method="post" style="display: inline-block">
                                     <input type="hidden" name="form[categoryId]" id="form_categoryId" value="{{categoryId}}">

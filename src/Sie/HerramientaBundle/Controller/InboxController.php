@@ -39,6 +39,7 @@ class InboxController extends Controller {
     public $arrUeTecTeg;
     public $arrUeGeneral;
     public $operativoUe;
+    public $reglasQA;
     /**
      * the class constructor
      */
@@ -50,6 +51,7 @@ class InboxController extends Controller {
         $this->arrUeNocturnas = $this->fillSieNocutrnas();
         $this->arrUeTecTeg = $this->fillSieTecnicos();
         $this->arrUeGeneral = $this->fillSieGeneral();
+        $this->reglasQA = '100';//'2,3,6,8,10,11,12,13,15,16,20,24,25,26';
     }
     /**
        *fill the sie's modulars
@@ -211,7 +213,7 @@ class InboxController extends Controller {
 
         $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
         //get the current year
-        $gestionOpeUnidadEducativa = (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 4)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
+        $gestionOpeUnidadEducativa = (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 3)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
 
 
         $objValidateUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
@@ -291,12 +293,26 @@ class InboxController extends Controller {
         // }
 
 
-        // $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
-        $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
+        $ie_id=$this->session->get('ie_id');
+        $_gestion=$this->session->get('currentyear');
+        $esGuanawek=$this->esGuanawek($ie_id,$gestion=2020);
+        if($esGuanawek)
+        {
+          $operativoPerUe=1;
+          $_gestion=2020;
+          $this->session->set('esGuanawek',1);
+        }
+        else
+        {
+          // $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
+          $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
+          $_gestion=$this->session->get('currentyear');
+          $this->session->set('esGuanawek',0);
+        }
 
         $this->operativoUe = $operativoPerUe;
         //get the current year
-        $arrSieInfo[0]['gestion']= (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 4)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
+        $arrSieInfo[0]['gestion']= (($operativoPerUe == 0))?$this->session->get('currentyear'):($operativoPerUe-1 == 3)?$this->session->get('currentyear'):$this->session->get('currentyear')-1;
         $arrSieInfo[0]['id'] = $this->session->get('ie_id');
         //get the fuill ue info
         $arrFullUeInfo=array();
@@ -328,12 +344,49 @@ class InboxController extends Controller {
         return $this->render($this->session->get('pathSystem') . ':Inbox:index.html.twig', array(
             'objValidateUePlena'=>($objValidateUePlena)?1:0,
             'arrSieInfo'=>$arrSieInfo[0],
-            'gestion'=>$this->session->get('currentyear'),
+            //'gestion'=>$this->session->get('currentyear'),
+            'gestion'=>$_gestion,
             'form'=> $this->formUePlena(json_encode($arrFullUeInfo),$objTypeOfUE)->createView(),
             'formOperativoRude'=> $this->formOperativoRude(json_encode($arrFullUeInfo),$objTypeOfUE)->createView(),
             'consolidationform'=> $this->infoConsolidationForm(json_encode($arrFullUeInfo))->createView(),
-            'entities' => $entities
+            'entities' => $entities,
+
+            'esGuanawek' => $esGuanawek,
         ));
+    }
+
+    /**
+     * Funcion que determina si una Institucion Educativa, es tipo Guanawek
+     *
+     * @param institucioneducativa_id, gestion
+     * @return true o flase
+     * @author lnina
+     **/
+    private function esGuanawek($ie_id,$gestion)
+    {
+      $return=false;
+      $tecnico_humanistico=4; //institucioneducativa_humanistico_tecnico_tipo_id 
+      $departamentos=array();
+      $em = $this->getDoctrine()->getManager();
+      $db = $em->getConnection();
+      $query = '
+      select * 
+      from 
+      institucioneducativa_humanistico_tecnico 
+      where 
+      institucioneducativa_humanistico_tecnico_tipo_id = ? 
+      and gestion_tipo_id = ?
+      and institucioneducativa_id = ?';
+
+      $stmt = $db->prepare($query);
+      $params = array($tecnico_humanistico,$gestion,$ie_id);
+      $stmt->execute($params);
+      $guanawek=$stmt->fetchAll();
+
+      if($guanawek)
+        $return=true;
+
+      return $return;
     }
 
     // this is fot the RUDE Operativo
@@ -558,6 +611,21 @@ class InboxController extends Controller {
         $form = $request->get('form');
         $data = json_decode($form['data'], true);
 
+        /*
+        * verificamos si tiene tuicion
+        */
+        $tuicion = false;
+        $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+        $query->bindValue(':user_id', $this->session->get('userId'));
+        $query->bindValue(':sie', $data['id']);
+        $query->bindValue(':rolId', $this->session->get('roluser'));
+        $query->execute();
+        $aTuicion = $query->fetchAll();
+
+        if ($aTuicion[0]['get_ue_tuicion']) {
+          $tuicion = true;
+        }
+
         $objValidateUePlena = $em->getRepository('SieAppWebBundle:InstitucioneducativaHumanisticoTecnico')->findOneBy(array(
           'institucioneducativaId' => $data['id'],
           'gestionTipoId' => $data['gestion']
@@ -659,7 +727,8 @@ class InboxController extends Controller {
           // $em->flush();
         }
 
-      $form['reglas'] = '1,2,3,10,12,13,16,27';
+      // $form['reglas'] = '1,2,3,10,12,13,16,27';
+      $form['reglas'] = $this->reglasQA;
       $form['gestion'] = $data['gestion'];
       $form['sie'] = $data['id'];
 
@@ -684,7 +753,8 @@ class InboxController extends Controller {
           'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
           'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo',$data)->createView(),
           'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
-          'data'=>$dataInfo
+          'data'=>$dataInfo,
+          'tuicion'=>$tuicion
         ));
       }
     }
@@ -722,7 +792,8 @@ class InboxController extends Controller {
             $form =$form->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
             ;
           }else{
-            $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
+            //$form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
+            $form =$form->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
             ;
           }
 
@@ -758,11 +829,9 @@ class InboxController extends Controller {
            ($this->session->get('ue_sol_regularizar')  ) ||
            ($this->session->get('ue_tecteg') )
         ){
-          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')))
-          ;
-        }else{
-          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')))
-          ;
+          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')));
+        } else {
+          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')));
         }
         $form = $form->getForm();
         return $form;
@@ -911,6 +980,159 @@ class InboxController extends Controller {
       return $objobsQA;
     }
 
+    // public function closeOperativoAction (Request $request){
+    //   //crete conexion DB
+    //   $em = $this->getDoctrine()->getManager();
+    //   $em->getConnection()->beginTransaction();
+    //   //get the values
+    //   $form = $request->get('form');
+    //   //ini var to validate info
+    //   $observation = false;
+    //   $inconsistencia = false;
+    //   $objObsQA = false;
+    //   $valPersonalAdm = false;
+
+    //   //get the current operativo
+    //   $objOperativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($form['sie'], $form['gestion']);
+    //   //update the close operativo to registro consolido table
+    //   $objRegistroConsolidado = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+    //     'unidadEducativa' => $form['sie'],
+    //     'gestion'         => $form['gestion']
+    //   ));
+
+    //   $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
+    //   $periodo = 0;
+    //   if($registroConsol){
+    //       if($registroConsol->getBim1()      == '0' and $registroConsol->getBim2() == '0' and $registroConsol->getBim3() == '0' and $registroConsol->getBim4() == '0'){
+    //           $periodo = 1;
+    //       }
+    //       else if($registroConsol->getBim1() >= '1' and $registroConsol->getBim2() == '0' and $registroConsol->getBim3() == '0' and $registroConsol->getBim4() == '0'){
+    //           $periodo = 2;
+    //       }
+    //       else if($registroConsol->getBim1() >= '1' and $registroConsol->getBim2() >= '1' and $registroConsol->getBim3() == '0' and $registroConsol->getBim4() == '0'){
+    //           $periodo = 3;
+    //       }
+    //       else if($registroConsol->getBim1() >= '1' and $registroConsol->getBim2() >= '1' and $registroConsol->getBim3() >= '1' and $registroConsol->getBim4() == '0'){
+    //           $periodo = 4;
+    //       }
+    //       else if($registroConsol->getBim1() >= '1' and $registroConsol->getBim2() >= '1' and $registroConsol->getBim3() >= '1' and $registroConsol->getBim4() >= '1'){
+    //           $periodo = 4;
+    //       }
+    //   }
+    //   else{
+    //       $rconsol = new RegistroConsolidacion();
+    //       $rconsol->setTipo(1);
+    //       $rconsol->setGestion($form['gestion']);
+    //       $rconsol->setUnidadEducativa($form['sie']);
+    //       $rconsol->setTabla('**');
+    //       $rconsol->setIdentificador('**');
+    //       $rconsol->setCodigo('**');
+    //       $rconsol->setDescripcionError('Consolidado exitosamente!!');
+    //       $rconsol->setFecha(new \DateTime("now"));
+    //       $rconsol->setusuario('0');
+    //       $rconsol->setConsulta('**');
+    //       $rconsol->setBim1('0');
+    //       $rconsol->setBim2('0');
+    //       $rconsol->setBim3('0');
+    //       $rconsol->setBim4('0');
+    //       $rconsol->setPeriodoId(1);
+    //       $rconsol->setSubCea(0);
+    //       $rconsol->setBan(1);
+    //       $rconsol->setEsonline('t');
+    //       $rconsol->setInstitucioneducativaTipoId(1);
+    //       $em->persist($rconsol);
+    //       $em->flush();
+    //       //$em->getConnection()->commit();
+    //   }
+
+    //   if($this->session->get('ue_caldiff') == false) {
+    //     if ($this->session->get('ue_modular')) {
+    //       $inconsistencia = null;
+    //     } else {
+    //       if($this->session->get('ie_id')=='80730460' && $form['gestion']==2018){
+    //         $query = $em->getConnection()->prepare('select * from sp_validacion_regular_insamericano_web(:gestion, :sie, :periodo)');
+    //         $query->bindValue(':gestion', $form['gestion']);
+    //         $query->bindValue(':sie', $form['sie']);
+    //         $query->bindValue(':periodo', $periodo);
+    //         $query->execute();
+    //         $inconsistencia = $query->fetchAll();
+    //       }else{
+    //         $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
+    //         $query->bindValue(':gestion', $form['gestion']);
+    //         $query->bindValue(':sie', $form['sie']);
+    //         $query->bindValue(':periodo', $periodo);
+    //         $query->execute();
+    //         $inconsistencia = $query->fetchAll();
+    //       }
+    //     }
+    //   }
+
+    //   /***********************************\
+    //   * *
+    //   * Validacion personal Administrativo de las Unidades Educativas
+    //   * send array => sie, gestion, reglas *
+    //   * return type of UE *
+    //   * *
+    //   \************************************/
+    //   $objOperativoValidacionPersonal = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findBy(array(
+    //     'institucioneducativa' => $form['sie'],
+    //     'gestionTipo' => $form['gestion'],
+    //     'notaTipo' => $periodo
+    //   ));
+    //   $arrValidacionPersonal = array();
+    //   if($objOperativoValidacionPersonal>0){
+    //     foreach ($objOperativoValidacionPersonal as $key => $value) {
+    //       # code...
+    //       if($value->getRolTipo()->getId() == 2 || $value->getRolTipo()->getId() == 5)
+    //         $arrValidacionPersonal[] = $value->getRolTipo()->getId();
+    //     }
+    //   }
+    //   //validation docente Administrativo director
+    //   if(sizeof($arrValidacionPersonal)<2){
+    //     $observation = true;
+    //     $valPersonalAdm = true;
+    //   }
+
+    //   /***********************************\
+    //   * *
+    //   * Validacion CONTROL DE CALIDAD
+    //   * send array => sie, gestion, reglas *
+    //   * return observations UE *
+    //   * *
+    //   \************************************/
+    //   // $form['reglas'] = '1,2,3,8,10,12,13,16';
+    //   $form['reglas'] = $this->reglasQA;
+    //   $objObsQA = $this->getObservationQA($form);
+    //   if( $inconsistencia || $objObsQA ){
+    //     $observation = true;
+    //   }
+
+    //   if(!$observation) {
+    //       $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
+    //       $registroConsol->setFecha(new \DateTime("now"));
+
+    //       switch ($periodo) {
+    //           case 1: $registroConsol->setBim1('2'); break;
+    //           case 2: $registroConsol->setBim2('2'); break;
+    //           case 3: $registroConsol->setBim3('2'); break;
+    //           case 4: $registroConsol->setBim4('2'); break;
+    //       }
+
+    //       $em->persist($registroConsol);
+    //       $em->flush();
+    //       $em->getConnection()->commit();
+    //   }
+
+    //   return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+    //     'inconsistencia' => $inconsistencia,
+    //     'objObsQA' => $objObsQA,
+    //     'validacionPersonal' => $valPersonalAdm,
+    //     'observation' => $observation,
+    //     'institucion' =>  $form['sie'],
+    //     'gestion' => $form['gestion'],
+    //     'periodo' => $periodo));
+    // }
+
     public function closeOperativoAction (Request $request){
       //crete conexion DB
       $em = $this->getDoctrine()->getManager();
@@ -923,104 +1145,45 @@ class InboxController extends Controller {
       $objObsQA = false;
       $valPersonalAdm = false;
 
-      //get the current operativo
-      $objOperativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($form['sie'], $form['gestion']);
-      //update the close operativo to registro consolido table
-      $objRegistroConsolidado = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+      //Sanitizamos las variables de ingreso
+      //$form['sie']= filter_var($form['sie'],FILTER_VALIDATE_INT);
+      //$form['gestion']= filter_var($form['gestion'],FILTER_VALIDATE_INT);
+
+
+      //get the current operativo //Variable no utilizada
+      //$objOperativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($form['sie'], $form['gestion']);
+      
+      //update the close operativo to registro consolido table //Variable no utilizada
+      /*$objRegistroConsolidado = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
         'unidadEducativa' => $form['sie'],
         'gestion'         => $form['gestion']
-      ));
+      ));*/
 
       $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
+      
       $periodo = 0;
-      if($registroConsol){
-          if($registroConsol->getBim1()      == '0' and $registroConsol->getBim2() == '0' and $registroConsol->getBim3() == '0' and $registroConsol->getBim4() == '0'){
+      if($registroConsol)
+      {
+          if($registroConsol->getBim1() == '0')
+          {
               $periodo = 1;
           }
-          else if($registroConsol->getBim1() >= '1' and $registroConsol->getBim2() == '0' and $registroConsol->getBim3() == '0' and $registroConsol->getBim4() == '0'){
-              $periodo = 2;
-          }
-          else if($registroConsol->getBim1() >= '1' and $registroConsol->getBim2() >= '1' and $registroConsol->getBim3() == '0' and $registroConsol->getBim4() == '0'){
-              $periodo = 3;
-          }
-          else if($registroConsol->getBim1() >= '1' and $registroConsol->getBim2() >= '1' and $registroConsol->getBim3() >= '1' and $registroConsol->getBim4() == '0'){
-              $periodo = 4;
-          }
-          else if($registroConsol->getBim1() >= '1' and $registroConsol->getBim2() >= '1' and $registroConsol->getBim3() >= '1' and $registroConsol->getBim4() >= '1'){
-              $periodo = 4;
-          }
-      }
-      else{
-          $rconsol = new RegistroConsolidacion();
-          $rconsol->setTipo(1);
-          $rconsol->setGestion($form['gestion']);
-          $rconsol->setUnidadEducativa($form['sie']);
-          $rconsol->setTabla('**');
-          $rconsol->setIdentificador('**');
-          $rconsol->setCodigo('**');
-          $rconsol->setDescripcionError('Consolidado exitosamente!!');
-          $rconsol->setFecha(new \DateTime("now"));
-          $rconsol->setusuario('0');
-          $rconsol->setConsulta('**');
-          $rconsol->setBim1('0');
-          $rconsol->setBim2('0');
-          $rconsol->setBim3('0');
-          $rconsol->setBim4('0');
-          $rconsol->setPeriodoId(1);
-          $rconsol->setSubCea(0);
-          $rconsol->setBan(1);
-          $rconsol->setEsonline('t');
-          $rconsol->setInstitucioneducativaTipoId(1);
-          $em->persist($rconsol);
-          $em->flush();
-          //$em->getConnection()->commit();
       }
 
-      if ($this->session->get('ue_modular')) {
-        $inconsistencia = null;
-      } else {
-        if($this->session->get('ie_id')=='80730460' && $form['gestion']==2018){
-          $query = $em->getConnection()->prepare('select * from sp_validacion_regular_insamericano_web(:gestion, :sie, :periodo)');
-          $query->bindValue(':gestion', $form['gestion']);
-          $query->bindValue(':sie', $form['sie']);
-          $query->bindValue(':periodo', $periodo);
-          $query->execute();
-          $inconsistencia = $query->fetchAll();
-        }else{
-          $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
-          $query->bindValue(':gestion', $form['gestion']);
-          $query->bindValue(':sie', $form['sie']);
-          $query->bindValue(':periodo', $periodo);
-          $query->execute();
-          $inconsistencia = $query->fetchAll();
-        }
+      if($form['gestion']>2020){
+        $queryClose = 'select * from sp_validacion_regular_web_2021_ini(:gestion, :sie, :periodo)';
+      }else{
+        $queryClose = 'select * from sp_validacion_regular_web_2020(:gestion, :sie, :periodo)';
       }
 
-      /***********************************\
-      * *
-      * Validacion personal Administrativo de las Unidades Educativas
-      * send array => sie, gestion, reglas *
-      * return type of UE *
-      * *
-      \************************************/
-      $objOperativoValidacionPersonal = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findBy(array(
-        'institucioneducativa' => $form['sie'],
-        'gestionTipo' => $form['gestion'],
-        'notaTipo' => $periodo
-      ));
-      $arrValidacionPersonal = array();
-      if($objOperativoValidacionPersonal>0){
-        foreach ($objOperativoValidacionPersonal as $key => $value) {
-          # code...
-          if($value->getRolTipo()->getId() == 2 || $value->getRolTipo()->getId() == 5)
-            $arrValidacionPersonal[] = $value->getRolTipo()->getId();
-        }
-      }
-      //validation docente Administrativo director
-      if(sizeof($arrValidacionPersonal)<2){
-        $observation = true;
-        $valPersonalAdm = true;
-      }
+
+      $query = $em->getConnection()->prepare($queryClose);
+      $query->bindValue(':gestion', $form['gestion']);
+      $query->bindValue(':sie', $form['sie']);
+      $query->bindValue(':periodo', $periodo);
+      $query->execute();
+      $inconsistencia = $query->fetchAll();
+
 
       /***********************************\
       * *
@@ -1029,36 +1192,142 @@ class InboxController extends Controller {
       * return observations UE *
       * *
       \************************************/
-      $form['reglas'] = '1,2,3,8,10,12,13,16';
+      // $form['reglas'] = '1,2,3,8,10,12,13,16';
+      $form['reglas'] = $this->reglasQA;
       $objObsQA = $this->getObservationQA($form);
-      if( $inconsistencia || $objObsQA ){
+      if( $inconsistencia || $objObsQA )
+      {
         $observation = true;
       }
+      $valPersonalAdm = false;
 
-      if(!$observation) {
+      if($observation)
+      {
+        return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+          'inconsistencia' => $inconsistencia,
+          'objObsQA' => $objObsQA,
+          'validacionPersonal' => $valPersonalAdm,
+          'observation' => $observation,
+          'institucion' =>  $form['sie'],
+          'gestion' => $form['gestion'],
+          'periodo' => $periodo));
+      }
+      else
+      {
+        if($form['gestion']>2020){
           $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
-          $registroConsol->setFecha(new \DateTime("now"));
+            if($registroConsol){
 
-          switch ($periodo) {
-              case 1: $registroConsol->setBim1('2'); break;
-              case 2: $registroConsol->setBim2('2'); break;
-              case 3: $registroConsol->setBim3('2'); break;
-              case 4: $registroConsol->setBim4('2'); break;
+              return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+              'observation' => false,
+              'institucion' =>  $form['sie'],
+              'gestion' => $form['gestion'],
+              'periodo' => 0));            
+
+
+
+            }else{
+              $rconsol = new RegistroConsolidacion();
+              $rconsol->setTipo(1);
+              $rconsol->setGestion($form['gestion']);
+              $rconsol->setUnidadEducativa($form['sie']);
+              $rconsol->setTabla('**');
+              $rconsol->setIdentificador('**');
+              $rconsol->setCodigo('**');
+              $rconsol->setDescripcionError('Consolidado exitosamente!!');
+              $rconsol->setFecha(new \DateTime("now"));
+              $rconsol->setusuario('0');
+              $rconsol->setConsulta('**');
+              $rconsol->setBim1('0');
+              $rconsol->setBim2('0');
+              $rconsol->setBim3('0');
+              $rconsol->setBim4('0');
+              $rconsol->setPeriodoId(1);
+              $rconsol->setSubCea(0);
+              $rconsol->setBan(1);
+              $rconsol->setEsonline('t');
+              $rconsol->setInstitucioneducativaTipoId(1);
+              $em->persist($rconsol);
+              $em->flush();
+              $em->getConnection()->commit();
+              return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+              'observation' => false,
+              'institucion' =>  $form['sie'],
+              'gestion' => $form['gestion'],
+              'periodo' => 0));  
+            }
+          }else{
+                          
+              $registroConsol->setFecha(new \DateTime("now"));
+              switch ($periodo)
+              {
+                  case 1: $registroConsol->setBim1('2'); break;//VOLVERLO DINAMICO
+              }
+              $em->persist($registroConsol);
+              $em->flush();
+              $em->getConnection()->commit();
+
+              return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+              'observation' => false,
+              'institucion' =>  $form['sie'],
+              'gestion' => $form['gestion'],
+              'periodo' => $periodo));            
+
+              
           }
-
-          $em->persist($registroConsol);
-          $em->flush();
-          $em->getConnection()->commit();
       }
 
-      return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
-        'inconsistencia' => $inconsistencia,
-        'objObsQA' => $objObsQA,
-        'validacionPersonal' => $valPersonalAdm,
-        'observation' => $observation,
-        'institucion' =>  $form['sie'],
-        'gestion' => $form['gestion'],
-        'periodo' => $periodo));
+
+      // if($this->session->get('ue_caldiff') == false) {
+      //   if ($this->session->get('ue_modular')) {
+      //     $inconsistencia = null;
+      //   } else {
+      //     if($this->session->get('ie_id')=='80730460' && $form['gestion']==2018){
+      //       $query = $em->getConnection()->prepare('select * from sp_validacion_regular_insamericano_web(:gestion, :sie, :periodo)');
+      //       $query->bindValue(':gestion', $form['gestion']);
+      //       $query->bindValue(':sie', $form['sie']);
+      //       $query->bindValue(':periodo', $periodo);
+      //       $query->execute();
+      //       $inconsistencia = $query->fetchAll();
+      //     }else{
+      //       $query = $em->getConnection()->prepare('select * from sp_validacion_regular_web(:gestion, :sie, :periodo)');
+      //       $query->bindValue(':gestion', $form['gestion']);
+      //       $query->bindValue(':sie', $form['sie']);
+      //       $query->bindValue(':periodo', $periodo);
+      //       $query->execute();
+      //       $inconsistencia = $query->fetchAll();
+      //     }
+      //   }
+      // }
+
+      /***********************************\
+      * *
+      * Validacion personal Administrativo de las Unidades Educativas
+      * send array => sie, gestion, reglas *
+      * return type of UE *
+      * *
+      \************************************/
+      
+      // $objOperativoValidacionPersonal = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoValidacionpersonal')->findBy(array(
+      //   'institucioneducativa' => $form['sie'],
+      //   'gestionTipo' => $form['gestion'],
+      //   'notaTipo' => $periodo
+      // ));
+
+      // $arrValidacionPersonal = array();
+      // if($objOperativoValidacionPersonal>0){
+      //   foreach ($objOperativoValidacionPersonal as $key => $value) {
+      //     # code...
+      //     if($value->getRolTipo()->getId() == 2 || $value->getRolTipo()->getId() == 5)
+      //       $arrValidacionPersonal[] = $value->getRolTipo()->getId();
+      //   }
+      // }
+      // //validation docente Administrativo director
+      // if(sizeof($arrValidacionPersonal)<2){
+      //   $observation = true;
+      //   $valPersonalAdm = true;
+      // }
+
     }
 
     public function downOperativoRudeAction(Request $request){

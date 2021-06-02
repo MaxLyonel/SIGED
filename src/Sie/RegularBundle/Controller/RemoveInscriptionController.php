@@ -25,10 +25,14 @@ class RemoveInscriptionController extends Controller {
      * @return type
      */
     public function indexAction(Request $request) {
+        
         $em = $this->getDoctrine()->getManager();
         //check if the user is logged
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        if (in_array($this->session->get('roluser'), array(7,8.10)) ) {
             return $this->redirect($this->generateUrl('login'));
         }
         //set the student and inscriptions data
@@ -43,7 +47,7 @@ class RemoveInscriptionController extends Controller {
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
             //verificamos si existe el estudiante y si es menor a 15
             if ($student) {
-                $dataInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getInscriptionHistoryEstudenWhitObservation($form['codigoRude']);
+                $dataInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getInscriptionHistoryEstudenWhitObservation($form['codigoRude'], $this->session->get('roluser'));
             }
             $sw = true;
             //check if the result has some value
@@ -154,6 +158,12 @@ class RemoveInscriptionController extends Controller {
             else{
                 $obs = '';
             }
+
+            $objEstudianteInscripcionCambioestado = $em->getRepository('SieAppWebBundle:EstudianteInscripcionCambioestado')->findBy(array('estudianteInscripcion' => $eiid));
+            foreach ($objEstudianteInscripcionCambioestado as $element) {
+                $em->remove($element);
+            }
+            $em->flush();            
 
 //            step 2 delete nota
             $objEstAsig = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion' => $eiid, 'gestionTipo' => $gestion ));

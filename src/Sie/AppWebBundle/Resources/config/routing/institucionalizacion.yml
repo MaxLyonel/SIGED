@@ -1,0 +1,29 @@
+institucionalizacion_index:
+    path:     /
+    defaults: { _controller: "SieProcesosBundle:InstitucionalizacionDgesttla:index" }
+
+institucionalizacion_new:
+    path:     /registro/nuevo
+    defaults: { _controller: "SieProcesosBundle:InstitucionalizacionDgesttla:registroNuevo" }
+
+institucionalizacion_buscar_instituto:
+    path:    /buscar/instituto/{idDepartamento}/
+    defaults: { _controller: "SieProcesosBundle:InstitucionalizacionDgesttla:institutos" }
+    options:
+        expose: true
+
+institucionalizacion_buscar_cargo:
+    path:    /buscar/cargo/{idInstituto}/
+    defaults: { _controller: "SieProcesosBundle:InstitucionalizacionDgesttla:cargos" }
+    options:
+        expose: true
+
+institucionalizacion_index_print:
+    path:     /print
+    defaults: { _controller: "SieProcesosBundle:InstitucionalizacionDgesttla:indexPrint" }
+
+institucionalizacion_print_insc:
+    path:    /print/insc
+    defaults: { _controller: "SieProcesosBundle:InstitucionalizacionDgesttla:printInsc" }
+    options:
+        expose: true

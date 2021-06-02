@@ -79,7 +79,8 @@ class DocumentoController extends Controller {
             , e.nombre as nombre, ie.id as sie, ie.institucioneducativa as institucioneducativa, gt.id as gestion, to_char(e.fecha_nacimiento, 'dd/mm/YYYY') as fechanacimiento
             , (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documento_tipo as documentoTipo
             , (case e.complemento when '' then e.carnet_identidad when 'null' then e.carnet_identidad else CONCAT(CONCAT(e.carnet_identidad,'-'),e.complemento) end) as carnetIdentidad
-            , tt.tramite_tipo as tramiteTipo, d.documento_firma_id as documentoFirmaId, d.token_privado as keyprivado, d.token_impreso
+            , tt.tramite_tipo as tramiteTipo, d.documento_firma_id as documentoFirmaId, d.token_privado as keyprivado, d.token_impreso, dt.id as documentoTipoId, de.id as documentoEstadoId
+            , p.nombre || ' ' || p.paterno || ' ' || p.materno as personafirma
             from documento as d
             inner join documento_estado as de on de.id = d.documento_estado_id
             inner join documento_tipo as dt on dt.id = d.documento_estado_id
@@ -93,9 +94,11 @@ class DocumentoController extends Controller {
             inner join gestion_tipo as gt on gt.id = ds.gestion_id
             inner join pais_tipo as pt on pt.id = e.pais_tipo_id
             inner join departamento_tipo as dept on dept.id = ds.departamento_tipo_id
+            left join documento_firma as df on df.id = d.documento_firma_id
+            left join persona as p on p.id = df.persona_id
             left join lugar_tipo as ltp on ltp.id = e.lugar_prov_nac_tipo_id
             left join lugar_tipo as ltd on ltd.id = ltp.lugar_tipo_id
-            where md5(cast(d.id as varchar)) = :id and dt.id in (1,3,4,5,6,7,8,9) and de.id in (1)
+            where md5(cast(d.id as varchar)) = :id and dt.id in (1,2,3,4,5,6,7,8,9) and de.id in (1)
             order by e.paterno, e.materno, e.nombre
         ");
         $queryEntidad->bindValue(':id', $id);
@@ -103,7 +106,7 @@ class DocumentoController extends Controller {
         $entityDocumento = $queryEntidad->fetchAll();
 
         if(count($entityDocumento)>0){
-            return $entityDocumento[0];
+            return $entityDocumento;
         } else {
             return $entityDocumento;
         }
@@ -126,6 +129,7 @@ public function getDocumentoTokenImpreso($token) {
         , (case pt.id when 1 then ltd.lugar else '' end) as departamentonacimiento, pt.pais as paisnacimiento, pt.id as codpaisnacimiento, dt.documento_tipo as documentoTipo
         , (case e.complemento when '' then e.carnet_identidad when 'null' then e.carnet_identidad else CONCAT(CONCAT(e.carnet_identidad,'-'),e.complemento) end) as carnetIdentidad
         , tt.tramite_tipo as tramiteTipo, d.documento_firma_id as documentoFirmaId, d.token_privado as keyprivado, d.token_impreso, de.id as documentoEstadoId
+        , p.nombre || ' ' || p.paterno || ' ' || p.materno as personafirma
         from documento as d
         inner join documento_estado as de on de.id = d.documento_estado_id
         inner join documento_tipo as dt on dt.id = d.documento_estado_id
@@ -139,6 +143,8 @@ public function getDocumentoTokenImpreso($token) {
         inner join gestion_tipo as gt on gt.id = ds.gestion_id
         inner join pais_tipo as pt on pt.id = e.pais_tipo_id
         inner join departamento_tipo as dept on dept.id = ds.departamento_tipo_id
+        left join documento_firma as df on df.id = d.documento_firma_id
+        left join persona as p on p.id = df.persona_id
         left join lugar_tipo as ltp on ltp.id = e.lugar_prov_nac_tipo_id
         left join lugar_tipo as ltd on ltd.id = ltp.lugar_tipo_id
         where d.token_impreso = :token and dt.id in (1,3,4,5,6,7,8,9)
@@ -296,7 +302,7 @@ public function getDocumentoTokenImpreso($token) {
                 ->leftJoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'ltd.id = ltp.lugarTipo')
                 ->where('t.id = :codTramite')
                 ->setParameter('codTramite', $tramite)
-                ->orderBy('d.fechaImpresion', 'DESC');
+                ->orderBy('d.fechaImpresion', 'DESC', 'd.id', 'DESC');
         $entityDocumento = $query->getQuery()->getResult();
         if(count($entityDocumento)>0){
             return $entityDocumento;
@@ -1367,7 +1373,7 @@ public function getDocumentoTokenImpreso($token) {
                     }
 
                     if (!$entity[0]["estadofintramite"]){
-                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con codigo rude "'.$entity[0]["rude"].'" y con número de serie "'.$entity[0]["serie"].'" no concluyo su trámite, conluya su tramite e intente nuevamente'));
+                        $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'El estudiante con codigo rude "'.$entity[0]["rude"].'" y con número de serie "'.$entity[0]["serie"].'" no concluyo su emisión, conluya e intente nuevamente'));
                         // return $this->redirectToRoute('sie_diploma_tramite_legalizacion');
                         return $this->redirectToRoute('tramite_documento_legalizacion_numero_serie');
                     } elseif (!$entity[0]["estadodocumento"]){
@@ -2388,7 +2394,7 @@ public function getDocumentoTokenImpreso($token) {
         if (isset($gestion)) {
             $gestionId = $gestion;
         } else {
-            $gestionId = $gestionActual->format('y');
+            $gestionId = $gestionActual->format('Y');
         }
 
         $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
@@ -2557,7 +2563,7 @@ public function getDocumentoTokenImpreso($token) {
         $estado = true;            
         $datosDocumentoValidado = array();
 
-        // dump($request);dump($qr);
+        //dump($request);dump($datosEnviados);die;
         //$entityDocumento = $this->getDocumentoMd5($documento);
         // $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tokenImpreso' => $datosEnviados));
         $entityDocumento = $this->getDocumentoTokenImpreso($datosEnviados);
@@ -2595,7 +2601,8 @@ public function getDocumentoTokenImpreso($token) {
                         'emisiondepartamento'=>$entityDocumento['departamentoemision'],
                         'emisionfecha'=>$entityDocumento['fechaemision'],
                         'tokenfirma'=>base64_encode($entityDocumento['documentofirmaid']),
-                        'documentotipo'=>$entityDocumento['documentotipo']
+                        'documentotipo'=>$entityDocumento['documentotipo'],
+                        'personafirma'=>$entityDocumento['personafirma']
                     );
                     // dump($datos);
                     $keys = $this->getEncodeRSA($datos);
@@ -2629,6 +2636,121 @@ public function getDocumentoTokenImpreso($token) {
                             $msg = 'Datos modificados, documento no válido';
                             $estado = false;
                         }
+                    } catch (\Exception $e) {
+                        $msg = 'Documento no válido';
+                        $estado = false;
+                        // dump("no decodificado");die;
+                    }
+                }
+            }
+        } else {
+            $msg = 'Documento inexistente, verifique con la Dirección Distrital o Dirección Departamental';
+            $estado = false;
+        }
+        // dump($this->session->get('pathSystem'));die;
+
+
+        return $this->render('SieTramitesBundle:Documento:validacion.html.twig',array(
+            'listaDocumento' => $datosDocumentoValidado,   
+            'estado' => $estado, 
+            'msg' => $msg,
+            'titulo' => 'Validación del documento',
+            'subtitulo' => 'Diploma de Bachiller',
+    	));
+        
+    }    
+    
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Controlador que verifica la valides del documento emitido con firma electronica
+    // PARAMETROS: request
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function validarDocumentoAction(Request $request, $qr){
+        $em = $this->getDoctrine()->getManager();
+        
+        $datosEnviados = str_replace(' ', '+', $qr);
+        $datosEnviados = str_replace('%20', '+', $datosEnviados);    
+        $msg = '';
+        $estado = true;            
+        $datosDocumentoValidado = array();
+
+        $entityDocumento = $this->getDocumentoMd5($datosEnviados);
+        // dump($request);dump($datosEnviados);dump($entityDocumento);die;
+        // $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tokenImpreso' => $datosEnviados));
+        // $entityDocumento = $this->getDocumentoTokenImpreso($datosEnviados);
+        //dump(count($entityDocumento));die;
+        
+        if(count($entityDocumento)>0){
+            if(count($entityDocumento)>1){
+                $msg = 'Documento observado por duplicidad en su registro, verifique con la Dirección Distrital o Dirección Departamental';
+                $estado = false;
+            } else {
+                $entityDocumento = $entityDocumento[0];
+                $entityDocumentoEstadoId = $entityDocumento['documentoestadoid'];
+                if($entityDocumentoEstadoId != 1){
+                    $msg = 'Documento no vigente, verifique con la Dirección Distrital o Dirección Departamental';
+                    $estado = false;
+                } else {            
+                    if ($entityDocumento['departamentonacimiento'] == ""){
+                        $lugarNacimiento = $entityDocumento['departamentonacimiento'];
+                    } else {
+                        $lugarNacimiento = $entityDocumento['departamentonacimiento'] . ' - ' . $entityDocumento['paisnacimiento'];
+                    }
+                    $datos = array(
+                        'inscripcion'=>$entityDocumento['estudianteinscripcionid'],
+                        'tramite'=>$entityDocumento['tramite'],
+                        'serie'=>$entityDocumento['serie'],
+                        'codigorude'=>$entityDocumento['rude'],
+                        'sie'=>$entityDocumento['sie'],
+                        'gestionegreso'=>$entityDocumento['gestion'],
+                        'nombre'=>$entityDocumento['nombre'],
+                        'paterno'=>$entityDocumento['paterno'],
+                        'materno'=>$entityDocumento['materno'],
+                        'nacimientolugar'=>$lugarNacimiento,
+                        'nacimientofecha'=>$entityDocumento['fechanacimiento'],
+                        'cedulaidentidad'=>$entityDocumento['carnetidentidad'],
+                        'emisiondepartamento'=>$entityDocumento['departamentoemision'],
+                        'emisionfecha'=>$entityDocumento['fechaemision'],
+                        'tokenfirma'=>'',
+                        'documentotipo'=>$entityDocumento['documentotipo'],
+                        'personafirma'=>$entityDocumento['personafirma']
+                    );
+                    // $keys = $this->getEncodeRSA($datos);
+                    $datosRegistrados = $datos;
+                    //dump($datosRegistrados);die;
+
+                    // $keyPrivado = $entityDocumento['keyprivado'];
+                    // $keyPrivado = $ll;
+                    // dump(md5(3197208));dump($entityDocumento['token_impreso']);dump($datos);dump($datosEnviados);dump($ll);
+                    try {
+                        // $datosEnviadosDecode = $this->getDecodeRSA($datosEnviados, $keyPrivado);
+                        // $datosEnviadosDecode = unserialize($datosEnviadosDecode);
+                        // dump($datosEnviadosDecode);die;
+                        // if(
+                        //     $datosEnviadosDecode['inscripcion'] == $datosRegistrados['inscripcion'] and 
+                        //     $datosEnviadosDecode['tramite'] == $datosRegistrados['tramite'] and 
+                        //     $datosEnviadosDecode['serie'] == $datosRegistrados['serie'] and 
+                        //     $datosEnviadosDecode['codigorude'] == $datosRegistrados['codigorude'] and 
+                        //     $datosEnviadosDecode['sie'] == $datosRegistrados['sie'] and 
+                        //     $datosEnviadosDecode['gestionegreso'] == $datosRegistrados['gestionegreso'] and 
+                        //     $datosEnviadosDecode['nombre'] == $datosRegistrados['nombre'] and 
+                        //     $datosEnviadosDecode['paterno'] == $datosRegistrados['paterno'] and 
+                        //     $datosEnviadosDecode['materno'] == $datosRegistrados['materno'] and 
+                        //     $datosEnviadosDecode['cedulaidentidad'] == $datosRegistrados['cedulaidentidad'] and 
+                        //     $datosEnviadosDecode['emisiondepartamento'] == $datosRegistrados['emisiondepartamento'] and 
+                        //     $datosEnviadosDecode['tokenfirma'] == $datosRegistrados['tokenfirma']
+                        //     ){
+                        //     $msg = 'Documento válido';
+                        //     $estado = true;
+                        //     $datosDocumentoValidado = $datosRegistrados;
+                        // } else {
+                        //     $msg = 'Datos modificados, documento no válido';
+                        //     $estado = false;
+                        // }                        
+                        $msg = 'Documento válido';
+                        $estado = true;
+                        $datosDocumentoValidado = $datosRegistrados;
                     } catch (\Exception $e) {
                         $msg = 'Documento no válido';
                         $estado = false;
@@ -2762,7 +2884,7 @@ public function getDocumentoTokenImpreso($token) {
                     $documentoId = $entityDocumentoAnulado['documento'];
                     $valTramiteDocumentoActivo = $this->getDocumentoTramite($tramiteId);
                     if(count($valTramiteDocumentoActivo) > 0){
-                        $msgContenido = ($msgContenido=="") ? "El trámite ".$tramiteId." del documento ".$serie." cuenta con ".count($valTramiteDocumentoActivo)." documento(s) activos(s)" : $msgContenido.", "."El trámite ".$tramiteId." del documento ".$serie." cuenta con ".count($valTramiteDocumentoActivo)." documento(s) activos(s)";
+                        $msgContenido = ($msgContenido=="") ? "La emisión ".$tramiteId." del documento ".$serie." cuenta con ".count($valTramiteDocumentoActivo)." documento(s) activos(s)" : $msgContenido.", "."La emisión ".$tramiteId." del documento ".$serie." cuenta con ".count($valTramiteDocumentoActivo)." documento(s) activos(s)";
                     }
                                      
                     $tramiteProcesoController = new tramiteProcesoController();
@@ -2887,7 +3009,7 @@ public function getDocumentoTokenImpreso($token) {
 
                 $valTramiteDocumentoActivo = $this->getDocumentoTramite($tramiteId);
                 if(count($valTramiteDocumentoActivo) > 0){
-                    $msgContenido = ($msgContenido=="") ? "El trámite ".$tramiteId." del documento ".$serie." cuenta con ".count($valTramiteDocumentoActivo)." documento(s) activos(s)" : $msgContenido.", "."El trámite ".$tramiteId." del documento ".$serie." cuenta con ".count($valTramiteDocumentoActivo)." documento(s) activos(s)";
+                    $msgContenido = ($msgContenido=="") ? "La emisión ".$tramiteId." del documento ".$serie." cuenta con ".count($valTramiteDocumentoActivo)." documento(s) activos(s)" : $msgContenido.", "."La emisión ".$tramiteId." del documento ".$serie." cuenta con ".count($valTramiteDocumentoActivo)." documento(s) activos(s)";
                 }
                 
                 $entityTramite = $em->getRepository('SieAppWebBundle:Tramite')->find($tramiteId);
@@ -2914,7 +3036,7 @@ public function getDocumentoTokenImpreso($token) {
                     $em->getConnection()->beginTransaction();
                     try {   
                         if (($procesosId == 1 and $tramiteEstado == false) or ($procesosId != 7 and $tramiteEstado == true)) {                            
-                            $obs = "DOCUMENTO REACTIVADO Y TRÁMITE PROCESADO COMO IMPRESO (".$fecha->format('d/m/Y h:i:s')."): ".$obs; 
+                            $obs = "DOCUMENTO REACTIVADO Y PROCESADO COMO IMPRESO (".$fecha->format('d/m/Y h:i:s')."): ".$obs; 
                             $valProcesaTramite = $tramiteProcesoController->setProcesaTramite($tramiteId,$entityFlujoProceso->getId(),$id_usuario,$obs,$em);
                             $documentoAnuladoId = $this->setDocumentoEstado($documentoId, 1, $em); 
                             $retEstadoUltimoProcesoTramite = $tramiteProcesoController->setEstadoUltimoProcesoTramite($tramiteId,3,$id_usuario,$fecha,$em);
@@ -2926,7 +3048,7 @@ public function getDocumentoTokenImpreso($token) {
                             if ($msgContenido == ""){
                                 $em->flush();
                                 $em->getConnection()->commit();
-                                $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Se reactivó el documento y el trámite fue procesado como impreso para su respectivo envío"));
+                                $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => "Se reactivó el documento y fue procesado la asignación del cartón para su respectivo envío"));
                                 
                                 $entityTramiteDetalle = $tramiteProcesoController->getTramiteDetalle($tramiteId);
                                 $entityDocumentoDetalle = $this->getDocumentoDetalle($tramiteId);                                

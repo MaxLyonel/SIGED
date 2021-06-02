@@ -129,7 +129,7 @@ class TramiteEstadisticaController extends Controller {
 				, count(d.id) as cantidad
 				from tramite as t
 				inner join documento as d on d.tramite_id = t.id
-				inner join estudiante_inscripcion as ei on ei.institucioneducativa_curso_id = t.estudiante_inscripcion_id
+				inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
 				inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
 				inner join (
 				select dep.id as departamento_id, dep.codigo as departamento_codigo, dep.lugar as departamento
@@ -157,7 +157,7 @@ class TramiteEstadisticaController extends Controller {
 				, count(d.id) as cantidad
 				from tramite as t
 				inner join documento as d on d.tramite_id = t.id
-				inner join estudiante_inscripcion as ei on ei.institucioneducativa_curso_id = t.estudiante_inscripcion_id
+				inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
 				inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
 				inner join (
 				select dep.id as departamento_id, dep.codigo as departamento_codigo, dep.lugar as departamento
@@ -186,7 +186,7 @@ class TramiteEstadisticaController extends Controller {
 				, count(d.id) as cantidad
 				from tramite as t
 				inner join documento as d on d.tramite_id = t.id
-				inner join estudiante_inscripcion as ei on ei.institucioneducativa_curso_id = t.estudiante_inscripcion_id
+				inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
 				inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
 				inner join institucioneducativa as ie on ie.id = iec.institucioneducativa_id
 				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
@@ -204,7 +204,7 @@ class TramiteEstadisticaController extends Controller {
 				, count(d.id) as cantidad
 				from tramite as t
 				inner join documento as d on d.tramite_id = t.id
-				inner join estudiante_inscripcion as ei on ei.institucioneducativa_curso_id = t.estudiante_inscripcion_id
+				inner join estudiante_inscripcion as ei on ei.id = t.estudiante_inscripcion_id
 				inner join institucioneducativa_curso as iec on iec.id = ei.institucioneducativa_curso_id
 				inner join (
 				select dep.id as departamento_id, dep.codigo as departamento_codigo, dep.lugar as departamento

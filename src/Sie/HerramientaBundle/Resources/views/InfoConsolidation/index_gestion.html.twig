@@ -23,38 +23,40 @@
     <!--/ End page header -->
 
     <div class="body-content animated fadeIn">
-      <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-        <!-- Start default panel -->
-            <div class="panel panel-primary rounded shadow">
-            <!-- Start panel heading -->
-            <div class="panel-heading">
-                <h3 class="panel-title">{{title}}</h3>
-                <div class="clearfix"></div>
-            </div><!-- /.panel-heading -->
-            <!--/ End panel heading -->
-            <!-- Start panel content -->
-            <div class="panel-body">
-                <div class="row">
-                    <div class="form-group">
-                        <label class="col-md-2 col-md-offset-3 control-label text-right" for="gestiones"><strong>Seleccionar gestión:</strong></label>
-                        <div class="col-md-2">
-                            <select onchange="registroConsol(this.value)" id="gestiones" class="form-control">
-                                {% for gestion in gestiones %}
-                                    <option value="{{gestion}}">{{gestion}}</option>
-                                {% endfor %}
-                            </select>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <!-- Start default panel -->
+                <div class="panel panel-primary rounded shadow">
+                    <!-- Start panel heading -->
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{title}}</h3>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <!--/ End panel heading -->
+                    <!-- Start panel content -->
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-md-2 col-md-offset-3 control-label text-right" for="gestiones"><strong>Seleccionar gestión:</strong></label>
+                                <div class="col-md-2">
+                                    <select onchange="registroConsol(this.value)" id="gestiones" class="form-control">
+                                        {% for gestion in gestiones %}
+                                            <option value="{{gestion}}">{{gestion}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12" id="tableConsol">
+                                {% include 'SieEspecialBundle:Institucioneducativa:consol_especial.html.twig' with {'gestionactual': gestionactual, 'consolEspecial': consol, 'label': label, 'label_distrito': label_distrito} %}
+                            </div>
+                        </div>
+                    </div><!-- /.panel-body -->
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-12" id="tableConsol">
-                        {% include 'SieEspecialBundle:Institucioneducativa:consol_especial.html.twig' with {'consolEspecial': consol, 'label': label, 'label_distrito': label_distrito} %}
-                    </div>
-                </div>
-            </div><!-- /.panel-body -->
-            <!--/ End panel content -->
+            </div>
+                <!--/ End panel content -->
         </div><!-- /.panel -->
         <!--/ End default panel -->
     </div>
@@ -100,10 +102,7 @@
 
         // DataTable
         var table = $('#listaConsol').DataTable( {
-                "order": [[ 0, "asc" ]],
-                "columnDefs": [
-                    { "orderable": false, "targets": [8,7,6,5] }
-                ],
+                "order": [[ 0, "asc" ]]
             }
         );
 

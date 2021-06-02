@@ -29,7 +29,6 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaSucursal;
 use Sie\AppWebBundle\Entity\DiscapacidadTipo;
 use Sie\AppWebBundle\Entity\EstudianteNotaCualitativa;
 use Sie\AppWebBundle\Entity\AltModuloemergente;
-use Sie\AppWebBundle\Entity\EstudianteInscripcionSocioeconomicoAlternativa;
 use Sie\AppWebBundle\Entity\Rude;
 use Sie\AppWebBundle\Entity\GradoDiscapacidadTipo;
 use Sie\AppWebBundle\Entity\NacionOriginariaTipo;
@@ -85,8 +84,7 @@ class DefaultController extends Controller
         
         return $this->render('SiePnpBundle:Default:index.html.twig', array('form' => $form->createView()));
     }
-
-    public function pnp_indexAction()
+public function pnp_indexAction()
     {   
         return $this->render('SiePnpBundle:Default:pnp_index.html.twig');
     }
@@ -2247,9 +2245,9 @@ class DefaultController extends Controller
 
             try {
                 // id de la tabla maestro_inscripcion
-                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
+                /*$result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
                 $maestroinscripcion_id=$result->getMaestroInscripcionAsesor()->getId();
-
+*/
                 // id de la tabla institucion_curso_oferta
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByinsitucioneducativaCurso($institucioneducativa_curso_id);
                 $institucioneducativa_curso_oferta_id = array();
@@ -2262,12 +2260,14 @@ class DefaultController extends Controller
                 foreach ($result as $results) {
                     $institucioneducativa_curso_datos_id[]=$results->getId();
                 }
+                
                 //id de la tabla institucioneducativa_curso_oferta_maestro
-                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('maestroInscripcion' => $maestroinscripcion_id, 'institucioneducativaCursoOferta' => $institucioneducativa_curso_oferta_id )); 
+                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta' => $institucioneducativa_curso_oferta_id )); 
                 $institucioneducativa_curso_oferta_maestro_id = array();
                 foreach ($result as $results) {
                     $institucioneducativa_curso_oferta_maestro_id[]=$results->getId();
                 }
+                
                 // id de la tabla estudiante_inscripcion
                 $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findByinstitucioneducativaCurso($institucioneducativa_curso_id);
                 $estudiante_inscripcion_id = array();
@@ -2291,14 +2291,6 @@ class DefaultController extends Controller
                 $estudiante_nota_id = array();
                 foreach ($result as $results) {
                     $estudiante_nota_id[]=$results->getId();
-                }
-                ///////////plan 2  
-                // id estduoante_socieconomico_alternativa 
-                $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findOneByestudianteInscripcion($estudiante_inscripcion_id);
-                $estudiante_inscripcion_socioeconomico_alternativa_id = array();
-                if($result)
-                foreach ($result as $results) {
-                    $estudiante_inscripcion_socioeconomico_alternativa_id[]=$results->getId();
                 }
                 
                  //PLAN 2
@@ -2348,18 +2340,7 @@ class DefaultController extends Controller
                 }          
                 $em->flush();
                 //////////ELMINAR PLAN 2
-                //1.- estudiante_inscripcion_socioeconomico_alternativa
-                $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findById($estudiante_inscripcion_socioeconomico_alternativa_id);
-                foreach ($result as $element) {
-                    $em->remove($element);
-                }          
-                $em->flush();
-                $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByestudianteInscripcion($estudiante_inscripcion_id);
-                foreach ($result as $element) {
-                    $em->remove($element);
-                }          
-                $em->flush();
-                // 2.- alt_modulo_emergente
+               // 2.- alt_modulo_emergente
                 $result=$em->getRepository('SieAppWebBundle:AltModuloemergente')->findById($alt_moduloemergente_id);
                 foreach ($result as $element) {
                     $em->remove($element);
@@ -2428,7 +2409,8 @@ class DefaultController extends Controller
                 }          
                 $em->flush();
                 // Eliminar Institucioneducativa Curso Oferta Maestro
-                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findById($institucioneducativa_curso_oferta_maestro_id);
+                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findById($institucioneducativa_curso_oferta_maestro_id);
+
                 foreach ($result as $element) {
                     $em->remove($element);
                 }          
@@ -2455,7 +2437,7 @@ class DefaultController extends Controller
                /* $result=$em->getRepository('SieAppWebBundle:MaestroInscripcion')->findById($maestroinscripcion_id);
                 foreach ($result as $element) {
                     $em->remove($element);
-                }   */        
+                }*/          
                 $em->flush();    
                 $this->get('session')->getFlashBag()->add(
                     'notice',
@@ -2641,7 +2623,7 @@ order by t2.fecha_inicio";
                     $institucioneducativa_curso_oferta_id[]=$results->getId();
                 }
                 //id de la tabla institucioneducativa_curso_oferta_maestro
-                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('maestroInscripcion' => $maestroinscripcion_id, 'institucioneducativaCursoOferta' => $institucioneducativa_curso_oferta_id )); 
+                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta' => $institucioneducativa_curso_oferta_id )); 
                 $institucioneducativa_curso_oferta_maestro_id = array();
                 foreach ($result as $results) {
                     $institucioneducativa_curso_oferta_maestro_id[]=$results->getId();
@@ -2896,9 +2878,10 @@ t1.departamento,t1.provincia ORDER BY count) as tt1 where count=0 and $where";
 
             try {
                 // id de la tabla maestro_inscripcion
-                $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
+                /*$result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($institucioneducativa_curso_id);
                 if($result)
                         $maestroinscripcion_id=$result->getMaestroInscripcionAsesor()->getId();
+                */
                 // id de la tabla institucion_curso_oferta
                 $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findByinsitucioneducativaCurso($institucioneducativa_curso_id);
                 $institucioneducativa_curso_oferta_id = array();
@@ -4239,21 +4222,6 @@ ciclo_tipo_id, grado_tipo_id
                 $product->setGeneroTipo($genero);
                 if($plan == 1)$product->setObservacionadicional($observacionadicional_n);
                 $em->flush();
-
-                /*if($plan==2){
-                    //obtener estudiante_inscripcion_id
-                     $estudiante_inscripcion_id = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy([
-                        'institucioneducativaCurso' => $id,
-                        'estudiante' => $estudiante_id,
-                    ]);
-                     $estudiante_inscripcion_id=$estudiante_inscripcion_id->getId();
-
-                    $estinscsocalt = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findOneByestudianteInscripcion($estudiante_inscripcion_id);
-                    $estinscsocalt->setSeccionivDiscapacitadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findOneById($discapacidad));
-                    $estinscsocalt->setSeccionvOtroTrabajo($ocupacion);
-                    $estinscsocalt->setFechaModificacion(new \DateTime('now'));
-                    $em->flush();
-                }*/
             }
             elseif($val == 2){
                 echo "entro";die;
@@ -5384,21 +5352,6 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                 $inscripcion->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById('66'));
                 $em->persist($inscripcion);
                 $em->flush();
-                /*/////////////OCUPACION Y DISCAPACDAD SI EL PLAN 2
-                if ($plan==2){
-                    $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion_socioeconomico_alternativa');")->execute();
-                    $estinscsocalt = new EstudianteInscripcionSocioeconomicoAlternativa();
-                    $estinscsocalt->setEstudianteInscripcion($inscripcion);
-
-                    $estinscsocalt->setSeccionivDiscapacitadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findOneById($discapacidad));
-                    $estinscsocalt->setSeccionvOtroTrabajo($ocupacion);
-                    $estinscsocalt->setLugar($lugar_llenar);
-                    $estinscsocalt->setFechaRegistro(new \DateTime('now'));
-                    $estinscsocalt->setFecha(new \DateTime('now'));
-                    $em->persist($estinscsocalt);
-                    $em->flush();
-                }*/
-                ///////////////////FIN
 
                 if ($plan==1){
                     /////buscar las id en la tabla institucion educativa curso oferta para las materias para luego registrar en estudiante asignatura 
@@ -5893,8 +5846,6 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
         
         $result=$em->getRepository('SieAppWebBundle:InstitucioneducativaCursoDatos')->findOneByinstitucioneducativaCurso($curso_id);
         $plan=$result->getPlancurricularTipoId();
-
-            
         // id de la tabla estudiante_asignatura
         $result=$em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findByestudianteInscripcion($estudiante_inscripcion_id);
         $estudiante_asignatura_id = array();
@@ -5907,24 +5858,20 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
         foreach ($result as $results) {
             $estudiante_nota_id[]=$results->getId();
         }
+        
         // nuevo id de la tabla apoderado inscripcion
         $result=$em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findByestudianteInscripcion($estudiante_inscripcion_id);
         $estudiante_apoderado_inscripcion_id = array();
         foreach ($result as $results) {
             $estudiante_apoderado_inscripcion_id[]=$results->getId();
         }
+        
         if($plan==2){
             // id de la tabla estudiante_nota
             $result=$em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findByestudianteInscripcion($estudiante_inscripcion_id);
             $estudiante_nota_cualitativa_id = array();
             foreach ($result as $results) {
                 $estudiante_nota_cualitativa_id[]=$results->getId();
-            }   
-            //id de la tabla estudiante_inscripción_socioeconomico_alternativa
-            $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findByestudianteInscripcion($estudiante_inscripcion_id);
-            $estudiante_inscripcion_socioeconomico_alternativa_id = array();
-            foreach ($result as $results) {
-                $estudiante_inscripcion_socioeconomico_alternativa_id[]=$results->getId();
             }
         }
 
@@ -5955,12 +5902,7 @@ ic.id=ei.institucioneducativa_curso_id and estudiante.id=ei.estudiante_id and ex
                 $result=$em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findById($estudiante_nota_cualitativa_id);
                 foreach ($result as $element) {
                     $em->remove($element);
-                }  
-                //eliminar estudiante inscripcion socioeconomico alternativa
-                $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findById($estudiante_inscripcion_socioeconomico_alternativa_id);
-                foreach ($result as $element) {
-                    $em->remove($element);
-                } 
+                }
                 //ELIMINAR RUDE
                 //buscar el id del rude
                 $result = $em->getRepository('SieAppWebBundle:Rude')->findByestudianteInscripcion($estudiante_inscripcion_id);
@@ -6949,27 +6891,6 @@ public function crear_curso_automaticoAction(Request $request){
                     $em->persist($inscripcion);
                     $em->flush();
 
-                    /////////////OCUPACION Y DISCAPACDAD SI EL PLAN 2
-                    /*if ($plan==2){
-                        //sacamos los datos anteriores para registrar en el  nuevo
-                        $result=$em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoAlternativa')->findOneByestudianteInscripcion($id_estudiante_inscripcion);
-                        $discapacidad=$result->getSeccionivDiscapacitadTipo()->getId();
-                        $ocupacion=$result->getSeccionvOtroTrabajo();
-                        $lugar_llenar=$result->getLugar();
-                        
-                        //guardamos los datos
-                        $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_inscripcion_socioeconomico_alternativa');")->execute();
-                        $estinscsocalt = new EstudianteInscripcionSocioeconomicoAlternativa();
-                        $estinscsocalt->setEstudianteInscripcion($inscripcion);
-                        $estinscsocalt->setSeccionivDiscapacitadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findOneById($discapacidad));
-                        $estinscsocalt->setSeccionvOtroTrabajo($ocupacion);
-                        $estinscsocalt->setLugar($lugar_llenar);
-                        $estinscsocalt->setFechaRegistro(new \DateTime('now'));
-                        $estinscsocalt->setFecha(new \DateTime('now'));
-                        $em->persist($estinscsocalt);
-                        $em->flush();
-                    }*/
-                ///////////////////FIN
 
                     /////buscar las id en la tabla institucion educativa curso oferta para las materias para luego registrar en estudiante asignatura 
                     if ($plan==1){

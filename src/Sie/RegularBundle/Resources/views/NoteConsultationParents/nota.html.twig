@@ -94,14 +94,14 @@
                 </tr>
             </table>
             {% if subsistema == 1 %}
-                {% include 'SieRegularBundle:NoteConsultationParents:nota_regular.html.twig' with {'cabeceras': cabeceras, 'indices': indices, 'notas': notas, 'cualitativo': cualitativo, 'inscripcion': inscripcion, 'gestion': gestion} %}
+                {% include 'SieRegularBundle:NoteConsultationParents:nota_regular.html.twig' with {'cabeceras': cabeceras, 'indices': indices, 'notas': notas, 'cualitativo': cualitativo, 'cualitativo2020': cualitativo2020, 'inscripcion': inscripcion, 'gestion': gestion} %}
             {% elseif subsistema == 2 %}
                 {% include 'SieRegularBundle:NoteConsultationParents:nota_alternativa.html.twig' with {'notas': notas, 'inscripcion': inscripcion, 'gestion': gestion} %}
             {% elseif subsistema == 4 %}
                 {% include 'SieRegularBundle:NoteConsultationParents:nota_especial.html.twig' with {'notas': notas, 'inscripcion': inscripcion, 'gestion': gestion} %}
             {% endif %}
         </div>
-        <div class="row">
+        {# <div class="row">
             <div class="col-md-12 text-center">
                 {% if app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 7 %}
                     {% if app.session.get('currentyear') == gestion and inscripcion.estadomatriculaTipo.id == 4 and tuicion == true and (inscripcion.institucioneducativaCurso.nivelTipo.id == 11 or inscripcion.institucioneducativaCurso.nivelTipo.id == 12 or inscripcion.institucioneducativaCurso.nivelTipo.id == 13) %}
@@ -116,6 +116,6 @@
                     {% endif %}
                 {% endif %}
             </div>
-        </div>
+        </div> #}
     </div>
 </div>

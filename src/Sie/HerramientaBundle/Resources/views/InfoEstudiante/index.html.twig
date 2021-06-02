@@ -139,12 +139,16 @@
                                                                                 {{paraleloKey}}
                                                                             </span>
                                                                         </div>
-                                                                      </a>                                                                      
-                                                                        <!--div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripción">
+                                                                      </a>
+                                                                      {#
+                                                                      {% if ( dataGrado[paraleloKey].nivelId in [11] and dataGrado[paraleloKey].gradoId in [2]) or   ( dataGrado[paraleloKey].nivelId in [12] and dataGrado[paraleloKey].gradoId in [1,2,3,4,5,6]) or ( dataGrado[paraleloKey].nivelId in [13] and dataGrado[paraleloKey].gradoId in [1,2,3,4,5,6])%}
+                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripción">
                                                                             <button type="button" class="btn btn-circle btn-warning btn-stroke" onclick="getStudents('{{dataParalelo.infoUe}}');" >
                                                                                 <i class="fa fa-group"></i>
                                                                             </button>
-                                                                        </div-->
+                                                                        </div> 
+                                                                      {% endif %}
+                                                                      #}
                                                                               
                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Areas/Maestros">
                                                                             <button class="btn btn-circle btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getAreas('{{dataParalelo.infoUe}}');">
@@ -162,23 +166,29 @@
                                                                                         <i class ="fa fa-pencil"></i> Inscripción
                                                                                     </button>
                                                                                 </td>
-                                                                            </tr>
-                                                                            <tr>
-                                                                                <td>
-                                                                                    <button type="button" class="btn btn-link" onclick="seeStudents('{{dataParalelo.infoUe}}');">
-                                                                                        <i class="fa fa-group"></i> Inscripción
-                                                                                    </button>
-                                                                                </td>
-                                                                            </tr>
+                                                                                </tr>
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <button type="button" class="btn btn-link" onclick="seeStudents('{{dataParalelo.infoUe}}');">
+                                                                                            <i class="fa fa-group"></i> Inscripción
+                                                                                        </button>
+                                                                                    </td>
+                                                                                </tr>
 
-                                                                        </table-->
+                                                                            </table-->
 
                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Datos del curso">
                                                                             <button class="btn btn-circle btn-info btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getDatosCurso('{{dataParalelo.infoUe}}');">
                                                                                 <i class="fa fa-list"></i>
                                                                             </button>
                                                                         </div>
-                                                                        
+                                                                        {# {% if "now"|date('j')|number_format in range(1,14) %} #}
+                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modalidad">
+                                                                            <button class="btn btn-circle btn-primary btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getDatosModalidad('{{dataParalelo.infoUe}}');">
+                                                                                <i class="fa fa-home"></i>
+                                                                            </button>
+                                                                        </div>
+                                                                        {# {% endif %} #}
                                                                         {% if arrLevelandGrado.operativo in allowOperativo and arrLevelandGrado.gestion >= 2019 %}
                                                                             {% if estado == true and app.session.get('currentyear') == 2019 %}
                                                                                 {% if dataParalelo.nivelId == 13 and dataParalelo.gradoId in app.session.get('gradoTipoBth') %}
@@ -463,6 +473,28 @@
             });
         };
 
+        var getDatosModalidad = function (infoUe) {
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe}),
+                url: "{{ path('herramienta_modalidadCurso_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
         var getDatosCurso = function (infoUe) {
             $.ajax({
                 type: 'post',

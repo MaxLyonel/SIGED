@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
+use Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion;
 
 /**
  * EstudianteInscripcion controller.
@@ -211,7 +212,7 @@ class CreacionCursosController extends Controller {
                 $query = $em->createQuery(
                                         'SELECT n FROM SieAppWebBundle:NivelTipo n
                                         WHERE n.id IN (:id)'
-                                        )->setParameter('id',array(3,11,12,13));
+                                        )->setParameter('id',array(11,12,13));
                 $niveles_result = $query->getResult();
                 $niveles = array();
                 foreach ($niveles_result as $n){
@@ -369,6 +370,22 @@ class CreacionCursosController extends Controller {
                 $em->persist($nuevo_curso);
                 $em->flush();
 
+                /*
+                * verificamos si tiene tuicion
+                */
+                $query = $em->getConnection()->prepare('SELECT sp_genera_institucioneducativa_curso_oferta(:institucioneducativa_curso_id::VARCHAR)');
+                $query->bindValue(':institucioneducativa_curso_id', $nuevo_curso->getId());
+                $query->execute();
+                $malla_curricular = $query->fetchAll();
+
+                // if ($aTuicion[0]['get_ue_tuicion']){
+                //     $institucion = $form['institucioneducativa'];
+                //     $gestion = $form['gestion'];
+                // }else{
+                //     $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa');
+                //     return $this->render('SieHerramientaBundle:CreacionCursos:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
+                // }
+
                 /**
                  * Obtenemos las asignaturas humanisticas en funcion al nivel
                  */
@@ -432,15 +449,24 @@ class CreacionCursosController extends Controller {
                 $this->get('session')->getFlashBag()->add('msgError', 'No se puede eliminar el curso, porque tiene estudiantes inscritos');
                 return $this->redirect($this->generateUrl('herramienta_ieducativa_index'));
             }
+
             /*
              * Verificamos si no tiene registros en curso oferta
             */ 
             $curso_oferta = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso'=>$request->get('idCurso')));
 
             if($curso_oferta){
-                //$this->get('session')->getFlashBag()->add('msgError', 'No se puede eliminar el curso, porque cuenta con asignaturas');
-                //return $this->redirect($this->generateUrl('herramienta_ieducativa_index'));
+                
                 foreach ($curso_oferta as $value) {
+                    $objEstAsig = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('institucioneducativaCursoOferta' => $value, 'gestionTipo' => $curso->getGestionTipo() ));
+
+                    if($objEstAsig){
+                        foreach ($objEstAsig as $elementEA) {
+                            $em->remove($elementEA);
+                            $em->flush();
+                        }
+                    }
+
                     $curso_oferta_maestro = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta'=>$value->getId()));
                     if($curso_oferta_maestro){
                         foreach ($curso_oferta_maestro as $valueM) {
@@ -450,13 +476,27 @@ class CreacionCursosController extends Controller {
                     }
                 }
             }
+            //eliminamos los datos de la tabla "institucioneducativa_curso_modalidad_atencion" 
+            //para corregir el bug encontrado el jueves 25/02/2021
+            //puesto que esta tabla fue creada a mediados de febrero del 2021
+            $institucioneducativaCursoModalidadAtencion = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoModalidadAtencion')->findBy(array('institucioneducativaCurso'=>$request->get('idCurso')));
+            if($institucioneducativaCursoModalidadAtencion)
+            {
+                foreach ($institucioneducativaCursoModalidadAtencion as $value)
+                {
+                    $em->remove($value);
+                }
+                $em->flush();
+                $em->getConnection()->commit();
+            }
+
             
             /**
              * Eliminamos los registros de curso oferta
              */
             $em->createQuery('DELETE FROM SieAppWebBundle:InstitucioneducativaCursoOferta ieco
-                              WHERE ieco.insitucioneducativaCurso = :idCurso')
-                              ->setParameter('idCurso',$curso->getId())->execute();
+                WHERE ieco.insitucioneducativaCurso = :idCurso')
+                ->setParameter('idCurso',$curso->getId())->execute();
             /*
              * Eliminamos el curso
              */
@@ -568,5 +608,47 @@ class CreacionCursosController extends Controller {
         return $this->render('SieHerramientaBundle:InfoEstudianteAreas:index.html.twig',array(
                 'areas'=>null
         ));
+    }
+
+    public function editarTurnoAction(Request $request){
+        $iecId = $request->get('cursoId');
+        $em = $this->getDoctrine()->getManager();
+        $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId);
+
+        $query = $em->createQuery(
+            'SELECT t FROM SieAppWebBundle:TurnoTipo t
+            WHERE t.id IN (:id)')->setParameter('id',array(1,2,4,8,9,10,11));
+        
+        $turnos_result = $query->getResult();
+        $turnosArray = array();
+        foreach ($turnos_result as $t){
+            $turnosArray[$t->getId()] = $t->getTurno();
+        }
+        
+        $form = $this->createFormBuilder()
+                ->setAction($this->generateUrl('herramienta_acurso_guardar_turno'))
+                ->add('curso', 'hidden', array('data' => $curso->getId()))
+                ->add('turno', 'choice', array('label' => 'Turno', 'required' => true, 'choices' => $turnosArray, 'data' => $curso->getTurnoTipo()->getId(), 'attr' => array('class' => 'form-control')))
+                ->add('guardar', 'submit', array('label' => 'Guardar Cambios', 'attr' => array('class' => 'btn btn-warning')))
+                ->getForm();
+
+        return $this->render('SieHerramientaBundle:InfoEstudianteAreas:turno.html.twig',array(
+            'form'=>$form->createView()
+        ));
+    }
+
+    public function guardarTurnoAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+
+        $turno = $em->getRepository('SieAppWebBundle:TurnoTipo')->find($form['turno']);
+        $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($form['curso']);
+
+        $curso->setTurnoTipo($turno);
+        $em->persist($curso);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('herramienta_ieducativa_index'));
+        //herramienta_creacioncursos
     }
 }

@@ -19,6 +19,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 
 
+use Sie\AppWebBundle\Entity\DepartamentoTipo;
+use Sie\AppWebBundle\Entity\DistritoTipo;
 
 use Doctrine\DBAL\Types\Type;
 Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
@@ -362,6 +364,7 @@ class InfoConsolidationController extends Controller {
             $gestionesArray[$value->getId()] = $value->getGestion();
         }
     }
+    
     return $this->render($this->session->get('pathSystem') . ':InfoConsolidation:index_gestion.html.twig', array(
         'consol' => $consol,
         'gestiones' => $gestionesArray,
@@ -508,5 +511,689 @@ class InfoConsolidationController extends Controller {
 
 
   }
+
+
+
+
+
+  public function reporteModalidadAtencionAction(Request $request)
+  {
+    $em = $this->getDoctrine()->getManager();
+    $objDepto =  $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findAll();
+    $arrDepto = array();
+    foreach ($objDepto as $value) {
+      $arrDepto[] = array('id'=>$value->getId(),'codigo'=>$value->getCodigo(),'depto'=>$value->getDepartamento());
+    }
+    
+    return $this->render($this->session->get('pathSystem') . ':InfoConsolidation:reporte_modalidad_atencion.html.twig', array(
+      'arrDepto' => $arrDepto,
+    ));
+  }
+
+
+  public function reporteInicioActividadesAction(Request $request)
+  {
+    if($request->isMethod('POST'))
+    {
+      if($request->get('_departamento'))
+        $this->session->set('_departamento',$request->get('_departamento'));
+      if($request->get('_distrito'))
+        $this->session->set('_distrito',$request->get('_distrito'));
+    }
+    else
+    {
+        $this->session->set('_departamento',-1);
+        $this->session->set('_distrito',-1);
+    }
+
+    $departamento=-1;
+    $distrito=-1;
+    $userId=$this->session->get('userId');
+    $userRol=$this->session->get('roluser');
+    $datosUser=$this->getDatosUsuario($userId,$userRol);
+    if($datosUser)
+    {
+      $departamentoDistrito=$datosUser['cod_dis'];
+      list($departamento,$distrito)=$this->getDepartamentoDistrito($departamentoDistrito);
+      //$departamento = ($request->get('_departamento') && $request->get('_departamento')!=-1)?$request->get('_departamento'):$departamento;
+      //$distrito = ($request->get('_distrito') && $request->get('_distrito')!=-1)?$request->get('_distrito'):$distrito;
+      $departamento = ($request->get('_departamento') && $request->get('_departamento')!=-1)?$request->get('_departamento'):($this->session->get('_departamento') && $this->session->get('_departamento')!=-1)?$this->session->get('_departamento'):$departamento;;
+      $distrito = ($request->get('_distrito') && $request->get('_distrito')!=-1)?$request->get('_distrito'):($this->session->get('_distrito') && $this->session->get('_distrito')!=-1)?$this->session->get('_distrito'):$distrito;
+    }
+    else
+    {
+      return $this->redirect($this->generateUrl('login'));
+    }
+
+    $gestion = ($request->get('_gestion'))?$request->get('_gestion'):date('Y');
+    $mes = ($request->get('_mes'))?$request->get('_mes'):date('n');
+
+    $todo=$this->getDatosInicioActividadesGeneral($departamento,$distrito,$gestion,$mes);
+    $datos=$this->getDatosInicioActividadesPorDepartamento($departamento,$distrito,$gestion,$mes);
+    $highcharts=$this->darFormatoHighcharts($todo);
+
+    return $this->render($this->session->get('pathSystem') . ':InfoConsolidation:reporte_inicio_actividades.html.twig', array(
+      'etiqueta'=> 'Departamentos',
+      'url'=>'herramienta_inforeporte_inicio_actividades_distrito',
+      'url_form'=>'herramienta_inforeporte_inicio_actividades',
+      'gestion'=> $gestion,
+      'mes'=> $mes,
+      'departamento'=> $departamento,
+      'distrito'=> $distrito,
+      'todo' => $todo,
+      'datos' => $datos,
+      'highcharts'=>$highcharts,
+      'departamento_nom'=>$this->getNombreDepartamento($departamento),
+      'distrito_nom'=>$this->getNombreDistrito($distrito),
+    ));
+  }
+
+  public function reporteInicioActividadesDistritoAction(Request $request)
+  {
+    if($request->get('_departamento'))
+      $this->session->set('_departamento',$request->get('_departamento'));
+    if($request->get('_distrito'))
+      $this->session->set('_distrito',$request->get('_distrito'));
+
+    $departamento=-1;
+    $distrito=-1;
+    $userId=$this->session->get('userId');
+    $userRol=$this->session->get('roluser');
+    $datosUser=$this->getDatosUsuario($userId,$userRol);
+    if($datosUser)
+    {
+      $departamentoDistrito=$datosUser['cod_dis'];
+      list($departamento,$distrito)=$this->getDepartamentoDistrito($departamentoDistrito);
+      //$departamento = ($request->get('_departamento') && $request->get('_departamento')!=-1)?$request->get('_departamento'):$departamento;
+      //$distrito = ($request->get('_distrito') && $request->get('_distrito')!=-1)?$request->get('_distrito'):$distrito;
+      $departamento = ($request->get('_departamento') && $request->get('_departamento')!=-1)?$request->get('_departamento'):($this->session->get('_departamento') && $this->session->get('_departamento')!=-1)?$this->session->get('_departamento'):$departamento;;
+      $distrito = ($request->get('_distrito') && $request->get('_distrito')!=-1)?$request->get('_distrito'):($this->session->get('_distrito') && $this->session->get('_distrito')!=-1)?$this->session->get('_distrito'):$distrito;
+    }
+    else
+    {
+      return $this->redirect($this->generateUrl('login'));
+    }
+
+    $gestion = ($request->get('_gestion'))?$request->get('_gestion'):date('Y');
+    $mes = ($request->get('_mes'))?$request->get('_mes'):date('n');
+
+    $todo=$this->getDatosInicioActividadesGeneral($departamento,$distrito,$gestion,$mes);
+    $datos=$this->getDatosInicioActividadesPorDistrito($departamento,$distrito,$gestion,$mes);
+    $highcharts=$this->darFormatoHighcharts($todo);
+
+    return $this->render($this->session->get('pathSystem') . ':InfoConsolidation:reporte_inicio_actividades.html.twig', array(
+      'etiqueta'=> 'Distritos',
+      'url'=>'herramienta_inforeporte_inicio_actividades_distrito_colegio',
+      'url_form'=>'herramienta_inforeporte_inicio_actividades_distrito',
+      'gestion'=> $gestion,
+      'mes'=> $mes,
+      'departamento'=> $departamento,
+      'distrito'=> $distrito,
+      'todo' => $todo,
+      'datos' => $datos,
+      'highcharts'=>$highcharts,
+      'departamento_nom'=>$this->getNombreDepartamento($departamento),
+      'distrito_nom'=>$this->getNombreDistrito($distrito),
+    ));
+  }
+
+  public function reporteInicioActividadesColegioAction(Request $request)
+  {
+    if($request->get('_departamento'))
+      $this->session->set('_departamento',$request->get('_departamento'));
+    if($request->get('_distrito'))
+      $this->session->set('_distrito',$request->get('_distrito'));
+
+    $departamento=-1;
+    $distrito=-1;
+    $userId=$this->session->get('userId');
+    $userRol=$this->session->get('roluser');
+    $datosUser=$this->getDatosUsuario($userId,$userRol);
+    if($datosUser)
+    {
+      $departamentoDistrito=$datosUser['cod_dis'];
+      list($departamento,$distrito)=$this->getDepartamentoDistrito($departamentoDistrito);
+      //$departamento = ($request->get('_departamento') && $request->get('_departamento')!=-1)?$request->get('_departamento'):$departamento;
+      //$distrito = ($request->get('_distrito') && $request->get('_distrito')!=-1)?$request->get('_distrito'):$distrito;
+      $departamento = ($request->get('_departamento') && $request->get('_departamento')!=-1)?$request->get('_departamento'):($this->session->get('_departamento') && $this->session->get('_departamento')!=-1)?$this->session->get('_departamento'):$departamento;;
+      $distrito = ($request->get('_distrito') && $request->get('_distrito')!=-1)?$request->get('_distrito'):($this->session->get('_distrito') && $this->session->get('_distrito')!=-1)?$this->session->get('_distrito'):$distrito;
+    }
+    else
+    {
+      return $this->redirect($this->generateUrl('login'));
+    }
+
+    $gestion = ($request->get('_gestion'))?$request->get('_gestion'):date('Y');
+    $mes = ($request->get('_mes'))?$request->get('_mes'):date('n');
+
+    $todo=$this->getDatosInicioActividadesGeneral($departamento,$distrito,$gestion,$mes);
+    $datos=$this->getDatosInicioActividadesPorColegio($departamento,$distrito,$gestion,$mes);
+    $highcharts=$this->darFormatoHighcharts($todo);
+
+    return $this->render($this->session->get('pathSystem') . ':InfoConsolidation:reporte_inicio_actividades.html.twig', array(
+      'etiqueta'=> 'Unidad educativa',
+      'url'=>'#',
+      'url_form'=>'herramienta_inforeporte_inicio_actividades_distrito_colegio',
+      'gestion'=> $gestion,
+      'mes'=> $mes,
+      'departamento'=> $departamento,
+      'distrito'=> $distrito,
+      'todo' => $todo,
+      'datos' => $datos,
+      'highcharts'=>$highcharts,
+      'departamento_nom'=>$this->getNombreDepartamento($departamento),
+      'distrito_nom'=>$this->getNombreDistrito($distrito),
+    ));
+  }
+
+
+    //Obtine la SUMATORIA TOTAL de quienes iniciaron actividades y quienes no (A nivel bolivia) 
+    private function getDatosInicioActividadesGeneral($departamento=-1,$distrito=-1,$gestion=-1,$mes=-1)
+    {
+        $general=array();
+
+        $operadorDepartamento=($departamento==-1)?' <> ':' = ';
+        $operadorDistrito=($distrito==-1)?' <> ':' = ';
+        $operadorGestion=($gestion==-1)?' <> ':' = ';
+        $operadorMes=($mes==-1)?' <> ':' = ';
+
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query =" 
+          select 
+          --cod_dep,des_dep,cod_dis,des_dis,institucioneducativa_id,ue_nom,riesgo_unidadeducativa,dependencia,
+          total,inicio, no_inicio,
+          riesgo_sanitario,helada,granizada,sismo,riada,deslizamiento,sequia,incendio,inundacion,otros,sin_riesgo
+
+          from 
+          (
+            select 
+            --substring(cod_dis,1,1) as cod_dep,  case substring(cod_dis,1,1)   when '1' then 'CHUQUISACA'  when '2' then 'LA PAZ'  when '3' then 'COCHABAMBA'  when '4' then 'ORURO'   when '5' then 'POTOSI'  when '6' then 'TARIJA'  when '7' then 'SANTA CRUZ'  when '8' then 'BENI'  when '9' then 'PANDO'   end des_dep,
+            --cod_dis,des_dis,institucioneducativa_id,institucioneducativa ue_nom,dependencia,string_agg(riesgo_unidadeducativa, ', ' ORDER BY riesgo_unidadeducativa) as riesgo_unidadeducativa,
+
+                    sum(case when institucioneducativa_id is not null then 1 else 0 end)  as \"total\",
+                    sum(case when riesgo_unidadeducativa is not null then 1 else 0 end)  as \"inicio\",
+                    sum(case when riesgo_unidadeducativa is null then 1 else 0 end)  as \"no_inicio\",
+
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riesgo Sanitario'  THEN 1 ELSE 0 END ) AS \"riesgo_sanitario\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Helada'  THEN 1 ELSE 0 END ) AS \"helada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Granizada'  THEN 1 ELSE 0 END ) AS \"granizada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sismo'  THEN 1 ELSE 0 END ) AS \"sismo\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riada'  THEN 1 ELSE 0 END ) AS \"riada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Deslizamiento'  THEN 1 ELSE 0 END ) AS \"deslizamiento\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sequia'  THEN 1 ELSE 0 END ) AS \"sequia\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Incendio'  THEN 1 ELSE 0 END ) AS \"incendio\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Inundación' THEN 1 ELSE 0 END ) AS \"inundacion\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Otros'  THEN 1 ELSE 0 END ) AS \"otros\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sin riesgo'  THEN 1 ELSE 0 END ) AS \"sin_riesgo\"
+
+            from 
+            (
+              select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as institucioneducativa_id,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id) as dependencia
+              ,(select riesgo_unidadeducativa from riesgo_unidadeducativa_tipo where id=f.riesgo_unidadeducativa_tipo_id) as riesgo_unidadeducativa
+              from (institucioneducativa c 
+                  inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
+                    inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
+                      left join (select a.riesgo_unidadeducativa_tipo_id,b.institucioneducativa_id
+                          from institucioneducativa_sucursal_riesgo_mes  a
+                            inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id=b.id
+                        where b.gestion_tipo_id ".$operadorGestion." ? and a.mes ".$operadorMes." ?) f on c.id=f.institucioneducativa_id 
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1
+            ) a
+          where 
+          cod_dis ".$operadorDistrito." ?
+          and substring(cod_dis,1,1) ".$operadorDepartamento." ?
+          --group by cod_dis,des_dis,institucioneducativa_id,institucioneducativa,dependencia
+          ) a;";
+        $stmt = $db->prepare($query);
+        $params = array($gestion,$mes,$distrito,$departamento);
+        $stmt->execute($params);
+        $general=$stmt->fetchAll();
+
+        return $general;
+    }
+
+    private function getDatosInicioActividadesPorDepartamento($departamento=-1,$distrito=-1,$gestion=-1,$mes=-1)
+    {
+        $operadorDepartamento=($departamento==-1)?' <> ':' = ';
+        $operadorDistrito=($distrito==-1)?' <> ':' = ';
+        $operadorGestion=($gestion==-1)?' <> ':' = ';
+        $operadorMes=($mes==-1)?' <> ':' = ';
+
+        $departamentos=array();
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->session->get('ie_id')));
+        $query =" 
+          select 
+          cod_dep as departamento_id,
+          des_dep as departamento_nom,
+
+          total,inicio, no_inicio,
+          riesgo_sanitario,helada,granizada,sismo,riada,deslizamiento,sequia,incendio,inundacion,otros,sin_riesgo
+
+          from 
+          (
+            select 
+            substring(cod_dis,1,1) as cod_dep,  case substring(cod_dis,1,1)   when '1' then 'CHUQUISACA'  when '2' then 'LA PAZ'  when '3' then 'COCHABAMBA'  when '4' then 'ORURO'   when '5' then 'POTOSI'  when '6' then 'TARIJA'  when '7' then 'SANTA CRUZ'  when '8' then 'BENI'  when '9' then 'PANDO'   end des_dep,
+
+                    sum(case when institucioneducativa_id is not null then 1 else 0 end)  as \"total\",
+                    sum(case when riesgo_unidadeducativa is not null then 1 else 0 end)  as \"inicio\",
+                    sum(case when riesgo_unidadeducativa is null then 1 else 0 end)  as \"no_inicio\",
+
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riesgo Sanitario'  THEN 1 ELSE 0 END ) AS \"riesgo_sanitario\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Helada'  THEN 1 ELSE 0 END ) AS \"helada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Granizada'  THEN 1 ELSE 0 END ) AS \"granizada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sismo'  THEN 1 ELSE 0 END ) AS \"sismo\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riada'  THEN 1 ELSE 0 END ) AS \"riada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Deslizamiento'  THEN 1 ELSE 0 END ) AS \"deslizamiento\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sequia'  THEN 1 ELSE 0 END ) AS \"sequia\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Incendio'  THEN 1 ELSE 0 END ) AS \"incendio\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Inundación' THEN 1 ELSE 0 END ) AS \"inundacion\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Otros'  THEN 1 ELSE 0 END ) AS \"otros\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sin riesgo'  THEN 1 ELSE 0 END ) AS \"sin_riesgo\"
+
+            from 
+            (
+              select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as institucioneducativa_id,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id) as dependencia
+              ,(select riesgo_unidadeducativa from riesgo_unidadeducativa_tipo where id=f.riesgo_unidadeducativa_tipo_id) as riesgo_unidadeducativa
+              from (institucioneducativa c 
+                  inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
+                    inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
+                      left join (select a.riesgo_unidadeducativa_tipo_id,b.institucioneducativa_id
+                          from institucioneducativa_sucursal_riesgo_mes  a
+                            inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id=b.id
+                        where b.gestion_tipo_id ".$operadorGestion." ? and a.mes ".$operadorMes." ?) f on c.id=f.institucioneducativa_id 
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1
+            ) a
+          where 
+          cod_dis ".$operadorDistrito." ?
+          and substring(cod_dis,1,1) ".$operadorDepartamento." ?
+          GROUP BY  cod_dep,des_dep
+          ) a;
+        ";
+        $stmt = $db->prepare($query);
+        $params = array($gestion,$mes,$distrito,$departamento);
+        $stmt->execute($params);
+        $departamentos=$stmt->fetchAll();
+
+        return $departamentos;
+    }
+
+    private function getDatosInicioActividadesPorDistrito($departamento=-1,$distrito=-1,$gestion=-1,$mes=-1)
+    {
+        $operadorDepartamento=($departamento==-1)?' <> ':' = ';
+        $operadorDistrito=($distrito==-1)?' <> ':' = ';
+        $operadorGestion=($gestion==-1)?' <> ':' = ';
+        $operadorMes=($mes==-1)?' <> ':' = ';
+
+        //$gestion=($gestion==-1)?date('Y'):$gestion;
+        //$mes=($mes==-1)?date('m'):$mes;
+
+        $departamentos=array();
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->session->get('ie_id')));
+        $query =" 
+          select 
+          cod_dep as departamento_id,
+          des_dep as departamento_nom,
+          cod_dis as distrito_id,
+          des_dis as distrito_nom,
+
+          total,inicio, no_inicio,
+          riesgo_sanitario,helada,granizada,sismo,riada,deslizamiento,sequia,incendio,inundacion,otros,sin_riesgo
+
+          from 
+          (
+            select 
+            substring(cod_dis,1,1) as cod_dep,  case substring(cod_dis,1,1)   when '1' then 'CHUQUISACA'  when '2' then 'LA PAZ'  when '3' then 'COCHABAMBA'  when '4' then 'ORURO'   when '5' then 'POTOSI'  when '6' then 'TARIJA'  when '7' then 'SANTA CRUZ'  when '8' then 'BENI'  when '9' then 'PANDO'   end des_dep,
+            cod_dis,des_dis,
+
+                    sum(case when institucioneducativa_id is not null then 1 else 0 end)  as \"total\",
+                    sum(case when riesgo_unidadeducativa is not null then 1 else 0 end)  as \"inicio\",
+                    sum(case when riesgo_unidadeducativa is null then 1 else 0 end)  as \"no_inicio\",
+
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riesgo Sanitario'  THEN 1 ELSE 0 END ) AS \"riesgo_sanitario\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Helada'  THEN 1 ELSE 0 END ) AS \"helada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Granizada'  THEN 1 ELSE 0 END ) AS \"granizada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sismo'  THEN 1 ELSE 0 END ) AS \"sismo\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riada'  THEN 1 ELSE 0 END ) AS \"riada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Deslizamiento'  THEN 1 ELSE 0 END ) AS \"deslizamiento\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sequia'  THEN 1 ELSE 0 END ) AS \"sequia\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Incendio'  THEN 1 ELSE 0 END ) AS \"incendio\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Inundación' THEN 1 ELSE 0 END ) AS \"inundacion\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Otros'  THEN 1 ELSE 0 END ) AS \"otros\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sin riesgo'  THEN 1 ELSE 0 END ) AS \"sin_riesgo\"
+
+            from 
+            (
+              select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as institucioneducativa_id,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id) as dependencia
+              ,(select riesgo_unidadeducativa from riesgo_unidadeducativa_tipo where id=f.riesgo_unidadeducativa_tipo_id) as riesgo_unidadeducativa
+              from (institucioneducativa c 
+                  inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
+                    inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
+                      left join (select a.riesgo_unidadeducativa_tipo_id,b.institucioneducativa_id
+                          from institucioneducativa_sucursal_riesgo_mes  a
+                            inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id=b.id
+                        where b.gestion_tipo_id ".$operadorGestion." ? and a.mes ".$operadorMes." ?) f on c.id=f.institucioneducativa_id 
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1
+            ) a
+          where 
+          cod_dis ".$operadorDistrito." ?
+          and substring(cod_dis,1,1) ".$operadorDepartamento." ?
+          group by cod_dep,des_dep,cod_dis,des_dis
+          ) a;";
+        $stmt = $db->prepare($query);
+        $params = array($gestion,$mes,$distrito,$departamento);
+        $stmt->execute($params);
+        $distritos=$stmt->fetchAll();
+
+        return $distritos;
+    }
+
+    private function getDatosInicioActividadesPorColegio($departamento=-1,$distrito=-1,$gestion=-1,$mes=-1)
+    {
+        $operadorDepartamento=($departamento==-1)?' <> ':' = ';
+        $operadorDistrito=($distrito==-1)?' <> ':' = ';
+        $operadorGestion=($gestion==-1)?' <> ':' = ';
+        $operadorMes=($mes==-1)?' <> ':' = ';
+
+        $departamentos=array();
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $objIesucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa'=>$this->session->get('ie_id')));
+
+        $query =" 
+          select 
+          cod_dep as departamento_id,
+          des_dep as departamento_nom,
+          cod_dis as distrito_id,
+          des_dis as distrito_nom,
+          institucioneducativa_id ue_id,
+          institucioneducativa as ue_nom,
+          riesgo_unidadeducativa,
+          dependencia,
+
+          total,inicio, no_inicio,
+          riesgo_sanitario,helada,granizada,sismo,riada,deslizamiento,sequia,incendio,inundacion,otros,sin_riesgo
+
+          from 
+          (
+            select 
+            substring(cod_dis,1,1) as cod_dep,  case substring(cod_dis,1,1)   when '1' then 'CHUQUISACA'  when '2' then 'LA PAZ'  when '3' then 'COCHABAMBA'  when '4' then 'ORURO'   when '5' then 'POTOSI'  when '6' then 'TARIJA'  when '7' then 'SANTA CRUZ'  when '8' then 'BENI'  when '9' then 'PANDO'   end des_dep,
+            cod_dis,des_dis,institucioneducativa_id,institucioneducativa,dependencia,string_agg(riesgo_unidadeducativa, ', ' ORDER BY riesgo_unidadeducativa) as riesgo_unidadeducativa,
+
+                    sum(case when institucioneducativa_id is not null then 1 else 0 end)  as \"total\",
+                    sum(case when riesgo_unidadeducativa is not null then 1 else 0 end)  as \"inicio\",
+                    sum(case when riesgo_unidadeducativa is null then 1 else 0 end)  as \"no_inicio\",
+
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riesgo Sanitario'  THEN 1 ELSE 0 END ) AS \"riesgo_sanitario\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Helada'  THEN 1 ELSE 0 END ) AS \"helada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Granizada'  THEN 1 ELSE 0 END ) AS \"granizada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sismo'  THEN 1 ELSE 0 END ) AS \"sismo\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Riada'  THEN 1 ELSE 0 END ) AS \"riada\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Deslizamiento'  THEN 1 ELSE 0 END ) AS \"deslizamiento\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sequia'  THEN 1 ELSE 0 END ) AS \"sequia\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Incendio'  THEN 1 ELSE 0 END ) AS \"incendio\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Inundación' THEN 1 ELSE 0 END ) AS \"inundacion\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Otros'  THEN 1 ELSE 0 END ) AS \"otros\",
+                    SUM (CASE WHEN riesgo_unidadeducativa='Sin riesgo'  THEN 1 ELSE 0 END ) AS \"sin_riesgo\"
+
+            from 
+            (
+              select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as institucioneducativa_id,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id) as dependencia
+              ,(select riesgo_unidadeducativa from riesgo_unidadeducativa_tipo where id=f.riesgo_unidadeducativa_tipo_id) as riesgo_unidadeducativa
+              from (institucioneducativa c 
+                  inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
+                    inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
+                      left join (select a.riesgo_unidadeducativa_tipo_id,b.institucioneducativa_id
+                          from institucioneducativa_sucursal_riesgo_mes  a
+                            inner join institucioneducativa_sucursal b on a.institucioneducativa_sucursal_id=b.id
+                        where b.gestion_tipo_id=? and a.mes=?) f on c.id=f.institucioneducativa_id 
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1
+            ) a
+          where 
+          cod_dis=?
+          and substring(cod_dis,1,1)=?
+          group by cod_dis,des_dis,institucioneducativa_id,institucioneducativa,dependencia
+          ) a;";
+
+        $stmt = $db->prepare($query);
+        $params = array($gestion,$mes,$distrito,$departamento);
+        $stmt->execute($params);
+        $colegios=$stmt->fetchAll();
+
+        return $colegios;
+    }
+
+    private function darFormatoHighcharts($dato)
+    {
+      $datoInicioActividades=array();
+      $datosRiesgo=array();
+      foreach ($dato as $i)
+      {
+        $total = $i['total'];
+        $inicio = $i['inicio'];
+        $no_inicio = $i['no_inicio'];
+
+        $helada = $i['helada'];
+        $granizada = $i['granizada'];
+        $sismo = $i['sismo'];
+        $riada = $i['riada'];
+        $deslizamiento = $i['deslizamiento'];
+        $sequia = $i['sequia'];
+        $incendio = $i['incendio'];
+        $inundación = $i['inundacion'];
+        $otros = $i['otros'];
+        $riesgo_sanitario = $i['riesgo_sanitario'];
+        $sin_riesgo = $i['sin_riesgo'];
+
+        if($total>0)
+        {
+          $datoInicioActividades=array(
+            array('name'=>'Si','y'=>round(($inicio*100)/($total), 1),       'label'=>$inicio ),
+            array('name'=>'No','y'=>round(($no_inicio*100)/($total), 1),    'label'=>$no_inicio ),
+          );
+          $datosRiesgo=array(
+            array('name'=>'Helada',             'y'=>round(($helada*100)/($total), 1),            'label'=>$helada ),
+            array('name'=>'Granizada',          'y'=>round(($granizada*100)/($total), 1),         'label'=>$granizada ),
+            array('name'=>'Sismo',              'y'=>round(($sismo*100)/($total), 1),             'label'=>$sismo ),
+            array('name'=>'Riada',              'y'=>round(($riada*100)/($total), 1),             'label'=>$riada ),
+            array('name'=>'Deslizamiento',      'y'=>round(($deslizamiento*100)/($total), 1),     'label'=>$deslizamiento ),
+            array('name'=>'Sequia',             'y'=>round(($sequia*100)/($total), 1),            'label'=>$sequia ),
+            array('name'=>'Incendio',           'y'=>round(($incendio*100)/($total), 1),          'label'=>$incendio ),
+            array('name'=>'Inundación',         'y'=>round(($inundación*100)/($total), 1),        'label'=>$inundación ),
+            array('name'=>'Otros',              'y'=>round(($otros*100)/($total), 1),             'label'=>$otros ),
+            array('name'=>'Riesgo sanitario',   'y'=>round(($riesgo_sanitario*100)/($total), 1),  'label'=>$riesgo_sanitario ),
+            array('name'=>'Sin riesgo',         'y'=>round(($sin_riesgo*100)/($total), 1),        'label'=>$sin_riesgo ),
+            array('name'=>'No inicio',          'y'=>round(($no_inicio*100)/($total), 1),         'label'=>$no_inicio ),
+          );
+        }
+
+      }
+      return array(
+        'inicio'=>json_encode($datoInicioActividades),
+        'riesgos'=>json_encode($datosRiesgo),
+      );
+    }
+
+    private function getDatosUsuario($userId,$userRol)
+    {
+        $userId=($userId)?$userId:-1;
+        $userRol=($userRol)?$userRol:-1;
+
+        $user=NULL;
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = '
+        select *
+        from (
+        select b.rol_tipo_id,(select rol from rol_tipo where id=b.rol_tipo_id) as rol,a.persona_id,c.codigo as cod_dis,a.esactivo,a.id as user_id
+        from usuario a 
+          inner join usuario_rol b on a.id=b.usuario_id 
+            inner join lugar_tipo c on b.lugar_tipo_id=c.id
+        where codigo not in (\'04\') and b.rol_tipo_id not in (2,3,9,29,26,21,14,39,6) and a.esactivo=\'t\'
+        union all
+        select f.rol_tipo_id,(select rol from rol_tipo where id=f.rol_tipo_id) as rol,a.persona_id,d.codigo as cod_dis,e.esactivo,e.id as user_id
+        from maestro_inscripcion a
+          inner join institucioneducativa b on a.institucioneducativa_id=b.id
+            inner join jurisdiccion_geografica c on b.le_juridicciongeografica_id=c.id
+              inner join lugar_tipo d on d.lugar_nivel_id=7 and c.lugar_tipo_id_distrito=d.id
+                inner join usuario e on a.persona_id=e.persona_id
+                  inner join usuario_rol f on e.id=f.usuario_id
+        where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and e.esactivo=\'t\') a
+        where user_id = ?
+        and rol_tipo_id = ?
+        ORDER BY cod_dis
+        LIMIT 1
+        ';
+        $stmt = $db->prepare($query);
+        $params = array($userId,$userRol);
+        $stmt->execute($params);
+        $user=$stmt->fetch();
+        return $user;
+    }
+
+    private function getDepartamentoDistrito($numero)
+    {
+      $departamento=-1;
+      $distrito=-1;
+      if($numero==0)
+      {
+        $departamento=-1;
+        $distrito=-1;
+      }
+      else
+      {
+        if($numero>0 && $numero<=9)
+        {
+          $departamento=$numero;
+          $distrito=-1;
+        }
+        else
+        {
+          if($numero > 10 and strlen($numero)==4)
+          {
+            $departamento=substr($numero,0,1);
+            $distrito=$numero;
+          }
+          else
+          {
+            $departamento=-1;
+            $distrito=-1;
+          }
+        }
+      }
+      return array($departamento,$distrito);
+    }
+
+    private function getNombreDepartamento($id)
+    {
+      $objDepto=NULL;
+      $em = $this->getDoctrine()->getManager();
+      $objDepto =  $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $id));
+      if($objDepto)
+        $objDepto=strtoupper($objDepto->getDepartamento());
+      else
+        $objDepto=NULL;
+      return $objDepto;
+    }
+
+    private function getNombreDistrito($id)
+    {
+      $objDistrito=NULL;
+      $em = $this->getDoctrine()->getManager();
+      $objDistrito =  $em->getRepository('SieAppWebBundle:DistritoTipo')->findOneBy(array('id' => $id));
+      if($objDistrito)
+        $objDistrito=strtoupper($objDistrito->getDistrito());
+      else
+        $objDistrito=NULL;
+      return $objDistrito;
+    }
+
+    private function getNombreColegio($id)
+    {
+      $objColegio=NULL;
+      $em = $this->getDoctrine()->getManager();
+      $objColegio =  $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $id));
+      if($objColegio)
+        $objColegio=strtoupper($objColegio->getInstitucioneducativa());
+      else
+        $objColegio=NULL;
+      return $objColegio;
+    }
+
+      //Reporte estudiantes en situacio de vulnerabilidad
+    function reporteEstudiantesSituacionVulnerabilidadAction(Request $request)
+    {
+      $departamento=-1;
+      $distrito=-1;
+      $userId=$this->session->get('userId');
+      $userRol=$this->session->get('roluser');
+      $datosUser=$this->getDatosUsuario($userId,$userRol);
+      if($datosUser)
+      {
+        $departamentoDistrito=$datosUser['cod_dis'];
+        list($departamento,$distrito)=$this->getDepartamentoDistrito($departamentoDistrito);
+      }
+      else
+      {
+        return $this->redirect($this->generateUrl('login'));
+      }
+      $datos=$this->getUESituacionVulnerabilidad($departamento,$distrito);
+
+      return $this->render($this->session->get('pathSystem') . ':InfoConsolidation:reporte_estudiantes_situacion_vulnerabilidad.html.twig', array(
+        'departamento'=> $departamento,
+        'distrito'=> $distrito,
+        'departamento_nom'=>$this->getNombreDepartamento($departamento),
+        'distrito_nom'=>$this->getNombreDistrito($distrito),
+        'datos' => $datos,
+      ));
+    }
+
+    private function getUESituacionVulnerabilidad($departamento=-1,$distrito=-1)
+    {
+        $operadorDepartamento=($departamento==-1)?' <> ':' = ';
+        $operadorDistrito=($distrito==-1)?' <> ':' = ';
+
+        $departamentos=array();
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = '
+        select 
+        j.id as departamento_id,
+        j.departamento as departamento_nom,
+        f.cod_dis as distrito_id,
+        f.des_dis as distrito_nom,
+        d.id as ue_id,
+        d.institucioneducativa ue_nom,
+        COALESCE(i.id_registro, -1) as registro
+        
+        from  institucioneducativa d 
+        inner join jurisdiccion_geografica e on d.le_juridicciongeografica_id=e.id
+        inner join (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo where lugar_nivel_id=7) f on e.lugar_tipo_id_distrito=f.id
+        inner JOIN institucioneducativa_sucursal g on g.institucioneducativa_id=d.id
+        
+        RIGHT JOIN (
+        select a.institucioneducativa_id, eq.id_registro from  institucioneducativa_frontera_vulnerabilidad a left JOIN (SELECT institucioneducativa_id as id_registro, count(institucioneducativa_id) nro_estudiantes from  estudiante_quipus GROUP BY institucioneducativa_id having count(institucioneducativa_id)>1) eq on a.institucioneducativa_id=eq.id_registro
+        ) i on i.institucioneducativa_id =d.id
+        
+        INNER JOIN departamento_tipo j on j.id=CAST(substring(f.cod_dis,1,1) as INTEGER)
+    
+        WHERE j.id '.$operadorDepartamento.' ? 
+        and f.cod_dis '.$operadorDistrito.' ?
+
+        GROUP BY j.id,j.departamento,f.cod_dis,f.des_dis,d.id, i.id_registro
+        ORDER BY j.id asc,j.departamento asc,f.cod_dis asc,d.institucioneducativa ASC
+        ';
+
+        $stmt = $db->prepare($query);
+        $params = array($departamento,$distrito);
+        $stmt->execute($params);
+        $colegios=$stmt->fetchAll();
+
+        return $colegios;
+    }
 
 }

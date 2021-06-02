@@ -10,7 +10,7 @@ $("#mb_carnet").attr("maxlength",'10');
 // aplicamos las mascaras para las fechas
 $("#m_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
 $("#mb_fechaNacimiento").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
-$("#mb_complemento").inputmask({mask: "9a"});
+//$("#mb_complemento").inputmask({mask: "9a"});
 
 // convertimos el complemento en mayusculas
 $('#mb_complemento').on('keyup',function(){
@@ -29,7 +29,7 @@ var m_validarTieneMadre = function(){
     if(tiene == 1){
         $('#m_divMadre').css('display','block');
         $('#m_carnet').attr('required','required');
-        $('#m_expedido').attr('required','required');
+        //$('#m_expedido').attr('required','required');
         $('#m_nombre').attr('required','required');
         $('#m_fechaNacimiento').attr('required','required');
         $('#m_genero').attr('required','required');
@@ -130,12 +130,55 @@ $('#mb_sinCarnet').on('change', function(){
     }else{
         $('#mb_carnet').removeAttr('disabled');
         $('#mb_complemento').removeAttr('disabled');
+        $('#mb_carnet').removeAttr('disabled');
+        $('#mb_complemento').removeAttr('disabled');
         
         $('#mb_carnet').focus();
 
         $('#m_carnet').attr('required','required');
     }
 });
+
+//verificamos si es extranjero y obligamos a llenar los campos necesarios
+var mostrarTipoIdentificacionMadre=function ()
+{
+        $("#mb_es_extranjero").on( 'change', function()
+        {
+            if( $(this).is(':checked') )
+            {
+                $('#mb_nro_identidad').focus();
+                $(".mdiv-identificacion-extranjeros").show();
+                $(".mdiv-identificacion-nacionales").hide();
+
+                $('#mb_carnet').removeAttr('required');
+                $('#mb_complemento').removeAttr('required');
+
+                $('#mb_carnet').attr('disabled','disabled');
+                $('#mb_complemento').attr('disabled','disabled');
+
+                $('#mb_nro_identidad').attr('required','required');
+
+                $('#mb_carnet').val('');
+                $('#mb_complemento').val('');
+            }
+            else
+            {
+                $('#mb_carnet').focus();
+                $(".mdiv-identificacion-extranjeros").hide();
+                $(".mdiv-identificacion-nacionales").show();
+
+                $('#mb_carnet').removeAttr('disabled');
+                $('#mb_complemento').removeAttr('disabled');
+
+                $('#mb_carnet').attr('required','required');
+                $('#mb_nro_identidad').removeAttr('required');
+
+                $('#mb_nro_identidad').val('');
+            }
+        });
+}
+
+
 
 // Buscar madre
 var m_buscarMadre = function(){
@@ -160,6 +203,9 @@ var m_buscarMadre = function(){
         return;
     }
     /////////
+    //esta seccion de añadio para el caso de extranjeros
+    var m_es_extranjero = $('#mb_es_extranjero').is(':checked')?1:0;
+    var m_nro_identidad = $('#mb_nro_identidad').val();
 
     if($('#mb_sinCarnet').is(':checked')){
 
@@ -191,12 +237,12 @@ var m_buscarMadre = function(){
             $('#m_mensaje').append('Complete los datos de nombre y fecha de nacimiento');
         }
     }else{
-
-        if(m_carnet != "" && m_nombre != ""){
+        if((m_carnet != "" && m_nombre != "" && m_es_extranjero==0) || (m_nro_identidad.length>0  && m_nombre.length>0 && m_es_extranjero==1))
+        {
 
             $.ajax({
                 type: 'get',
-                url: Routing.generate('info_estudiante_rude_nuevo_buscar_persona',{'carnet':m_carnet, 'complemento':m_complemento, 'paterno':m_paterno, 'materno': m_materno, 'nombre': m_nombre, 'fechaNacimiento': m_fechaNacimiento}),
+                url: Routing.generate('info_estudiante_rude_nuevo_buscar_persona',{'carnet':m_carnet, 'complemento':m_complemento, 'paterno':m_paterno, 'materno': m_materno, 'nombre': m_nombre, 'fechaNacimiento': m_fechaNacimiento,'esExtranjero':m_es_extranjero,'documentoNro':m_nro_identidad}),
                 beforeSend: function(){
                     $('#m_mensaje').empty();
                     m_cambiarFondoMensaje(1);
@@ -251,7 +297,10 @@ var m_buscarMadre = function(){
         }else{
             $('#m_mensaje').empty();
             m_cambiarFondoMensaje(3);
-            $('#m_mensaje').append('Complete los datos de carnet y fecha de nacimiento para realizar la busqueda');
+            if($('#mb_es_extranjero').is(':checked'))
+                $('#m_mensaje').append('Complete los datos de nro de identidad y fecha de nacimiento para realizar la busqueda');
+            else
+                $('#m_mensaje').append('Complete los datos de carnet y fecha de nacimiento para realizar la busqueda');
         }
     }
 }
@@ -279,6 +328,7 @@ function m_borrarDatos(){
     $('#m_correo').val('');
     $('#m_telefono').val('');
     $('#m_celular').val('');
+    $('#m_nro_identidad').val('');
 }
 
 var m_cambiarFondoMensaje = function(opcion){

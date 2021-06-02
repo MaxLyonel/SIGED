@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 use Sie\AppWebBundle\Entity\ValidacionOmisionHistoricaEstudiante;
+use Sie\AppWebBundle\Entity\IdiomaTipo;
 
 /**
  * Gestión de Menú Controller.
@@ -203,6 +204,7 @@ class ControlCalidadController extends Controller {
                     ->setParameter('gestion', $gestion)
                     ->setParameter('esActivo', true)
                     ->setParameter('fisquim', 27)
+                    ->orderBy('vrt.id', 'ASC')
                     ->getQuery();
                 break;
             case 9://unidad educativa
@@ -220,6 +222,7 @@ class ControlCalidadController extends Controller {
                     ->setParameter('gestion', $gestion)
                     ->setParameter('esActivo', true)
                     ->setParameter('fisquim', 27)
+                    ->orderBy('vrt.id', 'ASC')
                     ->getQuery();
                 break;
             case 7://departamento
@@ -238,6 +241,7 @@ class ControlCalidadController extends Controller {
                     ->setParameter('gestion', $gestion)
                     ->setParameter('esActivo', true)
                     ->setParameter('fisquim', 27)
+                    ->orderBy('vrt.id', 'ASC')
                     ->getQuery();
                 break;
             case 31://nacional (super usuario)
@@ -254,6 +258,7 @@ class ControlCalidadController extends Controller {
                     ->setParameter('gestion', $gestion)
                     ->setParameter('esActivo', true)
                     ->setParameter('fisquim', 27)
+                    ->orderBy('vrt.id', 'ASC')
                     ->getQuery();
                 break;
         }
@@ -292,6 +297,15 @@ class ControlCalidadController extends Controller {
 
         $repository = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo');
 
+        $qb = $em->createQueryBuilder();
+        $idiomas=$qb->select('i')
+             ->from('SieAppWebBundle:IdiomaTipo', 'i')
+             ->where('i.esVigente = :esVigente')
+             ->addOrderBy('i.id','asc')
+             ->setParameter('esVigente','true')
+             ->getQuery()
+             ->getResult();
+
         switch($rol_usuario){
             case 10://distrito
                 $query = $repository->createQueryBuilder('vrt')
@@ -305,7 +319,8 @@ class ControlCalidadController extends Controller {
                     ->setParameter('esactivo', 'f')
                     ->setParameter('lugarDistrito', $usuario_lugar)
                     ->setParameter('gestion', $gestion)
-                    ->addOrderBy('vp.gestionTipo', 'desc')
+                    ->orderBy('vp.gestionTipo', 'DESC')
+                    ->addOrderBy('vp.institucionEducativaId', 'ASC')
                     ->getQuery();
                 break;
             case 9://unidad educativa
@@ -320,7 +335,8 @@ class ControlCalidadController extends Controller {
                     ->setParameter('esactivo', 'f')
                     ->setParameter('sie', $this->session->get('ie_id'))
                     ->setParameter('gestion', $gestion)
-                    ->addOrderBy('vp.gestionTipo', 'desc')
+                    ->orderBy('vp.gestionTipo', 'DESC')
+                    ->addOrderBy('vp.institucionEducativaId', 'ASC')
                     ->getQuery();
                 break;
             case 31://nacional (super usuario)
@@ -333,14 +349,15 @@ class ControlCalidadController extends Controller {
                     ->setParameter('reglaTipo', $id)
                     ->setParameter('esactivo', 'f')
                     ->setParameter('gestion', $gestion)
-                    ->addOrderBy('vp.gestionTipo', 'desc')
+                    ->orderBy('vp.gestionTipo', 'DESC')
+                    ->addOrderBy('vp.institucionEducativaId', 'ASC')
                     ->getQuery();
                 break;
         }
 
         $lista_detalle = $query->getResult();
 
-        return $this->render('SieRegularBundle:ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla));
+        return $this->render('SieRegularBundle:ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla,'idiomas'=>$idiomas));
     }
 
     public function omitirAction(Request $request) {
@@ -573,7 +590,7 @@ class ControlCalidadController extends Controller {
                 $resultado = $query->fetchAll();
                 break;
 
-            case 14://DOBLE INSCRIPCIÓN
+            case 14://MAESTRO SIN MATERIA
                 $query = $em->getConnection()->prepare("SELECT sp_sist_calidad_maes_sin_materia (:tipo, :mi_id, :sie, :gestion)");
                 $query->bindValue(':tipo', '2');
                 $query->bindValue(':mi_id', $form['llave']);
@@ -844,7 +861,7 @@ class ControlCalidadController extends Controller {
         $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
         $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
 
-        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneByCodigoRude($vproceso->getLlave());
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($vproceso->getLlave());
 
         $datos = array(
             'complemento'=>$estudiante->getComplemento(),
@@ -882,29 +899,350 @@ class ControlCalidadController extends Controller {
     }
 
     public function justificarEstudianteSegipAction(Request $request) {
-
-        $gestion = $this->session->get('idGestionCalidad');
-
+        $defaultController = new DefaultCont();
+        $defaultController->setContainer($this->container);
         $em = $this->getDoctrine()->getManager();
-        
+        $em->getConnection()->beginTransaction();
+        $gestion = $this->session->get('idGestionCalidad');
         $form = $request->get('formJ');
         $justificacion= mb_strtoupper($form['justificacion'], 'utf-8');
         $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
         $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
         $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
 
-        if($vproceso){
-            $mensaje = "Se realizó el proceso satisfactoriamente: ".$justificacion.".";
-            $vproceso->setJustificacion($justificacion);
-            $em->persist($vproceso);
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($vproceso->getLlave());
+
+        try {
+            $antes = json_encode([
+                'carnet_identidad'=>$estudiante->getCarnetIdentidad(),
+                'complemento'=>$estudiante->getCarnetIdentidad(),
+                'paterno'=>$estudiante->getPaterno(),
+                'materno'=>$estudiante->getMaterno(),
+                'nombre'=>$estudiante->getNombre(),
+                'fecha_nacimiento'=>$estudiante->getFechaNacimiento(),
+                'segip_id'=>$estudiante->getSegipId()
+                
+            ]);
+
+            $estudiante->setCarnetIdentidad('');
+            $estudiante->setComplemento('');
             $em->flush();
-            $this->ratificar($vproceso);
-            $this->addFlash('success', $mensaje);
-        } else {
-            $mensaje = "No se encontró la inconsistencia.";
-            $this->addFlash('warning', $mensaje);
+
+            $despues = json_encode([
+                'carnet_identidad'=>$estudiante->getCarnetIdentidad(),
+                'complemento'=>$estudiante->getCarnetIdentidad(),
+                'paterno'=>$estudiante->getPaterno(),
+                'materno'=>$estudiante->getMaterno(),
+                'nombre'=>$estudiante->getNombre(),
+                'fecha_nacimiento'=>$estudiante->getFechaNacimiento(),
+                'segip_id'=>$estudiante->getSegipId()
+            ]);
+
+            // registro del log
+            $resp = $defaultController->setLogTransaccion(
+                $estudiante->getId(),
+                'estudiante',
+                'U',
+                json_encode(array('browser' => $_SERVER['HTTP_USER_AGENT'],'ip'=>$_SERVER['REMOTE_ADDR'])),
+                $this->session->get('userId'),
+                '',
+                $despues,
+                $antes,
+                'SIGED',
+                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );
+
+            if($vproceso){
+                $mensaje = "Se realizó el proceso satisfactoriamente: ".$justificacion.".";
+                $vproceso->setJustificacion($justificacion);
+                $em->persist($vproceso);
+                $em->flush();
+                $this->ratificar($vproceso);
+                $this->addFlash('success', $mensaje);
+            } else {
+                $mensaje = "No se encontró la inconsistencia.";
+                $this->addFlash('warning', $mensaje);
+            }
+
+            $em->getConnection()->commit();
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();           
         }
             
         return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
     }
+
+    public function justificarHomonimoGemeloAction(Request $request) {
+        $defaultController = new DefaultCont();
+        $defaultController->setContainer($this->container);
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $gestion = $this->session->get('idGestionCalidad');
+        $form = $request->get('formH');
+        $justificacion= mb_strtoupper($form['justificacion'], 'utf-8');
+        $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
+        $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
+        $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
+
+        try {
+            if($vproceso){
+                $mensaje = "Se realizó el proceso satisfactoriamente: ".$justificacion.".";
+                $vproceso->setJustificacion($justificacion);
+                $em->persist($vproceso);
+                $em->flush();
+                $this->ratificar($vproceso);
+                $this->addFlash('success', $mensaje);
+            } else {
+                $mensaje = "No se encontró la inconsistencia.";
+                $this->addFlash('warning', $mensaje);
+            }
+
+            $em->getConnection()->commit();
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+        }
+            
+        return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
+    }
+
+
+    /**
+     * Esta funcion corrige la observacion  de: "Inconsistencias respecto a Grados sin desayuno escolar respecto a la gestion 2014" (validacion_regla_tipo=17)
+     *
+     * @return json ($data=id,$status,$msj)
+     * @author lnina
+     **/
+    public function calidad_resolverInconsistenciasGradosSinDesayunoAction(Request $request)
+    {
+        $esAjax=$request->isXmlHttpRequest();
+        if($esAjax)
+        {
+            $em                     = $this->getDoctrine()->getManager();
+            $form                   = $request->request->all();
+
+            $request_llave          = filter_var($form['id'],FILTER_SANITIZE_NUMBER_INT);
+            $request_desayuno       = filter_var($form['desayunoEscolar'],FILTER_SANITIZE_NUMBER_INT);
+            $request_financiamiento = filter_var($form['finDesEscolarTipo'],FILTER_SANITIZE_NUMBER_INT);
+            $request_inconsistencia = filter_var($form['inconsistencia'],FILTER_SANITIZE_NUMBER_INT);
+            $request_ue             = filter_var($form['ue'],FILTER_SANITIZE_NUMBER_INT);
+
+            $request_llave          = empty($request_llave)?-1:$request_llave;
+            $request_desayuno       = (empty($request_desayuno) && !is_numeric($request_desayuno))?-1:$request_desayuno;
+            $request_financiamiento = empty($request_financiamiento)?-1:$request_financiamiento;
+            $request_inconsistencia = empty($request_inconsistencia)?-1:$request_inconsistencia;
+            $request_ue             = empty($request_ue)?-1:$request_ue;
+
+            $data   = NULL;
+            $status = 404;
+            $msj    = 'Acaba de ocurrir un error desconocido, por favor vuelva a intentarlo';
+
+            if($request_llave>0 && $request_inconsistencia>0 && $request_ue>0)
+            {
+                $observacion = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find(array('id'=>$request_inconsistencia,'InstitucionEducativa'=>$request_ue));
+                $curso       = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find(array('id'=>$request_llave));
+
+                if($curso && $observacion)
+                {
+                    $em->getConnection()->beginTransaction();
+                    if($request_desayuno == 0 || $request_desayuno == 1)
+                    {
+                        if($request_desayuno == 1)
+                        {
+                            if($request_financiamiento>0)
+                            {
+                                $financiamiento = $em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find($request_financiamiento);
+                            }
+                            else
+                            {
+                                $financiamiento = null;
+                            }
+                        }
+                        else //$request_desayuno=1
+                        {
+                            $financiamiento=$em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find(0);
+                        }
+
+                        if($financiamiento)
+                        {
+                            //asignamos los datos del desayuno
+                            $curso->setDesayunoEscolar($request_desayuno);
+                            $curso->setFinDesEscolarTipo($financiamiento);
+
+                            //ahora cambiamos el estado de la observación
+                            $observacion->setEsActivo('t');
+
+                            //guardamos los datos
+                            $em->persist($curso);
+                            $em->persist($observacion);
+                            $em->flush();
+                            //Confirmamos los cambios
+                            $em->getConnection()->commit();
+                            $data   = $observacion->getId();
+                            $status = 200;
+                            $msj    = 'La observación fue corregida exitosamente';
+                        }
+                        else
+                        {
+                            $em->getConnection()->rollback();
+                            $data   = NULL;
+                            $status = 404;
+                            $msj    = 'Debe seleccionar una fuente de financiamiento del desayuno';
+                        }
+                    }
+                    else
+                    {
+                        $em->getConnection()->rollback();
+                        $data   = NULL;
+                        $status = 404;
+                        $msj    = 'Debe seleccionar SI se proporciona o NO desayuno escolar al curso';
+                    }
+                }
+                else
+                {
+                    $data   = NULL;
+                    $status = 404;
+                    $msj    = 'La observación no existe o el curso seleccionado no existe, por favor vuelva a intentarlo';
+                }
+            }
+            else
+            {
+                $data   = NULL;
+                $status = 404;
+                $msj    = 'Acaba de ocurrir un error desconocido, por favor vuelva a intentarlo';
+            }
+            $response = new JsonResponse($data,$status);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+        }
+        else
+        {
+            return $this->redirect($this->generateUrl('login'));
+        }
+    }
+
+    /**
+     * Esta funcion corrige la observacion  de: "Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" (validacion_regla_tipo=19)
+     * Esta funcion corrige la observacion  de: "Grados sin idioma que hablan los estudiantes respecto a la gestion 2015" (validacion_regla_tipo=18)
+     *
+     * @return json ($data=id,$status,$msj)
+     * @author lnina
+     **/
+    public function calidad_resolverInconsistenciasGradosSinEnsenanzaAulaAction(Request $request)
+    {
+        $esAjax=$request->isXmlHttpRequest();
+        if($esAjax)
+        {
+            $em                     = $this->getDoctrine()->getManager();
+            $form                   = $request->request->all();
+
+            $request_idioma_1       = filter_var($form['priLenEnsenanzaTipo'],FILTER_SANITIZE_NUMBER_INT);
+            $request_idioma_2       = filter_var($form['segLenEnsenanzaTipo'],FILTER_SANITIZE_NUMBER_INT);
+            $request_idioma_3       = filter_var($form['terLenEnsenanzaTipo'],FILTER_SANITIZE_NUMBER_INT);
+            $request_tipo           = filter_var($form['tipo'],FILTER_SANITIZE_NUMBER_INT);
+            $request_llave          = filter_var($form['id'],FILTER_SANITIZE_NUMBER_INT);
+            $request_inconsistencia = filter_var($form['inconsistencia'],FILTER_SANITIZE_NUMBER_INT);
+            $request_ue             = filter_var($form['ue'],FILTER_SANITIZE_NUMBER_INT);
+
+            $request_idioma_1       = empty($request_idioma_1)?-1:$request_idioma_1;
+            $request_idioma_2       = empty($request_idioma_2)?-1:$request_idioma_2;
+            $request_idioma_3       = empty($request_idioma_3)?-1:$request_idioma_3;
+            $request_tipo           = empty($request_tipo)?-1:$request_tipo;
+            $request_tipo           = ($request_tipo==18 || $request_tipo==19)?$request_tipo:-1;
+            $request_llave          = empty($request_llave)?-1:$request_llave;
+            $request_inconsistencia = empty($request_inconsistencia)?-1:$request_inconsistencia;
+            $request_ue             = empty($request_ue)?-1:$request_ue;
+
+            $data   = NULL;
+            $status = 404;
+            $msj    = 'Acaba de ocurrir un error desconocido, por favor vuelva a intentarlo';
+
+            if( $request_idioma_1>0 && $request_idioma_2>0 && $request_idioma_3>0  && $request_tipo >0)
+            {
+                if($request_llave>0 && $request_inconsistencia>0 && $request_ue>0)
+                {
+                    $curso       = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find(array('id'=>$request_llave));
+                    $observacion = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find(array('id'=>$request_inconsistencia,'InstitucionEducativa'=>$request_ue));
+
+                    if($curso && $observacion)
+                    {
+                        $em->getConnection()->beginTransaction();
+
+                        $tmpIdioma1=$em->getRepository('SieAppWebBundle:IdiomaTipo')->find($request_idioma_1);
+                        $tmpIdioma2=$em->getRepository('SieAppWebBundle:IdiomaTipo')->find($request_idioma_2);
+                        $tmpIdioma3=$em->getRepository('SieAppWebBundle:IdiomaTipo')->find($request_idioma_3);
+
+                        //verificamos que los idiomas existan en la tabla
+                        if($tmpIdioma1 && $tmpIdioma2 && $tmpIdioma3)
+                        {
+                            if($request_tipo==19)
+                            {
+                                //asignamos los idiomas
+                                $curso->setPriLenEnsenanzaTipo( $tmpIdioma1 );
+                                $curso->setSegLenEnsenanzaTipo( $tmpIdioma2 );
+                                $curso->setTerLenEnsenanzaTipo( $tmpIdioma3 );
+                            }
+                            else // $request_tipo==18
+                            {
+                                $curso->setIdiomaMasHabladoTipo($em->getRepository( $tmpIdioma1 ));
+                                $curso->setIdiomaRegHabladoTipo($em->getRepository( $tmpIdioma2 ));
+                                $curso->setIdiomaMenHabladoTipo($em->getRepository( $tmpIdioma3 ));
+                            }
+
+                            //ahora cambiamos el estado de la observación
+                            $observacion->setEsActivo('t');
+
+                            //guardamos los datos
+                            $em->persist($curso);
+                            $em->persist($observacion);
+                            $em->flush();
+                            //Confirmamos los cambios
+                            $em->getConnection()->commit();
+                            $data   = $observacion->getId();
+                            $status = 200;
+                            $msj    = 'La observación fue corregida exitosamente';
+                        }
+                        else
+                        {
+                            $em->getConnection()->rollback();
+                            $data   = NULL;
+                            $status = 404;
+                            if($request_tipo==19)
+                                $msj    = 'Debe selecionar la primera, segunda y tercera lengua del proceso pedagógico';
+                            else
+                                $msj    = 'Debe selecionar la primera, segunda y tercera lengua en el ámbito escolar';
+                        }
+                    }
+                    else
+                    {
+                        $data   = NULL;
+                        $status = 404;
+                        $msj    = 'La observación no existe o el curso seleccionado no existe, por favor vuelva a intentarlo';
+                    }
+                }
+                else
+                {
+                    $data   = NULL;
+                    $status = 404;
+                    $msj    = 'Acaba de ocurrir un error desconocido, por favor vuelva a intentarlo';
+                }
+            }
+            else
+            {
+                $data   = NULL;
+                $status = 404;
+                if($request_tipo==19)
+                    $msj    = 'Debe selecionar la primera, segunda y tercera lengua del proceso pedagógico';
+                else
+                    $msj    = 'Debe selecionar la primera, segunda y tercera lengua en el ámbito escolar';
+            }
+            $response = new JsonResponse($data,$status);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+        }
+        else
+        {
+            return $this->redirect($this->generateUrl('login'));
+        }
+    }
+
 }

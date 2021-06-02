@@ -150,27 +150,53 @@ class InfoStudentsController extends Controller {
 
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
 
+      $objRegistroConsolidacion = $em->createQueryBuilder()
+        ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
+        ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
+        ->where('rc.unidadEducativa = :ue')
+        ->andWhere('rc.gestion = :gestion')
+        ->setParameter('ue',$sie)
+        ->setParameter('gestion',$gestion)
+        ->getQuery()
+        ->getResult();
+      
+      $operativo_fin = false;
+      if ($gestion >= 2020){
+        if($objRegistroConsolidacion){
+          if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0){
+            $operativo_fin = true;
+          }
+        }
+      } else {
+        if($objRegistroConsolidacion){
+          if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0 and $objRegistroConsolidacion[0]['bim4'] > 0){
+            $operativo_fin = true;
+          }
+        }
+      }
+
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
-                  'objStudents' => $objStudents,
-                  'sie' => $sie,
-                  'turno' => $turno,
-                  'nivel' => $nivel,
-                  'grado' => $grado,
-                  'paralelo' => $paralelo,
-                  'gestion' => $gestion,
-                  'aData' => $aData,
-                  'gradoname' => $gradoname,
-                  'paraleloname' => $paraleloname,
-                  'nivelname' => $nivelname,
-                  'turnoname' => $turnoname,
-                  'form' => $this->createFormStudentInscription($infoUe)->createView(),
-                  'infoUe' => $infoUe,
-                  'exist' => $exist,
-                  'itemsUe'=>$itemsUe,
-                  'ciclo'=>$ciclo,
-                  'operativo'=>$operativo,
-                  'arrDataLibreta'=> $arrDataLibreta,
-                  'areaEspecial' => $objArea->getAreaEspecial()
+        'operativo_fin' => $operativo_fin,
+        'objStudents' => $objStudents,
+        'sie' => $sie,
+        'turno' => $turno,
+        'nivel' => $nivel,
+        'grado' => $grado,
+        'paralelo' => $paralelo,
+        'gestion' => $gestion,
+        'aData' => $aData,
+        'gradoname' => $gradoname,
+        'paraleloname' => $paraleloname,
+        'nivelname' => $nivelname,
+        'turnoname' => $turnoname,
+        'form' => $this->createFormStudentInscription($infoUe)->createView(),
+        'infoUe' => $infoUe,
+        'exist' => $exist,
+        'itemsUe'=>$itemsUe,
+        'ciclo'=>$ciclo,
+        'operativo'=>$operativo,
+        'arrDataLibreta'=> $arrDataLibreta,
+        'areaEspecial' => $objArea->getAreaEspecial()
       ));
   }
   /**
@@ -232,7 +258,7 @@ class InfoStudentsController extends Controller {
     $form = $this->createFormBuilder()
             ->add('rudeal','text', array('label'=>'Rude', 'attr'=> array('class'=>'form-control', 'placeholder' => 'Rude', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
             ->add('data', 'hidden', array('data'=> $data))
-            ->add('find', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-primary', 'onclick'=>'findStudent()')))
+            ->add('find', 'button', array('label'=> 'Buscar', 'attr'=>array('class'=>'btn btn-facebook', 'onclick'=>'findStudent()')))
             ->getForm();
     return $form;
   }
@@ -399,27 +425,53 @@ class InfoStudentsController extends Controller {
       $dataUe=(unserialize($form['data']));
       $objArea = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($aInfoUeducativa['ueducativaInfoId']['areaEspecialId']);
 
+      $objRegistroConsolidacion = $em->createQueryBuilder()
+        ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
+        ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
+        ->where('rc.unidadEducativa = :ue')
+        ->andWhere('rc.gestion = :gestion')
+        ->setParameter('ue',$sie)
+        ->setParameter('gestion',$gestion)
+        ->getQuery()
+        ->getResult();
+      
+      $operativo_fin = false;
+      if ($gestion >= 2020){
+        if($objRegistroConsolidacion){
+          if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0){
+            $operativo_fin = true;
+          }
+        }
+      } else {
+        if($objRegistroConsolidacion){
+          if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0 and $objRegistroConsolidacion[0]['bim4'] > 0){
+            $operativo_fin = true;
+          }
+        }
+      }
+
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
-                  'objStudents' => $objStudents,
-                  'sie' => $sie,
-                  'turno' => $turno,
-                  'nivel' => $nivel,
-                  'grado' => $grado,
-                  'paralelo' => $paralelo,
-                  'gestion' => $gestion,
-                  'infoUe' => $form['data'],
-                  'aData' => $form['data'],
-                  'gradoname' => $gradoname,
-                  'paraleloname' => $paraleloname,
-                  'nivelname' => $nivelname,
-                  'turnoname' => $turnoname,
-                  'form' => $this->createFormStudentInscription($form['data'])->createView(),
-                  'exist' => $exist,
-                  'itemsUe'=>$itemsUe,
-                  'ciclo'=>$ciclo,
-                  'operativo'=>$operativo,
-                  'areaEspecial' => $objArea->getAreaEspecial()
-                  // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
+        'operativo_fin' => $operativo_fin,
+        'objStudents' => $objStudents,
+        'sie' => $sie,
+        'turno' => $turno,
+        'nivel' => $nivel,
+        'grado' => $grado,
+        'paralelo' => $paralelo,
+        'gestion' => $gestion,
+        'infoUe' => $form['data'],
+        'aData' => $form['data'],
+        'gradoname' => $gradoname,
+        'paraleloname' => $paraleloname,
+        'nivelname' => $nivelname,
+        'turnoname' => $turnoname,
+        'form' => $this->createFormStudentInscription($form['data'])->createView(),
+        'exist' => $exist,
+        'itemsUe'=>$itemsUe,
+        'ciclo'=>$ciclo,
+        'operativo'=>$operativo,
+        'areaEspecial' => $objArea->getAreaEspecial()
+        // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
 
     } catch (Exception $e) {
@@ -484,11 +536,11 @@ class InfoStudentsController extends Controller {
         }
 
         //step 4 delete socio economico data
-        $objSocioEco = $em->getRepository('SieAppWebBundle:SocioeconomicoRegular')->findBy(array('estudianteInscripcion' => $estInsEspId ));
-        foreach ($objSocioEco as $element) {
-            $em->remove($element);
-        }
-        $em->flush();
+        // $objSocioEco = $em->getRepository('SieAppWebBundle:SocioeconomicoRegular')->findBy(array('estudianteInscripcion' => $estInsEspId ));
+        // foreach ($objSocioEco as $element) {
+        //     $em->remove($element);
+        // }
+        // $em->flush();
 
 
         //step 5 delete apoderado_inscripcion data
@@ -509,36 +561,36 @@ class InfoStudentsController extends Controller {
             $em->remove($element);
         }
         $em->flush();
-      //paso 7 borrando apoderados
-        $objEstudianteInscripcionSocioeconomicoRegular = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $estInsId ));
-        if($objEstudianteInscripcionSocioeconomicoRegular){
-          $objEstudianteInscripcionSocioeconomicoRegNacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegNacion')->findBy(array(
-            'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-          ));
-          foreach ($objEstudianteInscripcionSocioeconomicoRegNacion as $element) {
-              $em->remove($element);
-          }
-          $em->flush();
+        //paso 7 borrando apoderados
+        // $objEstudianteInscripcionSocioeconomicoRegular = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $estInsId ));
+        // if($objEstudianteInscripcionSocioeconomicoRegular){
+        //   $objEstudianteInscripcionSocioeconomicoRegNacion = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegNacion')->findBy(array(
+        //     'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
+        //   ));
+        //   foreach ($objEstudianteInscripcionSocioeconomicoRegNacion as $element) {
+        //       $em->remove($element);
+        //   }
+        //   $em->flush();
 
-          $objEstudianteInscripcionSocioeconomicoRegInternet = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegInternet')->findBy(array(
-            'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-          ));
-          foreach ($objEstudianteInscripcionSocioeconomicoRegInternet as $element) {
-              $em->remove($element);
-          }
-          $em->flush();
+        //   $objEstudianteInscripcionSocioeconomicoRegInternet = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegInternet')->findBy(array(
+        //     'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
+        //   ));
+        //   foreach ($objEstudianteInscripcionSocioeconomicoRegInternet as $element) {
+        //       $em->remove($element);
+        //   }
+        //   $em->flush();
 
-          $objEstudianteInscripcionSocioeconomicoRegHablaFrec = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegHablaFrec')->findBy(array(
-            'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
-          ));
-          foreach ($objEstudianteInscripcionSocioeconomicoRegHablaFrec as $element) {
-              $em->remove($element);
-          }
-          $em->flush();
+        //   $objEstudianteInscripcionSocioeconomicoRegHablaFrec = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegHablaFrec')->findBy(array(
+        //     'estudianteInscripcionSocioeconomicoRegular' => $objEstudianteInscripcionSocioeconomicoRegular->getId()
+        //   ));
+        //   foreach ($objEstudianteInscripcionSocioeconomicoRegHablaFrec as $element) {
+        //       $em->remove($element);
+        //   }
+        //   $em->flush();
 
-          $em->remove($objEstudianteInscripcionSocioeconomicoRegular);
-          $em->flush();
-        }
+        //   $em->remove($objEstudianteInscripcionSocioeconomicoRegular);
+        //   $em->flush();
+        // }
 
         $objInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estInsId);
         if($objInscription){
@@ -566,6 +618,8 @@ class InfoStudentsController extends Controller {
       $paralelo = $aInfoUeducativa['ueducativaInfoId']['paraleloId'];
       $gradoname = $aInfoUeducativa['ueducativaInfo']['grado'];
       $paraleloname = $aInfoUeducativa['ueducativaInfo']['paralelo'];
+      $nivelname = $aInfoUeducativa['ueducativaInfo']['nivel'];
+      $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
       //get db connexion
       $em = $this->getDoctrine()->getManager();
 
@@ -600,26 +654,55 @@ class InfoStudentsController extends Controller {
       $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];
       $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($sie,$gestion);
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
+      $objArea = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($aInfoUeducativa['ueducativaInfoId']['areaEspecialId']);
+
+      $objRegistroConsolidacion = $em->createQueryBuilder()
+        ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
+        ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
+        ->where('rc.unidadEducativa = :ue')
+        ->andWhere('rc.gestion = :gestion')
+        ->setParameter('ue',$sie)
+        ->setParameter('gestion',$gestion)
+        ->getQuery()
+        ->getResult();
+      
+      $operativo_fin = false;
+      if ($gestion >= 2020){
+        if($objRegistroConsolidacion){
+          if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0){
+            $operativo_fin = true;
+          }
+        }
+      } else {
+        if($objRegistroConsolidacion){
+          if($objRegistroConsolidacion[0]['bim1'] > 0 and $objRegistroConsolidacion[0]['bim2'] > 0 and $objRegistroConsolidacion[0]['bim3'] > 0 and $objRegistroConsolidacion[0]['bim4'] > 0){
+            $operativo_fin = true;
+          }
+        }
+      }
 
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
-                  'objStudents' => $objStudents,
-                  'sie' => $sie,
-                  'turno' => $turno,
-                  'nivel' => $nivel,
-                  'grado' => $grado,
-                  'paralelo' => $paralelo,
-                  'gestion' => $gestion,
-                  'aData' => $aData,
-                  'gradoname' => $gradoname,
-                  'paraleloname' => $paraleloname,
-                  // 'nivelname' => $nivelname,
-                  'form' => $this->createFormStudentInscription($infoUe)->createView(),
-                  'infoUe' => $infoUe,
-                  'exist' => $exist,
-                  'itemsUe'=>$itemsUe,
-                  'ciclo'=>$ciclo,
-                  'operativo'=>$operativo,
-                  // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
+        'operativo_fin' => $operativo_fin,
+        'objStudents' => $objStudents,
+        'sie' => $sie,
+        'turno' => $turno,
+        'nivel' => $nivel,
+        'grado' => $grado,
+        'paralelo' => $paralelo,
+        'gestion' => $gestion,
+        'aData' => $aData,
+        'gradoname' => $gradoname,
+        'paraleloname' => $paraleloname,
+        'nivelname' => $nivelname,
+        'turnoname' => $turnoname,
+        'form' => $this->createFormStudentInscription($infoUe)->createView(),
+        'infoUe' => $infoUe,
+        'exist' => $exist,
+        'itemsUe'=>$itemsUe,
+        'ciclo'=>$ciclo,
+        'operativo'=>$operativo,
+        'areaEspecial' => $objArea->getAreaEspecial()
+        // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
   }
 
