@@ -24,6 +24,10 @@ class EstadosaludTipo
      */
     private $esactivo;
 
+    public function __toString(){
+        return $this->getId() ? (string)$this->getEstadosalud() : '-';
+    }
+
 
     /**
      * Get id

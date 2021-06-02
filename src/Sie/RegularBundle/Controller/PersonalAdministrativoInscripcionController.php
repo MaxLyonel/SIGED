@@ -17,6 +17,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
 
     public $session;
     public $idInstitucion;
+    public $codDistrito;
 
     /**
      * the class constructor
@@ -24,6 +25,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
     public function __construct() {
         //init the session values
         $this->session = new Session();
+        $this->codDistrito = 0;
     }
 
     /**
@@ -34,6 +36,9 @@ class PersonalAdministrativoInscripcionController extends Controller {
         $id_usuario = $this->session->get('userId');
         $id_rol = $this->session->get('roluser');
 
+        $datosUser=$this->getDatosUsuario($id_usuario,$id_rol);
+        $this->codDistrito=$datosUser['cod_dis'];
+        
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
@@ -42,6 +47,43 @@ class PersonalAdministrativoInscripcionController extends Controller {
                     'form' => $this->formSearch($request->getSession()->get('currentyear'))->createView(),
         ));
     }
+
+    private function getDatosUsuario($userId,$userRol)
+    {
+        $userId=($userId)?$userId:-1;
+        $userRol=($userRol)?$userRol:-1;
+
+        $user=NULL;
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = '
+        select *
+        from (
+        select b.rol_tipo_id,(select rol from rol_tipo where id=b.rol_tipo_id) as rol,a.persona_id,c.codigo as cod_dis,a.esactivo,a.id as user_id
+        from usuario a 
+          inner join usuario_rol b on a.id=b.usuario_id 
+            inner join lugar_tipo c on b.lugar_tipo_id=c.id
+        where codigo not in (\'04\') and b.rol_tipo_id not in (2,3,9,29,26,21,14,39,6) and a.esactivo=\'t\'
+        union all
+        select f.rol_tipo_id,(select rol from rol_tipo where id=f.rol_tipo_id) as rol,a.persona_id,d.codigo as cod_dis,e.esactivo,e.id as user_id
+        from maestro_inscripcion a
+          inner join institucioneducativa b on a.institucioneducativa_id=b.id
+            inner join jurisdiccion_geografica c on b.le_juridicciongeografica_id=c.id
+              inner join lugar_tipo d on d.lugar_nivel_id=7 and c.lugar_tipo_id_distrito=d.id
+                inner join usuario e on a.persona_id=e.persona_id
+                  inner join usuario_rol f on e.id=f.usuario_id
+        where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and e.esactivo=\'t\') a
+        where user_id = ?
+        and rol_tipo_id = ?
+        ORDER BY cod_dis
+        LIMIT 1
+        ';
+        $stmt = $db->prepare($query);
+        $params = array($userId,$userRol);
+        $stmt->execute($params);
+        $user=$stmt->fetch();
+        return $user;
+    }    
 
     /**
      * list of request
@@ -138,11 +180,17 @@ class PersonalAdministrativoInscripcionController extends Controller {
         $em->getConnection()->beginTransaction();
 
         $query = $em->createQuery('SELECT ct FROM SieAppWebBundle:PersonaAdministrativoInscripcionTipo ct ORDER BY ct.personaAdministrativoInscripcion');
-
         $cargos = $query->getResult();
         $cargosArray = array();
         foreach ($cargos as $c) {
             $cargosArray[$c->getId()] = $c->getPersonaAdministrativoInscripcion();
+        }
+        //get salud information
+        $query = $em->createQuery('SELECT st FROM SieAppWebBundle:EstadosaludTipo st where st.esactivo=:istrue ORDER BY st.id')->setParameter('istrue', 1);
+        $healthType = $query->getResult();
+        $healthTypeArray = array();
+        foreach ($healthType as $v) {
+            $healthTypeArray[$v->getId()] = $v->getEstadosalud();
         }
 
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($idPersona);
@@ -153,7 +201,8 @@ class PersonalAdministrativoInscripcionController extends Controller {
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('persona', 'hidden', array('data' => $idPersona))
                 ->add('tipo', 'choice', array('label' => 'Cargo', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'form-control')))
-                ->add('obs', 'text', array('label' => 'Observación', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
+                ->add('health', 'choice', array('label' => 'Estado Salud', 'required' => true, 'choices' => $healthTypeArray, 'attr' => array('class' => 'form-control')))
+                ->add('obs', 'textarea', array('label' => 'Observación', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
                 ->add('celular', 'text', array('label' => 'Nro de Celular', 'required' => false, 'data' => $persona->getCelular(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
                 ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'data' => $persona->getCorreo(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
                 ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => false, 'data' => $persona->getDireccion(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
@@ -205,6 +254,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
             $maestroinscripcion->setPersonaAdministrativoInscripcionTipo($em->getRepository('SieAppWebBundle:PersonaAdministrativoInscripcionTipo')->findOneById($form['tipo']));
             $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
             $maestroinscripcion->setDistritoTipo($em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($form['distrito']));
+            $maestroinscripcion->setEstadosaludTipo($em->getRepository('SieAppWebBundle:EstadosaludTipo')->find($form['health']));
             $maestroinscripcion->setObs(mb_strtoupper($form['obs'], 'utf-8'));
             $maestroinscripcion->setPersona($persona);
             $maestroinscripcion->setEsactivo(1);
@@ -296,6 +346,13 @@ class PersonalAdministrativoInscripcionController extends Controller {
         foreach ($cargos as $c) {
             $cargosArray[$c->getId()] = $c->getPersonaAdministrativoInscripcion();
         }
+        //get health information
+        $query = $em->createQuery('SELECT st FROM SieAppWebBundle:EstadosaludTipo st where st.esactivo=:istrue ORDER BY st.id')->setParameter('istrue', 1);
+        $healthType = $query->getResult();
+        $healthTypeArray = array();
+        foreach ($healthType as $v) {
+            $healthTypeArray[$v->getId()] = $v->getEstadosalud();
+        }        
 
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('personaladministrativoinscripcion_update'))
@@ -304,7 +361,8 @@ class PersonalAdministrativoInscripcionController extends Controller {
                 ->add('persona', 'hidden', array('data' => $persona->getId()))
                 ->add('idMaestroInscripcion', 'hidden', array('data' => $maestroInscripcion->getId()))
                 ->add('tipo', 'choice', array('label' => 'Administrativo Tipo', 'required' => true, 'choices' => $cargosArray, 'data' => $maestroInscripcion->getPersonaAdministrativoInscripcionTipo()->getId(), 'attr' => array('class' => 'form-control')))
-                ->add('obs', 'text', array('label' => 'Observación', 'required' => false, 'data' => $maestroInscripcion->getObs(), 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
+                ->add('health', 'choice', array('label' => 'Estado Salud', 'required' => true, 'choices' => $healthTypeArray,'data' => $maestroInscripcion->getEstadosaludTipo()->getId(), 'attr' => array('class' => 'form-control')))
+                ->add('obs', 'textarea', array('label' => 'Observación', 'required' => false, 'data' => $maestroInscripcion->getObs(), 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
                 ->add('celular', 'text', array('label' => 'Nro de Celular', 'required' => false, 'data' => $persona->getCelular(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
                 ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'data' => $persona->getCorreo(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
                 ->add('direccion', 'text', array('label' => 'Dirección de Domicilio', 'required' => false, 'data' => $persona->getDireccion(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbersletters jupper')))
@@ -339,6 +397,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
             $maestroinscripcion->setPersonaAdministrativoInscripcionTipo($em->getRepository('SieAppWebBundle:PersonaAdministrativoInscripcionTipo')->findOneById($form['tipo']));
             $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
             $maestroinscripcion->setDistritoTipo($em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($form['distrito']));
+            $maestroinscripcion->setEstadosaludTipo($em->getRepository('SieAppWebBundle:EstadosaludTipo')->find($form['health']));
             $maestroinscripcion->setObs(mb_strtoupper($form['obs'], 'utf-8'));
             $maestroinscripcion->setPersona($persona);
             $maestroinscripcion->setEsactivo(1);
@@ -442,9 +501,17 @@ class PersonalAdministrativoInscripcionController extends Controller {
         $gestiones = array($gestionactual => $gestionactual);
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('personaladministrativoinscripcion_list'))
-                ->add('institucioneducativa', 'text', array('required' => true, 'attr' => array('autocomplete' => 'on', 'maxlength' => 4)))
                 ->add('gestion', 'choice', array('required' => true, 'choices' => $gestiones))
-                ->add('buscar', 'submit', array('label' => 'Buscar'))
+                ->add('buscar', 'submit', array('label' => 'Buscar'));
+        if($this->codDistrito != 0){
+            $form = $form 
+                    ->add('institucioneducativa', 'text', array('required' => true, 'attr' => array('autocomplete' => 'on','readonly'=>true,'value'=>$this->codDistrito, 'maxlength' => 4)));
+        }else{
+            $form = $form 
+                    ->add('institucioneducativa', 'text', array('required' => true, 'attr' => array('autocomplete' => 'on', 'maxlength' => 4)));            
+
+        }
+        $form = $form 
                 ->getForm();
         return $form;
     }
@@ -482,13 +549,21 @@ class PersonalAdministrativoInscripcionController extends Controller {
         foreach ($cargos as $c) {
             $cargosArray[$c->getId()] = $c->getPersonaAdministrativoInscripcion();
         }
+        //get salud information
+        $query = $em->createQuery('SELECT st FROM SieAppWebBundle:EstadosaludTipo st where st.esactivo=:istrue ORDER BY st.id')->setParameter('istrue', 1);
+        $healthType = $query->getResult();
+        $healthTypeArray = array();
+        foreach ($healthType as $v) {
+            $healthTypeArray[$v->getId()] = $v->getEstadosalud();
+        }
 
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('personaladministrativoinscripcion_persona_create'))
                 ->add('distrito', 'hidden', array('data' => $idInstitucion))
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('tipo', 'choice', array('label' => 'Administrativo Tipo', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'form-control')))
-                ->add('obs', 'text', array('label' => 'Observación', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
+                ->add('health', 'choice', array('label' => 'Estado Salud', 'required' => true, 'choices' => $healthTypeArray, 'attr' => array('class' => 'form-control')))                
+                ->add('obs', 'textarea', array('label' => 'Observación', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
                 ->add('carnet', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'placeholder' => '', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
                 ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
                 ->add('paterno', 'text', array('label' => 'Apellido Paterno', 'required' => false, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jname jupper')))
@@ -512,50 +587,97 @@ class PersonalAdministrativoInscripcionController extends Controller {
     public function createpersonaAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
-        try {
+        
             $form = $request->get('form');
 
-            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();
             
-            //Nueva persona
-            $persona = new Persona();
-            $persona->setCarnet($form['carnet']);
-            $persona->setComplemento($form['complemento']);
-            $persona->setPaterno(mb_strtoupper($form['paterno'], 'utf-8'));
-            $persona->setMaterno(mb_strtoupper($form['materno'], 'utf-8'));
-            $persona->setNombre(mb_strtoupper($form['nombre'], 'utf-8'));
-            $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['genero']));
-            $persona->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
-            $persona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->findOneById(0));
-            $persona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
-            $persona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
-            $persona->setRda('0');
-            $persona->setSegipId('0');
-            $persona->setDireccion(mb_strtoupper($form['direccion'], 'utf-8'));
-            $persona->setCorreo($form['correo']);
-            $persona->setCelular($form['celular']);
-            $persona->setActivo(1);
-            $persona->setEsvigente(1);
-            $em->persist($persona);
-            $em->flush();
-            
-            // Registro Persona inscripcion
-            $maestroinscripcion = new PersonaAdministrativoInscripcion();
-            $maestroinscripcion->setPersonaAdministrativoInscripcionTipo($em->getRepository('SieAppWebBundle:PersonaAdministrativoInscripcionTipo')->findOneById($form['tipo']));
-            $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
-            $maestroinscripcion->setDistritoTipo($em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($form['distrito']));
-            $maestroinscripcion->setObs(mb_strtoupper($form['obs'], 'utf-8'));
-            $maestroinscripcion->setPersona($persona);
-            $maestroinscripcion->setEsactivo(1);
-            $em->persist($maestroinscripcion);
-            $em->flush();
+            $form['complemento'] = ($form['complemento'] != "") ? mb_strtoupper($form['complemento'], 'utf-8') : '';
+            $parametros = array(
+                'complemento'=>$form['complemento'],
+                'primer_apellido'=>$form['paterno'],
+                'segundo_apellido'=>$form['materno'],
+                'nombre'=>$form['nombre'],
+                'fecha_nacimiento'=>$form['fechaNacimiento']
+            );
+            $persona = $this->get('sie_app_web.segip')->buscarPersonaPorCarnet($form['carnet'], $parametros, 'prod', 'academico');
 
-            $em->getConnection()->commit();
-            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente');
-            return $this->redirect($this->generateUrl('personaladministrativoinscripcion_list'));
-        } catch (Exception $ex) {
-            $em->getConnection()->rollback();
-        }
+            if(isset($persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson']) && $persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'] !== "null"){
+
+                $this->get('session')->getFlashBag()->add('newError', 'VALIDACION SEGIP: Los datos NO fueron registrados ');
+                return $this->redirect($this->generateUrl('personaladministrativoinscripcion_list'));                                
+
+            }else{
+
+                $entity = $em->getRepository('SieAppWebBundle:Persona');
+                $query = $entity->createQueryBuilder('p');
+                
+                if($form['complemento']){
+                    $query = $query->where('p.complemento = :complemento');
+                    $query = $query->setParameter('complemento', $form['complemento']);
+                } else{
+                    $query = $query->where('p.complemento IS NULL');   
+                    $query = $query->orwhere('p.complemento = :complemento');
+                    $query = $query->setParameter('complemento', '');
+
+                }
+                $query = $query->andwhere('p.carnet = :carnet');
+                $query = $query->setParameter('carnet', $form['carnet']);
+                $query = $query->getQuery();                
+
+                $resultPerson = $query->getResult();    
+                if(sizeof($resultPerson)>0){
+                    // no save
+                    $this->get('session')->getFlashBag()->add('newError', 'DATOS EXISTEN EN SIGED: Los datos NO fueron registrados ');
+                    return $this->redirect($this->generateUrl('personaladministrativoinscripcion_list'));                     
+                }else{
+                    // yes save
+                    try {
+                            $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();
+                            
+                            //Nueva persona
+                            $persona = new Persona();
+                            $persona->setCarnet($form['carnet']);
+                            $persona->setComplemento($form['complemento']);
+                            $persona->setPaterno(mb_strtoupper($form['paterno'], 'utf-8'));
+                            $persona->setMaterno(mb_strtoupper($form['materno'], 'utf-8'));
+                            $persona->setNombre(mb_strtoupper($form['nombre'], 'utf-8'));
+                            $persona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['genero']));
+                            $persona->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
+                            $persona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById(0));
+                            $persona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
+                            $persona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
+                            $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById(0));
+                            $persona->setRda('0');
+                            $persona->setSegipId('0');
+                            $persona->setDireccion(mb_strtoupper($form['direccion'], 'utf-8'));
+                            $persona->setCorreo($form['correo']);
+                            $persona->setCelular($form['celular']);
+                            $persona->setActivo(1);
+                            $persona->setEsvigente(1);
+                            $em->persist($persona);
+                            $em->flush();
+                            
+                            // Registro Persona inscripcion
+                            $maestroinscripcion = new PersonaAdministrativoInscripcion();
+                            $maestroinscripcion->setPersonaAdministrativoInscripcionTipo($em->getRepository('SieAppWebBundle:PersonaAdministrativoInscripcionTipo')->findOneById($form['tipo']));
+                            $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
+                            $maestroinscripcion->setDistritoTipo($em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($form['distrito']));
+                            $maestroinscripcion->setObs(mb_strtoupper($form['obs'], 'utf-8'));
+                            $maestroinscripcion->setPersona($persona);
+                            $maestroinscripcion->setEsactivo(1);
+                            $em->persist($maestroinscripcion);
+                            $em->flush();
+
+                            $em->getConnection()->commit();
+                            $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente');
+                            return $this->redirect($this->generateUrl('personaladministrativoinscripcion_list'));                
+                       } catch (Exception $ex) {
+                                $em->getConnection()->rollback();
+                       }                      
+                }
+              
+            }
+     
     }
 
 
