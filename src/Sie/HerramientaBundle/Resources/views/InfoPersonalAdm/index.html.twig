@@ -171,6 +171,10 @@
                                         </form>
                                     </div>
                                 {% endif %}
+                                <br>
+                                <div class="pull-right" style="margin-top:1rem">
+                                    <a href="{{path('herramienta_info_personal_adm_seguimientoOperativo_estadosalud')}}" class="btn btn-primary" target="_blank">Seguimiento Operativo Salud</a>
+                                </div>
                             </div>
                             <div class="callout callout-warning">
                                 <strong>Recuerde que:</strong><br />
@@ -257,7 +261,7 @@
                                                     <td data-title="FechReg">{% if personal.fechaRegistro %}{{ personal.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     <td data-title="FechMod">{% if personal.fechaModificacion %}{{ personal.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     
-                                                    <td data-title="EstadoSalud" id="salud_{{personal.id}}" ></td>
+                                                    <td data-title="EstadoSalud" id="salud_{{personal.id}}" class="llenar-datos" data-sie="{{institucion.id}}"  data-inscripcion="{{personal.id}}" data-gestion="{{gestion}}" ></td>
                                                     
                                                     <td data-title="Observacion" {% if persona.id in personal_no_idioma|keys or persona.id in personal_no_genero|keys %}class="text-danger"{% else %}class="text-success"{% endif %}>
                                                         {% if persona.id in personal_no_idioma|keys %}<i class="fa fa-fw fa-warning" aria-hidden="true"></i>No tiene idiomas{% else %}<i class="fa fa-fw fa-check" aria-hidden="true"></i>(Idiomas) Correcto{% endif %}<br />
@@ -284,14 +288,14 @@
                                                                 -
                                                             {% endif %}
 
-                                                            {% if operativoSalud %}
+                                                            {# if operativoSalud %}
                                                                 <div class="div-operativo-salud">
                                                                     <button type="button" class="btn-link" onclick="editarEstadoSalud('{{personal.id}}'); return false;">
                                                                         <span class="badge badge-danger parpadeo">Nuevo</span><br>
                                                                         <i class="fa fa-edit text-danger"></i> Editar <br>estado de salud
                                                                     </button>
                                                                 </div>
-                                                            {% endif %}
+                                                            {% endif #}
 
                                                         </td>
                                                         <td>
@@ -476,5 +480,49 @@
         });
     }
 
+
+    var llenarDatos = function()
+    {
+        var personal=$('.llenar-datos');
+        $.each(personal,async function(i, item)
+        {
+            var inscripcion=$(item).attr('data-inscripcion');
+            var gestion=$(item).attr('data-gestion');
+            var sie=$(item).attr('data-sie');
+            
+            if(!isNaN(inscripcion) && !isNaN(gestion)  && !isNaN(sie) )
+            {
+                $.ajax(
+                {
+                    type: 'GET',
+                    url: Routing.generate('herramienta_info_personal_adm_obtener_estadosalud', { request_sie:sie,request_inscription: inscripcion,request_gestion:gestion }),
+                    beforeSend: function ()
+                    {
+                    },
+                    success: function (data)
+                    {
+                        var status=data.status;
+                        if(status==200)
+                        {
+                            $('#salud_'+inscripcion).html(data.data);
+                        }
+                    },
+                    statusCode:
+                    {
+                        500: function ()
+                        {
+                            $('#salud_'+inscripcion).empty();
+                        },
+                        404: function ()
+                        {
+                            $('#salud_'+inscripcion).empty();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    //llenarDatos();
     </script>
 {% endblock %}

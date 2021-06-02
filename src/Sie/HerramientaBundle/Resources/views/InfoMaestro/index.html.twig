@@ -244,14 +244,14 @@
                                                                 -
                                                             {% endif %}
 
-                                                            {% if operativoSalud %}
+                                                            {# if operativoSalud %}
                                                                 <div class="div-operativo-salud">
                                                                     <button type="button" class="btn-link" onclick="editarEstadoSalud('{{maestro.miId}}'); return false;">
                                                                         <span class="badge badge-danger parpadeo">Nuevo</span><br>
                                                                         <i class="fa fa-edit text-danger"></i> Editar <br>estado de salud
                                                                     </button>
                                                                 </div>
-                                                            {% endif %}
+                                                            {% endif #}
                                                         </td>
                                                         <td>
                                                         {% if activar_acciones and (app.session.get('lastOperativo') != 5) %}
