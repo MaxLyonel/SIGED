@@ -1,0 +1,405 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+    
+    <style type="text/css">
+        [v-cloak]{
+            display: none;
+        }
+        .buscador{
+            margin-top: -20px;
+            /* background: #E4E4E4; */
+            padding: 10px;
+        }
+        .encabezado{
+            padding: 5px;
+            /* font-weight: bold; */
+        }
+        .estudiante{
+            padding: 10px;
+            background: #EEEEEE;
+            text-align: center;
+            font-weight: bold;
+            font-size: 17px;
+        }
+        .jupper{
+            text-transform: uppercase;
+        }
+        input[type='text']{
+            /* background: #000000; */
+            text-transform: uppercase;
+            color: #000000 !important;
+        }
+        .select-nota:hover{
+            /* border-color: #60AA5D; */
+            background: #EAFBF1;
+            color: #009900;
+        }
+        .seleccionado{
+            background: #B8F1CA !important;
+        }
+        .headtabla{
+            background: #717171 !important;
+            color: #FFFFFF;
+            border-bottom: none !important;
+        }
+        .check{
+            /* background: #EEEEEE; */
+            /* margin-right: 30px; */
+        }
+        h5{
+            font-weight: bold;
+        }
+        .cajaPromedio{
+            font-weight: bold; 
+            /* background:#DDDDDD; */
+            background:#EAEAEA !important;
+        }
+        .cajaNota{
+            cursor: pointer;
+        }
+
+        .include{
+            margin: 20px;
+        }
+        .titulo{
+            padding: 5px;
+        }
+        .tachado{
+            text-decoration: line-through;
+            /* color: #D5956E; */
+            /* color:  #D51528; */
+            color:  #555555;
+            opacity: 0.4;
+            /* display: none; */
+        }
+        /* nota seleccionada */
+        .notaNueva{
+            /* color: #1EB480; */
+            /* color: #7B7DA7; */
+            font-size: 1.2em;
+        }
+        .notaNuevaAprobado{
+            /* color: #1EB480; */
+            color: #5CA813;
+            font-size: 1.2em;
+        }
+        .notaNuevaReprobado{
+            /* color: #1EB480; */
+            color: #E62220;
+            font-size: 1.2em;
+        }
+        input[type=”file”]#image {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+        label[for="image"] {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            background-color: #14A1DA;
+            display: inline-block;
+            transition: all .5s;
+            cursor: pointer;
+            padding: 5px 20px !important;
+            width: fit-content;
+            text-align: center;
+        }
+        .vistaModificaciones{
+            float: right;
+            font-size: 1.2em;
+        }
+        textarea{
+            resize: vertical;
+        }
+    </style>
+    <style type="text/css">
+        .requisitos{
+            background: #EEEEEE;
+            padding: 5px;
+            padding-left: 50px;
+            box-shadow: 4px 4px #DDDDDD;
+            margin-bottom: 15px;
+        }
+        .requisitos > .checkbox > label{
+            color: #2A3271;
+            font-size: 1.2rem !important;
+        }
+    </style>
+
+    <div class="header-content">
+        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Personal Administrativo <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Personal Administrativo</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-file"></i>
+                    Buscar
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active"></li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="include animated fadeIn">
+
+    </div>
+    <div id="app">
+    <div v-cloak>
+        <div class="body-content animated fadeIn">
+
+            <div class="panel panel-primary" v-if="urlreporte == ''">
+                <div class="panel-heading">
+                    <h3 class="panel-title"> <i class="fa fa-file"></i> --- </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="text-center">
+                                <h3>Registro de Salud del Personal</h3>
+                            </div>
+                            
+                            <a v-if='true' class="btn btn-primary" data-toggle="modal" href='#modalEstudiante' style="float:right; margin-top:-12px;" @click='loadData'> <i class="fa fa-search"></i> Buscar distrito </a>
+
+                            <div class="clearfix"></div>
+                            <div v-if="true">
+                                <div class="row">
+
+                                   <table v-if="DBDistritos.length > 0" class="table table-bordered table-striped table-condensed">
+                                   {# <table v-if="!idDepto" class="table table-bordered table-striped table-condensed"> #}
+                                   
+                                        <thead>
+                                            <tr>
+                                                <th class="headtabla">#</th>
+                                                <th class="headtabla">Cod. Distrito</th>
+                                                <th class="headtabla">Distrito</th>
+                                                {# <th class="headtabla"></th> #}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="(infoDistrito, pos) in DBDistritos ">
+                                                <td>${ pos + 1}</td>
+                                                <td>${infoDistrito.idDistrito}</td>
+                                                <td>${infoDistrito.distrito}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>                                
+                            
+                                 
+                                   
+                                </div>
+                                <hr>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            
+            <div v-else>
+
+            </div>
+
+        </div>
+
+        <div class="modal fade" id="modalEstudiante">
+            <div class="modal-dialog" style="width:800px">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"> <i class="fa fa-search"></i> Buscar Departamento</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row buscador">
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                <label for="sie22">Departamento</label>
+                                <select name="arrYear" id="idYear" v-model="DBsearch.depto" class="custom-select form-control" >
+                                    <option v-for="item in DBDeptos"  :value="item.id">${ item.depto }</option>
+                                </select>
+                            </div>
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <button v-on:click="buscarInfoDepto()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar Info </button>
+                            </div>
+                        </div>
+                        <div v-if="buscando" class="text-center">
+                            <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script>
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                
+               
+                buscando: false,
+                rudeBuscar: '4073002720104841',
+                respuesta: '',
+                cargandoCalificaciones: false,
+                verModificaciones: true,
+                idDepto:'{{idDepto}}',
+
+                gestionSelected:'',
+                DBsearch:{'depto':''},
+                DBinfoInscription:{
+                    'sieActual':'',
+                    'gestionSelected':'',
+                    'nivelId':'',
+                    'gradoId':'',
+                    'paraleloId':'',
+                    'turnoId':'',
+                },
+                RequestInscription:[],
+                DBDistritos:[],
+                DBYears: [],
+                DBDeptos: [],
+                DBLevel:[],
+                DBGrado:[],
+                DBParalelo:[],
+                DBTurno:[],
+                DBCatalogLibreta:[],
+                DBAsignatura:[],
+                arrInfoSelected:[],
+                DBCatalogoAsignatura:[],
+                DBCatalogoAsignatura2:[],                               
+
+                codigoRude: '',
+                estudiante: '',
+                carnet: '',
+                complemento:'',
+
+                directorNombre: '',
+                directorCarnet: '',
+                directorComplemento: '',
+
+                sie: '',
+                institucioneducativa: '',
+                nivel: '',
+                grado: '',
+                paralelo: '',
+                turno: '',
+                gestion: '',
+                departamento: '',
+                distrito: '',
+                
+                inscripciones: [],
+                datos: [],
+
+                idInscripcion: '',
+                flujoTipo: '',
+                notas: [],
+                filas: [],
+                notasCualitativas: [],
+                filasCualitativas: [],
+                justificacion: '',
+                informe: '',
+                
+                formularioEnviado: false,
+                urlreporte: '',
+                respuestaIdTramite: '',
+                
+                actualEstadomatricula: '',
+                nuevoEstadomatricula: '',
+                estadosMatricula: [],
+                promedioGeneral: '',
+                nuevoPromedioGeneral: '',
+
+                checkInforme: false,
+                checkCuaderno: false,
+                checkFormulario: false
+            },
+            methods: {
+                cerrarModal: function(){
+                    $('#modalCalificaciones').modal('hide');
+                },
+                inArray: function(needle, haystack) {
+                    var length = haystack.length;
+                    for(var i = 0; i < length; i++) {
+                        if(haystack[i] == needle) return true;
+                    }
+                    return false;
+                },
+ 
+
+                buscarInfoDepto: function(){
+                    this.buscando = true;
+                    axios.get(Routing.generate('personalhealth_lookforDepto', {
+                        depto: this.DBsearch.depto
+                    }))
+                    .then(response => {
+                        if (response.status == 200) {
+                            this.DBDistritos = response.data.arrDistritos;
+                            console.log(this.DBDistritos);
+
+                            $('[data-toggle="tooltip"]').tooltip();
+                        }
+                        if( response.status == 202){
+                            this.respuesta = response.data;
+                        }
+
+                        this.buscando = false;
+                        $('#modalEstudiante').modal('hide');
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.buscando = false;
+                    });                    
+
+                },
+           
+                loadData: function(){
+                    var arrDepto = [];
+                    var len = 2020;
+                    var Depto = [
+                                'NINGUNO',
+                                'Chuquisaca',
+                                'La Paz',
+                                'Cochabamba',
+                                'Oruro',
+                                'Potosi',
+                                'Tarija',
+                                'Santa Cruz',
+                                'Beni',
+                                'Pando'
+                    ];
+                  $.each(Depto, function(index, val) {
+                        arrDepto.push({
+                            id: index,
+                            depto: val
+                        });                      
+                      
+                    });
+                    console.log(this.idDepto);
+                    this.DBDeptos = arrDepto;
+                },
+
+            },
+            mounted(){
+            }
+        });
+
+   
+    </script>
+{% endblock %}

@@ -292,3 +292,7 @@ sie_app_web_studentEvent:
 sie_app_web_institucionalizacion:
     resource: "@SieAppWebBundle/Resources/config/routing/institucionalizacion.yml"
     prefix:   /acceso/institucionalizacion
+
+sie_app_web_personalhealth:
+    resource: "@SieAppWebBundle/Resources/config/routing/personalhealth.yml"
+    prefix:   /sie/personalhealth
