@@ -13,3 +13,7 @@ regularizacion_rue_save:
 regularizacion_rue_impresionDDJJ:
   path:     /impresionDDJJ/
   defaults: { _controller: SieHerramientaBundle:RegularizacionRue:impresionDDJJ }
+
+regularizacion_rue_impresion_seguimiento:
+  path:     /impresionSeguimiento/
+  defaults: { _controller: SieHerramientaBundle:RegularizacionRue:impresionSeguimiento }

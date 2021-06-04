@@ -2,6 +2,12 @@ Sie\AppWebBundle\Entity\MaestroInscripcionEstadosalud:
     type: entity
     table: maestro_inscripcion_estadosalud
     indexes:
+        IDX_2CDAB05CA1583A43:
+            columns:
+                - cargo_tipo_id
+        IDX_2CDAB05CF5F88DB9:
+            columns:
+                - persona_id
         IDX_2CDAB05C79DB83E8:
             columns:
                 - estadosalud_tipo_id
@@ -17,7 +23,31 @@ Sie\AppWebBundle\Entity\MaestroInscripcionEstadosalud:
             id: true
             generator:
                 strategy: SEQUENCE
+    fields:
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
     manyToOne:
+        cargoTipo:
+            targetEntity: CargoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cargo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         estadosaludTipo:
             targetEntity: EstadosaludTipo
             cascade: {  }
