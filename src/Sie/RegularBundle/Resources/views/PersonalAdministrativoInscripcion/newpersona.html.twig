@@ -176,7 +176,12 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="form-group col-lg-12 col-md-12">
+                                <div class="form-group col-lg-6 col-md-6">
+                                    {{ form_label(form.vacuna)}}
+                                    {{form_widget(form.vacuna) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>                             
+                                <div class="form-group col-lg-6 col-md-6">
                                     {{ form_label(form.obs)}}
                                     {{form_widget(form.obs) }}
                                     <div class="help-block with-errors"></div>
