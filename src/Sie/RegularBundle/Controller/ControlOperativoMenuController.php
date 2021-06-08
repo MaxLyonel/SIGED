@@ -56,7 +56,7 @@ class ControlOperativoMenuController extends Controller {
                   if($objInfoUE){
                       $registro['estadoMenu'] = 1;                    
                       $registro['id'] = $sie;
-                      $mensaje = "Puede realizar la descarga";
+                      $mensaje = "Puede realizar la habilitacion";
                   }else{
                       /*$registro['estadoMenu'] = 0;
                       $registro['id'] = null;*/
@@ -79,7 +79,7 @@ class ControlOperativoMenuController extends Controller {
                 $registro = null;
                 $mensaje = 'No tiene tuición sobre la unidad educativa';
             }
-            //dump($registro);die;
+            
             //return $this->render('SieRegularBundle:ControlOperativoMenu:response.html.twig',array(
             return $this->render($this->session->get('pathSystem') . ':ControlOperativoMenu:response.html.twig',array(
                 'registro'=>$registro, 
