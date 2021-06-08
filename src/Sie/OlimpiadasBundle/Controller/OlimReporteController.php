@@ -305,7 +305,7 @@ class OlimReporteController extends Controller{
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'olim_reporte_estudiante_inscrito.rptdesign&__format=pdf'.'&estudiante_id='.$estudiante.'&gestion='.$gestion.'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'olim_reporte_estudiante_inscrito.rptdesign&__format=pdf'.'&estudiante_id='.$estudiante.'&gestion='.$gestion));
         //$response->setContent(file_get_contents('http://127.0.0.1:64288/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte_olimpiada\olim_reporte_estudiante_inscrito.rptdesign&__format=pdf'.'&estudiante_id='.$estudiante.'&gestion='.$gestion));
 
         $response->setStatusCode(200);
@@ -328,7 +328,7 @@ class OlimReporteController extends Controller{
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
-       $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'Reporte-olimRobotica_reporte_estudiante_inscrito.rptdesign&__format=pdf'.'&ci_tutor='.$tutor.'&gestion='.$gestion.'));
+       $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'Reporte-olimRobotica_reporte_estudiante_inscrito.rptdesign&__format=pdf'.'&ci_tutor='.$tutor.'&gestion='.$gestion));
         //$response->setContent(file_get_contents('http://127.0.0.1:59393/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte_olimpiada\olimRobotica_reporte_estudiante_inscrito.rptdesign&__format=pdf'.'&ci_tutor='.$tutor.'&gestion='.$gestion));
 
         $response->setStatusCode(200);
