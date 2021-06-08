@@ -164,4 +164,32 @@ class MaestroInscripcionEstadosalud
     {
         return $this->persona;
     }
+    /**
+     * @var \DateTime
+     */
+    private $fecha;
+
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     * @return MaestroInscripcionEstadosalud
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+    
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime 
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
 }
