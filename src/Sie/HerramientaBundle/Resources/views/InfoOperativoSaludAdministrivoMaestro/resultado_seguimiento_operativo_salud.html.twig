@@ -1,0 +1,41 @@
+<div class="container-fuild">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="table-responsive">
+				<table class="table">
+				  <thead class="thead-dark">
+				    <tr>
+				      <th scope="col">#</th>
+				      <th scope="col">Sie</th>
+				      <th scope="col">Unidad Educativa</th>
+				      <th scope="col">Administrativos Registrados</th>
+				      <th scope="col">Maestros Registrados</th>
+				      <th scope="col">Administrativos Vacunados</th>
+				      <th scope="col">Maestros Vacunados</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				  	{% for d in datos %}
+				  		{% set registroAdm = (d.administrativos=='0 / 0')?' Registrado ':'No Registrado' %}
+				  		{% set registroMaes = (d.maestros=='0 / 0')?' Registrado ':'No Registrado' %}
+				    <tr>
+				      <th scope="row">{{loop.index}}</th>
+				      <td>{{d.id}}</td>
+				      <td>{{d.ue}}</td>
+				      <td>{{registroAdm}} ({{d.administrativos}})</td>
+				      <td>{{registroMaes}} ({{d.maestros}})</td>
+				      <td class="text-center">{{d.administrativos_vacunados}}</td>
+				      <td class="text-center">{{d.maestros_vacunados}}</td>
+				    </tr>
+				  	{% endfor %}
+				  	{% if datos|length<=0 %}
+				  		<tr>
+				  			<td>No existen datos con estos criterios de busqueda</td>
+				  		</tr>
+				  	{% endif %}
+				  </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
