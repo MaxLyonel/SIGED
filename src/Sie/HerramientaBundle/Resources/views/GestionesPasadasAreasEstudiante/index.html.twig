@@ -1,0 +1,94 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Adición/Eliminación de áreas<span>Gestiones Pasadas</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Adición/Eliminación de áreas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Inicio</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 text-center" style="margin-bottom: 2em;">
+                <h2>Unidad Educativa: {{institucioneducativa}}</h2>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title"><i class="fa fa-fw fa-search" aria-hidden="true"></i> Ingrese el código RUDE para realizar la búsqueda</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">      
+                        {{ form_start(form, { 'attr': {'data-toggle': 'validator', 'role': "form", 'class':'form-horizontal'} } ) }}
+                            <div class="form-group">
+                                <div class="col-md-2 col-md-offset-2 text-right">
+                                    <label for="form_codigoRude" class="control-label"><strong>RUDE:</strong></label>
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form_widget(form.codigoRude, { 'attr':{'class': 'form-control','placeholder':'Ingresar un código RUDE válido','pattern':'[0-9A]{10,18}'}  }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-sm-2">
+                                    {{ form_widget(form.buscar,{ 'attr': {'class': 'btn btn-success', 'onclick': 'getHistorial(); return false;' } }) }}
+                                </div>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>        
+        <div id="resultado"></div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        var getHistorial = function(){
+            codigoRude = $('#form_codigoRude').val();
+            alert(codigoRude);
+            /*$.ajax({
+                type: 'post',
+                data: ({codigoRude: codigoRude}),
+                url: "{{path('gp_areas_estudiante_result')}}",
+                beforeSend: function () {
+                    $('#resultado').empty();
+                    $('#resultado').html('Cargando...');
+                },
+                success: function (data) {
+                    $('#estudianteSegip_'+codigoRude).empty();
+                    if(data.estado){
+                        $('#trEstudianteSegip_'+codigoRude).removeClass('text-danger').addClass('text-success');
+                        $('#estudianteSegip_'+codigoRude).html('<span class="badge badge-success"><i class="fa fa-fw fa-check"></i> '+data.mensaje+'</span>');
+                    } else {
+                        $('#trEstudianteSegip_'+codigoRude).removeClass('text-danger').addClass('text-warning');
+                        $('#estudianteSegip_'+codigoRude).html('<span>'+data.mensaje+'</span>');
+                    }
+                },
+                statusCode: {
+                    500: function () {
+                        $('#resultado').empty();
+                        $('#resultado').html('Ocurrió un error interno.');                        
+                    },
+                    404: function () {
+                        $('#resultado').empty();
+                        $('#resultado').html('Ocurrió un error interno.');
+                    }
+                }
+            });*/
+        };
+    </script>
+{% endblock %}

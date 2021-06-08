@@ -263,6 +263,10 @@ sie_unidadeducativa_selectedStudents:
 sie_regularizacion_rue:
     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionRue.yml"
     prefix: /sie/regularizarRue
+
+sie_gestiones_pasadas_areas_estudiante:
+    resource: "@SieHerramientaBundle/Resources/config/routing/gestPasadasAreasEstudiante.yml"
+    prefix: /sie/gestPasadasAreasEstudiante
 #sie_unidadeducativa_regularizacionGestionesPasadas:
 #     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionGestionesPasadas.yml"
 #     prefix:   /sie/regularizacion-gestiones-pasadas
