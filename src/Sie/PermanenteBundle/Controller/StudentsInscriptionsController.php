@@ -380,6 +380,8 @@ class StudentsInscriptionsController extends Controller {
       // first look for student on ESTUDIANTE table 
       // set array conditions
       $arrayCondition['carnetIdentidad'] = $ci;
+      $arrayCondition['segipId'] = 1;
+
       if($complemento){
         $arrayCondition['complemento'] = $complemento;
       }else{
