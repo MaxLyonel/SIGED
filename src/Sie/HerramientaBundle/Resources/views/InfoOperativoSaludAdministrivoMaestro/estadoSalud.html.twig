@@ -1,0 +1,88 @@
+{#
+<form action="#" class="form-send-request " onsubmit="sendRequest(this,{{inscripcion_id}}) ;return false;">
+  <input name="request_inscription" id="request_inscription" type="hidden" value="{{inscripcion_id}}">
+  <input name="request_gestion" id="request_gestion" type="hidden" value="{{gestion}}">
+
+  <input name="request_persona" id="request_persona" type="hidden" value="{{persona_id}}">
+  <input name="request_cargo" id="request_cargo" type="hidden" value="{{cargoTipo_id}}">
+
+  <div class="form-row">
+    <div class="form-group col-md-12 col-sm-12">
+      <select name="request_estado_salud" id="request_estado_salud" class="form-control request-estado-salud" required style="font-size:10px !important">
+        {% for e in estadosSalud %}
+          {% set selected = (e.id==0)?'selected':'' %}
+          <option value="{{e.id}}" {{selected}} >{{e.estadosalud}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group col-md-12 col-sm-12">
+      <select name="request_vacunado" id="request_vacunado" class="form-control request-vacunado" required style="font-size:10px !important">
+        <option value="" selected>¿Fue vacunado?</option>
+          <option value="0" >No</option>
+          <option value="1" >Si</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-12 col-sm-12">
+      <button type="submit" class="btn btn-primary btn-block btn-sm">Actualizar</button>
+    </div>
+  </div> 
+</form>
+#}
+{% set meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] %}
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modal_estado_salud_titulo">{{persona.nombre}} {{persona.paterno}} {{persona.materno}}</h4>
+            </div>
+            {% if persona is not null%}
+                <form action="#" class="form-send-request " onsubmit="sendRequest(this,{{inscripcion_id}}) ;return false;">
+                  <input name="request_inscription" id="request_inscription" type="hidden" value="{{inscripcion_id}}">
+                  <input name="request_gestion" id="request_gestion" type="hidden" value="{{gestion}}">
+                  <input name="request_persona" id="request_persona" type="hidden" value="{{persona_id}}">
+                  <input name="request_cargo" id="request_cargo" type="hidden" value="{{cargoTipo_id}}">
+                    <div class="modal-body">
+                      <div class="form-group">
+                        <label for="request_estado_salud">Estado de salud</label>
+                        <select name="request_estado_salud" id="request_estado_salud" class="form-control request-estado-salud" autocomplete="off">
+                            {% for e in estadosSalud %}
+                                {% set selected = (e.id==0)?'selected':'' %}
+                                <option value="{{e.id}}" {{selected}} >{{e.estadosalud}}</option>
+                            {% endfor %}
+                        </select>
+                      </div>
+
+                      <div class="form-group div-fecha" style="display:none">
+                        <label for="request_fecha" class="required">Fecha</label>
+                        <div id="sandbox-container1" class="sandbox-container">
+                            <input type="text" id="request_fecha" name="request_fecha" maxlength="10" class="form-control">
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                    </div>
+                </form>
+            {% else %}
+              <div class="modal-body">
+                <p>Ocurrio un error, no se encontro datos de la persona seleccionada</p>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+              </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script type="text/javascript" >
+    $('.sandbox-container input').datepicker({
+        autoclose: true,
+        todayHighlight: true,
+        format: 'dd-mm-yyyy',
+        language: 'es',
+    });
+    </script>
