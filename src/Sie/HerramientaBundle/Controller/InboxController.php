@@ -755,8 +755,10 @@ class InboxController extends Controller {
           'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
           'data'=>$dataInfo,
           'tuicion'=>$tuicion,
-
+          
           'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
+
+          'closeOperativoRudeform' => $this->CloseOperativoRudeForm('herramienta_mallacurricular_cerraroperativo_rude', 'Cerrar Operativo RUDE',$data)->createView(),
         ));
       }
     }
@@ -834,6 +836,40 @@ class InboxController extends Controller {
           $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')));
         } else {
           $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativo()')));
+        }
+        $form = $form->getForm();
+        return $form;
+    }
+
+
+    private function CloseOperativoRudeForm($goToPath, $nextButton, $data)
+    {
+        //$this->unidadEducativa = $this->getAllUserInfo($this->session->get('userName'));
+        $this->unidadEducativa = ((int)$this->session->get('ie_id'));
+        $form =  $this->createFormBuilder()
+                        ->setAction($this->generateUrl($goToPath))
+                        ->add('gestion', 'hidden', array('data' => $data['gestion']))
+                        ->add('sie', 'hidden', array('data' => $this->unidadEducativa))//81880091
+        ;
+        // if( $this->session->get('ue_humanistica')){
+        if(
+           ($this->session->get('ue_plena')  && $this->session->get('ue_humanistica')) ||
+           ($this->session->get('ue_tecteg') && $this->session->get('ue_humanistica')) ||
+           ($this->session->get('ue_modular') && $this->session->get('ue_humanistica')) ||
+           ($this->session->get('ue_caldiff') && $this->session->get('ue_humanistica')) ||
+           ($this->session->get('ue_humanistica_web') && $this->session->get('ue_humanistica')) ||
+           ($this->session->get('ue_sol_regularizar') && $this->session->get('ue_humanistica')) ||
+           ($this->session->get('ue_plena')  ) ||
+           ($this->session->get('ue_humanistica_web')  ) ||
+           ($this->session->get('ue_modular')  ) ||
+           ($this->session->get('ue_caldiff')  ) ||
+           ($this->session->get('ue_sol_regularizar')  ) ||
+           ($this->session->get('ue_tecteg') )
+        ){
+          /**/
+          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativoRude()')));
+        } else {
+          $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativoRude()')));
         }
         $form = $form->getForm();
         return $form;
@@ -1331,6 +1367,122 @@ class InboxController extends Controller {
       // }
 
     }
+
+
+
+    public function closeOperativoRudeAction (Request $request)
+    {
+      //crete conexion DB
+      $em = $this->getDoctrine()->getManager();
+      $em->getConnection()->beginTransaction();
+      //get the values
+      $form = $request->get('form');
+      //ini var to validate info
+      $observation = false;
+      $inconsistencia = false;
+      $objObsQA = false;
+      $valPersonalAdm = false;
+
+      //Sanitizamos las variables de ingreso
+      //$form['sie']= filter_var($form['sie'],FILTER_VALIDATE_INT);
+      //$form['gestion']= filter_var($form['gestion'],FILTER_VALIDATE_INT);
+
+
+      //get the current operativo //Variable no utilizada
+      //$objOperativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($form['sie'], $form['gestion']);
+      
+      //update the close operativo to registro consolido table //Variable no utilizada
+      /*$objRegistroConsolidado = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+        'unidadEducativa' => $form['sie'],
+        'gestion'         => $form['gestion']
+      ));*/
+
+      $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
+      if($registroConsol){
+          $periodo = 0;
+          if($registroConsol)
+          {
+              if($registroConsol->getBim1() == '0')
+              {
+                  $periodo = 1;
+              }
+          }
+          //dump($form);die; 
+          // exute validation
+          $query = $em->getConnection()->prepare('select * from sp_validacion_regular_RUDE(:gestion, :sie)');
+          $query->bindValue(':gestion', $form['gestion']);
+          $query->bindValue(':sie', $form['sie']);      
+          $query->execute();
+          $inconsistencia = $query->fetchAll();
+
+          /***********************************\
+          * *
+          * Validacion CONTROL DE CALIDAD
+          * send array => sie, gestion, reglas *
+          * return observations UE *
+          * *
+          \************************************/
+          // $form['reglas'] = '1,2,3,8,10,12,13,16';
+          /*$form['reglas'] = $this->reglasQA;
+          $objObsQA = $this->getObservationQA($form);*/
+          if($inconsistencia){
+            $observation = true;
+          }
+          
+          $valPersonalAdm = false;
+
+          if($observation){
+            return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+              'inconsistencia' => $inconsistencia,
+              'objObsQA' => $objObsQA,
+              'validacionPersonal' => $valPersonalAdm,
+              'observation' => $observation,
+              'norow' => false,
+              'institucion' =>  $form['sie'],
+              'gestion' => $form['gestion'],
+              'periodo' => $periodo));
+          }else{
+              $registroConsolRude = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion'], 'rude' => 1));
+
+              if($registroConsolRude){
+                return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+                'observation' => false,
+                'norow' => false,
+                'institucion' =>  $form['sie'],
+                'gestion' => $form['gestion'],
+                'periodo' => 0));
+              }else{
+
+                $registroConsol->setRude(1);            
+                $em->persist($registroConsol);
+                $em->flush();
+                $em->getConnection()->commit();
+                return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+                'observation' => false,
+                'norow' => false,
+                'institucion' =>  $form['sie'],
+                'gestion' => $form['gestion'],
+                'periodo' => 0));
+
+              }
+              
+          }        
+
+      }else{
+
+         return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+                'observation' => true,
+                'norow' => true,
+                'institucion' =>  $form['sie'],
+                'gestion' => $form['gestion'],
+                'periodo' => 0));
+
+      }
+      
+
+
+    }
+
 
     public function downOperativoRudeAction(Request $request){
       return $this->redirect($this->generateUrl('principal_web'));
