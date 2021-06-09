@@ -1,5 +1,15 @@
 {% extends 'layoutHerramienta.html.twig' %}
 
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:800px;
+            margin-top:100px;
+        }
+    </style>
+{% endblock %}
+
 {% block contentoption %}
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Adición/Eliminación de áreas<span>Gestiones Pasadas</span></h2>
@@ -18,8 +28,8 @@
 
     <div class="body-content animated fadeIn">
         <div class="row">
-            <div class="col-md-12 text-center" style="margin-bottom: 2em;">
-                <h2>Unidad Educativa: {{institucioneducativa}}</h2>
+            <div class="col-md-12 well well-sm text-center">
+                <h3>Unidad Educativa: <span style="color:#0086DD"><strong>{{institucioneducativa.id}} - {{institucioneducativa}}</strong></span></h3>
             </div>
         </div>
         
@@ -33,62 +43,100 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="panel-body">      
-                        {{ form_start(form, { 'attr': {'data-toggle': 'validator', 'role': "form", 'class':'form-horizontal'} } ) }}
+                        {{ form_start(form, { 'attr': {'data-toggle': 'validator', 'role': "form", 'class':'form-horizontal', 'onsubmit': 'getHistorial(); return false;'} } ) }}
                             <div class="form-group">
                                 <div class="col-md-2 col-md-offset-2 text-right">
                                     <label for="form_codigoRude" class="control-label"><strong>RUDE:</strong></label>
                                 </div>
                                 <div class="col-md-4">
-                                    {{ form_widget(form.codigoRude, { 'attr':{'class': 'form-control','placeholder':'Ingresar un código RUDE válido','pattern':'[0-9A]{10,18}'}  }) }}
+                                    {{ form_widget(form.codigoRude, { 'attr':{'class': 'form-control', 'placeholder':'Ingresar un código RUDE válido', 'pattern':'[0-9A]{10,18}', 'autocomplete': 'true'}  }) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
-                                <div class="col-sm-2">
-                                    {{ form_widget(form.buscar,{ 'attr': {'class': 'btn btn-success', 'onclick': 'getHistorial(); return false;' } }) }}
+                                <div class="col-md-2">
+                                    {{ form_widget(form.buscar,{ 'attr': {'class': 'btn btn-primary' } }) }}
                                 </div>
                             </div>
                         {{ form_end(form) }}
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
         <div id="resultado"></div>
     </div>
+    
+    <div class="modal modal-flex fade" id="modalAreas" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Agregar/Eliminar áreas</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idAreas"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script>
         var getHistorial = function(){
             codigoRude = $('#form_codigoRude').val();
-            alert(codigoRude);
-            /*$.ajax({
+            
+            $.ajax({
                 type: 'post',
                 data: ({codigoRude: codigoRude}),
                 url: "{{path('gp_areas_estudiante_result')}}",
                 beforeSend: function () {
                     $('#resultado').empty();
-                    $('#resultado').html('Cargando...');
+                    $('#resultado').html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
                 },
                 success: function (data) {
-                    $('#estudianteSegip_'+codigoRude).empty();
-                    if(data.estado){
-                        $('#trEstudianteSegip_'+codigoRude).removeClass('text-danger').addClass('text-success');
-                        $('#estudianteSegip_'+codigoRude).html('<span class="badge badge-success"><i class="fa fa-fw fa-check"></i> '+data.mensaje+'</span>');
-                    } else {
-                        $('#trEstudianteSegip_'+codigoRude).removeClass('text-danger').addClass('text-warning');
-                        $('#estudianteSegip_'+codigoRude).html('<span>'+data.mensaje+'</span>');
-                    }
+                    $('#resultado').empty();
+                    $('#resultado').html(data);
                 },
                 statusCode: {
                     500: function () {
                         $('#resultado').empty();
-                        $('#resultado').html('Ocurrió un error interno.');                        
+                        $('#resultado').html('Ocurrió un error interno.');
                     },
                     404: function () {
                         $('#resultado').empty();
                         $('#resultado').html('Ocurrió un error interno.');
                     }
                 }
-            });*/
+            });
+        };
+
+        var aeAreas = function (inscripcionid, estudianteid, gestion) {
+            $('#modalAreas').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('gp_areas_estudiante', {'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
+                beforeSend: function () {
+                    $("#idAreas").empty();
+                    $("#idAreas").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#idAreas").empty();
+                    $("#idAreas").html(data);
+                },
+                statusCode: {
+                    500: function () {
+                        $('#idAreas').empty();
+                        $('#idAreas').html('Ocurrió un error interno.');
+                    },
+                    404: function () {
+                        $('#idAreas').empty();
+                        $('#idAreas').html('Ocurrió un error interno.');
+                    }
+                }
+            });
         };
     </script>
 {% endblock %}

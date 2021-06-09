@@ -3,7 +3,13 @@ gp_areas_estudiante_index:
   defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:index }
 
 gp_areas_estudiante_result:
-  path:     /
-  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:result }
+  path:     /resultHistorial
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:resultHistorial }
+  options:
+    expose: true
+
+gp_areas_estudiante:
+  path:     /resultAreasEstudiante
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:resultAreasEstudiante }
   options:
     expose: true
