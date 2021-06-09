@@ -1,0 +1,9 @@
+gp_areas_estudiante_index:
+  path:     /
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:index }
+
+gp_areas_estudiante_result:
+  path:     /
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:result }
+  options:
+    expose: true

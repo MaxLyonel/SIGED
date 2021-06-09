@@ -270,6 +270,10 @@ sie_herramienta_info_operativo_salud_administrativo_maestro:
     resource: "@SieHerramientaBundle/Resources/config/routing/operativoSaludAdministrativoMaestro.yml"
     prefix:   /acceso/operativo-salud/administrativo-maestro
 
+sie_gestiones_pasadas_areas_estudiante:
+    resource: "@SieHerramientaBundle/Resources/config/routing/gestPasadasAreasEstudiante.yml"
+    prefix: /sie/gestPasadasAreasEstudiante
+
 #sie_unidadeducativa_regularizacionGestionesPasadas:
 #     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionGestionesPasadas.yml"
 #     prefix:   /sie/regularizacion-gestiones-pasadas
