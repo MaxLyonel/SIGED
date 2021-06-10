@@ -15,12 +15,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class GestionesPasadasAreasEstudianteController extends Controller {
 
     private $session;
+    private $institucioneducativaId;
 
     /**
      * Constructor
      */
     public function __construct() {
         $this->session = new Session();
+        $this->institucioneducativaId = $this->session->get('ie_id');
     }
 
     public function indexAction(Request $request) {
@@ -35,9 +37,8 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
-
-        $insId = $this->session->get('ie_id');
-        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($insId);
+        
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->institucioneducativaId);
 
         return $this->render($this->session->get('pathSystem') . ':GestionesPasadasAreasEstudiante:index.html.twig', array(
             'institucioneducativa' => $institucioneducativa,
@@ -47,9 +48,9 @@ class GestionesPasadasAreasEstudianteController extends Controller {
 
     private function formSearch() {
         $form = $this->createFormBuilder()
-                ->add('codigoRude', 'text', array('required' => true))
-                ->add('buscar', 'submit', array('label' => 'Buscar'))
-                ->getForm();
+            ->add('codigoRude', 'text', array('required' => true))
+            ->add('buscar', 'submit', array('label' => 'Buscar'))
+            ->getForm();
         return $form;
     }
 
@@ -60,26 +61,34 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $sw = false;
 
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $codigoRude));
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->institucioneducativaId);
         
         if ($estudiante) {
-            $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $codigoRude . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
-            $query->execute();
-            $historial = $query->fetchAll();
+            $inscripcionEstudiante = $this->getInscripcionEstudianteUE($estudiante);
+            
+            if($inscripcionEstudiante) {
+                $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $codigoRude . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
+                $query->execute();
+                $historial = $query->fetchAll();
 
-            if ($historial) {
-                foreach ($historial as $key => $inscripcion) {
-                    switch ($inscripcion['institucioneducativa_tipo_id_raep']) {
-                    case '1':
-                        $historialRegular[$key] = $inscripcion;
-                        break;
+                if ($historial) {
+                    foreach ($historial as $key => $inscripcion) {
+                        switch ($inscripcion['institucioneducativa_tipo_id_raep']) {
+                        case '1':
+                            $historialRegular[$key] = $inscripcion;
+                            break;
+                        }
                     }
+                    $sw = true;
+                    $mensaje = "La búsqueda fue satisfactoria, se encontraron los siguientes resultados.";
+                } else {
+                    $mensaje = 'La/el Estudiante con Código RUDE: ' . $codigoRude . ', no presenta registro de inscripciones.';
+                    $sw = false;
                 }
-                $sw = true;
-                $mensaje = "La búsqueda fue satisfactoria, se encontraron los siguientes resultados.";
             } else {
-                $mensaje = 'La/el Estudiante con Código RUDE: ' . $codigoRude . ', no presenta registro de inscripciones.';
+                $mensaje = 'La/el Estudiante con Código RUDE: ' . $codigoRude . ', no presenta registro de inscripciones en esta Unidad Educativa.';
                 $sw = false;
-            }            
+            }
         }else{
             $mensaje = 'La/el Estudiante con Código RUDE: ' . $codigoRude . ', no se encuentra en la base de datos del SIE.';
             $sw = false;
@@ -89,7 +98,8 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'estudiante' => $estudiante,
             'historialRegular' => $historialRegular,
             'mensaje' => $mensaje,
-            'sw' => $sw
+            'sw' => $sw,
+            'institucioneducativa' => $institucioneducativa
         ));
     }
 
@@ -142,5 +152,23 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $areas = $query->getResult();
 
         return $areas;
+    }
+
+    private function getInscripcionEstudianteUE($estudiante) {
+        $em = $this->getDoctrine()->getManager();
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->institucioneducativaId);
+
+        $repository = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+        $query = $repository->createQueryBuilder('ei')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ei.institucioneducativaCurso = ic.id')
+            ->where('ei.estudiante = :estudiante')
+            ->andWhere('ic.institucioneducativa = :institucioneducativa')
+            ->setParameter('estudiante', $estudiante)
+            ->setParameter('institucioneducativa', $institucioneducativa)
+            ->getQuery();
+
+        $inscripcionEstudiante = $query->getResult();
+
+        return $inscripcionEstudiante;
     }
 }
