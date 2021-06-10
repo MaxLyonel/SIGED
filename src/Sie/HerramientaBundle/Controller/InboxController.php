@@ -758,7 +758,7 @@ class InboxController extends Controller {
           
           'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
 
-          'closeOperativoRudeform' => $this->CloseOperativoRudeForm('herramienta_mallacurricular_cerraroperativo_rude', 'Cerrar Operativo RUDE',$data)->createView(),
+          'closeOperativoRudeform' => $this->CloseOperativoRudeForm('herramienta_inbox_close_operativo_rude', 'Cerrar Operativo RUDE',$data)->createView(),
         ));
       }
     }
