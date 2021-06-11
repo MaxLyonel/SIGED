@@ -110,9 +110,13 @@
                                             <button type="submit" class="btn btn-link" onclick="ingresarSolucionValidacionSegip({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
                                         {% elseif regla.id == 55 %}    
                                             <button type="submit" class="btn btn-link" onclick="ingresarSolucionFuenteFinanciamiento({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
+                                            <form action="{{path('ccalidad_omitir')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
+                                            </form>
                                         {% elseif regla.id == 57 %}    
                                             <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignacion({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
-                                             <form action="{{path('ccalidad_omitir')}}" method="post">
+                                            <form action="{{path('ccalidad_omitir')}}" method="post">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
                                             </form>

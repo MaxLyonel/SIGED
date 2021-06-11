@@ -374,10 +374,12 @@ class ControlCalidadController extends Controller {
             $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
 
             $this->ratificar($vproceso);
+            $em->getConnection()->commit();
             $message = 'Se realizó el proceso satisfactoriamente.';
             $this->addFlash('success', $message);
 
         } catch (Exception $ex) {
+            $em->getConnection()->rollback();
             $message = 'No se pudo realizar el proceso.';
             $this->addFlash('warning', $message);
         }
