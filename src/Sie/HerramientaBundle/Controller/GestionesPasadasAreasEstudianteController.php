@@ -108,17 +108,23 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $inscripcionid = trim(strtoupper($request->get('inscripcionid')));
         $estudianteid = trim(strtoupper($request->get('estudianteid')));
         $gestion = trim(strtoupper($request->get('gestion')));
+        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudianteid);
 
         $areasEstudiante = $this->getAreasEstudiante($inscripcionid);
         $areasCurso = $this->getAreasCurso($inscripcionid);
-        dump($areasEstudiante,$areasCurso);die;
+        
+        return $this->render($this->session->get('pathSystem') . ':GestionesPasadasAreasEstudiante:areas.html.twig', array(
+            'estudiante' => $estudiante,
+            'areasEstudiante' => $areasEstudiante,
+            'areasCurso' => $areasCurso            
+        ));
     }
 
     private function getAreasEstudiante($inscripcionid) {
         $em = $this->getDoctrine()->getManager();
         $repository = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
         $query = $repository->createQueryBuilder('ei')
-            ->select('at2.id, at2.asignatura')
+            ->select('ic.id icId, ico.id icoId,at2.id atId, at2.asignatura')
             ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ei.institucioneducativaCurso = ic.id')
             ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ico', 'WITH', 'ico.insitucioneducativaCurso = ic.id')
             ->innerJoin('SieAppWebBundle:AsignaturaTipo', 'at2', 'WITH', 'ico.asignaturaTipo = at2.id')
@@ -136,16 +142,13 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
 
-        $repository = $em->getRepository('SieAppWebBundle:TmpAsignaturaHistorico');
-        $query = $repository->createQueryBuilder('tah')
-            ->select('at2.id, at2.asignatura')
-            ->innerJoin('SieAppWebBundle:AsignaturaTipo', 'at2', 'WITH', 'tah.asignaturaTipo = at2.id')
-            ->where('tah.gestionTipoId = :gestion')
-            ->andWhere('tah.nivelTipoId = :nivel')
-            ->andWhere('tah.gradoTipoId = :grado')
-            ->setParameter('gestion', $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId())
-            ->setParameter('nivel', $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId())
-            ->setParameter('grado', $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId())
+        $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $repository->createQueryBuilder('ic')
+            ->select('ic.id icId, ico.id icoId,at2.id atId, at2.asignatura')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ico', 'WITH', 'ico.insitucioneducativaCurso = ic.id')
+            ->innerJoin('SieAppWebBundle:AsignaturaTipo', 'at2', 'WITH', 'ico.asignaturaTipo = at2.id')
+            ->where('ic.id = :institucioneducativaCurso')
+            ->setParameter('institucioneducativaCurso', $inscripcion->getInstitucioneducativaCurso()->getId())
             ->orderBy('at2.id')
             ->getQuery();
 
