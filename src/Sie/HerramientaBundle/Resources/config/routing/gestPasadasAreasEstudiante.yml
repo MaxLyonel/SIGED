@@ -13,3 +13,15 @@ gp_areas_estudiante:
   defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:resultAreasEstudiante }
   options:
     expose: true
+
+gp_areas_estudiante_eliminar:
+  path:     /eliminarAreaEstudiante
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:eliminarAreaEstudiante }
+  options:
+    expose: true
+
+gp_areas_estudiante_agregar:
+  path:     /agregarAreaEstudiante
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:agregarAreaEstudiante }
+  options:
+    expose: true

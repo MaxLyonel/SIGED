@@ -114,10 +114,65 @@
         };
 
         var aeAreas = function (inscripcionid, estudianteid, gestion) {
+            $('#modalAreas').modal({backdrop: 'static', keyboard: false});
             $('#modalAreas').modal('show');
             $.ajax({
                 type: 'get',
                 url: Routing.generate('gp_areas_estudiante', {'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
+                beforeSend: function () {
+                    $("#idAreas").empty();
+                    $("#idAreas").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#idAreas").empty();
+                    $("#idAreas").html(data);
+                },
+                statusCode: {
+                    500: function () {
+                        $('#idAreas').empty();
+                        $('#idAreas').html('Ocurrió un error interno.');
+                    },
+                    404: function () {
+                        $('#idAreas').empty();
+                        $('#idAreas').html('Ocurrió un error interno.');
+                    }
+                }
+            });
+        };
+
+        var eliminarArea = function (areaid, inscripcionid, estudianteid, gestion) {
+            if(confirm('¿Está segura/o de eliminar el área?\nTenga en cuenta que también se eliminarán las calificaciones de la/el estudiante.')){
+                $.ajax({
+                    type: 'get',
+                    url: Routing.generate('gp_areas_estudiante_eliminar', {'areaid': areaid, 'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
+                    beforeSend: function () {
+                        $("#idAreas").empty();
+                        $("#idAreas").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                    },
+                    success: function (data) {
+                        $("#idAreas").empty();
+                        $("#idAreas").html(data);
+                    },
+                    statusCode: {
+                        500: function () {
+                            $('#idAreas').empty();
+                            $('#idAreas').html('Ocurrió un error interno.');
+                        },
+                        404: function () {
+                            $('#idAreas').empty();
+                            $('#idAreas').html('Ocurrió un error interno.');
+                        }
+                    }
+                });
+            } else {
+                return false;
+            }
+        };
+
+        var agregarArea = function (ofertaid, inscripcionid, estudianteid, gestion) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('gp_areas_estudiante_agregar', {'ofertaid': ofertaid, 'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
                 beforeSend: function () {
                     $("#idAreas").empty();
                     $("#idAreas").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
