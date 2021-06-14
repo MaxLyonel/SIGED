@@ -1,4 +1,4 @@
-<h5 class="panel-title"><i class="fa fa-fw fa-user" aria-hidden="true"></i> Datos de la/el Estudiante</h5>
+<h5 class="pull-left"><i class="fa fa-fw fa-user" aria-hidden="true"></i> Datos de la/el Estudiante</h5>
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">
@@ -23,7 +23,22 @@
     </div>
 </div>
 <hr />
-<h5 class="panel-title"><i class="fa fa-fw fa-list" aria-hidden="true"></i> Áreas de la/el Estudiante</h5>
+<h5 class="pull-left"><i class="fa fa-fw fa-list" aria-hidden="true"></i> Áreas de la/el Estudiante</h5>
+<div class="btn-group pull-right">
+    <button type="button" class="btn btn-lilac dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+        Agregar área <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
+        {# {% if asignaturas|length > 0 %}
+            {% for a in asignaturas %}
+                <li><button onclick="newArea({{a.id}},'{{infoUe}}')" class="btn-link">{{a.id}} - {{a.asignatura}}</button></li>
+            {% endfor %}
+        {% else %}
+            <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
+        {% endif %} #}
+        <li>Agregar</li>
+    </ul>
+</div>
 <div class="row">
     <div class="col-md-12">
         <div class="table-responsive">        
@@ -36,14 +51,24 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for area in areasEstudiante %}
-                    <tr>
-                        <td>{{area.atId}}</td>
-                        <td>{{area.asignatura}}</td>
-                        <td class="text-center">
-                            Eliminar
-                        </td>
-                    </tr>
+                    {% for areaEstudiante in areasEstudiante %}
+                        <tr>
+                            <td>{{areaEstudiante.atId}}</td>
+                            <td>{{areaEstudiante.asignatura}}</td>
+                            <td class="text-center">
+                                {% set cantidad = 0 %}
+                                {% for areaCurso in areasCurso %}
+                                    {% if areaEstudiante.atId == areaCurso.atId %}
+                                        {% set cantidad = cantidad + 1 %}
+                                    {% endif %}
+                                {% endfor %}
+                                {% if cantidad == 1 %}
+                                    <button onclick="deleteArea()" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar"><i class="fa fa-fw fa-times"></i> Eliminar</button>
+                                {% else %}
+                                    <button onclick="deleteArea()" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar"><i class="fa fa-fw fa-times"></i> Eliminar</button>
+                                {% endif %}
+                            </td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
