@@ -97,13 +97,13 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
 
         $institucionregular = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $institucion, 'institucioneducativaTipo' => 1));
 
-        if(!is_object($institucionregular)){
-            $this->get('session')->getFlashBag()->add('noTuicion', 'La Unidad Educativa no corresponde al Subsistema de Educación Regular');
-                if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
-                    return $this->redirect($this->generateUrl('herramienta_info_maestro_tsie_index'));
-                }
-                return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
-        }
+        // if(!is_object($institucionregular)){
+        //     $this->get('session')->getFlashBag()->add('noTuicion', 'La Unidad Educativa no corresponde al Subsistema de Educación Regular');
+        //         if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
+        //             return $this->redirect($this->generateUrl('herramienta_info_maestro_tsie_index'));
+        //         }
+        //         return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
+        // }
 
         /*
          * lista de ADMINISTRATIVOS registrados en la unidad educativa
