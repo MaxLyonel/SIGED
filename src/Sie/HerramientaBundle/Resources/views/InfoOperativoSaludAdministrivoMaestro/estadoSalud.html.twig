@@ -37,7 +37,7 @@
         <div class="modal-content">
             <div class="modal-header bg-primary">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="modal_estado_salud_titulo">{{persona.nombre}} {{persona.paterno}} {{persona.materno}}</h4>
+                <h4 class="modal-title" id="modal_estado_salud_titulo">{{persona.nombre}} {{persona.paterno}} {{persona.materno}} / Gestión: <b>{{gestion}}</b></h4>
             </div>
             {% if persona is not null%}
                 <form action="#" class="form-send-request " onsubmit="sendRequest(this,{{inscripcion_id}},event) ;return false;">
@@ -59,11 +59,12 @@
                                         <th scope="col">Estado</th>
                                         <th scope="col">De</th>
                                         <th scope="col">Hasta</th>
+                                        <th scope="col"></th>
                                       </tr>
                                     </thead>
                                     <tbody>
                                       {% for item in detalleSalud %}
-                                      <tr >
+                                      <tr class="tr-estado-salud-{{item.mi_id}}">
                                         <th scope="row">{{loop.index}}</th>
                                         <td>{{item.estadosalud}}</td>
                                         <td>{{item.fecha|date('d/m/Y')}}</td>
@@ -73,6 +74,9 @@
                                           {% else %}
                                             <div class="text-center">-</div>
                                           {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                          <a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="eliminarEstadoSalud({{item.mi_id}})"><i class="fa fa-trash fa-2x fg-danger"></i></a>
                                         </td>
                                       </tr>
                                       {% endfor %}
@@ -130,7 +134,7 @@
                                   <div class="col-md-5"></div>
                                     <div class="col-md-2">
                                       <div id="sandbox-container1" class="sandbox-container">
-                                          <button type="submit" class="btn btn-link" style="padding:0"><i class="fa fa-floppy-o fa-2x fg-primary"></i></button>
+                                          <button type="submit" class="btn btn-link" style="padding:0" data-toggle="tooltip" data-placement="top" title="Guardar" ><i class="fa fa-floppy-o fa-2x fg-primary"></i></button>
                                       </div>
                                     </div>
                                 </div>
@@ -141,7 +145,7 @@
                             {%endfor%}
                           </div>
                         {% else %}
-                          <p>No tiene opciones disponibles para registrar información, por que en la base de datos de la gestión anterior se declaro fallecido</p>
+                          <p>No tiene opciones disponibles para registrar información, por que en la base de datos se declaro fallecido/a a esta persona</p>
                         {% endif %}
                         {#
                         <div class="version-anterior-por-si-acaso" style="display:none">
@@ -314,6 +318,41 @@
            $(item).fadeIn();
         });
       }
+    }
+
+
+    var eliminarEstadoSalud=function(id)
+    {
+     var eliminar=confirm('¿Está seguro de eliminar este registro?');
+     if(eliminar==true && typeof(id)!='undefined')
+     {
+        $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_info_personal_adm_eliminar_estadosalud',{id:id}),
+                beforeSend: function ()
+                {
+                },
+                success: function (data)
+                {
+                  var status= data.status;
+                  if(status==200)
+                  {
+                    $('.tr-estado-salud-'+id).fadeOut(function (argument)
+                    {
+                      $('.tr-estado-salud-'+id).remove();
+                    });
+                  }
+                  else
+                  {
+                    alert('Ocurrio un error. por favor vuelva a intentarlo');
+                  }
+                },
+                error: function (data)
+                {
+                  alert('Ocurrio un error. por favor vuelva a intentarlo');
+                }
+            });
+     }
     }
     </script>
 
