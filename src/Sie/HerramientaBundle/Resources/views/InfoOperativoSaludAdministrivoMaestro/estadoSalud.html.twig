@@ -30,6 +30,8 @@
   </div> 
 </form>
 #}
+
+
 {% set meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] %}
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -38,33 +40,144 @@
                 <h4 class="modal-title" id="modal_estado_salud_titulo">{{persona.nombre}} {{persona.paterno}} {{persona.materno}}</h4>
             </div>
             {% if persona is not null%}
-                <form action="#" class="form-send-request " onsubmit="sendRequest(this,{{inscripcion_id}}) ;return false;">
+                <form action="#" class="form-send-request " onsubmit="sendRequest(this,{{inscripcion_id}},event) ;return false;">
                   <input name="request_inscription" id="request_inscription" type="hidden" value="{{inscripcion_id}}">
                   <input name="request_gestion" id="request_gestion" type="hidden" value="{{gestion}}">
                   <input name="request_persona" id="request_persona" type="hidden" value="{{persona_id}}">
                   <input name="request_cargo" id="request_cargo" type="hidden" value="{{cargoTipo_id}}">
                     <div class="modal-body">
-                      <div class="form-group">
-                        <label for="request_estado_salud">Estado de salud</label>
-                        <select name="request_estado_salud" id="request_estado_salud" class="form-control request-estado-salud" autocomplete="off">
-                            {% for e in estadosSalud %}
-                                {% set selected = (e.id==0)?'selected':'' %}
-                                <option value="{{e.id}}" {{selected}} >{{e.estadosalud}}</option>
-                            {% endfor %}
-                        </select>
-                      </div>
-
-                      <div class="form-group div-fecha" style="display:none">
-                        <label for="request_fecha" class="required">Fecha</label>
-                        <div id="sandbox-container1" class="sandbox-container">
-                            <input type="text" id="request_fecha" name="request_fecha" maxlength="10" class="form-control">
+                      <div class="row">
+                        <div class="col-md-12">
+                          <fieldset>
+                            <legend class="h4">Detalles de salud</legend>
+                              <div class="table-responsive table-detalles">
+                      {% if detalleSalud|length>0 %}
+                                  <table class="table">
+                                    <thead class="thead-dark">
+                                      <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Estado</th>
+                                        <th scope="col">De</th>
+                                        <th scope="col">Hasta</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {% for item in detalleSalud %}
+                                      <tr >
+                                        <th scope="row">{{loop.index}}</th>
+                                        <td>{{item.estadosalud}}</td>
+                                        <td>{{item.fecha|date('d/m/Y')}}</td>
+                                        <td>
+                                          {% if item.fecha2 is not null%}
+                                            {{item.fecha2|date('d/m/Y')}}
+                                          {% else %}
+                                            <div class="text-center">-</div>
+                                          {% endif %}
+                                        </td>
+                                      </tr>
+                                      {% endfor %}
+                                    </tbody>
+                                  </table>
+                      {% endif %}
+                              </div>
+                          </fieldset>
                         </div>
                       </div>
+
+                      <fieldset>
+                        <legend class="h4">Opciones de registro</legend>
+
+                        {% if deceso|length == 0 %}
+                          <div class="container-fliud">
+                            {% for e in estadosSalud %}
+                            {% set deceso = (e.id==3)?' div-deceso ':' div-no-deceso ' %}
+                            <div class="row shadow {{deceso}}" style="margin-bottom:0.5rem;">
+                              <div class="col-md-5">
+                                <div class="checkbox" style="margin:3px 0 4px 0">
+                                  <label>
+                                    <input type="checkbox" name="request_estado_salud[{{e.id}}]" id="request_estado_salud[{{e.id}}]" class="checkbox-estado estado" data-estado="{{e.id}}" data-nombre="{{e.estadosalud}}" > &nbsp; {{e.estadosalud}}
+                                    <span style="display:inline; font-size:1rem;">- <{{e.id}}></span>
+                                  </label>
+                                </div>
+                              </div>
+                              {% if e.id not in [0,4] %}
+                              <div class="col-md-7 div-detalles-{{e.id}}" data-estado="{{e.id}}" style="display:none; margin-bottom:5px">
+                                <div class="row">
+                                  <div class="col-md-5">
+                                    <div id="sandbox-container1" class="sandbox-container">
+                                      <input type="text" name="request_fecha_1[{{e.id}}]" id="request_fecha_1[{{e.id}}]" maxlength="10" class="form-control input-fecha-registro fecha1 request-fecha-1"  placeholder="Desde" autocomplete="off">
+                                    </div>
+                                  </div>
+                                  {% if e.id in [1,2] %}
+                                    <div class="col-md-5">
+                                      <div id="sandbox-container1" class="sandbox-container">
+                                      <input type="text" name="request_fecha_2[{{e.id}}]" id="request_fecha_2[{{e.id}}]" maxlength="10" class="form-control input-fecha-registro fecha2 request-fecha-2"  placeholder="Hasta" autocomplete="off">
+                                      </div>
+                                    </div>
+                                  {% endif %}
+                                    <div class="col-md-2">
+                                      <div id="sandbox-container1" class="sandbox-container">
+                                          <button type="button" class="btn btn-link" style="padding:0" ><i class="fa fa-floppy-o fa-2x fg-primary"></i></button>
+                                      </div>
+                                    </div>
+                                </div>
+                              </div>
+                              {% endif %}
+
+                              {% if e.id ==4 %}
+                              <div class="col-md-7 div-detalles-{{e.id}}" data-estado="{{e.id}}" style="display:none; margin-bottom:5px">
+                                <div class="row">
+                                  <div class="col-md-5"></div>
+                                    <div class="col-md-2">
+                                      <div id="sandbox-container1" class="sandbox-container">
+                                          <button type="submit" class="btn btn-link" style="padding:0"><i class="fa fa-floppy-o fa-2x fg-primary"></i></button>
+                                      </div>
+                                    </div>
+                                </div>
+                              </div>
+                              {% endif %}
+
+                            </div>
+                            {%endfor%}
+                          </div>
+                        {% else %}
+                          <p>No tiene opciones disponibles</p>
+                        {% endif %}
+                        {#
+                        <div class="version-anterior-por-si-acaso" style="display:none">
+                          <div class="form-group">
+                            <label for="request_estado_salud">Estado de salud</label>
+                            <select name="request_estado_salud" id="request_estado_salud" class="form-control request-estado-salud" autocomplete="off">
+                                {% for e in estadosSalud %}
+                                    {% set selected = (e.id==0)?'selected':'' %}
+                                    <option value="{{e.id}}" {{selected}} >{{e.estadosalud}}</option>
+                                {% endfor %}
+                            </select>
+                          </div>
+
+                          <div class="form-group div-fecha-1" style="display:none">
+                            <label for="request_fecha_1" class="required">Desde</label>
+                            <div id="sandbox-container1" class="sandbox-container">
+                                <input type="text" id="request_fecha_1" name="request_fecha_1" maxlength="10" class="form-control">
+                            </div>
+                          </div>
+
+                          <div class="form-group div-fecha-2" style="display:none">
+                            <label for="request_fecha_2" class="required">Hasta</label>
+                            <div id="sandbox-container1" class="sandbox-container">
+                                <input type="text" id="request_fecha_2" name="request_fecha_2" maxlength="10" class="form-control">
+                            </div>
+                          </div>
+                        </div>
+                        #}
+                      </fieldset>
 
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                    {#
+                        <button type="submit" class="btn btn-primary">Registrar</button>
+                    #}
                     </div>
                 </form>
             {% else %}
@@ -84,5 +197,132 @@
         todayHighlight: true,
         format: 'dd-mm-yyyy',
         language: 'es',
+    }).datepicker('setDate',(new Date({{gestion}},7-1,7)));
+
+    $('.checkbox-estado').on('change',function (e)
+    {
+      var estado=$(this).attr('data-estado');
+
+      if(typeof(estado)!='undefined')
+      {
+        var opcionesDiv=$('.div-detalles-'+estado);
+        if(typeof(opcionesDiv)!='undefined')
+        {
+          if($(this).is(":checked"))
+          {
+            
+            opcionesDiv.fadeIn();
+            $(this).addClass('request-estado-salud');
+
+            var fechas=opcionesDiv.find('.input-fecha-registro');
+            
+            if(fechas.length>0)
+            {
+              $.each(fechas,function(i, item)
+              {
+                $(item).val('');
+              });
+            }
+            if(fechas.length==2)
+            {
+              opcionesDiv.find(".fecha1").addClass('request-fecha-1');
+              opcionesDiv.find(".fecha2").addClass('request-fecha-2');
+            }
+            else if(fechas.length==1)
+            {
+              opcionesDiv.find(".fecha1").addClass('request-fecha-1');
+            }
+
+            clearCheckBox(estado);
+            var btnSubmitInline=opcionesDiv.find('button');
+            if(typeof(btnSubmitInline)!='undefined')
+            {
+              btnSubmitInline.prop('type','submit');
+              btnSubmitInline.addClass('btn-submit-inline');
+              btnSubmitInline.attr('data-target',estado);
+            }
+
+            console.log('if: '+estado);
+            ocultarNoDecesos(estado);
+          }
+          else
+          {
+            $(this).removeClass('request-estado-salud');
+            var fechas=opcionesDiv.find('.input-fecha-registro');
+            if(fechas.length>0)
+            {
+              $.each(fechas,function(i, item)
+              {
+                $(item).val('');
+                $(item).removeClass('request-fecha-1');
+                $(item).removeClass('request-fecha-2');
+              });
+            }
+
+            opcionesDiv.fadeOut();
+
+            //clearCheckBox(estado);
+            var btnSubmitInline=opcionesDiv.find('submit');
+            if(typeof(btnSubmitInline)!='undefined')
+            {
+              btnSubmitInline.prop('type','');
+              btnSubmitInline.removeClass('btn-submit-inline');
+              btnSubmitInline.removeAttr('data-target');
+            }
+
+            console.log('else: '+estado);
+            ocultarNoDecesos(-1);
+          }
+        }
+      }
     });
+
+
+
+    var clearCheckBox =function (target)
+    {
+      var estados=$('.checkbox-estado');
+      if(typeof(estados)!='undefined')
+      {
+        $.each(estados, function(i, checksBox)
+        {
+          var tmpEstado=parseInt($(checksBox).attr('data-estado'));
+          if(!isNaN(tmpEstado))
+          {
+            if(tmpEstado!=target)
+            {
+
+              if($(checksBox).is(":checked"))
+              {
+                $(checksBox).trigger('click');
+              }
+            }
+          }
+        });
+      }
+    }
+
+
+    var ocultarNoDecesos=function (estado)
+    {
+      var tmpNoDeceso=$('.div-no-deceso');
+      if(typeof(tmpNoDeceso)!='undefined')
+      {
+        $.each(tmpNoDeceso, function(i, item)
+        {
+          if(estado==3)//deceso
+           $(item).fadeOut();
+          else
+           $(item).fadeIn();
+        });
+      }
+    }
     </script>
+
+
+
+
+
+
+
+

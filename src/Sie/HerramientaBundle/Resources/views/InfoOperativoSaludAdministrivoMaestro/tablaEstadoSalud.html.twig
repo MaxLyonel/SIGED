@@ -1,0 +1,26 @@
+                                  <table class="table">
+                                    <thead class="thead-dark">
+                                      <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Estado</th>
+                                        <th scope="col">De</th>
+                                        <th scope="col">Hasta</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {% for item in detalleSalud %}
+                                      <tr >
+                                        <th scope="row">{{loop.index}}</th>
+                                        <td>{{item.estadosalud}}</td>
+                                        <td>{{item.fecha|date('d/m/Y')}}</td>
+                                        <td>
+                                          {% if item.fecha2 is not null%}
+                                            {{item.fecha2|date('d/m/Y')}}
+                                          {% else %}
+                                            <div class="text-center">-</div>
+                                          {% endif %}
+                                        </td>
+                                      </tr>
+                                      {% endfor %}
+                                    </tbody>
+                                  </table>

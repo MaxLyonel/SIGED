@@ -33,6 +33,10 @@ Sie\AppWebBundle\Entity\MaestroInscripcionEstadosalud:
             type: date
             nullable: true
             comment: ''
+        fecha2:
+            type: date
+            nullable: true
+            comment: ''
     manyToOne:
         cargoTipo:
             targetEntity: CargoTipo

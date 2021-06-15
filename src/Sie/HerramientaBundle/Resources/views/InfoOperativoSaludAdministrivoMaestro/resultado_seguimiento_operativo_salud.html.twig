@@ -8,24 +8,25 @@
 				      <th scope="col">#</th>
 				      <th scope="col">Sie</th>
 				      <th scope="col">Unidad Educativa</th>
-				      <th scope="col">Administrativos Registrados</th>
-				      <th scope="col">Maestros Registrados</th>
-				      <th scope="col">Administrativos Vacunados</th>
-				      <th scope="col">Maestros Vacunados</th>
+				      <th scope="col" width="10%">Estado</th>
+				      <th scope="col" width="5%">Acciones</th>
 				    </tr>
 				  </thead>
 				  <tbody>
 				  	{% for d in datos %}
-				  		{% set registroAdm = (d.administrativos=='0 / 0')?' Registrado ':'No Registrado' %}
-				  		{% set registroMaes = (d.maestros=='0 / 0')?' Registrado ':'No Registrado' %}
-				    <tr>
+				  		{% set id_cerrado = (d.estado_reporte)?d.estado_reporte:-1 %}
+				    <tr class="tr-estado-reporte-{{d.estado_reporte}}">
 				      <th scope="row">{{loop.index}}</th>
 				      <td>{{d.id}}</td>
 				      <td>{{d.ue}}</td>
-				      <td>{{registroAdm}} ({{d.administrativos}})</td>
-				      <td>{{registroMaes}} ({{d.maestros}})</td>
-				      <td class="text-center">{{d.administrativos_vacunados}}</td>
-				      <td class="text-center">{{d.maestros_vacunados}}</td>
+				      <td class="td-estado-operativo-detalle">{{(d.estado_reporte)?'Cerrado':'Abierto'}}</td>
+				      <td class="text-center td-estado-operativo">
+				      {% if d.estado_reporte is not null %}
+				      	<a href="javascript:void(0)" onclick="abrirOperativoEstadoSalud({{d.estado_reporte}})" class="btn btn-success" data-id="{{d.estado_reporte}}">Abrir operativo</a>
+				      {% else %}
+				      	<span class="label label-warning">Operativo abierto</span>
+				      {% endif %}
+				  	  </td>
 				    </tr>
 				  	{% endfor %}
 				  	{% if datos|length<=0 %}

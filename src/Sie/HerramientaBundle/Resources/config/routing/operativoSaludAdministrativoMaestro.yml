@@ -126,6 +126,12 @@ herramienta_info_personal_adm_cerrarOperativo_estadosalud:
     options:
         expose: true
 
+herramienta_info_personal_adm_abrirOperativo_estadosalud:
+    path:     /abrir-operativo/estado-de-salud/{id}
+    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:abrirOperativoEstadoSalud" }
+    options:
+        expose: true
+
 herramienta_info_personal_adm_seguimientoOperativo_estadosalud:
     path:     /seguimiento-operativo
     defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:seguimientoOperativoEstadoSalud" }
@@ -150,3 +156,7 @@ herramienta_info_personal_adm_obtener_estadosalud:
 #    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:getUnidadesEducativasSeleccionadas" }
 #    options:
 #        expose: true
+
+herramienta_info_salud_personal_adm_docente_ddjj:
+    path:     /ddjj/operativo-salud/{codue}/{gestion}
+    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:exportarReporteDDJJOperativoSalud" }

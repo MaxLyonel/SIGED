@@ -168,6 +168,10 @@ class MaestroInscripcionEstadosalud
      * @var \DateTime
      */
     private $fecha;
+    /**
+     * @var \DateTime
+     */
+    private $fecha2;
 
 
     /**
@@ -189,6 +193,29 @@ class MaestroInscripcionEstadosalud
      * @return \DateTime 
      */
     public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     * @return MaestroInscripcionEstadosalud
+     */
+    public function setFecha2($fecha)
+    {
+        $this->fecha2 = $fecha;
+    
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime 
+     */
+    public function getFecha2()
     {
         return $this->fecha;
     }

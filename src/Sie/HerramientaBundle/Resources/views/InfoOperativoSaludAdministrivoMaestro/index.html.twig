@@ -56,7 +56,7 @@
                 <div class="panel rounded shadow panel-teal">
                     <div class="panel-heading">
                         <div class="pull-left">
-                            <h3 class="panel-title">Personal</h3>
+                            <h3 class="panel-title">Personal Docente - Administrativo</h3>
                         </div>
                         <div class="clearfix"></div>
                     </div><!-- /.panel-heading -->
@@ -73,8 +73,11 @@
                                                       <input type="submit" class="btn btn-md btn-lilac" value="Finalizar operativo Estado Salud" onclick="return confirm('¿Está segura/o de continuar? Recuerde que posteriormente no podrá realizar más cambios hasta el siguiente operativo.')">
                                                 </form>
                                             </div>
+                                            <div class="pull-right div-ddjj-operativo-salud"></div>
                                         {% else %}
-                                            <a href="#" class="btn btn-md btn-primary" style="margin:0 0 1rem 0"> <i class="fa fa-file-pdf-o fa-2x text-white" aria-hidden="true"></i>&nbsp; Declaración Jurada</a>
+                                            <div class="pull-right div-ddjj-operativo-salud">
+                                                <a href="{{path('herramienta_info_salud_personal_adm_docente_ddjj',{codue:institucion.id,gestion:gestion})}}" class="btn btn-md btn-primary" style="margin:0 0 1rem 0"> <i class="fa fa-file-pdf-o fa-2x text-white" aria-hidden="true"></i>&nbsp; Declaración Jurada</a>
+                                            </div>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -82,7 +85,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                 {% if maestro is not empty %}
-                                    <div id="no-more-tables" class="table-responsive">
+                                    <div id="no-more-tables" class="table-responsive" style="margin-top:0px">
                                         <table class="table table-bordered table-primary">
                                             <thead>
                                                 <tr>
@@ -98,7 +101,7 @@
                                                     <th>Observación</th>
                                                     #}
                                                     <th>Cargo</th>
-                                                    <th>Salud</th>
+                                                    <th>Reportado</th>
                                                      <th>Acciones</th>
                                                 </tr>
                                             </thead>
@@ -121,7 +124,14 @@
                                                         #}
                                                         <td data-title="Cargo">{{maestro.cargo}}</td>
                                                         
-                                                        <td data-title="EstadoSalud" id="salud_{{maestro.miId}}" >{{maestro.estadosalud}}</td>
+                                                        <td data-title="EstadoSalud" id="salud_{{maestro.miId}}" align="center">
+                                                            {% set detalleSalud = maestro.detalleEstadoSalud %}
+                                                                {% if detalleSalud is not null %}
+                                                                     <i class="fa fa-check fa-2x fg-success"></i>
+                                                                {% else %}
+                                                                     <i class="fa fa-times fa-2x fg-danger"></i>
+                                                                {% endif %}
+                                                        </td>
 
 
                                                         {% if app.session.get('roluser') != 20 %}
@@ -129,7 +139,7 @@
                                                                 {% if operativoSalud %}
                                                                     <div class="div-operativo-salud">
                                                                         <button type="button" class="btn-link" onclick="editarEstadoSalud({{maestro.miId}},{{gestion}},{{maestro.perId}},{{maestro.cargoId}}); return false;">
-                                                                            <span class="badge badge-danger parpadeo">Nuevo</span><br>
+                                                                            {#<span class="badge badge-danger parpadeo">Nuevo</span><br>#}
                                                                             <i class="fa fa-edit text-danger"></i> Editar <br>estado de salud
                                                                         </button>
                                                                     </div>
@@ -143,7 +153,7 @@
                                         </table>
                                     </div>
                                 {% else %}
-                                    No hay Maestros Registrados
+                                    No hay Personal Docente Administrativo Registrados
                                 {% endif %}
                                     
                                 </div>
@@ -203,11 +213,264 @@
         });
     };
 
+    var formatearInput = function(arrayDatos)
+    {
+        var obj=new Object();
+        var INDICES=[];
+        var VALORES=[];
+        var DETALLES=[];
+        
+        var tmpData3=new Array();
+        if(Object.prototype.toString.call( arrayDatos)=='[object Object]' && arrayDatos.length>0)
+        {
+            var tmp =arrayDatos;
+            $.each(tmp, function(i, item)
+            {
+                 var tmpData=$(item).attr('name');
+                 var tmpValue=$(item).val();
+                 var tmpName = $(item).attr('data-nombre');
+                 var name='';
+                 if(tmpData.length>0)
+                 {
+                    name=tmpData.substring(0, tmpData.length-1); //eliminamos el ]
+                    var tmpData2=name.split('[');
+                    var indice = tmpData2[0].replace(/^\[+|\[+$/gm,'');//eliminamos el signo [
+                    var valor = tmpData2[1];
+
+                    if(typeof(indice)!='undefined')
+                    {
+                        if(!INDICES.includes(indice))
+                            INDICES.push(indice);
+                    }
+                    if(typeof(valor)!='undefined')
+                    {
+                        //var tmpData3=new Object();
+                        if(tmpValue==="on")
+                            tmpData3[valor+'_']=tmpName;
+                        else
+                            tmpData3[valor+'_']=tmpValue;
+                        //VALORES.push(tmpData3);
+                    }
+                 }
+            });
+            VALORES=tmpData3;
+        }
+
+        if(INDICES.length==1)
+        {
+            obj[INDICES[0]]=VALORES;
+        }
+        else
+        {
+            obj=null;
+        }
+        return obj;
+    }
+
+    var validarCampos= function (estadoActual,fecha1,fecha2)
+    {
+        var estadoValidacion=true;
+        var msjValidacion='';
+
+        if(estadoActual.hasOwnProperty('request_estado_salud'))
+        {
+            var registro=estadoActual.request_estado_salud;
+            
+            for(var id in registro)
+            {
+                var estado=parseInt(id.replaceAll(/[^0-9]/g,''));
+                if(!isNaN(estado))
+                {
+                    if(estado == 1 || estado == 2)
+                    {
+                        if(fecha1.hasOwnProperty('request_fecha_1') == false)
+                        {
+                            msjValidacion+='La opcion: "'+registro[id]+'" requiere que el campo DESDE sea completado\n';
+                            estadoValidacion=false;
+                        }
+                        else
+                        {
+                            if(fecha1.request_fecha_1[id].length<=0)
+                            {
+                                msjValidacion+='La opcion: "'+registro[id]+'" requiere que el campo DESDE sea completado\n';
+                                estadoValidacion=false;
+                            }
+                        }
+
+                        if(fecha2.hasOwnProperty('request_fecha_2') == false)
+                        {
+                            msjValidacion+='La opcion: "'+registro[id]+'" requiere que el campo HASTA sea completado\n';
+                            estadoValidacion=false;
+                        }
+                        else
+                        {
+                            if(fecha2.request_fecha_2[id].length<=0)
+                            {
+                                msjValidacion+='La opcion: "'+registro[id]+'" requiere que el campo HASTA sea completado\n';
+                                estadoValidacion=false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //if($.inArray(parseInt(estado),[0,4]) == -1)
+                        if(estado != 0 && estado != 4)
+                        {
+                            if(fecha1.hasOwnProperty('request_fecha_1') == false)
+                            {
+                                msjValidacion+='La opcion: "'+registro[id]+'" requiere que el campo DESDE sea completado\n';
+                                estadoValidacion=false;
+                            }
+                            else
+                            {
+                                if(fecha1.request_fecha_1[id].length<=0)
+                                {
+                                    msjValidacion+='La opcion: "'+registro[id]+'" requiere que el campo DESDE sea completado\n';
+                                    estadoValidacion=false;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    estadoValidacion=false;
+                    //msjValidacion='Error no selecciono ninguna opción';
+                }
+                msjValidacion+='\n';
+            }
+        }
+        else
+        {
+            estadoValidacion=false;
+            msjValidacion='Error no selecciono ninguna opción';
+        }
+       return {estado:estadoValidacion,msj:msjValidacion};
+    }
+
+    var sendRequest = function (_form,_id,e)
+    {
+        e.preventDefault();
+        var form=$(_form).serialize();
+        var id = $(_form).find('#request_inscription').val();
+
+        //var requestInline = $()
+
+        var getEstadoActual=formatearInput($('.request-estado-salud'));
+        var getFecha1=formatearInput($('.request-fecha-1'));
+        var getFecha2=formatearInput($('.request-fecha-2'));
+        
+        if(getEstadoActual!=null)
+        {
+            var datosValidos=validarCampos(getEstadoActual,getFecha1,getFecha2);
+            if(datosValidos.estado==false)
+            {
+                swal({
+                  text: datosValidos.msj,
+                  icon: "warning",
+                  dangerMode: true,
+                });
+                return;
+            }
+        }
+        else
+        {
+            swal({
+              text: 'No selecciono ninguna opción',
+              icon: "warning",
+              dangerMode: true,
+            })
+            return;
+        }
+
+        $.ajax(
+        {
+            type: 'post',
+            data: form,
+            url: "{{path('herramienta_info_personal_adm_actualizar_estadosalud')}}",
+            beforeSend: function ()
+            {
+                $('#salud_'+_id).empty();
+                $('#salud_'+_id).html('Actualizando ...');
+            },
+            success: function (data)
+            {
+                var resp_ok='<i class="fa fa-check fa-2x fg-success"></i>'
+                var resp_error='<i class="fa fa-times fa-2x fg-danger"></i>'
+                $('#salud_'+_id).empty();
+                if(data.status==200)
+                {
+                    $('#salud_'+_id).html(resp_ok);
+                    $('.table-detalles').html(data.data);
+                    $('tbody tr:last-child>*').css({
+                        background:'#37bc9b',
+                        color:'white'
+                    });
+                    setTimeout(function ()
+                    {
+                    $('tbody tr:last-child>*').css({
+                        background:'inherit',
+                        color:'black'
+                    });
+                    },2000);
+                    //$('#modal_estado_salud').modal('hide');
+                }
+                else
+                {
+                    $('#salud_'+_id).html(resp_error);
+                    alert(data.data)
+                }
+            },
+            statusCode:
+            {
+                500: function ()
+                {
+                    $('#salud_'+id).html('Ocurrio un error, por favor vuelva a intentarlo');
+                },
+                404: function (xhr)
+                {
+                    var data    = JSON.parse(xhr.responseText);
+                    var msj     = data.msj;
+                    var status  = data.status;
+                    $('#salud_'+_id).html(msj);
+                    try
+                    {
+                        var msjTmp='';
+                        var tmp=JSON.parse(data.data);
+                        if(tmp.length>0)
+                        {
+                            //$('#modal_estado_salud').modal('hide');
+                            $.each(tmp, function(i, m)
+                            {
+                                 msjTmp+=m+'\n';
+                            });
+                            swal({
+                              title:msj,
+                              text: msjTmp,
+                              icon: "warning",
+                              dangerMode: true,
+                            })
+                        }
+                    }
+                    catch(e)
+                    {
+                        alert('Ocurrio un error, por favor vuelva a intentarlo');
+                    }
+                }
+            }
+        });
+    }
+
+{#
+    Esta funcion se utlizo en la version anterior con otra forma de registro que se pidio, por si acaso lo comento si esque se llegara a utlizar
     var sendRequest = function (_form,_id)
     {
         var form=$(_form).serialize();
         var estado = $(_form).find('#request_estado_salud').val();
         var id = $(_form).find('#request_inscription').val();
+
+        var fecha1=$(_form).find('#request_fecha_1').val();
+        var fecha2=$(_form).find('#request_fecha_2').val();
         if(typeof(estado)=='undefined' || estado <0 || isNaN(estado))
         {
             alert('Debe seleccionar un estado');
@@ -223,14 +486,32 @@
             alert('Ocurrio un error, por favor vuelva a intentarlo');
             return;
         }
-        
-        if($.inArray(parseInt(estado),[0,1,4]) == -1)
+
+        if(estado == 2)
         {
-            var mesProblemaCovid=parseInt($(_form).find('#request_fecha').val());
-            if(isNaN(mesProblemaCovid))
+            var fecha1=parseInt($(_form).find('#request_fecha_1').val());
+            var fecha2=parseInt($(_form).find('#request_fecha_2').val());
+            if(isNaN(fecha1))
             {
-                alert('Debe seleccionar la fecha');
+                alert('Debe seleccionar la fecha de inicio de problema covid');
                 return;
+            }
+            if(isNaN(fecha2))
+            {
+                alert('Debe seleccionar la fecha de finalización de problema covid');
+                return;
+            }
+        }
+        else
+        {
+            if($.inArray(parseInt(estado),[0,4]) == -1)
+            {
+                var fechaProblemaCovid=parseInt($(_form).find('#request_fecha_1').val());
+                if(isNaN(fechaProblemaCovid))
+                {
+                    alert('Debe seleccionar la fecha');
+                    return;
+                }
             }
         }
         $.ajax(
@@ -245,8 +526,18 @@
             },
             success: function (data)
             {
+                var resp_ok='<i class="fa fa-check fa-2x fg-success"></i>'
+                var resp_error='<i class="fa fa-times fa-2x fg-danger"></i>'
                 $('#salud_'+_id).empty();
-                $('#salud_'+_id).html(data.data);
+                if(data.status==200)
+                {
+                    $('#salud_'+_id).html(resp_ok);
+                    $('#modal_estado_salud').modal('hide');
+                }
+                else
+                {
+                    $('#salud_'+_id).html(resp_error);
+                }
             },
             statusCode:
             {
@@ -261,6 +552,7 @@
             }
         });
     }
+#}
 
     var finalizarOperativoSalud =function(_form)
     {
@@ -297,6 +589,12 @@
                     {
                         $(item).remove();
                     });
+                    var ddjj=$('.div-ddjj-operativo-salud');
+                    if(typeof(ddjj)!='undefined')
+                    {
+                        {% set rutaJS = path('herramienta_info_salud_personal_adm_docente_ddjj', { codue:institucion.id,gestion:gestion }) %}
+                        ddjj.html('<a href="{{rutaJS}}" class="btn btn-md btn-primary" style="margin:0 0 1rem 0"> <i class="fa fa-file-pdf-o fa-2x text-white" aria-hidden="true"></i>&nbsp; Declaración Jurada</a>');
+                    }
                 }
                 else
                 {
@@ -320,13 +618,23 @@
     $('#modal_estado_salud').on('change','.request-estado-salud',function()
     {
         var valor=parseInt($(this).val());
-        if($.inArray(valor,[0,1,4])  == -1)
+        $('#request_fecha_1').val('');
+        $('#request_fecha_2').val('');
+
+        $('.div-fecha-1').hide();
+        $('.div-fecha-2').hide();
+        if($.inArray(valor,[0,4])  == -1)
         {
-            $('.div-fecha').show();
+            $('.div-fecha-1').show();
         }
         else
         {
-            $('.div-fecha').hide();
+            $('.div-fecha-1').hide();
+        }
+        if(valor==2)
+        {
+            $('.div-fecha-1').show();
+            $('.div-fecha-2').show();
         }
     });
 

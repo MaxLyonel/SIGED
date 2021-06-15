@@ -3,6 +3,7 @@
 namespace Sie\HerramientaBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -155,16 +156,16 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
             //                ->addOrderBy('p.materno')
             //                ->addOrderBy('p.nombre')
             //                ->getQuery();
-
-
+        
         $cargosArray = array_merge($cargosArrayAdministrativos, $cargosArrayMaestros);
+
         $query = $repository->createQueryBuilder('mi')
                 ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, mi.esVigenteAdministrativo, ft.formacion,ct.cargo ,ct.id cargoId,est.estadosalud')
                 ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
                 ->innerJoin('SieAppWebBundle:FormacionTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
                 ->innerJoin('SieAppWebBundle:CargoTipo', 'ct', 'WITH', 'mi.cargoTipo = ct.id')
 
-                ->leftJoin('SieAppWebBundle:MaestroInscripcionEstadosalud', 'mies', 'WITH', 'mi.id =mies.maestroInscripcion')
+                ->leftJoin('SieAppWebBundle:MaestroInscripcionEstadosalud', 'mies', 'WITH', 'mi.id = mies.maestroInscripcion')
                 ->leftJoin('SieAppWebBundle:EstadoSaludTipo', 'est', 'WITH', 'mies.estadosaludTipo = est.id')
 
                 ->where('mi.institucioneducativa = :idInstitucion')
@@ -179,9 +180,38 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                 ->addOrderBy('p.materno')
                 ->addOrderBy('p.nombre')
                 ->getQuery();
-
         $maestro = $query->getResult();
 
+/*************************************AQUI*****************************************/
+        $maestro=array();
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $c=implode(',',array_values($cargosArray));
+        $query = '
+            SELECT distinct p.id as "perId", p.carnet, p.paterno, p.materno, p.nombre, mi.id as "miId", mi.fecha_registro, mi.fecha_modificacion, mi.es_vigente_administrativo, ft.formacion,ct.cargo ,ct.id as "cargoId",
+            (
+                SELECT string_agg(concat_ws(\',\',mies0.estadosalud_tipo_id,est0.estadosalud,to_char(mies0.fecha, \'DD-MM-YYYY\'),to_char(mies0.fecha, \'DD-MM-YYYY\')),\'|\')
+                from maestro_inscripcion_estadosalud mies0
+                INNER JOIN estadosalud_tipo est0 on mies0.estadosalud_tipo_id=est0.id
+                where maestro_inscripcion_id=mi.id
+                and persona_id=p.id
+            ) as "detalleEstadoSalud"
+
+            FROM maestro_inscripcion mi
+            inner join persona  p  on mi.persona_id = p.id
+            inner join formacion_tipo  ft  on mi.formacion_tipo_id = ft.id
+            inner join cargo_tipo  ct  on mi.cargo_tipo_id = ct.id
+            where mi.institucioneducativa_id = ?
+            and mi.gestion_tipo_id = ?
+            and mi.cargo_tipo_id IN ('.$c.')
+            ORDER BY ct.id
+        ';
+        $stmt = $db->prepare($query);
+        $params = array($institucion,$gestion);
+        $stmt->execute($params);
+        $maestro=$stmt->fetchAll();
+        
+/*************************************AQUI*****************************************/
 
         $query = $repository->createQueryBuilder('mi')
             ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')
@@ -429,6 +459,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         if($esAjax && $request_personalInscripcion>0 && $request_persona>0 && $request_cargo>=0)
         {
             $em = $this->getDoctrine()->getManager();
+            $db = $em->getConnection();
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('id'=>$request_persona));
             /*
             $repository = $em->getRepository('SieAppWebBundle:EstadosaludTipo');
@@ -447,6 +478,31 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                 $estadosSalud=array();
             }
 
+            $detalleSalud=array();
+            $query = '
+                    SELECT *
+                    from maestro_inscripcion_estadosalud mies0
+                    INNER JOIN estadosalud_tipo est0 on mies0.estadosalud_tipo_id=est0.id
+                    where 
+                    maestro_inscripcion_id=? 
+                    and persona_id=? 
+            ';///////////////////AQUI CAMBIAR AND POR OR
+            $stmt = $db->prepare($query);
+            $params = array($request_personalInscripcion,$request_persona);
+            $stmt->execute($params);
+            $detalleSalud=$stmt->fetchAll();
+
+            $estadosaludTipoDeceso  = $em->getRepository('SieAppWebBundle:EstadosaludTipo')->findOneBy(array('id'=>3));
+            $maestroInscripcion     = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('id'=>$request_personalInscripcion));
+            $persona                = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('id'=>$request_persona));
+
+            $maestroDeceso  = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findBy(array(
+                        //'maestroInscripcion'=>$maestroInscripcion,
+                        'persona'=>$persona,
+                        'estadosaludTipo'=> $estadosaludTipoDeceso
+            ));
+
+
             return $this->render($this->session->get('pathSystem').':InfoOperativoSaludAdministrivoMaestro:estadoSalud.html.twig',array(
                 'estadosSalud'=>$estadosSalud,
                 'inscripcion_id' => $request_personalInscripcion,
@@ -454,6 +510,8 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                 'persona_id'=>$request_persona,
                 'cargoTipo_id'=>$request_cargo,
                 'persona'=>$persona,
+                'detalleSalud'=>$detalleSalud,
+                'deceso' => $maestroDeceso
             ));
         }
         else
@@ -469,10 +527,10 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
 
     /**
      * Esta funcion actualiza el estado de salud de una persona, en la tabla 'maestro_inscripcion_estadosalud'
-     *
+     * ESTA ES LA VERSIN ANTERIRO  POR SIA CASO LA DEJO ACA
      * @return void
      * @author lnina
-     **/
+     **
     public function actualizarEstadoSaludAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
@@ -491,6 +549,10 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $request_gestion = filter_var($request_gestion,FILTER_SANITIZE_NUMBER_INT);
         $request_gestion = is_numeric($request_gestion)?$request_gestion:-1;
 
+        $request_gestion_2 = $request->get('request_gestion_2');
+        $request_gestion_2 = filter_var($request_gestion_2,FILTER_SANITIZE_NUMBER_INT);
+        $request_gestion_2 = is_numeric($request_gestion_2)?$request_gestion_2:-1;
+
         $request_persona = $request->get('request_persona');
         $request_persona = filter_var($request_persona,FILTER_SANITIZE_NUMBER_INT);
         $request_persona = is_numeric($request_persona)?$request_persona:-1;
@@ -499,14 +561,18 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $request_cargo = filter_var($request_cargo,FILTER_SANITIZE_NUMBER_INT);
         $request_cargo = is_numeric($request_cargo)?$request_cargo:-1;
 
-        $request_fecha = $request->get('request_fecha');
-        $request_fecha = filter_var($request_fecha,FILTER_SANITIZE_STRING);
+        $request_fecha_1 = $request->get('request_fecha_1');
+        $request_fecha_1 = filter_var($request_fecha_1,FILTER_SANITIZE_STRING);
+
+        $request_fecha_2 = $request->get('request_fecha_2');
+        $request_fecha_2 = filter_var($request_fecha_2,FILTER_SANITIZE_STRING);
 
         $data=null;
         $status= 404;
         $msj='Ocurrio un error, por favor vuelva a intentarlo';
 
-        if($esAjax && $request_inscription >0 && $request_estadoSalud >=0 && strlen($request_fecha)>0 )
+        $existe = false;
+        if($esAjax && $request_inscription >0 && $request_estadoSalud >=0 )
         {
             $em = $this->getDoctrine()->getManager();
             
@@ -517,17 +583,17 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
 
             if($estadosaludTipo && $maestroInscripcion && $persona && $cargo)
             {
-                /*
-                $repository = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud');
-                $query = $repository->createQueryBuilder('mi')
-                    ->where('mi.maestroInscripcion = :maestroInscripcion')
-                    //->andWhere('mi.estadosaludTipo <> :estadosaludTipo')
-                    ->setParameter('maestroInscripcion', $maestroInscripcion->getId())
-                    //->setParameter('estadosaludTipo', 4)
-                    ->setMaxResults(1)
-                    ->getQuery();
-                $maestroInscripcionEstadosalud = $query->getOneOrNullResult();
-                */
+                
+                //$repository = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud');
+                //$query = $repository->createQueryBuilder('mi')
+                //    ->where('mi.maestroInscripcion = :maestroInscripcion')
+                //    //->andWhere('mi.estadosaludTipo <> :estadosaludTipo')
+                //    ->setParameter('maestroInscripcion', $maestroInscripcion->getId())
+                //    //->setParameter('estadosaludTipo', 4)
+                //    ->setMaxResults(1)
+                //    ->getQuery();
+                //$maestroInscripcionEstadosalud = $query->getOneOrNullResult();
+                
                
                 $maestroInscripcionEstadosalud = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneBy(array(
                     'maestroInscripcion'=>$maestroInscripcion,
@@ -535,28 +601,51 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                     'cargoTipo' => $cargo,
                     'estadosaludTipo'=> $estadosaludTipo
                 ));
-                $tmpmaestroInscripcionEstadosalud=$maestroInscripcionEstadosalud;
-
-                if($maestroInscripcionEstadosalud==null)//Si no existe lo creamos
-                    $maestroInscripcionEstadosalud = new MaestroInscripcionEstadosalud();
-
-                $maestroInscripcionEstadosalud->setEstadosaludTipo($estadosaludTipo);
-                $maestroInscripcionEstadosalud->setMaestroInscripcion($maestroInscripcion);
-                //if($tmpmaestroInscripcionEstadosalud==null)
-                    $maestroInscripcionEstadosalud->setFechaModificacion(new \DateTime('now'));
-
-                $maestroInscripcionEstadosalud->setCargoTipo($cargo);
-                $maestroInscripcionEstadosalud->setPersona($persona);
+                if($maestroInscripcionEstadosalud)
+                    $existe=true;
                 
-                list($d,$m,$y)=explode('-',$request_fecha);
+                if($existe==false || in_array($request_estadoSalud,[1,2]))
+                {
+                    $maestroInscripcionEstadosalud=null;
+                    $tmpmaestroInscripcionEstadosalud=$maestroInscripcionEstadosalud;
+                    if($maestroInscripcionEstadosalud==null)//Si no existe lo creamos
+                        $maestroInscripcionEstadosalud = new MaestroInscripcionEstadosalud();
 
-                $maestroInscripcionEstadosalud->setFecha(new \DateTime($y.'-'.$m.'-'.$d));
+                    $maestroInscripcionEstadosalud->setEstadosaludTipo($estadosaludTipo);
+                    $maestroInscripcionEstadosalud->setMaestroInscripcion($maestroInscripcion);
+                    //if($tmpmaestroInscripcionEstadosalud==null)
+                        $maestroInscripcionEstadosalud->setFechaModificacion(new \DateTime('now'));
 
-                $em->persist($maestroInscripcionEstadosalud);
-                $em->flush();
+                    $maestroInscripcionEstadosalud->setCargoTipo($cargo);
+                    $maestroInscripcionEstadosalud->setPersona($persona);
+                    
+                    if($request_estadoSalud==2)//este es el estado enfermo, por lo tanto tendra dos fechas
+                    {
+                        list($d1,$m1,$y1)=explode('-',$request_fecha_1);
+                        $maestroInscripcionEstadosalud->setFecha(new \DateTime($y1.'-'.$m1.'-'.$d1));
 
-                //$data=$estadosaludTipo->getEstadosalud().'<br>'.$tmpVacunado;
-                $data=$estadosaludTipo->getEstadosalud();
+                        list($d2,$m2,$y2)=explode('-',$request_fecha_2);
+                        //$maestroInscripcionEstadosalud->setFecha2(new \DateTime($y2.'-'.$m2.'-'.$d2));
+                    }
+                    else
+                    {
+                        if(in_array($request_estadoSalud,[0,4]))
+                        {
+                            $maestroInscripcionEstadosalud->setFecha(new \DateTime('now'));
+                        }
+                        else
+                        {
+                            list($d1,$m1,$y1)=explode('-',$request_fecha_1);
+                            $maestroInscripcionEstadosalud->setFecha(new \DateTime($y1.'-'.$m1.'-'.$d1));
+                        }
+                    }
+
+                    $em->persist($maestroInscripcionEstadosalud);
+                    $em->flush();
+                }
+
+                //$data=$this->getDetalleRegistroMaestroInscripcion($maestroInscripcion);
+                $data='Ok';
                 $status= 200;
                 $msj='Los datos fueron actualizados correctamente';
             }
@@ -577,6 +666,212 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $response->headers->set('Content-Type', 'application/json');
         return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
     }
+    */
+
+
+    public function actualizarEstadoSaludAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $esAjax=$request->isXmlHttpRequest();
+        $form=$request->request->all();
+
+        $request_inscription = $request->get('request_inscription');
+        $request_inscription = filter_var($request_inscription,FILTER_SANITIZE_NUMBER_INT);
+        $request_inscription = is_numeric($request_inscription)?$request_inscription:-1;
+
+        $request_gestion = $request->get('request_gestion');
+        $request_gestion = filter_var($request_gestion,FILTER_SANITIZE_NUMBER_INT);
+        $request_gestion = is_numeric($request_gestion)?$request_gestion:-1;
+
+        $request_persona = $request->get('request_persona');
+        $request_persona = filter_var($request_persona,FILTER_SANITIZE_NUMBER_INT);
+        $request_persona = is_numeric($request_persona)?$request_persona:-1;
+
+        $request_cargo = $request->get('request_cargo');
+        $request_cargo = filter_var($request_cargo,FILTER_SANITIZE_NUMBER_INT);
+        $request_cargo = is_numeric($request_cargo)?$request_cargo:-1;
+
+
+        //  NO OLIDAR SANITIZAR LOS DATOS DE ESTADO SALUD
+        //  request_fecha_1,request_fecha_2,request_estado_salud
+
+        $request_estado_salud = $form['request_estado_salud'];
+        $request_fecha_1 = $form['request_fecha_1'];
+        $request_fecha_2 = $form['request_fecha_2'];
+
+        $data=null;
+        $status= 404;
+        $msj='Ocurrio un error, por favor vuelva a intentarlo';
+
+        $existe = false;
+
+        $arrayMensajes=array();
+        $error=false;
+        if($esAjax && $request_inscription >0 )
+        {
+            $em = $this->getDoctrine()->getManager();
+            
+            $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('id'=>$request_inscription,'gestionTipo'=>$request_gestion));
+            $persona            = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('id'=>$request_persona));
+            $cargo              = $em->getRepository('SieAppWebBundle:CargoTipo')->findOneBy(array('id'=>$request_cargo));
+
+            if($maestroInscripcion && $persona && $cargo && $request_gestion>0)
+            {
+                foreach($request_estado_salud as $k=>$e)
+                {
+                    $error=false;
+                    $request_estadoSalud=$k;
+                    $estadosaludTipo                = $em->getRepository('SieAppWebBundle:EstadosaludTipo')->findOneBy(array('id'=>$request_estadoSalud));
+                    $maestroInscripcionEstadosalud  = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneBy(array(
+                        'maestroInscripcion'=>$maestroInscripcion,
+                        'persona'=>$persona,
+                        'cargoTipo' => $cargo,
+                        'estadosaludTipo'=> $estadosaludTipo
+                    ));
+
+                    $maestroInscripcionEstadosaludVerificacion  = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findBy(array(
+                        'maestroInscripcion'=>$maestroInscripcion,
+                        'persona'=>$persona,
+                    ));
+
+                    if($maestroInscripcionEstadosalud)
+                        $existe=true;
+
+                    if($existe==false || in_array($request_estadoSalud,[1,2]))
+                    {
+                        $maestroInscripcionEstadosalud=null;
+                        $tmpmaestroInscripcionEstadosalud=$maestroInscripcionEstadosalud;
+                        if($maestroInscripcionEstadosalud==null)//Si no existe lo creamos
+                            $maestroInscripcionEstadosalud = new MaestroInscripcionEstadosalud();
+
+                        $maestroInscripcionEstadosalud->setEstadosaludTipo($estadosaludTipo);
+                        $maestroInscripcionEstadosalud->setMaestroInscripcion($maestroInscripcion);
+                        $maestroInscripcionEstadosalud->setFechaModificacion(new \DateTime('now'));
+
+                        $maestroInscripcionEstadosalud->setCargoTipo($cargo);
+                        $maestroInscripcionEstadosalud->setPersona($persona);
+                        
+                        if(in_array($request_estadoSalud,[1,2]))//este es el estado enfermo o recuperado, por lo tanto tendra dos fechas
+                        {
+                            $fecha1=$request_fecha_1[$k];
+                            $fecha2=$request_fecha_2[$k];
+
+                            $tmpFecha1=explode('-',$fecha1);
+                            $tmpFecha2=explode('-',$fecha2);
+
+                            if(count($tmpFecha1)==3 && count($tmpFecha2)==3)
+                            {
+                                list($d1,$m1,$y1)=$tmpFecha1;
+                                $maestroInscripcionEstadosalud->setFecha(new \DateTime($y1.'-'.$m1.'-'.$d1));
+
+                                list($d2,$m2,$y2)=$tmpFecha2;
+                                $maestroInscripcionEstadosalud->setFecha2(new \DateTime($y2.'-'.$m2.'-'.$d2));
+                            }
+                            else
+                            {
+                                $error=true;
+                                $arrayMensajes[]='El estado: '.$estadosaludTipo->getEstadosalud().' requiere que tanto el campoo DESDE y campo HASTA sean registrados.';
+                            }
+                        }
+                        else
+                        {
+                            if(in_array($request_estadoSalud,[0,4]))
+                            {
+                                if(count($maestroInscripcionEstadosaludVerificacion)==0)
+                                {
+                                    $maestroInscripcionEstadosalud->setFecha(new \DateTime('now'));
+                                }
+                                else
+                                {
+                                    $error=true;
+                                    $arrayMensajes[]='El estado: '.$estadosaludTipo->getEstadosalud().' no puede ser registrado, puesto que ya existen registros.';
+                                }
+                            }
+                            else
+                            {
+                                $fecha1=$request_fecha_1[$k];
+
+                                $tmpFecha1=explode('-',$fecha1);
+
+                                if(count($tmpFecha1)==3)
+                                {
+                                    list($d1,$m1,$y1)=$tmpFecha1;
+                                    $maestroInscripcionEstadosalud->setFecha(new \DateTime($y1.'-'.$m1.'-'.$d1));
+                                }
+                                else
+                                {
+                                    $error=true;
+                                    $arrayMensajes[]='El estado: '.$estadosaludTipo->getEstadosalud().' requiere que tanto el campoo DESDE sea registrado.';
+                                }
+
+                            }
+                        }
+
+                        if($error==false)
+                        {
+                            $em->persist($maestroInscripcionEstadosalud);
+                            $em->flush();
+                        }
+                    }
+                    else
+                    {
+                        $arrayMensajes[]='El estado: '.$estadosaludTipo->getEstadosalud().' ya fue registrado';
+                    }
+                }
+
+                if(count($arrayMensajes)==0)
+                {
+                    //$data=$this->getDetalleRegistroMaestroInscripcion($maestroInscripcion);
+                    //
+                    
+                    $detalleSalud=array();
+                    $query = '
+                            SELECT *
+                            from maestro_inscripcion_estadosalud mies0
+                            INNER JOIN estadosalud_tipo est0 on mies0.estadosalud_tipo_id=est0.id
+                            where 
+                            maestro_inscripcion_id=? 
+                            and persona_id=? 
+                    ';///////////////////AQUI CAMBIAR AND POR OR
+
+                    $stmt = $db->prepare($query);
+                    $params = array($request_inscription,$request_persona);
+                    $stmt->execute($params);
+                    $detalleSalud=$stmt->fetchAll();
+                    $tablaDetalles= $this->renderView($this->session->get('pathSystem').':InfoOperativoSaludAdministrivoMaestro:tablaEstadoSalud.html.twig',array(
+                        'detalleSalud'=>$detalleSalud,
+                    ));
+
+                    $data=$tablaDetalles;
+                    $status= 200;
+                    $msj='Los datos fueron actualizados correctamente';
+                }
+                else
+                {
+                    $data=json_encode($arrayMensajes);
+                    $status= 404;
+                    $msj='Algunos datos no fueron guardados';
+                }
+            }
+            else
+            {
+                $data=null;
+                $status= 404;
+                $msj='Ocurrio un error, los datos enviados no son correctos, por favor vuelva a intentarlo';
+            }
+        }
+        else
+        {
+            $data=null;
+            $status= 404;
+            $msj='Ocurrio un error, por favor vuelva a intentarlo';
+        }
+        $response = new JsonResponse($data,$status);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+    }
+
 
 
     /**
@@ -677,6 +972,55 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
     }
 
+
+    public function abrirOperativoEstadoSaludAction(Request $request,$id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $esAjax=$request->isXmlHttpRequest();
+
+        $request_id = $id;
+        $request_id = filter_var($request_id,FILTER_SANITIZE_NUMBER_INT);
+        $request_id = is_numeric($request_id)?$request_id:-1;
+
+        $data=null;
+        $status= 404;
+        $msj='Ocurrio un error, por favor vuelva a intentarlo';
+
+        if($esAjax && $request_id >0)
+        {
+            $query ="delete from institucioneducativa_control_operativo_menus where id=?";
+            $stmt = $db->prepare($query);
+            $params = array($request_id);
+            $stmt->execute($params);
+            $tmp=$stmt->fetchAll();
+
+            $borrado = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('id' => $request_id));
+
+            if($borrado==null)
+            {
+                $data='ok';
+                $status= 200;
+                $msj='Los datos fueron guardados correctamente';
+            }
+            else
+            {
+                $data=null;
+                $status= 404;
+                $msj='Ocurrio un error, por favor vuelva a intentarlo';
+            }
+        }
+        else
+        {
+            $data=null;
+            $status= 404;
+            $msj='Ocurrio un error, por favor vuelva a intentarlo';
+        }
+        $response = new JsonResponse($data,$status);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+    }
+
     public function verificarEstadoOperativoSaludo($request_sie,$request_gestion)
     {
         //21 abierto
@@ -742,6 +1086,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                 */
                 $maestroInscripcionEstadosalud = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneBy(array('maestroInscripcion'=>$maestroInscripcion->getId()));
 
+                /*
                 if($maestroInscripcionEstadosalud)
                 {
                     $data='';
@@ -749,14 +1094,14 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                     
                     if($tmp)
                         $data=$tmp->getEstadosalud();
-                    /*
                     $tmpVacunado=$maestroInscripcionEstadosalud->getVacunado();
                     if($tmpVacunado)
                         $data=$data.'<br>*Vacunado';
                     else
                         $data=$data.'<br>*No vacunado';
-                    */
                 }
+                */
+                $data=$this->getDetalleRegistroMaestroInscripcion($maestroInscripcion);
             }
 
         $response = new JsonResponse($data,$status);
@@ -797,7 +1142,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
             $arrayDistritos = $this->getDistritos($departamento);
             $arrayUE = array();
         }
-        else if(in_array($rol,[10,9]))//distrital
+        else if(in_array($rol,[10]))//distrital
         {
             $tmpDepartamento= $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($departamento);
             $arrayDepartamentos[] = array('id'=>$tmpDepartamento->getId(),'codigo'=>$tmpDepartamento->getCodigo(),'depto'=>$tmpDepartamento->getDepartamento());
@@ -811,7 +1156,6 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         {
             return $this->redirect($this->generateUrl('login'));
         }
-
         return $this->render($this->session->get('pathSystem').':InfoOperativoSaludAdministrivoMaestro:seguimiento_operativo_salud.html.twig',array(
             'rol' => $rol,
             'departamentos'=>$arrayDepartamentos,
@@ -1004,7 +1348,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
 
-        $query ="
+        $queryOld ="
             select 
             TARGET AS institucioneducativa_id,institucioneducativa,
             (
@@ -1013,7 +1357,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                         from maestro_inscripcion mi
                         inner Join persona p on mi.persona_id = p.id
                         inner Join formacion_tipo ft on mi.formacion_tipo_id = ft.id
-                        left Join (SELECT * from maestro_inscripcion_estadosalud where estadosalud_tipo_id>0)  mies on mi.id =mies.maestro_inscripcion_id
+                        left Join (SELECT * from maestro_inscripcion_estadosalud where estadosalud_tipo_id>0 and estadosalud_tipo_id <=5)  mies on mi.id =mies.maestro_inscripcion_id
                         left Join estadosalud_tipo est  on mies.estadosalud_tipo_id = est.id
                         where mi.institucioneducativa_id = TARGET
                         and mi.gestion_tipo_id = ?
@@ -1025,7 +1369,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                         from maestro_inscripcion mi
                         inner Join persona p on mi.persona_id = p.id
                         inner Join formacion_tipo ft on mi.formacion_tipo_id = ft.id
-                        left Join (SELECT * from maestro_inscripcion_estadosalud where estadosalud_tipo_id>0)  mies on mi.id =mies.maestro_inscripcion_id
+                        left Join (SELECT * from maestro_inscripcion_estadosalud where estadosalud_tipo_id>0 and estadosalud_tipo_id <=5)  mies on mi.id =mies.maestro_inscripcion_id
                         left Join estadosalud_tipo est  on mies.estadosalud_tipo_id = est.id
                         where mi.institucioneducativa_id = TARGET
                         and mi.gestion_tipo_id = ?
@@ -1067,8 +1411,31 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
           group by cod_dis,des_dis,TARGET,institucioneducativa,dependencia
         ";
 
+        $query ="
+            select 
+            TARGET AS institucioneducativa_id,institucioneducativa,(
+            select id 
+            from institucioneducativa_control_operativo_menus 
+            where gestion_tipo_id= ? and institucioneducativa_id = TARGET and  estado_menu='11'
+            ) as estado_reporte
+            from 
+            (
+              select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as TARGET,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id) as dependencia
+              from (institucioneducativa c 
+                  inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
+                    inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1
+            ) a
+          where 
+          cod_dis = ?
+          and substring(cod_dis,1,1) = ?
+          group by cod_dis,des_dis,TARGET,institucioneducativa,dependencia
+        ";
+
+
         $stmt = $db->prepare($query);
-        $params = array($gestion,$gestion,$gestion,$gestion,$distrito,$departamento);
+        //$params = array($gestion,$gestion,$gestion,$gestion,$distrito,$departamento);
+        $params = array($gestion,$distrito,$departamento);
         $stmt->execute($params);
         $tmp=$stmt->fetchAll();
 
@@ -1079,16 +1446,57 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                 $ue[]=array(
                     'id' =>$u['institucioneducativa_id'],
                     'ue'=>$u['institucioneducativa'],
-                    'administrativos'=>$u['administrativos'],
-                    'maestros'=>$u['maestros'],
-                    'administrativos_vacunados'=>$u['administrativos_vacunados'],
-                    'maestros_vacunados'=>$u['maestros_vacunados'],
+                    'estado_reporte'=>$u['estado_reporte'],
+
                 );
             }
         }
         return $ue;
     }
 
+    private function getDetalleRegistroMaestroInscripcion($maestroInscripcion)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+
+        $detalle ='';
+        $query = "
+            select string_agg(est.estadosalud ||' ('|| to_char(mies.fecha, 'DD-MM-YYYY') ||') ',' - <br>') detalle
+            from maestro_inscripcion_estadosalud mies
+            inner join estadosalud_tipo est on mies.estadosalud_tipo_id=est.id
+            where mies.maestro_inscripcion_id = ?";
+        $stmt = $db->prepare($query);
+        $params = array($maestroInscripcion->getId());
+        $stmt->execute($params);
+        $detalle=$stmt->fetchAll();
+        if(count($detalle)>0)
+            $detalle=$detalle[0]['detalle'];
+        return $detalle;
+    }
+
+
+    public function exportarReporteDDJJOperativoSaludAction(Request $request,$codue,$gestion)
+    {
+        $codue  = filter_var($codue,FILTER_SANITIZE_NUMBER_INT);
+        $gestion               = filter_var($gestion,FILTER_SANITIZE_NUMBER_INT);
+
+        $codue  = empty($codue)?-1:$codue;
+        $gestion               = empty($gestion)?-1:$gestion;
+
+        $arch           = 'DECLARACIÓN_JURADA_REPORTE_ESTADO_DE_SALUD-'.date('Y').'_'.date('YmdHis').'.pdf';
+        $response       = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        
+        //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion));
+        $response->setContent(file_get_contents('http://127.0.0.1:62804/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-maestro-admistrativo\reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion));
+
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 
     /*
     public function getUnidadesEducativasSeleccionadasAction($distrito)

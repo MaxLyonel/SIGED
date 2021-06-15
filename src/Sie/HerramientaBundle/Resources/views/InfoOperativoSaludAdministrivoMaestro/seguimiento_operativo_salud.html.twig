@@ -80,7 +80,7 @@
 										<select class="form-control" name="gestion" id="gestion"><option value="2021">2021</option></select>
 									</div>
 									<div class="form-group col-md-3 col-sm-6 ">
-										<button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+										<button type="submit" class="btn btn-primary btn-search-request-salud"><i class="fa fa-search"></i> Buscar</button>
 									</div>
 								  </div>
 								</form>
@@ -137,6 +137,42 @@
                 }
             });
     }
+
+    var abrirOperativoEstadoSalud=function(id)
+    {
+     var abrir=confirm('¿Está seguro de abrir el operativo?');
+     if(abrir==true)
+     {
+        $.ajax({
+                type: 'get',
+                url: Routing.generate('herramienta_info_personal_adm_abrirOperativo_estadosalud',{id:id}),
+                beforeSend: function ()
+                {
+                },
+                success: function (data)
+                {
+                	var status= data.status;
+                	if(status==200)
+                	{
+                		var resp='<span class="label label-warning">Operativo abierto</span>';
+                		$('.tr-estado-reporte-'+id).find('.td-estado-operativo').html(resp);
+                		$('.tr-estado-reporte-'+id).find('.td-estado-operativo-detalle').html('Abierto');
+                		//$('.tr-estado-reporte-'+id).remove();
+                		//$('.btn-search-request-salud').trigger('click');
+                	}
+                	else
+                	{
+                		alert('Ocurrio un error. por favor vuelva a intentarlo');
+                	}
+                },
+                error: function (data)
+                {
+                	alert('Ocurrio un error. por favor vuelva a intentarlo');
+                }
+            });
+     }
+    }
+
     {#
     var getUEs= function(distrito)
     {
