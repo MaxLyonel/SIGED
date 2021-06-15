@@ -141,7 +141,7 @@
                             {%endfor%}
                           </div>
                         {% else %}
-                          <p>No tiene opciones disponibles para registrar información</p>
+                          <p>No tiene opciones disponibles para registrar información, por que en la base de datos de la gestión anterior se declaro fallecido</p>
                         {% endif %}
                         {#
                         <div class="version-anterior-por-si-acaso" style="display:none">
@@ -242,7 +242,6 @@
               btnSubmitInline.attr('data-target',estado);
             }
 
-            console.log('if: '+estado);
             ocultarNoDecesos(estado);
           }
           else
@@ -270,7 +269,6 @@
               btnSubmitInline.removeAttr('data-target');
             }
 
-            console.log('else: '+estado);
             ocultarNoDecesos(-1);
           }
         }
