@@ -194,7 +194,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                 from maestro_inscripcion_estadosalud mies0
                 INNER JOIN estadosalud_tipo est0 on mies0.estadosalud_tipo_id=est0.id
                 where maestro_inscripcion_id=mi.id
-                and persona_id=p.id
+                or persona_id=p.id --///////////////////AQUI CAMBIAR AND POR OR PARA MNOSTRAR DE OTRAS GESTIONES Y UNIDADES EDUCATIVAS
             ) as "detalleEstadoSalud"
 
             FROM maestro_inscripcion mi
@@ -480,13 +480,13 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
 
             $detalleSalud=array();
             $query = '
-                    SELECT *
+                    SELECT mies0.id as "mi_id",*
                     from maestro_inscripcion_estadosalud mies0
                     INNER JOIN estadosalud_tipo est0 on mies0.estadosalud_tipo_id=est0.id
                     where 
                     maestro_inscripcion_id=? 
-                    and persona_id=? 
-            ';///////////////////AQUI CAMBIAR AND POR OR
+                    or persona_id=? 
+            ';///////////////////AQUI CAMBIAR AND POR OR PARA MNOSTRAR DE OTRAS GESTIONES Y UNIDADES EDUCATIVAS
             $stmt = $db->prepare($query);
             $params = array($request_personalInscripcion,$request_persona);
             $stmt->execute($params);
@@ -827,13 +827,13 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                     
                     $detalleSalud=array();
                     $query = '
-                            SELECT *
+                            SELECT mies0.id as "mi_id",*
                             from maestro_inscripcion_estadosalud mies0
                             INNER JOIN estadosalud_tipo est0 on mies0.estadosalud_tipo_id=est0.id
                             where 
                             maestro_inscripcion_id=? 
-                            and persona_id=? 
-                    ';///////////////////AQUI CAMBIAR AND POR OR
+                            or persona_id=? 
+                    ';///////////////////AQUI CAMBIAR AND POR OR PARA MNOSTRAR DE OTRAS GESTIONES Y UNIDADES EDUCATIVAS
 
                     $stmt = $db->prepare($query);
                     $params = array($request_inscription,$request_persona);
@@ -859,6 +859,54 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                 $data=null;
                 $status= 404;
                 $msj='Ocurrio un error, los datos enviados no son correctos, por favor vuelva a intentarlo';
+            }
+        }
+        else
+        {
+            $data=null;
+            $status= 404;
+            $msj='Ocurrio un error, por favor vuelva a intentarlo';
+        }
+        $response = new JsonResponse($data,$status);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+    }
+
+    public function eliminarEstadoSaludAction(Request $request,$id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $esAjax=$request->isXmlHttpRequest();
+
+        $request_id = $id;
+        $request_id = filter_var($request_id,FILTER_SANITIZE_NUMBER_INT);
+        $request_id = is_numeric($request_id)?$request_id:-1;
+
+        $data=null;
+        $status= 404;
+        $msj='Ocurrio un error, por favor vuelva a intentarlo';
+
+        if($esAjax && $request_id >0)
+        {
+            $query ="delete from maestro_inscripcion_estadosalud where id=?";
+            $stmt = $db->prepare($query);
+            $params = array($request_id);
+            $stmt->execute($params);
+            $tmp=$stmt->fetchAll();
+
+            $borrado = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneBy(array('id' => $request_id));
+
+            if($borrado==null)
+            {
+                $data='ok';
+                $status= 200;
+                $msj='Los datos fueron eliminados correctamente';
+            }
+            else
+            {
+                $data=null;
+                $status= 404;
+                $msj='Ocurrio un error, por favor vuelva a intentarlo';
             }
         }
         else

@@ -120,6 +120,12 @@ herramienta_info_personal_adm_actualizar_estadosalud:
     options:
         expose: true
 
+herramienta_info_personal_adm_eliminar_estadosalud:
+    path:     /eliminar/estado-de-salud/{id}
+    defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:eliminarEstadoSalud" }
+    options:
+        expose: true
+
 herramienta_info_personal_adm_cerrarOperativo_estadosalud:
     path:     /cerrar-operativo/estado-de-salud
     defaults: { _controller: "SieHerramientaBundle:InfoOperativoSaludPersonalAdmYMaestro:cerrarOperativoEstadoSalud" }

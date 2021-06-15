@@ -5,11 +5,12 @@
                                         <th scope="col">Estado</th>
                                         <th scope="col">De</th>
                                         <th scope="col">Hasta</th>
+                                        <th scope="col"></th>
                                       </tr>
                                     </thead>
                                     <tbody>
                                       {% for item in detalleSalud %}
-                                      <tr >
+                                      <tr class="tr-estado-salud-{{item.mi_id}}">
                                         <th scope="row">{{loop.index}}</th>
                                         <td>{{item.estadosalud}}</td>
                                         <td>{{item.fecha|date('d/m/Y')}}</td>
@@ -19,6 +20,9 @@
                                           {% else %}
                                             <div class="text-center">-</div>
                                           {% endif %}
+                                        </td>
+                                        <td class="text-center">
+                                          <a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="eliminarEstadoSalud({{item.mi_id}})"><i class="fa fa-trash fa-2x fg-danger"></i></a>
                                         </td>
                                       </tr>
                                       {% endfor %}
