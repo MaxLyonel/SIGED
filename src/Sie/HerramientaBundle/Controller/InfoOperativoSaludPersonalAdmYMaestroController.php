@@ -1488,8 +1488,8 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
-        //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion));
-        $response->setContent(file_get_contents('http://127.0.0.1:62804/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-maestro-admistrativo\reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion));
+        //$response->setContent(file_get_contents('http://127.0.0.1:62804/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-maestro-admistrativo\reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion));
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');

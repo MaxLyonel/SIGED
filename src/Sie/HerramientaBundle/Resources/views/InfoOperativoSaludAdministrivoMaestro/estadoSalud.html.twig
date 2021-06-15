@@ -96,7 +96,7 @@
                                 <div class="checkbox" style="margin:3px 0 4px 0">
                                   <label>
                                     <input type="checkbox" name="request_estado_salud[{{e.id}}]" id="request_estado_salud[{{e.id}}]" class="checkbox-estado estado" data-estado="{{e.id}}" data-nombre="{{e.estadosalud}}" > &nbsp; {{e.estadosalud}}
-                                    <span style="display:inline; font-size:1rem;">- <{{e.id}}></span>
+                                    <span style="display:inline; font-size:1rem;"></span>
                                   </label>
                                 </div>
                               </div>
@@ -117,7 +117,7 @@
                                   {% endif %}
                                     <div class="col-md-2">
                                       <div id="sandbox-container1" class="sandbox-container">
-                                          <button type="button" class="btn btn-link" style="padding:0" ><i class="fa fa-floppy-o fa-2x fg-primary"></i></button>
+                                          <button type="button" class="btn btn-link" style="padding:0" data-toggle="tooltip" data-placement="top" title="Guardar" ><i class="fa fa-floppy-o fa-2x fg-primary"></i></button>
                                       </div>
                                     </div>
                                 </div>
@@ -141,7 +141,7 @@
                             {%endfor%}
                           </div>
                         {% else %}
-                          <p>No tiene opciones disponibles</p>
+                          <p>No tiene opciones disponibles para registrar información</p>
                         {% endif %}
                         {#
                         <div class="version-anterior-por-si-acaso" style="display:none">
