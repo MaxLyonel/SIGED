@@ -1,0 +1,29 @@
+<form action="" id="formEmergente">
+    <table class="table table-lilac table-striped">
+        <thead class="cf">
+            <tr>
+                {% for nota in libreta %}
+                    <th>{{nota.notaAbrev}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% set cantidad = 0 %}
+                {% for nota in libreta %}
+                    {% set cuantitativa = '' %}
+                    {% if nota.notaTipoId in estudianteNotaArray|keys %}
+                        {% set cuantitativa = estudianteNotaArray[nota.notaTipoId] %}
+                        {% set cantidad = cantidad + 1 %}
+                    {% endif %}
+                    <td><input type="text" name="{{nota.notaAbrev}}_{{areaid}}" class="form-control" maxlength="2" autocomplete="off" placeholder="{{nota.notaTipo}}" value="{{cuantitativa}}" {% if cantidad > 0 %}disabled{% endif %} onkeypress="return validarNumero(event)" /></td>
+                {% endfor %}
+            </tr>
+    </table>
+    <div style="background: #EEEEEE; text-align: center; padding: 5px;">
+        <button type="button" class="btn btn-default" onclick="cerrarFormCalificaciones({{areaid}})">Cerrar</button>        
+        {% if cantidad == 0 %}
+            <button type="button" class="btn btn-success" onclick="guardarCalificaciones();">Guardar Cambios</button>
+        {% endif %}
+    </div>
+</form>

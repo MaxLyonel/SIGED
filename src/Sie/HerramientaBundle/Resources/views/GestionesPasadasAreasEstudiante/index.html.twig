@@ -5,7 +5,7 @@
     <style>
         .higherWider {
             width:800px;
-            margin-top:100px;
+            margin-top:50px;
         }
     </style>
 {% endblock %}
@@ -84,6 +84,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
         var getHistorial = function(){
             codigoRude = $('#form_codigoRude').val();
@@ -141,57 +142,134 @@
         };
 
         var eliminarArea = function (areaid, inscripcionid, estudianteid, gestion) {
-            if(confirm('¿Está segura/o de eliminar el área?\nTenga en cuenta que también se eliminarán las calificaciones de la/el estudiante.')){
-                $.ajax({
-                    type: 'get',
-                    url: Routing.generate('gp_areas_estudiante_eliminar', {'areaid': areaid, 'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
-                    beforeSend: function () {
-                        $("#idAreas").empty();
-                        $("#idAreas").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
-                    },
-                    success: function (data) {
-                        $("#idAreas").empty();
-                        $("#idAreas").html(data);
-                    },
-                    statusCode: {
-                        500: function () {
-                            $('#idAreas').empty();
-                            $('#idAreas').html('Ocurrió un error interno.');
+            Swal.fire({
+                title: 'Eliminar área',
+                text: "¿Está segura/o de eliminar el área? Tenga en cuenta que también se eliminarán las calificaciones de la/el estudiante.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, proceder',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('gp_areas_estudiante_eliminar', {'areaid': areaid, 'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
+                        beforeSend: function () {
+                            $("#idAreas").empty();
+                            $("#idAreas").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
                         },
-                        404: function () {
-                            $('#idAreas').empty();
-                            $('#idAreas').html('Ocurrió un error interno.');
+                        success: function (data) {
+                            $("#idAreas").empty();
+                            $("#idAreas").html(data);
+                        },
+                        statusCode: {
+                            500: function () {
+                                $('#idAreas').empty();
+                                $('#idAreas').html('Ocurrió un error interno.');
+                            },
+                            404: function () {
+                                $('#idAreas').empty();
+                                $('#idAreas').html('Ocurrió un error interno.');
+                            }
                         }
-                    }
-                });
-            } else {
-                return false;
-            }
+                    });
+                }
+            });
         };
 
         var agregarArea = function (ofertaid, inscripcionid, estudianteid, gestion) {
-            $.ajax({
-                type: 'get',
-                url: Routing.generate('gp_areas_estudiante_agregar', {'ofertaid': ofertaid, 'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
-                beforeSend: function () {
-                    $("#idAreas").empty();
-                    $("#idAreas").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
-                },
-                success: function (data) {
-                    $("#idAreas").empty();
-                    $("#idAreas").html(data);
-                },
-                statusCode: {
-                    500: function () {
-                        $('#idAreas').empty();
-                        $('#idAreas').html('Ocurrió un error interno.');
-                    },
-                    404: function () {
-                        $('#idAreas').empty();
-                        $('#idAreas').html('Ocurrió un error interno.');
-                    }
+            Swal.fire({
+                title: 'Adicionar área',
+                text: "¿Está segura/o de adicionar el área? Tenga en cuenta que deberá registrar las calificaciones de la/el estudiante.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, proceder',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('gp_areas_estudiante_agregar', {'ofertaid': ofertaid, 'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
+                        beforeSend: function () {
+                            $("#idAreas").empty();
+                            $("#idAreas").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                        },
+                        success: function (data) {
+                            $("#idAreas").empty();
+                            $("#idAreas").html(data);
+                        },
+                        statusCode: {
+                            500: function () {
+                                $('#idAreas').empty();
+                                $('#idAreas').html('Ocurrió un error interno.');
+                            },
+                            404: function () {
+                                $('#idAreas').empty();
+                                $('#idAreas').html('Ocurrió un error interno.');
+                            }
+                        }
+                    });
                 }
             });
+        };
+
+        var abrirFormCalificaciones = function(areaid, inscripcionid, estudianteid, gestion){
+            if ($('#calificaciones_'+areaid).is(':hidden')){
+                $.ajax({
+                    type: 'post',
+                    data: ({'areaid': areaid, 'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
+                    url: "{{ path('gp_areas_estudiante_calificaciones') }}",
+                    beforeSend: function () {
+                        $('.divCalificaciones').hide();
+                        $('.arrow-before').hide();
+                        $('.arrow-after').hide();
+                        $("#calificaciones_"+areaid).empty();
+                        $('#calificaciones_before_'+areaid).fadeIn();
+                        $('#calificaciones_after_'+areaid).fadeIn();
+                        $('#calificaciones_'+areaid).fadeIn();
+                        $('#calificaciones_'+areaid).append("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'><p>Cargando formulario para registro de calificaciones...</p><p><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></p></div></div>");
+                    },
+                    success: function (data) {
+                        $("#calificaciones_"+areaid).empty();
+                        $("#calificaciones_"+areaid).append(data);
+                        $('.chosen-select').chosen({allow_single_deselect: false});
+                        $('#calificaciones_'+areaid).fadeIn();
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            }else{
+                $('#calificaciones_'+areaid).fadeOut();
+                $('#calificaciones_before_'+areaid).fadeOut();
+                $('#calificaciones_after_'+areaid).fadeOut();
+            }
+        };
+
+        var cerrarFormCalificaciones = function(areaid){
+            $('#calificaciones_'+areaid).fadeOut();
+            $('#calificaciones_before_'+areaid).fadeOut();
+            $('#calificaciones_after_'+areaid).fadeOut();
+        };
+
+        var validarNumero = function(e){
+            var key = e || window.event;
+            var k = key.charCode || key.keyCode;
+            if ((k < 48 || k > 57) //NUmeros
+                && (k != 13) //ENTER
+                && (k != 8) //retroceso
+                && (k != 9) //tab
+            )            
+            return false;
         };
     </script>
 {% endblock %}

@@ -310,7 +310,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'areasAsignar' => $areasAsignar,
             'estudianteid' => $estudianteid,
             'inscripcionid' => $inscripcionid,
-            'gestion' => $gestion           
+            'gestion' => $gestion
         ));
     }
 
@@ -367,6 +367,45 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'areasAsignar' => $areasAsignar,
             'estudianteid' => $estudianteid,
             'inscripcionid' => $inscripcionid,
+            'gestion' => $gestion
+        ));
+    }
+
+    public function calificacionesAreaEstudianteAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $areaid = trim(strtoupper($request->get('areaid')));
+        $inscripcionid = trim(strtoupper($request->get('inscripcionid')));
+        $estudianteid = trim(strtoupper($request->get('estudianteid')));
+        $gestion = trim(strtoupper($request->get('gestion')));        
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
+        $estudianteAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneById($areaid);
+
+        $libreta = $em->getRepository('SieAppWebBundle:CatalogoLibretaTipo')->findBy(
+            array('gestionTipoId' => $gestion, 'nivelTipoId' => $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId(), 'gradoTipoId' => $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId()),
+            array('orden' => 'ASC'
+        ));
+
+        $repository = $em->getRepository('SieAppWebBundle:EstudianteNota');
+        $query = $repository->createQueryBuilder('en')
+            ->select('nt.id ntId, en.notaCuantitativa')
+            ->innerJoin('SieAppWebBundle:NotaTipo', 'nt', 'WITH', 'nt.id = en.notaTipo')
+            ->where('en.estudianteAsignatura = :estudianteAsignatura')
+            ->setParameter('estudianteAsignatura', $estudianteAsignatura)
+            ->getQuery();
+
+        $estudianteNota = $query->getResult();
+
+        $estudianteNotaArray = [];
+        foreach ($estudianteNota as $key => $nota) {
+            $estudianteNotaArray[$nota['ntId']] = $nota['notaCuantitativa'];
+        }
+        
+        return $this->render($this->session->get('pathSystem') . ':GestionesPasadasAreasEstudiante:form_calificaciones.html.twig', array(
+            'libreta' => $libreta,
+            'estudianteNotaArray' => $estudianteNotaArray,
+            'estudianteid' => $estudianteid,
+            'inscripcionid' => $inscripcionid,
+            'areaid' => $areaid,
             'gestion' => $gestion
         ));
     }
