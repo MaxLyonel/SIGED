@@ -1356,7 +1356,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $ue=array();
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
-
+        $tipoUE=$this->session->get('sistemaid');
         $query ="
             select 
             institucioneducativa_id,institucioneducativa
@@ -1474,7 +1474,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
               from (institucioneducativa c 
                   inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
                     inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
-              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=?
             ) a
           where 
           cod_dis = ?
@@ -1482,10 +1482,12 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
           group by cod_dis,des_dis,TARGET,institucioneducativa,dependencia
         ";
 
+        $tipoUE=filter_var($this->session->get('sistemaid'),FILTER_SANITIZE_NUMBER_INT);
+        $tipoUE=is_numeric($tipoUE)?$tipoUE:-1;
 
         $stmt = $db->prepare($query);
         //$params = array($gestion,$gestion,$gestion,$gestion,$distrito,$departamento);
-        $params = array($gestion,$distrito,$departamento);
+        $params = array($gestion,$tipoUE,$distrito,$departamento);
         $stmt->execute($params);
         $tmp=$stmt->fetchAll();
 
