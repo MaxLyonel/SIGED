@@ -201,7 +201,9 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
             inner join persona  p  on mi.persona_id = p.id
             inner join formacion_tipo  ft  on mi.formacion_tipo_id = ft.id
             inner join cargo_tipo  ct  on mi.cargo_tipo_id = ct.id
-            where mi.institucioneducativa_id = ?
+            where 
+            mi.es_vigente_administrativo = \'t\'
+            and mi.institucioneducativa_id = ?
             and mi.gestion_tipo_id = ?
             and mi.cargo_tipo_id IN ('.$c.')
             ORDER BY ct.id
