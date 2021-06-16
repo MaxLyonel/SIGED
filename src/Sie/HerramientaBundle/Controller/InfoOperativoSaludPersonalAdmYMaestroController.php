@@ -1482,8 +1482,31 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
           group by cod_dis,des_dis,TARGET,institucioneducativa,dependencia
         ";
 
-        $tipoUE=filter_var($this->session->get('sistemaid'),FILTER_SANITIZE_NUMBER_INT);
+        $tipoUE=filter_var($this->session->get('tiposubsistema'),FILTER_SANITIZE_NUMBER_INT);
         $tipoUE=is_numeric($tipoUE)?$tipoUE:-1;
+
+        $tmpTipoUE = $this->session->get('sysname');
+        $tmpTipoUE = strtolower(filter_var($tmpTipoUE , FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH));
+
+        if(!in_array($tipoUE,[1,2,3]))
+        { 
+            if(strpos($tmpTipoUE,'regular')>0)
+            {
+                $tipoUE=1;
+            }
+            elseif(strpos($tmpTipoUE,'alternativa')>0)
+            {
+                $tipoUE=2;
+            }
+            elseif(strpos($tmpTipoUE,'especial')>0)
+            {
+                $tipoUE=2;
+            }
+            else
+            {
+                $tipoUE=-1;
+            }
+        }
 
         $stmt = $db->prepare($query);
         //$params = array($gestion,$gestion,$gestion,$gestion,$distrito,$departamento);
