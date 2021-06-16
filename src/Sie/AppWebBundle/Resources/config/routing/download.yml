@@ -189,3 +189,9 @@ donwload_boletinNivelacionTTEBth:
 donwload_ddjjStudentsQuipus:
     path:     /ddjjStudentsQuipus/{sie}
     defaults: { _controller: SieAppWebBundle:Download:ddjjStudentsQuipus }
+
+download_formulario_rude:
+    path:    /downloadLibretaRude/{idInscripcion}/{rude}/{sie}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}/{ciclo}
+    defaults: { _controller: SieAppWebBundle:Download:downloadFormularioRude }
+    options:
+        expose: true
