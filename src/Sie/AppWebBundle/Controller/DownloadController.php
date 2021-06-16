@@ -1504,7 +1504,7 @@ class DownloadController extends Controller {
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'Reporte-Formulario-Rude' .'.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_rude1298_2021_v4.rptdesign.rptdesign&rude_id=' . $rude_id . '&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_rude1298_2021_v4.rptdesign&rude_id=' . $rude_id . '&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
