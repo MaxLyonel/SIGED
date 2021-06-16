@@ -97,13 +97,13 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
 
         $institucionregular = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $institucion, 'institucioneducativaTipo' => 1));
 
-        if(!is_object($institucionregular)){
-            $this->get('session')->getFlashBag()->add('noTuicion', 'La Unidad Educativa no corresponde al Subsistema de Educación Regular');
-                if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
-                    return $this->redirect($this->generateUrl('herramienta_info_maestro_tsie_index'));
-                }
-                return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
-        }
+        // if(!is_object($institucionregular)){
+        //     $this->get('session')->getFlashBag()->add('noTuicion', 'La Unidad Educativa no corresponde al Subsistema de Educación Regular');
+        //         if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
+        //             return $this->redirect($this->generateUrl('herramienta_info_maestro_tsie_index'));
+        //         }
+        //         return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
+        // }
 
         /*
          * lista de ADMINISTRATIVOS registrados en la unidad educativa
@@ -194,14 +194,16 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                 from maestro_inscripcion_estadosalud mies0
                 INNER JOIN estadosalud_tipo est0 on mies0.estadosalud_tipo_id=est0.id
                 where maestro_inscripcion_id=mi.id
-                or persona_id=p.id --///////////////////AQUI CAMBIAR AND POR OR PARA MNOSTRAR DE OTRAS GESTIONES Y UNIDADES EDUCATIVAS
+                and persona_id=p.id --///////////////////AQUI CAMBIAR AND POR OR PARA MNOSTRAR DE OTRAS GESTIONES Y UNIDADES EDUCATIVAS
             ) as "detalleEstadoSalud"
 
             FROM maestro_inscripcion mi
             inner join persona  p  on mi.persona_id = p.id
             inner join formacion_tipo  ft  on mi.formacion_tipo_id = ft.id
             inner join cargo_tipo  ct  on mi.cargo_tipo_id = ct.id
-            where mi.institucioneducativa_id = ?
+            where 
+            mi.es_vigente_administrativo = \'t\'
+            and mi.institucioneducativa_id = ?
             and mi.gestion_tipo_id = ?
             and mi.cargo_tipo_id IN ('.$c.')
             ORDER BY ct.id
@@ -485,7 +487,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                     INNER JOIN estadosalud_tipo est0 on mies0.estadosalud_tipo_id=est0.id
                     where 
                     maestro_inscripcion_id=? 
-                    or persona_id=? 
+                    and persona_id=? 
             ';///////////////////AQUI CAMBIAR AND POR OR PARA MNOSTRAR DE OTRAS GESTIONES Y UNIDADES EDUCATIVAS
             $stmt = $db->prepare($query);
             $params = array($request_personalInscripcion,$request_persona);
@@ -832,7 +834,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                             INNER JOIN estadosalud_tipo est0 on mies0.estadosalud_tipo_id=est0.id
                             where 
                             maestro_inscripcion_id=? 
-                            or persona_id=? 
+                            and persona_id=? 
                     ';///////////////////AQUI CAMBIAR AND POR OR PARA MNOSTRAR DE OTRAS GESTIONES Y UNIDADES EDUCATIVAS
 
                     $stmt = $db->prepare($query);

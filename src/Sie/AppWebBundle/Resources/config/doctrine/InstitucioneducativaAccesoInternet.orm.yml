@@ -1,0 +1,67 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaAccesoInternet:
+    type: entity
+    table: institucioneducativa_acceso_internet
+    indexes:
+        IDX_B8EAFB439855A67:
+            columns:
+                - acceso_internet_proveedor_tipo_id
+        IDX_B8EAFB4179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_B8EAFB43AB163FE:
+            columns:
+                - institucioneducativa_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        accesoInternetProveedorTipo:
+            targetEntity: AccesoInternetProveedorTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                acceso_internet_proveedor_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
