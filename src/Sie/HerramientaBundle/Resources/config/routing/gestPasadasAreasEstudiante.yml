@@ -31,3 +31,9 @@ gp_areas_estudiante_calificaciones:
   defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:calificacionesAreaEstudiante }
   options:
     expose: true
+
+gp_areas_estudiante_calificaciones_guardar:
+  path:     /calificacionesGuardarAreaEstudiante
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:calificacionesGuardarAreaEstudiante }
+  options:
+    expose: true

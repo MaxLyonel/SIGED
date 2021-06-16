@@ -49,7 +49,7 @@
                                     <label for="form_codigoRude" class="control-label"><strong>RUDE:</strong></label>
                                 </div>
                                 <div class="col-md-4">
-                                    {{ form_widget(form.codigoRude, { 'attr':{'class': 'form-control', 'placeholder':'Ingresar un código RUDE válido', 'pattern':'[0-9A]{10,18}', 'autocomplete': 'true'}  }) }}
+                                    {{ form_widget(form.codigoRude, { 'attr':{'class': 'form-control', 'placeholder':'Ingresar un código RUDE válido', 'pattern':'[0-9A]{10,18}', 'autocomplete': 'false'}  }) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="col-md-2">
@@ -86,7 +86,7 @@
     {{ parent() }}
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
-        var getHistorial = function(){
+        var getHistorial = function() {
             codigoRude = $('#form_codigoRude').val();
             
             $.ajax({
@@ -114,7 +114,7 @@
             });
         };
 
-        var aeAreas = function (inscripcionid, estudianteid, gestion) {
+        var aeAreas = function(inscripcionid, estudianteid, gestion) {
             $('#modalAreas').modal({backdrop: 'static', keyboard: false});
             $('#modalAreas').modal('show');
             $.ajax({
@@ -141,7 +141,7 @@
             });
         };
 
-        var eliminarArea = function (areaid, inscripcionid, estudianteid, gestion) {
+        var eliminarArea = function(areaid, inscripcionid, estudianteid, gestion) {
             Swal.fire({
                 title: 'Eliminar área',
                 text: "¿Está segura/o de eliminar el área? Tenga en cuenta que también se eliminarán las calificaciones de la/el estudiante.",
@@ -179,7 +179,7 @@
             });
         };
 
-        var agregarArea = function (ofertaid, inscripcionid, estudianteid, gestion) {
+        var agregarArea = function(ofertaid, inscripcionid, estudianteid, gestion) {
             Swal.fire({
                 title: 'Adicionar área',
                 text: "¿Está segura/o de adicionar el área? Tenga en cuenta que deberá registrar las calificaciones de la/el estudiante.",
@@ -217,7 +217,7 @@
             });
         };
 
-        var abrirFormCalificaciones = function(areaid, inscripcionid, estudianteid, gestion){
+        var abrirFormCalificaciones = function(areaid, inscripcionid, estudianteid, gestion) {
             if ($('#calificaciones_'+areaid).is(':hidden')){
                 $.ajax({
                     type: 'post',
@@ -231,20 +231,22 @@
                         $('#calificaciones_before_'+areaid).fadeIn();
                         $('#calificaciones_after_'+areaid).fadeIn();
                         $('#calificaciones_'+areaid).fadeIn();
-                        $('#calificaciones_'+areaid).append("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'><p>Cargando formulario para registro de calificaciones...</p><p><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></p></div></div>");
+                        $('#calificaciones_'+areaid).html("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'><p>Cargando formulario para registro de calificaciones...</p><p><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></p></div></div>");
                     },
                     success: function (data) {
                         $("#calificaciones_"+areaid).empty();
-                        $("#calificaciones_"+areaid).append(data);
+                        $("#calificaciones_"+areaid).html(data);
                         $('.chosen-select').chosen({allow_single_deselect: false});
                         $('#calificaciones_'+areaid).fadeIn();
                     },
                     statusCode: {
                         500: function () {
-
+                            $('#idAreas').empty();
+                            $('#idAreas').html('Ocurrió un error interno.');
                         },
                         404: function () {
-
+                            $('#idAreas').empty();
+                            $('#idAreas').html('Ocurrió un error interno.');
                         }
                     }
                 });
@@ -255,21 +257,49 @@
             }
         };
 
-        var cerrarFormCalificaciones = function(areaid){
+        var cerrarFormCalificaciones = function(areaid) {
             $('#calificaciones_'+areaid).fadeOut();
             $('#calificaciones_before_'+areaid).fadeOut();
             $('#calificaciones_after_'+areaid).fadeOut();
         };
 
-        var validarNumero = function(e){
+        var validarNumero = function(e) {
             var key = e || window.event;
             var k = key.charCode || key.keyCode;
-            if ((k < 48 || k > 57) //NUmeros
-                && (k != 13) //ENTER
+            if ((k < 48 || k > 57) //números
+                && (k != 13) //enter
                 && (k != 8) //retroceso
                 && (k != 9) //tab
             )            
             return false;
+        };
+
+        var guardarCalificaciones = function(areaid) {
+            var formData = $('#formCalificaciones').serialize();
+            $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('gp_areas_estudiante_calificaciones_guardar') }}",
+                beforeSend: function () {
+                    $("#calificaciones_"+areaid).empty();
+                    $('#calificaciones_'+areaid).html("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'><p>Guardando calificaciones...</p><p><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></p></div></div>");
+                },
+                success: function (data) {
+                    $('#calificaciones_'+areaid).empty();
+                    $('#calificaciones_'+areaid).html("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>"+data.mensaje+"</div>");
+                    setTimeout("cerrarFormCalificaciones('"+areaid+"')",2000);
+                },
+                statusCode: {
+                    500: function () {
+                        $('#idAreas').empty();
+                        $('#idAreas').html('Ocurrió un error interno.');
+                    },
+                    404: function () {
+                        $('#idAreas').empty();
+                        $('#idAreas').html('Ocurrió un error interno.');
+                    }
+                }
+            });
         };
     </script>
 {% endblock %}
