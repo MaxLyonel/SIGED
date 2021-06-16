@@ -1,0 +1,19 @@
+ie_acceso_internet_index:
+  path:     /
+  defaults: { _controller: SieHerramientaBundle:InstitucioneducativaAccesoInternet:index }
+
+ie_acceso_internet_result:
+  path:     /result/
+  defaults: { _controller: SieHerramientaBundle:InstitucioneducativaAccesoInternet:result }
+
+ie_acceso_internet_save:
+  path:     /save/
+  defaults: { _controller: SieHerramientaBundle:InstitucioneducativaAccesoInternet:save }
+
+ie_acceso_internet_impresionDDJJ:
+  path:     /impresionDDJJ/
+  defaults: { _controller: SieHerramientaBundle:InstitucioneducativaAccesoInternet:impresionDDJJ }
+
+ie_acceso_internet_impresion_seguimiento:
+  path:     /impresionSeguimiento/
+  defaults: { _controller: SieHerramientaBundle:InstitucioneducativaAccesoInternet:impresionSeguimiento }

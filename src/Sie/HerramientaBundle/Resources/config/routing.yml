@@ -285,3 +285,7 @@ sie_gestiones_pasadas_areas_estudiante:
 #     prefix:   /sie/regularizacion-estudiantes-post-bachillerato
 #     
 #     
+
+sie_institucioneducativa_acceso_internet:
+    resource: "@SieHerramientaBundle/Resources/config/routing/institucioneducativaAccesoInternet.yml"
+    prefix: /sie/institucioneducativaAccesoInternet
