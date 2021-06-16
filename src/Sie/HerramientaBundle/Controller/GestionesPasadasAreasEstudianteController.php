@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
+use Sie\AppWebBundle\Entity\EstudianteNota;
 
 /**
  * GestionesPasadasAreasEstudianteController.php
@@ -310,7 +311,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'areasAsignar' => $areasAsignar,
             'estudianteid' => $estudianteid,
             'inscripcionid' => $inscripcionid,
-            'gestion' => $gestion           
+            'gestion' => $gestion
         ));
     }
 
@@ -371,7 +372,99 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         ));
     }
 
-    private function evaluarEstadomatriculaAction($inscripcionid) {
+    public function calificacionesAreaEstudianteAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $areaid = trim(strtoupper($request->get('areaid')));
+        $inscripcionid = trim(strtoupper($request->get('inscripcionid')));
+        $estudianteid = trim(strtoupper($request->get('estudianteid')));
+        $gestion = trim(strtoupper($request->get('gestion')));        
+        $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
+        $estudianteAsignatura = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findOneById($areaid);
+
+        $libreta = $em->getRepository('SieAppWebBundle:CatalogoLibretaTipo')->findBy(
+            array('gestionTipoId' => $gestion, 'nivelTipoId' => $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId(), 'gradoTipoId' => $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId()),
+            array('orden' => 'ASC'
+        ));
+
+        $repository = $em->getRepository('SieAppWebBundle:EstudianteNota');
+        $query = $repository->createQueryBuilder('en')
+            ->select('nt.id ntId, en.notaCuantitativa')
+            ->innerJoin('SieAppWebBundle:NotaTipo', 'nt', 'WITH', 'nt.id = en.notaTipo')
+            ->where('en.estudianteAsignatura = :estudianteAsignatura')
+            ->setParameter('estudianteAsignatura', $estudianteAsignatura)
+            ->getQuery();
+
+        $estudianteNota = $query->getResult();
+
+        $estudianteNotaArray = [];
+        foreach ($estudianteNota as $key => $nota) {
+            $estudianteNotaArray[$nota['ntId']] = $nota['notaCuantitativa'];
+        }
+        
+        return $this->render($this->session->get('pathSystem') . ':GestionesPasadasAreasEstudiante:form_calificaciones.html.twig', array(
+            'libreta' => $libreta,
+            'estudianteNotaArray' => $estudianteNotaArray,
+            'estudianteid' => $estudianteid,
+            'inscripcionid' => $inscripcionid,
+            'areaid' => $areaid,
+            'gestion' => $gestion
+        ));
+    }
+    
+    public function calificacionesGuardarAreaEstudianteAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $areaid = $request->get('areaid');
+        $inscripcionid = $request->get('inscripcionid');
+        $formCalificaciones = $request->get('formCalificaciones');
+        $mensaje = 'Se guardaron las calificaciones exitosamente.';
+        $em->getConnection()->beginTransaction();
+
+        try {
+            foreach ($formCalificaciones as $key => $nota) {
+                $porciones = explode("_", $key);
+                $estudianteNota = new EstudianteNota();
+                $estudianteNota->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->findOneById($porciones[0]));
+                $estudianteNota->setEstudianteAsignatura($em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($areaid));
+                $estudianteNota->setNotaCuantitativa(intval($nota));
+                $estudianteNota->setNotaCualitativa('');
+                $estudianteNota->setRecomendacion('');
+                $estudianteNota->setUsuarioId($this->session->get('userId'));
+                $estudianteNota->setFechaRegistro(new \DateTime('now'));
+                $estudianteNota->setFechaModificacion(new \DateTime('now'));
+                $estudianteNota->setObs('');
+                $em->persist($estudianteNota);
+                $em->flush();
+
+                $enNuevoLog = [];
+                $enNuevoLog['id'] = $estudianteNota->getId();
+                $enNuevoLog['notaTipo'] = $estudianteNota->getNotaTipo()->getId();
+                $enNuevoLog['estudianteAsignatura'] = $estudianteNota->getEstudianteAsignatura()->getId();
+                $enNuevoLog['notaCuantitativa'] = $estudianteNota->getNotaCuantitativa();
+                $enNuevoLog['notaCualitativa'] = $estudianteNota->getNotaCualitativa();
+                $enNuevoLog['usuario'] = $estudianteNota->getUsuarioId();
+                
+                $this->get('funciones')->setLogTransaccion(
+                    $estudianteNota->getId(),
+                    'estudiante_asignatura',
+                    'C',
+                    '',
+                    $enNuevoLog,
+                    '',
+                    'Academico',
+                    json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
+            }
+            $evaluarEstadomatricula = $this->evaluarEstadomatricula($inscripcionid);
+            $em->getConnection()->commit();
+        } catch (Exception $ex) {
+            $mensaje = 'No se guardaron las calificaciones.';
+            $em->getConnection()->rollback();
+        }
+
+        $response = new JsonResponse();
+        return $response->setData(array('mensaje' => $mensaje));
+    }
+
+    private function evaluarEstadomatricula($inscripcionid) {
         $em = $this->getDoctrine()->getManager();            
         
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);

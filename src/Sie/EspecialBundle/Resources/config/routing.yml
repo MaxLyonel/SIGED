@@ -61,3 +61,8 @@ sie_especial_info_students:
 index:
     path:     /index
     defaults: { _controller: SieEspecialBundle:InfoEspecial:index }
+
+#operativo salud
+sie_herramienta_info_operativo_salud_administrativo_maestro:
+    resource: "@SieHerramientaBundle/Resources/config/routing/operativoSaludAdministrativoMaestro.yml"
+    prefix:   /acceso/operativo-salud/administrativo-maestro

@@ -1,0 +1,42 @@
+<div class="container-fuild">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="table-responsive">
+				<table class="table">
+				  <thead class="thead-dark">
+				    <tr>
+				      <th scope="col">#</th>
+				      <th scope="col">Sie</th>
+				      <th scope="col">Unidad Educativa</th>
+				      <th scope="col" width="10%">Estado</th>
+				      <th scope="col" width="5%">Acciones</th>
+				    </tr>
+				  </thead>
+				  <tbody>
+				  	{% for d in datos %}
+				  		{% set id_cerrado = (d.estado_reporte)?d.estado_reporte:-1 %}
+				    <tr class="tr-estado-reporte-{{d.estado_reporte}}">
+				      <th scope="row">{{loop.index}}</th>
+				      <td>{{d.id}}</td>
+				      <td>{{d.ue}}</td>
+				      <td class="td-estado-operativo-detalle">{{(d.estado_reporte)?'Cerrado':'Abierto'}}</td>
+				      <td class="text-center td-estado-operativo">
+				      {% if d.estado_reporte is not null %}
+				      	<a href="javascript:void(0)" onclick="abrirOperativoEstadoSalud({{d.estado_reporte}})" class="btn btn-success" data-id="{{d.estado_reporte}}">Abrir operativo</a>
+				      {% else %}
+				      	<span class="label label-warning">Operativo abierto</span>
+				      {% endif %}
+				  	  </td>
+				    </tr>
+				  	{% endfor %}
+				  	{% if datos|length<=0 %}
+				  		<tr>
+				  			<td>No existen datos con estos criterios de busqueda</td>
+				  		</tr>
+				  	{% endif %}
+				  </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

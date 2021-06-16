@@ -121,6 +121,22 @@
                     </div>
                 </div>
             {% endif %}
+
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/operativo-salud300.jpg')}}" alt="Operativo Salud">
+                    <div class="caption text-center">
+                        <h4>Operativo salud</h4>
+                        <div class="thumbnail-action">
+                            {{form_start(operativoSaludform)}}
+                                {{form_widget(operativoSaludform.next)}}
+                            {{form_end(operativoSaludform)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
         <div class="row">
             <div id="answerClose" style="overflow: scroll; width: 100%; height:300px" class="col-lg-3 col-md-6 col-sm-12 col-xs-12"></div>
