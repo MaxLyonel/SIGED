@@ -150,7 +150,7 @@ class InfoEspecialController extends Controller{
                 'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo',$data)->createView(),
                 
                 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
-                
+                 
                 'data'=>$dataInfo
     ));
 
