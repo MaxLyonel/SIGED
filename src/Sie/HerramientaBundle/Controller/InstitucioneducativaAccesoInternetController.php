@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\InstitucioneducativaAccesoInternet;
+use Sie\AppWebBundle\Entity\InstitucioneducativaAccesoInternetDatos;
 
 /**
  * InstitucioneducativaAccesoInternet Controller
@@ -25,8 +26,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
         $this->session = new Session();
     }
 
-    public function indexAction(Request $request) {
-        
+    public function indexAction(Request $request) {        
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         
@@ -86,11 +86,11 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 ));
             } else {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa.');
-                return $this->redirect($this->generateUrl('regularizacion_rue_index'));
+                return $this->redirect($this->generateUrl('ie_acceso_internet_index'));
             }
         } else {
             $this->get('session')->getFlashBag()->add('noSearch', 'La unidad educativa no se encuentra registrada.');
-            return $this->redirect($this->generateUrl('regularizacion_rue_index'));
+            return $this->redirect($this->generateUrl('ie_acceso_internet_index'));
         }
     }
 
@@ -124,7 +124,6 @@ class InstitucioneducativaAccesoInternetController extends Controller {
     }
 
     public function saveAction(Request $request) {
-
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         
@@ -138,6 +137,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+        
         $sie = $form['sie'];
         $gestionid = $form['gestion'];
         $tieneAcceso = $form['tieneAcceso'];
@@ -159,6 +159,20 @@ class InstitucioneducativaAccesoInternetController extends Controller {
             $aTuicion = $query->fetchAll();
 
             if ($aTuicion[0]['get_ue_tuicion']) {
+                $iai = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'esactivo' => true));
+                if($iai) {
+                    $this->get('session')->getFlashBag()->add('newError', 'La Institución Educativa ya realizó el reporte de información.');
+                    return $this->redirect($this->generateUrl('ie_acceso_internet_index'));
+                } else {
+                    $nuevoIAI = new InstitucioneducativaAccesoInternet();
+                    $nuevoIAI->setFechaRegistro(new \DateTime('now'));
+                    $nuevoIAI->setAccesoInternetProveedorTipo($proveedor);
+                    $nuevoIAI->setGestionTipo($gestion);
+                    $nuevoIAI->setInstitucioneducativa($institucion);
+                    $em->persist($nuevoIAI);
+                    $em->flush();
+                }
+                
                 $proveedores = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
                 foreach ($proveedores as $key => $value) {
                     $em->remove($value);
@@ -188,11 +202,11 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 ));
             } else {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa.');
-                return $this->redirect($this->generateUrl('regularizacion_rue_index'));
+                return $this->redirect($this->generateUrl('ie_acceso_internet_index'));
             }
         } else {
             $this->get('session')->getFlashBag()->add('noSearch', 'La unidad educativa no se encuentra registrada.');
-            return $this->redirect($this->generateUrl('regularizacion_rue_index'));
+            return $this->redirect($this->generateUrl('ie_acceso_internet_index'));
         }
     }
 
