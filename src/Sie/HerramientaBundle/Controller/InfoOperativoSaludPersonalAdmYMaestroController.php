@@ -188,21 +188,28 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $db = $em->getConnection();
         $c=implode(',',array_values($cargosArray));
         $query = '
-            SELECT distinct p.id as "perId", p.carnet, p.paterno, p.materno, p.nombre, mi.id as "miId", mi.fecha_registro, mi.fecha_modificacion, mi.es_vigente_administrativo, ft.formacion,ct.cargo ,ct.id as "cargoId",
+            SELECT distinct p.id as "perId", p.carnet, p.paterno, p.materno, p.nombre, mi.id as "miId", mi.fecha_registro, mi.fecha_modificacion, mi.es_vigente_administrativo, ft.formacion,ct.cargo ,ct.id as "cargoId", ie.institucioneducativa_tipo_id,
             (
                 SELECT string_agg(concat_ws(\',\',mies0.estadosalud_tipo_id,est0.estadosalud,to_char(mies0.fecha, \'DD-MM-YYYY\'),to_char(mies0.fecha, \'DD-MM-YYYY\')),\'|\')
                 from maestro_inscripcion_estadosalud mies0
                 INNER JOIN estadosalud_tipo est0 on mies0.estadosalud_tipo_id=est0.id
-                where maestro_inscripcion_id=mi.id
+                where 
+                maestro_inscripcion_id=mi.id
                 and persona_id=p.id --///////////////////AQUI CAMBIAR AND POR OR PARA MNOSTRAR DE OTRAS GESTIONES Y UNIDADES EDUCATIVAS
             ) as "detalleEstadoSalud"
 
             FROM maestro_inscripcion mi
+            INNER JOIN institucioneducativa ie on ie.id=mi.institucioneducativa_id
             inner join persona  p  on mi.persona_id = p.id
             inner join formacion_tipo  ft  on mi.formacion_tipo_id = ft.id
             inner join cargo_tipo  ct  on mi.cargo_tipo_id = ct.id
             where 
-            mi.es_vigente_administrativo = \'t\'
+            mi.periodo_tipo_id = (case 
+                                  when ie.institucioneducativa_tipo_id = 1 then 1 
+                                  when ie.institucioneducativa_tipo_id = 4 then 1
+                                  else 2 end
+                                  )
+            and mi.es_vigente_administrativo = \'t\'
             and mi.institucioneducativa_id = ?
             and mi.gestion_tipo_id = ?
             and mi.cargo_tipo_id IN ('.$c.')
@@ -212,7 +219,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $params = array($institucion,$gestion);
         $stmt->execute($params);
         $maestro=$stmt->fetchAll();
-        
+
 /*************************************AQUI*****************************************/
 
         $query = $repository->createQueryBuilder('mi')
