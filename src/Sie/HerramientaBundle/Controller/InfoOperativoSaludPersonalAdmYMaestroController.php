@@ -187,6 +187,10 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $c=implode(',',array_values($cargosArray));
+
+        $iePerCod=filter_var($this->session->get('ie_per_cod'),FILTER_SANITIZE_NUMBER_INT);
+        $iePerCod=is_numeric($iePerCod)?$iePerCod:-1;
+
         $query = '
             SELECT distinct p.id as "perId", p.carnet, p.paterno, p.materno, p.nombre, mi.id as "miId", mi.fecha_registro, mi.fecha_modificacion, mi.es_vigente_administrativo, ft.formacion,ct.cargo ,ct.id as "cargoId", ie.institucioneducativa_tipo_id,
             (
@@ -207,7 +211,8 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
             mi.periodo_tipo_id = (case 
                                   when ie.institucioneducativa_tipo_id = 1 then 1 
                                   when ie.institucioneducativa_tipo_id = 4 then 1
-                                  else 2 end
+                                  when ie.institucioneducativa_tipo_id = 2 then ?
+                                  else -1 end
                                   )
             and mi.es_vigente_administrativo = \'t\'
             and mi.institucioneducativa_id = ?
@@ -216,7 +221,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
             ORDER BY ct.id
         ';
         $stmt = $db->prepare($query);
-        $params = array($institucion,$gestion);
+        $params = array($iePerCod,$institucion,$gestion);
         $stmt->execute($params);
         $maestro=$stmt->fetchAll();
 
