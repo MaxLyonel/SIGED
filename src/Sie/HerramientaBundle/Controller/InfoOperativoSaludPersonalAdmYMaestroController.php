@@ -1564,6 +1564,8 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
 
     public function exportarReporteDDJJOperativoSaludAction(Request $request,$codue,$gestion)
     {
+        $em = $this->getDoctrine()->getManager();
+        $status = 200;
         $codue  = filter_var($codue,FILTER_SANITIZE_NUMBER_INT);
         $gestion               = filter_var($gestion,FILTER_SANITIZE_NUMBER_INT);
 
@@ -1574,11 +1576,36 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $response       = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion));
-        //$response->setContent(file_get_contents('http://127.0.0.1:62804/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-maestro-admistrativo\reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion));
 
-        $response->setStatusCode(200);
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($codue);
+        
+        if($institucioneducativa && $institucioneducativa->getInstitucioneducativaTipo())
+        {
+            $tmpId=$institucioneducativa->getInstitucioneducativaTipo()->getId();
+
+            $iePerCod=filter_var($this->session->get('ie_per_cod'),FILTER_SANITIZE_NUMBER_INT);
+            $iePerCod=is_numeric($iePerCod)?$iePerCod:-1;
+
+            if(in_array($tmpId,[1,4]))//anual
+            {
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion));
+                //$response->setContent(file_get_contents('http://127.0.0.1:64895/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-maestro-admistrativo\reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion));
+            }
+            else if($tmpId==2)//semestral
+            {
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_maestroayadministrativo_alternativa_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion.'&ie_per_cod='.$iePerCod));
+                //$response->setContent(file_get_contents('http://127.0.0.1:64895/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-maestro-admistrativo\reg_lst_maestroayadministrativo_alternativa_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion.'&semestre='.$iePerCod));
+            }
+            else
+            {
+                $status =404;
+            }
+        }
+        else
+        {
+            $status =404;
+        }
+        $response->setStatusCode($status);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');

@@ -1,8 +1,7 @@
-{% extends 'layoutHerramienta.html.twig' %}
+{% extends app.session.get('layout') %}
 
 {% block contentoption %}
 
-    <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Acceso a Internet <span>Institución educativa</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
@@ -16,9 +15,9 @@
 
                 <li class="active">Resultado</li>
             </ol>
-        </div><!-- /.breadcrumb-wrapper -->
-    </div><!-- /.header-content -->
-    <!--/ End page header -->
+        </div>
+    </div>
+
     <div class="body-content animated fadeIn">
         <div class="row">
             <div class="col-md-12">
@@ -36,10 +35,10 @@
                 <div class="panel rounded shadow panel-teal">
                     <div class="panel-heading">
                         <div class="pull-left">
-                            <h3 class="panel-title">Información registrada</h3>
+                            <h3 class="panel-title">Información lasjdlksa</h3>
                         </div>
                         <div class="clearfix"></div>
-                    </div><!-- /.panel-heading -->
+                    </div>
                     <div class="panel-body">
                         <table class="table table-bordered table-striped table-hover">
                             <tr>
@@ -75,14 +74,15 @@
                                     {% endif %}
                                 </td>
                             </tr>
-                            {# <tr>
-                                <td colspan="2" class="text-right">
-                                    <form method ="POST" action="{{path('regularizacion_rue_impresionDDJJ')}}" name="form" id="form">
-                                        <input type="hidden" id="ddjjRue_sie" name="ddjjRue[sie]" value="{{institucion.institucioneducativa.id}}">
-                                        <input type="submit" class="btn btn-md btn-danger" value="Finalizar / Declaración Jurada" onclick="return confirm('¿Está segura/o de continuar? Recuerde que posteriormente no podrá realizar más cambios hasta el siguiente operativo.')">
+                            <tr>
+                                <td colspan="2" class="text-center">
+                                    <a href="{{path('ie_acceso_internet_index')}}" class="btn btn-md btn-warning" style="display: inline-block;" onclick="return confirm('¿Está segura/o de continuar? La información no será registrada.');">Comenzar nuevamente</a>
+                                    <form method ="POST" action="{{path('ie_acceso_internet_impresionDDJJ')}}" name="form" id="form" style="display: inline-block;">
+                                        <input type="hidden" id="ddjjIAI_iai" name="ddjjIAI[iai]" value="{{iai.id}}">
+                                        <input type="submit" class="btn btn-md btn-success" value="Confirmar registro" onclick="return confirm('¿Está segura/o de continuar? Recuerde que posteriormente no podrá realizar más cambios hasta el siguiente operativo.');">
                                     </form>
                                 </td>
-                            </tr> #}
+                            </tr>
                         </table>
                     </div>
                 </div>
