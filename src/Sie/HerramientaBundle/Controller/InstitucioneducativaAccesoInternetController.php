@@ -38,7 +38,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        return $this->render($this->session->get('pathSystem') . ':InstitucioneducativaAccesoInternet:index.html.twig', array(
+        return $this->render('SieHerramientaBundle:InstitucioneducativaAccesoInternet:index.html.twig', array(
             'form' => $this->formSearch()->createView(),
         ));
     }
@@ -78,8 +78,15 @@ class InstitucioneducativaAccesoInternetController extends Controller {
             $query->execute();
             $aTuicion = $query->fetchAll();
 
-            if ($aTuicion[0]['get_ue_tuicion']) { 
-                return $this->render($this->session->get('pathSystem') . ':InstitucioneducativaAccesoInternet:result.html.twig', array(
+            if ($aTuicion[0]['get_ue_tuicion']) {
+                $iai = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'esactivo' => true));
+
+                if($iai) {
+                    $this->get('session')->getFlashBag()->add('newError', 'La Institución Educativa ya realizó el reporte de información.');
+                    return $this->redirect($this->generateUrl('ie_acceso_internet_index'));
+                }
+
+                return $this->render('SieHerramientaBundle:InstitucioneducativaAccesoInternet:result.html.twig', array(
                     'institucion' => $institucion,
                     'gestion' => $gestion,
                     'form' => $this->formAccesoInternet($institucion->getId(), $gestion)->createView(),
@@ -116,7 +123,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 'class' => 'SieAppWebBundle:AccesoInternetProveedorTipo',
                 'property' => 'proveedor',
                 'empty_value' => 'Seleccionar...',
-                'attr' => array('class' => 'form-control')
+                'attr' => array('class' => 'form-control js-example-basic-multiple', 'style'=>'width:100%')
             ))
             ->add('guardar', 'submit', array('label' => 'Guardar'))
             ->getForm();
@@ -159,46 +166,53 @@ class InstitucioneducativaAccesoInternetController extends Controller {
             $aTuicion = $query->fetchAll();
 
             if ($aTuicion[0]['get_ue_tuicion']) {
-                $iai = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'esactivo' => true));
+                $iai = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
+                $datos = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternetDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));                
+
                 if($iai) {
-                    $this->get('session')->getFlashBag()->add('newError', 'La Institución Educativa ya realizó el reporte de información.');
-                    return $this->redirect($this->generateUrl('ie_acceso_internet_index'));
-                } else {
-                    $nuevoIAI = new InstitucioneducativaAccesoInternet();
-                    $nuevoIAI->setFechaRegistro(new \DateTime('now'));
-                    $nuevoIAI->setAccesoInternetProveedorTipo($proveedor);
-                    $nuevoIAI->setGestionTipo($gestion);
-                    $nuevoIAI->setInstitucioneducativa($institucion);
-                    $em->persist($nuevoIAI);
+                    if($iai->getEsactivo()) {
+                        $this->get('session')->getFlashBag()->add('newError', 'La Institución Educativa ya realizó el reporte de información.');
+                        return $this->redirect($this->generateUrl('ie_acceso_internet_index'));
+                    }
+                    $em->remove($iai);
                     $em->flush();
                 }
-                
-                $proveedores = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
-                foreach ($proveedores as $key => $value) {
+
+                foreach ($datos as $key => $value) {
                     $em->remove($value);
                     $em->flush();
                 }
+                
+                $nuevoIAI = new InstitucioneducativaAccesoInternet();
+                $nuevoIAI->setInstitucioneducativa($institucion);
+                $nuevoIAI->setGestionTipo($gestion);
+                $nuevoIAI->setTieneInternet($tieneAcceso == '1' ? true : false);
+                $nuevoIAI->setEsactivo(false);
+                $nuevoIAI->setFechaRegistro(new \DateTime('now'));                    
+                $em->persist($nuevoIAI);
+                $em->flush();                
 
                 foreach ($proveedorArray as $key => $value) {
                     $proveedor = $em->getRepository('SieAppWebBundle:AccesoInternetProveedorTipo')->findOneById($value);
-                    $nuevoRegistro = new InstitucioneducativaAccesoInternet();
-                    $nuevoRegistro->setEsactivo(true);
-                    $nuevoRegistro->setFechaRegistro(new \DateTime('now'));
-                    $nuevoRegistro->setFechaModificacion(new \DateTime('now'));
-                    $nuevoRegistro->setAccesoInternetProveedorTipo($proveedor);
-                    $nuevoRegistro->setGestionTipo($gestion);
-                    $nuevoRegistro->setInstitucioneducativa($institucion);
-                    $em->persist($nuevoRegistro);
+
+                    $nuevoIAID = new InstitucioneducativaAccesoInternetDatos();
+                    $nuevoIAID->setInstitucioneducativa($institucion);
+                    $nuevoIAID->setGestionTipo($gestion);
+                    $nuevoIAID->setAccesoInternetProveedorTipo($proveedor);
+                    $nuevoIAID->setFechaRegistro(new \DateTime('now'));
+                    $em->persist($nuevoIAID);
                     $em->flush();
                 }
 
-                $proveedores = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
-
+                $iai_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
+                $datos_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternetDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));                
+                
                 $this->get('session')->getFlashBag()->add('newOk', 'Registro realizado satisfactoriamente.');
 
-                return $this->render($this->session->get('pathSystem') . ':InstitucioneducativaAccesoInternet:saved.html.twig', array(
+                return $this->render('SieHerramientaBundle:InstitucioneducativaAccesoInternet:saved.html.twig', array(
                     'institucion' => $institucion,
-                    'proveedores' => $proveedores
+                    'iai' => $iai_fin,
+                    'datos' => $datos_fin
                 ));
             } else {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa.');
@@ -224,47 +238,13 @@ class InstitucioneducativaAccesoInternetController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($request->get('ddjjRue')['sie']);
-        $institucionHabilitada = $em->getRepository('SieAppWebBundle:InstitucioneducativaRueRegularizacion')->findOneBy(array('institucioneducativa' => $institucion));
-        $institucionHabilitada->setEsactivo('t');
-        $em->persist($institucionHabilitada);
+        $form = $request->get('ddjjIAI');
+        $iai = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findOneById($form['iai']);        
+        $iai->setEsactivo(true);
+        $em->persist($iai);
         $em->flush();
 
-        $arch = 'DDJJ_RUE_FECHAFUNDACION' . $request->get('ddjjRue')['sie'] . '_' . date('YmdHis') . '.pdf';
-        $response = new Response();
-        $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_dj_rue_fechafundacion_v1_afv.rptdesign&__format=pdf&&codue=' . $request->get('ddjjRue')['sie'] .'&&__format=pdf&'));
-        $response->setStatusCode(200);
-        $response->headers->set('Content-Transfer-Encoding', 'binary');
-        $response->headers->set('Pragma', 'no-cache');
-        $response->headers->set('Expires', '0');
-        return $response;
-    }
-
-    public function impresionSeguimientoAction(Request $request) {
-        $this->session = $request->getSession();
-        $id_usuario = $this->session->get('userId');
-        
-        if (!isset($id_usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-        
-        if (!$this->session->get('userId')) {
-            return $this->redirect($this->generateUrl('login'));
-        }        
-
-        $em = $this->getDoctrine()->getManager();
-
-        $arch = 'SEGUIMIENTO_RUE_FECHAFUNDACION' . '_' . date('YmdHis') . '.pdf';
-        $response = new Response();
-        $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_seguimiento_rue_fechafundacion_v1_afv.rptdesign&__format=pdf&&dpto=' . $request->get('seguimientoRue')['dpto'] .'&&__format=pdf&'));
-        $response->setStatusCode(200);
-        $response->headers->set('Content-Transfer-Encoding', 'binary');
-        $response->headers->set('Pragma', 'no-cache');
-        $response->headers->set('Expires', '0');
-        return $response;
+        $this->get('session')->getFlashBag()->add('newOk', 'Registro realizado satisfactoriamente.');
+        return $this->redirect($this->generateUrl('ie_acceso_internet_index'));        
     }
 }
