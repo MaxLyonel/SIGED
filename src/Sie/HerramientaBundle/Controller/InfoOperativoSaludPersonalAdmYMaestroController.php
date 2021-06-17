@@ -188,21 +188,28 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $db = $em->getConnection();
         $c=implode(',',array_values($cargosArray));
         $query = '
-            SELECT distinct p.id as "perId", p.carnet, p.paterno, p.materno, p.nombre, mi.id as "miId", mi.fecha_registro, mi.fecha_modificacion, mi.es_vigente_administrativo, ft.formacion,ct.cargo ,ct.id as "cargoId",
+            SELECT distinct p.id as "perId", p.carnet, p.paterno, p.materno, p.nombre, mi.id as "miId", mi.fecha_registro, mi.fecha_modificacion, mi.es_vigente_administrativo, ft.formacion,ct.cargo ,ct.id as "cargoId", ie.institucioneducativa_tipo_id,
             (
                 SELECT string_agg(concat_ws(\',\',mies0.estadosalud_tipo_id,est0.estadosalud,to_char(mies0.fecha, \'DD-MM-YYYY\'),to_char(mies0.fecha, \'DD-MM-YYYY\')),\'|\')
                 from maestro_inscripcion_estadosalud mies0
                 INNER JOIN estadosalud_tipo est0 on mies0.estadosalud_tipo_id=est0.id
-                where maestro_inscripcion_id=mi.id
+                where 
+                maestro_inscripcion_id=mi.id
                 and persona_id=p.id --///////////////////AQUI CAMBIAR AND POR OR PARA MNOSTRAR DE OTRAS GESTIONES Y UNIDADES EDUCATIVAS
             ) as "detalleEstadoSalud"
 
             FROM maestro_inscripcion mi
+            INNER JOIN institucioneducativa ie on ie.id=mi.institucioneducativa_id
             inner join persona  p  on mi.persona_id = p.id
             inner join formacion_tipo  ft  on mi.formacion_tipo_id = ft.id
             inner join cargo_tipo  ct  on mi.cargo_tipo_id = ct.id
             where 
-            mi.es_vigente_administrativo = \'t\'
+            mi.periodo_tipo_id = (case 
+                                  when ie.institucioneducativa_tipo_id = 1 then 1 
+                                  when ie.institucioneducativa_tipo_id = 4 then 1
+                                  else 2 end
+                                  )
+            and mi.es_vigente_administrativo = \'t\'
             and mi.institucioneducativa_id = ?
             and mi.gestion_tipo_id = ?
             and mi.cargo_tipo_id IN ('.$c.')
@@ -212,7 +219,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $params = array($institucion,$gestion);
         $stmt->execute($params);
         $maestro=$stmt->fetchAll();
-        
+
 /*************************************AQUI*****************************************/
 
         $query = $repository->createQueryBuilder('mi')
@@ -1356,7 +1363,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $ue=array();
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
-
+        $tipoUE=$this->session->get('sistemaid');
         $query ="
             select 
             institucioneducativa_id,institucioneducativa
@@ -1474,7 +1481,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
               from (institucioneducativa c 
                   inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
                     inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
-              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=?
             ) a
           where 
           cod_dis = ?
@@ -1482,10 +1489,35 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
           group by cod_dis,des_dis,TARGET,institucioneducativa,dependencia
         ";
 
+        $tipoUE=filter_var($this->session->get('tiposubsistema'),FILTER_SANITIZE_NUMBER_INT);
+        $tipoUE=is_numeric($tipoUE)?$tipoUE:-1;
+
+        $tmpTipoUE = $this->session->get('sysname');
+        $tmpTipoUE = strtolower(filter_var($tmpTipoUE , FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH));
+
+        if(!in_array($tipoUE,[1,2,3]))
+        { 
+            if(strpos($tmpTipoUE,'regular')>0)
+            {
+                $tipoUE=1;
+            }
+            elseif(strpos($tmpTipoUE,'alternativa')>0)
+            {
+                $tipoUE=2;
+            }
+            elseif(strpos($tmpTipoUE,'especial')>0)
+            {
+                $tipoUE=2;
+            }
+            else
+            {
+                $tipoUE=-1;
+            }
+        }
 
         $stmt = $db->prepare($query);
         //$params = array($gestion,$gestion,$gestion,$gestion,$distrito,$departamento);
-        $params = array($gestion,$distrito,$departamento);
+        $params = array($gestion,$tipoUE,$distrito,$departamento);
         $stmt->execute($params);
         $tmp=$stmt->fetchAll();
 

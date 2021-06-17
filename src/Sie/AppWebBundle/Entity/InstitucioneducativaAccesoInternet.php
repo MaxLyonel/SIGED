@@ -17,6 +17,11 @@ class InstitucioneducativaAccesoInternet
     /**
      * @var boolean
      */
+    private $tieneInternet;
+
+    /**
+     * @var boolean
+     */
     private $esactivo;
 
     /**
@@ -25,24 +30,14 @@ class InstitucioneducativaAccesoInternet
     private $fechaRegistro;
 
     /**
-     * @var \DateTime
+     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
      */
-    private $fechaModificacion;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\AccesoInternetProveedorTipo
-     */
-    private $accesoInternetProveedorTipo;
+    private $institucioneducativa;
 
     /**
      * @var \Sie\AppWebBundle\Entity\GestionTipo
      */
     private $gestionTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\Institucioneducativa
-     */
-    private $institucioneducativa;
 
 
     /**
@@ -53,6 +48,29 @@ class InstitucioneducativaAccesoInternet
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set tieneInternet
+     *
+     * @param boolean $tieneInternet
+     * @return InstitucioneducativaAccesoInternet
+     */
+    public function setTieneInternet($tieneInternet)
+    {
+        $this->tieneInternet = $tieneInternet;
+    
+        return $this;
+    }
+
+    /**
+     * Get tieneInternet
+     *
+     * @return boolean 
+     */
+    public function getTieneInternet()
+    {
+        return $this->tieneInternet;
     }
 
     /**
@@ -102,49 +120,26 @@ class InstitucioneducativaAccesoInternet
     }
 
     /**
-     * Set fechaModificacion
+     * Set institucioneducativa
      *
-     * @param \DateTime $fechaModificacion
+     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
      * @return InstitucioneducativaAccesoInternet
      */
-    public function setFechaModificacion($fechaModificacion)
+    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
     {
-        $this->fechaModificacion = $fechaModificacion;
+        $this->institucioneducativa = $institucioneducativa;
     
         return $this;
     }
 
     /**
-     * Get fechaModificacion
+     * Get institucioneducativa
      *
-     * @return \DateTime 
+     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
      */
-    public function getFechaModificacion()
+    public function getInstitucioneducativa()
     {
-        return $this->fechaModificacion;
-    }
-
-    /**
-     * Set accesoInternetProveedorTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\AccesoInternetProveedorTipo $accesoInternetProveedorTipo
-     * @return InstitucioneducativaAccesoInternet
-     */
-    public function setAccesoInternetProveedorTipo(\Sie\AppWebBundle\Entity\AccesoInternetProveedorTipo $accesoInternetProveedorTipo = null)
-    {
-        $this->accesoInternetProveedorTipo = $accesoInternetProveedorTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get accesoInternetProveedorTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\AccesoInternetProveedorTipo 
-     */
-    public function getAccesoInternetProveedorTipo()
-    {
-        return $this->accesoInternetProveedorTipo;
+        return $this->institucioneducativa;
     }
 
     /**
@@ -168,28 +163,5 @@ class InstitucioneducativaAccesoInternet
     public function getGestionTipo()
     {
         return $this->gestionTipo;
-    }
-
-    /**
-     * Set institucioneducativa
-     *
-     * @param \Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa
-     * @return InstitucioneducativaAccesoInternet
-     */
-    public function setInstitucioneducativa(\Sie\AppWebBundle\Entity\Institucioneducativa $institucioneducativa = null)
-    {
-        $this->institucioneducativa = $institucioneducativa;
-    
-        return $this;
-    }
-
-    /**
-     * Get institucioneducativa
-     *
-     * @return \Sie\AppWebBundle\Entity\Institucioneducativa 
-     */
-    public function getInstitucioneducativa()
-    {
-        return $this->institucioneducativa;
     }
 }

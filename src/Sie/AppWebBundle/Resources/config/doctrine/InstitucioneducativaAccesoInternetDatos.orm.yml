@@ -1,13 +1,16 @@
-Sie\AppWebBundle\Entity\InstitucioneducativaAccesoInternet:
+Sie\AppWebBundle\Entity\InstitucioneducativaAccesoInternetDatos:
     type: entity
-    table: institucioneducativa_acceso_internet
+    table: institucioneducativa_acceso_internet_datos
     indexes:
-        IDX_B8EAFB43AB163FE:
+        IDX_A95CBAC53AB163FE:
             columns:
                 - institucioneducativa_id
-        IDX_B8EAFB4179FF95:
+        IDX_A95CBAC5179FF95:
             columns:
                 - gestion_tipo_id
+        IDX_A95CBAC539855A67:
+            columns:
+                - acceso_internet_proveedor_tipo_id
     id:
         id:
             type: integer
@@ -18,17 +21,6 @@ Sie\AppWebBundle\Entity\InstitucioneducativaAccesoInternet:
             generator:
                 strategy: SEQUENCE
     fields:
-        tieneInternet:
-            type: boolean
-            nullable: true
-            comment: ''
-            default: false
-            column: tiene_internet
-        esactivo:
-            type: boolean
-            nullable: true
-            comment: ''
-            default: false
         fechaRegistro:
             type: datetime
             nullable: true
@@ -51,6 +43,15 @@ Sie\AppWebBundle\Entity\InstitucioneducativaAccesoInternet:
             inversedBy: null
             joinColumns:
                 gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        accesoInternetProveedorTipo:
+            targetEntity: AccesoInternetProveedorTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                acceso_internet_proveedor_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
