@@ -1,0 +1,94 @@
+tramite_inscription_score_index:
+  path: /
+  defaults: { _controller: SieProcesosBundle:TramiteInscriptionScore:index }
+
+tramite_inscription_score_buscar_estudiante:
+  path: /buscarEstudianteone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteInscriptionScore:buscarEstudiante }
+  options:
+    expose: true
+
+tramite_inscription_score_buscar_calificaciones:
+  path: /buscarCalificacionesone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteInscriptionScore:buscarCalificaciones }
+  options:
+    expose: true
+
+tramite_inscription_score_formulario_save:
+  path: /formulariosaveone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteInscriptionScore:formularioSave }
+  options:
+    expose: true
+
+tramite_inscription_score_formulario_imprimir:
+  path: /formularioImprimirone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteInscriptionScore:formularioImprimir }
+
+tramite_inscription_score_formulario_vista_imprimir_libreta:
+  path: /formularioVistaImprimirLibretaone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteInscriptionScore:formularioVistaImprimirLibreta }
+
+tramite_inscription_score_formulario_vista_imprimir_finalizar:
+  path: /formularioVistaImprimirFinalizarone/{idTramite}
+  defaults:
+    { _controller: SieProcesosBundle:TramiteInscriptionScore:formularioVistaImprimirFinalizar }
+
+tramite_inscription_score_loadLevel:
+    path:     /loadLevel
+    defaults: { _controller: SieProcesosBundle:TramiteInscriptionScore:loadLevel }
+    options:
+        expose: true    
+
+tramite_inscription_score_loadGrado:
+    path:     /loadGrado
+    defaults: { _controller: SieProcesosBundle:TramiteInscriptionScore:loadGrado }
+    options:
+        expose: true
+
+tramite_inscription_score_loadParalelo:
+    path:     /loadParalelo
+    defaults: { _controller: SieProcesosBundle:TramiteInscriptionScore:loadParalelo }
+    options:
+        expose: true
+
+tramite_inscription_score_loadTurno:
+    path:     /loadTurno
+    defaults: { _controller: SieProcesosBundle:TramiteInscriptionScore:loadTurno }
+    options:
+        expose: true        
+
+# DISTRITO
+
+tramite_inscription_score_recepcion_verifica_distrito:
+  path: /recepcionaVerificaDistritoone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteInscriptionScore:recepcionVerificaDistrito }
+
+tramite_inscription_score_deriva_distrito:
+  path: /derivaDistritoone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteInscriptionScore:derivaDistrito }
+
+# DEPARTAMENTO
+
+tramite_inscription_score_recepcion_verifica_departamento:
+  path: /recepcionaVerificaDepartamentoone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteInscriptionScore:recepcionVerificaDepartamento }
+
+tramite_inscription_score_deriva_departamento:
+  path: /derivaDepartamentoone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteInscriptionScore:derivaDepartamento }
+
+tramite_modificacion_calificaciones_acta_imprimir:
+  path: /actaImprimirone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteInscriptionScore:actaImprimir }
+
+
