@@ -13,3 +13,7 @@ ie_acceso_internet_save:
 ie_acceso_internet_impresionDDJJ:
   path:     /impresionDDJJ/
   defaults: { _controller: SieHerramientaBundle:InstitucioneducativaAccesoInternet:impresionDDJJ }
+
+ie_acceso_internet_seguimiento:
+  path:     /seguimiento/
+  defaults: { _controller: SieHerramientaBundle:InstitucioneducativaAccesoInternet:seguimiento }

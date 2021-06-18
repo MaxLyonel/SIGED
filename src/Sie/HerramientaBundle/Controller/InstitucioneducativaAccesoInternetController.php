@@ -247,4 +247,130 @@ class InstitucioneducativaAccesoInternetController extends Controller {
         $this->get('session')->getFlashBag()->add('newOk', 'Registro realizado satisfactoriamente.');
         return $this->redirect($this->generateUrl('ie_acceso_internet_index'));        
     }
+
+    public function seguimientoAction(Request $request) {
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }        
+
+        $em = $this->getDoctrine()->getManager();
+        $gestionactual = $this->session->get('currentyear');
+        $bundle = $this->session->get('pathSystem');
+        $roluser = $this->session->get('roluser');
+        $roluserlugarid = $this->session->get('roluserlugarid');
+        $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+
+        switch ($bundle) {
+            case 'SieHerramientaBundle':
+                $instipoid = 1;
+                break;
+    
+            case 'SieEspecialBundle':
+                $instipoid = 4;
+                break;
+            
+            case 'SieHerramientaAlternativaBundle':
+                $instipoid = 2;
+                break;
+            
+            default:
+                $instipoid = 0;
+                break;
+        }
+        
+        switch ($roluser) {
+            case '7':
+                $where = "ues.id_departamento = '".$lugar->getCodigo()."'";
+                break;
+
+            case '8':
+                $where = '1 = 1';
+                break;
+
+            case '10':
+                $where = "ues.cod_distrito = '".$lugar->getCodigo()."'";
+                break;
+
+            default:
+                $where = '1 = 0';
+                break;
+        }
+
+        $query = $em->getConnection()->prepare("
+            select iai.gestion_tipo_id, ues.id_departamento, ues.desc_departamento, ues.cod_distrito, ues.distrito, ues.cod_ue_id, ues.desc_ue, case when iai.tiene_internet is true then true else false end as tiene_internet, case when iai.esactivo is true then true else false end as esactivo
+            from
+            (select a.cod_ue_id, a.desc_ue, a.cod_le_id, a.direccion, a.zona, a.cod_distrito, a.distrito,
+            (case when a.tipo_area = 'R' then 'RURAL' when a.tipo_area = 'U' then 'URBANO' else '' end) as area,
+            a.id_departamento, a.desc_departamento, a.id_provincia, a.desc_provincia, a.id_seccion, a.desc_seccion, a.id_canton, a.desc_canton, a.id_localidad, a.desc_localidad,
+            a.cod_convenio_id, a.convenio,case when a.cod_dependencia_id <>3 then 'Publico' else 'Privado' end as dependencia_gen, a.cod_dependencia_id, a.dependencia, c.ini, c.pri, c.sec, c.epa, c.esa, c.eta, c.esp, c.perm,c.perm_tec,c.perm_otros, c.eja, a.fecha_last_update, a.estadoinstitucion_tipo_id, a.estadoinstitucion,a.institucioneducativa_tipo_id,a.cordx,a.cordy, a.nro_resolucion, a.fecha_resolucion
+            from 
+            (select  a.id as cod_ue_id,a.institucioneducativa as desc_ue,a.orgcurricular_tipo_id,a.estadoinstitucion_tipo_id, h.estadoinstitucion, a.le_juridicciongeografica_id as cod_le_id,a.orgcurricular_tipo_id as cod_org_curr_id,f.orgcurricula
+            ,a.dependencia_tipo_id as cod_dependencia_id, e.dependencia,a.convenio_tipo_id as cod_convenio_id,g.convenio,d.cod_dep as id_departamento,d.des_dep as desc_departamento
+            ,d.cod_pro as id_provincia, d.des_pro as desc_provincia, d.cod_sec as id_seccion, d.des_sec as desc_seccion, d.cod_can as id_canton, d.des_can as desc_canton
+            ,d.cod_loc as id_localidad,d.des_loc as desc_localidad,d.area2001 as tipo_area,d.cod_dis as cod_distrito,d.des_dis as distrito,d.direccion,d.zona
+            ,d.cod_nuc,d.des_nuc,0 as usuario_id,current_date as fecha_last_update, a.fecha_creacion,d.cordx,d.cordy, a.nro_resolucion, a.fecha_resolucion, a.institucioneducativa_tipo_id
+            from institucioneducativa a 
+            inner join 
+            (select a.id as cod_le,cod_dep,des_dep,cod_pro,des_pro,cod_sec,des_sec,cod_can,des_can,cod_loc,des_loc,area2001,cod_dis,des_dis,a.cod_nuc,a.des_nuc,a.direccion,a.zona,a.cordx,cordy
+            from jurisdiccion_geografica a inner join 
+            (select e.id,cod_dep,a.lugar as des_dep,cod_pro,b.lugar as des_pro,cod_sec,c.lugar as des_sec,cod_can,d.lugar as des_can,cod_loc,e.lugar as des_loc,area2001
+            from (select id,codigo as cod_dep,lugar_tipo_id,lugar
+            from lugar_tipo
+            where lugar_nivel_id=1) a inner join (
+            select id,codigo as cod_pro,lugar_tipo_id,lugar from lugar_tipo
+            where lugar_nivel_id=2) b on a.id=b.lugar_tipo_id inner join (
+            select id,codigo as cod_sec,lugar_tipo_id,lugar from lugar_tipo
+            where lugar_nivel_id=3) c on b.id=c.lugar_tipo_id inner join (
+            select id,codigo as cod_can,lugar_tipo_id,lugar from lugar_tipo
+            where lugar_nivel_id=4) d on c.id=d.lugar_tipo_id inner join (
+            select id,codigo as cod_loc,lugar_tipo_id,lugar,area2001 from lugar_tipo
+            where lugar_nivel_id=5) e on d.id=e.lugar_tipo_id) b on a.lugar_tipo_id_localidad=b.id
+            inner join 
+            (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo
+            where lugar_nivel_id=7) c on a.lugar_tipo_id_distrito=c.id) d on a.le_juridicciongeografica_id=d.cod_le  and institucioneducativa_acreditacion_tipo_id=1 and estadoinstitucion_tipo_id=10
+            INNER JOIN dependencia_tipo e ON a.dependencia_tipo_id = e.id
+            INNER JOIN orgcurricular_tipo f ON a.orgcurricular_tipo_id = f.id
+            INNER JOIN convenio_tipo g ON a.convenio_tipo_id = g.id
+            INNER JOIN estadoinstitucion_tipo h ON a.estadoinstitucion_tipo_id = h.id
+            where a.institucioneducativa_acreditacion_tipo_id = 1) as a
+            INNER JOIN (
+            select institucioneducativa_id
+            ,sum(case when nivel_tipo_id=11 then 1 else 0 end) as ini
+            ,sum(case when nivel_tipo_id=12 then 1 else 0 end) as pri
+            ,sum(case when nivel_tipo_id=13 then 1 else 0 end) as sec
+            ,sum(case when nivel_tipo_id=6 then 1 else 0 end) as esp
+            ,sum(case when nivel_tipo_id=8 then 1 else 0 end) as eja
+            ,sum(case when nivel_tipo_id=201 then 1 else 0 end) as epa
+            ,sum(case when nivel_tipo_id=202 then 1 else 0 end) as esa
+            ,sum(case when nivel_tipo_id in (203,204,205,206) then 1 else 0 end) as eta
+            ,sum(case when nivel_tipo_id in (207) then 1 else 0 end) as alfproy
+            ,sum(case when nivel_tipo_id in (208) then 1 else 0 end) as alfcam
+            ,sum(case when nivel_tipo_id in (211,212,213,214,215,216,217,218) then 1 else 0 end) as perm
+            ,sum(case when nivel_tipo_id in (219,220,224) then 1 else 0 end) as perm_tec
+            ,sum(case when nivel_tipo_id in (221,222,223) then 1 else 0 end) as perm_otros
+            from institucioneducativa_nivel_autorizado
+            group by institucioneducativa_id
+            ) as c on a.cod_ue_id=c.institucioneducativa_id 
+            inner join dependencia_tipo d on a.cod_dependencia_id=d.id
+                inner join orgcurricular_tipo e on e.id=a.cod_org_curr_id
+                    inner join convenio_tipo f on f.id=a.cod_convenio_id) ues
+            left join institucioneducativa_acceso_internet iai on ues.cod_ue_id = iai.institucioneducativa_id and iai.gestion_tipo_id = ".$gestionactual."
+            where ues.estadoinstitucion_tipo_id = 10 and ues.institucioneducativa_tipo_id = ".$instipoid." and ".$where."
+            order by ues.id_departamento, ues.cod_distrito, cod_ue_id;
+        ");
+        
+        $query->execute();        
+        $seguimientoiai = $query->fetchAll();
+
+        return $this->render('SieHerramientaBundle:InstitucioneducativaAccesoInternet:seguimiento.html.twig', array(
+            'seguimientoiai' => $seguimientoiai
+        ));
+    }
 }

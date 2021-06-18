@@ -1,0 +1,170 @@
+{% extends app.session.get('layout') %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Acceso a Internet <span>Institución Educativa</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Acceso a internet</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Seguimiento</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel rounded shadow panel-teal">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Seguimiento</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">
+                        {{dump(seguimientoiai)}}
+                        {# <div class="row">
+                            <div class="col-md-12" id="tableConsol">
+                                {% if consol is not empty %}
+                                    <div class="table-responsive col-md-9">
+                                        <table class="table table-bordered table-striped" id="listaConsol">
+                                        {% if gestionactual >= 2020 %}
+                                            <thead>
+                                                <tr>
+                                                    <th style="min-width:15px">#</th>
+                                                    <th>Departamento</th>
+                                                    <th>Distrito</th>
+                                                    <th>SIE</th>
+                                                    <th>Institución Educativa</th>
+                                                    <th>Trim. 1</th>
+                                                    <th>Trim. 2</th>
+                                                    <th>Trim. 3</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Departamento</th>
+                                                    <th>Distrito</th>
+                                                    <th>SIE</th>
+                                                    <th>Centro</th>
+                                                    <th>Trim. 1</th>
+                                                    <th>Trim. 2</th>
+                                                    <th>Trim. 3</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                {% for registro in consol %}
+                                                    <tr>
+                                                        <td class="text-center">{{loop.index}}</td>
+                                                        <td>{{registro.departamento}}</td>
+                                                        <td>{{registro.distrito}}</td>
+                                                        <td>{{registro.codigo_sie}}</td>
+                                                        <td>{{registro.institucioneducativa}}</td>
+                                                        <td><span class="label label-{% if registro.bim1 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim1}}</span></td>
+                                                        <td><span class="label label-{% if registro.bim2 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim2}}</span></td>
+                                                        <td><span class="label label-{% if registro.bim3 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim3}}</span></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        {% else %}
+                                            <thead>
+                                                <tr>
+                                                    <th style="min-width:15px">#</th>
+                                                    <th>Departamento</th>
+                                                    <th>Distrito</th>
+                                                    <th>SIE</th>
+                                                    <th>Institución Educativa</th>
+                                                    <th>Bim. 1</th>
+                                                    <th>Bim. 2</th>
+                                                    <th>Bim. 3</th>
+                                                    <th>Bim. 4</th>
+                                                </tr>
+                                            </thead>
+                                            <tfoot>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Departamento</th>
+                                                    <th>Distrito</th>
+                                                    <th>SIE</th>
+                                                    <th>Centro</th>
+                                                    <th>Bim. 1</th>
+                                                    <th>Bim. 2</th>
+                                                    <th>Bim. 3</th>
+                                                    <th>Bim. 4</th>
+                                                </tr>
+                                            </tfoot>
+                                            <tbody>
+                                                {% for registro in consol %}
+                                                    <tr>
+                                                        <td class="text-center">{{loop.index}}</td>
+                                                        <td>{{registro.departamento}}</td>
+                                                        <td>{{registro.distrito}}</td>
+                                                        <td>{{registro.codigo_sie}}</td>
+                                                        <td>{{registro.institucioneducativa}}</td>
+                                                        <td><span class="label label-{% if registro.bim1 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim1}}</span></td>
+                                                        <td><span class="label label-{% if registro.bim2 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim2}}</span></td>
+                                                        <td><span class="label label-{% if registro.bim3 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim3}}</span></td>
+                                                        <td><span class="label label-{% if registro.bim4 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim4}}</span></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        {% endif %}
+                                        </table>
+                                    </div>
+                                {% else %}
+                                    No se encontraron registros.
+                                {% endif %}
+                            </div>
+                        </div> #}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+        var cargatablas = function (identif){
+            // Setup - add a text input to each footer cell
+            $('#listaConsol tfoot th').each( function () {
+                var title = $(this).text();
+                if(title.trim() === "" || title === "#"){
+                    $(this).html('');
+                } else {
+                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+                }
+            } );
+
+            // DataTable
+            var table = $('#listaConsol').DataTable( {
+                    "order": [[ 0, "asc" ]]
+                }
+            );
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        };
+
+        $(document).ready(function(){
+            cargatablas();
+        });
+    </script>
+{% endblock %}
