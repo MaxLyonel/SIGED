@@ -189,3 +189,7 @@ donwload_boletinNivelacionTTEBth:
 donwload_ddjjStudentsQuipus:
     path:     /ddjjStudentsQuipus/{sie}
     defaults: { _controller: SieAppWebBundle:Download:ddjjStudentsQuipus }
+
+download_tramite_modificacion_calificaciones_formulario:
+    path:     /abc/{idTramite}/{codigoQR}
+    defaults: { _controller: SieAppWebBundle:Download:calificacionesFormulario }
