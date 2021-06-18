@@ -191,6 +191,9 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $iePerCod=filter_var($this->session->get('ie_per_cod'),FILTER_SANITIZE_NUMBER_INT);
         $iePerCod=is_numeric($iePerCod)?$iePerCod:-1;
 
+        $sysName = $this->session->get('sysname');
+        $sysName = strtolower(filter_var($sysName , FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH));
+        $ieTipo=$this->getTipoUE($sysName);
         $query = '
             SELECT distinct p.id as "perId", p.carnet, p.paterno, p.materno, p.nombre, mi.id as "miId", mi.fecha_registro, mi.fecha_modificacion, mi.es_vigente_administrativo, ft.formacion,ct.cargo ,ct.id as "cargoId", ie.institucioneducativa_tipo_id,
             (
@@ -214,6 +217,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                                   when ie.institucioneducativa_tipo_id = 2 then ?
                                   else -1 end
                                   )
+            and ie.institucioneducativa_tipo_id = ?
             and mi.es_vigente_administrativo = \'t\'
             and mi.institucioneducativa_id = ?
             and mi.gestion_tipo_id = ?
@@ -221,7 +225,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
             ORDER BY ct.id
         ';
         $stmt = $db->prepare($query);
-        $params = array($iePerCod,$institucion,$gestion);
+        $params = array($iePerCod,$ieTipo,$institucion,$gestion);
         $stmt->execute($params);
         $maestro=$stmt->fetchAll();
 
@@ -974,19 +978,46 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request_sie);
             if($institucioneducativa)
             {
-                //$operativoSalud = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa' => $institucioneducativa,'gestionTipoId'=>$request_gestion));
                 $request_tipo_cerrado=11;
-                $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus');
-                $query = $repository->createQueryBuilder('me')
-                        ->where('me.institucioneducativa = :institucioneducativa')
-                        ->andWhere('me.gestionTipoId = :gestion')
-                        ->andWhere('me.estadoMenu IN (:estado)')
+                $tmpId=$institucioneducativa->getInstitucioneducativaTipo()->getId();
 
-                        ->setParameter('institucioneducativa', $institucioneducativa->getId())
-                        ->setParameter('gestion', $request_gestion)
-                        ->setParameter('estado', array_values(array(11,21)))
-                        ->getQuery();
-                $operativoSalud = $query->getOneOrNullResult();
+                $iePerCod=filter_var($this->session->get('ie_per_cod'),FILTER_SANITIZE_NUMBER_INT);
+                $iePerCod=is_numeric($iePerCod)?$iePerCod:-1;
+                $periodo = 1;
+                if(in_array($tmpId,[1,4]) || $tmpId!=2)//anual
+                {
+                    //$operativoSalud = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa' => $institucioneducativa,'gestionTipoId'=>$request_gestion));
+                    $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus');
+                    $query = $repository->createQueryBuilder('me')
+                            ->where('me.institucioneducativa = :institucioneducativa')
+                            ->andWhere('me.gestionTipoId = :gestion')
+                            ->andWhere('me.estadoMenu IN (:estado)')
+
+                            ->setParameter('institucioneducativa', $institucioneducativa->getId())
+                            ->setParameter('gestion', $request_gestion)
+                            ->setParameter('estado', array_values(array(11,21)))
+                            ->getQuery();
+                    $operativoSalud = $query->getOneOrNullResult();
+                }
+                else //if($tmpId==2)//semestral
+                {
+                    //$operativoSalud = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa' => $institucioneducativa,'gestionTipoId'=>$request_gestion));
+                    $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus');
+                    $periodo = $iePerCod;
+                    $query = $repository->createQueryBuilder('me')
+                            ->where('me.institucioneducativa = :institucioneducativa')
+                            ->andWhere('me.gestionTipoId = :gestion')
+                            ->andWhere('me.estadoMenu IN (:estado)')
+                            ->andWhere('me.periodoTipoId = :periodo')
+
+                            ->setParameter('institucioneducativa', $institucioneducativa->getId())
+                            ->setParameter('gestion', $request_gestion)
+                            ->setParameter('estado', array_values(array(11,21)))
+                            ->setParameter('periodo', $periodo)
+                            ->getQuery();
+                    $operativoSalud = $query->getOneOrNullResult();
+                }
+
 
                 if($operativoSalud==null)//no existe, lo creamos el cierre del operatiovo
                 {
@@ -996,7 +1027,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                     $operativoSalud->setFecharegistro(new \DateTime('now'));
                     $operativoSalud->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->findOneById(0));
                     $operativoSalud->setInstitucioneducativa($institucioneducativa);
-
+                    $operativoSalud->setPeriodoTipoId($periodo);
                     $em->persist($operativoSalud);
                     $em->flush();
 
@@ -1092,7 +1123,50 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request_sie);
         if($institucioneducativa)
         {
+
+/***************aqui*****************/
+            $tmpId=$institucioneducativa->getInstitucioneducativaTipo()->getId();
+
+            $iePerCod=filter_var($this->session->get('ie_per_cod'),FILTER_SANITIZE_NUMBER_INT);
+            $iePerCod=is_numeric($iePerCod)?$iePerCod:-1;
+            $periodo = 1;
+            if(in_array($tmpId,[1,4]) || $tmpId!=2)//anual
+            {
+                //$operativoSalud = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa' => $institucioneducativa,'gestionTipoId'=>$request_gestion));
+                $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus');
+                $query = $repository->createQueryBuilder('me')
+                        ->where('me.institucioneducativa = :institucioneducativa')
+                        ->andWhere('me.gestionTipoId = :gestion')
+                        ->andWhere('me.estadoMenu IN (:estado)')
+
+                        ->setParameter('institucioneducativa', $institucioneducativa->getId())
+                        ->setParameter('gestion', $request_gestion)
+                        ->setParameter('estado', array_values(array(11,21)))
+                        ->getQuery();
+                $operativoSalud = $query->getOneOrNullResult();
+            }
+            else //if($tmpId==2)//semestral
+            {
+                //$operativoSalud = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa' => $institucioneducativa,'gestionTipoId'=>$request_gestion));
+                $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus');
+                $periodo = $iePerCod;
+                $query = $repository->createQueryBuilder('me')
+                        ->where('me.institucioneducativa = :institucioneducativa')
+                        ->andWhere('me.gestionTipoId = :gestion')
+                        ->andWhere('me.estadoMenu IN (:estado)')
+                        ->andWhere('me.periodoTipoId = :periodo')
+
+                        ->setParameter('institucioneducativa', $institucioneducativa->getId())
+                        ->setParameter('gestion', $request_gestion)
+                        ->setParameter('estado', array_values(array(11,21)))
+                        ->setParameter('periodo', $periodo)
+                        ->getQuery();
+                $operativoSalud = $query->getOneOrNullResult();
+            }
+/***************aqui*****************/
+
             //$operativoSalud = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa' => $institucioneducativa,'gestionTipoId'=>$request_gestion,'estadoMenu'='21'));
+            /*
             $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus');
             $query = $repository->createQueryBuilder('me')
                     //->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, mi.esVigenteAdministrativo, ft.formacion,ct.cargo ,ct.id cargoId,est.estadosalud, mies.vacunado')
@@ -1105,8 +1179,8 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                     ->setParameter('estado', array_values(array(11,21)))
                     ->getQuery();
             $operativoSalud = $query->getOneOrNullResult();
+            */
             
-
             if($operativoSalud)
             {
                 if($operativoSalud->getEstadoMenu()==11)
@@ -1264,7 +1338,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
     {
         $userId=($userId)?$userId:-1;
         $userRol=($userRol)?$userRol:-1;
-
+        $gestion = date('Y');
         $user=NULL;
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
@@ -1284,7 +1358,8 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
               inner join lugar_tipo d on d.lugar_nivel_id=7 and c.lugar_tipo_id_distrito=d.id
                 inner join usuario e on a.persona_id=e.persona_id
                   inner join usuario_rol f on e.id=f.usuario_id
-        where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and e.esactivo=\'t\') a
+        --where a.gestion_tipo_id='.$gestion.' and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and e.esactivo=\'t\') a
+        where a.gestion_tipo_id='.$gestion.' and cargo_tipo_id in (1,12) and e.esactivo=\'t\') a
         where user_id = ?
         and rol_tipo_id = ?
         ORDER BY cod_dis
@@ -1486,7 +1561,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
               from (institucioneducativa c 
                   inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
                     inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
-              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=?
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and c.institucioneducativa_tipo_id=?
             ) a
           where 
           cod_dis = ?
@@ -1494,35 +1569,13 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
           group by cod_dis,des_dis,TARGET,institucioneducativa,dependencia
         ";
 
-        $tipoUE=filter_var($this->session->get('tiposubsistema'),FILTER_SANITIZE_NUMBER_INT);
-        $tipoUE=is_numeric($tipoUE)?$tipoUE:-1;
-
-        $tmpTipoUE = $this->session->get('sysname');
-        $tmpTipoUE = strtolower(filter_var($tmpTipoUE , FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH));
-
-        if(!in_array($tipoUE,[1,2,3]))
-        { 
-            if(strpos($tmpTipoUE,'regular')>0)
-            {
-                $tipoUE=1;
-            }
-            elseif(strpos($tmpTipoUE,'alternativa')>0)
-            {
-                $tipoUE=2;
-            }
-            elseif(strpos($tmpTipoUE,'especial')>0)
-            {
-                $tipoUE=2;
-            }
-            else
-            {
-                $tipoUE=-1;
-            }
-        }
+        $sysName = $this->session->get('sysname');
+        $sysName = strtolower(filter_var($sysName , FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH));
+        $ieTipo=$this->getTipoUE($sysName);
 
         $stmt = $db->prepare($query);
         //$params = array($gestion,$gestion,$gestion,$gestion,$distrito,$departamento);
-        $params = array($gestion,$tipoUE,$distrito,$departamento);
+        $params = array($gestion,$ieTipo,$distrito,$departamento);
         $stmt->execute($params);
         $tmp=$stmt->fetchAll();
 
@@ -1581,20 +1634,23 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         
         if($institucioneducativa && $institucioneducativa->getInstitucioneducativaTipo())
         {
-            $tmpId=$institucioneducativa->getInstitucioneducativaTipo()->getId();
-
+            $tipoUe=$institucioneducativa->getInstitucioneducativaTipo()->getId();
+            if(!$tipoUe)
+            {
+                $tipoUe=-1;
+            }
             $iePerCod=filter_var($this->session->get('ie_per_cod'),FILTER_SANITIZE_NUMBER_INT);
             $iePerCod=is_numeric($iePerCod)?$iePerCod:-1;
 
-            if(in_array($tmpId,[1,4]))//anual
+            if(in_array($tipoUe,[1,4]))//anual
             {
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion));
-                //$response->setContent(file_get_contents('http://127.0.0.1:64895/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-maestro-admistrativo\reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion.'&tipoUe='.$tipoUe));
+                //$response->setContent(file_get_contents('http://127.0.0.1:64895/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-maestro-admistrativo\reg_lst_maestroayadministrativo_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion.'&tipoUe='.$tipoUe));
             }
-            else if($tmpId==2)//semestral
+            else if($tipoUe==2)//semestral
             {
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_maestroayadministrativo_alternativa_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion.'&semestre='.$iePerCod));
-                //$response->setContent(file_get_contents('http://127.0.0.1:64895/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-maestro-admistrativo\reg_lst_maestroayadministrativo_alternativa_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion.'&semestre='.$iePerCod));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_maestroayadministrativo_alternativa_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion.'&tipoUe='.$tipoUe.'&semestre='.$iePerCod));
+                //$response->setContent(file_get_contents('http://127.0.0.1:64895/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-maestro-admistrativo\reg_lst_maestroayadministrativo_alternativa_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion.'&tipoUe='.$tipoUe.'&semestre='.$iePerCod));
             }
             else
             {
@@ -1625,6 +1681,27 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         return $response;
     }*/
 
-
+    public function getTipoUE($sysName)
+    {
+        $tmpTipoUE = strtolower(filter_var($sysName , FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH));
+        $tipoUE =-1;
+        if(strpos($tmpTipoUE,'regular')>0)
+        {
+            $tipoUE=1;
+        }
+        elseif(strpos($tmpTipoUE,'alternativa')>0)
+        {
+            $tipoUE=2;
+        }
+        elseif(strpos($tmpTipoUE,'especial')>0)
+        {
+            $tipoUE=4;
+        }
+        else
+        {
+            $tipoUE=-1;
+        }
+        return $tipoUE;
+    }
 
 }
