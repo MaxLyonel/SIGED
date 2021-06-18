@@ -51,7 +51,7 @@ class InboxController extends Controller {
         $this->arrUeNocturnas = $this->fillSieNocutrnas();
         $this->arrUeTecTeg = $this->fillSieTecnicos();
         $this->arrUeGeneral = $this->fillSieGeneral();
-        $this->reglasQA = '100';//'2,3,6,8,10,11,12,13,15,16,20,24,25,26';
+        $this->reglasQA = '2,3,6,8,10,12,13,15,16,20,24,25,26';
     }
     /**
        *fill the sie's modulars
@@ -738,7 +738,7 @@ class InboxController extends Controller {
         $objObsQA = null;
       }
 
-      if($objObsQA){
+      if(false){
         return $this->render($this->session->get('pathSystem') . ':Inbox:list_inconsistencia.html.twig', array(
           'objObsQA' => $objObsQA,
           'sie' =>  $form['sie'],
@@ -754,7 +754,9 @@ class InboxController extends Controller {
           'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo',$data)->createView(),
           'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
           'data'=>$dataInfo,
-          'tuicion'=>$tuicion
+          'tuicion'=>$tuicion,
+          'objObsQA' => $objObsQA,
+
         ));
       }
     }
@@ -965,11 +967,14 @@ class InboxController extends Controller {
     }
 
     private function getObservationQA($data){
+      // added to 2021 about qa
+      $years = $data['gestion'].' ,'.$data['gestion'];
+
       $em = $this->getDoctrine()->getManager();
       $query = $em->getConnection()->prepare("
                                                 select vp.*
                                                 from validacion_proceso vp
-                                                where vp.institucion_educativa_id = '".$data['sie']."' and vp.gestion_tipo_id = '".$data['gestion']."'
+                                                where vp.institucion_educativa_id = '".$data['sie']."' and vp.gestion_tipo_id in (".$years.")
                                                 and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
                                                 and vp.es_activo = 'f'
                                             ");
@@ -1169,7 +1174,7 @@ class InboxController extends Controller {
               $periodo = 1;
           }
       }
-
+/* to do the final close ope
       if($form['gestion']>2020){
         $queryClose = 'select * from sp_validacion_regular_web_2021_ini(:gestion, :sie, :periodo)';
       }else{
@@ -1183,7 +1188,7 @@ class InboxController extends Controller {
       $query->bindValue(':periodo', $periodo);
       $query->execute();
       $inconsistencia = $query->fetchAll();
-
+*/
 
       /***********************************\
       * *
