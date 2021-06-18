@@ -1593,7 +1593,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
             }
             else if($tmpId==2)//semestral
             {
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_maestroayadministrativo_alternativa_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion.'&ie_per_cod='.$iePerCod));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_lst_maestroayadministrativo_alternativa_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion.'&semestre='.$iePerCod));
                 //$response->setContent(file_get_contents('http://127.0.0.1:64895/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-maestro-admistrativo\reg_lst_maestroayadministrativo_alternativa_salud_v1.rptdesign&__format=pdf'.'&codue='.$codue.'&gestion='.$gestion.'&semestre='.$iePerCod));
             }
             else
