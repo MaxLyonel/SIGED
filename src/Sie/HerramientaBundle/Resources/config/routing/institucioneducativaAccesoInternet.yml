@@ -17,3 +17,13 @@ ie_acceso_internet_impresionDDJJ:
 ie_acceso_internet_seguimiento:
   path:     /seguimiento/
   defaults: { _controller: SieHerramientaBundle:InstitucioneducativaAccesoInternet:seguimiento }
+
+ie_acceso_internet_restablecer:
+  path:     /restablecer/
+  defaults: { _controller: SieHerramientaBundle:InstitucioneducativaAccesoInternet:restablecer }
+
+ie_acceso_internet_ver_datos:
+  path:     /verDatos/
+  defaults: { _controller: SieHerramientaBundle:InstitucioneducativaAccesoInternet:verDatos }
+  options:
+    expose: true
