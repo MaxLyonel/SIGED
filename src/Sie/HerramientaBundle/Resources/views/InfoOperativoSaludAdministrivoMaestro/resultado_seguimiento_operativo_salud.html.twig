@@ -15,9 +15,10 @@
 				  <tbody>
 				  	{% for d in datos %}
 				  		{% set id_cerrado = (d.estado_reporte)?d.estado_reporte:-1 %}
+				  		{% set periodo = (d.periodo==1)?'':'Semestre '~((d.periodo|number_format)-1) %}
 				    <tr class="tr-estado-reporte-{{d.estado_reporte}}">
 				      <th scope="row">{{loop.index}}</th>
-				      <td>{{d.id}}</td>
+				      <td>{{d.id}} {{periodo}}</td>
 				      <td>{{d.ue}}</td>
 				      <td class="td-estado-operativo-detalle">{{(d.estado_reporte)?'Cerrado':'Abierto'}}</td>
 				      <td class="text-center td-estado-operativo">

@@ -1548,13 +1548,14 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
           group by cod_dis,des_dis,TARGET,institucioneducativa,dependencia
         ";
 
-        $query ="
+        $queryRegular ="
             select 
             TARGET AS institucioneducativa_id,institucioneducativa,(
             select id 
             from institucioneducativa_control_operativo_menus 
             where gestion_tipo_id= ? and institucioneducativa_id = TARGET and  estado_menu='11'
-            ) as estado_reporte
+            ) as estado_reporte,
+            1 as periodo
             from 
             (
               select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as TARGET,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id) as dependencia
@@ -1569,9 +1570,41 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
           group by cod_dis,des_dis,TARGET,institucioneducativa,dependencia
         ";
 
+        $queryAlternativa="
+            select 
+            c.id AS institucioneducativa_id,
+            c.institucioneducativa,
+            f.id as estado_reporte,
+            f.periodo_tipo_id as periodo
+
+            from institucioneducativa c 
+            inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id 
+            inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id
+            left join institucioneducativa_control_operativo_menus f on c.id = f.institucioneducativa_id
+            where 
+            f.gestion_tipo_id= ? 
+            and c.institucioneducativa_tipo_id=?
+            and c.estadoinstitucion_tipo_id=10 
+            and c.institucioneducativa_acreditacion_tipo_id=1 
+            and e.codigo = ?
+            and substring(e.codigo,1,1) = ?
+            and f.estado_menu='11'
+            order by c.id  asc
+        ";
+
+
         $sysName = $this->session->get('sysname');
         $sysName = strtolower(filter_var($sysName , FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH));
         $ieTipo=$this->getTipoUE($sysName);
+
+        if($ieTipo==2)
+        {
+            $query=$queryAlternativa;
+        }
+        else
+        {
+            $query=$queryRegular;
+        }
 
         $stmt = $db->prepare($query);
         //$params = array($gestion,$gestion,$gestion,$gestion,$distrito,$departamento);
@@ -1587,7 +1620,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                     'id' =>$u['institucioneducativa_id'],
                     'ue'=>$u['institucioneducativa'],
                     'estado_reporte'=>$u['estado_reporte'],
-
+                    'periodo'=>$u['periodo'],
                 );
             }
         }
