@@ -65,13 +65,13 @@
                     <div class="panel-body">
                         {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form-horizontal'} } ) }}
                             <div class="form-group">
-                                <label for="form_tieneAcceso" class="col-md-6 control-label"><strong>¿La Institución Educativa tiene acceso a internet?:</strong></label>
+                                <label for="form_tieneAcceso" class="col-md-6 control-label"><strong>¿La Institución Educativa cuenta con cobertura de internet?:</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.tieneAcceso) }}
                                 </div>
                             </div>
-                            <div class="form-group" id="proveedorDiv">
-                                <label for="form_proveedor" class="col-sm-6 control-label"><strong>Proveedor (puede seleccionar más de una opción):</strong></label>
+                            <div class="form-group" id="proveedorDiv" style="display: none;">
+                                <label for="form_proveedor" class="col-sm-6 control-label"><strong>¿A qué proveedor o proveedores de internet accede la Institución Educativa? (seleccione una o más opciones):</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.proveedor) }}
                                     <div class="help-block with-errors"></div>
@@ -93,7 +93,6 @@
     {{ parent() }}
     <script>
         $(document).ready(function(){
-            $("#proveedorDiv").hide();
             $(".js-example-basic-multiple").select2({
                 tags: "true",
                 placeholder: "Seleccione una opción...",
