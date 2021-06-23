@@ -18,7 +18,7 @@
         </div>
     </div>
     
-    <div class="body-content animated fadeIn">
+    <div class="body-content animated fadeIn">    
         <div class="row">
             <div class="col-md-12">
                 {% for flashMessage in app.session.flashbag.get('noSearch') %}
@@ -43,6 +43,9 @@
                     <div class="alert alert-danger" role="alert">
                         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                         <i class="fa fa-warning"></i> {{ flashMessage }}
+                        {% if app.request.get('iaiid') is defined %}
+                            <a href="#" onclick="verDatos({{app.request.get('iaiid')}})" class="btn btn-link"><i class="fa fa-fw fa-eye"></i> Ver</a>
+                        {% endif %}
                     </div>
                 {% endfor %}
             </div>
@@ -76,9 +79,51 @@
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
+    <div class="modal modal-flex fade" id="modalDatos" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Datos reportados por la Institución Educativa</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idDatos"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <script>
+        var verDatos = function(iaiid) {
+            $('#modalDatos').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('ie_acceso_internet_ver_datos', {'iaiid': iaiid}),
+                beforeSend: function () {
+                    $("#idDatos").empty();
+                    $("#idDatos").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#idDatos").empty();
+                    $("#idDatos").html(data);
+                },
+                statusCode: {
+                    500: function () {
+                        $('#idDatos').empty();
+                        $('#idDatos').html('Ocurrió un error interno.');
+                    },
+                    404: function () {
+                        $('#idDatos').empty();
+                        $('#idDatos').html('Ocurrió un error interno.');
+                    }
+                }
+            });
+        };
+    </script>
 {% endblock %}
-

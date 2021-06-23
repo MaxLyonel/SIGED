@@ -30,6 +30,31 @@ class InstitucioneducativaAccesoInternet
     private $fechaRegistro;
 
     /**
+     * @var boolean
+     */
+    private $tieneTv;
+
+    /**
+     * @var boolean
+     */
+    private $tieneEmergenciaSanitaria;
+
+    /**
+     * @var boolean
+     */
+    private $tieneBioseguridad;
+
+    /**
+     * @var string
+     */
+    private $planEmergenciaSanitaria;
+
+    /**
+     * @var string
+     */
+    private $protocoloBioseguridad;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\Institucioneducativa
      */
     private $institucioneducativa;
@@ -117,6 +142,121 @@ class InstitucioneducativaAccesoInternet
     public function getFechaRegistro()
     {
         return $this->fechaRegistro;
+    }
+
+    /**
+     * Set tieneTv
+     *
+     * @param boolean $tieneTv
+     * @return InstitucioneducativaAccesoInternet
+     */
+    public function setTieneTv($tieneTv)
+    {
+        $this->tieneTv = $tieneTv;
+    
+        return $this;
+    }
+
+    /**
+     * Get tieneTv
+     *
+     * @return boolean 
+     */
+    public function getTieneTv()
+    {
+        return $this->tieneTv;
+    }
+
+    /**
+     * Set tieneEmergenciaSanitaria
+     *
+     * @param boolean $tieneEmergenciaSanitaria
+     * @return InstitucioneducativaAccesoInternet
+     */
+    public function setTieneEmergenciaSanitaria($tieneEmergenciaSanitaria)
+    {
+        $this->tieneEmergenciaSanitaria = $tieneEmergenciaSanitaria;
+    
+        return $this;
+    }
+
+    /**
+     * Get tieneEmergenciaSanitaria
+     *
+     * @return boolean 
+     */
+    public function getTieneEmergenciaSanitaria()
+    {
+        return $this->tieneEmergenciaSanitaria;
+    }
+
+    /**
+     * Set tieneBioseguridad
+     *
+     * @param boolean $tieneBioseguridad
+     * @return InstitucioneducativaAccesoInternet
+     */
+    public function setTieneBioseguridad($tieneBioseguridad)
+    {
+        $this->tieneBioseguridad = $tieneBioseguridad;
+    
+        return $this;
+    }
+
+    /**
+     * Get tieneBioseguridad
+     *
+     * @return boolean 
+     */
+    public function getTieneBioseguridad()
+    {
+        return $this->tieneBioseguridad;
+    }
+
+    /**
+     * Set planEmergenciaSanitaria
+     *
+     * @param string $planEmergenciaSanitaria
+     * @return InstitucioneducativaAccesoInternet
+     */
+    public function setPlanEmergenciaSanitaria($planEmergenciaSanitaria)
+    {
+        $this->planEmergenciaSanitaria = $planEmergenciaSanitaria;
+    
+        return $this;
+    }
+
+    /**
+     * Get planEmergenciaSanitaria
+     *
+     * @return string 
+     */
+    public function getPlanEmergenciaSanitaria()
+    {
+        return $this->planEmergenciaSanitaria;
+    }
+
+    /**
+     * Set protocoloBioseguridad
+     *
+     * @param string $protocoloBioseguridad
+     * @return InstitucioneducativaAccesoInternet
+     */
+    public function setProtocoloBioseguridad($protocoloBioseguridad)
+    {
+        $this->protocoloBioseguridad = $protocoloBioseguridad;
+    
+        return $this;
+    }
+
+    /**
+     * Get protocoloBioseguridad
+     *
+     * @return string 
+     */
+    public function getProtocoloBioseguridad()
+    {
+        return $this->protocoloBioseguridad;
     }
 
     /**

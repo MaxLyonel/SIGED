@@ -34,6 +34,38 @@ Sie\AppWebBundle\Entity\InstitucioneducativaAccesoInternet:
             nullable: true
             comment: ''
             column: fecha_registro
+        tieneTv:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: tiene_tv
+        tieneEmergenciaSanitaria:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: tiene_emergencia_sanitaria
+        tieneBioseguridad:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: tiene_bioseguridad
+        planEmergenciaSanitaria:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: plan_emergencia_sanitaria
+        protocoloBioseguridad:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: protocolo_bioseguridad
     manyToOne:
         institucioneducativa:
             targetEntity: Institucioneducativa

@@ -1,0 +1,57 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaAccesoTvDatos:
+    type: entity
+    table: institucioneducativa_acceso_tv_datos
+    indexes:
+        IDX_DF9C265C3AB163FE:
+            columns:
+                - institucioneducativa_id
+        IDX_DF9C265C179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_DF9C265C7B9DDA66:
+            columns:
+                - acceso_canaltv_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+    manyToOne:
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        accesoCanaltvTipo:
+            targetEntity: AccesoCanaltvTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                acceso_canaltv_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

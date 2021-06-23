@@ -20,15 +20,54 @@
         <td>
             {% if iai.tieneInternet %}
                 <p class="text-success"><strong>Sí, la Institución Educativa cuenta con acceso a internet.</strong></p>
-                {% if datos %}
+                {% if internetDatos %}
                     <ul>
-                        {% for dato in datos %}
+                        {% for dato in internetDatos %}
                             <li>{{ dato.accesoInternetProveedorTipo.proveedor }}</li>
                         {% endfor %}
                     </ul>
                 {% endif %}
             {% else %}
                 <p class="text-danger"><strong>La Institución Educativa no cuenta con acceso a internet.</strong></p>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>¿La Institución Educativa tiene acceso a TV?:</th>
+        <td>
+            {% if iai.tieneInternet %}
+                <p class="text-success"><strong>Sí, la Institución Educativa cuenta con acceso a TV.</strong></p>
+                {% if tvDatos %}
+                    <ul>
+                        {% for dato in tvDatos %}
+                            <li>{{ dato.accesoCanaltvTipo.canaltv }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% else %}
+                <p class="text-danger"><strong>La Institución Educativa no cuenta con acceso a TV.</strong></p>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>¿La Institución Educativa tiene plan de emergencia sanitaria?:</th>
+        <td>
+            {% if iai.tieneEmergenciaSanitaria %}
+                <p class="text-success"><strong>Sí, la Institución Educativa cuenta con plan de emergencia sanitaria.</strong></p>
+                <p>Adjunto: <a href="/uploads/archivos/cobertura/{{institucion.id}}/{{iai.planEmergenciaSanitaria}}" target="_blank"><i class="fa fa-fw fa-2x fa-file-pdf-o"></i></a></p>
+            {% else %}
+                <p class="text-danger"><strong>La Institución Educativa no cuenta con plan de emergencia sanitaria.</strong></p>
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <th>¿La Institución Educativa tiene protocolo de bioseguridad?:</th>
+        <td>
+            {% if iai.tieneBioseguridad %}
+                <p class="text-success"><strong>Sí, la Institución Educativa cuenta con protocolo de bioseguridad.</strong></p>
+                <p>Adjunto: <a href="/uploads/archivos/cobertura/{{institucion.id}}/{{iai.protocoloBioseguridad}}" target="_blank"><i class="fa fa-fw fa-2x fa-file-pdf-o"></i></a></p>
+            {% else %}
+                <p class="text-danger"><strong>La Institución Educativa no cuenta con protocolo de bioseguridad.</strong></p>
             {% endif %}
         </td>
     </tr>
