@@ -151,6 +151,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
     private function getAreasCurso($inscripcionid) {
         $em = $this->getDoctrine()->getManager();
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
+        $areas = null;
 
         $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
         $query = $repository->createQueryBuilder('ic')
@@ -174,11 +175,13 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         foreach ($areasEstudiante as $key => $area) {
             $areasActuales[] = $area['atId'];
         }
-
+        
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
 
         $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
-        $query = $repository->createQueryBuilder('ic')
+
+        if($areasActuales) {
+            $query = $repository->createQueryBuilder('ic')
             ->select('ic.id icId, ico.id icoId,at2.id atId, at2.asignatura')
             ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ico', 'WITH', 'ico.insitucioneducativaCurso = ic.id')
             ->innerJoin('SieAppWebBundle:AsignaturaTipo', 'at2', 'WITH', 'ico.asignaturaTipo = at2.id')
@@ -187,7 +190,17 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             ->setParameter('institucioneducativaCurso', $inscripcion->getInstitucioneducativaCurso()->getId())
             ->setParameter('areasActuales', $areasActuales)
             ->orderBy('at2.id')
+            ->getQuery();            
+        } else {
+            $query = $repository->createQueryBuilder('ic')
+            ->select('ic.id icId, ico.id icoId,at2.id atId, at2.asignatura')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ico', 'WITH', 'ico.insitucioneducativaCurso = ic.id')
+            ->innerJoin('SieAppWebBundle:AsignaturaTipo', 'at2', 'WITH', 'ico.asignaturaTipo = at2.id')
+            ->where('ic.id = :institucioneducativaCurso')
+            ->setParameter('institucioneducativaCurso', $inscripcion->getInstitucioneducativaCurso()->getId())
+            ->orderBy('at2.id')
             ->getQuery();
+        }
 
         $areas = $query->getResult();
 
@@ -453,6 +466,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
                     'Academico',
                     json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ )));
             }
+            
             $evaluarEstadomatricula = $this->evaluarEstadomatricula($inscripcionid);
             $em->getConnection()->commit();
         } catch (Exception $ex) {

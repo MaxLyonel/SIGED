@@ -94,7 +94,7 @@
                         {% if deceso|length == 0 %}
                           <div class="container-fliud">
                             {% for e in estadosSalud %}
-                            {% set deceso = (e.id==3)?' div-deceso ':' div-no-deceso ' %}
+                            {% set deceso = (e.id==3 or e.id==10)?' div-deceso ':' div-no-deceso ' %}
                             <div class="row shadow {{deceso}}" style="margin-bottom:0.5rem;">
                               <div class="col-md-5">
                                 <div class="checkbox" style="margin:3px 0 4px 0">
@@ -202,6 +202,32 @@
         format: 'dd-mm-yyyy',
         language: 'es',
     }).datepicker('setDate',(new Date({{gestion}},7-1,7)));
+
+    var tmpDate =new Date();
+    var tmpYearActual=tmpDate.getFullYear();
+
+    var tmpYear= {{gestion}} ;
+    var tmpMesInicio = tmpDate.getMonth();
+    var tmpDiaInicio = tmpDate.getDate();
+
+    var tmpMesFin = tmpDate.getMonth();
+    var tmpDiaFin = tmpDate.getDate();
+
+    if(tmpYear<tmpYearActual)
+    {
+      tmpMesInicio = 3;
+      tmpDiaInicio = 1;
+
+      tmpMesFin = 12-1;
+      tmpDiaFin = 31;
+    }
+    else
+    {
+      tmpMesInicio = 1;
+      tmpDiaInicio = 1;
+    }
+    $('.sandbox-container input').datepicker().datepicker('setStartDate',new Date(tmpYear,(tmpMesInicio-1),tmpDiaInicio));
+    $('.sandbox-container input').datepicker().datepicker('setEndDate',new Date(tmpYear,(tmpMesFin),tmpDiaFin));
 
     $('.checkbox-estado').on('change',function (e)
     {
@@ -312,7 +338,7 @@
       {
         $.each(tmpNoDeceso, function(i, item)
         {
-          if(estado==3)//deceso
+          if(estado==3 || estado==10)//deceso
            $(item).fadeOut();
           else
            $(item).fadeIn();
