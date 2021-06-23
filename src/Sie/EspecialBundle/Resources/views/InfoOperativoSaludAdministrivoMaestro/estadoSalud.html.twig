@@ -205,16 +205,29 @@
 
     var tmpDate =new Date();
     var tmpYearActual=tmpDate.getFullYear();
+
     var tmpYear= {{gestion}} ;
-    var tmpAnio = tmpDate.getFullYear();
-    var tmpMes = tmpDate.getMonth();
-    var tmpDia = tmpDate.getDate();
+    var tmpMesInicio = tmpDate.getMonth();
+    var tmpDiaInicio = tmpDate.getDate();
+
+    var tmpMesFin = tmpDate.getMonth();
+    var tmpDiaFin = tmpDate.getDate();
+
     if(tmpYear<tmpYearActual)
     {
-      tmpAnio=tmpYearActual;
+      tmpMesInicio = 3;
+      tmpDiaInicio = 1;
+
+      tmpMesFin = 12-1;
+      tmpDiaFin = 31;
     }
-    $('.sandbox-container input').datepicker().datepicker('setStartDate',new Date(2020,(3-1),1));
-    $('.sandbox-container input').datepicker().datepicker('setEndDate',new Date(tmpAnio,tmpMes,tmpDia));
+    else
+    {
+      tmpMesInicio = 1;
+      tmpDiaInicio = 1;
+    }
+    $('.sandbox-container input').datepicker().datepicker('setStartDate',new Date(tmpYear,(tmpMesInicio-1),tmpDiaInicio));
+    $('.sandbox-container input').datepicker().datepicker('setEndDate',new Date(tmpYear,(tmpMesFin),tmpDiaFin));
 
     $('.checkbox-estado').on('change',function (e)
     {
