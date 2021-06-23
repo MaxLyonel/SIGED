@@ -1500,7 +1500,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         return $ue;
     }
 
-    private function getUnidadesEducativasDetalleReporte($departamento,$distrito,$gestion)
+    private function getUnidadesEducativasDetalle($departamento,$distrito,$gestion)
     {
         $operadorDepartamento=($departamento==-1)?' <> ':' = ';
         $operadorDistrito=($distrito==-1)?' <> ':' = ';
@@ -1524,6 +1524,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                         and mi.gestion_tipo_id = ?
                         and mi.cargo_tipo_id  not in (0,70)
             ) as administrativos,
+
             (
                         --select CASE WHEN count(mi.id) = count(estadosalud) THEN 1 WHEN count(mi.id) <> count(estadosalud) THEN 0 END maestros--p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, mi.esVigenteAdministrativo, ft.formacion, est.estadosalud
                         select  count(est.estadosalud)||' / '||count(mi.id) maestros
@@ -1536,6 +1537,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                         and mi.gestion_tipo_id = ?
                         and mi.cargo_tipo_id  in (0,70)
             ) as maestros,
+
             (
                         select count(est.estadosalud)||' / '||count(distinct mi.id) as resultado
                         from maestro_inscripcion mi
@@ -1547,6 +1549,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                         and mi.gestion_tipo_id = ?
                         and mi.cargo_tipo_id  not in (0,70)
             ) administrativos_primera_vacuna,
+
             (
                         select count(est.estadosalud)||' / '||count(distinct mi.id) as resultado
                         from maestro_inscripcion mi
@@ -1558,6 +1561,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                         and mi.gestion_tipo_id = ?
                         and mi.cargo_tipo_id  not in (0,70)
             ) administrativos_segunda_vacuna,
+
             (
                         select count(est.estadosalud)||' / '||count(distinct mi.id) as resultado
                         from maestro_inscripcion mi
@@ -1568,7 +1572,8 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                         where mi.institucioneducativa_id = TARGET
                         and mi.gestion_tipo_id = ?
                         and mi.cargo_tipo_id  in (0,70)
-            ) maestros_primera_vacuna
+            ) maestros_primera_vacuna,
+
             (
                         select count(est.estadosalud)||' / '||count(distinct mi.id) as resultado
                         from maestro_inscripcion mi
@@ -1580,6 +1585,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                         and mi.gestion_tipo_id = ?
                         and mi.cargo_tipo_id  in (0,70)
             ) maestros_segunda_vacuna
+
             from 
             (
               select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as TARGET,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id) as dependencia
