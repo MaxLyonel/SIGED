@@ -156,10 +156,10 @@
                                         {% endif %}
 
 
-                                        {% if regla.id == 17 %}{# Validacion para la regla "Grados sin desayuno escolar respecto a la gestion 2014" #}
+                                        {% if regla.id == 17 %}<!-- Validacion para la regla "Grados sin desayuno escolar respecto a la gestion 2014" -->
                                             <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-desayuno',{{detalle.id}})">Solucionar observación</button>
                                         {% endif %}
-                                        {% if regla.id == 19 %}{# Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" #}
+                                        {% if regla.id == 19 %}<!-- Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" -->
                                             {% set TIPO_REGLA = 19 %}
                                             {% set titulo = 'LENGUA EN LOS PROCESOS PEDAGÓGICOS' %}
                                             {% set idioma1 = '1. Lengua del proceso pedagógico (primera lengua)' %}
@@ -167,7 +167,7 @@
                                             {% set idioma3 = '3. Lengua extranjera de apoyo en los procesos pedagógicos' %}
                                             <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
                                         {% endif %}
-                                        {% if regla.id == 18 %}{# Inconsistencias respecto a Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 " #}
+                                        {% if regla.id == 18 %}<!-- Inconsistencias respecto a Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 " -->
                                             {% set TIPO_REGLA = 18 %}
                                             {% set titulo = 'PRESENCIA DE LENGUAS EN EL AMBITO ESCOLAR' %}
                                             {% set idioma1 = '1. Lengua más hablada (más frecuente)' %}
@@ -287,25 +287,25 @@
                                         {% endif %}
 
 
-                                        {% if regla.id == 17 %}{# Validacion para la regla "Grados sin desayuno escolar respecto a la gestion 2014" #}
-                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-desayuno',{{detalle.id}})">Solucionar observación</button>
+                                        {# if regla.id == 17 %}<!-- Validacion para la regla "Grados sin desayuno escolar respecto a la gestion 2014" -->
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-desayuno',{{detalle.id}})">Solucionar observación-17</button>
                                         {% endif %}
-                                        {% if regla.id == 19 %}{# Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" #}
+                                        {% if regla.id == 19 %}<!-- Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" -->
                                             {% set TIPO_REGLA = 19 %}
                                             {% set titulo = 'LENGUA EN LOS PROCESOS PEDAGÓGICOS' %}
                                             {% set idioma1 = '1. Lengua del proceso pedagógico (primera lengua)' %}
                                             {% set idioma2 = '2. Lengua del proceso pedagógico (segunda lengua)' %}
                                             {% set idioma3 = '3. Lengua extranjera de apoyo en los procesos pedagógicos' %}
-                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación-19</button>
                                         {% endif %}
-                                        {% if regla.id == 18 %}{# Inconsistencias respecto a Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 " #}
+                                        {% if regla.id == 18 %}<!-- Inconsistencias respecto a Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 " -->
                                             {% set TIPO_REGLA = 18 %}
                                             {% set titulo = 'PRESENCIA DE LENGUAS EN EL AMBITO ESCOLAR' %}
                                             {% set idioma1 = '1. Lengua más hablada (más frecuente)' %}
                                             {% set idioma2 = '2. Lengua regularmente hablada (menos frecuente)' %}
                                             {% set idioma3 = '3. Lengua menos hablada (poco frecuente)' %}
-                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
-                                        {% endif %}
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación-18</button>
+                                        {% endif #}
                                     {% endif %}
                                     </td>
                                 </tr>
