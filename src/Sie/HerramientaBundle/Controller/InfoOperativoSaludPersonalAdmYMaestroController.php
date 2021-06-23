@@ -489,7 +489,31 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                 ->getQuery();
             $estadosSalud = $query->getResult();
             */
-            $estadosSalud = $em->getRepository('SieAppWebBundle:EstadosaludTipo')->findBy(array('esactivo' => 't'));
+           //Esto para la gestion 2021
+            //Esto para la gestion 2020
+
+            if($request_gestion==2021)
+            {
+                $estadosSalud = $em->getRepository('SieAppWebBundle:EstadosaludTipo')->findBy(array('esactivo' => 't'));
+            }
+            else if($request_gestion==2020)
+            {
+                $query = '
+                        SELECT *
+                        from estadosalud_tipo
+                        where 
+                        esactivo = ?
+                        and id not in (5,6,7,8,9)
+                ';
+                $stmt = $db->prepare($query);
+                $params = array(true);
+                $stmt->execute($params);
+                $estadosSalud=$stmt->fetchAll();
+            }
+            else
+            {
+                $estadosSalud=null;
+            }
 
             if($estadosSalud==null)
             {
@@ -1476,7 +1500,7 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
         return $ue;
     }
 
-    private function getUnidadesEducativasDetalle($departamento,$distrito,$gestion)
+    private function getUnidadesEducativasDetalleReporte($departamento,$distrito,$gestion)
     {
         $operadorDepartamento=($departamento==-1)?' <> ':' = ';
         $operadorDistrito=($distrito==-1)?' <> ':' = ';
@@ -1517,23 +1541,45 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
                         from maestro_inscripcion mi
                         inner Join persona p on mi.persona_id = p.id
                         inner Join formacion_tipo ft on mi.formacion_tipo_id = ft.id
-                        left Join (SELECT * from maestro_inscripcion_estadosalud where estadosalud_tipo_id >=5 )  mies on mi.id =mies.maestro_inscripcion_id
+                        left Join (SELECT * from maestro_inscripcion_estadosalud where estadosalud_tipo_id =5 )  mies on mi.id =mies.maestro_inscripcion_id
                         left Join estadosalud_tipo est  on mies.estadosalud_tipo_id = est.id
                         where mi.institucioneducativa_id = TARGET
                         and mi.gestion_tipo_id = ?
                         and mi.cargo_tipo_id  not in (0,70)
-            ) administrativos_vacunados,
+            ) administrativos_primera_vacuna,
             (
                         select count(est.estadosalud)||' / '||count(distinct mi.id) as resultado
                         from maestro_inscripcion mi
                         inner Join persona p on mi.persona_id = p.id
                         inner Join formacion_tipo ft on mi.formacion_tipo_id = ft.id
-                        left Join (SELECT * from maestro_inscripcion_estadosalud where estadosalud_tipo_id >=5)  mies on mi.id =mies.maestro_inscripcion_id
+                        left Join (SELECT * from maestro_inscripcion_estadosalud where estadosalud_tipo_id =6 )  mies on mi.id =mies.maestro_inscripcion_id
+                        left Join estadosalud_tipo est  on mies.estadosalud_tipo_id = est.id
+                        where mi.institucioneducativa_id = TARGET
+                        and mi.gestion_tipo_id = ?
+                        and mi.cargo_tipo_id  not in (0,70)
+            ) administrativos_segunda_vacuna,
+            (
+                        select count(est.estadosalud)||' / '||count(distinct mi.id) as resultado
+                        from maestro_inscripcion mi
+                        inner Join persona p on mi.persona_id = p.id
+                        inner Join formacion_tipo ft on mi.formacion_tipo_id = ft.id
+                        left Join (SELECT * from maestro_inscripcion_estadosalud where estadosalud_tipo_id =5)  mies on mi.id =mies.maestro_inscripcion_id
                         left Join estadosalud_tipo est  on mies.estadosalud_tipo_id = est.id
                         where mi.institucioneducativa_id = TARGET
                         and mi.gestion_tipo_id = ?
                         and mi.cargo_tipo_id  in (0,70)
-            ) maestros_vacunados
+            ) maestros_primera_vacuna
+            (
+                        select count(est.estadosalud)||' / '||count(distinct mi.id) as resultado
+                        from maestro_inscripcion mi
+                        inner Join persona p on mi.persona_id = p.id
+                        inner Join formacion_tipo ft on mi.formacion_tipo_id = ft.id
+                        left Join (SELECT * from maestro_inscripcion_estadosalud where estadosalud_tipo_id =6)  mies on mi.id =mies.maestro_inscripcion_id
+                        left Join estadosalud_tipo est  on mies.estadosalud_tipo_id = est.id
+                        where mi.institucioneducativa_id = TARGET
+                        and mi.gestion_tipo_id = ?
+                        and mi.cargo_tipo_id  in (0,70)
+            ) maestros_segunda_vacuna
             from 
             (
               select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as TARGET,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id) as dependencia
