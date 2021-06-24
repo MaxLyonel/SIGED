@@ -1632,16 +1632,14 @@ class InfoOperativoSaludPersonalAdmYMaestroController extends Controller {
             from institucioneducativa c 
             inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id 
             inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id
-            left join institucioneducativa_control_operativo_menus f on c.id = f.institucioneducativa_id
+            left join (SELECT  *from institucioneducativa_control_operativo_menus where estado_menu=11 and gestion_tipo_id= ?) f on c.id = f.institucioneducativa_id
             where 
-            f.gestion_tipo_id= ? 
-            and c.institucioneducativa_tipo_id=?
+            c.institucioneducativa_tipo_id=?
             and c.estadoinstitucion_tipo_id=10 
             and c.institucioneducativa_acreditacion_tipo_id=1 
             and e.codigo = ?
             and substring(e.codigo,1,1) = ?
-            and f.estado_menu='11'
-            order by c.id  asc
+            order by c.id  asc, f.periodo_tipo_id asc
         ";
 
 
