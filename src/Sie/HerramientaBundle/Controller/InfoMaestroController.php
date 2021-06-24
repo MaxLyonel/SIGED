@@ -138,13 +138,9 @@ class InfoMaestroController extends Controller {
 //                ->getQuery();
 
         $query = $repository->createQueryBuilder('mi')
-                ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, mi.esVigenteAdministrativo, ft.formacion, est.estadosalud')
+                ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, mi.esVigenteAdministrativo, ft.formacion')
                 ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'mi.persona = p.id')
                 ->innerJoin('SieAppWebBundle:FormacionTipo', 'ft', 'WITH', 'mi.formacionTipo = ft.id')
-
-                ->leftJoin('SieAppWebBundle:MaestroInscripcionEstadosalud', 'mies', 'WITH', 'mi.id =mies.maestroInscripcion')
-                ->leftJoin('SieAppWebBundle:EstadoSaludTipo', 'est', 'WITH', 'mies.estadosaludTipo = est.id')
-
                 ->where('mi.institucioneducativa = :idInstitucion')
                 ->andWhere('mi.gestionTipo = :gestion')
                 ->andWhere('mi.cargoTipo IN (:cargos)')
@@ -158,7 +154,6 @@ class InfoMaestroController extends Controller {
                 ->getQuery();
 
         $maestro = $query->getResult();
-
 
         $query = $repository->createQueryBuilder('mi')
             ->select('p.id perId, p.carnet, p.paterno, p.materno, p.nombre, mi.id miId, mi.fechaRegistro, mi.fechaModificacion, ft.formacion')
@@ -267,9 +262,7 @@ class InfoMaestroController extends Controller {
                 'maestro_no_idioma' => $arrayNoIdioma,
                 'maestro_no_genero' => $arrayNoGenero,
                 'activar_acciones' => $activar_acciones,
-                'habilitar_ddjj' => $habilitar_ddjj,
-
-                'operativoSalud' => $this->verificarEstadoOperativoSaludo($institucion->getId(),$gestion,1)
+                'habilitar_ddjj' => $habilitar_ddjj
         ));
     }
 
@@ -1095,25 +1088,6 @@ class InfoMaestroController extends Controller {
             $this->get('session')->getFlashBag()->add('eliminarError', 'Error en la habilitación del operativo');
             return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
         }
-    }
-
-    public function verificarEstadoOperativoSaludo($request_sie,$request_gestion,$request_tipo)
-    {
-        //1 abierto
-        //0 cerrado
-        $em = $this->getDoctrine()->getManager();
-        $estadoOperativoSalud=true;
-        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request_sie);
-        if($institucioneducativa)
-        {
-            $operativoSalud = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa' => $institucioneducativa,'gestionTipoId'=>$request_gestion,'estadoMenu'=>$request_tipo));
-
-            if($operativoSalud)
-            {
-                $estadoOperativoSalud=false;
-            }
-        }
-        return $estadoOperativoSalud;
     }
 
 }
