@@ -1027,7 +1027,7 @@
         var _btn_submit='btn-resolver-inconsistencia';
         $.ajax({
                 type: 'POST',
-                url: '{{url("ccalidad_resolver_inconsistencias_grados_sin_desayuno")}}',
+                url: '{{path("ccalidad_resolver_inconsistencias_grados_sin_desayuno")}}',
                 data: form.serialize(),
                 {#
                 /*dataType: 'json',
@@ -1118,7 +1118,7 @@
         var _btn_submit='btn-resolver-inconsistencia-idioma-aula';
         $.ajax({
                 type: 'POST',
-                url: '{{url("ccalidad_resolver_inconsistencias_grados_sin_idioma_ensenanza_aula")}}',
+                url: '{{path("ccalidad_resolver_inconsistencias_grados_sin_idioma_ensenanza_aula")}}',
                 data: form.serialize(),
                 {#
                 /*dataType: 'json',
