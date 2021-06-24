@@ -1,27 +1,7 @@
 {% extends 'layoutHerramienta.html.twig' %}
 
 {% block contentoption %}
-    <style type="text/css">
-      @keyframes parapadeando
-      {
-        0%
-        {
-          background-color: #dc3545;
-          color:#ffffff;
-        }
-        100%
-        {
-          background-color: #ffffff;
-          color:#dc3545;
-        }
-      }
-      .parpadeo
-      {
-        animation: parapadeando 1.5s infinite;
-        border: 1px solid #dc3545;
-        border-radius: 50px;
-      }
-    </style>
+
     <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Recibidos <span>Solicitudes usuario</span></h2>
@@ -141,18 +121,6 @@
                                         </form>
                                     </div>
                                 {% endif %}
-
-                                {# if operativoSalud %}
-                                    <br>
-                                    <div class="pull-right div-operativo-salud" style="margin-top:1rem">
-                                        <form method ="POST" action="#" name="form" id="form-end-requests" style="display:inline-block" onsubmit="finalizarOperativoSalud(this); return false;">
-                                              <input type="hidden" id="request_sie" name="request_sie" value="{{institucion.id}}">
-                                              <input type="hidden" id="request_gestion" name="request_gestion" value="{{gestion}}">
-                                              <input type="hidden" id="request_tipo" name="request_tipo" value="1">
-                                              <input type="submit" class="btn btn-md btn-lilac" value="Finalizar operativo Estado Salud" onclick="return confirm('¿Está segura/o de continuar? Recuerde que posteriormente no podrá realizar más cambios hasta el siguiente operativo.')">
-                                        </form>
-                                    </div>
-                                {% endif #}
                             </div>
                             <div class="callout callout-warning">
                                 <strong>Recuerde que:</strong><br />
@@ -196,7 +164,6 @@
                                                 <th>Formación</th>
                                                 <th>Fecha Registro</th>
                                                 <th>Fecha Modificación</th>
-                                                <th>Salud</th>
                                                 <th>Observación</th>
                                                 {% if app.session.get('roluser') != 20 %}
                                                     <th>Acciones</th>
@@ -204,7 +171,7 @@
                                                 {% endif %}
                                             </tr>
                                         </thead>
-                                        <tbody class='tbody-data'>
+                                        <tbody>
                                             {% for maestro in maestro %}
                                                 <tr {% if maestro.perId in maestro_no_idioma|keys or maestro.perId in maestro_no_genero|keys %}class="danger text-danger"{% endif %}>
                                                     <td data-title="N°">{{ loop.index }}</td>
@@ -215,9 +182,6 @@
                                                     <td data-title="Formación">{{ maestro.formacion }}</td>
                                                     <td data-title="FechReg">{% if maestro.fechaRegistro %}{{ maestro.fechaRegistro|date('d-m-Y') }}{% else %}-{% endif %}</td>
                                                     <td data-title="FechMod">{% if maestro.fechaModificacion %}{{ maestro.fechaModificacion|date('d-m-Y') }}{% else %}-{% endif %}</td>
-
-                                                    <td data-title="EstadoSalud" id="salud_{{maestro.miId}}" >{{maestro.estadosalud}}</td>
-
                                                     <td data-title="Observacion" {% if maestro.perId in maestro_no_idioma|keys or maestro.perId in maestro_no_genero|keys %}class="text-danger"{% else %}class="text-success"{% endif %}>
                                                         {% if maestro.perId in maestro_no_idioma|keys %}<i class="fa fa-fw fa-warning" aria-hidden="true"></i>No tiene idiomas{% else %}<i class="fa fa-fw fa-check" aria-hidden="true"></i>(Idiomas) Correcto{% endif %}<br />
                                                         {% if maestro.perId in maestro_no_genero|keys %}<i class="fa fa-fw fa-warning" aria-hidden="true"></i>Corrija el género{% else %}<i class="fa fa-fw fa-check" aria-hidden="true"></i>(Género) Correcto{% endif %}
@@ -239,19 +203,9 @@
                                                                     <input type="hidden" name="idMaestroInscripcion" value="{{maestro.miId}}">
                                                                     <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');" id="eliminarD{{ loop.index }}" name="eliminarD{{ loop.index }}"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
                                                                 </form>
-
                                                             {% else %}
                                                                 -
                                                             {% endif %}
-
-                                                            {# if operativoSalud %}
-                                                                <div class="div-operativo-salud">
-                                                                    <button type="button" class="btn-link" onclick="editarEstadoSalud('{{maestro.miId}}'); return false;">
-                                                                        <span class="badge badge-danger parpadeo">Nuevo</span><br>
-                                                                        <i class="fa fa-edit text-danger"></i> Editar <br>estado de salud
-                                                                    </button>
-                                                                </div>
-                                                            {% endif #}
                                                         </td>
                                                         <td>
                                                         {% if activar_acciones and (app.session.get('lastOperativo') != 5) %}
@@ -308,148 +262,5 @@
             cont++;
         });
     }
-
-
-    var editarEstadoSalud = function (personaId)
-    {
-        $.ajax(
-        {
-            type: 'post',
-            data: ({personaId: personaId}),
-            url: "{{path('herramienta_info_personal_adm_editar_estadosalud')}}",
-            beforeSend: function ()
-            {
-                $('#salud_'+personaId).empty();
-                $('#salud_'+personaId).html('Cargando ...');
-            },
-            success: function (data)
-            {
-                $('#salud_'+personaId).empty();
-                $('#salud_'+personaId).html(data);
-            },
-            statusCode:
-            {
-                500: function ()
-                {
-                    $('#salud_'+id).html('Ocurrio un error, por favor vuelva a intentarlo');
-                },
-                404: function ()
-                {
-                    $('#salud_'+id).html('Ocurrio un error, por favor vuelva a intentarlo');
-                }
-            }
-        });
-    };
-
-    var sendRequest = function (_form,_id)
-    {
-        var form=$(_form).serialize();
-        var estado = $(_form).find('#request_estado_salud').val();
-        var id = $(_form).find('#request_inscription').val();
-        if(typeof(estado)=='undefined' || estado <=0 || isNaN(estado))
-        {
-            alert('Debe seleccionar un estado');
-            return;
-        }
-        if(typeof(id)=='undefined' || id <=0 || isNaN(id) )
-        {
-            alert('Ocurrio un error, por favor vuelva a intentarlo');
-            return;
-        }
-        if(typeof(_id)=='undefined' || _id <=0 || isNaN(_id) )
-        {
-            alert('Ocurrio un error, por favor vuelva a intentarlo');
-            return;
-        }
-        $.ajax(
-        {
-            type: 'post',
-            data: form,
-            url: "{{path('herramienta_info_personal_adm_actualizar_estadosalud')}}",
-            beforeSend: function ()
-            {
-                $('#salud_'+_id).empty();
-                $('#salud_'+_id).html('Actualizando ...');
-            },
-            success: function (data)
-            {
-                $('#salud_'+_id).empty();
-                $('#salud_'+_id).html(data.data);
-            },
-            statusCode:
-            {
-                500: function ()
-                {
-                    $('#salud_'+id).html('Ocurrio un error, por favor vuelva a intentarlo');
-                },
-                404: function ()
-                {
-                    $('#salud_'+id).html('Ocurrio un error, por favor vuelva a intentarlo');
-                }
-            }
-        });
-    }
-
-    var finalizarOperativoSalud =function(_form)
-    {
-        var form=$(_form).serialize();
-        var sie = $(_form).find('#request_sie').val();
-        var gestion = $(_form).find('#request_gestion').val();
-        var tipo = $(_form).find('#request_tipo').val();
-
-        if(typeof(sie)=='undefined' || sie <=0 || isNaN(sie))
-        {
-            alert('Ocurrio un error, por favor vuelva a intentarlo');
-            return;
-        }
-        if(typeof(gestion)=='undefined' || gestion <=0 || isNaN(gestion) )
-        {
-            alert('Ocurrio un error, por favor vuelva a intentarlo');
-            return;
-        }
-        if(typeof(tipo)=='undefined' || tipo !=1 || isNaN(tipo) )
-        {
-            alert('Ocurrio un error, por favor vuelva a intentarlo');
-            return;
-        }
-        $.ajax(
-        {
-            type: 'post',
-            data: form,
-            url: "{{path('herramienta_info_personal_adm_cerrarOperativo_estadosalud')}}",
-            beforeSend: function ()
-            {
-            },
-            success: function (data)
-            {
-                var status=data.status;
-                if(status==200)
-                {
-                    var contenido = $('.div-operativo-salud');
-                    $.each(contenido,function(i, item)
-                    {
-                        $(item).remove();
-                    });
-                }
-                else
-                {
-                    alert('Ocurrio un error, por favor vuelva a intentarlo');
-                }
-            },
-            statusCode:
-            {
-                500: function ()
-                {
-                    alert('Ocurrio un error, por favor vuelva a intentarlo');
-                },
-                404: function ()
-                {
-                    alert('Ocurrio un error, por favor vuelva a intentarlo');
-                }
-            }
-        });
-    }
-
-
     </script>
 {% endblock %}
