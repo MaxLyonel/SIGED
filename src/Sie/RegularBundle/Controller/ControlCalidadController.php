@@ -1217,9 +1217,9 @@ class ControlCalidadController extends Controller {
                             }
                             else // $request_tipo==18
                             {
-                                $curso->setIdiomaMasHabladoTipo($em->getRepository( $tmpIdioma1 ));
-                                $curso->setIdiomaRegHabladoTipo($em->getRepository( $tmpIdioma2 ));
-                                $curso->setIdiomaMenHabladoTipo($em->getRepository( $tmpIdioma3 ));
+                                $curso->setIdiomaMasHabladoTipo( $tmpIdioma1 );
+                                $curso->setIdiomaRegHabladoTipo( $tmpIdioma2 );
+                                $curso->setIdiomaMenHabladoTipo( $tmpIdioma3 );
                             }
 
                             //ahora cambiamos el estado de la observación
