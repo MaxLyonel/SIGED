@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\InstitucioneducativaAccesoInternet;
 use Sie\AppWebBundle\Entity\InstitucioneducativaAccesoInternetDatos;
+use Sie\AppWebBundle\Entity\InstitucioneducativaAccesoTvDatos;
 
 /**
  * InstitucioneducativaAccesoInternet Controller
@@ -83,7 +84,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
 
                 if($iai) {
                     $this->get('session')->getFlashBag()->add('newError', 'La Institución Educativa ya realizó el reporte de información.');
-                    return $this->redirect($this->generateUrl('ie_acceso_internet_index'));
+                    return $this->redirect($this->generateUrl('ie_acceso_internet_index', array('iaiid' => $iai->getId())));
                 }
 
                 return $this->render('SieHerramientaBundle:InstitucioneducativaAccesoInternet:result.html.twig', array(
@@ -110,7 +111,25 @@ class InstitucioneducativaAccesoInternetController extends Controller {
             ->add('gestion', 'hidden', array(
                 'data' => $gestion
             ))
-            ->add('tieneAcceso', 'choice', array(
+            ->add('tieneInternet', 'choice', array(
+                'required' => true,
+                'choices'=>array('1'=>'Si', '0'=>'No'),
+                'expanded'=>true,
+                'multiple'=>false
+            ))
+            ->add('tieneTv', 'choice', array(
+                'required' => true,
+                'choices'=>array('1'=>'Si', '0'=>'No'),
+                'expanded'=>true,
+                'multiple'=>false
+            ))
+            ->add('tieneEmergenciaSanitaria', 'choice', array(
+                'required' => true,
+                'choices'=>array('1'=>'Si', '0'=>'No'),
+                'expanded'=>true,
+                'multiple'=>false
+            ))
+            ->add('tieneBioseguridad', 'choice', array(
                 'required' => true,
                 'choices'=>array('1'=>'Si', '0'=>'No'),
                 'expanded'=>true,
@@ -124,6 +143,23 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 'property' => 'proveedor',
                 'empty_value' => 'Seleccionar...',
                 'attr' => array('class' => 'form-control js-example-basic-multiple', 'style'=>'width:100%')
+            ))
+            ->add('canaltv', 'entity', array(
+                'multiple' => true,
+                'required' => false,
+                'label' => false,
+                'class' => 'SieAppWebBundle:AccesoCanaltvTipo',
+                'property' => 'canaltv',
+                'empty_value' => 'Seleccionar...',
+                'attr' => array('class' => 'form-control js-example-basic-multiple', 'style'=>'width:100%')
+            ))
+            ->add('adjuntoEmergenciaSanitaria', 'file', array(
+                'attr' => array('title'=>"Adjuntar plan de emergencia sanitaria",'accept'=>"application/pdf,.doc,.docx",
+                'class'=>'form-control')
+            ))
+            ->add('adjuntoBioseguridad', 'file', array(
+                'attr' => array('title'=>"Adjuntar protocolo de bioseguridad",'accept'=>"application/pdf,.doc,.docx",
+                'class'=>'form-control')
             ))
             ->add('guardar', 'submit', array('label' => 'Guardar'))
             ->getForm();
@@ -143,20 +179,29 @@ class InstitucioneducativaAccesoInternetController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $form = $request->get('form');
-        
+        $form = $request->get('form');        
         $sie = $form['sie'];
         $gestionid = $form['gestion'];
-        $tieneAcceso = $form['tieneAcceso'];
-        if($tieneAcceso == '1') {
-            $proveedorArray = $form['proveedor'];
+        $tieneInternet = $form['tieneInternet'];
+        $tieneTv = $form['tieneTv'];
+        $tieneEmergenciaSanitaria = $form['tieneEmergenciaSanitaria'];
+        $tieneBioseguridad = $form['tieneBioseguridad'];
+
+        if($tieneInternet == '1') {
+            $internetArray = $form['proveedor'];
         } else {
-            $proveedorArray = [];
+            $internetArray = [];
+        }
+        
+        if($tieneTv == '1') {
+            $tvArray = $form['canaltv'];
+        } else {
+            $tvArray = [];
         }
 
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['sie']);
         $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($gestionid);
-        
+
         if($institucion) {
             $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
             $query->bindValue(':user_id', $this->session->get('userId'));
@@ -167,7 +212,8 @@ class InstitucioneducativaAccesoInternetController extends Controller {
 
             if ($aTuicion[0]['get_ue_tuicion']) {
                 $iai = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
-                $datos = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternetDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
+                $internetDatos = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternetDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
+                $tvDatos = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoTvDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
 
                 if($iai) {
                     if($iai->getEsactivo()) {
@@ -178,7 +224,12 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     $em->flush();
                 }
 
-                foreach ($datos as $key => $value) {
+                foreach ($internetDatos as $key => $value) {
+                    $em->remove($value);
+                    $em->flush();
+                }
+
+                foreach ($tvDatos as $key => $value) {
                     $em->remove($value);
                     $em->flush();
                 }
@@ -186,15 +237,58 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 $nuevoIAI = new InstitucioneducativaAccesoInternet();
                 $nuevoIAI->setInstitucioneducativa($institucion);
                 $nuevoIAI->setGestionTipo($gestion);
-                $nuevoIAI->setTieneInternet($tieneAcceso == '1' ? true : false);
+                $nuevoIAI->setTieneInternet($tieneInternet == '1' ? true : false);
+                $nuevoIAI->setTieneTv($tieneTv == '1' ? true : false);
+                $nuevoIAI->setTieneEmergenciaSanitaria($tieneEmergenciaSanitaria == '1' ? true : false);
+                $nuevoIAI->setTieneBioseguridad($tieneBioseguridad == '1' ? true : false);
                 $nuevoIAI->setEsactivo(false);
-                $nuevoIAI->setFechaRegistro(new \DateTime('now'));                    
+                $nuevoIAI->setFechaRegistro(new \DateTime('now'));
+
+                if($tieneEmergenciaSanitaria == '1') {
+                    $adjuntoEmergenciaSanitaria = $request->files->get('form')['adjuntoEmergenciaSanitaria'];
+                    if(!empty($adjuntoEmergenciaSanitaria)){
+                        $root_rue_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/cobertura/'.$sie;
+                        
+                        if (!file_exists($root_rue_path)) {
+                            mkdir($root_rue_path, 0777);
+                        }
+                        $destination_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/cobertura/'.$sie;
+                        
+                        if (!file_exists($destination_path)) {
+                            mkdir($destination_path, 0777);
+                        }
+                        $archivo = 'pes_'.$form['sie'].date('YmdHis').'.'.$adjuntoEmergenciaSanitaria->getClientOriginalExtension();
+                        $adjuntoEmergenciaSanitaria->move($destination_path, $archivo);
+                        
+                        $nuevoIAI->setPlanEmergenciaSanitaria($archivo);
+                    }
+                }
+
+                if($tieneBioseguridad == '1') {
+                    $adjuntoBioseguridad = $request->files->get('form')['adjuntoBioseguridad'];
+                    if(!empty($adjuntoBioseguridad)){
+                        $root_rue_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/cobertura/'.$sie;
+                        
+                        if (!file_exists($root_rue_path)) {
+                            mkdir($root_rue_path, 0777);
+                        }
+                        $destination_path = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/cobertura/'.$sie;
+                        
+                        if (!file_exists($destination_path)) {
+                            mkdir($destination_path, 0777);
+                        }
+                        $archivo = 'pb_'.$form['sie'].date('YmdHis').'.'.$adjuntoBioseguridad->getClientOriginalExtension();
+                        $adjuntoBioseguridad->move($destination_path, $archivo);
+                        
+                        $nuevoIAI->setProtocoloBioseguridad($archivo);
+                    }
+                }
+
                 $em->persist($nuevoIAI);
                 $em->flush();                
 
-                foreach ($proveedorArray as $key => $value) {
+                foreach ($internetArray as $key => $value) {
                     $proveedor = $em->getRepository('SieAppWebBundle:AccesoInternetProveedorTipo')->findOneById($value);
-
                     $nuevoIAID = new InstitucioneducativaAccesoInternetDatos();
                     $nuevoIAID->setInstitucioneducativa($institucion);
                     $nuevoIAID->setGestionTipo($gestion);
@@ -204,15 +298,28 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     $em->flush();
                 }
 
+                foreach ($tvArray as $key => $value) {
+                    $canaltv = $em->getRepository('SieAppWebBundle:AccesoCanaltvTipo')->findOneById($value);
+                    $nuevoIATD = new InstitucioneducativaAccesoTvDatos();
+                    $nuevoIATD->setInstitucioneducativa($institucion);
+                    $nuevoIATD->setGestionTipo($gestion);
+                    $nuevoIATD->setAccesoCanaltvTipo($canaltv);
+                    $nuevoIATD->setFechaRegistro(new \DateTime('now'));
+                    $em->persist($nuevoIATD);
+                    $em->flush();
+                }
+
                 $iai_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
-                $datos_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternetDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
-                
+                $internetDatos_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternetDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
+                $tvDatos_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoTvDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
+
                 $this->get('session')->getFlashBag()->add('newOk', 'Registro realizado satisfactoriamente.');
 
                 return $this->render('SieHerramientaBundle:InstitucioneducativaAccesoInternet:saved.html.twig', array(
                     'institucion' => $institucion,
                     'iai' => $iai_fin,
-                    'datos' => $datos_fin
+                    'internetDatos' => $internetDatos_fin,
+                    'tvDatos' => $tvDatos_fin
                 ));
             } else {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa.');
@@ -416,11 +523,13 @@ class InstitucioneducativaAccesoInternetController extends Controller {
         $iai = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findOneById($iaiid);
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($iai->getInstitucioneducativa()->getId());
         $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($iai->getGestionTipo()->getId());
-        $datos = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternetDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
+        $internetDatos_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternetDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
+        $tvDatos_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoTvDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
 
         return $this->render('SieHerramientaBundle:InstitucioneducativaAccesoInternet:datos.html.twig', array(
             'iai' => $iai,
-            'datos' => $datos,
+            'internetDatos' => $internetDatos_fin,
+            'tvDatos' => $tvDatos_fin,
             'institucion' => $institucion
         ));
     }
