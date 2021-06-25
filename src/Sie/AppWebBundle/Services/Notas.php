@@ -1768,7 +1768,7 @@ class Notas{
                         }                        
                     }
                     //to validate info consolidation
-                    $arrConsolidation = array('6'=>'bim1','7'=>'bim2','8'=>'bim3','9'=>'bim4');                    
+                $arrConsolidation = array('6'=>'bim1','7'=>'bim2','8'=>'bim3','9'=>'bim4');                    
                 foreach ($asignaturas as $a) {
                     // Concatenamos la especialidad si se tiene registrado
                     $nombreAsignatura = $a['asignatura'];
@@ -1807,7 +1807,7 @@ class Notas{
 
                         for($i=$inicio;$i<=$fin;$i++){
                             $swCloseOperative = false;
-                            if($this->em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa'=>$sie, 'gestion'=>$gestion, "$arrConsolidation[$i]"=> 1))){
+                            if($this->em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa'=>$sie, 'gestion'=>$gestion, "$arrConsolidation[$i]"=> 2))){
                                 $swCloseOperative = true;
                             }                            
                             $existe = 'no';
