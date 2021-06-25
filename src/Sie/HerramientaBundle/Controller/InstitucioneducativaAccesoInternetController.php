@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\InstitucioneducativaAccesoInternet;
 use Sie\AppWebBundle\Entity\InstitucioneducativaAccesoInternetDatos;
 use Sie\AppWebBundle\Entity\InstitucioneducativaAccesoTvDatos;
+use Sie\AppWebBundle\Entity\institucioneducativaEstudianteEstadosalud;
 
 /**
  * InstitucioneducativaAccesoInternet Controller
@@ -161,6 +162,36 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 'attr' => array('title'=>"Adjuntar protocolo de bioseguridad",'accept'=>"application/pdf,.doc,.docx",
                 'class'=>'form-control')
             ))
+            ->add('enfermo2020', 'text', array(
+                'data' => 0,
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4')
+            ))
+            ->add('enfermo2021', 'text', array(
+                'data' => 0,
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4')
+            ))
+            ->add('fallecido2020', 'text', array(
+                'data' => 0,
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4')
+            ))
+            ->add('fallecido2021', 'text', array(
+                'data' => 0,
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4')
+            ))
+            ->add('sinSintomas2020', 'text', array(
+                'data' => 0,
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4')
+            ))
+            ->add('sinSintomas2021', 'text', array(
+                'data' => 0,
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4')
+            ))
             ->add('guardar', 'submit', array('label' => 'Guardar'))
             ->getForm();
         return $form;
@@ -179,7 +210,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
         }
 
         $em = $this->getDoctrine()->getManager();
-        $form = $request->get('form');        
+        $form = $request->get('form');
         $sie = $form['sie'];
         $gestionid = $form['gestion'];
         $tieneInternet = $form['tieneInternet'];
@@ -214,6 +245,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 $iai = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
                 $internetDatos = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternetDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
                 $tvDatos = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoTvDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
+                $estudianteSalud = $em->getRepository('SieAppWebBundle:InstitucioneducativaEstudianteEstadosalud')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));                
 
                 if($iai) {
                     if($iai->getEsactivo()) {
@@ -231,6 +263,11 @@ class InstitucioneducativaAccesoInternetController extends Controller {
 
                 foreach ($tvDatos as $key => $value) {
                     $em->remove($value);
+                    $em->flush();
+                }
+
+                if($estudianteSalud) {
+                    $em->remove($estudianteSalud);
                     $em->flush();
                 }
                 
@@ -285,7 +322,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 }
 
                 $em->persist($nuevoIAI);
-                $em->flush();                
+                $em->flush();
 
                 foreach ($internetArray as $key => $value) {
                     $proveedor = $em->getRepository('SieAppWebBundle:AccesoInternetProveedorTipo')->findOneById($value);
@@ -309,9 +346,23 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     $em->flush();
                 }
 
+                $nuevoIEE = new institucioneducativaEstudianteEstadosalud();
+                $nuevoIEE->setInstitucioneducativa($institucion);
+                $nuevoIEE->setGestionTipo($gestion);
+                $nuevoIEE->setEnfermo2020(intval($form['enfermo2020']));
+                $nuevoIEE->setEnfermo2021(intval($form['enfermo2021']));
+                $nuevoIEE->setFallecido2020(intval($form['fallecido2020']));
+                $nuevoIEE->setFallecido2021(intval($form['fallecido2021']));
+                $nuevoIEE->setSinSintomas2020(intval($form['sinSintomas2020']));
+                $nuevoIEE->setSinSintomas2021(intval($form['sinSintomas2021']));
+                $nuevoIEE->setFechaRegistro(new \DateTime('now'));
+                $em->persist($nuevoIEE);
+                $em->flush();
+
                 $iai_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
                 $internetDatos_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternetDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
                 $tvDatos_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoTvDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
+                $estudianteSalud_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaEstudianteEstadosalud')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
 
                 $this->get('session')->getFlashBag()->add('newOk', 'Registro realizado satisfactoriamente.');
 
@@ -319,7 +370,8 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     'institucion' => $institucion,
                     'iai' => $iai_fin,
                     'internetDatos' => $internetDatos_fin,
-                    'tvDatos' => $tvDatos_fin
+                    'tvDatos' => $tvDatos_fin,
+                    'estudianteSalud' => $estudianteSalud_fin
                 ));
             } else {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa.');
@@ -525,11 +577,13 @@ class InstitucioneducativaAccesoInternetController extends Controller {
         $gestion = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($iai->getGestionTipo()->getId());
         $internetDatos_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternetDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
         $tvDatos_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoTvDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
+        $estudianteSalud_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaEstudianteEstadosalud')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
 
         return $this->render('SieHerramientaBundle:InstitucioneducativaAccesoInternet:datos.html.twig', array(
             'iai' => $iai,
             'internetDatos' => $internetDatos_fin,
             'tvDatos' => $tvDatos_fin,
+            'estudianteSalud' => $estudianteSalud_fin,
             'institucion' => $institucion
         ));
     }
