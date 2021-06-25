@@ -4004,6 +4004,7 @@ die;/*
         $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionId);
         
         $igestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+        $chooseyear = $igestion;
         $iinstitucioneducativa_id = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
         $inivel_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
         $igrado_tipo_id = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
@@ -4031,7 +4032,7 @@ die;/*
             $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
         } else if($igestion > 2013 && $igestion < 2020) {
             $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
-        } else if($igestion = 2020) {
+        } else if($igestion == 2020) {
             if($inivel_tipo_id == 12) {
                 if($igrado_tipo_id > 1) {
                     $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
@@ -4039,6 +4040,16 @@ die;/*
             } else if($inivel_tipo_id == 13) {
                 if($igrado_tipo_id >= 1) {
                     $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                }
+            }
+        } else if($igestion == 2021) {
+            if($inivel_tipo_id == 12) {
+                if($igrado_tipo_id >= 1) {
+                    $complementario = "'(6,7)','(6,7,8)','(9,11)','51'";
+                }
+            } else if($inivel_tipo_id == 13) {
+                if($igrado_tipo_id >= 1) {
+                    $complementario = "'(6,7)','(6,7,8)','(9,11)','51'";
                 }
             }
         }
