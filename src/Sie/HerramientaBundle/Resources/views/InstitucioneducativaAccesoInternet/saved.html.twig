@@ -114,6 +114,30 @@
                                 </td>
                             </tr>
                             <tr>
+                                <th>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2020:</th>
+                                <td>{{estudianteSalud.enfermo2020}}</td>
+                            </tr>
+                            <tr>
+                                <th>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2021:</th>
+                                <td>{{estudianteSalud.enfermo2021}}</td>
+                            </tr>
+                            <tr>
+                                <th>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2020:</th>
+                                <td>{{estudianteSalud.fallecido2020}}</td>
+                            </tr>
+                            <tr>
+                                <th>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2021:</th>
+                                <td>{{estudianteSalud.fallecido2021}}</td>
+                            </tr>
+                            <tr>
+                                <th>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2020:</th>
+                                <td>{{estudianteSalud.sinSintomas2020}}</td>
+                            </tr>
+                            <tr>
+                                <th>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2021:</th>
+                                <td>{{estudianteSalud.sinSintomas2021}}</td>
+                            </tr>
+                            <tr>
                                 <td colspan="2" class="text-center">
                                     <a href="{{path('ie_acceso_internet_index')}}" class="btn btn-md btn-warning" style="display: inline-block;" onclick="return confirm('¿Está segura/o de continuar? La información no será registrada.');">Comenzar nuevamente</a>
                                     <form method ="POST" action="{{path('ie_acceso_internet_impresionDDJJ')}}" name="form" id="form" style="display: inline-block;">
