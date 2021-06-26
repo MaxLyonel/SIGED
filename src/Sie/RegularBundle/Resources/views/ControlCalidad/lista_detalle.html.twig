@@ -95,7 +95,11 @@
                                                 <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
                                                 <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
                                                 <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
-                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del promedio actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                                <form action="{{path('ccalidad_omitir')}}" method="post">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
+                                                </form>
                                             </form>
                                             <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignarMateria({{detalle.id}}, {{detalle.llave}}, {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
                                         {% elseif regla.id == 56 %}                                    
