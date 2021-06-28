@@ -192,4 +192,60 @@ class InstitucioneducativaCursoModalidadAtencion
     {
         return $this->modalidadAtencionTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\SemanaModalidadAtencionTipo
+     */
+    private $semanaModalidadAtencionTipo;
+
+
+    /**
+     * Set semanaModalidadAtencionTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\SemanaModalidadAtencionTipo $semanaModalidadAtencionTipo
+     * @return InstitucioneducativaCursoModalidadAtencion
+     */
+    public function setSemanaModalidadAtencionTipo(\Sie\AppWebBundle\Entity\SemanaModalidadAtencionTipo $semanaModalidadAtencionTipo = null)
+    {
+        $this->semanaModalidadAtencionTipo = $semanaModalidadAtencionTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get semanaModalidadAtencionTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\SemanaModalidadAtencionTipo 
+     */
+    public function getSemanaModalidadAtencionTipo()
+    {
+        return $this->semanaModalidadAtencionTipo;
+    }
+    /**
+     * @var integer
+     */
+    private $semana;
+
+
+    /**
+     * Set semana
+     *
+     * @param integer $semana
+     * @return InstitucioneducativaCursoModalidadAtencion
+     */
+    public function setSemana($semana)
+    {
+        $this->semana = $semana;
+    
+        return $this;
+    }
+
+    /**
+     * Get semana
+     *
+     * @return integer 
+     */
+    public function getSemana()
+    {
+        return $this->semana;
+    }
 }
