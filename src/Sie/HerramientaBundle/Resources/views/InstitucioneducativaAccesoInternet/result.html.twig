@@ -3,13 +3,13 @@
 {% block contentoption %}
 
     <div class="header-content">
-        <h2><i class="fa fa-table"></i> Acceso a Internet <span>Institución Educativa</span></h2>
+        <h2><i class="fa fa-table"></i>Reporte de salud de Estudiantes <span>Acceso a internet, acceso a tv, estado de salud...</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="#">Acceso a internet</a>
+                    <a href="{{path('ie_acceso_internet_index')}}">Inicio</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
 
@@ -65,114 +65,161 @@
                     <div class="panel-body">
                         {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form-horizontal'} } ) }}
                             <div class="form-group">
-                                <label for="form_tieneInternet" class="col-md-6 control-label"><strong>¿La Institución Educativa cuenta con cobertura de internet?:</strong></label>
+                                <label for="form_tieneInternet" class="col-md-6 control-label"><strong>¿Llega alguna señal de internet a la Institución Educativa?:</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.tieneInternet) }}
                                 </div>
                             </div>
                             <div class="form-group" id="proveedorDiv" style="display: none;">
-                                <label for="form_proveedor" class="col-md-6 control-label"><strong>¿A qué proveedor o proveedores de internet accede la Institución Educativa? (seleccione una o más opciones):</strong></label>
+                                <label for="form_proveedor" class="col-md-6 control-label"><strong>¿Qué proveedor o proveedores de internet llega(n) a la Institución Educativa? (seleccione una o más opciones):</strong></label>
                                 <div class="col-md-6">
-                                    {{ form_widget(form.proveedor) }}
-                                    <div class="help-block with-errors"></div>
+                                    {{ form_widget(form.proveedor) }}                                    
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_tieneTv" class="col-md-6 control-label"><strong>¿La Institución Educativa cuenta con cobertura de Tv?:</strong></label>
+                                <label for="form_tieneTv" class="col-md-6 control-label"><strong>¿Llega alguna señal de televisión a la Institución Educativa?:</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.tieneTv) }}
                                 </div>
                             </div>
                             <div class="form-group" id="canaltvDiv" style="display: none;">
-                                <label for="form_canaltv" class="col-md-6 control-label"><strong>¿A qué canaltv o canaltves de internet accede la Institución Educativa? (seleccione una o más opciones):</strong></label>
+                                <label for="form_canaltv" class="col-md-6 control-label"><strong>¿Qué canal o canales de televisión llega(n) a la Institución Educativa? (seleccione una o más opciones):</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.canaltv) }}
-                                    <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_tieneEmergenciaSanitaria" class="col-md-6 control-label"><strong>¿La Institución Educativa cuenta con cobertura de EmergenciaSanitaria?:</strong></label>
+                                <label for="form_tieneEmergenciaSanitaria" class="col-md-6 control-label"><strong>¿La Institución Educativa cuenta con "Plan de Emergencia Sanitaria"?:</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.tieneEmergenciaSanitaria) }}
                                 </div>
                             </div>
                             <div class="form-group" id="emergenciaSanitariaDiv" style="display: none;">
-                                <label for="form_adjuntoEmergenciaSanitaria" class="col-md-6 control-label"><strong>Acta AdjuntoEmergenciaSanitaria <span class="text-danger">(Máximo permitido 3M, .pdf, .doc, .docx):</span></strong></label>
+                                <label for="form_adjuntoEmergenciaSanitaria" class="col-md-6 control-label"><strong>Adjunto Plan de Emergencia Sanitaria <span class="text-danger">(Máximo permitido 5M, .pdf):</span></strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.adjuntoEmergenciaSanitaria) }}
-                                    <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_tieneBioseguridad" class="col-md-6 control-label"><strong>¿La Institución Educativa cuenta con cobertura de Bioseguridad?:</strong></label>
+                                <label for="form_tieneBioseguridad" class="col-md-6 control-label"><strong>¿La Institución Educativa cuenta con "Protocolo de Bioseguridad"?:</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.tieneBioseguridad) }}
                                 </div>
                             </div>
                             <div class="form-group" id="bioseguridadDiv" style="display: none;">
-                                <label for="form_adjuntoBioseguridad" class="col-md-6 control-label"><strong>Adjunto Bioseguridad <span class="text-danger">(Máximo permitido 3M, .pdf, .doc, .docx):</span></strong></label>
+                                <label for="form_adjuntoBioseguridad" class="col-md-6 control-label"><strong>Adjunto Protocolo de Bioseguridad <span class="text-danger">(Máximo permitido 5M, .pdf):</span></strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.adjuntoBioseguridad) }}
-                                    <div class="help-block with-errors"></div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="form_enfermo2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2020:</strong></label>
-                                <div class="col-md-6">
-                                    {{ form_widget(form.enfermo2020) }}
-                                    <div class="help-block with-errors"></div>
+                            <div class="row text-center">
+                                <div class="col-md-12">
+                                    <h4 class="bg-info">Reporte de salud de Estudiantes</h4>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="form_enfermo2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2021:</strong></label>
-                                <div class="col-md-6">
-                                    {{ form_widget(form.enfermo2021) }}
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="form_fallecido2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2020:</strong></label>
-                                <div class="col-md-6">
-                                    {{ form_widget(form.fallecido2020) }}
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="form_fallecido2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2021:</strong></label>
-                                <div class="col-md-6">
-                                    {{ form_widget(form.fallecido2021) }}
-                                    <div class="help-block with-errors"></div>
+                            <div class="row well text-center">
+                                <div class="col-md-12">
+                                    <h5 class="text-primary">Cantidad de estudiantes efectivos en la gestión 2020: <span class="text-danger">{{cantidadEfectivos2020}}</span></h5>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="form_sinSintomas2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2020:</strong></label>
-                                <div class="col-md-6">
-                                    {{ form_widget(form.sinSintomas2020) }}
-                                    <div class="help-block with-errors"></div>
+                                <div class="col-md-1 text-right">
+                                    <span class="text-lilac">Mujeres:</span>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.sinSintomasF2020) }}
+                                </div>
+                                <div class="col-md-1 text-right">
+                                    <span class="text-lilac">Varones:</span>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.sinSintomasM2020) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="form_enfermo2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2020:</strong></label>
+                                <div class="col-md-1 text-right">
+                                    <span class="text-lilac">Mujeres:</span>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.enfermoF2020) }}
+                                </div>
+                                <div class="col-md-1 text-right">
+                                    <span class="text-lilac">Varones:</span>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.enfermoM2020) }}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="form_fallecido2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2020:</strong></label>
+                                <div class="col-md-1 text-right">
+                                    <span class="text-lilac">Mujeres:</span>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.fallecidoF2020) }}
+                                </div>
+                                <div class="col-md-1 text-right">
+                                    <span class="text-lilac">Varones:</span>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.fallecidoM2020) }}
+                                </div>
+                            </div>
+                            <div class="row well text-center">
+                                 <div class="col-md-12">
+                                    <h5 class="text-primary">Cantidad de estudiantes efectivos en la gestión 2021: <span class="text-danger">{{cantidadEfectivos2021}}</span></h5>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label for="form_sinSintomas2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2021:</strong></label>
-                                <div class="col-md-6">
-                                    {{ form_widget(form.sinSintomas2021) }}
-                                    <div class="help-block with-errors"></div>
+                                <div class="col-md-1 text-right">
+                                    <span class="text-lilac">Mujeres:</span>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.sinSintomasF2021) }}
+                                </div>
+                                <div class="col-md-1 text-right">
+                                    <span class="text-lilac">Varones:</span>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.sinSintomasM2021) }}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-6 control-label"><strong>Cantidad de estudiantes efectivos en la gestión 2020:</strong></label>
-                                <div class="col-md-6">
-                                    <strong><span class="text-danger">{{cantidadEfectivos2020}}</span></strong>
+                                <label for="form_enfermo2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2021:</strong></label>
+                                <div class="col-md-1 text-right">
+                                    <span class="text-lilac">Mujeres:</span>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.enfermoF2021) }}
+                                </div>
+                                <div class="col-md-1 text-right">
+                                    <span class="text-lilac">Varones:</span>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.enfermoM2021) }}
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-6 control-label"><strong>Cantidad de estudiantes efectivos en la gestión 2021:</strong></label>
-                                <div class="col-md-6">
-                                    <strong><span class="text-danger">{{cantidadEfectivos2021}}</span></strong>
+                                <label for="form_fallecido2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2021:</strong></label>
+                                <div class="col-md-1 text-right">
+                                    <span class="text-lilac">Mujeres:</span>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.fallecidoF2021) }}
+                                </div>
+                                <div class="col-md-1 text-right">
+                                    <span class="text-lilac">Varones:</span>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.fallecidoM2021) }}
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="col-md-offset-6 col-md-6">
-                                    {{ form_widget(form.guardar,{ 'attr':{'class':'btn btn-primary' } } ) }}
+                                    {{ form_widget(form.guardar,{ 'attr':{'class':'btn btn-success' } } ) }}
                                 </div>
                             </div>
                         {{ form_end(form) }}
@@ -188,7 +235,7 @@
         $(document).ready(function(){
             $(".js-example-basic-multiple").select2({
                 tags: "true",
-                placeholder: "Seleccione una opción...",
+                placeholder: "Seleccione una o más opciones...",
                 allowClear: true
             });
             $("input[type=radio][name='form[tieneInternet]']").change(function() {
@@ -233,6 +280,17 @@
                     $("#form_adjuntoBioseguridad").prop('required',false);
                 }
             });
-         });
+        });
+
+        var validarNumero = function(e) {
+            var key = e || window.event;
+            var k = key.charCode || key.keyCode;
+            if ((k < 48 || k > 57) //números
+                && (k != 13) //enter
+                && (k != 8) //retroceso
+                && (k != 9) //tab
+            )            
+            return false;
+        };
     </script>
 {% endblock %}

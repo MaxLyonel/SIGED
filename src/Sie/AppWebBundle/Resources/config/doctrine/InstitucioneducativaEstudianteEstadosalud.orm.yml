@@ -18,47 +18,83 @@ Sie\AppWebBundle\Entity\InstitucioneducativaEstudianteEstadosalud:
             generator:
                 strategy: SEQUENCE
     fields:
-        enfermo2020:
+        enfermoF2020:
             type: integer
             nullable: false
             unsigned: false
             comment: ''
-            column: enfermo_2020
-        enfermo2021:
+            column: enfermo_f_2020
+        enfermoF2021:
             type: integer
             nullable: false
             unsigned: false
             comment: ''
-            column: enfermo_2021
-        fallecido2020:
+            column: enfermo_f_2021
+        fallecidoF2020:
             type: integer
             nullable: false
             unsigned: false
             comment: ''
-            column: fallecido_2020
-        fallecido2021:
+            column: fallecido_f_2020
+        fallecidoF2021:
             type: integer
             nullable: false
             unsigned: false
             comment: ''
-            column: fallecido_2021
-        sinSintomas2020:
+            column: fallecido_f_2021
+        sinSintomasF2020:
             type: integer
             nullable: false
             unsigned: false
             comment: ''
-            column: sin_sintomas_2020
-        sinSintomas2021:
+            column: sin_sintomas_f_2020
+        sinSintomasF2021:
             type: integer
             nullable: false
             unsigned: false
             comment: ''
-            column: sin_sintomas_2021
+            column: sin_sintomas_f_2021
         fechaRegistro:
             type: datetime
             nullable: true
             comment: ''
             column: fecha_registro
+        enfermoM2020:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: enfermo_m_2020
+        enfermoM2021:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: enfermo_m_2021
+        fallecidoM2020:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: fallecido_m_2020
+        fallecidoM2021:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: fallecido_m_2021
+        sinSintomasM2020:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: sin_sintomas_m_2020
+        sinSintomasM2021:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: sin_sintomas_m_2021
     manyToOne:
         institucioneducativa:
             targetEntity: Institucioneducativa

@@ -3,17 +3,17 @@
 {% block contentoption %}
 
     <div class="header-content">
-        <h2><i class="fa fa-table"></i> Acceso a Internet <span>Institución Educativa</span></h2>
+        <h2><i class="fa fa-table"></i>Reporte de salud de Estudiantes <span>Acceso a internet, acceso a tv, estado de salud...</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="#">Acceso a internet</a>
+                    <a href="{{path('ie_acceso_internet_index')}}">Inicio</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
 
-                <li class="active">Resultado</li>
+                <li class="active">Registro</li>
             </ol>
         </div>
     </div>
@@ -114,28 +114,64 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2020:</th>
-                                <td>{{estudianteSalud.enfermo2020}}</td>
+                                <th>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2020:</th>
+                                <td>
+                                    <ul>
+                                        <li>Mujeres: {{estudianteSalud.sinSintomasF2020}}</li>
+                                        <li>Varones: {{estudianteSalud.sinSintomasM2020}}</li>
+                                        <li>Total: {{estudianteSalud.sinSintomasF2020 + estudianteSalud.sinSintomasM2020}}</li>
+                                    </ul>
+                                </td>
                             </tr>
                             <tr>
-                                <th>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2021:</th>
-                                <td>{{estudianteSalud.enfermo2021}}</td>
+                                <th>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2020:</th>
+                                <td>
+                                    <ul>
+                                        <li>Mujeres: {{estudianteSalud.enfermoF2020}}</li>
+                                        <li>Varones: {{estudianteSalud.enfermoM2020}}</li>
+                                        <li>Total: {{estudianteSalud.enfermoF2020 + estudianteSalud.enfermoM2020}}</li>
+                                    </ul>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2020:</th>
-                                <td>{{estudianteSalud.fallecido2020}}</td>
-                            </tr>
-                            <tr>
-                                <th>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2021:</th>
-                                <td>{{estudianteSalud.fallecido2021}}</td>
-                            </tr>
-                            <tr>
-                                <th>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2020:</th>
-                                <td>{{estudianteSalud.sinSintomas2020}}</td>
+                                <td>
+                                    <ul>
+                                        <li>Mujeres: {{estudianteSalud.fallecidoF2020}}</li>
+                                        <li>Varones: {{estudianteSalud.fallecidoM2020}}</li>
+                                        <li>Total: {{estudianteSalud.fallecidoF2020 + estudianteSalud.fallecidoM2020}}</li>
+                                    </ul>
+                                </td>
                             </tr>
                             <tr>
                                 <th>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2021:</th>
-                                <td>{{estudianteSalud.sinSintomas2021}}</td>
+                                <td>
+                                    <ul>
+                                        <li>Mujeres: {{estudianteSalud.sinSintomasF2021}}</li>
+                                        <li>Varones: {{estudianteSalud.sinSintomasM2021}}</li>
+                                        <li>Total: {{estudianteSalud.sinSintomasF2021 + estudianteSalud.sinSintomasM2021}}</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2021:</th>
+                                <td>
+                                    <ul>
+                                        <li>Mujeres: {{estudianteSalud.enfermoF2021}}</li>
+                                        <li>Varones: {{estudianteSalud.enfermoM2021}}</li>
+                                        <li>Total: {{estudianteSalud.enfermoF2021 + estudianteSalud.enfermoM2021}}</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2021:</th>
+                                <td>
+                                    <ul>
+                                        <li>Mujeres: {{estudianteSalud.fallecidoF2021}}</li>
+                                        <li>Varones: {{estudianteSalud.fallecidoM2021}}</li>
+                                        <li>Total: {{estudianteSalud.fallecidoF2021 + estudianteSalud.fallecidoM2021}}</li>
+                                    </ul>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="2" class="text-center">
