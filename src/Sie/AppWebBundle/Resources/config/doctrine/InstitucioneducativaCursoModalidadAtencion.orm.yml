@@ -2,12 +2,12 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion:
     type: entity
     table: institucioneducativa_curso_modalidad_atencion
     indexes:
-        IDX_21768A429E4EDBFE:
-            columns:
-                - institucioneducativa_curso_id
         IDX_21768A42E43F4BE9:
             columns:
                 - modalidad_atencion_tipo_id
+        IDX_21768A429E4EDBFE:
+            columns:
+                - institucioneducativa_curso_id
     id:
         id:
             type: integer
@@ -39,16 +39,12 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion:
             nullable: true
             unsigned: false
             comment: ''
+        semana:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
     manyToOne:
-        institucioneducativaCurso:
-            targetEntity: InstitucioneducativaCurso
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                institucioneducativa_curso_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         modalidadAtencionTipo:
             targetEntity: ModalidadAtencionTipo
             cascade: {  }
@@ -56,6 +52,15 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion:
             inversedBy: null
             joinColumns:
                 modalidad_atencion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaCurso:
+            targetEntity: InstitucioneducativaCurso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
