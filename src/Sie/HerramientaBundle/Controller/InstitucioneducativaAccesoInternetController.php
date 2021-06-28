@@ -87,11 +87,43 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     $this->get('session')->getFlashBag()->add('newError', 'La Institución Educativa ya realizó el reporte de información.');
                     return $this->redirect($this->generateUrl('ie_acceso_internet_index', array('iaiid' => $iai->getId())));
                 }
+                
+                $repository = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+                $query = $repository->createQueryBuilder('ei')
+                    ->select('count(ei) cantidadEfectivos')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ei.institucioneducativaCurso = ic.id')
+                    ->where('ei.estadomatriculaTipo = :estadomatriculaTipo')
+                    ->andWhere('ic.institucioneducativa = :institucioneducativa')
+                    ->andWhere('ic.gestionTipo = :gestionTipo')
+                    ->setParameter('estadomatriculaTipo', $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4))
+                    ->setParameter('institucioneducativa', $institucion)
+                    ->setParameter('gestionTipo', $gestion - 1)
+                    ->getQuery();
+
+                $estudiantesEfectivos = $query->getResult();
+                $cantidadEfectivos2020 = $estudiantesEfectivos[0]['cantidadEfectivos'];
+
+                $repository = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
+                $query = $repository->createQueryBuilder('ei')
+                    ->select('count(ei) cantidadEfectivos')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ei.institucioneducativaCurso = ic.id')
+                    ->where('ei.estadomatriculaTipo = :estadomatriculaTipo')
+                    ->andWhere('ic.institucioneducativa = :institucioneducativa')
+                    ->andWhere('ic.gestionTipo = :gestionTipo')
+                    ->setParameter('estadomatriculaTipo', $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4))
+                    ->setParameter('institucioneducativa', $institucion)
+                    ->setParameter('gestionTipo', $gestion)
+                    ->getQuery();
+
+                $estudiantesEfectivos = $query->getResult();
+                $cantidadEfectivos2021 = $estudiantesEfectivos[0]['cantidadEfectivos'];
 
                 return $this->render('SieHerramientaBundle:InstitucioneducativaAccesoInternet:result.html.twig', array(
                     'institucion' => $institucion,
                     'gestion' => $gestion,
                     'form' => $this->formAccesoInternet($institucion->getId(), $gestion)->createView(),
+                    'cantidadEfectivos2020' => $cantidadEfectivos2020,
+                    'cantidadEfectivos2021' => $cantidadEfectivos2021
                 ));
             } else {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa.');
