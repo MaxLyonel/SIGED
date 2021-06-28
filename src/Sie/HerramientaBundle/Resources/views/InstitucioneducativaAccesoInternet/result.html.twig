@@ -21,7 +21,7 @@
     <div class="body-content animated fadeIn">        
 
         <div class="row">
-            <div class="col-lg-6 col-lg-offset-3">
+            <div class="col-lg-8 col-lg-offset-2">
                 <div class="panel rounded shadow panel-teal">
                     <div class="panel-heading">
                         <div class="pull-left">
@@ -54,7 +54,7 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-6 col-lg-offset-3">
+            <div class="col-lg-8 col-lg-offset-2">
                 <div class="panel rounded shadow panel-primary">
                     <div class="panel-heading">
                         <div class="pull-left">
@@ -117,45 +117,57 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_enfermo2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2020:</span></strong></label>
+                                <label for="form_enfermo2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2020:</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.enfermo2020) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_enfermo2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2021:</span></strong></label>
+                                <label for="form_enfermo2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2021:</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.enfermo2021) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_fallecido2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2020:</span></strong></label>
+                                <label for="form_fallecido2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2020:</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.fallecido2020) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_fallecido2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2021:</span></strong></label>
+                                <label for="form_fallecido2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2021:</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.fallecido2021) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_sinSintomas2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2020:</span></strong></label>
+                                <label for="form_sinSintomas2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2020:</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.sinSintomas2020) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_sinSintomas2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2021:</span></strong></label>
+                                <label for="form_sinSintomas2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2021:</strong></label>
                                 <div class="col-md-6">
                                     {{ form_widget(form.sinSintomas2021) }}
                                     <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-6 control-label"><strong>Cantidad de estudiantes efectivos en la gestión 2020:</strong></label>
+                                <div class="col-md-6">
+                                    <strong><span class="text-danger">{{cantidadEfectivos2020}}</span></strong>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-6 control-label"><strong>Cantidad de estudiantes efectivos en la gestión 2021:</strong></label>
+                                <div class="col-md-6">
+                                    <strong><span class="text-danger">{{cantidadEfectivos2021}}</span></strong>
                                 </div>
                             </div>
                             <div class="form-group">
