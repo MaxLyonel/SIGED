@@ -63,7 +63,7 @@
                         <div class="clearfix"></div>
                     </div>
                     <div class="panel-body">
-                        {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form-horizontal'} } ) }}
+                        {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form-horizontal','onsubmit': 'return validarRegistro();'} } ) }}
                             <div class="form-group">
                                 <label for="form_tieneInternet" class="col-md-6 control-label"><strong>¿Llega alguna señal de internet a la Institución Educativa?:</strong></label>
                                 <div class="col-md-6">
@@ -291,6 +291,32 @@
                 && (k != 9) //tab
             )            
             return false;
+        };
+
+        var validarRegistro = function() {            
+            var cantidadEfectivos2020 = parseInt({{cantidadEfectivos2020}});
+            var cantidadEfectivos2021 = parseInt({{cantidadEfectivos2021}});
+            var total2020 = parseInt($("#form_sinSintomasF2020").val()) + parseInt($("#form_sinSintomasM2020").val()) + parseInt($("#form_enfermoF2020").val()) + parseInt($("#form_enfermoM2020").val()) + parseInt($("#form_fallecidoF2020").val()) + parseInt($("#form_fallecidoM2020").val());
+            var total2021 = parseInt($("#form_sinSintomasF2021").val()) + parseInt($("#form_sinSintomasM2021").val()) + parseInt($("#form_enfermoF2021").val()) + parseInt($("#form_enfermoM2021").val()) + parseInt($("#form_fallecidoF2021").val()) + parseInt($("#form_fallecidoM2021").val());
+            var sw = false;
+            var mensaje = "El formulario contiene los siguientes errores: ";
+
+            if(total2020 != cantidadEfectivos2020) {
+                mensaje = mensaje + "\n- La suma de casos (" + total2020 + " estudiantes) para la gestión 2020, debe ser igual a la cantidad de estudiantes efectivos en la gestión 2020 (" + cantidadEfectivos2020 + " estudiantes)";
+                sw = true;
+            }
+
+            if(total2021 != cantidadEfectivos2021) {
+                mensaje = mensaje + "\n- La suma de casos (" + total2021 + " estudiantes) para la gestión 2021, debe ser igual a la cantidad de estudiantes efectivos en la gestión 2021 (" + cantidadEfectivos2021 + " estudiantes)";
+                sw = true;
+            }
+
+            if(sw) {
+                alert(mensaje);
+                return false;
+            }
+
+            return true;
         };
     </script>
 {% endblock %}
