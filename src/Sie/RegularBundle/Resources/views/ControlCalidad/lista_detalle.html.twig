@@ -95,7 +95,11 @@
                                                 <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
                                                 <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
                                                 <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
-                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del promedio actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                                <form action="{{path('ccalidad_omitir')}}" method="post">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
+                                                </form>
                                             </form>
                                             <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignarMateria({{detalle.id}}, {{detalle.llave}}, {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
                                         {% elseif regla.id == 56 %}                                    
@@ -110,8 +114,16 @@
                                             <button type="submit" class="btn btn-link" onclick="ingresarSolucionValidacionSegip({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
                                         {% elseif regla.id == 55 %}    
                                             <button type="submit" class="btn btn-link" onclick="ingresarSolucionFuenteFinanciamiento({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
+                                            <form action="{{path('ccalidad_omitir')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
+                                            </form>
                                         {% elseif regla.id == 57 %}    
                                             <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignacion({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
+                                            <form action="{{path('ccalidad_omitir')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
+                                            </form>
                                         {% endif %}
                                         {% if regla.id == 25 %}
                                             {% set rudes = detalle.llave|split('|') %}
@@ -132,6 +144,9 @@
                                                 <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
                                             </form>
+                                            <div class="justificacion">
+                                                <button type="submit" class="btn btn-link" onclick="justificarModificarDatos({{detalle.id}})"><i class="fa fa-edit"></i> Omitir</button>
+                                            </div>
                                         {% endif %}
                                         {% if regla.id == 37 %}
                                             <form action="{{path('ccalidad_validar_estudiante_segip')}}" method="post">
@@ -145,10 +160,10 @@
                                         {% endif %}
 
 
-                                        {% if regla.id == 17 %}{# Validacion para la regla "Grados sin desayuno escolar respecto a la gestion 2014" #}
+                                        {% if regla.id == 17 %}<!-- Validacion para la regla "Grados sin desayuno escolar respecto a la gestion 2014" -->
                                             <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-desayuno',{{detalle.id}})">Solucionar observación</button>
                                         {% endif %}
-                                        {% if regla.id == 19 %}{# Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" #}
+                                        {% if regla.id == 19 %}<!-- Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" -->
                                             {% set TIPO_REGLA = 19 %}
                                             {% set titulo = 'LENGUA EN LOS PROCESOS PEDAGÓGICOS' %}
                                             {% set idioma1 = '1. Lengua del proceso pedagógico (primera lengua)' %}
@@ -156,7 +171,7 @@
                                             {% set idioma3 = '3. Lengua extranjera de apoyo en los procesos pedagógicos' %}
                                             <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
                                         {% endif %}
-                                        {% if regla.id == 18 %}{# Inconsistencias respecto a Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 " #}
+                                        {% if regla.id == 18 %}<!-- Inconsistencias respecto a Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 " -->
                                             {% set TIPO_REGLA = 18 %}
                                             {% set titulo = 'PRESENCIA DE LENGUAS EN EL AMBITO ESCOLAR' %}
                                             {% set idioma1 = '1. Lengua más hablada (más frecuente)' %}
@@ -276,25 +291,25 @@
                                         {% endif %}
 
 
-                                        {% if regla.id == 17 %}{# Validacion para la regla "Grados sin desayuno escolar respecto a la gestion 2014" #}
-                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-desayuno',{{detalle.id}})">Solucionar observación</button>
+                                        {# if regla.id == 17 %}<!-- Validacion para la regla "Grados sin desayuno escolar respecto a la gestion 2014" -->
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-desayuno',{{detalle.id}})">Solucionar observación-17</button>
                                         {% endif %}
-                                        {% if regla.id == 19 %}{# Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" #}
+                                        {% if regla.id == 19 %}<!-- Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" -->
                                             {% set TIPO_REGLA = 19 %}
                                             {% set titulo = 'LENGUA EN LOS PROCESOS PEDAGÓGICOS' %}
                                             {% set idioma1 = '1. Lengua del proceso pedagógico (primera lengua)' %}
                                             {% set idioma2 = '2. Lengua del proceso pedagógico (segunda lengua)' %}
                                             {% set idioma3 = '3. Lengua extranjera de apoyo en los procesos pedagógicos' %}
-                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación-19</button>
                                         {% endif %}
-                                        {% if regla.id == 18 %}{# Inconsistencias respecto a Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 " #}
+                                        {% if regla.id == 18 %}<!-- Inconsistencias respecto a Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 " -->
                                             {% set TIPO_REGLA = 18 %}
                                             {% set titulo = 'PRESENCIA DE LENGUAS EN EL AMBITO ESCOLAR' %}
                                             {% set idioma1 = '1. Lengua más hablada (más frecuente)' %}
                                             {% set idioma2 = '2. Lengua regularmente hablada (menos frecuente)' %}
                                             {% set idioma3 = '3. Lengua menos hablada (poco frecuente)' %}
-                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
-                                        {% endif %}
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación-18</button>
+                                        {% endif #}
                                     {% endif %}
                                     </td>
                                 </tr>
@@ -393,6 +408,29 @@
                         <button type="submit" class="btn btn-success" onclick="return confirm('Está a punto de omitir el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Confirmar</button>
                     </div>
                     <input type="hidden" id="formH_idDetalle" name="formH[idDetalle]" value="">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal modal-flex fade" id="myModalSolucionModificarDatos" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+    <div class="modal-dialog higherWider">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="flexModalLabel">Control de Calidad</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{{path('ccalidad_justificar_modificar_datos')}}" method="post">
+                    <div class="form-group">
+                        <textarea id="formMD_justificacion" name= "formMD[justificacion]" placeholder="Introduzca una descripción por la cual se omitirá la modificación de datos" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Está a punto de omitir el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Confirmar</button>
+                    </div>
+                    <input type="hidden" id="formMD_idDetalle" name="formMD[idDetalle]" value="">
                 </form>
             </div>
         </div>
@@ -807,6 +845,11 @@
         $('#myModalSolucionHomonimoGemelo').modal('show');
     }
 
+    var justificarModificarDatos = function(id){
+        $('#formMD_idDetalle').val(id);
+        $('#myModalSolucionModificarDatos').modal('show');
+    }
+
     {# Resolver inconsistencia desayuno escolar #}
 
     $('.request-desayuno').on('change',function(e)
@@ -988,7 +1031,7 @@
         var _btn_submit='btn-resolver-inconsistencia';
         $.ajax({
                 type: 'POST',
-                url: '{{url("ccalidad_resolver_inconsistencias_grados_sin_desayuno")}}',
+                url: '{{path("ccalidad_resolver_inconsistencias_grados_sin_desayuno")}}',
                 data: form.serialize(),
                 {#
                 /*dataType: 'json',
@@ -1079,7 +1122,7 @@
         var _btn_submit='btn-resolver-inconsistencia-idioma-aula';
         $.ajax({
                 type: 'POST',
-                url: '{{url("ccalidad_resolver_inconsistencias_grados_sin_idioma_ensenanza_aula")}}',
+                url: '{{path("ccalidad_resolver_inconsistencias_grados_sin_idioma_ensenanza_aula")}}',
                 data: form.serialize(),
                 {#
                 /*dataType: 'json',

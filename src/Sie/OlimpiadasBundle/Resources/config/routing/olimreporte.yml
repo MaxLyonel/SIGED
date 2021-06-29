@@ -11,3 +11,12 @@ olimreporte_actualizarModalidad:
 olimreporte_export:
     path:     /export
     defaults: { _controller: "SieOlimpiadasBundle:OlimReporte:export" }
+
+#
+#olimreporte_inscripcion_export:
+#    path:     /export/reporte-inscripcion/{estudiante}/{gestion}
+#    defaults: { _controller: "SieOlimpiadasBundle:OlimReporte:exportarReporteInscripcion" }
+
+olimRoboticaReporte_inscripcion_export:
+    path:     /export/reporte-inscripcion-robotica/{tutor}/{gestion}
+    defaults: { _controller: "SieOlimpiadasBundle:OlimReporte:exportarReporteInscripcionRobotica" }

@@ -1,0 +1,39 @@
+gp_areas_estudiante_index:
+  path:     /
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:index }
+
+gp_areas_estudiante_result:
+  path:     /resultHistorial
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:resultHistorial }
+  options:
+    expose: true
+
+gp_areas_estudiante:
+  path:     /resultAreasEstudiante
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:resultAreasEstudiante }
+  options:
+    expose: true
+
+gp_areas_estudiante_eliminar:
+  path:     /eliminarAreaEstudiante
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:eliminarAreaEstudiante }
+  options:
+    expose: true
+
+gp_areas_estudiante_agregar:
+  path:     /agregarAreaEstudiante
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:agregarAreaEstudiante }
+  options:
+    expose: true
+
+gp_areas_estudiante_calificaciones:
+  path:     /calificacionesAreaEstudiante
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:calificacionesAreaEstudiante }
+  options:
+    expose: true
+
+gp_areas_estudiante_calificaciones_guardar:
+  path:     /calificacionesGuardarAreaEstudiante
+  defaults: { _controller: SieHerramientaBundle:GestionesPasadasAreasEstudiante:calificacionesGuardarAreaEstudiante }
+  options:
+    expose: true

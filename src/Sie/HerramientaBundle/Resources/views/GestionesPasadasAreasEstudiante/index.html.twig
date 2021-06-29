@@ -1,0 +1,305 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:800px;
+            margin-top:50px;
+        }
+    </style>
+{% endblock %}
+
+{% block contentoption %}
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Adición/Eliminación de áreas<span>Gestiones Pasadas</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Adición/Eliminación de áreas</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Inicio</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="body-content animated fadeIn">
+        <div class="row">
+            <div class="col-md-12 well well-sm text-center">
+                <h3>Unidad Educativa: <span style="color:#0086DD"><strong>{{institucioneducativa.id}} - {{institucioneducativa}}</strong></span></h3>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title"><i class="fa fa-fw fa-search" aria-hidden="true"></i> Ingrese el código RUDE para realizar la búsqueda</h3>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="panel-body">      
+                        {{ form_start(form, { 'attr': {'data-toggle': 'validator', 'role': "form", 'class':'form-horizontal', 'onsubmit': 'getHistorial(); return false;'} } ) }}
+                            <div class="form-group">
+                                <div class="col-md-2 col-md-offset-2 text-right">
+                                    <label for="form_codigoRude" class="control-label"><strong>RUDE:</strong></label>
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form_widget(form.codigoRude, { 'attr':{'class': 'form-control', 'placeholder':'Ingresar un código RUDE válido', 'pattern':'[0-9A]{10,18}', 'autocomplete': 'false'}  }) }}
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_widget(form.buscar,{ 'attr': {'class': 'btn btn-primary' } }) }}
+                                </div>
+                            </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="resultado"></div>
+    </div>
+    
+    <div class="modal modal-flex fade" id="modalAreas" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+        <div class="modal-dialog higherWider">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="flexModalLabel">Agregar/Eliminar áreas</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="idAreas"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script>
+        var getHistorial = function() {
+            codigoRude = $('#form_codigoRude').val();
+            
+            $.ajax({
+                type: 'post',
+                data: ({codigoRude: codigoRude}),
+                url: "{{path('gp_areas_estudiante_result')}}",
+                beforeSend: function () {
+                    $('#resultado').empty();
+                    $('#resultado').html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $('#resultado').empty();
+                    $('#resultado').html(data);
+                },
+                statusCode: {
+                    500: function () {
+                        $('#resultado').empty();
+                        $('#resultado').html('Ocurrió un error interno.');
+                    },
+                    404: function () {
+                        $('#resultado').empty();
+                        $('#resultado').html('Ocurrió un error interno.');
+                    }
+                }
+            });
+        };
+
+        var aeAreas = function(inscripcionid, estudianteid, gestion) {
+            $('#modalAreas').modal({backdrop: 'static', keyboard: false});
+            $('#modalAreas').modal('show');
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('gp_areas_estudiante', {'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
+                beforeSend: function () {
+                    $("#idAreas").empty();
+                    $("#idAreas").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data) {
+                    $("#idAreas").empty();
+                    $("#idAreas").html(data);
+                },
+                statusCode: {
+                    500: function () {
+                        $('#idAreas').empty();
+                        $('#idAreas').html('Ocurrió un error interno.');
+                    },
+                    404: function () {
+                        $('#idAreas').empty();
+                        $('#idAreas').html('Ocurrió un error interno.');
+                    }
+                }
+            });
+        };
+
+        var eliminarArea = function(areaid, inscripcionid, estudianteid, gestion) {
+            Swal.fire({
+                title: 'Eliminar área',
+                text: "¿Está segura/o de eliminar el área? Tenga en cuenta que también se eliminarán las calificaciones de la/el estudiante.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, proceder',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('gp_areas_estudiante_eliminar', {'areaid': areaid, 'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
+                        beforeSend: function () {
+                            $("#idAreas").empty();
+                            $("#idAreas").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                        },
+                        success: function (data) {
+                            $("#idAreas").empty();
+                            $("#idAreas").html(data);
+                        },
+                        statusCode: {
+                            500: function () {
+                                $('#idAreas').empty();
+                                $('#idAreas').html('Ocurrió un error interno.');
+                            },
+                            404: function () {
+                                $('#idAreas').empty();
+                                $('#idAreas').html('Ocurrió un error interno.');
+                            }
+                        }
+                    });
+                }
+            });
+        };
+
+        var agregarArea = function(ofertaid, inscripcionid, estudianteid, gestion) {
+            Swal.fire({
+                title: 'Adicionar área',
+                text: "¿Está segura/o de adicionar el área? Tenga en cuenta que deberá registrar las calificaciones de la/el estudiante.",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, proceder',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'get',
+                        url: Routing.generate('gp_areas_estudiante_agregar', {'ofertaid': ofertaid, 'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
+                        beforeSend: function () {
+                            $("#idAreas").empty();
+                            $("#idAreas").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                        },
+                        success: function (data) {
+                            $("#idAreas").empty();
+                            $("#idAreas").html(data);
+                        },
+                        statusCode: {
+                            500: function () {
+                                $('#idAreas').empty();
+                                $('#idAreas').html('Ocurrió un error interno.');
+                            },
+                            404: function () {
+                                $('#idAreas').empty();
+                                $('#idAreas').html('Ocurrió un error interno.');
+                            }
+                        }
+                    });
+                }
+            });
+        };
+
+        var abrirFormCalificaciones = function(areaid, inscripcionid, estudianteid, gestion) {
+            if ($('#calificaciones_'+areaid).is(':hidden')){
+                $.ajax({
+                    type: 'post',
+                    data: ({'areaid': areaid, 'inscripcionid': inscripcionid, 'estudianteid': estudianteid, 'gestion': gestion}),
+                    url: "{{ path('gp_areas_estudiante_calificaciones') }}",
+                    beforeSend: function () {
+                        $('.divCalificaciones').hide();
+                        $('.arrow-before').hide();
+                        $('.arrow-after').hide();
+                        $("#calificaciones_"+areaid).empty();
+                        $('#calificaciones_before_'+areaid).fadeIn();
+                        $('#calificaciones_after_'+areaid).fadeIn();
+                        $('#calificaciones_'+areaid).fadeIn();
+                        $('#calificaciones_'+areaid).html("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'><p>Cargando formulario para registro de calificaciones...</p><p><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></p></div></div>");
+                    },
+                    success: function (data) {
+                        $("#calificaciones_"+areaid).empty();
+                        $("#calificaciones_"+areaid).html(data);
+                        $('.chosen-select').chosen({allow_single_deselect: false});
+                        $('#calificaciones_'+areaid).fadeIn();
+                    },
+                    statusCode: {
+                        500: function () {
+                            $('#idAreas').empty();
+                            $('#idAreas').html('Ocurrió un error interno.');
+                        },
+                        404: function () {
+                            $('#idAreas').empty();
+                            $('#idAreas').html('Ocurrió un error interno.');
+                        }
+                    }
+                });
+            }else{
+                $('#calificaciones_'+areaid).fadeOut();
+                $('#calificaciones_before_'+areaid).fadeOut();
+                $('#calificaciones_after_'+areaid).fadeOut();
+            }
+        };
+
+        var cerrarFormCalificaciones = function(areaid) {
+            $('#calificaciones_'+areaid).fadeOut();
+            $('#calificaciones_before_'+areaid).fadeOut();
+            $('#calificaciones_after_'+areaid).fadeOut();
+        };
+
+        var validarNumero = function(e) {
+            var key = e || window.event;
+            var k = key.charCode || key.keyCode;
+            if ((k < 48 || k > 57) //números
+                && (k != 13) //enter
+                && (k != 8) //retroceso
+                && (k != 9) //tab
+            )            
+            return false;
+        };
+
+        var guardarCalificaciones = function(areaid) {
+            var formData = $('#formCalificaciones').serialize();
+            $.ajax({
+                type: 'post',
+                data: formData,
+                url: "{{ path('gp_areas_estudiante_calificaciones_guardar') }}",
+                beforeSend: function () {
+                    $("#calificaciones_"+areaid).empty();
+                    $('#calificaciones_'+areaid).html("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'><p>Guardando calificaciones...</p><p><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></p></div></div>");
+                },
+                success: function (data) {
+                    $('#calificaciones_'+areaid).empty();
+                    $('#calificaciones_'+areaid).html("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>"+data.mensaje+"</div>");
+                    setTimeout("cerrarFormCalificaciones('"+areaid+"')",2000);
+                },
+                statusCode: {
+                    500: function () {
+                        $('#idAreas').empty();
+                        $('#idAreas').html('Ocurrió un error interno.');
+                    },
+                    404: function () {
+                        $('#idAreas').empty();
+                        $('#idAreas').html('Ocurrió un error interno.');
+                    }
+                }
+            });
+        };
+    </script>
+{% endblock %}

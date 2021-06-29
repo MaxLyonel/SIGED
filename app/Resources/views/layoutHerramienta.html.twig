@@ -285,6 +285,19 @@
                             <span class="selected"></span>
                         </a>
                     </li> -->
+                    {% if app.session.get('roluser') in [7,8,9,10] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">Operativo Salud de Estudiantes</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('ie_acceso_internet_index')}}">Registro</a></li>
+                                <li><a href="{{ path('ie_acceso_internet_seguimiento')}}">Seguimiento</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
                     {% if app.session.get('roluser') != 20 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -301,6 +314,7 @@
                                 {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 %}
                                     <li><a href="{{ path('herramienta_infoconsolidation_gestion_index')}}">Seguimiento Consolidación</a></li>
                                     <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li>
+                                    <li><a href="{{ path('controlOperativoMenu')}}">Habilitar Operativo RUDE</a></li>
                                 {% endif %}
                                 {% if true and app.session.get('roluser') in [0,8]  %}<!--Tecnnico nacional-->
                                     <li><a href="{{ path('herramienta_inforeporte_inicio_actividades')}}">Nacional Reporte de inicio de actividades</a></li>
@@ -317,6 +331,11 @@
                                     <li><a href="{{ path('herramienta_inforeporte_estudiantes_en_situacion_de_vulnerabilidad')}}">Reporte de estudiantes en situación de Vulnerabilidad</a></li>
                                 {% endif %}
 
+
+                                {# Seguimiento de operativo de salud #}
+                                {% if app.session.get('roluser') in [7,8,10]  %}<!--Tecnnico nacional, departamental y distrital-->
+                                    <li><a target="_blank" href="{{ path('herramienta_info_personal_adm_seguimientoOperativo_estadosalud')}}">Seguimiento al operativo de salud</a></li>
+                                {% endif %}
                             </ul>
                         </li>
 
@@ -648,7 +667,7 @@
                             </ul>
                         </li>
                     {% endif %}
-                    {# {% if app.session.get('roluser') in [9,10] %}
+                    {% if app.session.get('roluser') in [9,10] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-edit"></i></span>
@@ -659,8 +678,20 @@
                                 <li><a href="{{ path('regularizacion_rue_index')}}">Fecha de Fundación</a></li>
                             </ul>
                         </li>
-                    {% endif %} #}
-                    {% if FALSE %}
+                    {% endif %}                    
+                    {% if app.session.get('roluser') in [9] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">GESTIONES PASADAS</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('gp_areas_estudiante_index')}}">Adición/Eliminación de áreas</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+x                    {% if false %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -691,7 +722,7 @@
                                 <li><a href="{{ path('regularizacion_cut_index')}}"> Caso 6 </a></li>
                             </ul>
                         </li>
-                    {% endif %}
+                    {% endif %}                    
                     {#
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
                         <li class="submenu">
