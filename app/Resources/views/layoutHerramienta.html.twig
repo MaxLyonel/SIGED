@@ -285,6 +285,19 @@
                             <span class="selected"></span>
                         </a>
                     </li> -->
+                    {% if app.session.get('roluser') in [7,8,9,10] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">Operativo Salud de Estudiantes</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('ie_acceso_internet_index')}}">Registro</a></li>
+                                <li><a href="{{ path('ie_acceso_internet_seguimiento')}}">Seguimiento</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
                     {% if app.session.get('roluser') != 20 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -665,8 +678,8 @@
                                 <li><a href="{{ path('regularizacion_rue_index')}}">Fecha de Fundación</a></li>
                             </ul>
                         </li>
-                    {% endif %}
-                    {% if false %}
+                    {% endif %}                                        
+x                    {% if false %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -697,7 +710,7 @@
                                 <li><a href="{{ path('regularizacion_cut_index')}}"> Caso 6 </a></li>
                             </ul>
                         </li>
-                    {% endif %}
+                    {% endif %}                    
                     {#
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
                         <li class="submenu">

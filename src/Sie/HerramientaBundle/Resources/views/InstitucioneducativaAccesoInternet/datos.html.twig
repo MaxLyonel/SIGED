@@ -16,10 +16,10 @@
         <td>{{institucion.leJuridicciongeografica.distritoTipo.distrito}}</td>
     </tr>
     <tr>
-        <th>¿La Institución Educativa tiene acceso a internet?:</th>
+        <th>¿Llega alguna señal de internet a la Institución Educativa?:</th>
         <td>
             {% if iai.tieneInternet %}
-                <p class="text-success"><strong>Sí, la Institución Educativa cuenta con acceso a internet.</strong></p>
+                <p class="text-success"><strong>Sí, llega señal de inernet a la Institución Educativa.</strong></p>
                 {% if internetDatos %}
                     <ul>
                         {% for dato in internetDatos %}
@@ -28,15 +28,15 @@
                     </ul>
                 {% endif %}
             {% else %}
-                <p class="text-danger"><strong>La Institución Educativa no cuenta con acceso a internet.</strong></p>
+                <p class="text-danger"><strong>No llega señal de inernet a la Institución Educativa.</strong></p>
             {% endif %}
         </td>
     </tr>
     <tr>
-        <th>¿La Institución Educativa tiene acceso a TV?:</th>
+        <th>¿Llega alguna señal de televisión a la Institución Educativa?:</th>
         <td>
             {% if iai.tieneInternet %}
-                <p class="text-success"><strong>Sí, la Institución Educativa cuenta con acceso a TV.</strong></p>
+                <p class="text-success"><strong>Sí, llega señal de televisión a la Institución Educativa.</strong></p>
                 {% if tvDatos %}
                     <ul>
                         {% for dato in tvDatos %}
@@ -45,12 +45,12 @@
                     </ul>
                 {% endif %}
             {% else %}
-                <p class="text-danger"><strong>La Institución Educativa no cuenta con acceso a TV.</strong></p>
+                <p class="text-danger"><strong>No llega señal de televisión a la Institución Educativa.</strong></p>
             {% endif %}
         </td>
     </tr>
     <tr>
-        <th>¿La Institución Educativa tiene plan de emergencia sanitaria?:</th>
+        <th>¿La Institución Educativa cuenta con "Plan de Emergencia Sanitaria"?:</th>
         <td>
             {% if iai.tieneEmergenciaSanitaria %}
                 <p class="text-success"><strong>Sí, la Institución Educativa cuenta con plan de emergencia sanitaria.</strong></p>
@@ -61,7 +61,7 @@
         </td>
     </tr>
     <tr>
-        <th>¿La Institución Educativa tiene protocolo de bioseguridad?:</th>
+        <th>¿La Institución Educativa cuenta con "Protocolo de Bioseguridad"?:</th>
         <td>
             {% if iai.tieneBioseguridad %}
                 <p class="text-success"><strong>Sí, la Institución Educativa cuenta con protocolo de bioseguridad.</strong></p>
@@ -72,27 +72,63 @@
         </td>
     </tr>
     <tr>
-        <th>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2020:</th>
-        <td>{{estudianteSalud.enfermo2020}}</td>
+        <th>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2020:</th>
+        <td>
+            <ul>
+                <li>Mujeres: {{estudianteSalud.sinSintomasF2020}}</li>
+                <li>Varones: {{estudianteSalud.sinSintomasM2020}}</li>
+                <li>Total: {{estudianteSalud.sinSintomasF2020 + estudianteSalud.sinSintomasM2020}}</li>
+            </ul>
+        </td>
     </tr>
     <tr>
-        <th>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2021:</th>
-        <td>{{estudianteSalud.enfermo2021}}</td>
+        <th>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2020:</th>
+        <td>
+            <ul>
+                <li>Mujeres: {{estudianteSalud.enfermoF2020}}</li>
+                <li>Varones: {{estudianteSalud.enfermoM2020}}</li>
+                <li>Total: {{estudianteSalud.enfermoF2020 + estudianteSalud.enfermoM2020}}</li>
+            </ul>
+        </td>
     </tr>
     <tr>
         <th>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2020:</th>
-        <td>{{estudianteSalud.fallecido2020}}</td>
-    </tr>
-    <tr>
-        <th>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2021:</th>
-        <td>{{estudianteSalud.fallecido2021}}</td>
-    </tr>
-    <tr>
-        <th>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2020:</th>
-        <td>{{estudianteSalud.sinSintomas2020}}</td>
+        <td>
+            <ul>
+                <li>Mujeres: {{estudianteSalud.fallecidoF2020}}</li>
+                <li>Varones: {{estudianteSalud.fallecidoM2020}}</li>
+                <li>Total: {{estudianteSalud.fallecidoF2020 + estudianteSalud.fallecidoM2020}}</li>
+            </ul>
+        </td>
     </tr>
     <tr>
         <th>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2021:</th>
-        <td>{{estudianteSalud.sinSintomas2021}}</td>
+        <td>
+            <ul>
+                <li>Mujeres: {{estudianteSalud.sinSintomasF2021}}</li>
+                <li>Varones: {{estudianteSalud.sinSintomasM2021}}</li>
+                <li>Total: {{estudianteSalud.sinSintomasF2021 + estudianteSalud.sinSintomasM2021}}</li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <th>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2021:</th>
+        <td>
+            <ul>
+                <li>Mujeres: {{estudianteSalud.enfermoF2021}}</li>
+                <li>Varones: {{estudianteSalud.enfermoM2021}}</li>
+                <li>Total: {{estudianteSalud.enfermoF2021 + estudianteSalud.enfermoM2021}}</li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <th>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2021:</th>
+        <td>
+            <ul>
+                <li>Mujeres: {{estudianteSalud.fallecidoF2021}}</li>
+                <li>Varones: {{estudianteSalud.fallecidoM2021}}</li>
+                <li>Total: {{estudianteSalud.fallecidoF2021 + estudianteSalud.fallecidoM2021}}</li>
+            </ul>
+        </td>
     </tr>
 </table>

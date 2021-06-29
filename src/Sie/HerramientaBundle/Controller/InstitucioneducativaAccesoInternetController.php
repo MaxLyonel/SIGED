@@ -88,31 +88,37 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     return $this->redirect($this->generateUrl('ie_acceso_internet_index', array('iaiid' => $iai->getId())));
                 }
                 
-                $repository = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
-                $query = $repository->createQueryBuilder('ei')
-                    ->select('count(ei) cantidadEfectivos')
+                $estadosArray = [4,5,11,28,55];
+
+                $repository = $em->getRepository('SieAppWebBundle:Estudiante');
+                $query = $repository->createQueryBuilder('e')
+                    ->select('count(e.id) cantidadEfectivos')
+                    ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.estudiante = e.id')
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ei.institucioneducativaCurso = ic.id')
-                    ->where('ei.estadomatriculaTipo = :estadomatriculaTipo')
+                    ->where('ei.estadomatriculaTipo in (:estadomatriculaTipo)')
                     ->andWhere('ic.institucioneducativa = :institucioneducativa')
                     ->andWhere('ic.gestionTipo = :gestionTipo')
-                    ->setParameter('estadomatriculaTipo', $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4))
+                    ->setParameter('estadomatriculaTipo', $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id' => $estadosArray)))
                     ->setParameter('institucioneducativa', $institucion)
                     ->setParameter('gestionTipo', $gestion - 1)
+                    ->distinct('e.id')
                     ->getQuery();
 
                 $estudiantesEfectivos = $query->getResult();
                 $cantidadEfectivos2020 = $estudiantesEfectivos[0]['cantidadEfectivos'];
-
-                $repository = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
-                $query = $repository->createQueryBuilder('ei')
-                    ->select('count(ei) cantidadEfectivos')
+                
+                $repository = $em->getRepository('SieAppWebBundle:Estudiante');
+                $query = $repository->createQueryBuilder('e')
+                    ->select('count(e.id) cantidadEfectivos')
+                    ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.estudiante = e.id')
                     ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ei.institucioneducativaCurso = ic.id')
-                    ->where('ei.estadomatriculaTipo = :estadomatriculaTipo')
+                    ->where('ei.estadomatriculaTipo in (:estadomatriculaTipo)')
                     ->andWhere('ic.institucioneducativa = :institucioneducativa')
                     ->andWhere('ic.gestionTipo = :gestionTipo')
                     ->setParameter('estadomatriculaTipo', $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4))
                     ->setParameter('institucioneducativa', $institucion)
                     ->setParameter('gestionTipo', $gestion)
+                    ->distinct('e.id')
                     ->getQuery();
 
                 $estudiantesEfectivos = $query->getResult();
@@ -187,42 +193,72 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 'attr' => array('class' => 'form-control js-example-basic-multiple', 'style'=>'width:100%')
             ))
             ->add('adjuntoEmergenciaSanitaria', 'file', array(
-                'attr' => array('title'=>"Adjuntar plan de emergencia sanitaria",'accept'=>"application/pdf,.doc,.docx",
+                'attr' => array('title'=>"Adjuntar plan de emergencia sanitaria",'accept'=>"application/pdf",
                 'class'=>'form-control')
             ))
             ->add('adjuntoBioseguridad', 'file', array(
-                'attr' => array('title'=>"Adjuntar protocolo de bioseguridad",'accept'=>"application/pdf,.doc,.docx",
+                'attr' => array('title'=>"Adjuntar protocolo de bioseguridad",'accept'=>"application/pdf",
                 'class'=>'form-control')
             ))
-            ->add('enfermo2020', 'text', array(
+            ->add('enfermoF2020', 'text', array(
                 'data' => 0,
                 'required' => false,
-                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4')
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
             ))
-            ->add('enfermo2021', 'text', array(
+            ->add('enfermoF2021', 'text', array(
                 'data' => 0,
                 'required' => false,
-                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4')
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
             ))
-            ->add('fallecido2020', 'text', array(
+            ->add('fallecidoF2020', 'text', array(
                 'data' => 0,
                 'required' => false,
-                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4')
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
             ))
-            ->add('fallecido2021', 'text', array(
+            ->add('fallecidoF2021', 'text', array(
                 'data' => 0,
                 'required' => false,
-                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4')
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
             ))
-            ->add('sinSintomas2020', 'text', array(
+            ->add('sinSintomasF2020', 'text', array(
                 'data' => 0,
                 'required' => false,
-                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4')
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
             ))
-            ->add('sinSintomas2021', 'text', array(
+            ->add('sinSintomasF2021', 'text', array(
                 'data' => 0,
                 'required' => false,
-                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4')
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
+            ))
+            ->add('enfermoM2020', 'text', array(
+                'data' => 0,
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
+            ))
+            ->add('enfermoM2021', 'text', array(
+                'data' => 0,
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
+            ))
+            ->add('fallecidoM2020', 'text', array(
+                'data' => 0,
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
+            ))
+            ->add('fallecidoM2021', 'text', array(
+                'data' => 0,
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
+            ))
+            ->add('sinSintomasM2020', 'text', array(
+                'data' => 0,
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
+            ))
+            ->add('sinSintomasM2021', 'text', array(
+                'data' => 0,
+                'required' => false,
+                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
             ))
             ->add('guardar', 'submit', array('label' => 'Guardar'))
             ->getForm();
@@ -381,12 +417,18 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 $nuevoIEE = new institucioneducativaEstudianteEstadosalud();
                 $nuevoIEE->setInstitucioneducativa($institucion);
                 $nuevoIEE->setGestionTipo($gestion);
-                $nuevoIEE->setEnfermo2020(intval($form['enfermo2020']));
-                $nuevoIEE->setEnfermo2021(intval($form['enfermo2021']));
-                $nuevoIEE->setFallecido2020(intval($form['fallecido2020']));
-                $nuevoIEE->setFallecido2021(intval($form['fallecido2021']));
-                $nuevoIEE->setSinSintomas2020(intval($form['sinSintomas2020']));
-                $nuevoIEE->setSinSintomas2021(intval($form['sinSintomas2021']));
+                $nuevoIEE->setSinSintomasF2020(intval($form['sinSintomasF2020']));
+                $nuevoIEE->setSinSintomasM2020(intval($form['sinSintomasM2020']));
+                $nuevoIEE->setEnfermoF2020(intval($form['enfermoF2020']));
+                $nuevoIEE->setEnfermoM2020(intval($form['enfermoM2020']));
+                $nuevoIEE->setFallecidoF2020(intval($form['fallecidoF2020']));
+                $nuevoIEE->setFallecidoM2020(intval($form['fallecidoM2020']));
+                $nuevoIEE->setSinSintomasF2021(intval($form['sinSintomasF2021']));
+                $nuevoIEE->setSinSintomasM2021(intval($form['sinSintomasM2021']));                
+                $nuevoIEE->setEnfermoF2021(intval($form['enfermoF2021']));
+                $nuevoIEE->setEnfermoM2021(intval($form['enfermoM2021']));                
+                $nuevoIEE->setFallecidoF2021(intval($form['fallecidoF2021']));
+                $nuevoIEE->setFallecidoM2021(intval($form['fallecidoM2021']));
                 $nuevoIEE->setFechaRegistro(new \DateTime('now'));
                 $em->persist($nuevoIEE);
                 $em->flush();
