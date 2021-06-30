@@ -23,7 +23,7 @@ use Sie\ProcesosBundle\Controller\TramiteRueController;
 
 
 /**
- * Solicitud modificacion y adicion calificaciones controller.
+ * Solicitud modification y adicion calificaciones controller.
  *
  */
 class TramiteModificacionCalificacionesController extends Controller {
@@ -1446,6 +1446,9 @@ class TramiteModificacionCalificacionesController extends Controller {
                                     $this->get('notas')->calcularPromedioBimestral($datoNota->getEstudianteAsignatura()->getId());
                                 }
                                 break;
+                    case 2020:
+                                $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
+                                break;                                
                     default:
                                 $this->get('notas')->calcularPromedioBimestral($datoNota->getEstudianteAsignatura()->getId());
                                 break;
@@ -1467,7 +1470,8 @@ class TramiteModificacionCalificacionesController extends Controller {
         }
 
         // ACTUALIZAMOS EL ESTADO DE MATRICULA
-        $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+        // $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+        $this->get('notas')->actualizarEstadoMatriculaIGP($idInscripcion);                    
 
         return true;
     }
