@@ -420,7 +420,9 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'estudianteid' => $estudianteid,
             'inscripcionid' => $inscripcionid,
             'areaid' => $areaid,
-            'gestion' => $gestion
+            'gestion' => $gestion,
+            'nivelid' => $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId(),
+            'gradoid' => $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId()
         ));
     }
     

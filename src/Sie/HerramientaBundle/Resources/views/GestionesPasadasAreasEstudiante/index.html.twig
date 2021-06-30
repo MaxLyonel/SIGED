@@ -49,7 +49,7 @@
                                     <label for="form_codigoRude" class="control-label"><strong>RUDE:</strong></label>
                                 </div>
                                 <div class="col-md-4">
-                                    {{ form_widget(form.codigoRude, { 'attr':{'class': 'form-control', 'placeholder':'Ingresar un código RUDE válido', 'pattern':'[0-9A]{10,18}', 'autocomplete': 'false'}  }) }}
+                                    {{ form_widget(form.codigoRude, { 'attr':{'class': 'form-control', 'placeholder':'Ingresar un código RUDE válido', 'pattern':'[0-9A]{10,18}', 'autocomplete': 'off'}  }) }}
                                     <div class="help-block with-errors"></div>
                                 </div>
                                 <div class="col-md-2">
@@ -231,7 +231,7 @@
                         $('#calificaciones_before_'+areaid).fadeIn();
                         $('#calificaciones_after_'+areaid).fadeIn();
                         $('#calificaciones_'+areaid).fadeIn();
-                        $('#calificaciones_'+areaid).html("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'><p>Cargando formulario para registro de calificaciones...</p><p><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></p></div></div>");
+                        $('#calificaciones_'+areaid).html("<div style='background:#00B1E1; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'><p>Cargando formulario para registro de calificaciones...</p><p><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></p></div></div>");
                     },
                     success: function (data) {
                         $("#calificaciones_"+areaid).empty();
@@ -274,19 +274,20 @@
             return false;
         };
 
-        var guardarCalificaciones = function(areaid) {
+        var guardarCalificaciones = function(areaid,gestion,nivelid,gradoid) {
             var formData = $('#formCalificaciones').serialize();
+            
             $.ajax({
                 type: 'post',
                 data: formData,
                 url: "{{ path('gp_areas_estudiante_calificaciones_guardar') }}",
                 beforeSend: function () {
                     $("#calificaciones_"+areaid).empty();
-                    $('#calificaciones_'+areaid).html("<div style='background:#906094; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'><p>Guardando calificaciones...</p><p><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></p></div></div>");
+                    $('#calificaciones_'+areaid).html("<div style='background:#00B1E1; text-align:center; color:#FFFFFF'><div style='padding:10px 0px 10px 0px;'><p>Guardando calificaciones...</p><p><img src='{{asset('img/loading-sm.gif')}}' style='margin-top:10px'></p></div></div>");
                 },
                 success: function (data) {
                     $('#calificaciones_'+areaid).empty();
-                    $('#calificaciones_'+areaid).html("<div style='background:#906094; color:#FFFFFF; padding:5px; text-align:center;'>"+data.mensaje+"</div>");
+                    $('#calificaciones_'+areaid).html("<div style='background:#00B1E1; color:#FFFFFF; padding:5px; text-align:center;'>"+data.mensaje+"</div>");
                     setTimeout("cerrarFormCalificaciones('"+areaid+"')",2000);
                 },
                 statusCode: {

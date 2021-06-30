@@ -77,22 +77,12 @@
                             <td>{{areaEstudiante.atId}}</td>
                             <td>{{areaEstudiante.asignatura}}</td>
                             <td class="text-center">
-                                {% set cantidad = 0 %}
-                                {% for areaCurso in areasCurso %}
-                                    {% if areaEstudiante.atId == areaCurso.atId %}
-                                        {% set cantidad = cantidad + 1 %}
-                                    {% endif %}
-                                {% endfor %}
-                                {# {% if cantidad == 1 %} #}
-                                    <button onclick="eliminarArea({{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-times"></i> Eliminar</button>
-                                    <button class="btn btn-success btn-xs" onclick="abrirFormCalificaciones({{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})"><i class="fa fa-edit"></i> Calificaciones</button>
-                                    <div class="arrow-before" style="display:none; margin-left:10px;" id="calificaciones_before_{{areaEstudiante.eaId}}"></div>
-                                    <div class="arrow-after" style="display:none;margin-left:10px;" id="calificaciones_after_{{areaEstudiante.eaId}}"></div>
-                                        <div id="calificaciones_{{areaEstudiante.eaId}}" style="display:none; position:absolute; z-index:5; margin-left:-500px; border:2px solid #906094; box-shadow: 7px 7px 4px #929292;" class="divCalificaciones">
-                                    </div>
-                                {# {% else %}
-                                    <button class="btn btn-success btn-xs" onclick="formCalificaciones({{areaEstudiante.eaId}})"><i class="fa fa-edit"></i> Calificaciones</button>
-                                {% endif %} #}
+                                <button onclick="eliminarArea({{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-times"></i> Eliminar</button>
+                                <button class="btn btn-success btn-xs" onclick="abrirFormCalificaciones({{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})"><i class="fa fa-edit"></i> Calificaciones</button>
+                                <div class="arrow-before" style="display:none; margin-left:10px;" id="calificaciones_before_{{areaEstudiante.eaId}}"></div>
+                                <div class="arrow-after" style="display:none;margin-left:10px;" id="calificaciones_after_{{areaEstudiante.eaId}}"></div>
+                                    <div id="calificaciones_{{areaEstudiante.eaId}}" style="display:none; position:absolute; z-index:5; margin-left:-500px; border:2px solid #00B1E1; box-shadow: 7px 7px 4px #0095BD;" class="divCalificaciones">
+                                </div>                                
                             </td>
                         </tr>
                     {% endfor %}
