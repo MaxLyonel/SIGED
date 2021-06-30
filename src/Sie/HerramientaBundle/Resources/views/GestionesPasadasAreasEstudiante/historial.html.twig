@@ -71,7 +71,7 @@
                                 <td>{{historial.turno_raep}} </td>
                                 <td class="text-center">{{historial.estadomatricula_fin_r}}</td>
                                 <td class="text-center">
-                                    {% if historial.nivel_tipo_id_r in [2,12,3,13] and historial.gestion_tipo_id_raep >= 2009 and historial.institucioneducativa_id_raep == institucioneducativa.id %}
+                                    {% if historial.nivel_tipo_id_r in [2,12,3,13] and historial.gestion_tipo_id_raep >= 2009 and historial.gestion_tipo_id_raep <= 2020 and historial.institucioneducativa_id_raep == institucioneducativa.id %}
                                         <a href="#" onclick="aeAreas('{{historial.estudiante_inscripcion_id_raep}}', '{{historial.estudiante_id_raep}}', '{{historial.gestion_tipo_id_raep}}')" ><i class="fa fa-fw fa-edit"></i> Agregar/Eliminar áreas</a>
                                     {% else %}
                                         -

@@ -275,6 +275,94 @@
         };
 
         var guardarCalificaciones = function(areaid,gestion,nivelid,gradoid) {
+            var c = 0;
+            var errores = 0;
+            var min_ant = 0;
+            var max_ant = 70;
+            var apr_ant = 36;
+            var min_act = 1;
+            var max_act = 100;
+            var apr_act = 51;
+            var notas = $('#formCalificaciones').serializeArray();
+            for(let nota in notas) {
+                c++;
+                if(c>2) {
+                    if(gestion == 2013) {
+                        if(nivelid == 12) {
+                            if(gradoid == 1) {
+                                if(parseInt(notas[nota].value) > max_act || parseInt(notas[nota].value) < min_act) {
+                                    $("td[name='"+notas[nota].name+"']").css({"background-color": "#DA756C", "color": "#000", "font-weight": "bold"});
+                                    errores++;
+                                } else {
+                                    $("td[name='"+notas[nota].name+"']").css({"background-color": "#A6D99D", "color": "#000", "font-weight": "bold"});
+                                }
+                            } else {
+                                if(parseInt(notas[nota].value) > max_ant || parseInt(notas[nota].value) < min_ant) {
+                                    $("td[name='"+notas[nota].name+"']").css({"background-color": "#DA756C", "color": "#000", "font-weight": "bold"});
+                                    errores++;
+                                } else {
+                                    $("td[name='"+notas[nota].name+"']").css({"background-color": "#A6D99D", "color": "#000", "font-weight": "bold"});
+                                }
+                            }
+                        } else if(nivelid == 13) {
+                            if(gradoid == 1) {
+                                if(parseInt(notas[nota].value) > max_act || parseInt(notas[nota].value) < min_act) {
+                                    $("td[name='"+notas[nota].name+"']").css({"background-color": "#DA756C", "color": "#000", "font-weight": "bold"});
+                                    errores++;
+                                } else {
+                                    $("td[name='"+notas[nota].name+"']").css({"background-color": "#A6D99D", "color": "#000", "font-weight": "bold"});
+                                }
+                            } else {
+                                if(parseInt(notas[nota].value) > max_ant || parseInt(notas[nota].value) < min_ant) {
+                                    $("td[name='"+notas[nota].name+"']").css({"background-color": "#DA756C", "color": "#000", "font-weight": "bold"});
+                                    errores++;
+                                } else {
+                                    $("td[name='"+notas[nota].name+"']").css({"background-color": "#A6D99D", "color": "#000", "font-weight": "bold"});
+                                }
+                            }
+                        }
+                    } else if(gestion < 2013) {
+                        if(parseInt(notas[nota].value) > max_ant || parseInt(notas[nota].value) < min_ant) {
+                            $("td[name='"+notas[nota].name+"']").css({"background-color": "#DA756C", "color": "#000", "font-weight": "bold"});
+                            errores++;
+                        } else {
+                            $("td[name='"+notas[nota].name+"']").css({"background-color": "#A6D99D", "color": "#000", "font-weight": "bold"});
+                        }
+                    } else if(gestion > 2013 && gestion < 2020) {
+                        if(parseInt(notas[nota].value) > max_act || parseInt(notas[nota].value) < min_act) {
+                            $("td[name='"+notas[nota].name+"']").css({"background-color": "#DA756C", "color": "#000", "font-weight": "bold"});
+                            errores++;
+                        } else {
+                            $("td[name='"+notas[nota].name+"']").css({"background-color": "#A6D99D", "color": "#000", "font-weight": "bold"});
+                        }
+                    } else if(gestion == 2020) {
+                        if(nivelid == 12) {
+                            if(gradoid > 1) {
+                                if(parseInt(notas[nota].value) > max_act || parseInt(notas[nota].value) < min_act) {
+                                    $("td[name='"+notas[nota].name+"']").css({"background-color": "#DA756C", "color": "#000", "font-weight": "bold"});
+                                    errores++;
+                                } else {
+                                    $("td[name='"+notas[nota].name+"']").css({"background-color": "#A6D99D", "color": "#000", "font-weight": "bold"});
+                                }
+                            }
+                        } else if(nivelid == 13) {
+                            if(gradoid >= 1) {
+                                if(parseInt(notas[nota].value) > max_act || parseInt(notas[nota].value) < min_act) {
+                                    $("td[name='"+notas[nota].name+"']").css({"background-color": "#DA756C", "color": "#000", "font-weight": "bold"});
+                                    errores++;
+                                } else {
+                                    $("td[name='"+notas[nota].name+"']").css({"background-color": "#A6D99D", "color": "#000", "font-weight": "bold"});
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(errores > 0) {
+                return false;
+            }
+            
             var formData = $('#formCalificaciones').serialize();
             
             $.ajax({
