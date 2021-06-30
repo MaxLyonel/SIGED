@@ -106,7 +106,6 @@ class PrincipalController extends Controller {
         $codue = $emUe->getRepository('SieAppWebBundle:Usuario')->find($id_usuario);
 
         $emF = $this->getDoctrine()->getManager();
-        $faea = $emF->getRepository('SieAppWebBundle:Faea2014')->find($codue->getUsername());
 
 
         //////TEMPORAL ALTERNATIVA HERRAMIENTA
@@ -233,7 +232,6 @@ class PrincipalController extends Controller {
         return $this->render($this->sesion->get('pathSystem') . ':Principal:index.html.twig', array(
           'userData' => $userData,
           'entities' => $entities,
-          'faea' => $faea,
           'notification' => $not,
           'entitiestot' => $nacional,
           'entitiesdpto' => $departamental,
