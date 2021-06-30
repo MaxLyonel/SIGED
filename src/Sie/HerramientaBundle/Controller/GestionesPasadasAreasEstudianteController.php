@@ -415,6 +415,26 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             $estudianteNotaArray[$nota['ntId']] = $nota['notaCuantitativa'];
         }
         
+        // select a.id, b.id
+        // from institucioneducativa_especialidad_tecnico_humanistico a
+        //     inner join especialidad_tecnico_humanistico_tipo b on a.especialidad_tecnico_humanistico_tipo_id = b.id
+        // where institucioneducativa_id = 80480171 and gestion_tipo_id = 2019 and b.es_vigente is true;
+        if($estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() == 1039) {
+            $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico');
+            $query = $repository->createQueryBuilder('ieth')
+                ->select('ieth.id iethId, etht.id ethtId, etht.especialidad')
+                ->innerJoin('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo', 'etht', 'WITH', 'ieth.especialidadTecnicoHumanisticoTipo = etht.id')
+                ->where('ieth.institucioneducativa = :institucioneducativa')
+                ->andWhere('ieth.gestionTipo = :gestion')
+                ->andWhere('etht.esVigente = :estado')
+                ->setParameter('institucioneducativa', $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId())
+                ->setParameter('gestion', $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId())
+                ->setParameter('estado', 't')
+                ->getQuery();
+
+            $especialidades = $query->getResult();
+        }
+        
         return $this->render($this->session->get('pathSystem') . ':GestionesPasadasAreasEstudiante:form_calificaciones.html.twig', array(
             'libreta' => $libreta,
             'estudianteNotaArray' => $estudianteNotaArray,
@@ -423,7 +443,8 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'areaid' => $areaid,
             'gestion' => $gestion,
             'nivelid' => $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId(),
-            'gradoid' => $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId()
+            'gradoid' => $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId(),
+            'especialidades' => $especialidades
         ));
     }
     

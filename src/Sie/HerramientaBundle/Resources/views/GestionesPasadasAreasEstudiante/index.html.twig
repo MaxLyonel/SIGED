@@ -284,9 +284,16 @@
             var max_act = 100;
             var apr_act = 51;
             var notas = $('#formCalificaciones').serializeArray();
+            
             for(let nota in notas) {
                 c++;
-                if(c>2) {
+                if(c==3){
+                    if(parseInt(notas[nota].value) == 0) {
+                        alert("¡Debe seleccionar alguna especialidad!");
+                        return false;
+                    }
+                }
+                if(c>3) {
                     if(gestion == 2013) {
                         if(nivelid == 12) {
                             if(gradoid == 1) {
