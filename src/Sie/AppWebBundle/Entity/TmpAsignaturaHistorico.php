@@ -45,14 +45,14 @@ class TmpAsignaturaHistorico
     private $orgacurricularTipoId;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\AreaTipo
-     */
-    private $areaTipo;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\AsignaturaTipo
      */
     private $asignaturaTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\AreaTipo
+     */
+    private $areaTipo;
 
 
     /**
@@ -204,29 +204,6 @@ class TmpAsignaturaHistorico
     }
 
     /**
-     * Set areaTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\AreaTipo $areaTipo
-     * @return TmpAsignaturaHistorico
-     */
-    public function setAreaTipo(\Sie\AppWebBundle\Entity\AreaTipo $areaTipo = null)
-    {
-        $this->areaTipo = $areaTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get areaTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\AreaTipo 
-     */
-    public function getAreaTipo()
-    {
-        return $this->areaTipo;
-    }
-
-    /**
      * Set asignaturaTipo
      *
      * @param \Sie\AppWebBundle\Entity\AsignaturaTipo $asignaturaTipo
@@ -247,5 +224,28 @@ class TmpAsignaturaHistorico
     public function getAsignaturaTipo()
     {
         return $this->asignaturaTipo;
+    }
+
+    /**
+     * Set areaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\AreaTipo $areaTipo
+     * @return TmpAsignaturaHistorico
+     */
+    public function setAreaTipo(\Sie\AppWebBundle\Entity\AreaTipo $areaTipo = null)
+    {
+        $this->areaTipo = $areaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get areaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\AreaTipo 
+     */
+    public function getAreaTipo()
+    {
+        return $this->areaTipo;
     }
 }

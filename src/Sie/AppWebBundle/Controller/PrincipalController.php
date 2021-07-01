@@ -604,7 +604,9 @@ class PrincipalController extends Controller {
                 //verificamos si ya registro este mes
                 $institucioneducativaSucursalRiesgoMes=$em->getRepository('SieAppWebBundle:InstitucioneducativaSucursalRiesgoMes')->findOneBy(
                     array('institucioneducativaSucursal'=>$objIesucursal->getId(),
-                          'mes'=>date('m'),/*AQUI se debe verificar año mas */)
+                          'mes'=>date('m'),
+                          'semana' =>date('W')
+                    )
                 );
                 if($institucioneducativaSucursalRiesgoMes==null)
                 {
@@ -639,6 +641,9 @@ class PrincipalController extends Controller {
                 $institucioneducativaSucursalRiesgoMes->setObservacion($noInicioRazonOtros);
                 $institucioneducativaSucursalRiesgoMes->setRiesgoUnidadeducativaTipo($riesgoUnidadeducativaTipo);
                 $institucioneducativaSucursalRiesgoMes->setInstitucioneducativaSucursal($objIesucursal);
+
+                $institucioneducativaSucursalRiesgoMes->setSemana(date('W'));
+
                 $em->persist($institucioneducativaSucursalRiesgoMes);
                 $em->flush();
             }
@@ -758,7 +763,8 @@ from
 Institucioneducativa_Sucursal_Riesgo_mes ie_srm 
 left JOIN riesgo_unidadeducativa_tipo r_udt on ie_srm.riesgo_unidadeducativa_tipo_id =r_udt.id
 where institucioneducativa_sucursal_id =?
-ORDER BY mes DESC
+--ORDER BY mes DESC
+ORDER BY mes DESC,semana ASC
 LIMIT ?';
         $stmt = $db->prepare($query);
         $params = array($sucursalId,$limit);

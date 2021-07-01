@@ -1466,6 +1466,53 @@ class DownloadController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
+
+    //Reporte para el formulario RUDE funcionalidad añadida el 26 de febrero del 2021
+    /**
+     * libreta tecnica tecnologica
+     * @param Request $request
+     * @return object libreta
+     */
+    public function downloadFormularioRudeAction(Request $request)
+    {
+        $idInscripcion = $request->get('idInscripcion');
+        $rude = $request->get('rude');
+        $sie = $request->get('sie');
+        $gestion = $request->get('gestion');
+        $nivel = $request->get('nivel');
+        $grado = $request->get('grado');
+        $paralelo = $request->get('paralelo');
+        $turno = $request->get('turno');
+        $ciclo = $request->get('ciclo');
+
+        $em = $this->getDoctrine()->getManager();
+        $informacion = $em->createQueryBuilder()
+                    ->select('r.id as rude_id')
+                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                    ->innerJoin('SieAppWebBundle:Rude','r','with','ei.id = r.estudianteInscripcion')
+                    ->where('ei.id = :idInscripcion')
+                    ->setParameter('idInscripcion',$idInscripcion)
+                    ->getQuery()
+                    ->getResult();
+        //$periodo = $informacion[0]['periodo'];
+        $rude_id=-1;
+        if($informacion)
+        {
+            $rude_id=$informacion[0]['rude_id'];
+        }
+        
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'Reporte-Formulario-Rude' .'.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_rude1298_2021_v4.rptdesign&rude_id=' . $rude_id . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+
+        return $response;
+    }
+
     public function calificacionesFormularioAction(Request $request, $idTramite, $codigoQR){
 
         $response = new Response();
@@ -1481,5 +1528,25 @@ class DownloadController extends Controller {
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
-    }             
+    }    
+
+    public function requestInsCalYearOldAction(Request $request, $idStudent,$sie,$idTramite, $codigoRude){
+
+        $response = new Response();
+
+        $codigoQR = 'FICGP'.$idTramite.'|'.$codigoRude.'|'.$sie.'|'.$gestion;
+
+        $data = $this->session->get('userId').'|'.$this->session->get('currentyear').'|'.$idTramite;
+        //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_cert_cal_solicitud_tramite_V1_eee.rptdesign&estudiante_id=' . $idStudent.'&institucioneducativa_id='. $sie.'&tramite_id='.$idTramite.' &&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }      
+
+           
 }

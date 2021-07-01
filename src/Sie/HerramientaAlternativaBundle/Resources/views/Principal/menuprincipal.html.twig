@@ -304,6 +304,32 @@
                   <div class="cbp-l-grid-masonry-projects-desc"></div>
               </div><br></div>
 
+
+            <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">
+                <div class="cbp-caption">
+                    <div class="cbp-caption-defaultWrap">
+                        <div class="headerOptions" style="height:20px; background:#22B389"></div>
+                        <img src="{{asset('img/operativo-salud300.jpg')}}" alt="...">
+                    </div>
+                    <div class="cbp-caption-activeWrap">
+                        <div class="cbp-l-caption-alignCenter">
+                            <div class="cbp-l-caption-body"><br>
+                                <form action="{{path('herramienta_info_personalAdm_maestro_index')}}" method="post" style="display:inline-block"> <input type="hidden" id="form_gestion" name="form[gestion]" value="{{app.session.get('ie_gestion')}}">
+                                 <input type="hidden" id="form_sie" name="form[sie]" value="{{app.session.get('ie_id')}}">
+                                    <button class="btn btn-inverse btn-stroke">INGRESAR</button>
+                                </form>
+                                <br>
+                                <span style="color:#FFFFFF">Operativo Salud</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cbp-singlePage cbp-l-grid-masonry-projects-title" rel="nofollow">Operativo Salud</div>
+                <div class="cbp-l-grid-masonry-projects-desc"></div>
+            </div><br></div>
+
+
+
             {% if (app.session.get('roluser') == 9) %} {#SOLO EL DIRECTOR PUEDE CERRAR EL OPERATIVO#}
                 {% if (app.session.get('ie_per_estado') == '0') %}  {#GENERA ACTA DE CIERRE UNA VES CERRADO EL OPERATIVO#}                                      
                     <div class="col-lg-3 col-md-3 col-sm-6"><div class="cbp-item-wrapper">

@@ -1,0 +1,465 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+
+        [v-cloak]{
+            display: none;
+        }
+        .readData{
+            background-color: lightblue;
+            color:  #000;
+            opacity: 0.8;
+         
+
+        }
+		.jupper{
+			text-transform: uppercase;
+		}        
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Registro Diplomático/Extranjero <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Registro Diplomático/Extranjero</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active"></li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <!-- /.row -->
+	<div id="app" v-cloak>
+		<div v-if="cortina" class="cortina">
+			{# <i class="fa fa-refresh fa-spin"></i> Procesando... #}
+		</div>
+		<div class="body-content animated fadeIn">
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-default">
+						<div class="panel-body">
+								<h2 class="titulo">Registro Diplomático/Extranjero </h2>
+								<div class="col-md-12">
+									<div role="tabpanel">
+										<!-- Nav tabs -->
+										<ul class="nav nav-tabs" role="tablist">
+											<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
+												<a role="tab" data-toggle="tab">Datos Personales</a>
+											</li>
+										</ul>
+										<!-- Tab panes -->
+										<div class="tab-content">
+											<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+
+												<div class="row">
+													<div class="form-group col-md-4">
+														<label>(*)Nombre(s)</label>
+														<input type="text" v-model="newperson.nombre" class="form-control jupper" maxlength="" v-on:keypress="">
+													</div>
+													<div class="form-group col-md-4">
+														<label>Paterno </label>
+														<input type="text" v-model="newperson.paterno" class="form-control jupper" maxlength="" v-on:keypress="">
+													</div>
+													<div class="form-group col-md-4">
+														<label>Materno  </label>
+														<input type="text" v-model="newperson.materno" class="form-control jupper" maxlength="" v-on:keypress="">
+													</div>													
+												</div>														
+												<div class="row">
+													<div class="form-group col-md-3">
+														<label>(*)F. Nacimiento  </label>
+														<input type="text" v-model="newperson.fechaNacimiento" class="form-control jupper" maxlength="" v-on:keypress="" id="form_idfecnac">
+													</div>
+
+													<div class="form-group col-md-3">
+														<label>(*)Género </label>														
+						                                <select name="arrGenero" id="idarrGenero_p" v-model="newperson.generoId" class="custom-select form-control">
+						                                  <option v-for="item in DBGenero"  :value="item.generoId">${ item.genero }</option>       
+						                                </select>														
+													</div>
+
+													<div class="form-group col-md-6">
+														<label>(*)País  </label>
+														{# <input type="text" v-model="newperson.pais" class="form-control jupper" maxlength="" v-on:keypress=""> #}
+						                                <select name="arrPais" id="idarrPais_p" v-model="newperson.paisId" class="custom-select form-control">
+						                                  <option v-for="item in DBPais"  :value="item.paisId">${ item.pais }</option>       
+						                                </select>														
+													</div>													
+												</div>
+												<div class="row">											
+													<div class="form-group col-md-5">
+														<label>(*)Nro. Documento </label>
+														<input type="text" v-model="newperson.run" class="form-control jupper" maxlength="" v-on:keypress="">
+													</div>
+													<div class="form-group col-md-7">
+														<label>(*)Lugar de Nacimiento  </label>
+														<input type="text" v-model="newperson.lugarNacimiento" class="form-control jupper" maxlength="" v-on:keypress="">
+													</div>
+												</div>												
+												<div class="row">
+													<div class="form-group col-md-6">
+														<label>(*)Adj. Documento </label>
+														<input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
+													</div>
+													<div class="form-group col-md-6">
+														<label>(*)Tipo de Registro </label>
+														<select name="arrTipoPersona" id="arrTipoPersona_id" class="custom-select form-control" v-model="newperson.typeofregister"><option value="13">Diplomático</option><option value="14">Extranjero</option></select>				
+													</div>													
+													
+												</div>																																				
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12 text-center" v-if="!swregistry">
+									<button type="button" class="btn btn-primary" @click="register">Registrar</button>
+								</div>							
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="col-md-12" v-if="swregistry">
+					<table class="table">
+					<thead>
+						<tr>
+						<th scope="col">NRO. DOCUMENTO</th>
+						<th scope="col">NOMBRE(S)</th>
+						<th scope="col">PATERNO</th>
+						<th scope="col">MATERNO</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+						<td> ${newperson.run} </td>
+						<td> ${newperson.nombre.toUpperCase()}</td>
+						<td> ${newperson.paterno.toUpperCase()}</td>
+						<td> ${newperson.materno.toUpperCase()}</td>
+						</tr>
+					</tbody>
+					</table>
+					<div class="col-md-12 text-center">
+						<button type="button" class="btn btn-success" @click="closeRegistry">Registrar Otro</button>
+					</div>					
+				</div>			
+			</div>
+
+		</div>
+	</div>	
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript">
+    // $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+  </script>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+    <script src="{{asset('js/inputmask.js')}}"></script>
+    <script type="text/javascript">
+// $("#fecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+    
+
+
+		var app = new Vue({
+		    delimiters: ['${', '}'],
+		    el: '#app',
+		    data: {
+		    	state: {isSending: false},
+		    	errores: [],
+		    	opcion: 1,
+		    	swregistry: false,
+		    	newperson: {
+		    		
+		    		nombre: '',
+		    		paterno: '',
+		    		materno: '',
+					genero: '',
+		    		fechaNacimiento: '',
+		    		pais: '',
+		    		lugarNacimiento: '',
+		    		run: '',
+		    		docAdjunto: '',
+		    		paisId: '',
+		    		generoId: '',
+		    		typeofregister: '',
+
+		    	},
+				informe:'',
+		    	validado: false,
+		    	cortina: false,
+				swConfirm:false,
+				DBPais: [],
+				DBGenero: [],
+		    	datos: []
+		    	
+		    },
+			filters: {
+				uppercase: function(v) {
+				  return v.toUpperCase();
+				}
+			},		    
+		    mounted(){	
+				this.loadData();
+                var selector = document.getElementById("form_idfecnac");
+                Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "mm-yyyy-dd", inputEventOnly: true}).mask(selector);				
+		    
+		    },
+
+		    methods: {
+				
+
+                getImage: function(event){
+                    var informe = event.target.files[0];
+                    var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+                    if(!allowedExtensions.exec(event.target.value)){
+                        event.target.value = '';
+                        Swal.fire(
+                              'Archivo incorrecto!',
+                              'El archivo adjunto debe ser una imagen o un archivo pdf',
+                              'warning'
+                            );
+                        this.informe = '';
+                        return false;
+                    }else{
+                        var megas = (informe.size / 1024)/1024;
+                        if (megas > 2) {
+                            event.target.value = '';
+                            Swal.fire(
+                              'Tamaño no permitido!',
+                              'El archivo debe tener un tamaño menor a 2MB',
+                              'warning'
+                            );
+                            this.informe = '';
+                            return false;
+                        }
+                    }
+                    this.informe = event.target.files[0];
+                }, 		    
+				loadData(){
+					axios.get(Routing.generate('registerforeignerperson_loadData'))
+		    		.then(response => {
+						this.DBPais = response.data.datos.arrPais;
+						this.DBGenero = response.data.datos.arrGenero;
+		    		})
+		    		.catch(e = {
+
+		    		});					
+				},
+		    	register(){
+		    		this.errores = [];
+		    		this.state.isSending = false;
+
+		    		if (this.opcion == 1) {	
+	                    if (typeof this.informe != 'object') {
+	                     	this.errores.push('Debe adjuntar Documento de Diplomático/Extranjero');   
+	                    }
+		    			if (this.newperson.run == '') {
+		    				this.errores.push('Nro. de Documento');
+		    			}	
+		    			if (this.newperson.fechaNacimiento == '') {
+		    				this.errores.push('Fecha Nacimiento');
+		    			}
+	                    if (typeof this.typeofregister == '') {
+	                     	this.errores.push('Tipo de Registro');   
+	                    }		    			
+		    			if (this.newperson.nombre == '') {
+		    				this.errores.push('Nombre');
+		    			}
+
+		    			if (this.newperson.generoId == '') {
+		    				this.errores.push('Género');
+		    			}
+		    			if (this.newperson.paisId == '') {
+		    				this.errores.push('País');
+		    			}	                    
+		    		}
+		    			    	
+		    		if (this.errores.length > 0) {
+			    		let texto = '<div class="errores">';
+			    		$.each(this.errores, function (i, value) {
+	                        texto = texto + '<li>' + value + '</li>';
+	                    });
+	                    texto = texto + '</div>';
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:texto,
+		    		  		type:'warning'
+		    			});
+		    			return false;
+		    		}
+		    		this.datos = [];
+		    		this.validado = false;
+		    		this.cortina = true;
+	    			Swal.fire({
+	    		  		title:'Procesando',
+	    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-search fa-spin"></i> Espere un momento</div> ',
+	    		  		type:'info',
+	    		  		showConfirmButton: false,
+	    			});
+
+            		var data = new FormData();
+                    data.append('datos', JSON.stringify(this.newperson));
+                    data.append('informe', this.informe);	    			
+					axios.post(Routing.generate('registerforeignerperson_register'), data )
+		    		/*axios.post(Routing.generate('registerforeignerperson_register', { newperson: this.newperson, opcion: this.opcion}))*/
+		    			.then(response => {
+		    				if (response.data.status === 'error') {
+			    				Swal.fire(
+	    					  		'Aviso',
+	    					  		response.data.msg,
+	    					  		'info'
+	    						)
+		    				}
+
+		    				if (response.data.status == 'success') {
+		    					Swal.close();
+								
+		    					this.datos = response.data.datos;
+		    					this.swregistry = this.datos.swregistry;
+		    					
+		    				}
+		    				this.cortina = false;
+		    			})
+		    			.catch(e => {
+		    				Swal.fire(
+    					  		'Aviso',
+    					  		'No se pudo realizar la verficación',
+    					  		'error'
+    						)
+		    				this.cortina = false;
+		    			});
+		    	},
+
+			
+
+                closeRegistry(id){
+                	this.swregistry = 0;
+                	this.cerrar();
+
+                },		
+				validEmail(email){
+					var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+					return re.test(email);
+				},			
+			
+		    	cerrar(){
+
+		    		this.swregistry = false;
+		    		this.opcion = 1;
+		    		this.newperson.nombre = '';
+		    		this.newperson.run = '';
+		    		this.newperson.nombre = '';
+		    		this.newperson.paterno = '';
+		    		this.newperson.materno = '';
+		    		this.newperson.fechaNacimiento = '';
+		    		this.newperson.paisId = '';
+		    		this.newperson.generoId = '';
+		    		this.informe = '';
+		    		this.newperson.docAdjunto = '';
+		    		this.newperson.lugarNacimiento='';
+		    		document.getElementById("archivoAdjuntoId").value=null; 
+		    		
+		    		
+		    	},
+		    	validarFormatoFecha(campo) {
+	    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+	    	        if ((campo.match(RegExPattern)) && (campo!='')) {
+	    	            return true;
+	    	        } else {
+	    	            return false;
+	    	        }
+		    	},
+		    	numerico: function(event){
+		    	    var k = event.charCode || event.keyCode;
+		    	    if ((k < 48 || k > 57) //NUmeros
+		    	        && (k != 13) //ENTER
+		    	        && (k != 8) //retroceso
+		    	        && (k != 9) //tab
+		    	    ){
+		    	        event.preventDefault();
+		    	        return false;
+		    	    }
+		    	},
+		    	alfabetico: function(event){
+	                var k = event.charCode || event.keyCode;
+	                if ((k < 97 || k > 122)//letras minusculas
+	                    && (k < 65 || k > 90) //letras mayusculas
+	                    && (k != 13) //ENTER
+	                    && (k != 8) //retroceso
+	                    && (k != 9) //tab
+	                    && (k != 241) //ñ
+	                     && (k != 209) //Ñ
+	                     && (k != 32) //espacio
+	                     && (k != 225) //á
+	                     && (k != 233) //é
+	                     && (k != 237) //í
+	                     && (k != 243) //ó
+	                     && (k != 250) //ú
+	                     && (k != 193) //Á
+	                     && (k != 201) //É
+	                     && (k != 205) //Í
+	                     && (k != 211) //Ó
+	                     && (k != 218) //Ú
+	                     && (k != 44) //coma ,
+	                     && (k != 46) //punto .
+	                ){
+	                	event.preventDefault();
+	                	return false;
+	                }
+	            },
+		    	alfanumerico: function(event){
+	                var k = event.charCode || event.keyCode;
+	                if ((k < 97 || k > 122)//letras minusculas
+	                    && (k < 65 || k > 90) //letras mayusculas
+	                    && (k < 48 || k > 57) //NUmeros
+	                    && (k != 13) //ENTER
+	                    && (k != 8) //retroceso
+	                    && (k != 9) //tab
+	                    && (k != 241) //ñ
+	                     && (k != 209) //Ñ
+	                     && (k != 32) //espacio
+	                     && (k != 225) //á
+	                     && (k != 233) //é
+	                     && (k != 237) //í
+	                     && (k != 243) //ó
+	                     && (k != 250) //ú
+	                     && (k != 193) //Á
+	                     && (k != 201) //É
+	                     && (k != 205) //Í
+	                     && (k != 211) //Ó
+	                     && (k != 218) //Ú
+	                     && (k != 44) //coma ,
+	                     && (k != 46) //punto .
+	                ){
+	                	event.preventDefault();
+	                	return false;
+	                }
+	            },
+		    }
+		});
+
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $("td").focus();
+        });        
+
+
+    </script>
+{%endblock%}

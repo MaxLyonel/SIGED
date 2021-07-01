@@ -110,6 +110,38 @@
                 </div>
                 
             {% endif %}
+
+
+            
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/operativo-salud300.jpg')}}" alt="Operativo Salud">
+                    <div class="caption text-center">
+                        <h4>Operativo salud</h4>
+                        <div class="thumbnail-action">
+                            {{form_start(operativoSaludform)}}
+                                {{form_widget(operativoSaludform.next)}}
+                            {{form_end(operativoSaludform)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="thumbnail">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Rude">
+                        <div class="caption text-center">
+                            <h4>Cerrar Operativo Rude</h4>
+                            <div class="thumbnail-action">
+                                {{form_start(closeOperativoRudeform, { 'attr':{'id':'formCloseOperativo' }} )}}
+                                    {{form_widget(closeOperativoRudeform.next)}}
+                                {{form_end(closeOperativoRudeform)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
         </div>
         <div class="row">
             <div id="answerClose" style="overflow: scroll; width: 100%; height:300px" class="col-lg-3 col-md-6 col-sm-12 col-xs-12"></div>
@@ -136,6 +168,35 @@
                 $.ajax({
                     type: 'post',
                     url: Routing.generate('herramienta_inbox_close_operativo'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerClose").empty();
+                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data) {
+                        $("#answerClose").empty();
+                        $("#answerClose").append(data);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            } else{ 
+                return false;
+            }
+        };
+
+        var closeOperativoRude = function(){
+            if(confirm('¿Está segura/o de cerrar el operativo rude?')){
+                formData = $('#formCloseOperativo').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('herramienta_inbox_close_operativo_rude'),
                     data: formData,
                     beforeSend: function () {
                         $("#answerClose").empty();

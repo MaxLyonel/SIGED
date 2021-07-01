@@ -26,6 +26,9 @@ use Sie\AppWebBundle\Entity\RudeAbandono;
 use Sie\AppWebBundle\Entity\ApoderadoInscripcion;
 use Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos;
 use Sie\AppWebBundle\Entity\Persona;
+use Sie\AppWebBundle\Entity\EstadoCivilTipo;
+
+use Sie\AppWebBundle\Entity\EstudiantePersonaDiplomatico;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -70,7 +73,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
         $rude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array(
             'estudianteInscripcion'=>$inscripcion->getId()
         ));
-
+        //obtenemos los datos de la tabla estado civil tipo
+        $estadoCivilData = $em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findAll();
         if(!is_object($rude)){
             /**
              * OBTENEMOS UN REGISTRO ANTERIOR
@@ -147,7 +151,10 @@ class InfoEstudianteRudeNuevoController extends Controller {
             'ayudaComplemento'=>$ayudaComplemento,
             'formLugar'=>$this->createFormLugar($rude)->createView(),
             'inscripcion'=>$inscripcion,
-            'rude'=>$rude
+            'rude'=>$rude,
+
+
+            'estadoCivilData'=>$estadoCivilData,
         ]);
     }
 
@@ -157,15 +164,19 @@ class InfoEstudianteRudeNuevoController extends Controller {
     private function createFormEstudiante($rude, $e){
         $em = $this->getDoctrine()->getManager();
         $pais = $e->getPaisTipo()->getId();
-        $departamento = '';
-        $provincia = '';
-        if($e->getLugarNacTipo() != null){
-            $departamento = $e->getLugarNacTipo()->getId();
+        if($pais == 1){
+            $departamento = '79354';
+            $provincia = 11;
+            if($e->getLugarNacTipo() != null){
+                $departamento = $e->getLugarNacTipo()->getId();
+            }
+            if($e->getLugarProvNacTipo() != null){
+                $provincia = $e->getLugarProvNacTipo()->getId();                
+            }
+        }else{
+            $departamento = '79354';
+            $provincia = 11;
         }
-        if($e->getLugarProvNacTipo()){
-            $provincia = $e->getLugarProvNacTipo()->getId();
-        }
-
         $departamentos = array();
         $provincias = array();
 
@@ -324,6 +335,10 @@ class InfoEstudianteRudeNuevoController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['estudianteId']);
         $rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['rudeId']);
+        //Para guardar datos del la discapacidad en la tabla Rude
+        $rude->setTieneDiscapacidad($form['tieneDiscapacidad']);
+        $carnetIbc=empty($form['carnetIbc'])?0:1;
+        $rude->setTieneCarnetDiscapacidad($carnetIbc);
         // dump($estudiante);die;
         /**
          * REGISTRO DE CARNET DE IDENTIDAD
@@ -339,13 +354,13 @@ class InfoEstudianteRudeNuevoController extends Controller {
         // $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['departamento'] ? $form['departamento'] : null)));
         // $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['provincia'] ? $form['provincia'] : null)));
         // $estudiante->setLocalidadNac(mb_strtoupper($form['localidad'],'utf-8'));
-        // $estudiante->setOficialia($form['oficialia']);
-        // $estudiante->setLibro($form['libro']);
-        // $estudiante->setPartida($form['partida']);
-        // $estudiante->setFolio($form['folio']);
+           $estudiante->setOficialia($form['oficialia']);
+           $estudiante->setLibro($form['libro']);
+           $estudiante->setPartida($form['partida']);
+           $estudiante->setFolio($form['folio']);
         // $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneBy(array('id' => $form['sexo'])));
-        // $em->persist($estudiante);
-        // $em->flush();
+           $em->persist($estudiante);
+           $em->flush();
 
         // DISCAPACIDADES
         if($form['tieneDiscapacidad'] == true){
@@ -524,6 +539,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         ->from('SieAppWebBundle:RudeIdioma','ri')
                         ->where('ri.rude = :rudeId')
                         ->andWhere('ri.hablaTipo = 2')
+                        ->orderBy('ri.id','asc')//esta linea para correjir el orden inverso de los idiomas
                         ->setParameter('rudeId', $rude->getId())
                         ->getQuery()
                         ->getResult();
@@ -1134,7 +1150,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
         if($form['idioma1']){
             $rudeIdioma->setRude($rude);
             $rudeIdioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->find($form['idioma1'] ? $form['idioma1'] : 0));
-            $rudeIdioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->find(2));
+            $rudeIdioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->find(2));//habla FRECUENTE
             $rudeIdioma->setFechaRegistro(new \DateTime('now'));
             $rudeIdioma->setFechaModificacion(new \DateTime('now'));
             $em->persist($rudeIdioma);
@@ -1144,7 +1160,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
         if($form['idioma2']){
             $rudeIdioma->setRude($rude);
             $rudeIdioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->find($form['idioma2'] ? $form['idioma2'] : 0));
-            $rudeIdioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->find(2));
+            $rudeIdioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->find(3));//habla MEDIANAMENTE FRECUENTE
             $rudeIdioma->setFechaRegistro(new \DateTime('now'));
             $rudeIdioma->setFechaModificacion(new \DateTime('now'));
             $em->persist($rudeIdioma);
@@ -1154,7 +1170,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
         if($form['idioma3']){
             $rudeIdioma->setRude($rude);
             $rudeIdioma->setIdiomaTipo($em->getRepository('SieAppWebBundle:IdiomaTipo')->find($form['idioma3'] ? $form['idioma3'] : 0));
-            $rudeIdioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->find(2));
+            $rudeIdioma->setHablaTipo($em->getRepository('SieAppWebBundle:HablaTipo')->find(4));//habla MENOS FRECUENTE
             $rudeIdioma->setFechaRegistro(new \DateTime('now'));
             $rudeIdioma->setFechaModificacion(new \DateTime('now'));
             $em->persist($rudeIdioma);
@@ -1532,7 +1548,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         p.complemento,
                         p.fechaNacimiento,
                         p.celular,
-                        p.segipId, 
+                        p.segipId,
+                        p.apellidoEsposo,
+                        IDENTITY(p.estadocivilTipo) as estado_civil, 
                         dt.id as expedido,
                         gt.id as genero, 
                         p.correo, 
@@ -1573,6 +1591,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 'complemento'=>null,
                 'fechaNacimiento'=>null,
                 'segipId'=>null,
+                'apellidoEsposo'=>null,
+                'estado_civil'=>null,
                 'expedido'=>null,
                 'genero'=>null,
                 'correo'=>null,
@@ -1689,7 +1709,6 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             },
                             'property'=>'sigla',
                             'empty_value' => 'Seleccionar...',
-                            'required'=>false,
                             'data'=>($datos['expedido'] != null)?$em->getReference('SieAppWebBundle:DepartamentoTipo', $datos['expedido']):''
                         ))
                     ->add('fechaNacimiento', 'text', array('required' => true))
@@ -1762,8 +1781,10 @@ class InfoEstudianteRudeNuevoController extends Controller {
     /*
     * FUNCION AJAX PARA BUSCAR PERSONA APODERADO
     */
-    public function buscarPersonaAction(Request $request){
-        try {
+    public function buscarPersonaAction(Request $request)
+    {
+        try
+        {
             $carnet = $request->get('carnet');
             $complemento = $request->get('complemento');
             // $complemento = ($request->get('complemento') != "")?$request->get('complemento'):0;
@@ -1771,62 +1792,92 @@ class InfoEstudianteRudeNuevoController extends Controller {
             $materno = $request->get('materno');
             $nombre = $request->get('nombre');
             $fechaNacimiento = $request->get('fechaNacimiento');
+            $esExtranjero=filter_var($request->get('esExtranjero'),FILTER_SANITIZE_NUMBER_INT);
+            $documentoNro=$request->get('documentoNro');
 
-            $parametros = array(
-                'complemento'=>$complemento,
-                'primer_apellido'=>$paterno,
-                'segundo_apellido'=>$materno,
-                'nombre'=>$nombre,
-                'fecha_nacimiento'=>$fechaNacimiento
-            );
-
-            // $respuesta = $this->get('sie_app_web.segip')->verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNacimiento, 'prod', 'academico');
-            $persona = $this->get('sie_app_web.segip')->buscarPersonaPorCarnet($carnet, $parametros, 'prod', 'academico');
-
-            // dump($persona);
-            // die;
-            // dump($persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson']);die;
-
-            //$respuesta = false;
-            // $persona = $persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'];
-            // if($persona == null){
-            //     dump('no existe');
-            // }else{
-            //     dump('existe');
-            // }
-
-            if(isset($persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson']) && $persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'] !== "null"){
-                // dump($persona);die;
-                // $persona = $this->get('sie_app_web.segip')->buscarPersonaPorCarnet($carnet, $parametros, 'dev', 'academico');
-                // $persona = 
-                $persona = json_decode($persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'], true);
-
-                // dump($persona);die;
-
-                $data['status'] = 200;
-                $data['persona'] = array(
-                    'id'=>'segip',
-                    'carnet'=> $persona['NumeroDocumento'],
-                    'complemento'=> ($persona['ComplementoVisible'] == 1)? $persona['Complemento']:'',
-                    'paterno'=> $persona['PrimerApellido'],
-                    'materno'=> $persona['SegundoApellido'],
-                    'nombre'=> $persona['Nombres'],
-                    'fecha_nacimiento'=> $persona['FechaNacimiento']
+            $data=array();
+            if($esExtranjero==0)//es nacional
+            {
+                $parametros = array(
+                    'complemento'=>$complemento,
+                    'primer_apellido'=>$paterno,
+                    'segundo_apellido'=>$materno,
+                    'nombre'=>$nombre,
+                    'fecha_nacimiento'=>$fechaNacimiento
                 );
-            }else{
-                $data['status'] = 404;
-            }
 
-            // $data['status'] = 200;
-            // $data['persona'] = array(
-            //     'id'=>'23519419',
-            //     'carnet'=> '8260138',
-            //     'complemento'=> '',
-            //     'paterno'=> 'QUISPEC',
-            //     'materno'=> 'CHOQUE',
-            //     'nombre'=> 'JHONNY',
-            //     'fecha_nacimiento'=> '20-01-1990'
-            // );
+                // $respuesta = $this->get('sie_app_web.segip')->verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNacimiento, 'prod', 'academico');
+                $persona = $this->get('sie_app_web.segip')->buscarPersonaPorCarnet($carnet, $parametros, 'prod', 'academico');
+
+                // dump($persona);
+                // die;
+                // dump($persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson']);die;
+
+                //$respuesta = false;
+                // $persona = $persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'];
+                // if($persona == null){
+                //     dump('no existe');
+                // }else{
+                //     dump('existe');
+                // }
+
+                if(isset($persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson']) && $persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'] !== "null")
+                {
+                    // dump($persona);die;
+                    // $persona = $this->get('sie_app_web.segip')->buscarPersonaPorCarnet($carnet, $parametros, 'dev', 'academico');
+                    // $persona = 
+                    $persona = json_decode($persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'], true);
+                    // dump($persona);die;
+                    $data['status'] = 200;
+                    $data['persona'] = array(
+                        'id'=>'segip',
+                        'carnet'=> $persona['NumeroDocumento'],
+                        'complemento'=> ($persona['ComplementoVisible'] == 1)? $persona['Complemento']:'',
+                        'paterno'=> $persona['PrimerApellido'],
+                        'materno'=> $persona['SegundoApellido'],
+                        'nombre'=> $persona['Nombres'],
+                        'fecha_nacimiento'=> $persona['FechaNacimiento']
+                    );
+                }
+                else
+                {
+                    $data['status'] = 404;
+                }
+
+                // $data['status'] = 200;
+                // $data['persona'] = array(
+                //     'id'=>'23519419',
+                //     'carnet'=> '8260138',
+                //     'complemento'=> '',
+                //     'paterno'=> 'QUISPEC',
+                //     'materno'=> 'CHOQUE',
+                //     'nombre'=> 'JHONNY',
+                //     'fecha_nacimiento'=> '20-01-1990'
+                // );
+            
+            }
+            else // es extranjero
+            {
+                $personaExtranjera=$this->buscarPersonaExtranjero($documentoNro);
+                if($personaExtranjera)
+                {
+                    $data['status'] = 200;
+                    $data['persona'] = array(
+                        'id'=>'extranjero',//REVISAR--------
+                        'carnet'=> $personaExtranjera->getCarnet(),
+                        'complemento'=> $personaExtranjera->getComplemento(),
+                        'paterno'=> $personaExtranjera->getPaterno(),
+                        'materno'=> $personaExtranjera->getMaterno(),
+                        'nombre'=> $personaExtranjera->getNombre(),
+                        ///'fecha_nacimiento'=> $personaExtranjera->getFechaNacimiento()
+                        'fecha_nacimiento'=> $personaExtranjera->getFechaNacimiento()->format('d-m-Y')
+                    );
+                }
+                else
+                {
+                    $data['status'] = 404;
+                }
+            }
 
             $response = new JsonResponse();
             $response->setData($data);
@@ -1834,6 +1885,26 @@ class InfoEstudianteRudeNuevoController extends Controller {
         } catch (Exception $e) {
             
         }
+    }
+
+    private function buscarPersonaExtranjero($documentoNro)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $extranjero = $em->getRepository('SieAppWebBundle:EstudiantePersonaDiplomatico')->findOneBy(array('documentoNumero'=>$documentoNro));
+
+        if($extranjero)
+        {
+            $extranjero=$extranjero->getPersona();
+            if($extranjero)
+            {
+                $persona=$em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('id'=>$extranjero->getId()));
+                return $persona;
+            }
+            else
+                return false;
+        }
+        else
+            return false;
     }
 
     public function saveFormApoderadoAction(Request $request){
@@ -1866,7 +1937,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
         }
 
         // expedido
-        if (!isset($form['expedido'])) {
+        if (empty($form['expedido']) && strlen($form['expedido'])==0) {
             $expedido = 0;
         }else{
             $expedido = $form['expedido'];
@@ -1877,47 +1948,112 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
             // VERIFICAMOS SI LA PERSONA ES NUEVA SIN CARNET
             // O ES NUEVO PERO VALIDADO POR EL SEGIP
-            if($form['idPersona'] == 'nuevo' or $form['idPersona'] == 'segip'){
+            
+            if($form['idPersona'] == 'nuevo' or $form['idPersona'] == 'segip' or $form['idPersona'] == 'extranjero')
+            {
                 // PREGUNTAMOS SI EL CARNET NO ESTA VACIO
                 // ENTONCES EL DATO VIENE DEL SERVICIO SEGIP
-                if($form['carnet'] != ""){
+                if($form['carnet'] != "")
+                {
                     // BUSCAMOS LA PERSONA EN LA BASE DE DATOS
-                    $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
-                        'carnet'=>$form['carnet'],
-                        'complemento'=>mb_strtoupper($form['complemento'],'utf-8'),
-                        'paterno'=>mb_strtoupper($form['paterno'],'utf-8'),
-                        'materno'=>mb_strtoupper($form['materno'],'utf-8'),
-                        'nombre'=>mb_strtoupper($form['nombre'],'utf-8'),
-                        'fechaNacimiento'=>new \DateTime($form['fechaNacimiento'])
-                    ));
+                    $form['paterno'] = str_replace('--', '', $form['paterno']);
+                    $form['materno'] = str_replace('--', '', $form['materno']);
 
-                    // VERIFICAMOS SI EL REGISTRO NO EXISTE EN LA BASE DE DATOS
-                    if (!$persona) {
-                        // BUSCAMOS NUEVAMENTE A LA PERSONA SIN COMPLEMENTO EN LA BASE DE DATOS
+                    //verificamos si son personas extranjeras
+                    $personaExtranjera = $this->buscarPersonaExtranjero($form['carnet']);
+                    if($personaExtranjera &&  $form['idPersona'] == 'extranjero')//personas extranjeras
+                    {
+                        $persona=$personaExtranjera;
+                    }
+                    else //personas nacionales
+                    {
                         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
                             'carnet'=>$form['carnet'],
+                            'complemento'=>mb_strtoupper($form['complemento'],'utf-8'),
                             'paterno'=>mb_strtoupper($form['paterno'],'utf-8'),
                             'materno'=>mb_strtoupper($form['materno'],'utf-8'),
                             'nombre'=>mb_strtoupper($form['nombre'],'utf-8'),
                             'fechaNacimiento'=>new \DateTime($form['fechaNacimiento'])
                         ));
-
-                        // SI EXISTE LA PERSONA ENTONCES LE AGREGAMOS EL COMPLEMENTO
-                        if ($persona) {
-                            $persona->setComplemento(mb_strtoupper($form['complemento'],'utf-8'));
-                        }else{
-                            $persona = null;
+                        // VERIFICAMOS SI EL REGISTRO NO EXISTE EN LA BASE DE DATOS
+                        if (!$persona)
+                        {
+                            // BUSCAMOS NUEVAMENTE A LA PERSONA SIN COMPLEMENTO EN LA BASE DE DATOS
+                            $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                                'carnet'=>$form['carnet'],
+                                'paterno'=>mb_strtoupper($form['paterno'],'utf-8'),
+                                'materno'=>mb_strtoupper($form['materno'],'utf-8'),
+                                'nombre'=>mb_strtoupper($form['nombre'],'utf-8'),
+                                'fechaNacimiento'=>new \DateTime($form['fechaNacimiento'])
+                            ));
+                            // SI EXISTE LA PERSONA ENTONCES LE AGREGAMOS EL COMPLEMENTO
+                            if ($persona)
+                            {
+                                //Correcion del bug cuando existe dos personas que tienen el mismo CI pero son distitas en fecha 19/03/2021
+                                $objPersonasConMismoCarnet=$em->getRepository('SieAppWebBundle:Persona')->findBy(array('carnet'=>$persona->getCarnet()));
+                                if($objPersonasConMismoCarnet)
+                                {
+                                    foreach ($objPersonasConMismoCarnet as $value)
+                                    {
+                                        if($persona->getId()!= $value->getId() && $value->getSegipId()==0)
+                                        {
+                                            $value->setCarnet($value->getCarnet().'±');
+                                            $em->flush();
+                                        }
+                                    }
+                                }
+                                $persona->setComplemento(mb_strtoupper($form['complemento'],'utf-8'));
+                            }
+                            else
+                            {
+                                //Validacion para evitar que se vuelva a registrar con Carnet=$form['carnet'] y complemento=±,
+                                //validacion creada con apoyo del lic Carlos y lic Erik el 12/03/2021
+                                $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                                    'complemento'=>mb_strtoupper($form['complemento'],'utf-8'),
+                                    'carnet'=>$form['carnet'],
+                                    'fechaNacimiento'=>new \DateTime($form['fechaNacimiento']),
+                                    'segipId'=>'1'
+                                ));
+                                if($persona!=NULL)
+                                {
+                                    $persona->setCarnet($form['carnet']);
+                                    //$persona->setComplemento(mb_strtoupper($form['complemento'],'utf-8'));
+                                    $persona->setPaterno(mb_strtoupper($form['paterno'],'utf-8'));
+                                    $persona->setMaterno(mb_strtoupper($form['materno'],'utf-8'));
+                                    $persona->setNombre(mb_strtoupper($form['nombre'],'utf-8'));
+                                    $persona->setFechaNacimiento=new \DateTime($form['fechaNacimiento']);
+                                }
+                                else
+                                {
+                                    //Validacion para corregir si la fecha de nacimiento de una persona validad por el segip, es diferente en la BD el 22/03/2021
+                                    $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
+                                        'paterno'=>mb_strtoupper($form['paterno'],'utf-8'),
+                                        'materno'=>mb_strtoupper($form['materno'],'utf-8'),
+                                        'nombre'=>mb_strtoupper($form['nombre'],'utf-8'),
+                                        'segipId'=>'1'));
+                                    if($persona!=NULL)
+                                    {
+                                        $persona->setFechaNacimiento=new \DateTime($form['fechaNacimiento']);
+                                    }
+                                    else
+                                    {
+                                        $persona=null;
+                                    }
+                                }
+                            }
                         }
-
-                    }else{
-                        // SI EL REGISTRO EXISTE EN LA BASE DE DATOS
-                        // VERIFICAMOS SI ESTA VALIDADO POR EL SEGIP, SI NO ESTA VALIDADO LO VALIDAMOS
-                        if($persona->getSegipId() != 1){
-                            $persona->setSegipId(1);
+                        else
+                        {
+                            // SI EL REGISTRO EXISTE EN LA BASE DE DATOS
+                            // VERIFICAMOS SI ESTA VALIDADO POR EL SEGIP, SI NO ESTA VALIDADO LO VALIDAMOS
+                            if($persona->getSegipId() != 1){
+                                $persona->setSegipId(1);
+                            }
                         }
                     }
-
-                }else{
+                }
+                else
+                {
                     // SI EL DATO VIENE SIN CARNET
                     // BUSCAMOS PERSONA POR SUS DATOS PERSONALES EN LA BASE DE DATOS
                     $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array(
@@ -1926,7 +2062,6 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         'nombre'=>mb_strtoupper($form['nombre'],'utf-8'),
                         'fechaNacimiento'=>new \DateTime($form['fechaNacimiento'])
                     ));
-                    
                     // VERIFICAMOS SI EXISTE LA PERSONA
                     if($persona){
                         // BUSCAMOS EL TEXTO SC "SIN CARNET" EN EL CAMPO CARNET
@@ -1952,6 +2087,15 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     $persona->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
                     $persona->setCelular($form['celular']);
                     $persona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedido));
+
+                    if(isset($form['estado_civil']))
+                        $persona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find($form['estado_civil']));
+
+                    if(isset($form['apellido_esposo']))
+                        $persona->setApellidoEsposo(mb_strtoupper($form['apellido_esposo'],'utf-8'));
+
+                    $persona->setCorreo($form['correo']);
+
                     $em->flush();
 
                     $idPersona = $persona->getId();
@@ -1972,7 +2116,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             // VERIFICAMOS SI EL REGISTRO ENCONTRADO NO ESTA VALIDADO POR EL SEGIP
                             // PARA ACTUALIZAR SU NUERO DE CARNET Y AGREGARLE EL CARACTER ESPECIAL (±)
                             if ($personaAnterior->getSegipId() != 1) {
-                                $personaAnterior->setCarnet($persona->getCarnet().'±');
+                                $personaAnterior->setCarnet($personaAnterior->getCarnet().'±');
                                 $em->flush();
                             }else{
                                 // SI EL CARNET ESTA OCUPADO POR OTRA PERSONA Y TAMBIEN VALIDADO POR EL SEGIP
@@ -1980,7 +2124,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                                 $response = new JsonResponse();
                                 return $response->setData([
                                     'status'=>500,
-                                    'msg'=>'Carnet duplicado. No se pudo realizar el registro, verifique la información con el segip'
+                                    'msg'=>'Datos personales observado . No se pudo realizar el registro, comuníquese con su técnico de Distrito'
                                 ]);
                             }
                         }
@@ -1997,10 +2141,10 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
                         $form['carnet'] = 'SC'. (count($personasSinCarnet) + 1);
                     }
-                    
                     // REGISTRAMOS LOS DATOS DE LA PERSONA
                     $nuevaPersona = new Persona();
-                    $nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find(98));
+                    //$nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find(98));
+                    $nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find(0));
                     $nuevaPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['genero']));
                     $nuevaPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
                     $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
@@ -2011,6 +2155,14 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     $nuevaPersona->setPaterno(mb_strtoupper($form['paterno'],'utf-8'));
                     $nuevaPersona->setMaterno(mb_strtoupper($form['materno'],'utf-8'));
                     $nuevaPersona->setNombre(mb_strtoupper($form['nombre'],'utf-8'));
+                    if(isset($form['estado_civil'])){
+                        $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find($form['estado_civil']));
+                    }
+                    if(isset($form['apellido_esposo'])){
+                        $nuevaPersona->setApellidoEsposo(mb_strtoupper($form['apellido_esposo'],'utf-8'));
+                    }                    
+                    $nuevaPersona->setCorreo($form['correo']);
+
                     $nuevaPersona->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
                     if($form['idPersona'] == 'segip'){
                         $nuevaPersona->setSegipId(1);
@@ -2024,23 +2176,33 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     $idPersona = $nuevaPersona->getId();
                 }
                 
-            }else{
-
+            }
+            else
+            {
                 /*----------  SI LA PERSONA EXISTE EN LA BASE DIRECTAMENTE  ----------*/
-
                 // MODIFICAMOS LOS DATOS DE LA PERSONA
                 $actualizarPersona = $em->getRepository('SieAppWebBundle:Persona')->find($form['idPersona']);
-                if($actualizarPersona){
+                if($actualizarPersona)
+                {
                     // ACTUALIZAMOS LOS DATOS DE LA PERSONA
                     $actualizarPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedido));
                     $actualizarPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['genero']));
                     $actualizarPersona->setCorreo($form['correo']);
                     $actualizarPersona->setCelular($form['celular']);
+
+                    if(isset($form['estado_civil']))
+                    {
+                        $actualizarPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find($form['estado_civil']));
+                    }
+                    if(isset($form['apellido_esposo']))
+                    {
+                        $actualizarPersona->setApellidoEsposo(mb_strtoupper($form['apellido_esposo'],'utf-8'));
+                    }
                     $em->flush();
                 }
-
                 $idPersona = $actualizarPersona->getId();
             }
+
 
             // Verficamos si el registro de apoderado es nuevo
             // if($form['id'] == 'nuevo'){

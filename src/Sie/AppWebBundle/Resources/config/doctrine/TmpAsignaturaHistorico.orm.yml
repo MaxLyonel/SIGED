@@ -2,12 +2,12 @@ Sie\AppWebBundle\Entity\TmpAsignaturaHistorico:
     type: entity
     table: tmp_asignatura_historico
     indexes:
-        IDX_F8E4B272AAF70791:
-            columns:
-                - area_tipo_id
         IDX_F8E4B272585AE0D9:
             columns:
                 - asignatura_tipo_id
+        IDX_F8E4B272AAF70791:
+            columns:
+                - area_tipo_id
     id:
         id:
             type: bigint
@@ -54,15 +54,6 @@ Sie\AppWebBundle\Entity\TmpAsignaturaHistorico:
             comment: ''
             column: orgacurricular_tipo_id
     manyToOne:
-        areaTipo:
-            targetEntity: AreaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                area_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         asignaturaTipo:
             targetEntity: AsignaturaTipo
             cascade: {  }
@@ -70,6 +61,15 @@ Sie\AppWebBundle\Entity\TmpAsignaturaHistorico:
             inversedBy: null
             joinColumns:
                 asignatura_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        areaTipo:
+            targetEntity: AreaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                area_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

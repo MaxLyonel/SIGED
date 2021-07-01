@@ -41,6 +41,11 @@ class InstitucioneducativaControlOperativoMenus
 
 
     /**
+     * @var integer
+     */
+    private $periodoTipoId;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -164,4 +169,29 @@ class InstitucioneducativaControlOperativoMenus
     {
         return $this->institucioneducativa;
     }
+
+
+    /**
+     * Set gestionTipoId
+     *
+     * @param integer $gestionTipoId
+     * @return InstitucioneducativaControlOperativoMenus
+     */
+    public function setPeriodoTipoId($periodoTipoId)
+    {
+        $this->periodoTipoId = $periodoTipoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get gestionTipoId
+     *
+     * @return integer 
+     */
+    public function getPeriodoTipoId()
+    {
+        return $this->periodoTipoId;
+    }
+
 }

@@ -36,7 +36,7 @@
                 <a href="#" onclick="seeNotaNew('{{data.estudiante_inscripcion_id_raep}}', '{{data.estudiante_id_raep}}', '{{data.gestion_tipo_id_raep}}', '1')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
               {% endif %}
               <span class="clearfix"></span>
-              {% if data.gestion_tipo_id_raep < 2020 and (app.session.get('roluser') == 8 or app.session.get('roluser') == 7) %}
+              {% if data.gestion_tipo_id_raep < 2020 and (app.session.get('roluser') in [7,8,10]) %}
                 <a href="{{path('evaluar_estado',{'inscripcionId': data.estudiante_inscripcion_id_raep})}}" onclick="return confirm('Se evaluará el estado de matrícula final ¿Desea continuar?');"><span class="fa fa-list"></span> Evaluar estado de matrícula</a>
               {% endif %}
               {# {% if data.gestion_tipo_id_raep == 2020 and app.session.get('roluser') == 8 %}

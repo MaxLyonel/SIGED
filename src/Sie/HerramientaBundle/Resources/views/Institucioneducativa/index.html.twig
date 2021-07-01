@@ -2,6 +2,10 @@
 
 {% block contentoption %}
 
+{% set fechaInicioOperativo=date('05/31/2021 14:00:00') %}
+{% set fechaFinOperativo=date('06/4/2022 23:59:59') %}
+{% set fechaActual = date() %}
+
     <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Herramientas <span>Información U.E., Cursos</span></h2>
@@ -111,7 +115,7 @@
                             </div>
                         </a>
                     </li>
-                    {#
+                    {% if fechaActual >= fechaInicioOperativo and fechaActual <= fechaFinOperativo %}
                     <li>
                         <a href="component-tabsaccordion.html#tab2-3" data-toggle="tab">
                             <i class="fa fa-file-text"></i>
@@ -121,7 +125,8 @@
                             </div>
                         </a>
                     </li>
-                    #}
+                    {% endif %}
+                    
 
                 </ul>
             </div><!-- /.panel-heading -->
@@ -132,7 +137,7 @@
                 <div class="tab-content">
 
               <!-- multigrado option start -->
-                    {#
+                    {% if fechaActual >= fechaInicioOperativo and fechaActual <= fechaFinOperativo %}
                     <div class="tab-pane fade " id="tab2-3">
                         <div class="row">
                             <div class="col-md-9 col-sm-9 col-xs-9">
@@ -142,7 +147,8 @@
                             </div>
                         </div>
                     </div>
-                    #}
+                    {% endif %}
+                    
                 <!-- multigrado option end -->                                    
 
                     <div class="tab-pane fade in active" id="tab2-1">

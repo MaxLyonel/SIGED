@@ -99,7 +99,13 @@
                         <h4 class="portlet-title">Administrativos</h4>
                     </div>
                     <div class="pull-right">
-                        <a href="{{path('personaladministrativoinscripcion_find')}}" class="btn btn-default btn-sm"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
+                        
+                        {% if swCloseOperative %}
+                            <a href="{{path('personaladministrativoinscripcion_close_operative', { 'idDepto':lugarInfo.cod_dep, 'idDistrito':institucion.id,'gestion':gestion}) }}" class="btn btn-info btn-sm"><i class="fa fa-close"></i> Download Report</a>
+                        {% else %}
+                            <a href="{{path('personaladministrativoinscripcion_find')}}" class="btn btn-success btn-sm"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
+                            <a href="{{path('personaladministrativoinscripcion_close_operative', { 'idDepto':lugarInfo.cod_dep, 'idDistrito':institucion.id,'gestion':gestion}) }}" class="btn btn-default btn-sm"><i class="fa fa-close"></i> Cerrar Operativo</a>
+                        {% endif %}
                     </div>
                     <div class="clearfix"></div>
                 </div><!-- /.panel-heading -->
@@ -118,14 +124,16 @@
                                             <th>Materno</th>
                                             <th>Nombre(s)</th>
                                             <th>Tipo</th>
+                                            <th>Salud</th>
                                             <th>Acciones</th>
-                                            <th>Es vigente</th>
+                                            {#<th>Es vigente</th>#}
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for personal in personal %}
                                             {% set persona = personal.persona %}
                                             {% set tipo = personal.personaAdministrativoInscripcionTipo %}
+                                            {% set health = personal.estadosaludTipo %}
                                             <tr>
                                                 <td data-title="N°">{{ loop.index }}</td>
                                                 <td data-title="Carnet">{{ persona.carnet }}</td>
@@ -133,6 +141,7 @@
                                                 <td data-title="Materno">{{ persona.materno }}</td>
                                                 <td data-title="Nombre(s)">{{ persona.nombre }}</td>
                                                 <td data-title="Tipo">{{ tipo.personaAdministrativoInscripcion }}</td>
+                                                <td data-title="Saludo">{{ health.estadosalud }}</td>
                                                 <td data-title="Acciones">
                                                     <form action="{{path('personaladministrativoinscripcion_edit')}}" method="post" style="display:inline-block">
                                                         <input type="hidden" name="idPersona" value="{{persona.id}}">
@@ -149,6 +158,7 @@
                                                         <button type="submit" class="btn-link" onclick="return confirm('Se eliminara el registro!. ¿Desea continuar?');"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
                                                     </form>
                                                 </td>
+                                                {#
                                                 <td>
                                                     <form action="{{path('personaladministrativoinscripcion_es_vigente_administrativo')}}" method="post" style="display: inline-block">
                                                         <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
@@ -161,6 +171,7 @@
                                                         {% endif %}
                                                     </form>  
                                                 </td>
+                                                #}
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -175,4 +186,33 @@
         </div>
     </div> 
 {% endblock %}
+{% block javascripts %}
+    {{parent()}}
+    <script>
+    var closeOperative = function(idDistrito, idDepto, gestion){
+            /*$.ajax({
+             type: 'post',
+             url: Routing.generate('personaladministrativoinscripcion_close_operative'),
+             data: {idDistrito: idDistrito, idDepto:idDepto, gestion:gestion},
+             beforeSend: function () {
+                $("#templateId").empty();
+                $("#form_category").empty();
+                $("#form_category").append('<option value="">Seleccionar</option>');
+             },
+             success: function (data) {
+                  $("#form_category").empty();
 
+                },
+             statusCode: {
+                 500: function () {
+
+                 },
+                 404: function () {
+
+                 }
+             }
+          });*/
+        
+    };
+    </script>    
+{% endblock %}

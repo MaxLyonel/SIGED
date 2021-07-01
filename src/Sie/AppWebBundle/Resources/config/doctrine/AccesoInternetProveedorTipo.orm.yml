@@ -1,0 +1,24 @@
+Sie\AppWebBundle\Entity\AccesoInternetProveedorTipo:
+    type: entity
+    table: acceso_internet_proveedor_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        proveedor:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }
