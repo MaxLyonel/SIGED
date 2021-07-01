@@ -115,7 +115,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     ->where('ei.estadomatriculaTipo in (:estadomatriculaTipo)')
                     ->andWhere('ic.institucioneducativa = :institucioneducativa')
                     ->andWhere('ic.gestionTipo = :gestionTipo')
-                    ->setParameter('estadomatriculaTipo', $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4))
+                    ->setParameter('estadomatriculaTipo', $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id' => $estadosArray)))
                     ->setParameter('institucioneducativa', $institucion)
                     ->setParameter('gestionTipo', $gestion)
                     ->distinct('e.id')
