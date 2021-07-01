@@ -730,13 +730,16 @@ class TramiteInscriptionScoreController extends Controller{
 
             $datos = $this->datosFormulario($idTramite);
             
-            $codigoQR = 'FIGP'.$idTramite.'|'.$codigoRude.'|'.$sie.'|'.$gestion;
+            //$codigoQR = 'FICGP'.$idTramite.'|'.$codigoRude.'|'.$sie.'|'.$gestion;
+            $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$codigoRude));
+
+            $sendDataRequest = array(
+                'idTramite'=>$idTramite,
+                'urlreporte'=> $this->generateUrl('download_process_inscriptionScore_yearOld', array('idStudent'=>$objStudent->getId(),'sie'=>$sie,'idTramite'=>$idTramite, 'codigoRude'=>$codigoRude))
+            );
 
             $response->setStatusCode(200);
-            $response->setData(array(
-                'idTramite'=>$idTramite,
-                'urlreporte'=> 'krloss'//$this->generateUrl('download_tramite_modificacion_calificaciones_formulario', array('idTramite'=>$idTramite, 'codigoQR'=>$codigoQR))
-            ));
+            $response->setData($sendDataRequest);
 
             $em->getConnection()->commit();
 
