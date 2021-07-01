@@ -88,7 +88,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     return $this->redirect($this->generateUrl('ie_acceso_internet_index', array('iaiid' => $iai->getId())));
                 }
                 
-                $estadosArray = [4,5,11,28,55];
+                $estadosArray = [4,5,11,22,28,55,57,58,70,71,72,73];
 
                 $repository = $em->getRepository('SieAppWebBundle:Estudiante');
                 $query = $repository->createQueryBuilder('e')
@@ -115,7 +115,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     ->where('ei.estadomatriculaTipo in (:estadomatriculaTipo)')
                     ->andWhere('ic.institucioneducativa = :institucioneducativa')
                     ->andWhere('ic.gestionTipo = :gestionTipo')
-                    ->setParameter('estadomatriculaTipo', $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4))
+                    ->setParameter('estadomatriculaTipo', $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id' => $estadosArray)))
                     ->setParameter('institucioneducativa', $institucion)
                     ->setParameter('gestionTipo', $gestion)
                     ->distinct('e.id')

@@ -110,13 +110,14 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $inscripcionid = trim(strtoupper($request->get('inscripcionid')));
         $estudianteid = trim(strtoupper($request->get('estudianteid')));
         $gestion = trim(strtoupper($request->get('gestion')));
+        $evaluarEstadomatricula = $this->evaluarEstadomatricula($inscripcionid);
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudianteid);
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
 
         $areasEstudiante = $this->getAreasEstudiante($inscripcionid);
         $areasCurso = $this->getAreasCurso($inscripcionid);
         $areasAsignar = $this->getAreasAsignar($inscripcionid, $areasEstudiante);
-        
+
         return $this->render($this->session->get('pathSystem') . ':GestionesPasadasAreasEstudiante:areas.html.twig', array(
             'estudiante' => $estudiante,
             'inscripcion' => $inscripcion,
@@ -414,6 +415,26 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             $estudianteNotaArray[$nota['ntId']] = $nota['notaCuantitativa'];
         }
         
+        // select a.id, b.id
+        // from institucioneducativa_especialidad_tecnico_humanistico a
+        //     inner join especialidad_tecnico_humanistico_tipo b on a.especialidad_tecnico_humanistico_tipo_id = b.id
+        // where institucioneducativa_id = 80480171 and gestion_tipo_id = 2019 and b.es_vigente is true;
+        if($estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() == 1039) {
+            $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico');
+            $query = $repository->createQueryBuilder('ieth')
+                ->select('ieth.id iethId, etht.id ethtId, etht.especialidad')
+                ->innerJoin('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo', 'etht', 'WITH', 'ieth.especialidadTecnicoHumanisticoTipo = etht.id')
+                ->where('ieth.institucioneducativa = :institucioneducativa')
+                ->andWhere('ieth.gestionTipo = :gestion')
+                ->andWhere('etht.esVigente = :estado')
+                ->setParameter('institucioneducativa', $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId())
+                ->setParameter('gestion', $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId())
+                ->setParameter('estado', 't')
+                ->getQuery();
+
+            $especialidades = $query->getResult();
+        }
+        
         return $this->render($this->session->get('pathSystem') . ':GestionesPasadasAreasEstudiante:form_calificaciones.html.twig', array(
             'libreta' => $libreta,
             'estudianteNotaArray' => $estudianteNotaArray,
@@ -422,7 +443,8 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'areaid' => $areaid,
             'gestion' => $gestion,
             'nivelid' => $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId(),
-            'gradoid' => $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId()
+            'gradoid' => $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId(),
+            'especialidades' => $especialidades
         ));
     }
     
@@ -513,7 +535,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
         } else if($igestion > 2013 && $igestion < 2020) {
             $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
-        } else if($igestion = 2020) {
+        } else if($igestion == 2020) {
             if($inivel_tipo_id == 12) {
                 if($igrado_tipo_id > 1) {
                     $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
