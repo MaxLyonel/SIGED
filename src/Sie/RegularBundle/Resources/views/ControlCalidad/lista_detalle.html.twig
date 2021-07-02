@@ -247,6 +247,10 @@
                                                 <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
                                                 <input type="hidden" id="form_optionTodo" name="form[optionTodo]" value=2>
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>
+                                            <form action="{{path('ccalidad_omitir')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
                                             </form>                                            
                                         {% endif %}
                                         {% if regla.id == 16 %}
