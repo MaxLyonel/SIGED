@@ -1,21 +1,29 @@
-<form id="formCalificaciones" name="formCalificaciones" style="background: #D5EDEA;">
-    <input type="hidden" name="areaid" value="{{areaid}}">
-    <input type="hidden" name="inscripcionid" value="{{inscripcionid}}">
-    <div class="col-md-12" style="background: #D5EDEA; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
-        <div class="form-group">
-            <label for="especialidades" class="col-md-4 col-md-offset-2 control-label text-right"><strong>Seleccionar Especialidad:</strong></label>
-            <div class="col-md-4">
-                {% if especialidades %}
-                    <select id="especialidades" name="especialidades" class="form-control">
-                        <option value="0">Seleccionar...</option>
-                        {% for especialidad in especialidades %}
-                            <option value="{{especialidad.ethtId}}">{{especialidad.especialidad}}</option>
-                        {% endfor %}
-                    </select>
-                {% endif %}
-            </div>
+<form id="formCalificaciones" name="formCalificaciones" style="background: #BDD6E5;">
+    <input type="hidden" name="areaid" value="{{areaid}}" />
+    <input type="hidden" name="inscripcionid" value="{{inscripcionid}}" />
+    {% if estudianteAsignatura.institucioneducativaCursoOferta.asignaturaTipo.id == 1039 %}
+        <div class="col-md-12" style="background: #BDD6E5; margin-top: 10px; margin-bottom: 10px; padding: 5px;">
+            {% if tiene_especialidad %}
+                <h4>Especialidad: {{especialidadEstudiante.especialidadTecnicoHumanisticoTipo.especialidad}}</h4>
+            {% else %}
+                <div class="form-group">
+                    <label for="especialidades" class="col-md-4 col-md-offset-2 control-label text-right"><strong>Seleccionar Especialidad:</strong></label>
+                    <div class="col-md-4">
+                        {% if especialidades %}
+                            <select id="especialidades" name="especialidades" class="form-control">
+                                <option value="0">Seleccionar...</option>
+                                {% for especialidad in especialidades %}
+                                    <option value="{{especialidad.iethId}}">{{especialidad.especialidad}}</option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            <input type="hidden" id="especialidades" name="especialidades" value="0" />
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
-    </div>
+    {% endif %}
     <table class="table table-primary table-striped">
         <thead class="cf">
             <tr>
