@@ -353,7 +353,7 @@
                                 <hr>
                                 <h5>
                                     <b>Detalle de calificaciones</b>
-                                    <a v-if="datos != ''" class="btn btn-primary" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Registrar calificaciones)</a>
+                                    <a v-if="datos != ''" class="btn btn-primary yearOld" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Registrar calificaciones</a>
                                 </h5>                                
                             </div>
                         </div>
@@ -476,7 +476,7 @@
                                                     <div class="row">
                                                     <div class="col-sm-12">
                                                         </br>
-                                                        <a  v-if="!this.RequestInscription.length" class="btn btn-warning" style="float:right; margin-top:-2px;" @click='registreInscription' > <i class="fa fa-book"></i> Registrar </a>
+                                                        <a  v-if="!this.RequestInscription.length" class="btn btn-warning yearOld" style="float:right; margin-top:-2px;" @click='registreInscription' > <i class="fa fa-book"></i> Registrar </a>
                                                     </div>                     
                                                     </div>
                                                 </div>                                            
@@ -616,7 +616,7 @@
                             </b>
                         </div>
                         <div class="pull-right">
-                            <button type="button" class="btn btn-primary" v-on:click="cerrarModal">Aceptar</button>
+                            <button type="button" class="btn btn-primary yearOld" v-on:click="cerrarModal">Aceptar</button>
                         </div>
                     </div>
                 </div>
