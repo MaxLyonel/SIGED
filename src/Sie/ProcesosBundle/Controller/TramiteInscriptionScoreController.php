@@ -731,11 +731,12 @@ class TramiteInscriptionScoreController extends Controller{
             $datos = $this->datosFormulario($idTramite);
             
             //$codigoQR = 'FICGP'.$idTramite.'|'.$codigoRude.'|'.$sie.'|'.$gestion;
+
             $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$codigoRude));
 
             $sendDataRequest = array(
                 'idTramite'=>$idTramite,
-                'urlreporte'=> $this->generateUrl('download_process_inscriptionScore_yearOld', array('idStudent'=>$objStudent->getId(),'sie'=>$sie,'idTramite'=>$idTramite, 'codigoRude'=>$codigoRude))
+                'urlreporte'=> $this->generateUrl('tramite_download_inscriptionScore_yearOld', array('idStudent'=>$objStudent->getId(),'sie'=>$sie,'idTramite'=>$idTramite, 'codigoRude'=>$codigoRude, 'gestion'=>$gestion))
             );
 
             $response->setStatusCode(200);
@@ -2075,6 +2076,25 @@ class TramiteInscriptionScoreController extends Controller{
             
         }
     }
+
+
+    public function requestInsCalYearOldAction(Request $request, $idStudent,$sie,$idTramite, $codigoRude, $gestion){
+
+        $response = new Response();
+
+        $codigoQR = 'FICGP'.$idTramite.'|'.$codigoRude.'|'.$sie.'|'.$gestion;
+
+        $data = $this->session->get('userId').'|'.$gestion.'|'.$idTramite;
+        //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_regu_ins_pas_calif_V1_eea.rptdesign&estudiante_id=' .$idStudent.'&institucioneducativa_id='. $sie.'&tramite_id='.$idTramite.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }       
     
     /*=====  End of FUNCIONES COMPLEMENTARIAS  ======*/
     

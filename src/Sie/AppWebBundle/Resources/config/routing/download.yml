@@ -192,11 +192,7 @@ donwload_ddjjStudentsQuipus:
 
 download_tramite_modificacion_calificaciones_formulario:
     path:     /abc/{idTramite}/{codigoQR}
-    defaults: { _controller: SieAppWebBundle:Download:calificacionesFormulario }
-
-download_process_inscriptionScore_yearOld:
-    path:     /ficgp/{idStudent}/{sie}/{idTramite}/{codigoQR}
-    defaults: { _controller: SieAppWebBundle:Download:requestInsCalYearOld }    
+    defaults: { _controller: SieAppWebBundle:Download:calificacionesFormulario }  
 
 download_formulario_rude:
     path:    /downloadLibretaRude/{idInscripcion}/{rude}/{sie}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}/{ciclo}
