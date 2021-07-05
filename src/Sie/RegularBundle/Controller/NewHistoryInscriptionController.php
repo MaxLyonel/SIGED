@@ -261,11 +261,11 @@ class NewHistoryInscriptionController extends Controller {
         } else if($igestion == 2020) {
             if($inivel_tipo_id == 12) {
                 if($igrado_tipo_id > 1) {
-                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             } else if($inivel_tipo_id == 13) {
                 if($igrado_tipo_id >= 1) {
-                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             }
         }
