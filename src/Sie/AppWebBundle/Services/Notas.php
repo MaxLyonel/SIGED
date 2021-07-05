@@ -4035,21 +4035,21 @@ die;/*
         } else if($igestion == 2020) {
             if($inivel_tipo_id == 12) {
                 if($igrado_tipo_id > 1) {
-                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             } else if($inivel_tipo_id == 13) {
                 if($igrado_tipo_id >= 1) {
-                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             }
-        } else if($igestion == 2021) {
+        }else if($igestion == 2021) {
             if($inivel_tipo_id == 12) {
                 if($igrado_tipo_id >= 1) {
-                    $complementario = "'(6,7)','(6,7,8)','(9,11)','51'";
+                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             } else if($inivel_tipo_id == 13) {
                 if($igrado_tipo_id >= 1) {
-                    $complementario = "'(6,7)','(6,7,8)','(9,11)','51'";
+                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             }
         }

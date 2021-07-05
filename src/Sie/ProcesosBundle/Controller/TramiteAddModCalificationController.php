@@ -456,12 +456,13 @@ class TramiteAddModCalificationController extends Controller {
             }
 
             $datos = $this->datosFormulario($idTramite);
-            $codigoQR = 'FTMC'.$idTramite.'|'.$datos['codigoRude'].'|'.$datos['sie'].'|'.$datos['gestion'];
+            //$codigoQR = 'FTMC'.$idTramite.'|'.$datos['codigoRude'].'|'.$datos['sie'].'|'.$datos['gestion'];
+            $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$datos['codigoRude']));
 
             $response->setStatusCode(200);
             $response->setData(array(
                 'idTramite'=>$idTramite,
-                'urlreporte'=> $this->generateUrl('download_tramite_modificacion_calificaciones_formulario', array('idTramite'=>$idTramite, 'codigoQR'=>$codigoQR))
+                'urlreporte'=> $this->generateUrl('tramite_add_mod_download_requet', array('idStudent'=>$objStudent->getId(),'sie'=>$datos['sie'],'idTramite'=>$idTramite, 'codigoRude'=>$datos['codigoRude'], 'gestion'=>$datos['gestion']))
             ));
 
             $em->getConnection()->commit();
@@ -1622,6 +1623,24 @@ class TramiteAddModCalificationController extends Controller {
             
         }
     }
+
+    public function requestInsCalYearOldAction(Request $request, $idStudent,$sie,$idTramite, $codigoRude, $gestion){
+
+        $response = new Response();
+
+        $codigoQR = 'FICGP'.$idTramite.'|'.$codigoRude.'|'.$sie.'|'.$gestion;
+
+        $data = $this->session->get('userId').'|'.$gestion.'|'.$idTramite;
+        //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_mod_calif_V1_eea.rptdesign&estudiante_id=' .$idStudent.'&institucioneducativa_id='. $sie.'&tramite_id='.$idTramite.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }     
     
     /*=====  End of FUNCIONES COMPLEMENTARIAS  ======*/
     

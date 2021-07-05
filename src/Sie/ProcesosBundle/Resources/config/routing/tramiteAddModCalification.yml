@@ -56,3 +56,7 @@ tramite_add_mod_cal_deriva_departamento:
 tramite_add_mod_cal_acta_imprimir:
     path:     /kactaImprimir
     defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:actaImprimir }
+
+tramite_add_mod_download_requet:
+    path:     /famcgp/{idStudent}/{sie}/{idTramite}/{codigoRude}/{gestion}
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:requestInsCalYearOld }  
