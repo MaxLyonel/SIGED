@@ -43,9 +43,9 @@ sie_procesos_wf_tramite:
     resource: "@SieProcesosBundle/Resources/config/routing/wftramite.yml"
     prefix:   /sie/tramite
 
-sie_procesos_tramite_modificacion_calificaciones:
-    resource: "@SieProcesosBundle/Resources/config/routing/tramiteModificacionCalificaciones.yml"
-    prefix:   /sie/tramite/tramitemodificacionCalificaciones
+# sie_procesos_tramite_modificacion_calificaciones:
+#     resource: "@SieProcesosBundle/Resources/config/routing/tramiteModificacionCalificaciones.yml"
+#     prefix:   /sie/tramite/tramitemodificacionCalificaciones
 
 #Talento extraordinario y aceleracion educativa
 sie_especial_talento_extraordinario:
@@ -55,3 +55,12 @@ sie_especial_talento_extraordinario:
 sie_procesos_tramite_aceleracion:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteAceleracion.yml"
     prefix:   /sie/tramite/aceleracion
+
+
+sie_procesos_tramite_inscription_score:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteInscriptionScore.yml"
+    prefix:   /sie/tramite/inscriptionscore
+
+ie_procesos_tramite_modificacion_calificaciones:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteAddModCalification.yml"
+    prefix:   /sie/tramite/tramiteAddModCalification

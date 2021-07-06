@@ -1,0 +1,62 @@
+tramite_add_mod_cal_index:
+    path:     /
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:index }
+
+tramite_add_mod_cal_buscar_estudiante:
+    path:     /kbuscarEstudiante
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:buscarEstudiante }
+    options:
+        expose: true
+
+tramite_add_mod_cal_buscar_calificaciones:
+    path:     /kbuscarCalificaciones
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:buscarCalificaciones }
+    options:
+        expose: true
+
+tramite_add_mod_cal_formulario_save:
+    path:     /kformulariosave
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:formularioSave }
+    options:
+        expose: true
+
+tramite_add_mod_cal_formulario_imprimir:
+    path:     /kformularioImprimir
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:formularioImprimir }
+
+
+tramite_add_mod_cal_formulario_vista_imprimir_libreta:
+    path:     /kformularioVistaImprimirLibreta
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:formularioVistaImprimirLibreta }
+
+tramite_add_mod_cal_formulario_vista_imprimir_finalizar:
+    path:     /kformularioVistaImprimirFinalizar/{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:formularioVistaImprimirFinalizar }
+
+# DISTRITO
+
+tramite_add_mod_cal_recepcion_verifica_distrito:
+    path:     /krecepcionaVerificaDistrito
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:recepcionVerificaDistrito }
+
+tramite_add_mod_cal_deriva_distrito:
+    path:     /kderivaDistrito
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:derivaDistrito }
+
+# DEPARTAMENTO
+
+tramite_add_mod_cal_recepcion_verifica_departamento:
+    path:     /krecepcionaVerificaDepartamento
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:recepcionVerificaDepartamento }
+
+tramite_add_mod_cal_deriva_departamento:
+    path:     /kderivaDepartamento
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:derivaDepartamento }
+
+tramite_add_mod_cal_acta_imprimir:
+    path:     /kactaImprimir
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:actaImprimir }
+
+tramite_add_mod_download_requet:
+    path:     /famcgp/{idStudent}/{sie}/{idTramite}/{codigoRude}/{gestion}
+    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:requestInsCalYearOld }  

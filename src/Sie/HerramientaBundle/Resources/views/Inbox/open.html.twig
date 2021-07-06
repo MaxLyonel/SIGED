@@ -21,6 +21,9 @@
 <div class="body-content animated fadeIn">
     {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Menú Principal', 'gestion': data.gestion,'sie': data.ieducativa.id, 'ieducativa': data.ieducativa.institucioneducativa, 'opcion': 'Acceso a Módulos'} %}
     {% include 'SieHerramientaBundle:Principal:onlyview.html.twig'%}
+    {% if objObsQA %}
+        {% include 'SieHerramientaBundle:Principal:list_inconsistencia.html.twig' with {'objObsQA': objObsQA, 'sie': data.ieducativa.id,'institucion': data.ieducativa.institucioneducativa, 'gestion': data.gestion} %}
+    {% endif %}
     {% if tuicion %}
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">

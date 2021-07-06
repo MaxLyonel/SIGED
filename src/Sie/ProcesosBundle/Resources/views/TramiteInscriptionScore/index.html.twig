@@ -5,6 +5,9 @@
         [v-cloak]{
             display: none;
         }
+        .formRequired{
+            margin-left: 5px;color: red;
+        },
         .buscador{
             margin-top: -20px;
             /* background: #E4E4E4; */
@@ -159,17 +162,17 @@
         <div class="body-content animated fadeIn">
 
             <div class="panel panel-primary" v-if="urlreporte == ''">
-                <div class="panel-heading">
+                <div class="panel-heading yearOld">
                     <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario </h3>
                 </div>
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="text-center">
-                                <h3>FORMULARIO DE ADICIÓN Y/O MODIFICACIÓN DE CALIFICACIONES</h3>
+                                <h3>FORMULARIO DE INSCRIPCIÓN Y REGISTRO DE CALIFICACIONES</h3>
                                 <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
                             </div>
-                            <a class="btn btn-primary" data-toggle="modal" href='#modalEstudiante' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Buscar estudiante </a>
+                            <a class="btn btn-primary yearOld" data-toggle="modal" href='#modalEstudiante' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Buscar estudiante </a>
                             <div class="clearfix"></div>
                             <div v-if="datos != ''">
                                 <div class="row">
@@ -217,13 +220,13 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <table class="table table-condensed table-bordered">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                                        <table class="table table-condensed table-bordered " >
                                             <thead>
                                                 <tr><th colspan="4"><b>Datos del Trámite</b></th></tr>
                                             </thead>
                                             <tbody>
-                                                <tr><th colspan="4">Datos de Inscripción</th></tr>
+                                                <tr><th colspan="4" class="yearOld">Datos de Solicitud de Inscripción</th></tr>
                                                 <tr><th>Nivel</th><td>${nivel}</td><th>Paralelo</th><td>${paralelo}</td></tr>
                                                 <tr><th>Grado</th><td>${grado}</td><th>Turno</th><td>${turno}</td></tr>
                                                 <tr><td colspan="2"></td><th>Gestión</th><td>${gestion}</td></tr>
@@ -231,11 +234,7 @@
                                         </table>
                                     </div>
                                 </div>
-                                <hr>
-                                <h5>
-                                    <b>Detalle de calificaciones</b>
-                                    <a v-if="datos != ''" class="btn btn-primary" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Seleccionar calificación(es)</a>
-                                </h5>
+
                                 <div v-if="notas.length > 0 || notasCualitativas.length > 0">
                                     <table v-if="notas.length > 0" class="table table-bordered table-striped table-condensed">
                                         <thead>
@@ -322,22 +321,23 @@
                                                         </label>
                                                     </label>
                                                 </div>
-                                                <div class="checkbox">
+                                                
+                                                {# <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox" v-model="checkCuaderno">
                                                         Registro o cuaderno pedagógico
                                                     </label>
-                                                </div>
+                                                </div> #}
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox" v-model="checkFormulario">
-                                                        Formulario de adición y/o modificación de calificaciones
+                                                        Solicitud de Regularización del año
                                                     </label>
                                                 </div>
                                             </div>
                                             <div class="text-center">
                                                 <a href="" class="btn btn-default">Cancelar</a>
-                                                <button v-bind:disabled="formularioEnviado" v-on:click="enviarSolicitud()" type="button" class="btn btn-success">Enviar solicitud</button>
+                                                <button v-bind:disabled="formularioEnviado" v-on:click="enviarSolicitud()" type="button" class="btn btn-success">Enviar solicitud ABD</button>
                                             </div>
                                         </div>
                                     </div>
@@ -345,11 +345,16 @@
 
                                 </div>
                                 <div v-else>
-                                    <div class="alert alert-info">
+                                    <div class="alert alert-warning">
                                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                        <strong>Nota!</strong> Seleccione las calificaciones que solicita adicionar o modificar. Haga clic en el boton "Agregar calificación" ->
+                                        <strong>Nota!</strong> Registre las Calificaciones en "Registrar Calificaciones" ->
                                     </div>
                                 </div>
+                                <hr>
+                                <h5>
+                                    <b>Detalle de calificaciones</b>
+                                    <a v-if="datos != ''" class="btn btn-primary yearOld" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Registrar calificaciones</a>
+                                </h5>                                
                             </div>
                         </div>
 
@@ -379,7 +384,7 @@
         <div class="modal fade" id="modalEstudiante">
             <div class="modal-dialog" style="width:800px">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header yearOld">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title"> <i class="fa fa-search"></i> Buscar estudiante</h4>
                     </div>
@@ -392,7 +397,7 @@
                                 <input type="text" class="form-control" v-model="rudeBuscar" maxlength="18" v-on:keyup.enter="buscarEstudiante()" placeholder="Ingrese el Código RUDE a buscar">
                             </div>
                             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar </button>
+                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary yearOld"><i class="fa fa-search"></i> Buscar </button>
                             </div>
                         </div>
 
@@ -402,7 +407,7 @@
                         </div>
 
                         <div v-if="inscripciones.length > 0">
-                            <p class="encabezado bg-primary">Datos Estudiante</p>
+                            <p class="encabezado yearOld">Datos Estudiante</p>
                             <table class="table table-primary">
                                 <tr>
                                     <th>Código Rude</th>
@@ -414,41 +419,119 @@
                                 </tr>
                             </table>
                             <br>
-                            <p class="encabezado bg-primary">Historial de Inscripciones: <span> ( Seleccione una inscripción )</span> </p>
+                            {# <p class="encabezado bg-primary">Informacion Solicitud <span> ()</span> </p> #}
                             <div v-if="cargandoCalificaciones" style="position:absolute; text-align:center; background:#FFFFFF; width:96%">
                                 <img src="{{asset('img/loading.gif')}}" alt=""> Cargando calificaciones de la gestion ${gestion}
                             </div>
-                            <table class="table table-striped table-default">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center border-right">#</th>
-                                        <th>Gestión</th>
-                                        <th>Sie</th>
-                                        <th>Institución educativa</th>
-                                        <th>Nivel</th>
-                                        <th>Grado</th>
-                                        <th>Paralelo</th>
-                                        <th>Estado Matrícula</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="(ins, index) in inscripciones">
-                                        <td class="text-center border-right">${ index + 1}</td>
-                                        <td>${ins.gestion}</td>
-                                        <td>${ins.sie}</td>
-                                        <td>${ins.institucioneducativa}</td>
-                                        <td>${ins.nivel}</td>
-                                        <td>${ins.grado}</td>
-                                        <td>${ins.paralelo}</td>
-                                        <td>${ins.estadomatricula}</td>
-                                        <td>
-                                            <a v-if="(ins.estadomatriculaId == 5 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11 || ins.estadomatriculaId == 28) && (ins.idNivel != 1 && ins.idNivel != 11) && (ins.sie == sieActual) && (ins.gestion !=2021)" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
-                                            {# <a v-bind:href="'{{path("solicitud_modificacion_calificaciones_formulario_index")}}?idInscripcion=' + ins.idInscripcion" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-edit"></i> </a> #}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <div class="row">  
+                                <div class="col-md-12">
+
+                                    <div class="panel panel-primary" v-if="urlreporte == ''">
+                                        <div class="panel-heading yearOld">
+                                            <h3 class="panel-title"> <i class="fa fa-file"></i> Solicitud de Inscripción </h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="table-responsive">
+
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <label for="sie22">Gestion<span class="formRequired">*</span></label>
+                                                        <select name="arrYear" id="idYear" v-model="DBinfoInscription.gestionSelected" class="custom-select form-control" v-on:change="loadLevel">
+                                                            <option value="">Seleccionar...</option>
+                                                            <option v-for="item in DBYears"  :value="item.id">${ item.year }</option>
+                                                        </select>	                                  
+                                                    </div>                                  
+                                                    <div class="col-sm-6">
+                                                        <label for="nivel">Nivel<span class="formRequired">*</span></label>                                  
+                                                        <select name="arrLevel" id="idpais" v-model="DBinfoInscription.nivelId" class="custom-select form-control" v-on:change="loadGrado">
+                                                        <option value="">Seleccionar...</option>
+                                                        <option v-for="item in DBLevel"  :value="item.id">${ item.level }</option>#}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <label for="depto">Grado<span class="formRequired">*</span></label>
+                                                            <select name="arrGrado" id="idgrado" v-model="DBinfoInscription.gradoId" class="custom-select form-control" v-on:change="loadParalelo">  
+                                                                <option value="">Seleccionar...</option>
+                                                                <option v-for="item in DBGrado"  :value="item.id">${ item.grado }</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <label for="paralelo">Paralelo<span class="formRequired">*</span></label>
+                                                            <select name="arrParalelo" id="idparalelo" v-model="DBinfoInscription.paraleloId" class="custom-select form-control"  v-on:change="loadTurno">  
+                                                                <option value="">Seleccionar...</option>
+                                                                <option v-for="item in DBParalelo"  :value="item.id">${ item.paralelo }</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <label for="turno">Turno<span class="formRequired">*</span></label>
+                                                            <select name="arrTurno" id="idturno" v-model="DBinfoInscription.turnoId" class="custom-select form-control" >  
+                                                                <option value="">Seleccionar...</option>
+                                                                <option v-for="item in DBTurno"  :value="item.id">${ item.turno }</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                    <div class="col-sm-12">
+                                                        </br>
+                                                        <a  v-if="!this.RequestInscription.length" class="btn btn-warning yearOld" style="float:right; margin-top:-2px;" @click='registreInscription' > <i class="fa fa-book"></i> Registrar </a>
+                                                    </div>                     
+                                                    </div>
+                                                </div>                                            
+ 
+                                            </div>                                                  
+                                        </div>
+                                    </div>
+
+                                    {# start here the inscription request #}
+                                    <div class="panel panel-primary" v-if="this.RequestInscription.length > 0">
+                                        <div class="panel-heading yearOld">
+                                            <h3 class="panel-title"> <i class="fa fa-file"></i> Solicitud Inscripción </h3>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-default" >
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center border-right">#</th>
+                                                            <th>Gestión</th>
+                                                            {# <th>Sie</th>
+                                                            <th>Institución educativa</th> #}
+                                                            <th>Nivel</th>
+                                                            <th>Grado</th>
+                                                            <th>Paralelo</th>
+                                                            <th>Turno</th>
+                                                            <th></th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr v-for="(requesetIns, index) in RequestInscription">
+                                                            <td class="text-center border-right">${ index + 1}</td>
+                                                            <td>${requesetIns.gestion}</td>
+                                                            <td>${requesetIns.nivel}</td>
+                                                            <td>${requesetIns.grado}</td>
+                                                            <td>${requesetIns.paralelo}</td>
+                                                            <td>${requesetIns.turno}</td>
+                                                            <td><a class="btn btn btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar"  @click='removeRequest(index)'> <i class="fa fa-trash text-danger"></i> </a></td>
+                                                            <td>
+                                                            <a v-on:click="seleccionarInscripcion(index)" class="btn btn btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Registrar Notas"> <i class=" fa fa-pencil text-success"  ></i> </a></td>
+                                                            {#v-bind:href="'{{path("solicitud_modificacion_calificaciones_formulario_index")}}?idInscripcion=' + ins.idInscripcion"#}
+                                                            
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>                                                    
+                                        </div>
+                                    </div>    
+                                    {# end here the inscription request #}
+                                
+                                </div>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -463,7 +546,7 @@
                         <h4 class="modal-title">Calificaciones</h4>
                     </div>
                     <div class="modal-body">
-                        <h4 class="bg-primary titulo">--- <small style="float:right"> (Haga clic sobre la calificación que quiere adicionar y/o modificar)</small>
+                        <h4 class="yearOld titulo ">--- <small style="float:right;color:white"> (Haga clic sobre la calificación que quiere adicionar y/o modificar)</small>
                             {# <div class="vistaModificaciones">
                                 <i v-if="verModificaciones" class="fa fa-eye" v-on:click="verModificaciones = false"></i>
                                 <i v-else class="fa fa-eye-slash" v-on:click="verModificaciones = true"></i>
@@ -473,7 +556,7 @@
                             <thead>
                                 <tr>
                                     <th><small>Área</small></th>
-                                    <th v-for="n in datos.titulosNotas" align="center"><small>${n.titulo}krlos</small></th>
+                                    <th v-for="n in datos.titulosNotas" align="center"><small>${n.titulo}</small></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -489,7 +572,7 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <tr v-if="datos.gestion >= 2019 && datos.cualitativas.length > 0 && datos.nivel != 11 && datos.tipoSubsistema != 4">
+                                <tr >
                                     <td align="center" colspan="5">PROMEDIO ANUAL</td>
                                     <td v-for="c in datos.cualitativas" align="center">
                                         {# <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" v-bind:value="c.notaCuantitativa" v-bind:class="['form-control','input-sm', 'p'+c.idNotaTipo]" v-model="promedioGeneral"> #}
@@ -501,7 +584,7 @@
                             </tbody>
                         </table>
                         <div v-if="datos.gestion < 2019 || (datos.gestion >= 2019 && datos.nivel == 11)">
-                            <h4 class="bg-primary titulo">Cualitativas <small style="float:right"> (Haga clic sobre la valoración que quiere adicionar y/o modificar)</small></h4>
+                            <h4 class="yearOld titulo ">Cualitativas <small style="float:right; color:white;"> (Haga clic sobre la valoración que quiere adicionar y/o modificar)</small></h4>
                             <table v-if="datos.cualitativas != ''" class="table table-bordered table-hover cf" id="tablaNotasCualitativas">
                                 <thead>
                                     <tr class="cf">
@@ -533,7 +616,7 @@
                             </b>
                         </div>
                         <div class="pull-right">
-                            <button type="button" class="btn btn-primary" v-on:click="cerrarModal">Aceptar</button>
+                            <button type="button" class="btn btn-primary yearOld" v-on:click="cerrarModal">Aceptar</button>
                         </div>
                     </div>
                 </div>
@@ -556,10 +639,32 @@
                 idTramite: '{{idTramite}}',
                 sieActual: '{{sieActual}}',
                 buscando: false,
-                rudeBuscar: '4073002720104841',
+                rudeBuscar: '507300162009104',
                 respuesta: '',
                 cargandoCalificaciones: false,
                 verModificaciones: true,
+
+                gestionSelected:'',
+                DBinfoInscription:{
+                    'sieActual':'',
+                    'gestionSelected':'',
+                    'nivelId':'',
+                    'gradoId':'',
+                    'paraleloId':'',
+                    'turnoId':'',
+                },
+                RequestInscription:[],
+                RequestInscriptionSelected:[],
+                DBYears: [],
+                DBLevel:[],
+                DBGrado:[],
+                DBParalelo:[],
+                DBTurno:[],
+                DBCatalogLibreta:[],
+                DBAsignatura:[],
+                arrInfoSelected:[],
+                DBCatalogoAsignatura:[],
+                DBCatalogoAsignatura2:[],                               
 
                 codigoRude: '',
                 estudiante: '',
@@ -603,7 +708,7 @@
                 nuevoPromedioGeneral: '',
 
                 checkInforme: false,
-                checkCuaderno: false,
+                checkCuaderno: true,
                 checkFormulario: false
             },
             methods: {
@@ -672,7 +777,7 @@
                         return;
                     }
 
-                    axios.get(Routing.generate('tramite_modificacion_calificaciones_buscar_estudiante', {
+                    axios.get(Routing.generate('tramite_inscription_score_buscar_estudiante', {
                         codigoRude: this.rudeBuscar,
                         flujoTipo: '{{ flujoTipo }}'
                     }))
@@ -700,20 +805,187 @@
                         console.log(e);
                         this.buscando = false;
                     });
+                    this.loadData();
                 },
+                loadData: function(){
+                    var arrYear = [];
+                    var len = 2020;
+                    for(var i = 2009; i<2021; i++){
+                        arrYear.push({
+                            id: i,
+                            year: i
+                        });
+                    }
+                    this.DBYears = arrYear;
+                },
+                loadLevel: function(){
+                    this.DBLevel = [];
+                    this.DBinfoInscription.nivelId = '';
+                    this.DBGrado = [];
+                    this.DBinfoInscription.gradoId = '';
+                    this.DBParalelo = [];
+                    this.DBinfoInscription.paraleloId = '';
+                    this.DBTruno = [];
+                    this.DBinfoInscription.turnoId = '';
+                    
+
+
+                    this.DBinfoInscription.sieActual = this.sieActual;
+                    axios.post(Routing.generate('tramite_inscription_score_loadLevel', this.DBinfoInscription))
+                    .then(response => {
+                        if(response.status == 200){
+                            this.DBLevel = response.data.arrLevel;
+                        }
+
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                    
+                },
+                loadGrado: function(){
+                    this.DBGrado = [];
+                    this.DBinfoInscription.gradoId = '';
+                    this.DBParalelo = [];
+                    this.DBinfoInscription.paraleloId = '';
+                    this.DBTruno = [];
+                    this.DBinfoInscription.turnoId = '';
+
+                    this.DBinfoInscription.sieActual = this.sieActual;
+                    axios.post(Routing.generate('tramite_inscription_score_loadGrado', this.DBinfoInscription))
+                    .then(response => {
+                        if(response.status == 200){
+                            this.DBGrado = response.data.arrGrado;
+                        }
+
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                    
+                },
+                loadParalelo: function(){
+                    this.DBParalelo = [];
+                    this.DBinfoInscription.paraleloId = '';
+                    this.DBTruno = [];
+                    this.DBinfoInscription.turnoId = '';
+
+                    this.DBinfoInscription.sieActual = this.sieActual;
+                    axios.post(Routing.generate('tramite_inscription_score_loadParalelo', this.DBinfoInscription))
+                    .then(response => {
+                        if(response.status == 200){
+                            this.DBParalelo = response.data.arrParalelo;
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                    
+                },
+                loadTurno: function(){
+                    this.DBTruno = [];
+                    this.DBinfoInscription.turnoId = '';
+
+                    this.DBinfoInscription.sieActual = this.sieActual;
+                    axios.post(Routing.generate('tramite_inscription_score_loadTurno', this.DBinfoInscription))
+                    .then(response => {
+                        if(response.status == 200){
+                            this.DBTurno = response.data.arrTurno;
+                        }
+                    })
+                    .catch(e => {
+                        console.log(e);
+                    });
+                    
+                }, 
+                registreInscription: function(){
+                    $('[data-toggle="popover"]').popover();
+                    $('[data-toggle="tooltip"]').tooltip();                    
+                    
+                    // to validate the year requeset
+                    if (this.DBinfoInscription['gestionSelected'].length == 0 || 
+                        this.DBinfoInscription['nivelId'] == 0 || 
+                        this.DBinfoInscription['gradoId'] == 0 || 
+                        this.DBinfoInscription['paraleloId'] == 0 || 
+                        this.DBinfoInscription['turnoId']  == 0  
+                        ) {
+                        //this.$refs.justificacion.focus();
+                        Swal.fire(
+                          'Error!',
+                          'Debe registrar todo los campos requeridos para la solicitud.',
+                          'warning'
+                        );
+                        return;
+                    }
+                    
+
+                    let newInscription = {
+                                        'gestion':this.DBinfoInscription['gestionSelected'],
+                                        'nivelId':this.DBLevel[this.DBinfoInscription['nivelId']].id,
+                                        'nivel':this.DBLevel[this.DBinfoInscription['nivelId']].level,
+                                        'gradoId':this.DBGrado[this.DBinfoInscription['gradoId']].id,
+                                        'grado':this.DBGrado[this.DBinfoInscription['gradoId']].grado,
+                                        'paraleloId':this.DBParalelo[this.DBinfoInscription['paraleloId']].id,
+                                        'paralelo':this.DBParalelo[this.DBinfoInscription['paraleloId']].paralelo,
+                                        'turnoId':this.DBTurno[this.DBinfoInscription['turnoId'] - 1].id,
+                                        'turno':this.DBTurno[this.DBinfoInscription['turnoId'] - 1].turno,
+                                        'keyId':'',
+                                        'notasRequest':'',
+                                        };
+                    this.DBinfoInscription['gestionSelected'] = '';
+                    this.DBLevel[this.DBinfoInscription['nivelId']].id= '';
+                    this.DBLevel[this.DBinfoInscription['nivelId']].level= '';
+                    this.DBGrado[this.DBinfoInscription['gradoId']].id= '';
+                    this.DBGrado[this.DBinfoInscription['gradoId']].grado= '';
+                    this.DBParalelo[this.DBinfoInscription['paraleloId']].id= '';
+                    this.DBParalelo[this.DBinfoInscription['paraleloId']].paralelo= '';
+                    this.DBTurno[this.DBinfoInscription['turnoId'] - 1].id= '';
+                    this.DBTurno[this.DBinfoInscription['turnoId'] - 1].turno= '';                                                           
+                    
+                    //console.log(newInscription);
+                    this.RequestInscription.push(newInscription);
+                    newInscription= '';
+                    //console.log(this.RequestInscription);
+
+                    //console.log(this.DBinfoInscription);
+                    //$('#modalInscription').modal('hide');
+                    
+                    
+                    return;
+
+                },
+                removeRequest: function(ikey){
+                    console.log(ikey);
+                    if(ikey == 0)
+                        this.RequestInscription.shift();
+                    else
+                        this.RequestInscription.splice(ikey,ikey);                        
+                    console.log(ikey);
+                    console.log(this.RequestInscription);
+
+                },                                                  
                 seleccionarInscripcion: function(pos){
+                
+                    this.RequestInscription[pos].idTramite = this.idTramite;
+                    this.RequestInscription[pos].flujoTipo = this.flujoTipo;
+                    this.RequestInscription[pos].sie = this.sieActual;
+
                     this.cargandoCalificaciones = true;
 
                     this.idInscripcion = this.inscripciones[pos].idInscripcion;
                     this.sie = this.inscripciones[pos].sie;
                     this.institucioneducativa = this.inscripciones[pos].institucioneducativa;
-                    this.nivel = this.inscripciones[pos].nivel;
-                    this.grado = this.inscripciones[pos].grado;
-                    this.paralelo = this.inscripciones[pos].paralelo;
-                    this.turno = this.inscripciones[pos].turno;
-                    this.gestion = this.inscripciones[pos].gestion;
+                    this.nivel = this.RequestInscription[pos].nivel;
+                    this.grado = this.RequestInscription[pos].grado;
+                    this.paralelo = this.RequestInscription[pos].paralelo;
+                    this.turno = this.RequestInscription[pos].turno;
+                    this.gestion = this.RequestInscription[pos].gestion;
                     this.departamento = this.inscripciones[pos].departamento;
                     this.distrito = this.inscripciones[pos].distrito;
+
+                    this.RequestInscription[pos].posSelected = pos; 
+                    this.RequestInscription[pos].codigoRude = this.codigoRude; 
+
                     this.datos = [];
 
                     this.notas = [];
@@ -733,11 +1005,7 @@
                     this.nuevoPromedioGeneral = '';
 
                     // CARGAMOS LAS CALIFICACIONES
-                    axios.get(Routing.generate('tramite_modificacion_calificaciones_buscar_calificaciones', {
-                        idInscripcion: this.idInscripcion, 
-                        idTramite: this.idTramite,
-                        flujoTipo: this.flujoTipo
-                    }))
+                    axios.post(Routing.generate('tramite_inscription_score_buscar_calificaciones', this.RequestInscription[pos] ))
                     .then(response => {
                         if (response.data.tramitePendiente.length > 0) {
                             // console.log(response.data.tramitePendiente[0]);
@@ -752,6 +1020,8 @@
                             this.estadosMatricula = response.data.estadosMatricula;
                             this.promedioGeneral = response.data.promedioGeneral;
                             this.nuevoPromedioGeneral = response.data.promedioGeneral;
+
+                            this.RequestInscriptionSelected[pos] = this.RequestInscription[pos]
 
                             var me = this;
                             $.each(this.estadosMatricula, function(index, val) {
@@ -817,15 +1087,13 @@
                                     }  
                                     if (value < 0) {
                                         return 'La calificación no puede ser negativa!'
-                                    }                                      
+                                    }            
                                     if (value == 0) {
                                         return 'La calificación no puede ser cero!'
                                     }
-
                                     if (nuevaNota.nota == value) {
                                         return 'La nueva calificación no puede ser igual a la calificación actual'
                                     }
-
                                     // NOTAS TRIMESTRALES
                                     if ((idNotaTipo == 30 || idNotaTipo == 31 || idNotaTipo == 32) && value > 60) {
                                         return 'La calificación no puede ser mayor a 60!'   
@@ -847,7 +1115,7 @@
                                     this.notas.push(nuevaNota);
                                     this.filas.push(idFila);
                                     $('#'+idFila).addClass('seleccionado');
-console.log('donde');
+                                    console.log('donde');
                                 },
                                 onClose: () => {
                                     $('body').addClass('modal-open');
@@ -951,14 +1219,14 @@ console.log('donde');
                         return false;
                     }
                 },
-                validarValorNota: function(nota){
+                validarValorNota: function(nota){console.log(nota);
                     // VALIDACIONES TRIMESTRALES
                     if(nota.idNotaTipo == 6 || nota.idNotaTipo == 7 || nota.idNotaTipo == 8){
                         if(nota.gestion == 2020){
-                            console.log('notaaaaaa11'+nota.notaNueva);
+                            //console.log('notaaaaaa11'+nota.notaNueva);
                             if(nota.notaNueva < 0){ nota.notaNueva = 0; }
                             if(nota.notaNueva > 100){ nota.notaNueva = 100; }                            
-                            console.log('notaaaaaa22'+nota.notaNueva);
+                            //console.log('notaaaaaa22'+nota.notaNueva);
                         }else{
                             if(nota.notaNueva < 0){ nota.notaNueva = 0; }
                             if(nota.notaNueva > 70){ nota.notaNueva = 70; }
@@ -983,7 +1251,7 @@ console.log('donde');
                     if(nota.notaNueva != "" && nota.notaNueva != 0){
                         nota.notaNueva = Math.round(nota.notaNueva);
                     }
-                    console.log('notaaaaaa '+nota.notaNueva);
+                    //console.log('notaaaaaa '+nota.notaNueva);
                     // cargamos la nota al valor de nueva nota
                     var me = this;
 
@@ -1453,6 +1721,7 @@ console.log('donde');
                     this.checkInforme = true;
                 },
                 enviarSolicitud: function(){
+                    
                     // DESACTIVAMOS EL BOTON DE ENVIAR
 
                     // VALIDAR NOTAS
@@ -1573,9 +1842,11 @@ console.log('donde');
                             data.append('checkFormulario', this.checkFormulario);
                             data.append('informe', this.informe);
 
+                            data.append('dataInscription', JSON.stringify(this.RequestInscriptionSelected));
+
                             this.formularioEnviado = true;
 
-                            axios.post(Routing.generate('tramite_modificacion_calificaciones_formulario_save'), data)
+                            axios.post(Routing.generate('tramite_inscription_score_formulario_save'), data)
                             .then(response => {
                                 // window.location.href = "{{path('wf_tramite_index', { tipo: 3 })}}";
                                 this.respuestaIdTramite = response.data.idTramite;

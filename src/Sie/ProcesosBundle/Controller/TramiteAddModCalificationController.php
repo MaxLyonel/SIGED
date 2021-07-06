@@ -26,7 +26,7 @@ use Sie\ProcesosBundle\Controller\TramiteRueController;
  * Solicitud modification y adicion calificaciones controller.
  *
  */
-class TramiteModificacionCalificacionesController extends Controller {
+class TramiteAddModCalificationController extends Controller {
     public $session;
     public $idInstitucion;
     public $router;
@@ -69,7 +69,7 @@ class TramiteModificacionCalificacionesController extends Controller {
             $flujoTipo = $request->get('id');
         }
 
-        return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:index.html.twig', array(
+        return $this->render('SieProcesosBundle:TramiteAddModCalification:index.html.twig', array(
             'flujoTipo'=>$flujoTipo,
             'historial'=>$historial,
             'idTramite'=>$idTramite,
@@ -263,7 +263,7 @@ class TramiteModificacionCalificacionesController extends Controller {
 
         return $response;
 
-        // return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:formulario.html.twig', array(
+        // return $this->render('SieProcesosBundle:TramiteAddModCalification:formulario.html.twig', array(
         //     'inscripcion'=>$inscripcion,
         //     'data'=>$data
         // ));
@@ -456,12 +456,13 @@ class TramiteModificacionCalificacionesController extends Controller {
             }
 
             $datos = $this->datosFormulario($idTramite);
-            $codigoQR = 'FTMC'.$idTramite.'|'.$datos['codigoRude'].'|'.$datos['sie'].'|'.$datos['gestion'];
+            //$codigoQR = 'FTMC'.$idTramite.'|'.$datos['codigoRude'].'|'.$datos['sie'].'|'.$datos['gestion'];
+            $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$datos['codigoRude']));
 
             $response->setStatusCode(200);
             $response->setData(array(
                 'idTramite'=>$idTramite,
-                'urlreporte'=> $this->generateUrl('download_tramite_modificacion_calificaciones_formulario', array('idTramite'=>$idTramite, 'codigoQR'=>$codigoQR))
+                'urlreporte'=> $this->generateUrl('tramite_add_mod_download_requet', array('idStudent'=>$objStudent->getId(),'sie'=>$datos['sie'],'idTramite'=>$idTramite, 'codigoRude'=>$datos['codigoRude'], 'gestion'=>$datos['gestion']))
             ));
 
             $em->getConnection()->commit();
@@ -674,7 +675,7 @@ class TramiteModificacionCalificacionesController extends Controller {
             $turno = $inscripcion->getInstitucioneducativaCurso()->getTurnoTipo()->getId();
             $ciclo = $inscripcion->getInstitucioneducativaCurso()->getCicloTipo()->getId();
 
-            return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:formularioVistaImprimirLibreta.html.twig', array(
+            return $this->render('SieProcesosBundle:TramiteAddModCalification:formularioVistaImprimirLibreta.html.twig', array(
                 'historial'=>$historial,
                 'datos'=>$datosNotas,
                 'idTramite'=>$idTramite,
@@ -810,7 +811,7 @@ class TramiteModificacionCalificacionesController extends Controller {
 
         $aprobarDistrito = $this->verificarBimestreAnterior($idTramite);
 
-        return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:formularioVistaDistrito.html.twig', array(
+        return $this->render('SieProcesosBundle:TramiteAddModCalification:formularioVistaDistrito.html.twig', array(
             'idTramite'=>$idTramite,
             'historial'=>$this->historial($idTramite),
             'aprobarDistrito'=>$aprobarDistrito
@@ -1088,7 +1089,7 @@ class TramiteModificacionCalificacionesController extends Controller {
 
         $historial = $this->historial($idTramite);
 
-        return $this->render('SieProcesosBundle:TramiteModificacionCalificaciones:formularioVistaDepartamento.html.twig', array(
+        return $this->render('SieProcesosBundle:TramiteAddModCalification:formularioVistaDepartamento.html.twig', array(
             'idTramite'=>$idTramite,
             'historial'=>$historial
         ));
@@ -1622,6 +1623,24 @@ class TramiteModificacionCalificacionesController extends Controller {
             
         }
     }
+
+    public function requestInsCalYearOldAction(Request $request, $idStudent,$sie,$idTramite, $codigoRude, $gestion){
+
+        $response = new Response();
+
+        $codigoQR = 'FICGP'.$idTramite.'|'.$codigoRude.'|'.$sie.'|'.$gestion;
+
+        $data = $this->session->get('userId').'|'.$gestion.'|'.$idTramite;
+        //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_mod_calif_V1_eea.rptdesign&estudiante_id=' .$idStudent.'&institucioneducativa_id='. $sie.'&tramite_id='.$idTramite.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }     
     
     /*=====  End of FUNCIONES COMPLEMENTARIAS  ======*/
     

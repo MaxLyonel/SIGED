@@ -159,7 +159,7 @@
         <div class="body-content animated fadeIn">
 
             <div class="panel panel-primary" v-if="urlreporte == ''">
-                <div class="panel-heading">
+                <div class="panel-heading yearOld">
                     <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario </h3>
                 </div>
                 <div class="panel-body">
@@ -169,7 +169,7 @@
                                 <h3>FORMULARIO DE ADICIÓN Y/O MODIFICACIÓN DE CALIFICACIONES</h3>
                                 <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
                             </div>
-                            <a class="btn btn-primary" data-toggle="modal" href='#modalEstudiante' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Buscar estudiante </a>
+                            <a class="btn btn-primary yearOld" data-toggle="modal" href='#modalEstudiante' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Buscar estudiante </a>
                             <div class="clearfix"></div>
                             <div v-if="datos != ''">
                                 <div class="row">
@@ -234,7 +234,7 @@
                                 <hr>
                                 <h5>
                                     <b>Detalle de calificaciones</b>
-                                    <a v-if="datos != ''" class="btn btn-primary" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Seleccionar calificación(es)</a>
+                                    <a v-if="datos != ''" class="btn btn-primary yearOld" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Seleccionar calificación(es)</a>
                                 </h5>
                                 <div v-if="notas.length > 0 || notasCualitativas.length > 0">
                                     <table v-if="notas.length > 0" class="table table-bordered table-striped table-condensed">
@@ -379,7 +379,7 @@
         <div class="modal fade" id="modalEstudiante">
             <div class="modal-dialog" style="width:800px">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header yearOld">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title"> <i class="fa fa-search"></i> Buscar estudiante</h4>
                     </div>
@@ -392,7 +392,7 @@
                                 <input type="text" class="form-control" v-model="rudeBuscar" maxlength="18" v-on:keyup.enter="buscarEstudiante()" placeholder="Ingrese el Código RUDE a buscar">
                             </div>
                             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar </button>
+                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary yearOld"><i class="fa fa-search"></i> Buscar </button>
                             </div>
                         </div>
 
@@ -402,7 +402,7 @@
                         </div>
 
                         <div v-if="inscripciones.length > 0">
-                            <p class="encabezado bg-primary">Datos Estudiante</p>
+                            <p class="encabezado yearOld">Datos Estudiante</p>
                             <table class="table table-primary">
                                 <tr>
                                     <th>Código Rude</th>
@@ -414,7 +414,7 @@
                                 </tr>
                             </table>
                             <br>
-                            <p class="encabezado bg-primary">Historial de Inscripciones: <span> ( Seleccione una inscripción )</span> </p>
+                            <p class="encabezado yearOld">Historial de Inscripciones: <span> ( Seleccione una inscripción )</span> </p>
                             <div v-if="cargandoCalificaciones" style="position:absolute; text-align:center; background:#FFFFFF; width:96%">
                                 <img src="{{asset('img/loading.gif')}}" alt=""> Cargando calificaciones de la gestion ${gestion}
                             </div>
@@ -443,7 +443,7 @@
                                         <td>${ins.paralelo}</td>
                                         <td>${ins.estadomatricula}</td>
                                         <td>
-                                            <a v-if="(ins.estadomatriculaId == 5 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11 || ins.estadomatriculaId == 28) && (ins.idNivel != 1 && ins.idNivel != 11) && (ins.sie == sieActual) && (ins.gestion !=2021)" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
+                                            <a v-if="(ins.estadomatriculaId == 5 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11 || ins.estadomatriculaId == 28) && (ins.idNivel != 1 && ins.idNivel != 11) && (ins.sie == sieActual) && (ins.gestion !=2021)" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs yearOld" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
                                             {# <a v-bind:href="'{{path("solicitud_modificacion_calificaciones_formulario_index")}}?idInscripcion=' + ins.idInscripcion" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-edit"></i> </a> #}
                                         </td>
                                     </tr>
@@ -463,7 +463,7 @@
                         <h4 class="modal-title">Calificaciones</h4>
                     </div>
                     <div class="modal-body">
-                        <h4 class="bg-primary titulo">--- <small style="float:right"> (Haga clic sobre la calificación que quiere adicionar y/o modificar)</small>
+                        <h4 class="yearOld titulo">--- <small style="float:right; color:white;"> (Haga clic sobre la calificación que quiere adicionar y/o modificar)</small>
                             {# <div class="vistaModificaciones">
                                 <i v-if="verModificaciones" class="fa fa-eye" v-on:click="verModificaciones = false"></i>
                                 <i v-else class="fa fa-eye-slash" v-on:click="verModificaciones = true"></i>
@@ -501,7 +501,7 @@
                             </tbody>
                         </table>
                         <div v-if="datos.gestion < 2019 || (datos.gestion >= 2019 && datos.nivel == 11)">
-                            <h4 class="bg-primary titulo">Cualitativas <small style="float:right"> (Haga clic sobre la valoración que quiere adicionar y/o modificar)</small></h4>
+                            <h4 class="yearOld titulo">Cualitativas <small style="float:right;color:white;"> (Haga clic sobre la valoración que quiere adicionar y/o modificar)</small></h4>
                             <table v-if="datos.cualitativas != ''" class="table table-bordered table-hover cf" id="tablaNotasCualitativas">
                                 <thead>
                                     <tr class="cf">
@@ -533,7 +533,7 @@
                             </b>
                         </div>
                         <div class="pull-right">
-                            <button type="button" class="btn btn-primary" v-on:click="cerrarModal">Aceptar</button>
+                            <button type="button" class="btn btn-primary yearOld" v-on:click="cerrarModal">Aceptar</button>
                         </div>
                     </div>
                 </div>
@@ -556,7 +556,7 @@
                 idTramite: '{{idTramite}}',
                 sieActual: '{{sieActual}}',
                 buscando: false,
-                rudeBuscar: '4073002720104841',
+                rudeBuscar: '507300162009104',
                 respuesta: '',
                 cargandoCalificaciones: false,
                 verModificaciones: true,
@@ -672,7 +672,7 @@
                         return;
                     }
 
-                    axios.get(Routing.generate('tramite_modificacion_calificaciones_buscar_estudiante', {
+                    axios.get(Routing.generate('tramite_add_mod_cal_buscar_estudiante', {
                         codigoRude: this.rudeBuscar,
                         flujoTipo: '{{ flujoTipo }}'
                     }))
@@ -733,7 +733,7 @@
                     this.nuevoPromedioGeneral = '';
 
                     // CARGAMOS LAS CALIFICACIONES
-                    axios.get(Routing.generate('tramite_modificacion_calificaciones_buscar_calificaciones', {
+                    axios.get(Routing.generate('tramite_add_mod_cal_buscar_calificaciones', {
                         idInscripcion: this.idInscripcion, 
                         idTramite: this.idTramite,
                         flujoTipo: this.flujoTipo
@@ -1575,7 +1575,7 @@ console.log('donde');
 
                             this.formularioEnviado = true;
 
-                            axios.post(Routing.generate('tramite_modificacion_calificaciones_formulario_save'), data)
+                            axios.post(Routing.generate('tramite_add_mod_cal_formulario_save'), data)
                             .then(response => {
                                 // window.location.href = "{{path('wf_tramite_index', { tipo: 3 })}}";
                                 this.respuestaIdTramite = response.data.idTramite;
