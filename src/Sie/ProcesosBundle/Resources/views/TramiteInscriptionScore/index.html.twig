@@ -639,7 +639,7 @@
                 idTramite: '{{idTramite}}',
                 sieActual: '{{sieActual}}',
                 buscando: false,
-                rudeBuscar: '507300162009104',
+                rudeBuscar: '',
                 respuesta: '',
                 cargandoCalificaciones: false,
                 verModificaciones: true,
@@ -900,8 +900,8 @@
                 }, 
                 registreInscription: function(){
                     $('[data-toggle="popover"]').popover();
-                    $('[data-toggle="tooltip"]').tooltip();                    
-                    
+                    $('[data-toggle="tooltip"]').tooltip();  
+                          
                     // to validate the year requeset
                     if (this.DBinfoInscription['gestionSelected'].length == 0 || 
                         this.DBinfoInscription['nivelId'] == 0 || 
@@ -918,7 +918,16 @@
                         return;
                     }
                     
-
+                    var me = this;
+                    let selectedkeyTurnoId;
+                     $.each(this.DBTurno, function(index, val) {
+                         
+                         //console.log(this.DBinfoInscription['turnoId']);
+                                if (val['id'] == me.DBinfoInscription['turnoId']) {
+                                   selectedkeyTurnoId =index ;
+                                }
+                            });
+              
                     let newInscription = {
                                         'gestion':this.DBinfoInscription['gestionSelected'],
                                         'nivelId':this.DBLevel[this.DBinfoInscription['nivelId']].id,
@@ -927,8 +936,8 @@
                                         'grado':this.DBGrado[this.DBinfoInscription['gradoId']].grado,
                                         'paraleloId':this.DBParalelo[this.DBinfoInscription['paraleloId']].id,
                                         'paralelo':this.DBParalelo[this.DBinfoInscription['paraleloId']].paralelo,
-                                        'turnoId':this.DBTurno[this.DBinfoInscription['turnoId'] - 1].id,
-                                        'turno':this.DBTurno[this.DBinfoInscription['turnoId'] - 1].turno,
+                                        'turnoId':this.DBTurno[selectedkeyTurnoId].id,
+                                        'turno':this.DBTurno[selectedkeyTurnoId].turno,
                                         'keyId':'',
                                         'notasRequest':'',
                                         };
@@ -939,8 +948,8 @@
                     this.DBGrado[this.DBinfoInscription['gradoId']].grado= '';
                     this.DBParalelo[this.DBinfoInscription['paraleloId']].id= '';
                     this.DBParalelo[this.DBinfoInscription['paraleloId']].paralelo= '';
-                    this.DBTurno[this.DBinfoInscription['turnoId'] - 1].id= '';
-                    this.DBTurno[this.DBinfoInscription['turnoId'] - 1].turno= '';                                                           
+                    this.DBTurno[selectedkeyTurnoId].id= '';
+                    this.DBTurno[selectedkeyTurnoId].turno= '';                                                           
                     
                     //console.log(newInscription);
                     this.RequestInscription.push(newInscription);
