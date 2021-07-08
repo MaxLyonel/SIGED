@@ -1,0 +1,14 @@
+													{% if nueva_inscripcion %}
+													<tr class="regularizacion-materias-inscritas-{{nueva_inscripcion.id}}">
+														<th scope="row">{{nueva_inscripcion.id}}</th>
+														<td>Inscripción {{nueva_inscripcion.id}}</td>
+														<td class="data-gestion">{{nueva_inscripcion.gestion}}</td>
+														<td class="data-nivel">{{nueva_inscripcion.nivel}}</td>
+														<td class="data-grado">{{nueva_inscripcion.grado}}</td>
+
+														<td width="5%">
+															<button type="button" class="btn btn-danger btn-xs btn-remove-inscripction" data-inscription={{nueva_inscripcion.id}} onclick="formRemoveInscription(this)">Eliminar</button>
+														</td>
+													</tr>
+													{% endif %}
+
