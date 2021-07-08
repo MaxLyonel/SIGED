@@ -39,10 +39,10 @@
     </div><!-- /.header-content -->
     <!--/ End page header -->
 
-<div class="alert alert-warning text-center" role="alert">
+{# <div class="alert alert-warning text-center" role="alert">
   <b>Estimados Directores:</b>
  El presente operativo de registro de Estudiantes en Situación de Vulnerabilidad estará <b>HABILITADO</b> hasta el día <b>VIERNES 19 DE MARZO.</b>
-</div>
+</div> #}
 
     <!-- /.row -->
 	<div id="app" v-cloak>
@@ -56,6 +56,9 @@
 					<div class="panel panel-default">
 						<div class="panel-body">
 								<h2 class="titulo">Buscar Estudiante </h2>
+									<div class="alert alert-info" role="alert">
+										Registro de Estudiantes:<strong  style="color:red; font-size:20px;"> {{labelFM}}</strong>
+									</div>								
 								<div class="col-md-12">
 									<div role="tabpanel">
 										<!-- Nav tabs -->
@@ -93,6 +96,8 @@
 									</div>
 								</div>
 								<div class="col-md-12 text-center">
+
+									
 									<button type="button" class="btn btn-primary" @click="consultar" v-if="!swConfirmGlobal">Buscar</button>
 								</div>							
 
@@ -244,6 +249,7 @@
 		    		nivel: '',
 					paralelo: '',
 					estId: '',
+					banFM: '',
 		    		grado: ''
 		    	},
 				
@@ -252,6 +258,7 @@
 				swConfirm:false,
 				swConfirmGlobal:'{{swConfirmGlobal}}',
 				swregistry: '{{swregistry}}',
+				banFM: '{{banFM}}',
 				DBStudentsQuipus: [],
 		    	datos: []
 		    	
@@ -325,6 +332,7 @@
 	    		  		type:'info',
 	    		  		showConfirmButton: false,
 	    			});
+					this.estudiante.banFM = this.banFM;
 		    		axios.post(Routing.generate('selected_students_buscar', { estudiante: this.estudiante, opcion: this.opcion}))
 		    			.then(response => {
 		    				if (response.data.status === 'error') {
@@ -345,6 +353,7 @@
 								this.estudiante.materno = this.datos.arrStudent.materno;
 								this.estudiante.carnet = this.datos.arrStudent.carnet;
 								this.estudiante.genero = this.datos.arrStudent.genero;
+								this.estudiante.fechaNacimiento = this.datos.arrStudent.fechaNacimiento;
 								this.estudiante.idGenero = this.datos.arrStudent.idGenero;
 								this.estudiante.estId = this.datos.arrStudent.estId;
 								this.estudiante.estInsId = this.datos.arrStudent.estInsId;
@@ -360,7 +369,9 @@
 								this.estudiante.gradoId = this.datos.arrStudent.gradoId;
 								this.estudiante.paraleloId = this.datos.arrStudent.paraleloId;
 								this.estudiante.cicloId = this.datos.arrStudent.cicloId;
+
 								
+
 		    					this.validado = this.datos.swStudent;
 		    				}
 		    				this.cortina = false;
