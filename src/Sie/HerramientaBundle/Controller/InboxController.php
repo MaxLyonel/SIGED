@@ -738,14 +738,14 @@ class InboxController extends Controller {
         $objObsQA = null;
       }
 
-      if($objObsQA){
+      /*if($objObsQA){
         return $this->render($this->session->get('pathSystem') . ':Inbox:list_inconsistencia.html.twig', array(
           'objObsQA' => $objObsQA,
           'sie' =>  $form['sie'],
           'institucion' => $ieducativa->getInstitucioneducativa(),
           'gestion' => $form['gestion']
         ));
-      } else {
+      } else {*/
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
           'personalAdmform' => $this->InfoStudentForm('herramienta_info_personal_adm_index', 'Personal Administrativo',$data)->createView(),
@@ -759,7 +759,7 @@ class InboxController extends Controller {
           'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
           'closeOperativoRudeform' => $this->CloseOperativoRudeForm('herramienta_inbox_close_operativo_rude', 'Cerrar Operativo RUDE',$data)->createView(),
         ));
-      }
+      // }
     }
 
     /**
