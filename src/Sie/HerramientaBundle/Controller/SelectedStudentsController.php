@@ -93,7 +93,7 @@ class SelectedStudentsController extends Controller{
             'status'=>'success',
             'datos'=>array(
                 'arrStudents'=>$studentsQuipus,
-                'swConfirm'=>(sizeof($studentsQuipus)==2)?true:false,
+                'swConfirm'=>(sizeof($studentsQuipus)>=1)?true:false,
                 'swConfirmGlobal'=>$this->swConfirmGlobal,
                 // 'banFM'=>$this->ueInformationReg($ie_id)['ban_h_m'],
                 // 'labelFM'=>$this->arrUeMaleFemale[$this->ueInformationReg($ie_id)['ban_h_m']],                
