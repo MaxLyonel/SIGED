@@ -190,8 +190,16 @@ donwload_ddjjStudentsQuipus:
     path:     /ddjjStudentsQuipus/{sie}
     defaults: { _controller: SieAppWebBundle:Download:ddjjStudentsQuipus }
 
+download_tramite_modificacion_calificaciones_formulario:
+    path:     /abc/{idTramite}/{codigoQR}
+    defaults: { _controller: SieAppWebBundle:Download:calificacionesFormulario }  
+
 download_formulario_rude:
     path:    /downloadLibretaRude/{idInscripcion}/{rude}/{sie}/{gestion}/{nivel}/{grado}/{paralelo}/{turno}/{ciclo}
     defaults: { _controller: SieAppWebBundle:Download:downloadFormularioRude }
     options:
         expose: true
+
+download_report_vulnerability:
+    path:    /downloadVul/{gestion}/{distrito}
+    defaults: { _controller: SieAppWebBundle:Download:downloadVulnerability }

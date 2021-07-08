@@ -1,0 +1,61 @@
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+    	<form action="" id="formNotas" onsubmit="registrarNotasT(); return false">
+        <input type="hidden" name="infoUe" id="infoUe" value="{{infoUe}}">
+      	<input type="hidden" name="infoStudent" id="infoStudent" value="{{infoStudent}}">
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title">Notas del Estudiante</h3>
+                </div>
+
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body no-padding" id="modal-body">
+
+
+              {% include 'SieHerramientaBundle:InfoEstudianteNotas:encabezadoNotas.html.twig' %}
+
+              <h5 class="text-success" style="margin-left:10px">Notas <span style="float:right; margin-right:10px; font-size:0.9em;">Gestion: {{inscripcion.institucioneducativaCurso.gestionTipo.gestion}} | <span style="color:#2D839A; font-size: 1em"> {% if app.session.get('roluser') in [7,8,10]  %} C{{notas.operativo }} {% else %} A{{notas.operativo}} {% endif %} </span> </span></h5>
+              
+      			  <div style="padding:0px 10px 0px 10px">
+      				{% include 'SieAppWebBundle:Services/Notas:'~ plantilla ~'.html.twig' with {'notas':notas, 'vista':vista} %}
+      			  </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            {% if vista > 0 and inscripcion.estadomatriculaTipo.id in notas.estadosPermitidos %}
+	            <button type="submit" class="btn btn-theme">Guardar Cambios</button>
+	        {% endif %}
+        </div>
+    </div><!-- /.modal-content -->
+    </form>
+</div><!-- /.modal-dialog -->
+<script>
+
+    var registrarNotasT = function(){
+
+      
+        var formData = $('#formNotas').serialize();
+
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('herramienta_infoEstudianteNotas_create_update'),
+            data: formData,
+            beforeSend: function () {
+                $('#modal-body').empty();
+                $('.modal-footer').empty();
+                $('#modal-body').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+            },
+            success: function (data) {
+                $('#modal').modal('hide');
+            },
+            error: function (data) {
+
+            }
+        });
+    
+	  }
+
+</script>

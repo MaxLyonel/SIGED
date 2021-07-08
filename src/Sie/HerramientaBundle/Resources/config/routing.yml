@@ -289,3 +289,11 @@ sie_gestiones_pasadas_areas_estudiante:
 sie_institucioneducativa_acceso_internet:
     resource: "@SieHerramientaBundle/Resources/config/routing/institucioneducativaAccesoInternet.yml"
     prefix: /sie/institucioneducativaAccesoInternet
+
+sie_institucioneducativa_report_vul:
+    resource: "@SieHerramientaBundle/Resources/config/routing/reportstudentvulnerability.yml"
+    prefix: /sie/reportVul
+
+sie_tramite_gp_areasestudiante:
+    resource: "@SieHerramientaBundle/Resources/config/routing/tramitegpareasestudiante.yml"
+    prefix:   /sie/tramite/areasestudiante

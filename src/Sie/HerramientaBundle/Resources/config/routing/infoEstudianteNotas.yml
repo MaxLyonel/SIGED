@@ -1,23 +1,37 @@
 herramienta_infoEstudianteNotas_index:
-    path:     /index
-    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteNotas:index"}
-    options:
-         expose: true
+  path: /index
+  defaults: { _controller: "SieHerramientaBundle:InfoEstudianteNotas:index" }
+  options:
+    expose: true
 
 herramienta_infoEstudianteNotas_create_update:
-    path:     /createUpdate
-    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteNotas:createUpdate"}
-    options:
-         expose: true
+  path: /createUpdate
+  defaults:
+    { _controller: "SieHerramientaBundle:InfoEstudianteNotas:createUpdate" }
+  options:
+    expose: true
 
 herramienta_infoEstudianteNotas_delete:
-    path:     /delete
-    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteNotas:delete"}
-    options:
-         expose: true
+  path: /delete
+  defaults: { _controller: "SieHerramientaBundle:InfoEstudianteNotas:delete" }
+  options:
+    expose: true
 
 herramienta_infoEstudianteNotas_putspeciality:
-    path:     /putspeciality
-    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteNotas:putSpeciality"}
-    options:
-         expose: true
+  path: /putspeciality
+  defaults:
+    { _controller: "SieHerramientaBundle:InfoEstudianteNotas:putSpeciality" }
+  options:
+    expose: true
+
+herramienta_StudentScore_index:
+  path: /
+  defaults: { _controller: "SieHerramientaBundle:StudentScore:index" }
+  options:
+    expose: true
+
+herramienta_StudentScore_create_update:
+  path: /updatescore
+  defaults: { _controller: "SieHerramientaBundle:StudentScore:createUpdate" }
+  options:
+    expose: true

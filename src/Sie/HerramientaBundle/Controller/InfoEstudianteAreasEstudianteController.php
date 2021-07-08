@@ -426,6 +426,7 @@ class InfoEstudianteAreasEstudianteController extends Controller {
         $idInscripcion = $request->get('idInscripcion');
         $infoUe = $request->get('infoUe');
         $infoStudent = $request->get('infoStudent');
+        $arrInfoUe = unserialize($infoUe);
 
         // VERIFICAMOS SI EL ESTUDIANTE TIENE LA MATERIA ESPECIALIZADA
         $materiaEspecializada = $em->createQueryBuilder()
@@ -452,7 +453,7 @@ class InfoEstudianteAreasEstudianteController extends Controller {
                 $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
                 //added funciont to migrate notas by krlos
                 $objInfoCourse = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscripcion->getInstitucioneducativaCurso());
-                if($objInfoCourse->getNivelTipo()->getId() == 13 && $objInfoCourse->getGradoTipo()->getId() == 5 ){                    
+                if($objInfoCourse->getNivelTipo()->getId() == 13 && $objInfoCourse->getGradoTipo()->getId() == 5 && $arrInfoUe['requestUser']['gestion'] == 2020){                    
                     $query = $em->getConnection()->prepare('SELECT * from sp_genera_migracion_notas_ttg_tte_2019_2020(:iestudiante_id::VARCHAR, :iinstitucioneducativa_id ::VARCHAR)');
                     $query->bindValue(':iestudiante_id', $inscripcion->getEstudiante()->getId());
                     $query->bindValue(':iinstitucioneducativa_id', $objInfoCourse->getInstitucioneducativa()->getId());
@@ -511,6 +512,8 @@ class InfoEstudianteAreasEstudianteController extends Controller {
         $infoStudent = $form['infoStudent'];
         $idInscripcion = $form['idInscripcion'];
         $idieeht = $form['idieeht'];
+        $arrInfoUe = unserialize($infoUe);
+
 
         $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->find($idieeht);
 
@@ -526,7 +529,9 @@ class InfoEstudianteAreasEstudianteController extends Controller {
         return $response->setData(array(
             'idInscripcion'=>$idInscripcion,
             'infoUe'=>$infoUe,
-            'infoStudent'=>$infoStudent
+            'infoStudent'=>$infoStudent,
+            'gestion'=>$arrInfoUe['requestUser']['gestion']
+
         ));
 
     }

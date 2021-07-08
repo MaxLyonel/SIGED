@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 use Sie\AppWebBundle\Entity\EstudianteNota;
+use Sie\AppWebBundle\Entity\EstudianteInscripcionHumnisticoTecnico;
 
 /**
  * GestionesPasadasAreasEstudianteController.php
@@ -110,13 +111,14 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $inscripcionid = trim(strtoupper($request->get('inscripcionid')));
         $estudianteid = trim(strtoupper($request->get('estudianteid')));
         $gestion = trim(strtoupper($request->get('gestion')));
+        $evaluarEstadomatricula = $this->evaluarEstadomatricula($inscripcionid);
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudianteid);
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
 
         $areasEstudiante = $this->getAreasEstudiante($inscripcionid);
         $areasCurso = $this->getAreasCurso($inscripcionid);
         $areasAsignar = $this->getAreasAsignar($inscripcionid, $areasEstudiante);
-        
+
         return $this->render($this->session->get('pathSystem') . ':GestionesPasadasAreasEstudiante:areas.html.twig', array(
             'estudiante' => $estudiante,
             'inscripcion' => $inscripcion,
@@ -238,6 +240,15 @@ class GestionesPasadasAreasEstudianteController extends Controller {
 
         try {
             if($estudianteAsignatura) {
+                if($estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() == 1039) {
+                    $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
+        
+                    if($especialidadEstudiante) {
+                        $em->remove($especialidadEstudiante);
+                        $em->flush();
+                    }
+                }
+
                 $estudianteNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$estudianteAsignatura));
                 if($estudianteNota) {
                     foreach ($estudianteNota as $key => $nota) {
@@ -387,6 +398,9 @@ class GestionesPasadasAreasEstudianteController extends Controller {
 
     public function calificacionesAreaEstudianteAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
+        $esSexto = false;
+        $tiene_especialidad = false;
+        $especialidades = null;
         $areaid = trim(strtoupper($request->get('areaid')));
         $inscripcionid = trim(strtoupper($request->get('inscripcionid')));
         $estudianteid = trim(strtoupper($request->get('estudianteid')));
@@ -413,6 +427,62 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         foreach ($estudianteNota as $key => $nota) {
             $estudianteNotaArray[$nota['ntId']] = $nota['notaCuantitativa'];
         }
+
+        $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
+        if(!$especialidadEstudiante) {
+            if($estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() == 1039) {
+            
+                if($inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId() == 13 and $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId() == 6) {
+                    $esSexto = true;
+                    $repository = $em->getRepository('SieAppWebBundle:Estudiante');
+                    $query = $repository->createQueryBuilder('e')
+                        ->select('eiht.institucioneducativaHumanisticoId')
+                        ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ic.id = ei.institucioneducativaCurso')
+                        ->innerJoin('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico', 'eiht', 'WITH', 'ei.id = eiht.estudianteInscripcion')
+                        ->where('ic.gestionTipo = :gestion')
+                        ->andWhere('e.id = :estudiante')
+                        ->andWhere('ei.estadomatriculaTipo = :matricula')
+                        ->setParameter('gestion', $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId() - 1)
+                        ->setParameter('estudiante', $estudianteid)
+                        ->setParameter('matricula', $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(5))
+                        ->getQuery();
+    
+                    $especialidadAnterior = $query->getResult();
+    
+                    if(count($especialidadAnterior) > 0) {
+                        $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->find($especialidadAnterior[0]['institucioneducativaHumanisticoId']);                    
+                        $especialidadEstudiante = new EstudianteInscripcionHumnisticoTecnico();
+                        $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
+                        $especialidadEstudiante->setEstudianteInscripcion($inscripcion);
+                        $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
+                        $especialidadEstudiante->setHoras(0);
+                        $em->persist($especialidadEstudiante);
+                        $em->flush();
+                    }
+                }
+    
+                $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico');
+                $query = $repository->createQueryBuilder('ieth')
+                    ->select('ieth.id iethId, etht.id ethtId, etht.especialidad')
+                    ->innerJoin('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo', 'etht', 'WITH', 'ieth.especialidadTecnicoHumanisticoTipo = etht.id')
+                    ->where('ieth.institucioneducativa = :institucioneducativa')
+                    ->andWhere('ieth.gestionTipo = :gestion')
+                    ->andWhere('etht.esVigente = :estado')
+                    ->setParameter('institucioneducativa', $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId())
+                    ->setParameter('gestion', $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId())
+                    ->setParameter('estado', 't')
+                    ->getQuery();
+    
+                $especialidades = $query->getResult();
+            }
+        }
+
+        $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
+        
+        if($especialidadEstudiante) {
+            $tiene_especialidad = true;
+        }
         
         return $this->render($this->session->get('pathSystem') . ':GestionesPasadasAreasEstudiante:form_calificaciones.html.twig', array(
             'libreta' => $libreta,
@@ -420,7 +490,14 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'estudianteid' => $estudianteid,
             'inscripcionid' => $inscripcionid,
             'areaid' => $areaid,
-            'gestion' => $gestion
+            'gestion' => $gestion,
+            'nivelid' => $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId(),
+            'gradoid' => $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId(),
+            'especialidades' => $especialidades,
+            'tiene_especialidad' => $tiene_especialidad,
+            'especialidadEstudiante' => $especialidadEstudiante,
+            'estudianteAsignatura' => $estudianteAsignatura,
+            'esSexto' => $esSexto
         ));
     }
     
@@ -429,10 +506,22 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $areaid = $request->get('areaid');
         $inscripcionid = $request->get('inscripcionid');
         $formCalificaciones = $request->get('formCalificaciones');
+        $especialidades = $request->get('especialidades');
         $mensaje = 'Se guardaron las calificaciones exitosamente.';
         $em->getConnection()->beginTransaction();
 
         try {
+            if($especialidades != 0) {
+                $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->find($especialidades);
+                $especialidadEstudiante = new EstudianteInscripcionHumnisticoTecnico();
+                $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
+                $especialidadEstudiante->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($inscripcionid));
+                $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
+                $especialidadEstudiante->setHoras(0);
+                $em->persist($especialidadEstudiante);
+                $em->flush();
+            }
+
             foreach ($formCalificaciones as $key => $nota) {
                 $porciones = explode("_", $key);
                 $estudianteNota = new EstudianteNota();
@@ -511,14 +600,14 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
         } else if($igestion > 2013 && $igestion < 2020) {
             $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
-        } else if($igestion = 2020) {
+        } else if($igestion == 2020) {
             if($inivel_tipo_id == 12) {
                 if($igrado_tipo_id > 1) {
-                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             } else if($inivel_tipo_id == 13) {
                 if($igrado_tipo_id >= 1) {
-                    $complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             }
         }
