@@ -398,6 +398,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
 
     public function calificacionesAreaEstudianteAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
+        $esSexto = false;
         $tiene_especialidad = false;
         $especialidades = null;
         $areaid = trim(strtoupper($request->get('areaid')));
@@ -426,21 +427,55 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         foreach ($estudianteNota as $key => $nota) {
             $estudianteNotaArray[$nota['ntId']] = $nota['notaCuantitativa'];
         }
-        
-        if($estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() == 1039) {
-            $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico');
-            $query = $repository->createQueryBuilder('ieth')
-                ->select('ieth.id iethId, etht.id ethtId, etht.especialidad')
-                ->innerJoin('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo', 'etht', 'WITH', 'ieth.especialidadTecnicoHumanisticoTipo = etht.id')
-                ->where('ieth.institucioneducativa = :institucioneducativa')
-                ->andWhere('ieth.gestionTipo = :gestion')
-                ->andWhere('etht.esVigente = :estado')
-                ->setParameter('institucioneducativa', $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId())
-                ->setParameter('gestion', $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId())
-                ->setParameter('estado', 't')
-                ->getQuery();
 
-            $especialidades = $query->getResult();
+        $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
+        if(!$especialidadEstudiante) {
+            if($estudianteAsignatura->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId() == 1039) {
+            
+                if($inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId() == 13 and $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId() == 6) {
+                    $esSexto = true;
+                    $repository = $em->getRepository('SieAppWebBundle:Estudiante');
+                    $query = $repository->createQueryBuilder('e')
+                        ->select('eiht.institucioneducativaHumanisticoId')
+                        ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ic.id = ei.institucioneducativaCurso')
+                        ->innerJoin('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico', 'eiht', 'WITH', 'ei.id = eiht.estudianteInscripcion')
+                        ->where('ic.gestionTipo = :gestion')
+                        ->andWhere('e.id = :estudiante')
+                        ->andWhere('ei.estadomatriculaTipo = :matricula')
+                        ->setParameter('gestion', $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId() - 1)
+                        ->setParameter('estudiante', $estudianteid)
+                        ->setParameter('matricula', $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(5))
+                        ->getQuery();
+    
+                    $especialidadAnterior = $query->getResult();
+    
+                    if(count($especialidadAnterior) > 0) {
+                        $institucionEspecialidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico')->find($especialidadAnterior[0]['institucioneducativaHumanisticoId']);                    
+                        $especialidadEstudiante = new EstudianteInscripcionHumnisticoTecnico();
+                        $especialidadEstudiante->setInstitucioneducativaHumanisticoId($institucionEspecialidad->getId());
+                        $especialidadEstudiante->setEstudianteInscripcion($inscripcion);
+                        $especialidadEstudiante->setEspecialidadTecnicoHumanisticoTipo($em->getRepository('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo')->find($institucionEspecialidad->getEspecialidadTecnicoHumanisticoTipo()->getId()));
+                        $especialidadEstudiante->setHoras(0);
+                        $em->persist($especialidadEstudiante);
+                        $em->flush();
+                    }
+                }
+    
+                $repository = $em->getRepository('SieAppWebBundle:InstitucioneducativaEspecialidadTecnicoHumanistico');
+                $query = $repository->createQueryBuilder('ieth')
+                    ->select('ieth.id iethId, etht.id ethtId, etht.especialidad')
+                    ->innerJoin('SieAppWebBundle:EspecialidadTecnicoHumanisticoTipo', 'etht', 'WITH', 'ieth.especialidadTecnicoHumanisticoTipo = etht.id')
+                    ->where('ieth.institucioneducativa = :institucioneducativa')
+                    ->andWhere('ieth.gestionTipo = :gestion')
+                    ->andWhere('etht.esVigente = :estado')
+                    ->setParameter('institucioneducativa', $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId())
+                    ->setParameter('gestion', $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId())
+                    ->setParameter('estado', 't')
+                    ->getQuery();
+    
+                $especialidades = $query->getResult();
+            }
         }
 
         $especialidadEstudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcionHumnisticoTecnico')->findOneBy(array('estudianteInscripcion' => $inscripcion));
@@ -461,7 +496,8 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'especialidades' => $especialidades,
             'tiene_especialidad' => $tiene_especialidad,
             'especialidadEstudiante' => $especialidadEstudiante,
-            'estudianteAsignatura' => $estudianteAsignatura
+            'estudianteAsignatura' => $estudianteAsignatura,
+            'esSexto' => $esSexto
         ));
     }
     
