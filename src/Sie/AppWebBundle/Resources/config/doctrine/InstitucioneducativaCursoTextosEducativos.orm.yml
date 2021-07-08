@@ -1,0 +1,66 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaCursoTextosEducativos:
+    type: entity
+    table: institucioneducativa_curso_textos_educativos
+    indexes:
+        IDX_C150A16D756DFBFA:
+            columns:
+                - nota_tipo_id
+        IDX_C150A16D9E4EDBFE:
+            columns:
+                - institucioneducativa_curso_id
+    uniqueConstraints:
+        iinstitucioneducativa_curso_textos_educativos_key:
+            columns:
+                - institucioneducativa_curso_id
+                - nota_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaEntrega:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_entrega
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        notaTipo:
+            targetEntity: NotaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nota_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaCurso:
+            targetEntity: InstitucioneducativaCurso
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_curso_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
