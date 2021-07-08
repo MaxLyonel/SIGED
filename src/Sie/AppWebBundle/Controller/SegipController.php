@@ -24,6 +24,17 @@ class SegipController extends Controller {
     }
 
     public function indexAction() {
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        $roluser = $this->session->get('roluser');
+        
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }
 
         $formBuscarPersona = $this->createForm(new BuscarPersonaSegipType(), 
             null, 
@@ -32,6 +43,10 @@ class SegipController extends Controller {
                 'method' => 'POST'
             )
         );
+
+        if($roluser != 8) {
+            return $this->redirect($this->generateUrl('principal_web'));
+        }
 
         $formVerificarPersona = $this->createForm(new VerificarPersonaSegipType(), 
             null, 

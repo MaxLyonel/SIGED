@@ -49,7 +49,11 @@
 
 		    },
 		    success: function (data) {
-		        getNotas(data.infoUe, data.infoStudent, data.idInscripcion);
+				if(data.gestion == 2021){
+					getNotas2021(data.infoUe, data.infoStudent, data.idInscripcion);
+				}else{
+					getNotas(data.infoUe, data.infoStudent, data.idInscripcion);
+				}
 		    },
 		    statusCode: {
 		        500: function () {

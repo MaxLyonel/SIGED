@@ -61,6 +61,11 @@ class InstitucioneducativaSucursalRiesgoMes
 
 
     /**
+     * @var integer
+     */
+    private $semana;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -276,4 +281,29 @@ class InstitucioneducativaSucursalRiesgoMes
     {
         return $this->institucioneducativaSucursal;
     }
+
+
+    /**
+     * Set semana
+     *
+     * @param integer $semana
+     * @return InstitucioneducativaSucursalRiesgoMes
+     */
+    public function setSemana($semana)
+    {
+        $this->semana = $semana;
+    
+        return $this;
+    }
+
+    /**
+     * Get semana
+     *
+     * @return integer 
+     */
+    public function getSemana()
+    {
+        return $this->semana;
+    }
+
 }

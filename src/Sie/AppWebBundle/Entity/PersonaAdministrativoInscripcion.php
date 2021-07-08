@@ -248,4 +248,32 @@ class PersonaAdministrativoInscripcion
     {
         return $this->estadosaludTipo;
     }
+    /**
+     * @var boolean
+     */
+    private $esvacuna;
+
+
+    /**
+     * Set esvacuna
+     *
+     * @param boolean $esvacuna
+     * @return PersonaAdministrativoInscripcion
+     */
+    public function setEsvacuna($esvacuna)
+    {
+        $this->esvacuna = $esvacuna;
+    
+        return $this;
+    }
+
+    /**
+     * Get esvacuna
+     *
+     * @return boolean 
+     */
+    public function getEsvacuna()
+    {
+        return $this->esvacuna;
+    }
 }

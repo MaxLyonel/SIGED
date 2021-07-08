@@ -80,4 +80,143 @@ class MaestroInscripcionEstadosalud
     {
         return $this->maestroInscripcion;
     }
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacion;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\CargoTipo
+     */
+    private $cargoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\Persona
+     */
+    private $persona;
+
+
+    /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return MaestroInscripcionEstadosalud
+     */
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
+    }
+
+    /**
+     * Set cargoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\CargoTipo $cargoTipo
+     * @return MaestroInscripcionEstadosalud
+     */
+    public function setCargoTipo(\Sie\AppWebBundle\Entity\CargoTipo $cargoTipo = null)
+    {
+        $this->cargoTipo = $cargoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get cargoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\CargoTipo 
+     */
+    public function getCargoTipo()
+    {
+        return $this->cargoTipo;
+    }
+
+    /**
+     * Set persona
+     *
+     * @param \Sie\AppWebBundle\Entity\Persona $persona
+     * @return MaestroInscripcionEstadosalud
+     */
+    public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
+    {
+        $this->persona = $persona;
+    
+        return $this;
+    }
+
+    /**
+     * Get persona
+     *
+     * @return \Sie\AppWebBundle\Entity\Persona 
+     */
+    public function getPersona()
+    {
+        return $this->persona;
+    }
+    /**
+     * @var \DateTime
+     */
+    private $fecha;
+    /**
+     * @var \DateTime
+     */
+    private $fecha2;
+
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     * @return MaestroInscripcionEstadosalud
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+    
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime 
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     * @return MaestroInscripcionEstadosalud
+     */
+    public function setFecha2($fecha)
+    {
+        $this->fecha2 = $fecha;
+    
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime 
+     */
+    public function getFecha2()
+    {
+        return $this->fecha;
+    }
 }

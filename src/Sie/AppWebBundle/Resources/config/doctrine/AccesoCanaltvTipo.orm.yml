@@ -1,0 +1,24 @@
+Sie\AppWebBundle\Entity\AccesoCanaltvTipo:
+    type: entity
+    table: acceso_canaltv_tipo
+    id:
+        id:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        canaltv:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
+        esactivo:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -374,10 +374,12 @@ class ControlCalidadController extends Controller {
             $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
 
             $this->ratificar($vproceso);
+            $em->getConnection()->commit();
             $message = 'Se realizó el proceso satisfactoriamente.';
             $this->addFlash('success', $message);
 
         } catch (Exception $ex) {
+            $em->getConnection()->rollback();
             $message = 'No se pudo realizar el proceso.';
             $this->addFlash('warning', $message);
         }
@@ -1005,6 +1007,38 @@ class ControlCalidadController extends Controller {
         return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
     }
 
+    public function justificarModificarDatosAction(Request $request) {
+        $defaultController = new DefaultCont();
+        $defaultController->setContainer($this->container);
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        $gestion = $this->session->get('idGestionCalidad');
+        $form = $request->get('formMD');
+        $justificacion= mb_strtoupper($form['justificacion'], 'utf-8');
+        $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
+        $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
+        $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
+
+        try {
+            if($vproceso){
+                $mensaje = "Se realizó el proceso satisfactoriamente: ".$justificacion.".";
+                $vproceso->setJustificacion($justificacion);
+                $em->persist($vproceso);
+                $em->flush();
+                $this->ratificar($vproceso);
+                $this->addFlash('success', $mensaje);
+            } else {
+                $mensaje = "No se encontró la inconsistencia.";
+                $this->addFlash('warning', $mensaje);
+            }
+
+            $em->getConnection()->commit();
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+        }
+            
+        return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
+    }
 
     /**
      * Esta funcion corrige la observacion  de: "Inconsistencias respecto a Grados sin desayuno escolar respecto a la gestion 2014" (validacion_regla_tipo=17)
@@ -1183,9 +1217,9 @@ class ControlCalidadController extends Controller {
                             }
                             else // $request_tipo==18
                             {
-                                $curso->setIdiomaMasHabladoTipo($em->getRepository( $tmpIdioma1 ));
-                                $curso->setIdiomaRegHabladoTipo($em->getRepository( $tmpIdioma2 ));
-                                $curso->setIdiomaMenHabladoTipo($em->getRepository( $tmpIdioma3 ));
+                                $curso->setIdiomaMasHabladoTipo( $tmpIdioma1 );
+                                $curso->setIdiomaRegHabladoTipo( $tmpIdioma2 );
+                                $curso->setIdiomaMenHabladoTipo( $tmpIdioma3 );
                             }
 
                             //ahora cambiamos el estado de la observación

@@ -263,6 +263,17 @@ sie_unidadeducativa_selectedStudents:
 sie_regularizacion_rue:
     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionRue.yml"
     prefix: /sie/regularizarRue
+
+
+#Ruta para el operativo de salud
+sie_herramienta_info_operativo_salud_administrativo_maestro:
+    resource: "@SieHerramientaBundle/Resources/config/routing/operativoSaludAdministrativoMaestro.yml"
+    prefix:   /acceso/operativo-salud/administrativo-maestro
+
+sie_gestiones_pasadas_areas_estudiante:
+    resource: "@SieHerramientaBundle/Resources/config/routing/gestPasadasAreasEstudiante.yml"
+    prefix: /sie/gestPasadasAreasEstudiante
+
 #sie_unidadeducativa_regularizacionGestionesPasadas:
 #     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionGestionesPasadas.yml"
 #     prefix:   /sie/regularizacion-gestiones-pasadas
@@ -272,3 +283,17 @@ sie_regularizacion_rue:
 #sie_regularizacion_regularizacionEstudiantesPostBachillerato:
 #     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionEstudiantesPostBachillerato.yml"
 #     prefix:   /sie/regularizacion-estudiantes-post-bachillerato
+#     
+#     
+
+sie_institucioneducativa_acceso_internet:
+    resource: "@SieHerramientaBundle/Resources/config/routing/institucioneducativaAccesoInternet.yml"
+    prefix: /sie/institucioneducativaAccesoInternet
+
+sie_institucioneducativa_report_vul:
+    resource: "@SieHerramientaBundle/Resources/config/routing/reportstudentvulnerability.yml"
+    prefix: /sie/reportVul
+
+sie_tramite_gp_areasestudiante:
+    resource: "@SieHerramientaBundle/Resources/config/routing/tramitegpareasestudiante.yml"
+    prefix:   /sie/tramite/areasestudiante

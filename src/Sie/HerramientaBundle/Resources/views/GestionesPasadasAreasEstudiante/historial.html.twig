@@ -1,0 +1,89 @@
+<div class="alert alert-{% if sw %}success{% else %}danger{% endif %}" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    {{mensaje}}
+</div>
+{% if sw %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title"><i class="fa fa-fw fa-user" aria-hidden="true"></i> Datos de la/el Estudiante</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">      
+                <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                    <tr>
+                        <th>Codigo Rude</th><td style="color:#0086DD"><strong>{{estudiante.codigoRude}}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Estudiante</th><td><strong>{{estudiante.nombre}} {{estudiante.paterno}} {{estudiante.materno}}</strong></td>
+                    </tr>
+                    <tr>
+                        <th>Carnet de Identidad</th><td>{{estudiante.carnetIdentidad}}{% if estudiante.complemento %} - {{estudiante.complemento}}{% endif %}</td>
+                    </tr>
+                    <tr>
+                        <th>Género</th><td>{{estudiante.generoTipo}}</td>
+                    </tr>
+                    <tr>
+                        <th>Fecha de Nacimiento</th><td>{{estudiante.fechaNacimiento|date('d-m-Y')}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="pull-left">
+                    <h3 class="panel-title"><i class="fa fa-fw fa-list" aria-hidden="true"></i> Historial de inscripción</h3>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped cf">
+                        <thead class="cf">
+                            <tr class="info">
+                                <th class="text-center">Gestión</th>
+                                <th class="text-center">SIE</th>
+                                <th class="text-center">Unidad Educativa</th>
+                                <th class="text-center">Nivel</th>
+                                <th class="text-center">Grado</th>
+                                <th class="text-center">Paralelo</th>
+                                <th class="text-center">Turno</th>
+                                <th class="text-center">Estado Matrícula</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for historial in historialRegular %}
+                            <tr>
+                                <td>{{historial.gestion_tipo_id_raep}}</td>
+                                <td>{{historial.institucioneducativa_id_raep}}</td>
+                                <td>{{historial.institucioneducativa_raep}}</td>
+                                <td>{{historial.nivel_r }} </td>
+                                <td>{{historial.grado_r}}</td>
+                                <td>{{historial.paralelo_raep}}</td>
+                                <td>{{historial.turno_raep}} </td>
+                                <td class="text-center">{{historial.estadomatricula_fin_r}}</td>
+                                <td class="text-center">
+                                    {% if historial.nivel_tipo_id_r in [2,12,3,13] and historial.gestion_tipo_id_raep >= 2009 and historial.gestion_tipo_id_raep <= 2020 and historial.institucioneducativa_id_raep == institucioneducativa.id %}
+                                        <a href="#" onclick="aeAreas('{{historial.estudiante_inscripcion_id_raep}}', '{{historial.estudiante_id_raep}}', '{{historial.gestion_tipo_id_raep}}')" ><i class="fa fa-fw fa-edit"></i> Agregar/Eliminar áreas</a>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

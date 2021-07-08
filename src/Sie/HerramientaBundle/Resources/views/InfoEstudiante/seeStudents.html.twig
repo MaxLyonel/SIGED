@@ -282,6 +282,34 @@
                                             </button>
                                         </div>
                                     {% endif %}
+                                    {#
+                                    {% if swRegisterCalifications %}
+                                        {% if gestion >= 2021 and data.estadomatriculaId in [4] %}
+                                            {% if gestion >= 2021 and nivel == 13 and grado >= 5 and app.session.get('acceso_total') %}
+                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                        <i class="fa fa-list"></i>
+                                                    </button>
+                                                </div>
+                                            {% else %}
+                                                {% if gestion >= 2021 %}                                        
+                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                            <i class="fa fa-list"></i>
+                                                        </button>
+                                                    </div>
+                                            {% endif %}
+                                    {% endif %}
+                                    #}
+
+                                    {#Sea añadio el boton de reporte formulario RUDE#}
+                                    {# if true #}
+                                    {% if app.session.get('roluser') in [9] and app.session.get('optionReporteRude') %}
+                                           <a class="btn btn-circle btn-lilac" target="_blank" href="{{path('download_formulario_rude', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
+                                             <i class="fa fa-archive" style="color:#FFFFFF"></i>
+                                           </a>
+                                   {% endif %}                                    
+
 
                                     {#by krlos notas 28.05.2021
                                     {% if gestion >= 2021 and nivel == 13 and grado >= 5 and app.session.get('acceso_total') %}
@@ -297,9 +325,10 @@
                                                     <i class="fa fa-list"></i>
                                                 </button>
                                             </div>
+>>>>>>> devsiged
                                         {% endif %}
-                                    {% endif %}                                    
-                                    #}
+                                    {% endif %}
+                                    
 
                                     {# Esto es para las unidades educativas que son Guanawek en la gestion 2020 #}
                                     {% if app.session.get('esGuanawek') and app.session.get('esGuanawek')==1 %}
@@ -575,7 +604,7 @@
             success: function (data) {
 
                 if(typeof data === 'object'){
-                    getNotas(data.infoUe, data.infoStudent, data.idInscripcion);
+                    getNotas2021(data.infoUe, data.infoStudent, data.idInscripcion);
                 }else{
                     $('#modal').empty();
                     $('#modal').append(data);

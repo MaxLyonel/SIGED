@@ -226,4 +226,30 @@ class RegularizacionRueController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
+
+    public function impresionSeguimientoAction(Request $request) {
+        $this->session = $request->getSession();
+        $id_usuario = $this->session->get('userId');
+        
+        if (!isset($id_usuario)) {
+            return $this->redirect($this->generateUrl('login'));
+        }
+        
+        if (!$this->session->get('userId')) {
+            return $this->redirect($this->generateUrl('login'));
+        }        
+
+        $em = $this->getDoctrine()->getManager();
+
+        $arch = 'SEGUIMIENTO_RUE_FECHAFUNDACION' . '_' . date('YmdHis') . '.pdf';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_seguimiento_rue_fechafundacion_v1_afv.rptdesign&__format=pdf&&dpto=' . $request->get('seguimientoRue')['dpto'] .'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }

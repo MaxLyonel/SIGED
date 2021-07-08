@@ -216,7 +216,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
         foreach ($healthType as $v) {
             $healthTypeArray[$v->getId()] = $v->getEstadosalud();
         }
-
+        $arrVacuna = array('NO VACUNADO','SI VACUNADO');
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($idPersona);
 
         $form = $this->createFormBuilder()
@@ -226,6 +226,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
                 ->add('persona', 'hidden', array('data' => $idPersona))
                 ->add('tipo', 'choice', array('label' => 'Cargo', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'form-control')))
                 ->add('health', 'choice', array('label' => 'Estado Salud', 'required' => true, 'choices' => $healthTypeArray, 'attr' => array('class' => 'form-control')))
+                ->add('vacuna', 'choice', array('label' => 'Vacuna', 'required' => true, 'choices' => $arrVacuna, 'attr' => array('class' => 'form-control')))
                 ->add('obs', 'textarea', array('label' => 'Observación', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
                 ->add('celular', 'text', array('label' => 'Nro de Celular', 'required' => false, 'data' => $persona->getCelular(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
                 ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'data' => $persona->getCorreo(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
@@ -279,6 +280,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
             $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
             $maestroinscripcion->setDistritoTipo($em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($form['distrito']));
             $maestroinscripcion->setEstadosaludTipo($em->getRepository('SieAppWebBundle:EstadosaludTipo')->find($form['health']));
+            $maestroinscripcion->setEsvacuna(($form['vacuna']));
             $maestroinscripcion->setObs(mb_strtoupper($form['obs'], 'utf-8'));
             $maestroinscripcion->setPersona($persona);
             $maestroinscripcion->setEsactivo(1);
@@ -377,6 +379,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
         foreach ($healthType as $v) {
             $healthTypeArray[$v->getId()] = $v->getEstadosalud();
         }        
+        $arrVacuna = array('NO VACUNADO','SI VACUNADO');
 
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('personaladministrativoinscripcion_update'))
@@ -386,6 +389,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
                 ->add('idMaestroInscripcion', 'hidden', array('data' => $maestroInscripcion->getId()))
                 ->add('tipo', 'choice', array('label' => 'Administrativo Tipo', 'required' => true, 'choices' => $cargosArray, 'data' => $maestroInscripcion->getPersonaAdministrativoInscripcionTipo()->getId(), 'attr' => array('class' => 'form-control')))
                 ->add('health', 'choice', array('label' => 'Estado Salud', 'required' => true, 'choices' => $healthTypeArray,'data' => $maestroInscripcion->getEstadosaludTipo()->getId(), 'attr' => array('class' => 'form-control')))
+                ->add('vacuna', 'choice', array('label' => 'Vacuna', 'required' => true, 'choices' => $arrVacuna,'data' => $maestroInscripcion->getEsvacuna(), 'attr' => array('class' => 'form-control')))                
                 ->add('obs', 'textarea', array('label' => 'Observación', 'required' => false, 'data' => $maestroInscripcion->getObs(), 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
                 ->add('celular', 'text', array('label' => 'Nro de Celular', 'required' => false, 'data' => $persona->getCelular(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}')))
                 ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'data' => $persona->getCorreo(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jemail')))
@@ -422,6 +426,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
             $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
             $maestroinscripcion->setDistritoTipo($em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($form['distrito']));
             $maestroinscripcion->setEstadosaludTipo($em->getRepository('SieAppWebBundle:EstadosaludTipo')->find($form['health']));
+            $maestroinscripcion->setEsvacuna(($form['vacuna']));
             $maestroinscripcion->setObs(mb_strtoupper($form['obs'], 'utf-8'));
             $maestroinscripcion->setPersona($persona);
             $maestroinscripcion->setEsactivo(1);
@@ -580,13 +585,14 @@ class PersonalAdministrativoInscripcionController extends Controller {
         foreach ($healthType as $v) {
             $healthTypeArray[$v->getId()] = $v->getEstadosalud();
         }
-
+        $arrVacuna = array('NO VACUNADO','SI VACUNADO');        
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('personaladministrativoinscripcion_persona_create'))
                 ->add('distrito', 'hidden', array('data' => $idInstitucion))
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('tipo', 'choice', array('label' => 'Administrativo Tipo', 'required' => true, 'choices' => $cargosArray, 'attr' => array('class' => 'form-control')))
-                ->add('health', 'choice', array('label' => 'Estado Salud', 'required' => true, 'choices' => $healthTypeArray, 'attr' => array('class' => 'form-control')))                
+                ->add('health', 'choice', array('label' => 'Estado Salud', 'required' => true, 'choices' => $healthTypeArray, 'attr' => array('class' => 'form-control')))  
+                ->add('vacuna', 'choice', array('label' => 'Vacuna', 'required' => true, 'choices' => $arrVacuna, 'attr' => array('class' => 'form-control')))                                 
                 ->add('obs', 'textarea', array('label' => 'Observación', 'required' => false, 'attr' => array('class' => 'form-control jnumbersletters jupper', 'autocomplete' => 'off', 'maxlength' => '90')))
                 ->add('carnet', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'placeholder' => '', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11')))
                 ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'maxlength' => '2', 'autocomplete' => 'off')))
@@ -686,6 +692,7 @@ class PersonalAdministrativoInscripcionController extends Controller {
                             $maestroinscripcion->setPersonaAdministrativoInscripcionTipo($em->getRepository('SieAppWebBundle:PersonaAdministrativoInscripcionTipo')->findOneById($form['tipo']));
                             $maestroinscripcion->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->findOneById($form['gestion']));
                             $maestroinscripcion->setDistritoTipo($em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($form['distrito']));
+                            $maestroinscripcion->setEsvacuna(($form['vacuna']));
                             $maestroinscripcion->setObs(mb_strtoupper($form['obs'], 'utf-8'));
                             $maestroinscripcion->setPersona($persona);
                             $maestroinscripcion->setEsactivo(1);

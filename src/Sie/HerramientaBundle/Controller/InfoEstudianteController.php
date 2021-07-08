@@ -66,6 +66,23 @@ class InfoEstudianteController extends Controller {
         //find the levels from UE
         //levels gestion -1
         //$objLevelsOld = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getNivelBySieAndGestion($form['sie'], $form['gestion']);
+        
+        // get the QA observactions
+        $form['reglas'] = '2,3,6,8,10,12,13,15,16,20,24,25,26';
+        $form['gestion'] = $form['gestion'];
+        $form['sie'] = $form['sie'];
+        if ($form['gestion'] == $this->session->get('currentyear')) {
+            $objObsQA = $this->getObservationQA($form);        
+        } else {
+            $objObsQA = null;
+        }       
+        // check QA on UE
+        if($objObsQA){
+            $swRegisterCalifications = false;
+        }else{
+            $swRegisterCalifications = true;
+        }
+
 
         $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getInfoUeducativaBySieGestion($form['sie'], $form['gestion']);
         $exist = true;
@@ -78,7 +95,7 @@ class InfoEstudianteController extends Controller {
                 $sinfoUeducativa = serialize(array(
                     'ueducativaInfo' => array('nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno']),
                     'ueducativaInfoId' => array('paraleloId' => $uEducativa['paraleloId'], 'turnoId' => $uEducativa['turnoId'], 'nivelId' => $uEducativa['nivelId'], 'gradoId' => $uEducativa['gradoId'], 'cicloId' => $uEducativa['cicloTipoId'], 'iecId' => $uEducativa['iecId']),
-                    'requestUser' => array('sie' => $form['sie'], 'gestion' => $form['gestion'])
+                    'requestUser' => array('sie' => $form['sie'], 'gestion' => $form['gestion'], 'swRegisterCalifications' => $swRegisterCalifications)
                 ));
 
                 //send the values to the next steps
@@ -182,6 +199,7 @@ class InfoEstudianteController extends Controller {
                     'sie' => $form['sie'],
                     'gestion' => $form['gestion'],
                     'objUe' => $objUe,
+                    'objObsQA' => $objObsQA,
                     //'form' => $this->removeForm()->createView(),
                     'exist' => $exist,
           //          'levelAutorizados' => $objInfoAutorizadaUe,
@@ -192,6 +210,24 @@ class InfoEstudianteController extends Controller {
                     'gradoId'=>$gradoId
         ));
     }
+    private function getObservationQA($data){
+      // added to 2021 about qa
+      $years = $data['gestion'].' ,'.$data['gestion'];
+
+      $em = $this->getDoctrine()->getManager();
+      $query = $em->getConnection()->prepare("
+                                                select vp.*
+                                                from validacion_proceso vp
+                                                where vp.institucion_educativa_id = '".$data['sie']."' and vp.gestion_tipo_id in (".$years.")
+                                                and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
+                                                and vp.es_activo = 'f'
+                                            ");
+          //
+      $query->execute();
+      $objobsQA = $query->fetchAll();
+
+      return $objobsQA;
+    }    
 
     public function getStudentsAction(Request $request) {
         //get db connexion
@@ -628,6 +664,7 @@ class InfoEstudianteController extends Controller {
 
         //get the values throght the infoUe
         $sie = $aInfoUeducativa['requestUser']['sie'];
+        $swRegisterCalifications = $aInfoUeducativa['requestUser']['swRegisterCalifications'];
         $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         $nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];
         $grado = $aInfoUeducativa['ueducativaInfoId']['gradoId'];
@@ -858,6 +895,7 @@ class InfoEstudianteController extends Controller {
                     'objStudents' => $objStudents,
                     'iecId'=>$iecId,
                     'sie' => $sie,
+                    'swRegisterCalifications' => $swRegisterCalifications,
                     'turno' => $turno,
                     'nivel' => $nivel,
                     'grado' => $grado,

@@ -41,6 +41,11 @@ Sie\AppWebBundle\Entity\PersonaAdministrativoInscripcion:
             type: boolean
             nullable: true
             comment: ''
+        esvacuna:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
     manyToOne:
         estadosaludTipo:
             targetEntity: EstadosaludTipo
