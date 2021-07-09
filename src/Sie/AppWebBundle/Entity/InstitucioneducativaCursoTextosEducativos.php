@@ -192,4 +192,60 @@ class InstitucioneducativaCursoTextosEducativos
     {
         return $this->institucioneducativaCurso;
     }
+    /**
+     * @var integer
+     */
+    private $trimestreSemestre;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\PeriodoTipo
+     */
+    private $periodoTipo;
+
+
+    /**
+     * Set trimestreSemestre
+     *
+     * @param integer $trimestreSemestre
+     * @return InstitucioneducativaCursoTextosEducativos
+     */
+    public function setTrimestreSemestre($trimestreSemestre)
+    {
+        $this->trimestreSemestre = $trimestreSemestre;
+    
+        return $this;
+    }
+
+    /**
+     * Get trimestreSemestre
+     *
+     * @return integer 
+     */
+    public function getTrimestreSemestre()
+    {
+        return $this->trimestreSemestre;
+    }
+
+    /**
+     * Set periodoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\PeriodoTipo $periodoTipo
+     * @return InstitucioneducativaCursoTextosEducativos
+     */
+    public function setPeriodoTipo(\Sie\AppWebBundle\Entity\PeriodoTipo $periodoTipo = null)
+    {
+        $this->periodoTipo = $periodoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get periodoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\PeriodoTipo 
+     */
+    public function getPeriodoTipo()
+    {
+        return $this->periodoTipo;
+    }
 }

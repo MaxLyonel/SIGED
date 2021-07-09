@@ -2,9 +2,9 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoTextosEducativos:
     type: entity
     table: institucioneducativa_curso_textos_educativos
     indexes:
-        IDX_C150A16D756DFBFA:
+        IDX_C150A16D96157FA0:
             columns:
-                - nota_tipo_id
+                - periodo_tipo_id
         IDX_C150A16D9E4EDBFE:
             columns:
                 - institucioneducativa_curso_id
@@ -12,7 +12,7 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoTextosEducativos:
         iinstitucioneducativa_curso_textos_educativos_key:
             columns:
                 - institucioneducativa_curso_id
-                - nota_tipo_id
+                - trimestre_semestre
     id:
         id:
             type: integer
@@ -23,6 +23,12 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoTextosEducativos:
             generator:
                 strategy: SEQUENCE
     fields:
+        trimestreSemestre:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: trimestre_semestre
         cantidad:
             type: integer
             nullable: true
@@ -45,13 +51,13 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoTextosEducativos:
             fixed: false
             comment: ''
     manyToOne:
-        notaTipo:
-            targetEntity: NotaTipo
+        periodoTipo:
+            targetEntity: PeriodoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                nota_tipo_id:
+                periodo_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         institucioneducativaCurso:
