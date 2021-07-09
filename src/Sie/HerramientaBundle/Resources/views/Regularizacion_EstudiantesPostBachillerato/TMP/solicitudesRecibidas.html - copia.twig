@@ -1,0 +1,658 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+
+{% set url_tipo = (tipo==1)? 'regularizacion_estudiantesPostBachillerato_postDetalleSolicitudeRecibidasDistrital': 'regularizacion_estudiantesPostBachillerato_postDetalleSolicitudeRecibidasUE' %}
+
+	<div class="header-content">
+		<h2><i class="fa fa-list-alt"></i> Solicitudes recibidas <span> Estudiantes post bachillerato</span></h2>
+		<div class="breadcrumb-wrapper hidden-xs">
+			<span class="label">Usted esta aquí:</span>
+			<ol class="breadcrumb">
+				<li>
+					<a href="#">Estudiantes post bachillerato</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+				<li>
+					<a href="#">Solicitudes recibidas</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+			</ol>
+		</div><!-- /.breadcrumb-wrapper -->
+	</div>
+	<div class="body-content animated fadeIn">
+		<div class="row" style="padding-top:1rem">
+			<div class="col-lg-12">
+				<div class="panel panel-icon panel-primary">
+					<div class="panel-heading">
+						<div class="pull-left">
+							<h3 class="panel-title">Socilitudes de regularización recibidas</h3>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+					<div class="panel-body">
+						<div class="panel-body panel-primary">
+							<div class="table-responsive">
+								{#
+								<table class="table">url_tipo
+								</table>
+								#}
+								<ul class="nav nav-tabs">
+									<li class="active"><a data-toggle="tab" href="#tab-solicitudes-recibidas">Recibidos <span class="badge btn-rounded">42</span> </a></li>
+									<li><a data-toggle="tab" href="#tab-solicitudes-observadas">Observados <span class="badge btn-rounded">42</span> </a></li>
+									<li><a data-toggle="tab" href="#tab-solicitudes-enviadas">Enviados <span class="badge btn-rounded">42</span> </a></li>
+									<li><a data-toggle="tab" href="#tab-solicitudes-enviadas">Por concluir <span class="badge btn-rounded">42</span> </a></li>
+									<li><a data-toggle="tab" href="#tab-solicitudes-enviadas">Concluidos <span class="badge btn-rounded">42</span> </a></li>
+								</ul>
+
+								<div class="tab-content">
+									<div id="tab-solicitudes-recibidas" class="tab-pane fade in active">
+										<table class="table table-data-table">
+											<thead class="thead-dark">
+												<tr>
+													<th scope="ol" width="5%">#</th>
+													<th scope="col" width="8%">Estado</th>
+													<th scope="col" width="10%">Gestión</th>
+													<th scope="col" width="15">Nro. Tramite</th>
+													<th scope="col" width="57%">Estudiante</th>
+													<th scope="col" width="5%"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-primary" style="margin:0"> <i class="fa fa-inbox" aria-hidden="true"></i> Recibido</div>
+														<span class="label label-primary"> <i class="fa fa-inbox" aria-hidden="true"></i> Recibido </span>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="1">
+															<button type="submit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-primary" style="margin:0"> <i class="fa fa-inbox" aria-hidden="true"></i> Recibido</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="2">
+															<button type="subimit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-primary" style="margin:0"> <i class="fa fa-inbox" aria-hidden="true"></i> Recibido</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="3">
+															<button type="subimit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div id="tab-solicitudes-observadas" class="tab-pane fade">
+										<table class="table table-data-table">
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col" width="5%">#</th>
+													<th scope="col" width="8%">Estado</th>
+													<th scope="col" width="10%">Gestión</th>
+													<th scope="col" width="15">Nro. Tramite</th>
+													<th scope="col" width="57%">Estudiante</th>
+													<th scope="col" width="5%"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-danger" style="margin:0"> <i class="fa fa-warning" aria-hidden="true"></i> Observado</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="1">
+															<button type="submit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-danger" style="margin:0"> <i class="fa fa-warning" aria-hidden="true"></i> Observado</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="2">
+															<button type="subimit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-danger" style="margin:0"> <i class="fa fa-warning" aria-hidden="true"></i> Observado</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="3">
+															<button type="subimit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div id="tab-solicitudes-enviadas" class="tab-pane fade">
+										<table class="table table-data-table">
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col" width="5%">#</th>
+													<th scope="col" width="8%">Estado</th>
+													<th scope="col" width="10%">Gestión</th>
+													<th scope="col" width="15">Nro. Tramite</th>
+													<th scope="col" width="57%">Estudiante</th>
+													<th scope="col" width="5%"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-success" style="margin:0"> <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviado</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="1">
+															<button type="submit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-success" style="margin:0"> <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviado</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="2">
+															<button type="subimit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-success" style="margin:0"> <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviado</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="3">
+															<button type="subimit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div id="tab-solicitudes-por-concluir" class="tab-pane fade">
+										<table class="table table-data-table">
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col" width="5%">#</th>
+													<th scope="col" width="8%">Estado</th>
+													<th scope="col" width="10%">Gestión</th>
+													<th scope="col" width="15">Nro. Tramite</th>
+													<th scope="col" width="57%">Estudiante</th>
+													<th scope="col" width="5%"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-success" style="margin:0"> <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviado</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="1">
+															<button type="submit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-success" style="margin:0"> <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviado</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="2">
+															<button type="subimit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-success" style="margin:0"> <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviado</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="3">
+															<button type="subimit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div id="tab-solicitudes-conluidas" class="tab-pane fade">
+										<table class="table table-data-table">
+											<thead class="thead-dark">
+												<tr>
+													<th scope="col" width="5%">#</th>
+													<th scope="col" width="8%">Estado</th>
+													<th scope="col" width="10%">Gestión</th>
+													<th scope="col" width="15">Nro. Tramite</th>
+													<th scope="col" width="57%">Estudiante</th>
+													<th scope="col" width="5%"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-success" style="margin:0"> <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviado</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="1">
+															<button type="submit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-success" style="margin:0"> <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviado</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="2">
+															<button type="subimit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+												<tr>
+													<th scope="row">1</th>
+													<td>
+														<div class="well well-sm text-center bg-success" style="margin:0"> <i class="fa fa-paper-plane" aria-hidden="true"></i> Enviado</div>
+													</td>
+													<td>2007</td>
+													<td>Trámite nro. XYZ</td>
+													<td>NOMBRE DEL ESTUSDINATE</td>
+													<td class="text-center">
+														<form action="{{url(url_tipo)}}" method="POST" target="_blank">
+															<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+															<input type="hidden" name="tramite_id" id="tramite_id" value="3">
+															<button type="subimit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+														</form>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block javascripts%}
+	{{ parent() }}
+	<script type="text/javascript" >
+		$('.table-data-table').DataTable({});
+		
+		$('.form-search-student').on('submit',function (e)
+		{
+			buscarEstudiante($(this),e);
+		});
+
+		$('.form-create-inscription').on('submit',function (e)
+		{
+			formCreateInscription($(this),e);
+		});
+
+		$('.form-register-grade').on('submit',function (e)
+		{
+			formRegisterGrade($(this),e);
+		});
+
+		var buscarEstudiante=function (_form,e)
+		{
+			e.preventDefault();
+			var form=_form.serialize();
+			$.ajax({
+				type:'POST',
+				url:'{{url("regularizacion_estudiantesPostBachillerato_buscarEstudiante")}}',
+				data:form,
+				beforeSend:function(){
+					$('.div-response').html('<div class="text-center">Buscando...</div>');
+				},
+				success:function (data){
+					$('.div-response').html(data);
+				},
+				error:function(){
+
+				}
+			});
+		}
+
+		var cantidadDeInscripciones = function ()
+		{
+			var cantidad,tbody,tr;
+			cantidad=0;
+			tbody 	= $('.tbody-subject-assignment');
+			tr 		= tbody.find('tr[class^="regularizacion-materias-inscritas-"]');
+			if(typeof(tr)!='undefined')
+				cantidad=tr.length;
+
+			return cantidad;
+		}
+
+		var formCreateInscription=function (_form,e)
+		{
+			e.preventDefault();
+			var cantidad=cantidadDeInscripciones();
+			if(cantidad>=2)
+			{
+				alert('Solo puede registrar 2 inscripciones.');
+				return;
+			}
+			var form=_form.serialize();
+			var _btn_submit='btn-create-inscription';
+			deshabilitarElemento(_form,_btn_submit);
+			$.ajax({
+				type:'POST',
+				url:'{{url("regularizacion_estudiantesPostBachillerato_crearInscripcion")}}',
+				data:form,
+				beforeSend:function(){
+					$('.tbody-subject-assignment').append('<tr class="tmp-tr"><td colspan=10 class="text-center">Cargando datos ...</td></tr>');
+				},
+				success:function (data)
+				{
+					var tbody=$('.tbody-subject-assignment');
+					eliminarFilasTmp(tbody);
+					try
+					{
+						var status=data.status;
+						if(status==200)
+						{
+							$('.tbody-subject-assignment').append(data.data);
+							setTimeout(function ()
+							{
+								cerrarModal('modal-create-inscription');
+								habilitarElemento(_form,_btn_submit);
+							},2000);
+						}
+						else
+						{
+							alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+							habilitarElemento(_form,_btn_submit);
+						}
+					}
+					catch(e)
+					{
+						alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+						eliminarFilasTmp(tbody);
+						habilitarElemento(_form,_btn_submit);
+					}
+				},
+				error:function()
+				{
+					alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+					eliminarFilasTmp(tbody);
+					habilitarElemento(_form,_btn_submit);
+				}
+			});
+		}
+
+		var abrirModalRegistrarCalificaciones=function (b)
+		{
+			var id=$(b).attr('data-inscription');
+			/*var tr=$('.regularizacion-materias-inscritas-'+id);
+			if(typeof(tr)!=null)
+			{
+				var gestion=tr.find('td.data-gestion').text();
+				var nivel=tr.find('td.data-nivel').text();
+				var grado=tr.find('td.data-grado').text();
+				var paralelo=tr.find('td.data-paralelo').text();
+				var turno=tr.find('td.data-turno').text();
+			}
+			var form=$('.form-register-grade')
+			if(typeof(form)!=null)
+			{
+				form.find('input.inscription-id').val(id);
+				form.find('div.div-input-gestion').text(gestion);
+				form.find('div.div-input-nivel').text(nivel);
+				form.find('div.div-input-grado').text(grado);
+				form.find('div.div-input-paralelo').text(paralelo);
+				form.find('div.div-input-turno').text(turno);
+
+				if(form.find('input.inscription-id').val().length>0)
+				{
+					abrirModal("modal-register-grade");
+				}
+				else
+				{
+					alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+				}
+			}*/
+			$.ajax({
+				type:'GET',
+				//url:'{# url("regularizacion_gestionesPasadas_getMaterias") #}',
+				url:'{# url("base_url") #}',
+				beforeSend:function()
+				{
+					$('.div-add-grade').html('<div class="text-center">Cargando datos ...</div>');
+				},
+				success:function (data)
+				{
+					var div=$('.div-add-grade');
+					$('.div-add-grade').html('');
+					try
+					{
+						var status=data.status;
+						if(status==200)
+						{
+							$('.div-add-grade').html(data.data);
+							abrirModal("modal-register-grade");
+						}
+						else
+						{
+							alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+							$('.div-add-grade').html('');
+						}
+					}
+					catch(e)
+					{
+						alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+						$('.div-add-grade').html('');
+
+					}
+				},
+				error:function()
+				{
+					alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+					$('.div-add-grade').html('');
+
+				}
+			});
+
+		}
+
+		var formRegisterGrade=function (_form,e)
+		{
+			e.preventDefault();
+			var form=_form.serialize();
+			var _btn_submit='btn-register-grade';
+			deshabilitarElemento(_form,_btn_submit);
+			$.ajax({
+				type:'POST',
+				url:'{{url("regularizacion_estudiantesPostBachillerato_registrarNota")}}',
+				data:form,
+				beforeSend:function(){
+					$('.tbody-subject-assignment').append('<tr class="tmp-tr"><td colspan=10 class="text-center">Cargando datos ...</td></tr>');
+				},
+				success:function (data)
+				{
+					var tbody=$('.tbody-subject-assignment');
+					eliminarFilasTmp(tbody);
+					try
+					{
+						var status=data.status;
+						if(status==200)
+						{
+							$('.tbody-subject-assignment').append(data.data);
+							setTimeout(function ()
+							{
+								cerrarModal('modal-create-inscription');
+								habilitarElemento(_form,_btn_submit);
+							},2000);
+						}
+						else
+						{
+							alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+							habilitarElemento(_form,_btn_submit);
+						}
+					}
+					catch(e)
+					{
+						alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+						eliminarFilasTmp(tbody);
+						habilitarElemento(_form,_btn_submit);
+					}
+				},
+				error:function()
+				{
+					alert('Acaba de ocurrir un error, por favor vuelva a intentarlo.');
+					eliminarFilasTmp(tbody);
+					habilitarElemento(_form,_btn_submit);
+				}
+			});
+		}
+
+		var eliminarFilasTmp=function (tbody)
+		{
+
+			tbody.find('.tmp-tr').remove();
+		}
+		var habilitarElemento=function(_con,_ele)
+		{
+			var ele=$(_con).find('.'+_ele);
+			if(typeof(ele)!=null)
+			{
+				ele.removeAttr('disabled');
+			}
+		}
+		var deshabilitarElemento=function(_con,_ele)
+		{
+			var ele=$(_con).find('.'+_ele);
+			if(typeof(ele)!=null)
+			{
+				ele.attr('disabled',true);
+			}
+		}
+		var abrirModal=function(_nombreModal)
+		{
+			var modal=$("#"+_nombreModal);
+			if(typeof(modal)!=null)
+				modal.modal('show');
+		}
+		var cerrarModal=function(_nombreModal)
+		{
+			var modal=$("#"+_nombreModal);
+			if(typeof(modal)!=null)
+			{
+				modal.modal('hide');
+				limpiarModal(_nombreModal)
+			}
+		}
+		var limpiarModal=function (_nombreModal)
+		{
+
+			$("#"+_nombreModal).find('form')[0].reset();
+		}
+	</script>
+{% endblock %}
+

@@ -1634,7 +1634,7 @@ class TramiteAddModCalificationController extends Controller {
         //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_mod_calif_V1_eea.rptdesign&estudiante_id=' .$idStudent.'&institucioneducativa_id='. $sie.'&tramite_id='.$idTramite.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_mod_calif_V2_eea.rptdesign&estudiante_id=' .$idStudent.'&institucioneducativa_id='. $sie.'&tramite_id='.$idTramite.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

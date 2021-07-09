@@ -1,0 +1,255 @@
+{% extends 'layoutHerramienta.html.twig' %}
+{% block contentoption %}
+
+	<div class="header-content">
+		<h2><i class="fa fa-list-alt"></i> Solicitudes recibidas <span> Estudiantes post bachillerato</span></h2>
+		<div class="breadcrumb-wrapper hidden-xs">
+			<span class="label">Usted esta aquí:</span>
+			<ol class="breadcrumb">
+				<li>
+					<a href="#">Estudiantes post bachillerato</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+				<li>
+					<a href="#">Solicitudes recibidas</a>
+					<i class="fa fa-angle-right"></i>
+				</li>
+			</ol>
+		</div><!-- /.breadcrumb-wrapper -->
+	</div>
+
+
+	<div class="body-content animated fadeIn">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel-body">
+					<div class="row compose-mail-wrapper">
+						<div class="col-sm-2">
+							<div class="panel">
+								<ul class="nav nav-pills nav-stacked nav-email mb-20 rounded shadow">
+									<li class="tipos-solicitudes">
+										<a href="javascript:void(0);" onclick="listarSolicitudes(1)"><i class="fa fa-envelope-o"></i> Recibidos </a>
+									</li>
+									<li class="tipos-solicitudes">
+										<a href="javascript:void(0);" onclick="listarSolicitudes(2)"><i class="fa fa-certificate"></i> Enviados </a>
+									</li>
+									<li class="tipos-solicitudes">
+										<a href="javascript:void(0);" onclick="listarSolicitudes(3)"><i class="glyphicon glyphicon-tasks"></i> Pendientes </a>
+									</li>
+									<li class="tipos-solicitudes">
+										<a href="javascript:void(0);" onclick="listarSolicitudes(4)"><i class="fa fa-file-text-o"></i> Concluidos </a>
+									</li>
+									{% if app.session.get('roluser') in [8,41] %}
+
+									{% endif %}
+								</ul>
+							</div>
+						</div>
+						{% set titulo = 'ESTE-ES-EL-TITULO' %}
+						<div class="col-sm-10">
+							<div class="panel rounded shadow panel-primary">
+								<div class="panel-heading">
+									<div class="pull-left">
+										<h3 class="panel-title" id="titulo">Solicitudes</h3>
+									</div>
+									<div class="clearfix"></div>
+								</div><!-- /.panel-heading -->
+								<div class="panel-body">
+									<div id="contenido" class="div-contenido">
+										Por favor seleccione una de las opciones del menu
+										{# include 'SieProcesosBundle:WfTramite:contenido.html.twig' with { 'entities':entities,'titulo':titulo,'tipo':tipo } #}
+										{#
+										<div class="row">
+											<div class="col-md-12">
+												<div class="table-responsive">
+													<div class="col-md-12">
+														<table class="table table-bordered table-striped table-black" id="table">
+															<thead>
+																<tr>
+																	<!--
+																	<th class="text-center" style="min-width: 15px;">No. Trámite</th>
+																	<th>Trámite</th>
+																	<th>Tipo de Trámite</th>
+																	<th>Código</th>
+																	<th>Nombre</th>
+																	<th>Fecha de inicio</th>
+																	<th>Fecha de fin</th>
+																	<th>Duración del trámite(días)</th>
+																	<th>Esdado</th>
+																	<th>Detalle</th>
+																	-->
+																	<th scope="col" width="5%">#</th>
+																	<th scope="col" width="5%">Trámite</th>
+																	<th scope="col" width="5%">Código</th>
+																	<th scope="col" width="5%">Gestión</th>
+																	<th scope="col" width="60%">Estudiante</th>
+																	<th scope="col" width="5%">Duración del trámite(días)</th>
+																	<th scope="col" width="5%">Fecha de recepción</th>
+																	<th scope="col" width="5%">Fecha de envio</th>
+																	<th scope="col" width="5%">&nbsp;</th>
+																</tr>
+															</thead>
+																	<!--
+															<tfoot>
+																<tr>
+																	<th class="text-center" style="min-width: 15px;">No. Trámite</th>
+																	<th>Trámite</th>
+																	<th>Tipo de Trámite</th>
+																	<th>Código</th>
+																	<th>Nombre</th>
+																	<th>Fecha de inicio</th>
+																	<th>Fecha de fin</th>
+																	<th>Duración del trámite(días)</th>
+																	<th>Esdado</th>
+																	<th>Detalle</th>
+																	<th scope="col" width="5%">#</th>
+																	<th scope="col" width="5%">Trámite</th>
+																	<th scope="col" width="5%">Código</th>
+																	<th scope="col" width="5%">Gestión</th>
+																	<th scope="col" width="60%">Estudiante</th>
+																	<th scope="col" width="5%">Duración del trámite(días)</th>
+																	<th scope="col" width="5%">Fecha de recepción</th>
+																	<th scope="col" width="5%">Fecha de envio</th>
+																	<th scope="col" width="5%">&nbsp;</th>
+																</tr>
+															</tfoot>
+																	-->
+															<tbody>
+																	<tr>
+																		<!--
+																		<td>1651801</td>
+																		<td>SOLICITUD BTH</td>
+																		<td>Ratificación </td>
+																		<td>SIE:40730039</td>
+																		<td>Institucion Educativa: JUAN CAPRILES TARDE</td>
+																		<td>27-03-2019</td>
+																		<td>06-05-2019</td>
+																		<td>40</td>
+																		<td><span class="label label-success">CONCLUIDO </span></td>
+																		<td class="text-center">
+																			<a class="btn btn-info btn-xs tooltips" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Detalle" onclick="detalle(1651801,6)">
+																				<i class="fa fa-list"></i>
+																			</a>
+																		</td>
+																		-->
+																		<th scope="row" width="5%">1</th>
+																		<td>465467</td>
+																		<td>SIE:40730039</td>
+																		<td>2007</td>
+																		<td>NOMBRE DEL ESTUSDINATE</td>
+																		<td>40</td>
+																		<td>06-05-2019</td>
+																		<td>10-05-2019</td>
+																		<td class="text-center">
+																			<form action="#" method="POST" target="_blank">
+																				<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+																				<input type="hidden" name="tramite_id" id="tramite_id" value="1">
+																				<button type="submit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+																			</form>
+																		</td>
+																	</tr>
+																	<tr>
+																		<!--
+																		<td>1651767</td>
+																		<td>SOLICITUD BTH</td>
+																		<td>Ratificación </td>
+																		<td>SIE:40730016</td>
+																		<td>Institucion Educativa: EUFRASIO IBAÑEZ RIVERO</td>
+																		<td>27-03-2019</td>
+																		<td>06-05-2019</td>
+																		<td>40</td>
+																		<td><span class="label label-success">CONCLUIDO </span></td>
+																		<td class="text-center">
+																			<a class="btn btn-info btn-xs tooltips" data-toggle="modal" data-target="#modal" data-placement="top" title="Ver Detalle" onclick="detalle(1651767,6)">
+																				<i class="fa fa-list"></i>
+																			</a>
+																		</td>
+																		-->
+																		<th scope="row" width="5%">2</th>
+																		<td>5465465465</td>
+																		<td>SIE:40730039</td>
+																		<td>2007</td>
+																		<td>NOMBRE DEL ESTUSDINATE</td>
+																		<td>40</td>
+																		<td>06-05-2019</td>
+																		<td>13-05-2019</td>
+																		<td class="text-center">
+																			<form action="#" method="POST" target="_blank">
+																				<input type="hidden" name="token" value="{{ csrf_token('form-send-tramite') }}">
+																				<input type="hidden" name="tramite_id" id="tramite_id" value="1">
+																				<button type="submit" class="btn btn-info"><i class="fa fa-search" aria-hidden="true"></i> Abrir</button>
+																			</form>
+																		</td>
+																	</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+											</div>
+										</div>
+										#}
+
+									</div>
+								</div><!-- /.panel-body -->
+							</div><!-- /.panel -->
+						</div>
+					</div>
+				</div><!-- /.panel-body -->
+				<!--/ End panel content -->
+			</div>
+		</div><!-- /.row -->
+	</div>
+
+{% endblock %}
+
+
+{% block javascripts%}
+	{{ parent() }}
+	<script type="text/javascript" >
+
+		function listarSolicitudes(_tipo)
+		{
+			//formData = {tipo: _tipo};
+			var tipos={
+				1:'Solicitudes recibidas',
+				2:'Solicitudes enviadas',
+				3:'Solicitudes pendientes',
+				4:'Solicitudes concluidas',
+			};
+			$.ajax({
+				type: 'GET',
+				url: Routing.generate('{{url}}', { tipo: _tipo }),
+				//data: formData,
+				beforeSend: function ()
+				{
+					$('#titulo').text(tipos[_tipo]);
+					$('#contenido').empty();
+					$('#contenido').append('<div style="text-align:center">Cargando datos ...<img src="{{asset('img/loading.gif')}}"  /></div>');
+				},
+				success: function (data)
+				{
+					$('#contenido').empty();
+					$('#contenido').append(data);
+					$('table.table').DataTable({});
+				},
+				error:function ()
+				{
+					$('#contenido').empty();
+					$('#contenido').append('<div style="text-align:center">Acaba de ocurrir un error, por favor vuelva a intentarlo.</div>');
+				}
+			});
+		}
+
+		//estas lineas de codigo asignan la clase active a cada item del menu
+		$('.tipos-solicitudes').on('click',function (e)
+		{
+			var active=$('.tipos-solicitudes');
+			$.each(active,function(i,li)
+			{
+				$(li).removeClass('active');
+			});
+			$(this).addClass('active');
+		});
+	</script>
+{% endblock %}
+

@@ -1,0 +1,231 @@
+#selected_students_index:
+#    path:     /
+#    defaults: { _controller: SieHerramientaBundle:SelectedStudents:index }
+#
+#selected_students_buscar:
+#    path:     /buscar
+#    defaults: { _controller: SieHerramientaBundle:SelectedStudents:buscar }
+#    options:
+#         expose: true
+#
+#selected_students_registryStudent:
+#    path:     /registryStudent
+#    defaults: { _controller: SieHerramientaBundle:SelectedStudents:registryStudent }
+#    options:
+#         expose: true         
+#
+#selected_students_loadData:
+#    path:     /loadData
+#    defaults: { _controller: SieHerramientaBundle:SelectedStudents:loadData }
+#    options:
+#         expose: true
+#
+#selected_students_removeStudent:
+#    path:     /removeStudent
+#    defaults: { _controller: SieHerramientaBundle:SelectedStudents:removeStudent }
+#    options:
+#         expose: true         
+#
+#selected_students_closeRegistry:
+#    path:     /closeRegistry
+#    defaults: { _controller: SieHerramientaBundle:SelectedStudents:closeRegistry }
+#    options:
+#         expose: true#
+
+#Dpartamental
+regularizacion_estudiantesPostBachillerato_getRegistrarHistorial: #enlace a la pagina de registro de calificaciones
+    path:     /departamental/registrar-historial
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:getRegularizacionRegistrarHistorial }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_postRegistrarHistorial: #enlace para enviar los datos de .la solicitud a la distrital
+    path:     /departamental/enviar-solicitud
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:postRegularizacionRegistrarHistorial }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_buscarEstudiante:
+    path:     /departamental/buscar-estudiante
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:regularizacionBuscarEstudiante }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_buscarNivel:
+    path:     /departamental/buscar-nivel/{gestion}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:regularizacionBuscarNivel, gestion:-1}
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_buscarGrado:
+    path:     /departamental/buscar-grado/{gestion}/{nivel}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:regularizacionBuscarGrado,gestion:-1,nivel:-1 }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_crearInscripcion:
+    path:     /departamental/crear-inscripcion
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:regularizacionCrearInscripcion }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_borrarInscripcion:
+    path:     /departamental/borrar-inscripcion/{id}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:regularizacionBorrarInscripcion }
+    options:
+        expose: true
+
+#regularizacion_estudiantesPostBachillerato_getMaterias:
+#    path:     /departamental/crear-inscripcion/{id}
+#    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:getRegularizacionMaterias }
+#    options:
+#        expose: true
+
+regularizacion_estudiantesPostBachillerato_registrarNota:
+    path:     /departamental/crear-inscripcion
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:regularizacionRegistrarNota }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_getSolicitudeRecibidasDepartamental: #enlace a la pagina de solicitudes recibidas
+    path:     /departamental/solicitudes-recibidas
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:getRegularizacionSolicitudesRecibidasDepartamental }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_postDetalleSolicitudesRecibidasDepartamentalPorConcluir: #enlace a la pagina de con detalle de solicitudes recibidas de un tramite que ya paso por la UE
+    path:     /departamental/detalle-solicitudes-recibidas/por-concluir
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:postRegularizacionDetalleSolicitudesRecibidasDepartamentalPorConcluir }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_postEnviarSolicitudDepartamentalPorConcluir: #enlace para enviar los datos de la solicitud a la departamental, una vez que haya pasado por la departamental, distrial, ue y distrital y este en la etapa acepatcion o rechazo
+    path:     /departamental/aprobar-rechazar-solicitud
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:postEnviarSolicitudDepartamentalPorConcluir }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_verificarInscripcion: #enlace para enviar los datos de la solicitud a la departamental, una vez que haya pasado por la departamental, distrial, ue y distrital y este en la etapa acepatcion o rechazo
+    path:     /departamental/verificar-inscripcion
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:verificarInscripcion }
+    options:
+        expose: true
+
+#Distrital
+regularizacion_estudiantesPostBachillerato_getSolicitudeRecibidasDistrital: #enlace a la pagina de solicitudes recibidas
+    path:     /distrital/solicitudes-recibidas
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:getRegularizacionSolicitudesRecibidasDistrital }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_postDetalleSolicitudeRecibidasDistrital: #enlace a la pagina de con detalle de solicitudes recibidas
+    path:     /distrital/detalle-solicitudes-recibidas
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:postRegularizacionDetalleSolicitudesRecibidasDistrital }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_postEnviarSolicitudUnidadEducativa: #enlace para enviar los datos de .la solicitud a la unidad educativa
+    path:     /distrital/enviar-solicitud
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:postEnviarSolicitudUnidadEducativa }
+    options:
+        expose: true
+
+#regularizacion_estudiantesPostBachillerato_postDetalleSolicitudeRecibidasDistritalPorConcluir: #enlace a la pagina de con detalle de solicitudes recibidas de un tramite que ya paso por la UE
+#    path:     /distrital/detalle-solicitudes-recibidas/por-concluir
+#    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:postRegularizacionDetalleSolicitudesRecibidasDistritalPorConcluir }
+#    options:
+#        expose: true
+
+regularizacion_estudiantesPostBachillerato_postDetalleSolicitudeRecibidasDistritalPorConcluir: #enlace a la pagina de con detalle de solicitudes recibidas de un tramite que ya paso por la UE
+    path:     /distrital/detalle-solicitudes-recibidas/por-concluir
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:postRegularizacionDetalleSolicitudesRecibidasDistritalPorConcluir }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_buscarUE:
+    path:     /distrital/buscar-unidad-educativa
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:regularizacionBuscarUE }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_listarUEValidas:
+    path:     /distrital/listar-unidades-educativas-validas
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:regularizacionListarUEValidas }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_postEnviarSolicitudDistritalPorConcluir: #enlace para enviar los datos de la solicitud a la departamental, una vez que haya pasado por la departamental, distrial, ue y distrital y este en la etapa final de la solicitud
+    path:     /distrital/enviar-solicitud-nuevamente
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:postEnviarSolicitudDistritalPorConcluir }
+    options:
+        expose: true
+
+
+#UE
+regularizacion_estudiantesPostBachillerato_getSolicitudeRecibidasUE: #enlace a la pagina de solicitudes recibidas
+    path:     /ue/solicitudes-recibidas
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:getRegularizacionSolicitudesRecibidasUE }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_postDetalleSolicitudeRecibidasUE: #enlace a la pagina de con detalle de solicitudes recibidas
+    path:     /ue/detalle-solicitudes-recibidas
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:postRegularizacionDetalleSolicitudesRecibidasUE }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_getMaterias:
+    path:     /ue/obtener-materias
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:getMaterias }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_getTurnos:
+    path:     /ue/obtener-turnos
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:getTurnosApartirDeParalelo }
+    options:
+        expose: true
+
+
+regularizacion_estudiantesPostBachillerato_postEnviarSolicitudDistrital: #enlace para enviar los datos de .la solicitud a la unidad educativa
+    path:     /ue/enviar-solicitud
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:postEnviarSolicitudDistrital }
+    options:
+        expose: true
+
+
+#Rutas genericas para todas la instancias
+regularizacion_estudiantesPostBachillerato_getSolicitudes: #Obtiene todas las solicitudes, dependiento el tipo
+    path:     /todas/solicitudes/{tipo}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:getSolicitudes }
+    options:
+        expose: true
+
+
+regularizacion_estudiantesPostBachillerato_getSolicitudesDepartamental: #Obtiene todas las solicitudes de la departamental, dependiento el tipo
+    path:     /departamental/solicitudes/{tipo}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:getSolicitudesDepartamental }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_getSolicitudesDistrital: #Obtiene todas las solicitudes de la departamental, dependiento el tipo
+    path:     /distrital/solicitudes/{tipo}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:getSolicitudesDistrital }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachillerato_getSolicitudesUE: #Obtiene todas las solicitudes de la departamental, dependiento el tipo
+    path:     /eu/solicitudes/{tipo}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:getSolicitudesUE }
+    options:
+        expose: true
+
+
+regularizacion_estudiantesPostBachillerato_mostrarAdjunto: #Obtiene todas las solicitudes de la departamental, dependiento el tipo
+    path:     /mostrar-adjunto/{tramite}/{archivo}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPostBachillerato:mostrarAdjunto }
+    options:
+        expose: true
+
+
+
