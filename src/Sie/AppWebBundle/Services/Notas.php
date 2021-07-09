@@ -4043,7 +4043,9 @@ die;/*
                 }
             }
         }else if($igestion == 2021) {
-            if($inivel_tipo_id == 12) {
+            if($inivel_tipo_id == 11) {
+                $complementario = "";
+            }else if($inivel_tipo_id == 12) {
                 if($igrado_tipo_id >= 1) {
                     $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
@@ -4053,10 +4055,11 @@ die;/*
                 }
             }
         }
-
-        $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
-        $query->execute();        
-        $resultado = $query->fetchAll();        
+        if($inivel_tipo_id != 11) {
+            $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+            $query->execute();        
+            $resultado = $query->fetchAll();        
+        }
       
        
     }
