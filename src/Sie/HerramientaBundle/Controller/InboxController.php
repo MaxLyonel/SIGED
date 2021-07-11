@@ -737,7 +737,7 @@ class InboxController extends Controller {
       } else {
         $objObsQA = null;
       }
-
+      //$this->session->set('donwloadLibreta', false);
       /*if($objObsQA){
         return $this->render($this->session->get('pathSystem') . ':Inbox:list_inconsistencia.html.twig', array(
           'objObsQA' => $objObsQA,
@@ -1259,8 +1259,11 @@ class InboxController extends Controller {
           
             if($registroConsol){
               $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
-              $fieldOpe = 'setBim' .$operativo;
-              $registroConsol->$fieldOpe(2);
+              if($operativo == 1){
+                  $fieldOpe = 'setBim' .$operativo;
+                  $registroConsol->$fieldOpe(2);
+                  $this->session->set('donwloadLibreta', true);
+              }
 
             }else{
               $registroConsol = new RegistroConsolidacion();
