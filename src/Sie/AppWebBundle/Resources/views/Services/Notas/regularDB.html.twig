@@ -62,16 +62,16 @@
                                                         <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
                                                         <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
                                                         <p class="text-justify">
-                                                            <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="20" cols="50" style="resize:vertical; max-height: 270px; text-transform:uppercase" maxlength="400" minlength="16">{{c.notaCualitativa}}</textarea>
+                                                            <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="20" cols="50" style="resize:vertical; max-height: 270px; text-transform:uppercase" maxlength="250" minlength="16">{{c.notaCualitativa}}</textarea>
                                                         </p>
                                                     {% else %}
                                                         <p class="text-justify">
-                                                            <textarea class="form-control jnumbersletters" rows="20" cols="50" style="resize:vertical; max-height: 270px; text-transform:uppercase" maxlength="400" disabled="disabled">{{c.notaCualitativa}}</textarea>
+                                                            <textarea class="form-control jnumbersletters" rows="20" cols="50" style="resize:vertical; max-height: 270px; text-transform:uppercase" maxlength="250" disabled="disabled">{{c.notaCualitativa}}</textarea>
                                                         </p>
                                                     {% endif %}
                                                 {% else %}
                                                     <p class="text-justify">
-                                                        <textarea class="form-control jnumbersletters" rows="20" cols="50" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="400" disabled="disabled">{{c.notaCualitativa}}</textarea>
+                                                        <textarea class="form-control jnumbersletters" rows="20" cols="50" style="resize:vertical; max-height: 200px; text-transform:uppercase" maxlength="250" disabled="disabled">{{c.notaCualitativa}}</textarea>
                                                     </p>
                                                 {% endif %}
                                             {# {% endif %} #}
