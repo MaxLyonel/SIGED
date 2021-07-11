@@ -274,7 +274,7 @@
             return false;
         };
 
-        var guardarCalificaciones = function(areaid,gestion,nivelid,gradoid) {
+        var guardarCalificaciones = function(areaid,gestion,nivelid,gradoid,conEspecialidad) {
             var c = 0;
             var errores = 0;
             var min_ant = 0;
@@ -285,15 +285,21 @@
             var apr_act = 51;
             var notas = $('#formCalificaciones').serializeArray();
             
+            if(conEspecialidad == 1) {
+                contar = 3;
+            } else {
+                contar = 2;
+            }
+            
             for(let nota in notas) {
                 c++;
-                if(c==3){
+                if(c==contar){
                     if(parseInt(notas[nota].value) == 0) {
                         alert("¡Debe seleccionar alguna especialidad!");
                         return false;
                     }
                 }
-                if(c>3) {
+                if(c>contar) {
                     if(gestion == 2013) {
                         if(nivelid == 12) {
                             if(gradoid == 1) {

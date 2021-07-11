@@ -1546,7 +1546,27 @@ class DownloadController extends Controller {
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
-    }      
+    }   
+
+    public function downloadVulnerabilityAction(Request $request, $gestion, $distrito){
+
+        $response = new Response();
+
+        // $codigoQR = 'FICGP'.$idTramite.'|'.$codigoRude.'|'.$sie.'|'.$gestion;
+
+        $data = $this->session->get('userId').'|'.$this->session->get('currentyear').'|'.$distrito;
+        //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
+        
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestVul_'.$distrito.'_'.$gestion. '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_listado_quipus_V1_eea.rptdesign&distrito_id=' . $distrito.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }   
+
 
            
 }

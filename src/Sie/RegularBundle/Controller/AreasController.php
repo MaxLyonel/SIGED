@@ -371,45 +371,36 @@ class AreasController extends Controller {
      */
 
     public function lista_areas_cursoAction(Request $request) {
-        try {
-            $em = $this->getDoctrine()->getManager();
-            $em->getConnection()->beginTransaction();
-            //echo $request->get('divResultado')."<br>";
-            //echo $request->get('idInstitucionCurso');
-            $form = $request->get('form');
-            if ($form['nivel'] != 10) {
-                $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
-                    'institucioneducativa' => $form['idInstitucion'],
-                    'gestionTipo' => $form['idGestion'],
-                    'turnoTipo' => $form['turno'],
-                    'nivelTipo' => $form['nivel'],
-                    'gradoTipo' => $form['grado'],
-                    'paraleloTipo' => $form['paralelo']));
-                if ($curso) {
-                    $idCurso = $curso->getId();
-                    $mensaje = '';
-                } else {
-                    $mensaje = "No hay asignaturas";
-                    //return $mensaje;
-                }
+        $em = $this->getDoctrine()->getManager();
+        
+        $form = $request->get('form');
+        
+        $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
+            'institucioneducativa' => $form['idInstitucion'],
+            'gestionTipo' => $form['idGestion'],
+            'turnoTipo' => $form['turno'],
+            'nivelTipo' => $form['nivel'],
+            'gradoTipo' => $form['grado'],
+            'paraleloTipo' => $form['paralelo']
+        ));
 
-                $areasCurso = $this->get('areas')->getAreas($idCurso);
-                $operativo = $this->get('funciones')->obtenerOperativo($form['idInstitucion'],$form['idGestion']);
-
-                $em->getConnection()->commit();
-                return $this->render('SieRegularBundle:Areas:listaAreasCurso.html.twig', array(
-                            'areas' => $areasCurso,
-                            'curso' => $curso,
-                            'mensaje' => $mensaje,
-                            'operativo'=>$operativo
-                ));
-            } else {
-                echo "La adición de areas no se puede aplicar a nivel Inicial";
-                die;
-            }
-        } catch (Exception $ex) {
-            //$em->getConnection()->rollback();
+        if ($curso) {
+            $idCurso = $curso->getId();
+            $mensaje = '';
+        } else {
+            $mensaje = "No hay asignaturas";
+            //return $mensaje;
         }
+
+        $areasCurso = $this->get('areas')->getAreas($idCurso);
+        $operativo = $this->get('funciones')->obtenerOperativo($form['idInstitucion'],$form['idGestion']);
+
+        return $this->render('SieRegularBundle:Areas:listaAreasCurso.html.twig', array(
+            'areas' => $areasCurso,
+            'curso' => $curso,
+            'mensaje' => $mensaje,
+            'operativo'=>$operativo
+        ));
     }
 
     /*
@@ -437,6 +428,14 @@ class AreasController extends Controller {
             $areasNivel = $asignaturas;
             $areasCurso = $areas['cursoOferta'];
 
+            $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
+            
+            $tmpAsignaturaHistorico = $em->getRepository('SieAppWebBundle:TmpAsignaturaHistorico')->findBy(array(
+                'gestionTipoId' => $curso->getGestionTipo()->getId(),
+                'nivelTipoId' => $curso->getNivelTipo()->getId(),
+                'gradoTipoId' => $curso->getGradoTipo()->getId()
+            ));
+
             $areasArray = array();
             for ($i = 0; $i < count($areasNivel); $i++) {
                 $check = '';
@@ -452,25 +451,27 @@ class AreasController extends Controller {
                     $areasArray[] = array('marcado' => $check, 'bloqueado' => $bloqueado, 'codigo' => $areasNivel[$i]->getId(), 'asignatura' => $areasNivel[$i]->getAsignatura());
                 }
             }
+
             $maestros = $em->createQueryBuilder()
-                           ->select('mi.id, p.paterno, p.materno, p.nombre, p.carnet')
-                           ->from('SieAppWebBundle:MaestroInscripcion','mi')
-                           ->innerJoin('SieAppWebBundle:Persona','p','with','mi.persona = p.id')
-                           ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','mi.institucioneducativa = ie.id')
-                           ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','mi.gestionTipo = gt.id')
-                           ->innerJoin('SieAppWebBundle:CargoTipo','ct','with','mi.cargoTipo = ct.id')
-                           ->innerJoin('SieAppWebBundle:RolTipo','rt','with','ct.rolTipo = rt.id')
-                           ->where('ie.id = :idInstitucion')
-                           ->andWhere('gt.id = :gestion')
-                           ->andWhere('rt.id = :rol')
-                           ->setParameter('idInstitucion',$this->session->get('idInstitucion'))
-                           ->setParameter('gestion',$this->session->get('idGestion'))
-                           ->setParameter('rol',2)
-                           ->orderBy('p.paterno','asc')
-                           ->addOrderBy('p.materno','asc')
-                           ->addOrderBy('p.nombre','asc')
-                           ->getQuery()
-                           ->getResult();
+                ->select('mi.id, p.paterno, p.materno, p.nombre, p.carnet')
+                ->from('SieAppWebBundle:MaestroInscripcion','mi')
+                ->innerJoin('SieAppWebBundle:Persona','p','with','mi.persona = p.id')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','mi.institucioneducativa = ie.id')
+                ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','mi.gestionTipo = gt.id')
+                ->innerJoin('SieAppWebBundle:CargoTipo','ct','with','mi.cargoTipo = ct.id')
+                ->where('ie.id = :idInstitucion')
+                ->andWhere('gt.id = :gestion')
+                ->andWhere('mi.esVigenteAdministrativo = :esvigente')
+                ->andWhere('ct.id = :cargo')
+                ->setParameter('idInstitucion',$this->session->get('idInstitucion'))
+                ->setParameter('gestion',$this->session->get('idGestion'))
+                ->setParameter('esvigente','t')
+                ->setParameter('cargo',0)
+                ->orderBy('p.paterno','asc')
+                ->addOrderBy('p.materno','asc')
+                ->addOrderBy('p.nombre','asc')
+                ->getQuery()
+                ->getResult();
 
             $em->getConnection()->commit();
             return $this->render('SieRegularBundle:Areas:listaAreas.html.twig', array('areasNivel' => $areasArray, 'maestros' => $maestros));
@@ -661,7 +662,6 @@ class AreasController extends Controller {
             // Si no existe es operativo inicio de gestion
             $operativo = 0;
         }else{
-            //dump($registroOperativo);die;
             if($registroOperativo[0]['bim1'] == 0 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
                 $operativo = 1; // Primer Bimestre
             }

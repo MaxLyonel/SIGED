@@ -199,3 +199,7 @@ download_formulario_rude:
     defaults: { _controller: SieAppWebBundle:Download:downloadFormularioRude }
     options:
         expose: true
+
+download_report_vulnerability:
+    path:    /downloadVul/{gestion}/{distrito}
+    defaults: { _controller: SieAppWebBundle:Download:downloadVulnerability }
