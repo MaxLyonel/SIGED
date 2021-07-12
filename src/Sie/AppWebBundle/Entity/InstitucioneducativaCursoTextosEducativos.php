@@ -46,6 +46,11 @@ class InstitucioneducativaCursoTextosEducativos
 
 
     /**
+     * @var integer
+     */
+    private $recibido;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -248,4 +253,29 @@ class InstitucioneducativaCursoTextosEducativos
     {
         return $this->periodoTipo;
     }
+
+
+    /**
+     * Set cantidad
+     *
+     * @param integer $cantidad
+     * @return InstitucioneducativaCursoTextosEducativos
+     */
+    public function setRecibido($recibido)
+    {
+        $this->recibido = $recibido;
+    
+        return $this;
+    }
+
+    /**
+     * Get cantidad
+     *
+     * @return integer 
+     */
+    public function getRecibido()
+    {
+        return $this->recibido;
+    }
+
 }

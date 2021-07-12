@@ -191,6 +191,14 @@
                                                                                 <i class="fa fa-home"></i>
                                                                             </button>
                                                                         </div>
+
+                                                                        {# Este icono es para registrar los textos educativos #}
+                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Textos Educativos">
+                                                                            <button class="btn btn-circle btn-danger btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="registrarTextoEducativo('{{dataParalelo.infoUe}}');">
+                                                                                <i class="fa fa-book"></i>
+                                                                            </button>
+                                                                        </div>
+
                                                                         {# {% endif %} #}
                                                                         {% if arrLevelandGrado.operativo in allowOperativo and arrLevelandGrado.gestion >= 2019 %}
                                                                             {% if estado == true and app.session.get('currentyear') == 2019 %}
@@ -498,6 +506,31 @@
                 }
             });
         };
+
+        var registrarTextoEducativo = function (infoUe)
+        {
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe}),
+                url: "{{ path('herramienta_textoEducativo_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
         var getDatosCurso = function (infoUe) {
             $.ajax({
                 type: 'post',

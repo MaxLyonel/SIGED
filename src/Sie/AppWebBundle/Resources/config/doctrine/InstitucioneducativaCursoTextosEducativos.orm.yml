@@ -50,6 +50,11 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoTextosEducativos:
             length: 255
             fixed: false
             comment: ''
+        recibido:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
     manyToOne:
         periodoTipo:
             targetEntity: PeriodoTipo

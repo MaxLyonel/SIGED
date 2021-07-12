@@ -1,0 +1,49 @@
+<div class="container--fuild">
+	<div class="row">
+		<div class="col-md-12">
+			<div class="table-responsive">
+				<table class="table table-striped table-condensed table-hover">
+				  <thead class="thead-dark">
+				    <tr>
+				      <th scope="col">#</th>
+				      <th scope="col">Sie</th>
+				      <th scope="col">Turno</th>
+				      <th scope="col">Nivel</th>
+				      <th scope="col">Grado</th>
+				      <th scope="col">Paralelo</th>
+				      <th scope="col">Registro</th>
+				      {#<th scope="col" width="5%"></th>#}
+				    </tr>
+				  </thead>
+				  <tbody>
+				  	{% for d in datos %}
+				  		{% set periodo = (d.periodo==1)?'Trimestre(s)':'Semestre(s) ' %}
+				  		{% set registro = (d.nro_registros==0)?'No registro':'Registro '~ d.nro_registros ~' ' ~ periodo %}
+				  		{% set ue = (d.ue==-11)?' ':d.ue %}
+				    <tr class="tr-estado-reporte-{{d.id}}">
+				      <th scope="row">{{loop.index}}</th>
+				      <td>{{ue}}</td>
+				      <td>{{d.turno}}</td>
+				      <td>{{d.nivel}}</td>
+				      <td>{{d.grado}}</td>
+				      <td>{{d.paralelo}}</td>
+				      <td>{{registro}}</td>
+				      {#
+				      <td class="td-estado-operativo-detalle">
+				      	<button type="button" class="btn btn-info btn-sm" >Ver Registro</button>
+				      </td>
+				      #}
+				    </tr>
+				  	{% endfor %}
+				  	{% if datos|length<=0 %}
+				  		<tr>
+				  			<td>No existen datos con estos criterios de busqueda</td>
+				  		</tr>
+				  	{% endif %}
+				  </tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
