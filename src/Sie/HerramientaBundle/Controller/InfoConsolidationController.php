@@ -1195,5 +1195,26 @@ class InfoConsolidationController extends Controller {
 
         return $colegios;
     }
+    public function enabledOpeAction(Request $request){
+      // get the send values
+      $sie = $request->get('sie');
+      $em = $this->getDoctrine()->getManager();
+      $objRegistroConsolidado = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+        'unidadEducativa' => $sie,
+        'gestion'         => $this->session->get('currentyear')
+      ));
+      $objRegistroConsolidado->setBim1(0);
+      $objRegistroConsolidado->setBim2(0);
+      $objRegistroConsolidado->setBim3(0);
+      $objRegistroConsolidado->setBim4(0);
+
+      $em->persist($objRegistroConsolidado);
+      $em->flush();
+
+      return $this->redirectToRoute('herramienta_infoconsolidation_gestion_index');
+
+    }
+
+
 
 }

@@ -641,8 +641,15 @@
                     {% endif %}
                     #}
                     {# commented by krlos 8.7.21#}
+                    {# commented by krlos 8.7.21
+                            {% if  app.session.get('roluser') in [8,20]   %}
+                                <ul>
+                                    <li><a href="{{ path('cdlseguimiento')}}">Seguimiento</a></li>
+                                </ul>
+                            {% endif %}
+                            #}
                     
-                    
+                    {#  
                     {% if  (app.session.get('roluser') in [7,10,9,8])  %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -660,16 +667,10 @@
                                     <li><a href="{{ path('report_vul_seguimiento')}}">Reporte de Registro</a></li>
                                 </ul>
                             {% endif %}
-                            {# commented by krlos 8.7.21
-                            {% if  app.session.get('roluser') in [8,20]   %}
-                                <ul>
-                                    <li><a href="{{ path('cdlseguimiento')}}">Seguimiento</a></li>
-                                </ul>
-                            {% endif %}
-                            #}
+                            
                         </li>
                     {% endif %}                    
-                    
+                    #}
                     {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 or app.session.get('roluser') == 20 %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
