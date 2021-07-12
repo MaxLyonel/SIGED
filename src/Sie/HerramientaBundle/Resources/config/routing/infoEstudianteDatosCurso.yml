@@ -21,3 +21,40 @@ herramienta_modalidadCurso_save:
     defaults: { _controller: "SieHerramientaBundle:ModalidadCurso:save"}
     options:
          expose: true
+
+#Texto Educativo
+herramienta_textoEducativo_index:
+    path:     /TextoEducativo
+    defaults: { _controller: "SieHerramientaBundle:TextoEducativo:index"}
+    options:
+         expose: true
+
+herramienta_textoEducativo_save:
+    path:     /saveTextoEducativo
+    defaults: { _controller: "SieHerramientaBundle:TextoEducativo:save"}
+    options:
+         expose: true
+
+herramienta_textoEducativo_delete:
+    path:     /deleteTextoEducativo/{id}
+    defaults: { _controller: "SieHerramientaBundle:TextoEducativo:delete"}
+    options:
+         expose: true
+
+herramienta_textoEducativo_seguimiento:
+    path:     /seguimientoOperativoTextoEducativo
+    defaults: { _controller: "SieHerramientaBundle:TextoEducativo:seguimiento"}
+    options:
+         expose: true
+
+herramienta_textoEducativo_seguimiento_mostrarDatos:
+    path:     /mostrarDatosSeguimiento
+    defaults: { _controller: "SieHerramientaBundle:TextoEducativo:mostrarDatos"}
+    options:
+         expose: true
+
+herramienta_textoEducativo_getUEs:
+    path:     /getUEs/{distrito}
+    defaults: { _controller: "SieHerramientaBundle:TextoEducativo:getUnidadesEducativas"}
+    options:
+         expose: true

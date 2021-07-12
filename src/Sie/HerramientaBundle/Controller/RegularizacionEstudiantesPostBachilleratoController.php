@@ -106,15 +106,17 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		$request_distrito = is_numeric($request_distrito)?$request_distrito:-1;
 
 
-		$rude=filter_var($form['request_estudiante'],FILTER_SANITIZE_NUMBER_INT);
+		//$rude=filter_var($form['request_estudiante'],FILTER_SANITIZE_NUMBER_INT);
+		$rude=$this->sanitizarCIRude($form['request_estudiante']);
 		$em = $this->getDoctrine()->getManager();
 		$qb = $em->createQueryBuilder();
 
 		//$regularizacion_materias_inscritas=array();
 		$estudiante=$qb->select('e')
 			 ->from('SieAppWebBundle:Estudiante', 'e')
-			 ->where('e.codigoRude = :codigoRude')
-			 ->setParameters(array('codigoRude'=>$rude))
+			 ->where('e.carnetIdentidad = :carnetIdentidad')
+			 ->orWhere('e.codigoRude = :codigoRude')
+			 ->setParameters(array('carnetIdentidad'=>$rude,'codigoRude'=>$rude))
 			 ->getQuery()
 			 ->getSingleResult();
 
@@ -172,7 +174,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 
 							$tarea = $this->get('wftramite')->obtieneTarea($flujoTipo, 'idflujo');
 							$tareaActual = $tarea['tarea_actual'];
-							$tipoTramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('id'=>56));
+							$tipoTramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs'=>'PBGP'));
 
 							//Se utilizara este artificio para obtener el distrito
 							$gestionArray=$nivelArray=$gradoArray=array();
@@ -409,10 +411,13 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 	public function regularizacionBuscarEstudianteAction(Request $request)
 	{
 		/*Obtenemos los datos del formulario*/
-		$form=$request->request->all();
-		$ci_rude=filter_var($form['ci_rude'],FILTER_SANITIZE_NUMBER_INT);
-
-		$em = $this->getDoctrine()->getManager();
+		$em 		= $this->getDoctrine()->getManager();
+		$form 		= $request->request->all();
+		//$ci_rude 	= filter_var($form['ci_rude'],FILTER_SANITIZE_NUMBER_INT);
+		$ci_rude 	= $form['ci_rude'];
+		$patron 	= "/[^A-Za-z0-9]/";
+		$reemplazo 	= '';
+		$ci_rude 	= preg_replace($patron, $reemplazo, $ci_rude);
 
 		$qb = $em->createQueryBuilder();
 		$estudiante=$qb->select('e')
@@ -3672,6 +3677,18 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		}
 		//return 0;
 		return $cantidadTramitesRegularizacion;
+	}
+
+	private function sanitizarCIRude($ci_rude)
+	{
+		$rude 		= -1;
+		$patron 	= "/[^A-Za-z0-9]/";
+		$reemplazo 	= '';
+		$resultado 	= preg_replace($patron, $reemplazo, $ci_rude);
+		if($resultado)
+			$rude = $resultado;
+
+		return $rude;
 	}
 }
 
