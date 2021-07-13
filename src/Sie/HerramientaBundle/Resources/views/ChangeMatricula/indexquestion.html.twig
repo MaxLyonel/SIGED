@@ -94,15 +94,30 @@
         </div>
     </div><!-- /.modal-content -->
 </div><!-- /.modal-dialog -->
+{% set tolerancia = enTolerancia.estadomatricula %}
 <script>
     var saveChangeMatricula = function(){
         var chooseAnswer = $('#form_questionStatus').val();
         var observation = $('#form_observation').val();
-        if(chooseAnswer != 0){
+        if(chooseAnswer != 0)
+        {
+            var matriculaMessage= 'NO INCOROPORADO';
+            /*
             if(chooseAnswer==1)
                 var matriculaMessage= 'NO INCOROPORADO';
             else
                 var matriculaMessage= 'RETIRO TRASLADO';
+            */
+            switch (parseInt(chooseAnswer))
+            {
+                case 1:
+                    matriculaMessage = 'NO INCOROPORADO';
+                break;
+
+                case 2:
+                    matriculaMessage = '{{tolerancia}}';
+                break;
+            }
 
         }else{
              Swal.fire({

@@ -195,7 +195,7 @@
                                                 {{data.estadomatricula}}
                                             </button>
                                         {% else %} #}
-                                            {% if data.estadomatriculaId == 4%}
+                                            {% if data.estadomatriculaId == 4 or data.estadomatriculaId == 6 %}
                                                 <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                     {{data.estadomatricula}}
                                                 </button>                                            
