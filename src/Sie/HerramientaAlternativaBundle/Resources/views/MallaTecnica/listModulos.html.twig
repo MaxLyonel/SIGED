@@ -82,7 +82,7 @@
 
                                 <tbody>
                                 {#{{ dump(malla.modulo |split(',')) }}#}
-                                {% set foo = malla.modulo|split(',') %}
+                                {% set foo = malla.modulo|split('|') %}
                                 {% set horas = malla.horas|split(',') %}
                                 {% set idmodulo = malla.idmodulo|split(',') %}
                                 {% set idspm = malla.idspm|split(',') %}
