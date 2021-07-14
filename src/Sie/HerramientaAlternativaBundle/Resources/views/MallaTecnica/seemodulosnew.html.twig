@@ -91,11 +91,10 @@
 
                                                 <tbody>
                                                 {#{{ dump(malla.modulo |split(',')) }}#}
-                                                {% set foo = malla.modulo|split(',') %}
+                                                {% set foo = malla.modulo|split('|') %}
                                                 {% set horas = malla.horas|split(',') %}
                                                 {% set idmodulo = malla.idmodulo|split(',') %}
                                                 {% set idspm = malla.idspm|split(',') %}
-                                                {#{{ dump(foo) }}#}
                                                 {% for i in 0..foo|length-1 %}
                                                     <tr>
                                                         <td data-title="N°" class="text-center">{{ loop.index }}</td>
