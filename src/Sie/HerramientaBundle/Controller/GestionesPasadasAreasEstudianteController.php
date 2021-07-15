@@ -32,6 +32,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
+        $esGestionVigente = 0;
         
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -40,18 +41,23 @@ class GestionesPasadasAreasEstudianteController extends Controller {
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
-        
+    
+        if ($request->get('op')) {
+            $esGestionVigente = 1;
+        }
+
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->institucioneducativaId);
 
         return $this->render($this->session->get('pathSystem') . ':GestionesPasadasAreasEstudiante:index.html.twig', array(
             'institucioneducativa' => $institucioneducativa,
-            'form' => $this->formSearch()->createView()
+            'form' => $this->formSearch($esGestionVigente)->createView()
         ));
     }
 
-    private function formSearch() {
+    private function formSearch($esGestionVigente) {
         $form = $this->createFormBuilder()
             ->add('codigoRude', 'text', array('required' => true))
+            ->add('esGestionVigente', 'hidden', array('data' => $esGestionVigente))
             ->add('buscar', 'submit', array('label' => 'Buscar'))
             ->getForm();
         return $form;
@@ -59,7 +65,9 @@ class GestionesPasadasAreasEstudianteController extends Controller {
 
     public function resultHistorialAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
-        $codigoRude = trim(strtoupper($request->get('codigoRude')));
+        $form = $request->get('form');
+        $codigoRude = trim(strtoupper($form['codigoRude']));
+        $esGestionVigente = trim($form['esGestionVigente']);
         $historialRegular = array();
         $sw = false;
 
@@ -102,19 +110,20 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'historialRegular' => $historialRegular,
             'mensaje' => $mensaje,
             'sw' => $sw,
-            'institucioneducativa' => $institucioneducativa
+            'institucioneducativa' => $institucioneducativa,
+            'esGestionVigente' => $esGestionVigente
         ));
     }
 
     public function resultAreasEstudianteAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
+        $esGestionVigente = trim(strtoupper($request->get('esGestionVigente')));
         $inscripcionid = trim(strtoupper($request->get('inscripcionid')));
         $estudianteid = trim(strtoupper($request->get('estudianteid')));
         $gestion = trim(strtoupper($request->get('gestion')));
         $evaluarEstadomatricula = $this->evaluarEstadomatricula($inscripcionid);
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudianteid);
         $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionid);
-
         $areasEstudiante = $this->getAreasEstudiante($inscripcionid);
         $areasCurso = $this->getAreasCurso($inscripcionid);
         $areasAsignar = $this->getAreasAsignar($inscripcionid, $areasEstudiante);
@@ -127,7 +136,8 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'areasAsignar' => $areasAsignar,
             'estudianteid' => $estudianteid,
             'inscripcionid' => $inscripcionid,
-            'gestion' => $gestion
+            'gestion' => $gestion,
+            'esGestionVigente' => $esGestionVigente
         ));
     }
 
@@ -229,6 +239,7 @@ class GestionesPasadasAreasEstudianteController extends Controller {
 
     public function eliminarAreaEstudianteAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
+        $esGestionVigente = trim(strtoupper($request->get('esGestionVigente')));
         $areaid = trim(strtoupper($request->get('areaid')));
         $inscripcionid = trim(strtoupper($request->get('inscripcionid')));
         $estudianteid = trim(strtoupper($request->get('estudianteid')));
@@ -335,12 +346,14 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'areasAsignar' => $areasAsignar,
             'estudianteid' => $estudianteid,
             'inscripcionid' => $inscripcionid,
-            'gestion' => $gestion
+            'gestion' => $gestion,
+            'esGestionVigente' => $esGestionVigente
         ));
     }
 
     public function agregarAreaEstudianteAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
+        $esGestionVigente = trim(strtoupper($request->get('esGestionVigente')));
         $ofertaid = trim(strtoupper($request->get('ofertaid')));
         $inscripcionid = trim(strtoupper($request->get('inscripcionid')));
         $estudianteid = trim(strtoupper($request->get('estudianteid')));
@@ -392,7 +405,8 @@ class GestionesPasadasAreasEstudianteController extends Controller {
             'areasAsignar' => $areasAsignar,
             'estudianteid' => $estudianteid,
             'inscripcionid' => $inscripcionid,
-            'gestion' => $gestion
+            'gestion' => $gestion,
+            'esGestionVigente' => $esGestionVigente
         ));
     }
 
@@ -610,6 +624,8 @@ class GestionesPasadasAreasEstudianteController extends Controller {
                     $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             }
+        } else if($igestion == 2021) {            
+            $complementario = "'(6,7)','(6,7,8)','(9)','51'";            
         }
 
         $query = $em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
