@@ -1,3 +1,17 @@
+
+							{% if listadoEntregas|length>0 %}
+							<div class="row" style="padding:1rem">
+								<div class="col-sm-12" style="padding:0;">
+									<a href="{{path('herramienta_textoEducativo_generarReporte',{sie:sie,gestion:gestion})}}" target="_blank" title="Descargue el Reporte de Entrega de Textos Educativos una vez que hayan sido registrados TODOS los cursos">
+										<i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> 
+										Descargar Reporte</a>
+								</div>
+								<div class="col-sm-12" style="padding:0;font-size:11px">
+									<mark class="small-text">Descargue el Reporte de Entrega de Textos Educativos una vez que hayan sido registrados <b>TODOS</b> los cursos.</mark>
+								</div>
+							</div>
+							{% endif %}
+
 							<table class="table table-striped table-condensed">
 							  <thead>
 								<tr>
