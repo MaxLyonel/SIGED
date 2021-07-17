@@ -170,9 +170,9 @@ from superior_acreditacion_especialidad sae
         $params = array();
         $mallanivel->execute($params);
         $mallaniv = $mallanivel->fetchAll();
-     //   dump($mallaniv);
+        // dump($mallaniv);die;
         $db = $em->getConnection();
-        $query = "select idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip , string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+        $query = "select idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip , string_agg(modulo, '|') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
 from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditacion, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 from superior_acreditacion_especialidad sae
 		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
@@ -222,7 +222,7 @@ from superior_acreditacion_especialidad sae
 left join (
 select idsae,idacr
 --,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
-, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+, string_agg(modulo, '|') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
 	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 	from superior_acreditacion_especialidad sae
 			inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
@@ -1339,7 +1339,7 @@ select idsae,idacr
             $em->getConnection()->commit();
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
             $db = $em->getConnection();
-            $query = "select idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip , string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+            $query = "select idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip , string_agg(modulo, '|') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
 from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditacion, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 from superior_acreditacion_especialidad sae
 		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
@@ -1391,7 +1391,7 @@ from superior_acreditacion_especialidad sae
 left join (
 select idsae,idacr
 --,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
-, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+, string_agg(modulo, '|') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
 	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 	from superior_acreditacion_especialidad sae
 			inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
@@ -1502,7 +1502,7 @@ from superior_acreditacion_especialidad sae
 
 
             $db = $em->getConnection();
-            $query = "select idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip , string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+            $query = "select idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip , string_agg(modulo, '|') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
 from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditacion, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 from superior_acreditacion_especialidad sae
 		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
@@ -1559,7 +1559,7 @@ from superior_acreditacion_especialidad sae
 left join (
 select idsae,idacr
 --,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
-, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+, string_agg(modulo, '|') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
 	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 	from superior_acreditacion_especialidad sae
 			inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
@@ -1681,7 +1681,7 @@ from superior_acreditacion_especialidad sae
             //dump($mallaniv);die;
 
             $db = $em->getConnection();
-            $query = "select idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip , string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+            $query = "select idsae,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip , string_agg(modulo, '|') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
 from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditacion, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 from superior_acreditacion_especialidad sae
 		inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
@@ -1738,7 +1738,7 @@ from superior_acreditacion_especialidad sae
 left join (
 select idsae,idacr
 --,idespecialidad,especialidad,idacreditacion,acreditacion,idsia,idsip 
-, string_agg(modulo, ',') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
+, string_agg(modulo, '|') as modulo, string_agg(idmodulo::character varying, ',') as idmodulo, string_agg(horas::character varying, ',')as horas, sum(horas) as tothoras, string_agg(idsmp::character varying, ',')as idspm,COUNT (idmodulo) AS cantidad
 	from(select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacr, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
 	from superior_acreditacion_especialidad sae
 			inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id

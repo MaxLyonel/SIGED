@@ -1099,7 +1099,7 @@ class InstitucioneducativaController extends Controller {
         from institucioneducativa a
             inner join institucioneducativa_nivel_autorizado b on a.id = b.institucioneducativa_id
                 inner join nivel_tipo c on c.id = b.nivel_tipo_id
-        where a.id = '".$idInstitucion."' and a.estadoinstitucion_tipo_id = 10 and c.id in (select id from nivel_tipo where nivel like 'Permanente%');");
+        where a.id = '".$idInstitucion."' and a.estadoinstitucion_tipo_id = 10 and c.id in (211,212,213,214,215,216,217,218,219,220,221,222,223,224,230,231);");
         
         $query->execute();
         $institucioneducativa = $query->fetchAll();

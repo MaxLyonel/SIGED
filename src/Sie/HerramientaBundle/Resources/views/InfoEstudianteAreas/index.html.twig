@@ -33,14 +33,16 @@
                                 <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu">
                                     {% if areas.faltantes|length > 0 %}
                                         {% for a in areas.faltantes %}
-                                            <li><button onclick="newArea({{a.id}},{{areas.idCurso}})" class="btn-link">{{a.id}} - {{a.asignatura}}</button></li>
+                                            {% if a.id == 1039 %}
+                                                <li><button onclick="newArea({{a.id}},{{areas.idCurso}})" class="btn-link">{{a.id}} - {{a.asignatura}}</button></li>
+                                            {% endif %}
                                         {% endfor %}
                                     {% else %}
                                         <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
                                     {% endif %}
                                 </ul>
                             </div>
-                        {% else %}
+                        {# {% else %}
                             {% if areas.tipoUE == 2 and areas.vista != 0 %}
                                 <div class="btn-group" style="width:650px; float:right;">
                                     <button type="button" class="btn btn-wordpress" onclick="verMateriaTecnica('materiasTecnicas')" style="float:right">
@@ -60,7 +62,7 @@
                                         {% endif %}
                                     </div>
                                 </div>
-                            {% endif %}
+                            {% endif %} #}
                         {% endif %}
                     {% endif %}
                     <br>
