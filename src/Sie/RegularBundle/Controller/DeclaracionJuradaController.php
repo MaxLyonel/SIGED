@@ -172,6 +172,7 @@ class DeclaracionJuradaController extends Controller {
                         left join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
                         left join genero_tipo g on (e.genero_tipo_id = g.id)
                         left join institucioneducativa_curso iec on (ei.institucioneducativa_curso_id = iec.id)
+                        left join periodo_tipo pert on (iec.periodo_tipo_id = pert.id)
                         left join superior_institucioneducativa_periodo as siep on siep.id = iec.superior_institucioneducativa_periodo_id
                         left join superior_institucioneducativa_acreditacion as siea on siea.id = siep.superior_institucioneducativa_acreditacion_id
                         left join superior_acreditacion_especialidad as sae on sae.id = siea.acreditacion_especialidad_id
@@ -180,10 +181,10 @@ class DeclaracionJuradaController extends Controller {
                         left join estudiante_inscripcion_humnistico_tecnico as eiht on eiht.estudiante_inscripcion_id = ei.id
                         where iec.gestion_tipo_id = ".$gestion." and i.id = ".$sie."
                         and
-                        case when iec.gestion_tipo_id >=2011 then (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id=15 and sat.codigo = 3 /*sat.id in (6,52)*/)
-                        when iec.gestion_tipo_id <= 2010 then (iec.nivel_tipo_id=3 and iec.grado_tipo_id=4) or (iec.nivel_tipo_id=15 and sat.codigo = 3 /*iec.grado_tipo_id=2*/)
-                        else ((iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id=15 and sat.codigo = 3)) end
-                        order by  e.paterno, e.materno
+                        case when iec.gestion_tipo_id >=2011 then (iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id in (5,15) and sat.codigo = 3 and pert.id = 3/*sat.id in (6,52)*/)
+                        when iec.gestion_tipo_id <= 2010 then (iec.nivel_tipo_id=3 and iec.grado_tipo_id=4) or (iec.nivel_tipo_id in (5,15) and sat.codigo = 3 and pert.id = 3/*iec.grado_tipo_id=2*/)
+                        else ((iec.nivel_tipo_id=13 and iec.grado_tipo_id=6) or (iec.nivel_tipo_id in (5,15) and sat.codigo = 3 and pert.id = 3)) end
+                        order by e.paterno, e.materno, e.nombre
                       ");
 
                       $query->execute();
