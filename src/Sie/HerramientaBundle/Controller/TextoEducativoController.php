@@ -25,6 +25,13 @@ class TextoEducativoController extends Controller
 	public function __construct()
 	{
 		$this->session = new Session();
+		/* Verificar login*/
+		$id_usuario = $this->session->get('userId');
+		if (!isset($id_usuario))
+		//if(false)
+		{
+			return $this->redirect($this->generateUrl('login'));
+		}
 	}
 
 	public function indexAction(Request $request)
@@ -37,6 +44,7 @@ class TextoEducativoController extends Controller
 		$institucioneducativaCurso 			= $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($cursoId); 
 		$estudiantes 		= null;
 		$sie= -1;
+		$gestion=$this->session->get('currentyear');
 		$listadoEntregas 	=array();
 		if($institucioneducativaCurso)
 		{
@@ -90,7 +98,8 @@ class TextoEducativoController extends Controller
 			'cantidadPeriodo' => $cantidadPeriodo,
 			'tipoPeriodo' => $tipoPeriodo,
 			'sie' => $sie,
-			'listadoEntregas' => $listadoEntregas
+			'listadoEntregas' => $listadoEntregas,
+			'gestion' => $gestion
 		));
 	}
 
@@ -129,13 +138,13 @@ class TextoEducativoController extends Controller
 		$dataId = -1;
 		$status = 404;
 		$msj 	= 'Ocurrio un error, por favor vuelva a intentarlo.';
+		$gestion=$this->session->get('currentyear');
 
 		$institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id'=>$request_sie));
 		$institucioneducativaCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id'=>$request_curso));
 
 		if($institucioneducativa && $institucioneducativaCurso)
 		{
-
 
 			$sie 		= $institucioneducativaCurso->getInstitucioneducativa()->getId();
 			$gestion 	= $institucioneducativaCurso->getGestionTipo()->getId();
@@ -201,6 +210,8 @@ class TextoEducativoController extends Controller
 				'cantidadPeriodo'=>$cantidadPeriodo,
 				'tipoPeriodo'=>$tipoPeriodo,
 				'estudiantes' => $estudiantes,
+				'sie' =>$sie,
+				'gestion'=>$gestion,
 			));
 
 			$data=$datosTexto;
@@ -629,6 +640,24 @@ class TextoEducativoController extends Controller
             $tipoUE=-1;
         }
         return $tipoUE;
+    }
+
+    public function generarReporteAction(Request $request, $sie,$gestion)
+    {
+		$pdf=$this->container->getParameter('urlreportweb') . 'reg_lst_textos_educativos_v1.rptdesign&__format=pdf'.'&codue='.$sie.'&gestion='.$gestion;
+		//$pdf='http://127.0.0.1:63020/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-Textos-Educativos\reg_lst_textos_educativos_v1.rptdesign&__format=pdf'.'&codue='.$sie.'&gestion='.$gestion;
+		
+		$status = 200;
+		$arch           = 'REPORTE_REGISTRO_DE_TEXTOS_EDUCATIVOS-'.date('Y').'_'.date('YmdHis').'.pdf';
+		$response       = new Response();
+		$response->headers->set('Content-type', 'application/pdf');
+		$response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+		$response->setContent(file_get_contents($pdf));
+		$response->setStatusCode($status);
+		$response->headers->set('Content-Transfer-Encoding', 'binary');
+		$response->headers->set('Pragma', 'no-cache');
+		$response->headers->set('Expires', '0');
+		return $response;
     }
 
 }

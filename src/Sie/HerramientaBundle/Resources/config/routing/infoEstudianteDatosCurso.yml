@@ -58,3 +58,9 @@ herramienta_textoEducativo_getUEs:
     defaults: { _controller: "SieHerramientaBundle:TextoEducativo:getUnidadesEducativas"}
     options:
          expose: true
+
+herramienta_textoEducativo_generarReporte:
+    path:     /reporte/{sie}/{gestion}
+    defaults: { _controller: "SieHerramientaBundle:TextoEducativo:generarReporte"}
+    options:
+         expose: true
