@@ -1258,12 +1258,35 @@ class InboxController extends Controller {
           $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
           
             if($registroConsol){
-              $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
-              if($operativo == 1){
-                  $fieldOpe = 'setBim' .$operativo;
-                  $registroConsol->$fieldOpe(2);
-                  $this->session->set('donwloadLibreta', true);
-              }
+
+                $queryCheckCal = 'select * from sp_validacion_regular_web_2021_med(:gestion, :sie, :ope)';
+                $query = $em->getConnection()->prepare($queryCheckCal);
+                $query->bindValue(':gestion', $form['gestion']);
+                $query->bindValue(':sie', $form['sie']);
+                $query->bindValue(':ope', 6);
+                $query->execute();
+                $inconsistenciaCal = $query->fetchAll();                
+                
+                if(sizeof($inconsistenciaCal)>0){
+                  return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+                  'observation' => true,
+                  'inconsistencia' => $inconsistenciaCal,
+                  'objObsQA' => false,
+                  'validacionPersonal' => false,
+                  'institucion' =>  $form['sie'],
+                  'gestion' => $form['gestion'],
+                  'periodo' => $periodo)); 
+
+                }else{
+
+                  $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
+                  if($operativo == 1){
+                      $fieldOpe = 'setBim' .$operativo;
+                      $registroConsol->$fieldOpe(2);
+                      $this->session->set('donwloadLibreta', true);
+                  }                  
+
+                }
 
             }else{
               $registroConsol = new RegistroConsolidacion();
