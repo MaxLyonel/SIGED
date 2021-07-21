@@ -424,8 +424,7 @@ class AreasController extends Controller {
                     ORDER BY at.id ASC'
             )->setParameter('ids',$idsAsignaturas)
             ->getResult();
-
-            $areasNivel = $asignaturas;
+            
             $areasCurso = $areas['cursoOferta'];
 
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
@@ -435,6 +434,20 @@ class AreasController extends Controller {
                 'nivelTipoId' => $curso->getNivelTipo()->getId(),
                 'gradoTipoId' => $curso->getGradoTipo()->getId()
             ));
+
+            $areasNivel = [];
+
+            foreach ($asignaturas as $key => $asignatura) {
+                $existe_asignatura = false;
+                foreach ($tmpAsignaturaHistorico as $key => $tmp) {
+                    if($asignatura->getId() == $tmp->getAsignaturaTipo()->getId()) {
+                        $existe_asignatura = true;
+                    }
+                }
+                if($existe_asignatura) {
+                    array_push($areasNivel,$asignatura);
+                }
+            }
 
             $areasArray = array();
             for ($i = 0; $i < count($areasNivel); $i++) {
