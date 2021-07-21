@@ -77,7 +77,7 @@ class NotasMaestroController extends Controller {
         }
         // dump($codigosSie);die;
         // 
-        //dump($this->session->get('ie_per_estado'));die;
+        // dump($this->session->get('ie_per_estado'));die;
 
         /*$sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array(
                 'sucursalTipo'=>$this->session->get('ie_suc_id'),//0
@@ -90,20 +90,23 @@ class NotasMaestroController extends Controller {
         // if($sucursal){
         // stt.turnoSuperior as turno,
             $asignaturas = $em->createQueryBuilder()
-                            ->select('smt.modulo,
-                                    ie.id as sie,
-                                    ie.institucioneducativa,
-                                    tt.turno,
-                                    iec.id as idCurso,
-                                    ieco.id as idCursoOferta,
-                                    pt.paralelo,
-                                    gt.gestion,
-                                    sat.acreditacion,
-                                    sespt.especialidad,
-                                    st.id as sucursal,
-                                    pet.periodo,
-                                    ies.id as idSucursal
-                            ')
+                            ->select('pet.id,
+                                sat.id,
+                                sespt.id,
+                                smt.modulo,
+                                ie.id as sie,
+                                ie.institucioneducativa,
+                                tt.turno,
+                                iec.id as idCurso,
+                                ieco.id as idCursoOferta,
+                                pt.paralelo,
+                                gt.gestion,
+                                sat.acreditacion,
+                                sespt.especialidad,
+                                st.id as sucursal,
+                                pet.periodo,
+                                ies.id as idSucursal
+                            ')->distinct()
                             ->from('SieAppWebBundle:Persona','p')
                             ->innerJoin('SieAppWebBundle:MaestroInscripcion','mi','with','mi.persona = p.id')
                             ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal','ies','with','mi.institucioneducativaSucursal = ies.id')
@@ -136,8 +139,7 @@ class NotasMaestroController extends Controller {
                             ->setParameter('idPersona',$this->session->get('personaId'))
                             ->setParameter('idGestion',$gestion)
                             ->setParameter('estados',array(8,14))
-                            ->setParameter('sies', $codigosSie)
-                            // ->setParameter('idSucursal',611764)
+                            ->setParameter('sies', $codigosSie)                            
                             ->getQuery()
                             ->getResult();
         // }else{
