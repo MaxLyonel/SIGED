@@ -704,9 +704,12 @@ class DownloadController extends Controller {
                 }
             }else{
                 if($gestion == 2019){
-
                     switch ($nivel) {
-                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v4_rcm.rptdesign'; break;
+                        case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v2_rcm.rptdesign'; break;
+                        case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v2_rcm.rptdesign'; break;
+                        case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v2_rcm.rptdesign'; break;
+
+                        /*case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v4_rcm.rptdesign'; break;
                         case 12: 
                             if($grado == 1) {
                                 $reporte = 'reg_est_LibretaEscolar_primaria_v4_rcm.rptdesign';
@@ -715,6 +718,7 @@ class DownloadController extends Controller {
                             }
                             break;
                         case 13: $reporte = 'reg_est_LibretaEscolar_secundaria_v4_rcm.rptdesign'; break;
+                        */
                     }                    
 
                 }else{
@@ -798,7 +802,6 @@ class DownloadController extends Controller {
                         $operativo = 4;
                     }
                 }
-                
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&bimestre=' . $operativo . '&&__format=pdf&'));
             }else{
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&&__format=pdf&'));
