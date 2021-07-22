@@ -39,6 +39,7 @@ class UpdateSudentLevelController extends Controller{
     }
     // index method by krlos
     public function indexAction(Request $request){
+        return $this->redirect($this->generateUrl('login'));
         $form = is_array(($request->get('form')))?$request->get('form'):false;
         if(!$form){
             $form = array(
