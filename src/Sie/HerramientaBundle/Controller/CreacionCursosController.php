@@ -490,6 +490,17 @@ class CreacionCursosController extends Controller {
                 $em->getConnection()->commit();
             }
 
+            //eliminamos los datos de la tabla "institucioneducativa_curso_textos_educativos" 
+            $institucioneducativaCursoTextosEducativos = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoTextosEducativos')->findBy(array('institucioneducativaCurso'=>$request->get('idCurso')));
+            if($institucioneducativaCursoTextosEducativos)
+            {
+                foreach ($institucioneducativaCursoTextosEducativos as $value)
+                {
+                    $em->remove($value);
+                }
+                $em->flush();
+                $em->getConnection()->commit();
+            }
             
             /**
              * Eliminamos los registros de curso oferta
