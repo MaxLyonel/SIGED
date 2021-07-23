@@ -37,10 +37,18 @@
 						<div class="panel-body ">
 							<div class="col-md-12 p-3">
 								<div class="col-sm-12">
-									<i class="fa fa-search"></i> Presionando el boton <strong>"Buscar"</strong> se desplegará el listado de las Unidades Educativas y además la información de si registro los textos educativos
+									<i class="fa fa-search"></i> Presionando el boton <strong>"Buscar"</strong> se desplegará el listado de las Unidades Educativas y además la información de si registro los textos educativos.
+									<p><mark>Solo se considera un registro completo del curso si registro 2 Trimestres</mark></p>
 								</div>
 								<form method="POST" id="form-mostrar-resultados-reporte-salud" onsubmit="mostrarResultadosReporte(this); return false;">
 								  <div class="form-row">
+
+									<div class="form-group col-md-3 col-sm-6 ">
+										<select class="form-control" name="gestion" id="gestion">
+											<option value="2021">2021</option>
+										</select>
+									</div>
+
 									<div class="form-group col-md-3 col-sm-6 ">
 										<select class="form-control" name="departamento" id="departamento" onchange="getDistritos(this.value); return false;" required="" autocomplete="off">
 											<option value="" selected>Seleccione un departamento</option>
@@ -51,7 +59,7 @@
 									</div>
 
 									<div class="form-group col-md-3 col-sm-6 ">
-									  <select class="form-control select-distrito" name="distrito" id="distrito" autocomplete="off" onchange="getUEs(this.value); return false">
+									  <select class="form-control select-distrito" name="distrito" id="distrito" autocomplete="off" >
 									  	{% if departamentos|length > 1 %}
 											<option>Primero seleccione un departamento</option>
 									  	{% else %}
@@ -63,7 +71,7 @@
 									  </select>
 									</div>
 
-									
+									{#
 									<div class="form-group col-md-3 col-sm-6 ">
 									  <select class="form-control select-ue" name="ue" id="ue" autocomplete="off">
 									  	{% if distritos|length > 1 %}
@@ -72,17 +80,12 @@
 											<option value="" selected>Seleccione una unidad educativa</option>
 											{# for u in ues %}
 												<option value="{{u.id}}">{{u.ue}}</option>
-											{% endfor #}
+											{% endfor }
 									  	{% endif %}
 									  </select>
 									</div>
-									
+									#}
 
-									<div class="form-group col-md-3 col-sm-6 ">
-										<select class="form-control" name="gestion" id="gestion">
-											<option value="2021">2021</option>
-										</select>
-									</div>
 									<div class="form-group col-md-3 col-sm-6 ">
 										<button type="submit" class="btn btn-primary btn-search-request-salud"><i class="fa fa-search"></i> Buscar</button>
 									</div>
@@ -176,47 +179,6 @@
      }
     }
 
-    var getUEs= function(distrito)
-    {
-        if(distrito.length>0)
-        {
-            $.ajax({
-                    type: 'post',
-                    url: Routing.generate('herramienta_textoEducativo_getUEs',{distrito:distrito}),
-                    beforeSend: function () {
-                        $(".select-ue").empty();
-                        $(".select-ue").append('<option>Obteniendo unidades educativas ...</option>');
-                    },
-                    success: function (data)
-                    {
-                        try
-                        {
-                            var len= data.length;
-                            var option='<option value="" selected>Seleccione una Unidad Educativa</option>';
-                            for(i in data)
-                            {
-                                option+='<option value="'+data[i].id+'">'+data[i].id+' | '+data[i].ue+'</option>';
-                            }
-                            if(len==0)
-                            {
-                                option='<option>El distrito no tiene unidades educativas</option>';
-                            }
-                            $(".select-ue").empty();
-                            $(".select-ue").html(option);
-                        }
-                        catch(e)
-                        {
-                            $(".select-ue").html('<option>El distrito no tiene unidades educativas</option>');
-                        }
-                    },
-                    error: function (data) {
-                        $(".select-ue").empty();
-                        $(".select-ue").append('<option>Ocurrio un error, por favor intente nuevamente.</option>');
-                    }
-                });
-        }
-    }
-	
     </script>
 
     <script>

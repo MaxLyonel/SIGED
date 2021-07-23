@@ -7,32 +7,32 @@
 				    <tr>
 				      <th scope="col">#</th>
 				      <th scope="col">Sie</th>
-				      <th scope="col">Turno</th>
-				      <th scope="col">Nivel</th>
-				      <th scope="col">Grado</th>
-				      <th scope="col">Paralelo</th>
-				      <th scope="col">Registro</th>
-				      {#<th scope="col" width="5%"></th>#}
+				      <th scope="col">Unidad Educativa</th>
+				      <th scope="col">Tipo</th>
+				      <th scope="col">Total cursos</th>
+				      <th scope="col">Cursos registrados</th>
+				      <th scope="col" width="5%">Registro completo</th>
 				    </tr>
 				  </thead>
 				  <tbody>
 				  	{% for d in datos %}
-				  		{% set periodo = (d.periodo==1)?'Trimestre(s)':'Semestre(s) ' %}
-				  		{% set registro = (d.nro_registros==0)?'No registro':'Registro '~ d.nro_registros ~' ' ~ periodo %}
-				  		{% set ue = (d.ue==-11)?' ':d.ue %}
-				    <tr class="tr-estado-reporte-{{d.id}}">
+				  		{% set periodoTipo = (periodo==1)?'Trimestre(s)':'Semestre(s) ' %}
+				  		{% set totalCursos = (d.nro_cursos > 0)? d.nro_cursos :1 %}
+				  		{% set completo = (d.cursos_registrados /totalCursos)|round %}
+				    <tr>
 				      <th scope="row">{{loop.index}}</th>
-				      <td>{{ue}}</td>
-				      <td>{{d.turno}}</td>
-				      <td>{{d.nivel}}</td>
-				      <td>{{d.grado}}</td>
-				      <td>{{d.paralelo}}</td>
-				      <td>{{registro}}</td>
-				      {#
-				      <td class="td-estado-operativo-detalle">
-				      	<button type="button" class="btn btn-info btn-sm" >Ver Registro</button>
+				      <td>{{d.institucioneducativa_id_target}}</td>
+				      <td>{{d.institucioneducativa}}</td>
+				      <td>{{d.dependencia}}</td>
+				      <td class="text-right">{{d.nro_cursos}}</td>
+				      <td class="text-right">{{d.cursos_registrados}}</td>
+				      <td class="text-right">
+				      	{% if completo==1 %}
+				      		<i class="fa fa-check fa-2x fg-success"></i>
+				      	{% else %}
+				      		<i class="fa fa-times fa-2x fg-danger"></i>
+				      	{% endif %}
 				      </td>
-				      #}
 				    </tr>
 				  	{% endfor %}
 				  	{% if datos|length<=0 %}

@@ -355,7 +355,7 @@ class TextoEducativoController extends Controller
             $tmpDistrito = $em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($distrito);
             $arrayDistritos[] = array('id' =>$tmpDistrito->getId(),'distrito'=>$tmpDistrito->getDistrito());
 
-            $arrayUE=$this->getUnidadesEducativas($departamento,$distrito);
+            //$arrayUE=$this->getUnidadesEducativas($departamento,$distrito);
         }
         else//ningun rol permitido
         {
@@ -367,7 +367,7 @@ class TextoEducativoController extends Controller
             'rol' => $rol,
             'departamentos'=>$arrayDepartamentos,
             'distritos'=>$arrayDistritos,
-            'ues'=>$arrayUE,
+            //'ues'=>$arrayUE,
         ));
       }
       else
@@ -466,26 +466,32 @@ class TextoEducativoController extends Controller
 
         $departamento = $form['departamento'];
         $distrito = $form['distrito'];
-        $ue = $form['ue'];
+        //$ue = $form['ue'];
         $gestion = $form['gestion'];
+
+        $sysName = $this->session->get('sysname');
+        $sysName = strtolower(filter_var($sysName , FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH));
+        $ieTipo=$this->getTipoUE($sysName);
 
         $departamento = filter_var($departamento,FILTER_SANITIZE_NUMBER_INT);
         $distrito = filter_var($distrito,FILTER_SANITIZE_NUMBER_INT);
-        $ue = filter_var($ue,FILTER_SANITIZE_NUMBER_INT);
+        //$ue = filter_var($ue,FILTER_SANITIZE_NUMBER_INT);
         $gestion = filter_var($gestion,FILTER_SANITIZE_NUMBER_INT);
 
         $departamento = is_numeric($departamento)?$departamento:-1;
         $distrito = is_numeric($distrito)?$distrito:-1;
         $gestion = is_numeric($gestion)?$gestion:-1;
 
-        $datos=$this->getUnidadesEducativasDetalle($departamento,$distrito,$ue,$gestion);
-
+        //$datos=$this->getUnidadesEducativasDetalle($departamento,$distrito,$ue,$gestion);
+        $datos=$this->getUnidadesEducativas($departamento,$distrito,$gestion);
+        //dump($datos);die();
         return $this->render('SieHerramientaBundle:TextoEducativo:mostrarDatosSeguimientoOperativoTextosEducativos.html.twig',array(
-            'datos'=>$datos
+            'datos' => $datos,
+            'periodo' => $ieTipo,
         ));
     }
 
-    private function getUnidadesEducativas($departamento=-1,$distrito=-1)
+    private function getUnidadesEducativas($departamento=-1,$distrito=-1,$gestion)
     {
         $operadorDepartamento=($departamento==-1)?' <> ':' = ';
         $operadorDistrito=($distrito==-1)?' <> ':' = ';
@@ -494,7 +500,7 @@ class TextoEducativoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $tipoUE=$this->session->get('sistemaid');
-        $query ="
+        /*$query ="
             select 
             institucioneducativa_id,institucioneducativa
             from 
@@ -508,22 +514,60 @@ class TextoEducativoController extends Controller
           where 
           cod_dis = ?
           and substring(cod_dis,1,1) = ?
-          group by cod_dis,des_dis,institucioneducativa_id,institucioneducativa,dependencia
+          group by cod_dis,des_dis,institucioneducativa_id,institucioneducativa,dependencia";*/
+
+        $query ="
+            select 
+            institucioneducativa_id_target,
+            institucioneducativa,
+            dependencia,
+            (select count(*)
+			from (
+			select c.id, count(i.trimestre_semestre)
+			from institucioneducativa_curso  c
+				inner join turno_tipo d on  d.id = c.turno_tipo_id
+					inner join nivel_tipo e on e.id = c.nivel_tipo_id 
+						inner join ciclo_tipo f on f.id = c.ciclo_tipo_id 
+						INNER JOIN grado_tipo g on g.id = c.grado_tipo_id
+							INNER JOIN paralelo_tipo h on h.id = c.paralelo_tipo_id
+								left JOIN institucioneducativa_curso_textos_educativos i on i.institucioneducativa_curso_id = c.id
+			where institucioneducativa_id = institucioneducativa_id_target and gestion_tipo_id = ?
+			group by c.id
+			having count(i.trimestre_semestre)>=2
+			) as tmp) as cursos_registrados,
+			(select count(c.id)
+			from institucioneducativa_curso  c
+				inner join turno_tipo d on  d.id = c.turno_tipo_id
+					inner join nivel_tipo e on e.id = c.nivel_tipo_id 
+						inner join ciclo_tipo f on f.id = c.ciclo_tipo_id 
+						INNER JOIN grado_tipo g on g.id = c.grado_tipo_id
+							INNER JOIN paralelo_tipo h on h.id = c.paralelo_tipo_id
+								left JOIN institucioneducativa_curso_textos_educativos i on i.institucioneducativa_curso_id = c.id
+			where institucioneducativa_id = institucioneducativa_id_target and gestion_tipo_id = ?) as nro_cursos
+            from 
+            (
+              select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as institucioneducativa_id_target,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id ) as dependencia
+              from (institucioneducativa c 
+                  inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
+                    inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
+              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1 
+            ) a
+          where 
+          cod_dis = ?
+          and substring(cod_dis,1,1) = ?
+          group by cod_dis,des_dis,institucioneducativa_id_target,institucioneducativa,dependencia
         ";
 
         $stmt = $db->prepare($query);
-        $params = array($distrito,$departamento);
+        $params = array($gestion,$gestion,$distrito,$departamento);
         $stmt->execute($params);
         $tmp=$stmt->fetchAll();
 
-        if($tmp)
+        if(!$tmp)
         {
-            foreach ($tmp as $u)
-            {
-                $ue[]=array('id' =>$u['institucioneducativa_id'],'ue'=>$u['institucioneducativa']);
-            }
+        	$tmp=array();
         }
-        return $ue;
+        return $tmp;
     }
 
     private function getUnidadesEducativasDetalle($departamento,$distrito,$ueSeleccionado,$gestion)
