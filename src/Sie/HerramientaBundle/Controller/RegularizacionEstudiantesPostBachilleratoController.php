@@ -25,6 +25,7 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 use Sie\AppWebBundle\Entity\EstudianteNota;
 
+
 /*
  *Controlador para dar solucion al caso 1 del "MANUAL DE PROCEDIMIENTOS PARA LA REGULARIZACION DEL HISTORIAL ACADEMICO DE ESTUDIANTES DEL SUSBSITEMA DE EDUCACION REGULAR"
  */
@@ -89,6 +90,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		$data 							= NULL;
 		$status 						= 404;
 		$msj 							= NULL;
+		$urlReporte 					= NULL;
 
 		$tieneErrores = true;
 		$inscripciones = array();
@@ -221,9 +223,10 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 										$renombrado=$this->renombrarDirectorio($path,$tramite_id_tmp,$tramite_id);
 										if ($renombrado)
 										{
-											$data 	= $registroTramite['idtramite'];
-											$status = 200;
-											$msj 	= $registroTramite['msg'];
+											$data 			= $registroTramite['idtramite'];
+											$status 		= 200;
+											$msj 			= $registroTramite['msg'];
+											$urlReporte 	= $this->generateUrl('regularizacion_estudiantesPostBachillerato_reporteDepartamental',array('idtramite' => $registroTramite['idtramite'])) ;
 										}
 										else
 										{
@@ -305,7 +308,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 
 		$response = new JsonResponse($data,$status);
 		$response->headers->set('Content-Type', 'application/json');
-		return $response->setData(array('msj'=>$msj,'status'=>$status,'data'=>$data));
+		return $response->setData(array('msj'=>$msj,'status'=>$status,'data'=>$data,'urlReporte'=>$urlReporte));
 	}
 
 	/**
@@ -1013,9 +1016,10 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 	{
 		$em 					= $this->getDoctrine()->getManager();
 
-		$data 	= NULL;
-		$status = 404;
-		$msj 	= 'Acaba de ocurrir un error, por favor vuelva a intentarlo.';
+		$data 								= NULL;
+		$status 							= 404;
+		$msj 								= 'Acaba de ocurrir un error, por favor vuelva a intentarlo.';
+		$urlCertificacionConclusionEstudios = NULL;
 
 		$form 					= $request->request->all();
 		$tramite_id 			= isset($form['request_tramite'])? filter_var($form['request_tramite'],FILTER_SANITIZE_NUMBER_INT) :-1;
@@ -1026,6 +1030,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		
 		$request_observacion 	= '';
 		
+		$determinarAprobacionOReprobacionSolicitud= false;
 		if($request_procede>=0)
 		{
 			if($request_procede==0)//no procede
@@ -1186,7 +1191,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 											$this->session->get('userId'),										//$usuario,
 											$this->session->get('roluser'),										//$rol,
 											$flujoTipo,															//$flujotipo,?
-											$tareaSiguiente,														//$tarea,
+											$tareaSiguiente,													//$tarea,
 											'institucioneducativa',												//$tabla,?
 											$sie,																//$id_tabla,?
 											'',//$obs,															//$observacion,
@@ -1200,6 +1205,15 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 										$data 	= $registroTramite['idtramite'];
 										$status = 200;
 										$msj 	= $registroTramite['msg'];
+
+										list($tieneErrores,$tablaInscripciones_procesada)=$this->obtenerNombresDeInscripciones($datosJSONInscripcion_decode);
+										$tablaInscripciones = $tablaInscripciones_procesada->inscripciones;
+										$determinarAprobacionOReprobacionSolicitud = $this->determinarAprobacionOReprobacionSolicitud($tablaInscripciones);
+										
+										if($request_procede==1 && $determinarAprobacionOReprobacionSolicitud==true)// procede
+											$urlCertificacionConclusionEstudios = $this->generateUrl('regularizacion_estudiantesPostBachillerato_reporteDepartamentalPorConcluirConclusionEstudios',array('idtramite' => $registroTramite['idtramite'])) ;
+										else
+											$urlCertificacionConclusionEstudios = NULL;
 									}
 									else
 									{
@@ -1264,7 +1278,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 
 		$response = new JsonResponse($data,$status);
 		$response->headers->set('Content-Type', 'application/json');
-		return $response->setData(array('msj'=>$msj,'status'=>$status,'data'=>$data));
+		return $response->setData(array('msj'=>$msj,'status'=>$status,'data'=>$data,'urlCertificacionConclusionEstudios'=>$urlCertificacionConclusionEstudios));
 	}
 
 	//LNINA...
@@ -1647,7 +1661,6 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 				'institucioneducativa' => $institucioneducativa,
 				"tramite" => $tramite_id,
 			));
-
 		}
 		else
 		{
@@ -1796,7 +1809,6 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 	 **/
 	private function listarUEValidas($departamento,$distrito,$gestionArray,$nivelArray,$gradoArray,$ue=-1)
 	{
-		//hacer um implode de gestion, nivel, grado NO OLVIDAR
 		$ueTmp = $this->listarUECumplenRequerimientos($gestionArray,$nivelArray,$gradoArray);
 
 		$gestionArray = implode(',',$gestionArray);
@@ -1821,7 +1833,8 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		        inner join jurisdiccion_geografica e on d.le_juridicciongeografica_id=e.id
 		        inner join (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo where lugar_nivel_id=7) f on e.lugar_tipo_id_distrito=f.id
 		        INNER JOIN departamento_tipo j on j.id=CAST(substring(f.cod_dis,1,1) as INTEGER)
-		where d.id in('.$ueTmp.')
+		where d.dependencia_tipo_id = 1 --unidad educativa fiscal
+		and d.id in('.$ueTmp.')
 		and j.id '.$operadorDepartamento.' ?
 		and f.cod_dis '.$operadorDistrito.' ?
 		and (c.gestion_tipo_id in ( '.$gestionArray.' )) 
@@ -2005,20 +2018,21 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 						
 						$paralelo = 	$em->getRepository('SieAppWebBundle:ParaleloTipo')->findOneBy(array( 'id'=> $inscripcion->paralelo));
 						$turno = 		$em->getRepository('SieAppWebBundle:TurnoTipo')->findOneBy(array( 'id'=> $inscripcion->turno));
-						list($materiasTieneError,$materias) =		$this->procesarMaterias($inscripcion->materias);
-
+						list($materiasTieneError,$materias) =		$this->procesarMaterias($inscripcion->materias,$inscripcion->gestion,$inscripcion->nivel,$inscripcion->grado);
+						$estadoAprobacion = 		$this->determinarAprobacionOReprobacionInscripcion($inscripcion);
 						if($nivel && $grado && $paralelo && $turno && $materiasTieneError==false)
 						{
 							$tmp=array();
 							$tmp=array(
-								'id'		=> $inscripcion->id,
-								'gestion'	=> $inscripcion->gestion,
-								'nivel' 	=> $nivel->getNivel(),
-								'grado' 	=> $grado->getGrado(),
-								'paralelo' 	=> $paralelo->getParalelo(),
-								'turno' 	=> $turno->getTurno(),
-								'materias' 	=> $materias,
-								'sie' 		=> $inscripcionesDecode->sie
+								'id'					=> $inscripcion->id,
+								'gestion'				=> $inscripcion->gestion,
+								'nivel' 				=> $nivel->getNivel(),
+								'grado' 				=> $grado->getGrado(),
+								'paralelo' 				=> $paralelo->getParalelo(),
+								'turno' 				=> $turno->getTurno(),
+								'materias' 				=> $materias,
+								'estado_aprobacion' 	=> $estadoAprobacion,
+								'sie' 					=> $inscripcionesDecode->sie
 							);
 							$tablaInscripciones_procesada[]=$tmp;
 						}
@@ -2050,7 +2064,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		return json_decode(json_encode(array($tieneErrores,array('inscripciones'=>$tablaInscripciones_procesada))));
 	}
 
-	public function procesarMaterias($materias)
+	public function procesarMaterias($materias,$gestion,$nivel,$grado)
 	{
 		$em = $this->getDoctrine()->getManager();
 		$tieneErrores=false;
@@ -2068,7 +2082,8 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 						$tmp=[
 							'id'=>$materia->getId(),
 							'nombre'=>$materia->getAsignatura(),
-							'nota'=>$m->nota
+							'nota'=>$m->nota,
+							'estado_aprobacion' => $this->verificarAprobacionoReprobacionDeMateria($gestion,$nivel,$grado,$m->nota),
 						];
 						$materias_procesadas[]=$tmp;
 					}
@@ -2619,7 +2634,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		}
 	}
 
-	public function getMateriasAction(Request $request)
+	public function getDetalleInscripcionAction(Request $request)
 	{
 		$em 				= $this->getDoctrine()->getManager();
 		$qb 				= $em->createQueryBuilder();
@@ -2727,6 +2742,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 								$msj 		= 'Ok';
 
 								//en base a los los datos de la inscripcion encontrada, se buscara los paralelos y los turnos y las materias
+								/*
 								$qb 		= $em->createQueryBuilder();
 								$paralelos 	= $qb->select('p.id,p.paralelo')
 											 ->from('SieAppWebBundle:ParaleloTipo', 'p')
@@ -2734,19 +2750,37 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 											 ->setParameter('paralelos', array_values( explode('|',$paralelosTmp) ))
 											 ->getQuery()
 											 ->getArrayResult();
+								*/
 
 
+								/*
 								$qb 		= $em->createQueryBuilder();
 								$turnos 	= $qb->select('t')
 											 ->from('SieAppWebBundle:TurnoTipo', 't')
 											 ->getQuery()
 											 ->getArrayResult();
+								*/
+
+								$query = $em->createQuery(
+								        'SELECT DISTINCT tt.id,tt.turno
+								        FROM SieAppWebBundle:InstitucioneducativaCurso iec
+								        JOIN iec.institucioneducativa ie
+								        JOIN iec.turnoTipo tt
+								        WHERE ie.id = :id
+								        AND iec.gestionTipo = :gestion
+								        ORDER BY tt.id')
+								        ->setParameter('id', $sie)
+								        ->setParameter('gestion', $gestion);
+								$turnos = $query->getResult();
 
 								$materias=NULL;
 								//obtenemos los paralelos y turnos en base a la inscripcion recibida (en base a gestion, nivel y grado)
 								//$query = 'select asignatura_tipo_id,asignatura from tmp_asignatura_historico where gestion_tipo_id = ? and nivel_tipo_id = ? and grado_tipo_id = ? order by asignatura_tipo_id';
-								$query = 'select id as asignatura_tipo_id ,asignatura from asignatura_tipo where id in ('.$idMaterias.') order by id';
+								//$query = 'select id as asignatura_tipo_id ,asignatura from asignatura_tipo where id in ('.$idMaterias.') order by id';
+								$query = 'select id as asignatura_tipo_id ,asignatura from asignatura_tipo where id in (select asignatura_tipo_id from tmp_asignatura_historico where gestion_tipo_id = ? and nivel_tipo_id = ? and grado_tipo_id = ? order by asignatura_tipo_id) order by id';
 								$stmt = $db->prepare($query);
+								$params = array($gestion,$nivel,$grado);
+								$stmt->execute($params);
 								//$params = array($gestion,$nivel,$grado);
 								//$stmt->execute($params);
 								$stmt->execute();
@@ -2764,9 +2798,9 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 
 								$data = json_encode(array(
 									'inscripcion' => $inscripcion_retornar,
-									'paralelos'=> $paralelos,
+									//'paralelos'=> $paralelos,
 									'turnos'=> $turnos,
-									'materias'=> $materias,
+									//'materias'=> $materias,
 								));
 							}
 							else
@@ -2774,6 +2808,167 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 								$data 	= NULL;
 								$status = 404;
 								$msj 	= 'No existen paralelos con los requisitos requeridos por la inscripción.';
+							}
+						}
+						else
+						{
+							$data 	= NULL;
+							$status = 404;
+							$msj 	= 'No se encontro la inscripción seleccionada2.';
+						}
+					}
+					catch(Excepción $e)
+					{
+						//Por si se produjera un error
+						$data 	= NULL;
+						$status = 404;
+						$msj 	= 'Ocurrio un error al obtener el registro, por favor vuelva a intentarlo.';
+					}
+				}
+				else
+				{
+					$data 	= NULL;
+					$status = 404;
+					$msj 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+				}
+			}
+			else
+			{
+				$data 	= NULL;
+				$status = 404;
+				$msj 	= 'Ocurrio un error debido a que no existe el trámite seleccionado, por favor vuelva a intentarlo.';
+			}
+		}
+		else
+		{
+			$data 	= NULL;
+			$status = 404;
+			$msj 	= 'Ocurrio un error debido a que no existe el trámite o la inscripción seleccionada no existe, por favor vuelva a intentarlo.';
+		}
+		$response = new JsonResponse($data,$status);
+		$response->headers->set('Content-Type', 'application/json');
+		return $response->setData(array('msj'=>$msj,'status'=>$status,'data'=>$data));
+	}
+
+	public function getMateriasAction(Request $request)
+	{
+		$em 				= $this->getDoctrine()->getManager();
+		$qb 				= $em->createQueryBuilder();
+		$db 				= $em->getConnection();
+
+		$form 				= $request->request->all();
+		$_tramite_id 		= isset($form['tramite'])? 	filter_var($form['tramite'], FILTER_SANITIZE_NUMBER_INT ):-1;
+		$_inscripcion_id 	= isset($form['id'])?		filter_var($form['id'], FILTER_SANITIZE_NUMBER_INT ):-1;
+		$_turno 			= isset($form['turno'])? 	filter_var($form['turno'], FILTER_SANITIZE_NUMBER_INT ):-1;
+		$_paralelo 			= isset($form['paralelo'])? 	filter_var($form['paralelo'], FILTER_SANITIZE_NUMBER_INT ):-1;
+
+		$inscripcion_retornar = null;
+		$materias = array();
+
+		$data	= null;
+		$status	= 404;
+		$msj	= null;
+
+		if($_tramite_id >0 && $_inscripcion_id>0)
+		{
+			$tramite_id=$_tramite_id;
+			//Buscamos el trámite apartir del codigo de trámite enviado en la peticion
+			$tramite= $this->getTramite($tramite_id);
+			
+			//verificamos que exista el trámite
+			if($tramite)
+			{
+				//ahora obtenemos el campo json del trámite
+				$datosJSONInscripcion=$tramite['datos'];
+				//verificamos que el JSon existe
+				if(strlen($datosJSONInscripcion)>0)
+				{
+					try //al decodificar la cadena JSON nos aseguramos que sea correcta
+					{
+						//decodificamos el json para volverlo en objeto y poder procesarlos
+						$datosJSONInscripcion_decode 	= json_decode($datosJSONInscripcion);
+						$inscripciones 					= $datosJSONInscripcion_decode->inscripciones;
+						$sie 							= $datosJSONInscripcion_decode->sie;
+						
+						foreach ($inscripciones as $i)
+						{
+							if($i->id == $_inscripcion_id)
+							{
+								$inscripcion_retornar = $i;
+								break;
+							}
+						}
+						if($inscripcion_retornar != null && property_exists($inscripcion_retornar,'gestion') && property_exists($inscripcion_retornar,'nivel') && property_exists($inscripcion_retornar,'grado'))
+						{
+							//sanitizamos los datos
+							$gestion = filter_var($inscripcion_retornar->gestion,FILTER_SANITIZE_NUMBER_INT);
+							$nivel = filter_var($inscripcion_retornar->nivel,FILTER_SANITIZE_NUMBER_INT);
+							$grado = filter_var($inscripcion_retornar->grado,FILTER_SANITIZE_NUMBER_INT);
+
+							$gestion = is_numeric($gestion)?$gestion:-1;
+							$nivel = is_numeric($nivel)?$nivel:-1;
+							$grado = is_numeric($grado)?$grado:-1;
+
+
+
+							/*
+							$curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
+							    'institucioneducativa' => $sie,
+							    'gestionTipo' => $gestion,
+							    'turnoTipo' => $_turno,
+							    'nivelTipo' => $nivel,
+							    'gradoTipo' => $grado,
+							    'paraleloTipo' => $_paralelo
+							));
+							*/
+							
+
+							$qb = $em->createQueryBuilder();
+							$curso=$qb->select('c')
+							 ->from('SieAppWebBundle:InstitucioneducativaCurso', 'c')
+							 ->where('c.institucioneducativa = :institucioneducativa')
+							 ->andWhere('c.gestionTipo = :gestionTipo')
+							 ->andWhere('c.turnoTipo = :turnoTipo')
+							 ->andWhere('c.nivelTipo = :nivelTipo')
+							 ->andWhere('c.gradoTipo = :gradoTipo')
+							 ->andWhere('c.paraleloTipo = :paraleloTipo')
+							 ->setParameter('institucioneducativa',$sie)
+							 ->setParameter('gestionTipo',$gestion)
+							 ->setParameter('turnoTipo',$_turno)
+							 ->setParameter('nivelTipo',$nivel)
+							 ->setParameter('gradoTipo',$grado)
+							 ->setParameter('paraleloTipo',$_paralelo)
+							 ->getQuery()
+							 ->getSingleResult();
+
+							if($curso)
+							{
+								$idCurso = $curso->getId();
+								$materias = $this->get('areas')->getAreas($idCurso);
+
+								if($materias && isset($materias['cursoOferta']))
+								{
+									$data = json_encode(array(
+										'inscripcion' => $inscripcion_retornar,
+										//'paralelos'=> $paralelos,
+										'turnos'=> $turnos,
+										'materias'=> $materias['cursoOferta'],
+									));
+									$status 	= 200;
+									$msj 		= 'Ok';
+								}
+								else
+								{
+									$data 	= NULL;
+									$status = 404;
+									$msj 	= 'No existen asignaturas con los requisitos requeridos por la inscripción.';
+								}
+							}
+							else
+							{
+								$data 	= NULL;
+								$status = 404;
+								$msj 	= 'No existen asignaturas con los requisitos requeridos por la inscripción.';
 							}
 						}
 						else
@@ -2961,6 +3156,170 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		return $response->setData(array('msj'=>$msj,'status'=>$status,'data'=>$data));
 	}
 
+	public function getParalelosApartirDeTurnoAction(Request $request)//NUEVA FUNCION
+	{
+		$em 				= $this->getDoctrine()->getManager();
+		$qb 				= $em->createQueryBuilder();
+		$db 				= $em->getConnection();
+
+		$form 				= $request->request->all();
+		$_tramite_id 		= filter_var($form['tramite'], FILTER_SANITIZE_NUMBER_INT);
+		$_inscripcion_id 	= filter_var($form['id'], FILTER_SANITIZE_NUMBER_INT);
+		$_turno_id 		= filter_var($form['turno'], FILTER_SANITIZE_NUMBER_INT );
+
+		$_tramite_id 		= is_numeric($_tramite_id)?$_tramite_id:-1;
+		$_inscripcion_id 	= is_numeric($_inscripcion_id)?$_inscripcion_id:-1;
+		$_turno_id 		= is_numeric($_turno_id)?$_turno_id:-1;
+
+		$inscripcion_retornar = null;
+		$paralelos = array();
+
+		$data	= null;
+		$status	= 404;
+		$msj	= null;
+
+		//Buscamos el trámite apartir del codigo de trámite enviado en la peticion
+		if($_tramite_id >0 && $_inscripcion_id>0 && $_turno_id>=0)
+		{
+			$tramite_id=$_tramite_id;
+			
+			//verificamos que exista el trámite
+			$tramite = $this->getTramite($tramite_id);
+			if($tramite)
+			{
+				//ahora obtenemos el campo json del trámite
+				$datosJSONInscripcion=$tramite['datos'];
+				if(strlen($datosJSONInscripcion)>0)//verificamos que el JSon existe
+				{
+					//al decodificar la cadena JSON nos aseguramos que sea correcta
+					try
+					{
+						//decodificamos el json para volverlo en objeto y poder procesarlos
+						$datosJSONInscripcion_decode = json_decode($datosJSONInscripcion);
+						$inscripciones = $datosJSONInscripcion_decode->inscripciones;
+						$sie 		= $datosJSONInscripcion_decode->sie;
+						
+						foreach ($inscripciones as $i)
+						{
+							if($i->id == $_inscripcion_id)
+							{
+								$inscripcion_retornar = $i;
+								break;
+							}
+						}
+						if($inscripcion_retornar != null && property_exists($inscripcion_retornar,'gestion') && property_exists($inscripcion_retornar,'nivel') && property_exists($inscripcion_retornar,'grado'))
+						{
+							//sanitizamos los datos
+							$gestion = filter_var($inscripcion_retornar->gestion,FILTER_SANITIZE_NUMBER_INT);
+							$nivel = filter_var($inscripcion_retornar->nivel,FILTER_SANITIZE_NUMBER_INT);
+							$grado = filter_var($inscripcion_retornar->grado,FILTER_SANITIZE_NUMBER_INT);
+
+							$gestion = is_numeric($gestion)?$gestion:-1;
+							$nivel = is_numeric($nivel)?$nivel:-1;
+							$grado = is_numeric($grado)?$grado:-1;
+
+							//obtenemos los paralelos en base a la inscripcion recibida (en base a gestion, nivel y grado y turno)
+							/*
+							$query = ' 
+								select string_agg(turno_tipo_id::VARCHAR,\'|\') as turnos
+								from institucioneducativa_curso 
+								where 
+								institucioneducativa_id = ?
+								and gestion_tipo_id = ?
+								and nivel_tipo_id = ?
+								and grado_tipo_id = ?
+								and paralelo_tipo_id = ?
+							';
+							$stmt = $db->prepare($query);
+							$params = array($sie,$gestion,$nivel,$grado,$_turno_id);
+							$stmt->execute($params);
+							$requisitos=$stmt->fetch();
+							$turnosTmp= $requisitos['turnos'];
+							*/
+							
+							$query = $em->createQuery(
+							        'SELECT DISTINCT pt.id,pt.paralelo
+							        FROM SieAppWebBundle:InstitucioneducativaCurso iec
+							        JOIN iec.institucioneducativa ie
+							        JOIN iec.paraleloTipo pt
+							        WHERE ie.id = :id
+							        AND iec.gestionTipo = :gestion
+							        AND iec.turnoTipo = :turno
+							        AND iec.nivelTipo = :nivel
+							        AND iec.gradoTipo = :grado
+							        ORDER BY pt.id')
+							        ->setParameter('id', $sie)
+							        ->setParameter('gestion', $gestion)
+							        ->setParameter('turno', $_turno_id)
+							        ->setParameter('nivel', $nivel)
+							        ->setParameter('grado', $grado);
+							$paralelos = $query->getResult();
+
+							if($paralelos)
+							{
+								$status 	= 200;
+								$msj 		= 'Ok';
+								//en base a los los datos de la inscripcion encontrada, se buscara los paralelos
+								/*
+								$qb 		= $em->createQueryBuilder();
+								$turnos 	= $qb->select('t')
+											 ->from('SieAppWebBundle:TurnoTipo', 't')
+											 ->where('t.id in (:turnos)')
+											 ->setParameter('turnos', array_values( explode('|',$turnosTmp) ))
+											 ->getQuery()
+											 ->getArrayResult();
+								*/
+								$data = json_encode(array(
+									'paralelos'=> $paralelos,
+								));
+							}
+							else
+							{
+								$data 	= NULL;
+								$status = 404;
+								$msj 	= 'No existen paralelos con los requisitos requeridos por la inscripción.';
+							}
+						}
+						else
+						{
+							$data 	= NULL;
+							$status = 404;
+							$msj 	= 'No se encontro la inscripción seleccionada1.';
+						}
+					}
+					catch(Excepción $e)
+					{
+						//Por si se produjera un error
+						$data 	= NULL;
+						$status = 404;
+						$msj 	= 'Ocurrio un error al obtener el registro, por favor vuelva a intentarlo.';
+					}
+				}
+				else
+				{
+					$data 	= NULL;
+					$status = 404;
+					$msj 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+				}
+			}
+			else
+			{
+				$data 	= NULL;
+				$status = 404;
+				$msj 	= 'Ocurrio un error debido a que no existe el trámite seleccionado, por favor vuelva a intentarlo.';
+			}
+		}
+		else
+		{
+			$data 	= NULL;
+			$status = 404;
+			$msj 	= 'Ocurrio un error debido a que no existe el trámite o la inscripción seleccionada no existe, por favor vuelva a intentarlo.';
+		}
+		$response = new JsonResponse($data,$status);
+		$response->headers->set('Content-Type', 'application/json');
+		return $response->setData(array('msj'=>$msj,'status'=>$status,'data'=>$data));
+	}
+
 	/**
 	 * Esta funcion envia una solicitud que ya paso por la departamental, distrital, unidad educativa en donde se registraron la notas y ahora esta  a la distrital esta lista para etapa final con la departamental
 	 *
@@ -2980,6 +3339,11 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		$request_materias 		= isset($form['request_materias'])?$form['request_materias']:array( );
 		$request_fileInforme 	= $_FILES["request_fileInforme"];
 
+		$data 					= NULL;
+		$status 				= 404;
+		$msj 					= NULL;
+		$urlReporte 			= NULL;
+		$urlActaSupletoria 		= NULL;
 
 		//Buscamos el trámite apartir del codigo de trámite enviado en la peticion
 		$tramite= $this->getTramite($tramite_id);
@@ -3084,9 +3448,11 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 											if($registroTramite['dato']===true && $registroTramite['tipo']==='exito')
 											{
 												//dump(json_encode($datosJSONInscripcion));
-												$data 	= $registroTramite['idtramite'];
-												$status = 200;
-												$msj 	= $registroTramite['msg'];
+												$data 				= $registroTramite['idtramite'];
+												$status 			= 200;
+												$msj 				= $registroTramite['msg'];
+												$urlReporte 		= $this->generateUrl('regularizacion_estudiantesPostBachillerato_reporteUE',array('idtramite' => $registroTramite['idtramite'])) ;
+												$urlActaSupletoria 	= $this->generateUrl('regularizacion_estudiantesPostBachillerato_reporteUEActaSupletoria',array('idtramite' => $registroTramite['idtramite'])) ;
 											}
 											else
 											{
@@ -3173,7 +3539,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 
 		$response = new JsonResponse($data,$status);
 		$response->headers->set('Content-Type', 'application/json');
-		return $response->setData(array('msj'=>$msj,'status'=>$status,'data'=>$data));
+		return $response->setData(array('msj'=>$msj,'status'=>$status,'data'=>$data,'urlReporte'=>$urlReporte,'urlActaSupletoria'=>$urlActaSupletoria ));
 	}
 
 	/**
@@ -3280,10 +3646,33 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		$tramite= null;
 		$tramite_id=is_numeric($tramite_id)?$tramite_id:-1;
 		$query = '
-			select t1.id as tramite_id, t2.id as tramite_detalle_id, t3.id as solicitud_tramite, t3.datos,t1.flujo_tipo_id,t1.tramite_tipo
+			select t1.id as tramite_id, t2.id as tramite_detalle_id, t3.id as solicitud_tramite, t3.datos,t1.flujo_tipo_id,t1.tramite_tipo,to_char(t1.fecha_tramite,\'DD/MM/YYYY\') as fecha_tramite
 			from tramite t1
 			INNER JOIN tramite_detalle t2 on  (t2.id::INT) = (t1.tramite::INT)
 			INNER JOIN wf_solicitud_tramite t3 on (t3.tramite_detalle_id::INT)=(t2.tramite_detalle_id::INT)
+			--INNER JOIN wf_solicitud_tramite t3 on (t3.tramite_detalle_id::INT)=(t2.id::INT)
+			where t1.id=?
+			limit 1';
+		$stmt = $db->prepare($query);
+		$params = array($tramite_id);
+		$stmt->execute($params);
+		$tramite=$stmt->fetch();
+		return $tramite;
+	}
+
+	private function getTramiteReporte($tramite_id)
+	{
+		$em 		= $this->getDoctrine()->getManager();
+		$db 		= $em->getConnection();
+
+		$tramite= null;
+		$tramite_id=is_numeric($tramite_id)?$tramite_id:-1;
+		$query = '
+			select t1.id as tramite_id, t2.id as tramite_detalle_id, t3.id as solicitud_tramite, t3.datos,t1.flujo_tipo_id,t1.tramite_tipo,to_char(t1.fecha_tramite,\'DD/MM/YYYY\') as fecha_tramite
+			from tramite t1
+			INNER JOIN tramite_detalle t2 on  (t2.id::INT) = (t1.tramite::INT)
+			--INNER JOIN wf_solicitud_tramite t3 on (t3.tramite_detalle_id::INT)=(t2.tramite_detalle_id::INT)
+			INNER JOIN wf_solicitud_tramite t3 on (t3.tramite_detalle_id::INT)=(t2.id::INT)
 			where t1.id=?
 			limit 1';
 		$stmt = $db->prepare($query);
@@ -3690,6 +4079,841 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 
 		return $rude;
 	}
+
+	private function determinarAprobacionOReprobacionInscripcion($inscripcion)
+	{
+		$aproboInscripcion = true;
+		if( $inscripcion && property_exists($inscripcion,'id') && property_exists($inscripcion,'gestion') && property_exists($inscripcion,'nivel') && property_exists($inscripcion,'grado') && property_exists($inscripcion,'paralelo') && property_exists($inscripcion,'turno') && property_exists($inscripcion,'materias') )
+		{
+			$id = 			$inscripcion->id;
+			$gestion = 		$inscripcion->gestion;
+			$nivel = 		$inscripcion->nivel;
+			$grado = 		$inscripcion->grado;
+			$materias = 	$inscripcion->materias;
+
+			if($id && $gestion && $nivel && $grado && $materias)
+			{
+				foreach ($materias as $m)
+				{
+					$nota = $m->nota;
+					$aproboMateria = $this->verificarAprobacionoReprobacionDeMateria($gestion,$nivel,$grado,$nota);
+					if($aproboMateria==false)
+					{
+						$aproboInscripcion = false;
+						break;
+					}
+				}
+			}
+			else
+			{
+				$aproboInscripcion = false;
+			}
+		}
+		else
+		{
+			$aproboInscripcion = false;
+		}
+		return $aproboInscripcion;
+	}
+
+	private function determinarAprobacionOReprobacionSolicitud($inscripciones)
+	{
+		$inscripcionesAprobadas= true;
+
+		if(count($inscripcionesAprobadas)>0)
+		{
+			foreach ($inscripciones as $i)
+			{
+				$estadoAprobacion=$i->estado_aprobacion;
+				if($estadoAprobacion == false)
+				{
+					$inscripcionesAprobadas= false;
+					break;
+				}
+			}
+		}
+		else
+		{
+			$inscripcionesAprobadas= false;
+		}
+
+
+		return $inscripcionesAprobadas;
+	}
+
+	private function verificarAprobacionOReprobacionDeMateria($gestion,$nivel,$grado,$nota)
+	{
+		$aprobado = true;
+		if($gestion && $nivel && $grado)
+		{
+			if($gestion == 2013)
+			{
+				if($nivel == 12)
+				{
+					if($grado == 1)
+					{
+						//$complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
+						$notaAprobacion = 51;
+					}
+					else
+					{
+						//$complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+						$notaAprobacion = 36;
+					}
+				}
+				else if($nivel == 13)
+				{
+					if($grado == 1)
+					{
+						//$complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
+						$notaAprobacion = 51;
+					}
+					else
+					{
+						//$complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+						$notaAprobacion = 36;
+					}
+				}
+			}
+			else if($gestion < 2013)
+			{
+				//$complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+				$notaAprobacion = 36;
+			}
+			else if($gestion > 2013 && $gestion < 2020)
+			{
+				//$complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
+				$notaAprobacion = 51;
+			}
+			else if($gestion == 2020)
+			{
+					if($nivel == 12)
+					{
+						if($grado > 1)
+						{
+							//$complementario = "'(6,7)','(6,7,8)','(9)','51'";
+							$notaAprobacion = 51;
+						}
+					}
+					else if($nivel == 13)
+					{
+						if($grado >= 1)
+						{
+							//$complementario = "'(6,7)','(6,7,8)','(9)','51'";
+							$notaAprobacion = 51;
+						}
+					}
+			}
+
+			if($nota<$notaAprobacion)
+			{
+				$aprobado = false;
+			}
+		}
+		else
+		{
+			$aprobado = false;
+		}
+
+		return $aprobado;
+	}
+
+	/************************************************* REPORTES *************************************************/
+	/************************************************* REPORTES *************************************************/
+	/************************************************* REPORTES *************************************************/
+
+
+	public function reporteDepartamentalAction(Request $request,$idtramite)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$request_id = $request->get('id');
+		$request_id = filter_var($request_id,FILTER_SANITIZE_NUMBER_INT);
+		$request_id = is_numeric($request_id)?$request_id:-1;
+
+		$request_tipo = $request->get('tipo');
+		$request_tipo = filter_var($request_tipo,FILTER_SANITIZE_STRING);
+
+		$tramite_id = filter_var($idtramite,FILTER_SANITIZE_NUMBER_INT);
+		$tramite_id = is_numeric($tramite_id)?$tramite_id:-1;
+
+		//Verificamos que el id de trámite haya sido enviado, caso contrario redireccionamos a la anteriro pagina
+		if($tramite_id>0)
+		{
+			//Buscamos el trámite segun el id enviado
+			$tramite =$this->getTramiteReporte($tramite_id);
+
+			//verificamos que el trámite exista
+			if($tramite)
+			{
+				$datosJSONInscripcion = $tramite['datos'];
+
+				if(strlen($datosJSONInscripcion)>0)//verificamos que el JSon existe
+				{
+					try
+					{
+						$datosJSONInscripcion_decode=json_decode($datosJSONInscripcion);
+						$rude=property_exists($datosJSONInscripcion_decode,'estudiante')?$datosJSONInscripcion_decode->estudiante:-1;
+
+						$qb = $em->createQueryBuilder();
+						$estudiante=$qb->select('e')
+						 ->from('SieAppWebBundle:Estudiante', 'e')
+						 ->where('e.codigoRude = :codigoRude')
+						 ->setParameters(array('codigoRude'=>$rude))
+						 ->getQuery()
+						 ->getSingleResult();
+						 
+						//verificamos que exista el estudiante
+						if($estudiante)
+						{
+							if( $datosJSONInscripcion_decode && property_exists($datosJSONInscripcion_decode,'inscripciones'))
+							{
+								//Una vez verificado que el estudiante exista obtenemos los datos json de la inscripciones, documentos adjuntos delinteresado y el primer informe de la departamental
+								$inscripciones = $datosJSONInscripcion_decode->inscripciones;
+								
+								$cantidadInscripciones= count($inscripciones);
+								$tablaInscripciones=array();
+								list($tieneErrores,$tablaInscripciones)=$this->obtenerNombresYValidarDatosDeInscripciones($datosJSONInscripcion_decode->inscripciones);
+								
+								//continuamos con los documentos del interesado
+								$adjuntosDocsInteresado = $datosJSONInscripcion_decode->docsInteresado;
+								//terminamos con los informes
+								$adjuntosInformes 		= $datosJSONInscripcion_decode->informes;
+
+								$datosInscripcion = base64_encode(json_encode($datosJSONInscripcion_decode->inscripciones));
+
+								$etapa = "Inicio Departamental";
+								$datosQR = "Etapa: ".$etapa."\n"."Tramite: ".$tramite_id."\n"."Solicitante: ".$rude."\n"."Fecha inicio de tramite: ".$tramite['fecha_tramite']."\n\n";
+								$codigoQR = $this->getCodigoQR($datosQR,$datosInscripcion);
+								$codigoQR=preg_replace('#^data:image/[^;]+;base64,#', '',base64_encode($codigoQR) );
+
+								$html= 
+								$this->render($this->session->get('pathSystem') . ':Regularizacion_EstudiantesPostBachillerato:Reportes/departamental_reporte.html.twig',array(
+									'estudiante'=>$estudiante,
+									'path' => $this->path,
+									'error' => $error,
+									'tablaInscripciones' => $tablaInscripciones,
+									'adjuntosDocsInteresado' => $adjuntosDocsInteresado,
+									'adjuntosInformes' => $adjuntosInformes,
+									"tramite" => $tramite_id,
+									"codigoQR" => $codigoQR
+								));
+								$pdf=$this->generarPdf($html, $tramite_id, $rude,$descripcion="TRAMITE_DE_REGULARIZACION");
+								$this->descargarPdf($pdf);
+
+							}
+							else
+							{
+								$error = 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+							}
+						}
+						else
+						{
+							$error='No se puede encontrar al estudiante, por favor verifique que el trámite fue realizado correctamente.';
+						}
+					}
+					catch(Exception $e)
+					{
+						$error = 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+					}
+				}
+				else
+				{
+					$error='No se pudo encontrar el trámite, por favor verifique que el trámite fue realizado correctamente.';
+				}
+			}
+			else
+			{
+				$error='No se pudo encontrar el trámite, por favor verifique que el trámite fue realizado correctamente.';
+			}
+			return $this->render($this->session->get('pathSystem') . ':Regularizacion_EstudiantesPostBachillerato:Reportes/departamental_reporte.html.twig',array(
+				'estudiante'=>$estudiante,
+				'path' => $this->path,
+				'error' => $error,
+				'tablaInscripciones' => $tablaInscripciones,
+				'adjuntosDocsInteresado' => $adjuntosDocsInteresado,
+				'adjuntosInformes' => $adjuntosInformes,
+				"tramite" => $tramite_id,
+			));
+		}
+		else
+		{
+			return $this->redirect($this->generateUrl('login'));
+		}
+	}
+
+	public function reporteUEAction(Request $request,$idtramite)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$request_id = $request->get('id');
+		$request_id = filter_var($request_id,FILTER_SANITIZE_NUMBER_INT);
+		$request_id = is_numeric($request_id)?$request_id:-1;
+
+		$request_tipo = $request->get('tipo');
+		$request_tipo = filter_var($request_tipo,FILTER_SANITIZE_STRING);
+
+		$tramite_id = filter_var($idtramite,FILTER_SANITIZE_NUMBER_INT);
+		$tramite_id = is_numeric($tramite_id)?$tramite_id:-1;
+
+
+		$determinarAprobacionOReprobacionSolicitud = false;
+		//Verificamos que el id de trámite haya sido enviado, caso contrario redireccionamos a la anteriro pagina
+		if($tramite_id>0)
+		{
+			//Buscamos el trámite segun el id enviado
+			$tramite =$this->getTramiteReporte($tramite_id);
+
+			if($tramite)
+			{
+				$datosJSONInscripcion = $tramite['datos'];
+
+				if(strlen($datosJSONInscripcion)>0)//verificamos que el JSon existe
+				{
+					try
+					{
+						//intentamos decodificar la cadena
+						$datosJSONInscripcion_decode=json_decode($datosJSONInscripcion);
+						$rude=property_exists($datosJSONInscripcion_decode,'estudiante')?$datosJSONInscripcion_decode->estudiante:-1;
+
+						$qb = $em->createQueryBuilder();
+						$estudiante=$qb->select('e')
+						 ->from('SieAppWebBundle:Estudiante', 'e')
+						 ->where('e.codigoRude = :codigoRude')
+						 ->setParameters(array('codigoRude'=>$rude))
+						 ->getQuery()
+						 ->getSingleResult();
+
+						//verificamos que exista el estudiante
+						if($estudiante)
+						{
+							if( $datosJSONInscripcion_decode && property_exists($datosJSONInscripcion_decode,'inscripciones'))
+							{
+								//Ahora procedemos a procesar los datos
+								$inscripcionesDecode 	= $datosJSONInscripcion_decode;
+
+								list($tieneErrores,$tablaInscripciones_procesada)=$this->obtenerNombresDeInscripciones($inscripcionesDecode);
+
+								$institucioneducativa=null;
+								if($inscripcionesDecode && property_exists($inscripcionesDecode,'sie'))
+								{
+									//obtenemos con la unidad educativa
+									$institucioneducativaTMP=$em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $inscripcionesDecode->sie));
+									$institucioneducativa= $institucioneducativaTMP->getInstitucioneducativa();
+								}
+								if($tieneErrores==false && $institucioneducativa)
+								{
+									//verificamos que la inscripcion tenga los campos inscripciones, docsInteresadoe informess
+									$tablaInscripciones=array();
+									if($tablaInscripciones_procesada && property_exists($tablaInscripciones_procesada,'inscripciones'))
+									{
+										//empezamos con las inscripciones
+										$tablaInscripciones = $tablaInscripciones_procesada->inscripciones;
+										$determinarAprobacionOReprobacionSolicitud = $this->determinarAprobacionOReprobacionSolicitud($tablaInscripciones);
+									}
+									$adjuntosDocsInteresado=array();
+									if($inscripcionesDecode && property_exists($inscripcionesDecode,'docsInteresado'))
+									{
+										//continuamos con los documentos del interesado
+										$adjuntosDocsInteresado = $inscripcionesDecode->docsInteresado;
+									}
+
+									$adjuntosInformes=array();
+									if($inscripcionesDecode && property_exists($inscripcionesDecode,'informes'))
+									{
+										//continuamos con los informes
+										$adjuntosInformes = $inscripcionesDecode->informes;
+									}
+
+									$datosInscripcion = base64_encode(json_encode($datosJSONInscripcion_decode->inscripciones));
+
+									$etapa = "Evaluacion Unidad Educativa";
+									$datosQR = "Etapa: ".$etapa."\n"."Tramite: ".$tramite_id."\n"."Solicitante: ".$rude."\n"."Fecha inicio de tramite: ".$tramite['fecha_tramite']."\n\n";
+									$codigoQR = $this->getCodigoQR($datosQR,$datosInscripcion);
+									$codigoQR=preg_replace('#^data:image/[^;]+;base64,#', '',base64_encode($codigoQR) );
+
+									$html= 
+									$this->render($this->session->get('pathSystem') . ':Regularizacion_EstudiantesPostBachillerato:Reportes/ue_reporte.html.twig',array(
+										'estudiante'=>$estudiante,
+										'path' => $this->path,
+										'error' => $error,
+										'tablaInscripciones' => $tablaInscripciones,
+										'adjuntosDocsInteresado' => $adjuntosDocsInteresado,
+										'adjuntosInformes' => $adjuntosInformes,
+										'institucioneducativa' => $institucioneducativaTMP,
+										"tramite" => $tramite_id,
+										"codigoQR" => $codigoQR
+									));
+									$pdf=$this->generarPdf($html, $tramite_id, $rude,$descripcion="EVALUACION_UE_");
+									$this->descargarPdf($pdf,$tramite_id, $rude,$descripcion="EVALUACION_UE_");
+								}
+								else
+								{
+									$tablaInscripciones = array();
+									$adjuntosDocsInteresado = array();
+									$adjuntosInformes = array();
+									$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+								}
+							}
+							else
+							{
+								$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+							}
+						}
+						else
+						{
+							$error='No se puede encontrar al estudiante, por favor verifique que el trámite fue realizado correctamente.';
+						}
+					}
+					catch(Exception $e)
+					{
+						$tablaInscripciones = array();
+						$adjuntosDocsInteresado = array();
+						$adjuntosInformes = array();
+						$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+					}
+				}
+				else
+				{
+					$error='No se pudo encontrar el trámite, por favor verifique que el trámite fue realizado correctamente.';
+				}
+			}
+			else
+			{
+				$error='No se pudo encontrar el trámite, por favor verifique que el trámite fue realizado correctamente.';
+			}
+
+			return $this->render($this->session->get('pathSystem') . ':Regularizacion_EstudiantesPostBachillerato:distrital_detalleSolicitudesRecibidasPorConcluir.html.twig',array(
+				'estudiante'=>$estudiante,
+				'path' => $this->path,
+				'error' => $error,
+				'tablaInscripciones' => $tablaInscripciones,
+				'adjuntosDocsInteresado' => $adjuntosDocsInteresado,
+				'adjuntosInformes' => $adjuntosInformes,
+				'institucioneducativa' => $institucioneducativa,
+				"tramite" => $tramite_id,
+			));
+		}
+		else
+		{
+			return $this->redirect($this->generateUrl('login'));
+		}
+	}
+
+	public function reporteUEActaSupletoriaAction(Request $request,$idtramite)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$request_id = $request->get('id');
+		$request_id = filter_var($request_id,FILTER_SANITIZE_NUMBER_INT);
+		$request_id = is_numeric($request_id)?$request_id:-1;
+
+		$request_tipo = $request->get('tipo');
+		$request_tipo = filter_var($request_tipo,FILTER_SANITIZE_STRING);
+
+		$tramite_id = filter_var($idtramite,FILTER_SANITIZE_NUMBER_INT);
+		$tramite_id = is_numeric($tramite_id)?$tramite_id:-1;
+
+		$determinarAprobacionOReprobacionSolicitud= false;
+
+		if($tramite_id>0)
+		{
+			//Buscamos el trámite segun el id enviado
+			$tramite =$this->getTramiteReporte($tramite_id);
+
+			if($tramite)
+			{
+				$datosJSONInscripcion = $tramite['datos'];
+
+				if(strlen($datosJSONInscripcion)>0)//verificamos que el JSon existe
+				{
+					try
+					{
+						//intentamos decodificar la cadena
+						$datosJSONInscripcion_decode=json_decode($datosJSONInscripcion);
+						$rude=property_exists($datosJSONInscripcion_decode,'estudiante')?$datosJSONInscripcion_decode->estudiante:-1;
+
+						$qb = $em->createQueryBuilder();
+						$estudiante=$qb->select('e')
+						 ->from('SieAppWebBundle:Estudiante', 'e')
+						 ->where('e.codigoRude = :codigoRude')
+						 ->setParameters(array('codigoRude'=>$rude))
+						 ->getQuery()
+						 ->getSingleResult();
+
+						//verificamos que exista el estudiante
+						if($estudiante)
+						{
+							if( $datosJSONInscripcion_decode && property_exists($datosJSONInscripcion_decode,'inscripciones'))
+							{
+								//Ahora procedemos a procesar los datos
+								$inscripcionesDecode 	= $datosJSONInscripcion_decode;
+
+								list($tieneErrores,$tablaInscripciones_procesada)=$this->obtenerNombresDeInscripciones($inscripcionesDecode);
+
+								$institucioneducativa=null;
+								if($inscripcionesDecode && property_exists($inscripcionesDecode,'sie'))
+								{
+									//obtenemos con la unidad educativa
+									$institucioneducativaTMP=$em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $inscripcionesDecode->sie));
+									$institucioneducativa= $institucioneducativaTMP->getInstitucioneducativa();
+								}
+								if($tieneErrores==false && $institucioneducativa)
+								{
+									//verificamos que la inscripcion tenga los campos inscripciones, docsInteresadoe informess
+									$tablaInscripciones=array();
+									if($tablaInscripciones_procesada && property_exists($tablaInscripciones_procesada,'inscripciones'))
+									{
+										//empezamos con las inscripciones
+										$tablaInscripciones = $tablaInscripciones_procesada->inscripciones;
+										$determinarAprobacionOReprobacionSolicitud = $this->determinarAprobacionOReprobacionSolicitud($tablaInscripciones);
+									}
+									$adjuntosDocsInteresado=array();
+									if($inscripcionesDecode && property_exists($inscripcionesDecode,'docsInteresado'))
+									{
+										//continuamos con los documentos del interesado
+										$adjuntosDocsInteresado = $inscripcionesDecode->docsInteresado;
+									}
+
+									$adjuntosInformes=array();
+									if($inscripcionesDecode && property_exists($inscripcionesDecode,'informes'))
+									{
+										//continuamos con los informes
+										$adjuntosInformes = $inscripcionesDecode->informes;
+									}
+
+									//$pdf=$this->container->getParameter('urlreportweb') . 'reg_est_cert_cal_solicitud_tramite_acta_supletoria_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
+									$pdf='http://127.0.0.1:63020/viewer/preview?__report=D%3A\workspaces\workspace_especial\Regularizacion_EstudiantesPostBachillerato\reg_est_cert_cal_solicitud_tramite_acta_supletoria_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
+									
+									$status = 200;
+									$arch           = 'ACTA_SUPLETORIA-'.$tramite_id.'-'.$estudiante->getCodigoRude().'.pdf';
+									$response       = new Response();
+									$response->headers->set('Content-type', 'application/pdf');
+									$response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+									$response->setContent(file_get_contents($pdf));
+									$response->setStatusCode($status);
+									$response->headers->set('Content-Transfer-Encoding', 'binary');
+									$response->headers->set('Pragma', 'no-cache');
+									$response->headers->set('Expires', '0');
+									return $response;
+
+								}
+								else
+								{
+									$tablaInscripciones = array();
+									$adjuntosDocsInteresado = array();
+									$adjuntosInformes = array();
+									$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+								}
+							}
+							else
+							{
+								$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+							}
+						}
+						else
+						{
+							$error='No se puede encontrar al estudiante, por favor verifique que el trámite fue realizado correctamente.';
+						}
+					}
+					catch(Exception $e)
+					{
+						$tablaInscripciones = array();
+						$adjuntosDocsInteresado = array();
+						$adjuntosInformes = array();
+						$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+					}
+				}
+				else
+				{
+					$error='No se pudo encontrar el trámite, por favor verifique que el trámite fue realizado correctamente.';
+				}
+			}
+			else
+			{
+				$error='No se pudo encontrar el trámite, por favor verifique que el trámite fue realizado correctamente.';
+			}
+
+			return $this->render($this->session->get('pathSystem') . ':Regularizacion_EstudiantesPostBachillerato:distrital_detalleSolicitudesRecibidasPorConcluir.html.twig',array(
+				'estudiante'=>$estudiante,
+				'path' => $this->path,
+				'error' => $error,
+				'tablaInscripciones' => $tablaInscripciones,
+				'adjuntosDocsInteresado' => $adjuntosDocsInteresado,
+				'adjuntosInformes' => $adjuntosInformes,
+				'institucioneducativa' => $institucioneducativa,
+				"tramite" => $tramite_id,
+			));
+		}
+		else
+		{
+			return $this->redirect($this->generateUrl('login'));
+		}
+	}
+
+	public function reporteDepartamentalPorConcluirConclusionEstudiosAction(Request $request,$idtramite)
+	{
+
+		$em = $this->getDoctrine()->getManager();
+		$request_id = $request->get('id');
+		$request_id = filter_var($request_id,FILTER_SANITIZE_NUMBER_INT);
+		$request_id = is_numeric($request_id)?$request_id:-1;
+
+		$request_tipo = $request->get('tipo');
+		$request_tipo = filter_var($request_tipo,FILTER_SANITIZE_STRING);
+
+		$tramite_id = filter_var($idtramite,FILTER_SANITIZE_NUMBER_INT);
+		$tramite_id = is_numeric($tramite_id)?$tramite_id:-1;
+
+		$determinarAprobacionOReprobacionSolicitud= false;
+
+		if($tramite_id>0)
+		{
+			//Buscamos el trámite segun el id enviado
+			$tramite =$this->getTramite($tramite_id);
+
+			//verificamos que el trámite exista
+			if($tramite)
+			{
+				$datosJSONInscripcion = $tramite['datos'];
+
+				if(strlen($datosJSONInscripcion)>0)
+				{
+					try
+					{
+						//intentamos decodificar la cadena
+						$datosJSONInscripcion_decode=json_decode($datosJSONInscripcion);
+
+						//Ahora procedemos a procesar los datos
+						$inscripcionesDecode 	= $datosJSONInscripcion_decode;
+
+						$rude=property_exists($datosJSONInscripcion_decode,'estudiante')?$datosJSONInscripcion_decode->estudiante:-1;
+
+						$qb = $em->createQueryBuilder();
+						$estudiante=$qb->select('e')
+						 ->from('SieAppWebBundle:Estudiante', 'e')
+						 ->where('e.codigoRude = :codigoRude')
+						 ->setParameters(array('codigoRude'=>$rude))
+						 ->getQuery()
+						 ->getSingleResult();
+
+						//verificamos que exista el estudiante
+						if($estudiante)
+						{
+							if( $datosJSONInscripcion_decode && property_exists($datosJSONInscripcion_decode,'inscripciones'))
+							{
+								list($tieneErrores,$tablaInscripciones_procesada)=$this->obtenerNombresDeInscripciones($inscripcionesDecode);
+								
+								$institucioneducativa=null;
+								if($inscripcionesDecode && property_exists($inscripcionesDecode,'sie'))
+								{
+									//obtenemos con la unidad educativa
+									$institucioneducativaTMP=$em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $inscripcionesDecode->sie));
+									$institucioneducativa=$institucioneducativaTMP->getInstitucioneducativa();
+								}
+								
+								if($tieneErrores==false && $institucioneducativa)
+								{
+									//verificamos que la inscripcion tenga los campos inscripciones, docsInteresadoe informess
+									$tablaInscripciones=array();
+									if($tablaInscripciones_procesada  && property_exists($tablaInscripciones_procesada,'inscripciones'))
+									{
+										//empezamos con las inscripciones
+										$tablaInscripciones = $tablaInscripciones_procesada->inscripciones;
+										$determinarAprobacionOReprobacionSolicitud = $this->determinarAprobacionOReprobacionSolicitud($tablaInscripciones);
+									}
+
+									$adjuntosDocsInteresado=array();
+									if($inscripcionesDecode  && property_exists($inscripcionesDecode,'docsInteresado'))
+									{
+										//continuamos con los documentos del interesado
+										$adjuntosDocsInteresado = $inscripcionesDecode->docsInteresado;
+									}
+
+									$adjuntosInformes=array();
+									if($inscripcionesDecode  && property_exists($inscripcionesDecode,'informes'))
+									{
+										//terminamos con los informes
+										$adjuntosInformes = $inscripcionesDecode->informes;
+									}
+
+									$pdf= null;
+									$status = 404;
+									if($determinarAprobacionOReprobacionSolicitud==true)
+									{
+										//$pdf=$this->container->getParameter('urlreportweb') . 'reg_est_cert_cal_solicitud_tramite_cert_conclu_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
+										$pdf='http://127.0.0.1:63020/viewer/preview?__report=D%3A\workspaces\workspace_especial\Regularizacion_EstudiantesPostBachillerato\reg_est_cert_cal_solicitud_tramite_cert_conclu_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
+										$status = 200;
+									}
+									$arch           = 'CERTIFICADO_DE_CONCLUSIÓN_DE_ESTUDIOS-'.$tramite_id.'-'.$estudiante->getCodigoRude().'.pdf';
+									$response       = new Response();
+									$response->headers->set('Content-type', 'application/pdf');
+									$response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+									$response->setContent(file_get_contents($pdf));
+									$response->setStatusCode($status);
+									$response->headers->set('Content-Transfer-Encoding', 'binary');
+									$response->headers->set('Pragma', 'no-cache');
+									$response->headers->set('Expires', '0');
+									return $response;
+
+								}
+								else
+								{
+									$tablaInscripciones = array();
+									$adjuntosDocsInteresado = array();
+									$adjuntosInformes = array();
+									$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+								}
+							}
+							else
+							{
+								$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+							}
+						}
+						else
+						{
+							$error='No se puede encontrar al estudiante, por favor verifique que el trámite fue realizado correctamente.';
+						}
+					}
+					catch(Exception $e)
+					{
+						$tablaInscripciones = array();
+						$adjuntosDocsInteresado = array();
+						$adjuntosInformes = array();
+						$error 	= 'Ocurrio un error debido a que no existen datos de las inscripciones, por favor verifique que el trámite sea correcto.';
+					}
+				}
+				else
+				{
+					$error='No se pudo encontrar el trámite, por favor verifique que el trámite fue realizado correctamente.';
+				}
+			}
+			else
+			{
+				$error='No se pudo encontrar el trámite, por favor verifique que el trámite fue realizado correctamente.';
+			}
+
+			return $this->render($this->session->get('pathSystem') . ':Regularizacion_EstudiantesPostBachillerato:departamental_detalleSolicitudesRecibidasPorConcluir.html.twig',array(
+				'estudiante'=>$estudiante,
+				'path' => $this->path,
+				'error' => $error,
+				'tablaInscripciones' => $tablaInscripciones,
+				'adjuntosDocsInteresado' => $adjuntosDocsInteresado,
+				'adjuntosInformes' => $adjuntosInformes,
+				'institucioneducativa' => $institucioneducativa,
+				"tramite" => $tramite_id,
+			));
+		}
+		else
+		{
+			return $this->redirect($this->generateUrl('login'));
+		}
+	}
+
+	private function generarPdf($html,$tramite_id, $rude,$descripcion="")
+	{
+		$pdf = $this->container->get("white_october.tcpdf")->create(
+			'PORTRAIT',
+			PDF_UNIT,
+			'LETTER',//PDF_PAGE_FORMAT,
+			true,
+			'UTF-8',
+			false
+		);
+		$pdf->SetAuthor('Ministerio de Educación');
+		$pdf->SetTitle('Informe de inicio de trámite');
+		//$pdf->SetSubject('Your client');
+		//$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+		$pdf->setFontSubsetting(true);
+		$pdf->SetFont('helvetica', '', 11, '', true);
+
+		// set default header data
+		//$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 001', PDF_HEADER_STRING, array(0,64,255), array(0,64,128));
+		//$pdf->setFooterData(array(0,64,0), array(0,64,128));
+		$pdf->setFooterData(array(0,32,0), array(0,32,64));
+
+		// set header and footer fonts
+		//$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+		$pdf->setPrintHeader(false);
+		$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+		// set default monospaced font
+		$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+		// set margins
+		//$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+		$pdf->SetMargins(12, 10, 12);
+		$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+		//$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+		$pdf->SetFooterMargin(10);
+
+		// set auto page breaks
+		//$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+		$pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+
+		// set image scale factor
+		$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+		$style = array(
+			'position' => $this->rtl?'R':'L',
+			'align' => $this->rtl?'R':'L',
+			'stretch' => false,
+			'fitwidth' => true,
+			'cellfitalign' => '',
+			'border' => false,
+			'padding' => 0,
+			'fgcolor' => array(0,0,0),
+			'bgcolor' => false,
+			'text' => false
+		);
+		$pdf->AddPage();
+
+		$content=null;
+		if($html)
+			$content=$html->getContent();
+
+		$pdf->writeHTMLCell(
+			$w = 0,
+			$h = 0,
+			$x = '',
+			$y = '',
+			$content,
+			$border = 0,
+			$ln = 1,
+			$fill = 0,
+			$reseth = true,
+			$align = '',
+			$autopadding = true
+		);
+		
+		//$pdf->writeHTML($content, true, false, true, false, '');
+		$nombrePdf=$tramite_id."-".$rude."-".date('d.m.Y-H.i.s.v');
+		return $pdf->Output($descripcion.$nombrePdf.".pdf", 'I');
+	}
+
+	private function descargarPdf($pdf,$tramite_id, $rude,$descripcion="")
+	{
+		$status 		= 200;
+		$nombrePdf 		= $tramite_id."-".$rude."-".date('d.m.Y-H.i.s.v');
+		$arch           = $descripcion.$nombrePdf.".pdf";
+		$response       = new Response();
+		$response->headers->set('Content-type', 'application/pdf');
+		$response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+		$response->setContent($pdf);
+		$response->setStatusCode(file_get_contents($pdf));
+		$response->setStatusCode($status);
+		$response->headers->set('Content-Transfer-Encoding', 'binary');
+		$response->headers->set('Pragma', 'no-cache');
+		$response->headers->set('Expires', '0');
+		return $response;
+	}
+
+	private function getCodigoQR($datosQR,$datosInscripcion)
+	{
+		//$datosQR=$datosQR.$datosInscripcion;
+		$barcodeobj = new \TCPDF2DBarcode($datosQR, 'QRCODE,Q');
+		//$qr=$barcodeobj->getBarcodePNG(6, 6, array(0,0,0));
+		$qr=$barcodeobj->getBarcodePngData();
+		return $qr;
+	}
+
 }
 
 

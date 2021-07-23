@@ -98,17 +98,31 @@
 																	<div class="row" style="padding-top:1rem">
 																		<div class="col-xs-12 col-sm-6">
 																			<div class="form-group">
+																				<label class="col-xs-12 col-sm-3 control-label">Turno:</label>
+																				<div class="col-xs-12 col-sm-9">
+																					<div class="form-control request-turno" disabled></div>
+																				</div>
+																			</div>
+																		</div>
+																		<div class="col-xs-12 col-sm-6">
+																			<div class="form-group">
 																				<label class="col-xs-12 col-sm-3 control-label">Paralelo:</label>
 																				<div class="col-xs-12 col-sm-9">
 																					<div class="form-control request-paralelo" disabled></div>
 																				</div>
 																			</div>
 																		</div>
-																		<div class="col-xs-12 col-sm-6">
+																	</div>
+																</div>
+															</div>
+
+															<div class="row">
+																<div class="col-xs-12">
+																	<div class="row" style="padding-top:1rem">
+																		<div class="col-xs-12 col-sm-12">
 																			<div class="form-group">
-																				<label class="col-xs-12 col-sm-3 control-label">Turno:</label>
-																				<div class="col-xs-12 col-sm-9">
-																					<div class="form-control request-turno" disabled></div>
+																				<div class="col-xs-12 col-sm-12">
+																					<div class="text-center request-estado-aprobacion"></div>
 																				</div>
 																			</div>
 																		</div>
@@ -517,15 +531,22 @@
 														var grado=$('#modal-view-grade').find('.request-grado');
 														var paralelo=$('#modal-view-grade').find('.request-paralelo');
 														var turno=$('#modal-view-grade').find('.request-turno');
+														var estadoAprobacion=$('#modal-view-grade').find('.request-estado-aprobacion');
 
-														if(m==1 && typeof(gestion) != 'undefined' && typeof(sie) != 'undefined' && typeof(nivel) != 'undefined' && typeof(grado) != 'undefined' && typeof(paralelo) != 'undefined' && typeof(turno) != 'undefined')
+														if(m==1 && typeof(gestion) != 'undefined' && typeof(sie) != 'undefined' && typeof(nivel) != 'undefined' && typeof(grado) != 'undefined' && typeof(paralelo) != 'undefined' && typeof(turno) != 'undefined' && typeof(estadoAprobacion) != 'undefined')
 														{
+															var estadoAprobacionTmp= (inscripciones_decode.estado_aprobacion)?'APROBO':'REPROBO';
+															var color='red';
 															gestion.html(inscripciones_decode.gestion);
 															sie.html(inscripciones_decode.sie);
 															nivel.html(inscripciones_decode.nivel);
 															grado.html(inscripciones_decode.grado);
 															paralelo.html(inscripciones_decode.paralelo);
 															turno.html(inscripciones_decode.turno);
+															estadoAprobacion.html(estadoAprobacionTmp);
+															if(inscripciones_decode.estado_aprobacion)
+																color='green';
+															estadoAprobacion.css({'font-size': '32px','font-weight': 'bold','color':color});
 															abrirModal('modal-view-grade');
 														}
 														else
@@ -655,7 +676,7 @@
 													{
 														var status=data.status;
 														var msg= data.msj;
-
+														var urlCertificacionConclusionEstudios = data.urlCertificacionConclusionEstudios;
 														if(status==200)
 														{
 															$('.container-fluid-').fadeOut(function ()
@@ -668,13 +689,23 @@
 																  title: msg,
 																  icon: "success",
 																});
-																$('.container-fluid-').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div>');
+																if(typeof(urlCertificacionConclusionEstudios)!='undefined' && urlCertificacionConclusionEstudios != null)
+																{
+																	var certificacionConclusionEstudios = '<a href="'+urlCertificacionConclusionEstudios+'" target="_blank" title="Descarga Certificado de Conclusión de Estudios"><i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> Descarga Certificado de Conclusión de Estudios</a>';
+																	$('.container-fluid-').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'<br>'+certificacionConclusionEstudios+'<br></div>');
+																}
+																else
+																{
+																	$('.container-fluid-').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div>');
+																}
 															});
+															{#
 															setTimeout(function ()
 															{
 																window.location.href="{{path('wf_tramite_index')}}";
 																//swal.close();
 															},3700);
+															#}
 															
 														}
 														else
