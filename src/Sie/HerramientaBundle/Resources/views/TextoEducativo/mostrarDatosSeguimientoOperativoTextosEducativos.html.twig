@@ -17,8 +17,6 @@
 				  <tbody>
 				  	{% for d in datos %}
 				  		{% set periodoTipo = (periodo==1)?'Trimestre(s)':'Semestre(s) ' %}
-				  		{% set totalCursos = (d.nro_cursos > 0)? d.nro_cursos :1 %}
-				  		{% set completo = (d.cursos_registrados /totalCursos)|round %}
 				    <tr>
 				      <th scope="row">{{loop.index}}</th>
 				      <td>{{d.institucioneducativa_id_target}}</td>
@@ -27,7 +25,7 @@
 				      <td class="text-right">{{d.nro_cursos}}</td>
 				      <td class="text-right">{{d.cursos_registrados}}</td>
 				      <td class="text-right">
-				      	{% if completo==1 %}
+				      	{% if d.nro_cursos == d.cursos_registrados %}
 				      		<i class="fa fa-check fa-2x fg-success"></i>
 				      	{% else %}
 				      		<i class="fa fa-times fa-2x fg-danger"></i>

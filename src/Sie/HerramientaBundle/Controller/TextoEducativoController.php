@@ -531,11 +531,11 @@ class TextoEducativoController extends Controller
 						INNER JOIN grado_tipo g on g.id = c.grado_tipo_id
 							INNER JOIN paralelo_tipo h on h.id = c.paralelo_tipo_id
 								left JOIN institucioneducativa_curso_textos_educativos i on i.institucioneducativa_curso_id = c.id
-			where institucioneducativa_id = institucioneducativa_id_target and gestion_tipo_id = ?
+			where institucioneducativa_id = institucioneducativa_id_target and gestion_tipo_id = ? 
 			group by c.id
 			having count(i.trimestre_semestre)>=2
 			) as tmp) as cursos_registrados,
-			(select count(c.id)
+			(select count(distinct c.id)
 			from institucioneducativa_curso  c
 				inner join turno_tipo d on  d.id = c.turno_tipo_id
 					inner join nivel_tipo e on e.id = c.nivel_tipo_id 
