@@ -140,6 +140,7 @@
 																						<th scope="col" width="5%">#</th>
 																						<th scope="col" >Materia</th>
 																						<th scope="col" width="15%">Calificación</th>
+																						<th scope="col" width="15%">Estado</th>
 																					</tr>
 																				</thead>
 																				<tbody class="tbody-grades-assignment">
@@ -403,15 +404,18 @@
 											var c=1;
 											$.each(_datos,function(i, materia)
 											{
+												var estadoAprobacion = (materia.estado_aprobacion)?'APROBO':'REPROBO';
+												var classEstadoAprobacion = (materia.estado_aprobacion)?"":"style='background-color:#f2dede;'";
 												var tmp=
 													'<tr class="regularizacion-registrar-notas-'+materia.id+'">\
-														<th scope="row">'+c+'</th>\
-														<td>'+materia.nombre+'</td>\
-														<td>\
+														<th '+classEstadoAprobacion+' scope="row">'+c+'</th>\
+														<td '+classEstadoAprobacion+'>'+materia.nombre+'</td>\
+														<td '+classEstadoAprobacion+'>\
 															<div class="col-xs-12 col-sm-12 text-right">\
-																<div class="form-control request-nota" disabled>'+materia.nota+'</div>\
+																<div class="form-control disabled request-nota" disabled>'+materia.nota+'</div>\
 															</div>\
 														</td>\
+														<td '+classEstadoAprobacion+'>'+estadoAprobacion+'</td>\
 													</tr>';
 												tr=tr+tmp;
 												c=c+1;

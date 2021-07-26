@@ -531,9 +531,10 @@
 						var inscripcion = tmpData.inscripcion;
 						if(typeof(materias)!='undefined' && typeof(inscripcion)!='undefined')
 						{
-							var gestion 	= inscripcion.gestion;
-							var nivel 		= inscripcion.nivel;
-							var grado 		= inscripcion.grado;
+							var _inscripcion_id 	= inscripcion.id;
+							var gestion 			= inscripcion.gestion;
+							var nivel 				= inscripcion.nivel;
+							var grado 				= inscripcion.grado;
 							
 							if(typeof(gestion)!='undefined' && !isNaN(gestion))
 							{
@@ -613,6 +614,7 @@
 														{
 															tmpP.val(paralelo).change(function ()
 															{
+																//verificarAsignaturaModificada(materias);
 																llenarNotasEnAsigantura(materias);
 															});
 														}
@@ -620,6 +622,7 @@
 
 													if(typeof(materias)!='undefined')
 													{
+														//verificarAsignaturaModificada(materias);
 														llenarNotasEnAsigantura(materias);
 													}
 
@@ -629,6 +632,39 @@
 													inscripcion.val('');
 													cambiarEstadoRegistroNota(_inscripcion_id,0);
 												}
+											}
+										}
+
+										var verificarAsignaturaModificada = function (materias)
+										{
+											var todasLasAsignaturasHTML = $('.tbody-grades-assignment').find('tr[class^="regularizacion-registrar-notas-"]');
+											var todasLasAsignaturasConNota= new Array();
+
+											for (var i=0; i<materias.length;i++)
+											{
+												var tmp=materias[i];
+												if(typeof(tmp)!='undefined')
+												{
+													if(tmp.hasOwnProperty('id'))
+													{
+														todasLasAsignaturasConNota.push(tmp.id);
+													}
+												}
+											}
+
+											if(typeof(todasLasAsignaturasHTML)!='undefined')
+											{
+												$.each(todasLasAsignaturasHTML,function(i, tr)
+												{
+													if( typeof(tr)!='undefined' )
+													{
+														var tmpasignatura = $(tr).attr('data-tmpasignatura');
+														if(!todasLasAsignaturasConNota.includes(tmpasignatura))
+														{
+															tr.remove();
+														}
+													}
+												});
 											}
 										}
 
@@ -919,7 +955,7 @@
 											$.each(_datos,function(i, materia)
 											{
 												var tmp=
-													'<tr class="regularizacion-registrar-notas-'+materia.idAsignatura+'">\
+													'<tr class="regularizacion-registrar-notas-'+materia.idAsignatura+'" data-tmpasignatura="'+materia.idAsignatura+'">\
 														<th scope="row">'+c+'</th>\
 														<td style="font-size:0.8rem">'+materia.asignatura+'</td>\
 														<td>\

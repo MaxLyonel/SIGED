@@ -36,6 +36,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 
 	public $session;
 	public $path;
+	public $NRO_MAX_INSCRIPCIONES;
 	public function __construct()
 	{
 		$this->session = new Session();
@@ -47,6 +48,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 			return $this->redirect($this->generateUrl('login'));
 		}
 		$this->path = '/../web/uploads/archivos/regularizacion/estudiantes_post_bachillerato/';//Esto es una sugerencia y debe ser socializado con el lic Carlos
+		$this->NRO_MAX_INSCRIPCIONES = 2;
 	}
 
 	/************************************************* DEPARTAMENTAL *************************************************/
@@ -81,7 +83,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 	 **/
 	public function postRegularizacionRegistrarHistorialAction(Request $request)//DEPARTAMENTAL
 	{
-		$NRO_MAX_INSCRIPCIONES 			= 2;
+		$NRO_MAX_INSCRIPCIONES 			= $this->NRO_MAX_INSCRIPCIONES;
 		$form 							= $request->request->all();
 		$request_inscriptions 			= $form['request_inscriptions'];
 		$request_fileDocsInteresado 	= $_FILES["request_fileDocsInteresado"];
@@ -1132,25 +1134,27 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 								if(strlen($request_observacion)>0)
 									$datosJSONInscripcion_decode->observacion=$request_observacion;
 							}
-
 							if(($varevaluacion==='NO' && strlen($request_observacion)>0) || ($varevaluacion==='SI' && $archivoGuardado === true && $datosActualizados===true))
 							{
 								$flujoTipo=$tramite['flujo_tipo_id'];//Solicitud de regularización
 
 								//$tarea = $this->get('wftramite')->obtieneTarea($flujoTipo, 'idflujo');
 								$tareaTmp = $this->get('wftramite')->obtieneTarea($tramite['tramite_id'], 'idtramite');
+
 								if($request_procede==0)//No procede
 									$tarea = $tareaTmp[1];
 								else //Si procede
-									$tarea = $tareaTmp[1];
-									//$tarea = $tareaTmp[0];
+									//$tarea = $tareaTmp[1];
+									$tarea = $tareaTmp[0];
 
 								$tareaActual = $tarea['tarea_actual'];
 								$tareaSiguiente = $tarea['tarea_siguiente'];
-								
+
 								$idTramite=$tramite['tramite_id'];
 								$gestion=$this->session->get('currentyear');
 								$lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
+								
+								$obs = $datosJSONInscripcion_decode->observacion;
 								
 								$registroTramite = $this->get('wftramite')->guardarTramiteEnviado(
 									$this->session->get('userId'),										//$usuario,
@@ -1159,7 +1163,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 									$tareaActual,														//$tarea,
 									'institucioneducativa',												//$tabla,
 									$sie,																//$id_tabla,
-									'',//$obs,															//$observacion,
+									$obs,																//$observacion,
 									$varevaluacion,														//$varevaluacion,
 									$idTramite,															//$idtramite,
 									json_encode($datosJSONInscripcion_decode, JSON_UNESCAPED_UNICODE),	//$datos,
@@ -1167,18 +1171,23 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 									$lugarTipo['lugarTipoIdDistrito']									//$lugarTipoDistrito_id?
 								);
 
+								//$registroTramite['dato']=true;
+								//$registroTramite['tipo']='exito';
+
 								if($registroTramite)
 								{
-									if($registroTramite['dato']===true && $registroTramite['tipo']==='exito')
+									if($registroTramite['dato']==true && $registroTramite['tipo']=='exito')
 									{
 										//volvemos a enviar el tramite para finalizarlo
 										$flujoTipo=$tramite['flujo_tipo_id'];
 										
 										$tareaTmp = $this->get('wftramite')->obtieneTarea($tramite['tramite_id'], 'idtramite');
 										if($request_procede==0)//No procede
-											$tarea = $tareaTmp[1];
+											//$tarea = $tareaTmp[1];
+											$tarea = $tareaTmp[0];
 										else //Si procede
 											$tarea = $tareaTmp[0];
+
 
 										$tareaActual = $tarea['tarea_actual'];
 										$tareaSiguiente = $tarea['tarea_siguiente'];
@@ -1186,7 +1195,16 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 										$idTramite=$tramite['tramite_id'];
 										$lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
 
+
+										//No olvidar este paso
+										$recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
+											$this->session->get('userId'),
+											$tareaSiguiente,
+											$idTramite
+										);
+
 										$varevaluacion='SI';
+										$obs = $datosJSONInscripcion_decode->observacion;
 										$registroTramite = $this->get('wftramite')->guardarTramiteEnviado(
 											$this->session->get('userId'),										//$usuario,
 											$this->session->get('roluser'),										//$rol,
@@ -1194,14 +1212,15 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 											$tareaSiguiente,													//$tarea,
 											'institucioneducativa',												//$tabla,?
 											$sie,																//$id_tabla,?
-											'',//$obs,															//$observacion,
-											$varevaluacion,																	//$varevaluacion,
+											$obs,																//$observacion,
+											$varevaluacion,														//$varevaluacion,
 											$idTramite,															//$idtramite,
 											json_encode($datosJSONInscripcion_decode, JSON_UNESCAPED_UNICODE),	//$datos,
 											'',//$lugarTipoLocalidad,											//$lugarTipoLocalidad_id,
 											$lugarTipo['lugarTipoIdDistrito']									//$lugarTipoDistrito_id?
 										);
 
+										//dump($registroTramite);die();
 										$data 	= $registroTramite['idtramite'];
 										$status = 200;
 										$msj 	= $registroTramite['msg'];
@@ -3972,12 +3991,9 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		return $resultado;
 	}
 
-	private function verificarUnaInscripcion($rude,$gestion,$nivel,$grado)
+	private function verificarUnaInscripcion($rude,$gestion,$nivel,$grado,$cantidadPreInscripciones)
 	{
 		$em = $this->getDoctrine()->getManager();
-
-		$gestion = filter_var($gestion);
-		$gestion = is_numeric($gestion)?$gestion:-1;
 
 		$inscripcionValida = true;
 
@@ -3985,8 +4001,10 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		$params = array($rude,$nivel,$grado);
 		$query->execute($params);
 		$dataInscription = $query->fetchAll();
+		
+		$totalInscripciones=count($dataInscription)+$cantidadPreInscripciones;
 
-		if(count($dataInscription)>0)
+		if($totalInscripciones>0)
 			$inscripcionValida=false;
 
 		return $inscripcionValida;
@@ -3996,24 +4014,26 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 	{
 		$form 		= $request->request->all();
 
-		$rude = filter_var($form['register_rude']);
-		$rude = is_numeric($rude)?$rude:-1;
+		$rude = $this->sanitizarCIRude($form['register_rude']);
 
-		$gestion = filter_var($form['register_gestion']);
+		$gestion = filter_var($form['register_gestion'],FILTER_SANITIZE_NUMBER_INT);
 		$gestion = is_numeric($gestion)?$gestion:-1;
 
-		$nivel = filter_var($form['register_nivel']);
+		$nivel = filter_var($form['register_nivel'],FILTER_SANITIZE_NUMBER_INT);
 		$nivel = is_numeric($nivel)?$nivel:-1;
 
-		$grado = filter_var($form['register_grado']);
+		$grado = filter_var($form['register_grado'],FILTER_SANITIZE_NUMBER_INT);
 		$grado = is_numeric($grado)?$grado:-1;
 
+		$cantidadPreInscripciones = filter_var($form['register_inscripciones'],FILTER_SANITIZE_NUMBER_INT);
+		$cantidadPreInscripciones = is_numeric($cantidadPreInscripciones)?$cantidadPreInscripciones:7777777;
+
 		$esValido = true;
-		$esValido = $this->verificarUnaInscripcion($rude,$gestion,$nivel,$grado);
+		$esValido = $this->verificarUnaInscripcion($rude,$gestion,$nivel,$grado,$cantidadPreInscripciones);
 
 		$data 	= NULL;
 		$status = 404;
-		$msj 	= 'No se puede crear la inscripción, puesto que el estudiante ya tiene una inscripción con el grado y nivel seleccionado.';
+		$msj 	= 'No se puede crear la inscripción, puesto que el estudiante ya tiene una inscripción con el grado y nivel seleccionado o excedió la cantidad maxima de '.$this->NRO_MAX_INSCRIPCIONES.' inscripciones.';
 
 		if($esValido)
 		{
@@ -4025,7 +4045,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		{
 			$data 	= NULL;
 			$status = 404;
-			$msj 	= 'No se puede crear la inscripción, puesto que el estudiante ya tiene una inscripción con el grado y nivel seleccionado.';
+			$msj 	= 'No se puede crear la inscripción, puesto que el estudiante ya tiene una inscripción con el grado y nivel seleccionado o excedió la cantidad maxima de '.$this->NRO_MAX_INSCRIPCIONES.' inscripciones.';
 		}
 
 		$response = new JsonResponse($data,$status);

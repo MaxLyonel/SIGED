@@ -328,7 +328,11 @@
 				alert('Solo puede registrar dos inscripciones.');
 				return;
 			}
-			
+			var cantidadInscripciones =_form.find('#register_inscripciones');
+			if(typeof(cantidadInscripciones)!='undefined')
+			{
+				cantidadInscripciones.val(cantidad);
+			}
 			var form=_form.serialize();
 			var _btn_submit='btn-create-inscription';
 			var tbody=$('.tbody-subject-assignment');
