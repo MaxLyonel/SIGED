@@ -647,7 +647,7 @@ class InscriptionRezagoController extends Controller {
         
         // validation if the ue is over 4 operativo
           $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$this->session->get('currentyear'));
-          if($operativo >= 4){
+          if($operativo >= 3){
             $message = 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos';
             $this->addFlash('warningrezago', $message);
             return $this->redirectToRoute('inscription_rezago_index');
@@ -812,7 +812,7 @@ class InscriptionRezagoController extends Controller {
             //save promedios
             //$studentAsignatura = new EstudianteAsignatura();
             //change to the 2020 year set id notaTipo like 5 or 9
-            $idNotaAvg = ($this->session->get('currentyear') == 2020)?9:5;
+            $idNotaAvg = ($this->session->get('currentyear') == 2021)?9:5;
             $userId = $this->session->get('userId');
             reset($materias);
             while ($val = current($materias)) {
