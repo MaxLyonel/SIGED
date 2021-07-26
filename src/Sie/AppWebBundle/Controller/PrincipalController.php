@@ -785,16 +785,26 @@ LIMIT ?';
         $mes=filter_var($request->get('mes'),FILTER_SANITIZE_NUMBER_INT);
 
         $query = 'select * from sp_genera_reporte_modalidad_atencion(?,?,?,?);';
+        $plantillaReporte = 'reporte_modalidad_atencion.html.twig';
+        if($gestion == 2021)
+        {
+            if($mes<=6)
+            {
+                $plantillaReporte = 'reporte_modalidad_atencion_mensual.html.twig';
+                $query = 'select * from sp_genera_reporte_modalidad_atencion_mensual(?,?,?,?);';
+            }
+        }
+
         $stmt = $db->prepare($query);
         $params = array($gestion,$departamento,$distritoTmp,$mes);
         $stmt->execute($params);
         $datosReporte=$stmt->fetchAll();
-        
-        return $this->render($this->sesion->get('pathSystem') . ':Principal:reporte_modalidad_atencion.html.twig', array
+
+        //return $this->render($this->sesion->get('pathSystem') . ':Principal:reporte_modalidad_atencion.html.twig', array
+        return $this->render($this->sesion->get('pathSystem') . ':Principal:'.$plantillaReporte, array
         (
         'datosReporte' => $datosReporte,
         'mes' =>$mes,
-
         'gestion'=>$gestion,
         'departamento'=>$departamento,
         'distrito'=>$distrito,
@@ -817,9 +827,17 @@ LIMIT ?';
         $response->headers->set('Content-type', 'application/xlsx');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'Reporte-modalidades_v1.rptdesign&__format=xlsx&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distritoTmp.'&mes='.$mes));
-        //$response->setContent(file_get_contents('http://127.0.0.1:62395/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-modalidades-atencion\Reporte-modalidades_v1.rptdesign&__format=xlsx'.'&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distritoTmp.'&mes='.$mes));
-        
+        //$excel = file_get_contents('http://127.0.0.1:63020/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-modalidades-atencion\Reporte-modalidades_v1.rptdesign&__format=xlsx'.'&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distritoTmp.'&mes='.$mes);
+        $excel = file_get_contents($this->container->getParameter('urlreportweb') . 'Reporte-modalidades_v1.rptdesign&__format=xlsx&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distritoTmp.'&mes='.$mes);
+        if($gestion == 2021)
+        {
+            if($mes<=6)
+            {
+                //$excel = file_get_contents('http://127.0.0.1:63020/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-modalidades-atencion\Reporte-modalidades-mensual_v1.rptdesign&__format=xlsx'.'&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distritoTmp.'&mes='.$mes);
+                $excel = file_get_contents($this->container->getParameter('urlreportweb') . 'Reporte-modalidades-mensual_v1.rptdesign&__format=xlsx&gestion='.$gestion.'&departamento='.$departamento.'&distrito='.$distritoTmp.'&mes='.$mes);
+            }
+        }
+        $response->setContent($excel);
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
