@@ -585,7 +585,8 @@
 					{
 						var status=data.status;
 						var msg= data.msj;
-
+						var tramite = data.data;
+						var urlReporte =  data.urlReporte;
 						if(status==200)
 						{
 							$('#ci_rude').val('');
@@ -593,13 +594,15 @@
 							{
 								$('.div-response').html('');
 							});
+
 							$('.div-response').fadeIn(function ()
 							{
 								swal({
 								  title: msg,
 								  icon: "success",
 								});
-								$('.div-response').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div>');
+								var reporte = '<a href="'+urlReporte+'" target="_blank" title="Descarga solicitud"><i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> Descarga solicitud</a>';
+								$('.div-response').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'<br>'+reporte+'</div>');
 							});
 						}
 						else

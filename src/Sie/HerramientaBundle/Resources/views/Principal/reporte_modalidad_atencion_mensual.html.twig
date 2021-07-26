@@ -19,11 +19,7 @@
 		      <th scope="col">Departamento</th>
 		      <th scope="col">Distrito</th>
 		      <th scope="col">Institución educativa</th>
-		      <th scope="col" style="font-size:0.9em;">Semana 1</th>
-		      <th scope="col" style="font-size:0.9em;">Semana 2</th>
-		      <th scope="col" style="font-size:0.9em;">Semana 3</th>
-		      <th scope="col" style="font-size:0.9em;">Semana 4</th>
-		      <th scope="col" style="font-size:0.9em;">Semana 5</th>
+		      <th scope="col">Modalidad de atención</th>
 		    </tr>
 		  </thead>
 		  <tbody>
@@ -34,12 +30,7 @@
 			      <td scope="row">{{ dato.des_dep }}</td>
 			      <td scope="row">{{ dato.des_dis }}</td>
 			      <td scope="row">{{ dato.institucioneducativa }}</td>
-			      
-			      <td scope="row">{{ dato.semana1 }}</td>
-			      <td scope="row">{{ dato.semana2 }}</td>
-			      <td scope="row">{{ dato.semana3 }}</td>
-			      <td scope="row">{{ dato.semana4 }}</td>
-			      <td scope="row">{{ dato.semana5 }}</td>
+			      <td scope="row">{{ dato.modalidad_atencion }}</td>
 			    </tr>
 			  	{% endfor %}
 		  	{% else %}

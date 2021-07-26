@@ -76,19 +76,20 @@
 																	<div class="row" style="padding-top:1rem">
 																		<div class="col-xs-12 col-sm-6">
 																			<div class="form-group">
-																				<label class="col-xs-12 col-sm-3 control-label">Paralelo:</label>
+																				<label class="col-xs-12 col-sm-3 control-label">Turno:</label>
 																				<div class="col-xs-12 col-sm-9">
-																					<select name="register_paralelo" id="register_paralelo" class="form-control register-paralelo" autocomplete="false" required>
+																					<select name="register_turno" id="register_turno" class="form-control register-turno" autocomplete="false" required>
+																						<option value="" class="option-turno">Seleccione el turno</option>
 																					</select>
 																				</div>
 																			</div>
 																		</div>
 																		<div class="col-xs-12 col-sm-6">
 																			<div class="form-group">
-																				<label class="col-xs-12 col-sm-3 control-label">Turno:</label>
+																				<label class="col-xs-12 col-sm-3 control-label">Paralelo:</label>
 																				<div class="col-xs-12 col-sm-9">
-																					<select name="register_turno" id="register_turno" class="form-control register-turno" autocomplete="false" required>
-																						<option value="" class="option-turno">Seleccione el turno</option>
+																					<select name="register_paralelo" id="register_paralelo" class="form-control register-paralelo" autocomplete="false" required>
+																						<option value="" class="option-paralelo">Seleccione el paralelo</option>
 																					</select>
 																				</div>
 																			</div>
@@ -110,7 +111,7 @@
 																					</tr>
 																				</thead>
 																				<tbody class="tbody-grades-assignment">
-
+																					<tr><td colspan="7">Seleccione el turno y el paralelo primero</td></tr>
 																				</tbody>
 																			</table>
 																		</div>
@@ -241,12 +242,12 @@
 											}
 										});
 
-										$('.register-paralelo').on('change',function(e)
+										$('.register-turno').on('change',function(e)
 										{
 											var tramite = $(this).attr('data-tramite');
 											var id = $(this).attr('data-id');
-											var paralelo= $(this).val();
-											buscarTurno(id,tramite,paralelo,e);
+											var turno= $(this).val();
+											buscarParalelos(id,tramite,turno,e);
 											/*
 											var tmp=$('.hidden-register-nivel');
 											if(typeof(tmp)!='undefined')
@@ -256,6 +257,25 @@
 											}
 											*/
 										});
+
+										
+										$('.register-paralelo').on('change',function(e)
+										{
+											var tramite = $(this).attr('data-tramite');
+											var id = $(this).attr('data-id');
+											var turno= $('.register-turno').val();
+											var paralelo= $(this).val();
+											buscarMaterias(id,tramite,turno,paralelo,e);
+											/*
+											var tmp=$('.hidden-register-nivel');
+											if(typeof(tmp)!='undefined')
+											{
+												tmp.val('');
+												tmp.val( $(this).children("option:selected").text().trim() );
+											}
+											*/
+										});
+										
 
 										var abrirModal=function(_nombreModal)//codigo repetido se pensara volver en un plantilla
 										{
@@ -398,6 +418,162 @@
 			});
 		}
 
+		var buscarParalelos = function (_id,_tramite,_turno,e)
+		{
+			e.preventDefault();
+			var option_default='<option value="" class="option-paralelo">Seleccione el paralelo</option>';
+			var option_error='<option value="" class="option-paralelo">Acaba de ocurrir un error, por favor vuelva a seleccionar el turno</option>';
+
+			if(_turno.toString().length<=0 || isNaN(_turno))
+			{
+				$('.register-paralelo').html(option_default);
+				return;
+			}
+			var form= new FormData();
+			form.set('id',_id);
+			form.set('tramite',_tramite);
+			form.set('turno',_turno);
+			$.ajax({
+				type:'post',
+				url:"{{path('regularizacion_estudiantesPostBachillerato_getParalelos')}}",
+				data:form,
+				dataType: 'json',
+				processData: false,
+				contentType: false,
+				beforeSend:function(){
+					$('.option-paralelo').html('Buscando paralelos ...');
+				},
+				success:function (data)
+				{
+					try
+					{
+						var tmpData = JSON.parse(data.data);
+						var paralelos = tmpData.paralelos;
+						if(typeof(paralelos)!='undefined')
+						{
+							var option=option_default;
+							$.each(paralelos,function(i, item)
+							{
+								option+="<option value='"+item.id+"'>"+item.paralelo+"</option>";
+							});
+							$('.register-paralelo').html(option);
+						}
+						else
+						{
+							$('.register-paralelo').html(option_error);
+						}
+					}
+					catch(e)
+					{
+						$('.register-paralelo').html(option_error);
+					}
+				},
+				error:function()
+				{
+					$('.register-paralelo').html(option_default);
+					try
+					{
+						var data 	= JSON.parse(xhr.responseText);
+						var msj 	= data.msj;
+						var status 	= data.status;
+						if(status== 404)
+							$('.register-paralelo').html('<option value="" class="option-paralelo">'+data.msj+'</option>');
+						else
+							$('.register-paralelo').html(option_error);
+					}
+					catch(e)
+					{
+						$('.register-paralelo').html(option_error);
+					}
+				}
+			});
+		}
+
+		var buscarMaterias = function (_id,_tramite,_turno,_paralelo,e)
+		{
+			e.preventDefault();
+			var option_default='<tr><td colspan="7">Seleccione el turno y el paralelo primero</td></tr>';
+			var option_error='<tr><td colspan="7">Acaba de ocurrir un error, por favor vuelva a seleccionar el paralelo</td></tr>';
+
+			if(_turno.toString().length<=0 || isNaN(_turno))
+			{
+				alert('Debe seleccionar un turno');
+				return;
+			}
+
+			if(_paralelo.toString().length<=0 || isNaN(_paralelo))
+			{
+				alert('Debe seleccionar un paralelo');
+				return;
+			}
+
+			var form= new FormData();
+			form.set('id',_id);
+			form.set('tramite',_tramite);
+			form.set('turno',_turno);
+			form.set('paralelo',_paralelo);
+			$.ajax({
+				type:'post',
+				url:"{{path('regularizacion_estudiantesPostBachillerato_getMaterias')}}",
+				data:form,
+				dataType: 'json',
+				processData: false,
+				contentType: false,
+				beforeSend:function(){
+					$('.tbody-grades-assignment').html('<tr><td colspan="7">Cargando Materias ...</td></tr>');
+				},
+				success:function (data)
+				{
+					try
+					{
+						var tmpData = JSON.parse(data.data);
+						var materias = tmpData.materias;
+						var inscripcion = tmpData.inscripcion;
+						if(typeof(materias)!='undefined' && typeof(inscripcion)!='undefined')
+						{
+							var gestion 	= inscripcion.gestion;
+							var nivel 		= inscripcion.nivel;
+							var grado 		= inscripcion.grado;
+							
+							if(typeof(gestion)!='undefined' && !isNaN(gestion))
+							{
+								var m = llenarMaterias(materias,'tbody-grades-assignment',_tramite,_id,gestion,nivel,grado);
+							}
+							else
+							{
+								$('.tbody-grades-assignment').html(option_error);
+							}
+						}
+						else
+						{
+							$('.tbody-grades-assignment').html(option_error);
+						}
+					}
+					catch(e)
+					{
+						$('.tbody-grades-assignment').html(option_error);
+					}
+				},
+				error:function()
+				{
+					$('.tbody-grades-assignment').html(option_default);
+					try
+					{
+						var data 	= JSON.parse(xhr.responseText);
+						var msj 	= data.msj;
+						var status 	= data.status;
+						if(status== 404)
+							$('.register-paralelo').html('<tr><td colspan="7">'+data.msj+'</td></tr>');
+						else
+							$('.tbody-grades-assignment').html(option_error);
+					}
+					catch(e)
+					{
+						$('.tbody-grades-assignment').html(option_error);
+					}
+				}
+			});
+		}
 										var llenarDatosInscripcionSiExiste = function(_inscripcion_id)
 										{
 											var inscripcion = $('#request_materias_'+_inscripcion_id);
@@ -411,66 +587,77 @@
 													var paralelo= json.paralelo;
 													var turno = json.turno;
 													var materias =json.materias;
-													if(typeof(paralelo)!='undefined')
-													{
-														var tmp=$('.register-paralelo');
-														if(typeof(tmp)!='undefined')
-														{
-															tmp.val(paralelo).change(function()
-															{
-																if(typeof(turno)!='undefined')
-																{
-																	var tmp=$('.register-turno');
-																	if(typeof(tmp)!='undefined')
-																	{
-																		tmp.val(turno).change();
-																	}
-																}
-															});
-														}
-													}
 													if(typeof(turno)!='undefined')
 													{
 														var tmp=$('.register-turno');
 														if(typeof(tmp)!='undefined')
 														{
-															tmp.val(turno).change();
-														}
-													}
-													if(typeof(materias)!='undefined')
-													{
-														for (var i=0; i<materias.length;i++)
-														{
-															var tmp=materias[i];
-															if(typeof(tmp)!='undefined')
+															tmp.val(turno).change(function()
 															{
-																if(tmp.hasOwnProperty('id'))
+																if(typeof(paralelo)!='undefined')
 																{
-																	var tr = $('.regularizacion-registrar-notas-'+tmp.id);
-																	if(typeof(tr)!='undefined')
+																	let tmp2=$('.register-paralelo');
+																	if(typeof(tmp2)!='undefined')
 																	{
-																		var input = tr.find('td input.register-notas');
-																		if(typeof(input)!='undefined')
-																		{
-																			if(tmp.hasOwnProperty('nota'))
-																			{
-																				var nota=parseInt(tmp.nota);
-																				if(!isNaN(nota))
-																				{
-																					input.val(nota);
-																				}
-																			}
-																		}
+																		tmp2.val(paralelo).change();
 																	}
 																}
-															}
+															});
 														}
 													}
+
+													if(typeof(paralelo)!='undefined')
+													{
+														var tmpP=$('.register-paralelo');
+														if(typeof(tmpP)!='undefined')
+														{
+															tmpP.val(paralelo).change(function ()
+															{
+																llenarNotasEnAsigantura(materias);
+															});
+														}
+													}
+
+													if(typeof(materias)!='undefined')
+													{
+														llenarNotasEnAsigantura(materias);
+													}
+
 												}
 												catch(e)
 												{
 													inscripcion.val('');
 													cambiarEstadoRegistroNota(_inscripcion_id,0);
+												}
+											}
+										}
+
+										var llenarNotasEnAsigantura = function (materias)
+										{
+											for (var i=0; i<materias.length;i++)
+											{
+												var tmp=materias[i];
+												if(typeof(tmp)!='undefined')
+												{
+													if(tmp.hasOwnProperty('id'))
+													{
+														var tr = $('.regularizacion-registrar-notas-'+tmp.id);
+														if(typeof(tr)!='undefined')
+														{
+															var input = tr.find('td input.register-notas');
+															if(typeof(input)!='undefined')
+															{
+																if(tmp.hasOwnProperty('nota'))
+																{
+																	var nota=parseInt(tmp.nota);
+																	if(!isNaN(nota))
+																	{
+																		input.val(nota);
+																	}
+																}
+															}
+														}
+													}
 												}
 											}
 										}
@@ -504,6 +691,7 @@
 												var nivel=$(btn).attr('data-txtNivel');
 												var grado=$(btn).attr('data-txtGrado');
 												var paralelo = $('.register-paralelo');
+												var turno = $('.register-turno');
 												if(typeof(tramite)!='undefined' && typeof(id)!='undefined')
 												{
 													//console.log('tramite: '+tramite);
@@ -514,7 +702,6 @@
 													var paralelos=new Array();
 													var turnos=new Array();
 													var materias=new Array();
-
 
 													var modal=$('.form-register-grade');
 													modal.find('.span-txt-nombre').html(' - '+titulo);
@@ -527,26 +714,31 @@
 														paralelo.attr('data-tramite', tramite);
 														paralelo.attr('data-id', id);
 													}
+													if(typeof(turno)!='undefined')
+													{
+														turno.attr('data-tramite', tramite);
+														turno.attr('data-id', id);
+													}
 													ejecutandoAccion('regularizacion-materias-inscritas-'+id,'btn-register-grade','Procesando ...');
 													try
 													{
 														//verificamos si ya existe un registro de notas de la inscripcion con el ID id, de ser asi lo cargamos
-														getMaterias(form,
+														getDetalleInscripcion(form,
 															function(data)//en caso de exito llamara a esta funcion
 															{
 																//obtenemos los datos
 																datos=JSON.parse(data.data);
-																paralelos	= (datos.paralelos);
-																//turnos		= (datos.turnos);
+																//paralelos	= (datos.paralelos);
 																materias 	= (datos.materias);
+																turnos		= (datos.turnos);
 
 																//llenamos el html con los datos necesatrios
-																var p = llenarSelect(paralelos,'register-paralelo',['id','paralelo']);
-																//var t = llenarSelect(turnos,'register-turno',['id','turno']);
-																var m = llenarMaterias(materias,'tbody-grades-assignment',tramite,id,gestion);
+																//var p = llenarSelect(paralelos,'register-paralelo',['id','paralelo']);
+																var t = llenarSelect(turnos,'register-turno',['id','turno']);
+																//var m = llenarMaterias(materias,'tbody-grades-assignment',tramite,id,gestion);
 
 																ejecutandoAccion('regularizacion-materias-inscritas-'+id,'btn-register-grade','Registrar/actualizar notas');
-																if(p==1 && m==1)
+																if(t==1)
 																{
 																	$('.inscription-id').val(id);
 																	llenarDatosInscripcionSiExiste(id);
@@ -619,7 +811,74 @@
 											return completado;
 										}
 
-										var llenarMaterias = function (_datos,_contendor,_tramite,_idInscripcion,_gestion)
+										var getNotaAprobacionDeMateria = function(_gestion,_nivel,_grado)
+										{
+											var maxNota= -1;
+											if(_gestion && _nivel && _grado)
+											{
+												if(_gestion == 2013)
+												{
+													if(_nivel == 12)
+													{
+														if(_grado == 1)
+														{
+															//$complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
+															maxNota = 51;
+														}
+														else
+														{
+															//$complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+															maxNota = 36;
+														}
+													}
+													else if(_nivel == 13)
+													{
+														if(_grado == 1)
+														{
+															//$complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
+															maxNota = 51;
+														}
+														else
+														{
+															//$complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+															maxNota = 36;
+														}
+													}
+												}
+												else if(_gestion < 2013)
+												{
+													//$complementario = "'(6,7)','(6,7,8)','(9,11)','36'";
+													maxNota = 36;
+												}
+												else if(_gestion > 2013 && _gestion < 2020)
+												{
+													//$complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
+													maxNota = 51;
+												}
+												else if(_gestion == 2020)
+												{
+														if(_nivel == 12)
+														{
+															if(_grado > 1)
+															{
+																//$complementario = "'(6,7)','(6,7,8)','(9)','51'";
+																maxNota = 51;
+															}
+														}
+														else if(_nivel == 13)
+														{
+															if(_grado >= 1)
+															{
+																//$complementario = "'(6,7)','(6,7,8)','(9)','51'";
+																maxNota = 51;
+															}
+														}
+												}
+											}
+											return maxNota;
+										}
+
+										var llenarMaterias = function (_datos,_contendor,_tramite,_idInscripcion,_gestion,_nivel,_grado)
 										{
 											var completado = 0;
 											var tr='';
@@ -628,6 +887,16 @@
 											var lenText=2;
 											var notaAprobacion=36;
 
+											notaAprobacion = getNotaAprobacionDeMateria(_gestion,_nivel,_grado);
+											maxNota = (notaAprobacion==36)?70:100;
+											lenText = maxNota.toString().length;
+
+											if(notaAprobacion==-1)
+											{
+												alert('No existe materias para esta gestión');
+												return completado;
+											}
+											{#
 											if(_gestion==2009 || _gestion<=2010)
 											{
 												maxNota=70;
@@ -645,15 +914,16 @@
 												alert('No existe materias para esta gestión');
 												return completado;
 											}
+											#}
 
 											$.each(_datos,function(i, materia)
 											{
 												var tmp=
-													'<tr class="regularizacion-registrar-notas-'+materia.asignatura_tipo_id+'">\
+													'<tr class="regularizacion-registrar-notas-'+materia.idAsignatura+'">\
 														<th scope="row">'+c+'</th>\
 														<td style="font-size:0.8rem">'+materia.asignatura+'</td>\
 														<td>\
-															<input type="text" class="form-control text-right only-numbers register-notas" name="register_notas['+_idInscripcion+']['+materia.asignatura_tipo_id+']" id="register_notas['+_idInscripcion+']['+materia.asignatura_tipo_id+']" data-materia="'+materia.asignatura+'" maxlength="'+lenText+'" size="'+lenText+'"  data-max="'+maxNota+'"  data-aprobacion="'+notaAprobacion+'" required7>\
+															<input type="text" class="form-control text-right only-numbers register-notas" name="register_notas['+_idInscripcion+']['+materia.idAsignatura+']" id="register_notas['+_idInscripcion+']['+materia.idAsignatura+']" data-materia="'+materia.asignatura+'" maxlength="'+lenText+'" size="'+lenText+'"  data-max="'+maxNota+'"  data-aprobacion="'+notaAprobacion+'" required7>\
 														</td>\
 													</tr>';
 												tr=tr+tmp;
@@ -670,11 +940,11 @@
 											return completado;
 										}
 
-										var getMaterias = function(_form,callback,callbackError)
+										var getDetalleInscripcion = function(_form,callback,callbackError)
 										{
 											$.ajax({
 												type:'POST',
-												url:'{{ url("regularizacion_estudiantesPostBachillerato_getMaterias") }}',
+												url:'{{ url("regularizacion_estudiantesPostBachillerato_getDetalleInscripcion") }}',
 												data:_form,
 												dataType: 'json',
 												processData: false,
@@ -965,6 +1235,9 @@
 													{
 														var status=data.status;
 														var msg= data.msj;
+														var tramite = data.data;
+														var urlReporte =  data.urlReporte;
+														var urlActaSupletoria =  data.urlActaSupletoria;
 
 														if(status==200)
 														{
@@ -978,13 +1251,18 @@
 																  title: msg,
 																  icon: "success",
 																});
-																$('.container-fluid-').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div>');
+															  //$('.container-fluid-').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'</div>');
+																var reporte = '<a href="'+urlReporte+'" target="_blank" title="Descarga evaluación"><i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> Descarga evaluación</a>';
+																var actaSupletoria = '<a href="'+urlActaSupletoria+'" target="_blank" title="Descarga Acta Supletoria"><i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> Descarga Acta Supletoria</a>';
+																$('.container-fluid-').html('<div class="alert alert-success alert-dismissible" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+msg+'<br>'+reporte+'<br>'+actaSupletoria+'</div>');
 															});
+															{#
 															setTimeout(function ()
 															{
 																window.location.href="{{path('wf_tramite_index')}}";
 																//swal.close();
 															},2000);
+															#}
 														}
 														else
 														{
