@@ -4599,8 +4599,8 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 										$adjuntosInformes = $inscripcionesDecode->informes;
 									}
 
-									//$pdf=$this->container->getParameter('urlreportweb') . 'reg_est_cert_cal_solicitud_tramite_acta_supletoria_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
-									$pdf='http://127.0.0.1:63020/viewer/preview?__report=D%3A\workspaces\workspace_especial\Regularizacion_EstudiantesPostBachillerato\reg_est_cert_cal_solicitud_tramite_acta_supletoria_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
+									$pdf=$this->container->getParameter('urlreportweb') . 'reg_est_cert_cal_solicitud_tramite_acta_supletoria_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
+									//$pdf='http://127.0.0.1:63020/viewer/preview?__report=D%3A\workspaces\workspace_especial\Regularizacion_EstudiantesPostBachillerato\reg_est_cert_cal_solicitud_tramite_acta_supletoria_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
 									
 									$status = 200;
 									$arch           = 'ACTA_SUPLETORIA-'.$tramite_id.'-'.$estudiante->getCodigoRude().'.pdf';
@@ -4758,8 +4758,8 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 									$status = 404;
 									if($determinarAprobacionOReprobacionSolicitud==true)
 									{
-										//$pdf=$this->container->getParameter('urlreportweb') . 'reg_est_cert_cal_solicitud_tramite_cert_conclu_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
-										$pdf='http://127.0.0.1:63020/viewer/preview?__report=D%3A\workspaces\workspace_especial\Regularizacion_EstudiantesPostBachillerato\reg_est_cert_cal_solicitud_tramite_cert_conclu_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
+										$pdf=$this->container->getParameter('urlreportweb') . 'reg_est_cert_cal_solicitud_tramite_cert_conclu_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
+										//$pdf='http://127.0.0.1:63020/viewer/preview?__report=D%3A\workspaces\workspace_especial\Regularizacion_EstudiantesPostBachillerato\reg_est_cert_cal_solicitud_tramite_cert_conclu_V1_eea.rptdesign&__format=pdf'.'&tramite_id='.$tramite_id;
 										$status = 200;
 									}
 									$arch           = 'CERTIFICADO_DE_CONCLUSIÓN_DE_ESTUDIOS-'.$tramite_id.'-'.$estudiante->getCodigoRude().'.pdf';
