@@ -1514,6 +1514,7 @@ class TramiteAceleracionController extends Controller
             ->where('inst.id = :idInstitucion')
             ->andWhere('mi.gestionTipo = :gestion')
             ->andWhere('mi.cargoTipo = 1')
+            ->andWhere('mi.esVigenteAdministrativo is true')
             ->setParameter('idInstitucion', $institucioneducativa_id)
             ->setParameter('gestion', $gestion_id)
             ->getQuery()
