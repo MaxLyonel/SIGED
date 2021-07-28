@@ -246,7 +246,7 @@
 			{
 				$.ajax({
 					type:'POST',
-					url:'{{url("regularizacion_estudiantesPostBachillerato_buscarEstudiante")}}',
+					url:'{{path("regularizacion_estudiantesPostBachillerato_buscarEstudiante")}}',
 					data:form,
 					beforeSend:function(){
 						$('.div-response').html('<div class="text-center">Buscando...</div>');
@@ -574,7 +574,7 @@
 
 			$.ajax({
 					type: 'POST',
-					url: '{{url("regularizacion_estudiantesPostBachillerato_postRegistrarHistorial")}}',
+					url: '{{path("regularizacion_estudiantesPostBachillerato_postRegistrarHistorial")}}',
 					data: form,
 					dataType: 'json',
 					contentType: false,

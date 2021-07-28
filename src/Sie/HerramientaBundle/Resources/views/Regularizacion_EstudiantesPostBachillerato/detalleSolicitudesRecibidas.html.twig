@@ -368,7 +368,7 @@
 			var form=_form.serialize();
 			$.ajax({
 				type:'POST',
-				url:'{{url("regularizacion_estudiantesPostBachillerato_buscarEstudiante")}}',
+				url:'{{path("regularizacion_estudiantesPostBachillerato_buscarEstudiante")}}',
 				data:form,
 				beforeSend:function(){
 					$('.div-response').html('<div class="text-center">Buscando...</div>');
@@ -408,7 +408,7 @@
 			deshabilitarElemento(_form,_btn_submit);
 			$.ajax({
 				type:'POST',
-				url:'{{url("regularizacion_estudiantesPostBachillerato_crearInscripcion")}}',
+				url:'{{path("regularizacion_estudiantesPostBachillerato_crearInscripcion")}}',
 				data:form,
 				beforeSend:function(){
 					$('.tbody-subject-assignment').append('<tr class="tmp-tr"><td colspan=10 class="text-center">Cargando datos ...</td></tr>');
@@ -505,7 +505,7 @@
 			deshabilitarElemento(_form,_btn_submit);
 			$.ajax({
 				type:'POST',
-				url:'{{url("regularizacion_estudiantesPostBachillerato_registrarNota")}}',
+				url:'{{path("regularizacion_estudiantesPostBachillerato_registrarNota")}}',
 				data:form,
 				beforeSend:function(){
 					$('.tbody-subject-assignment').append('<tr class="tmp-tr"><td colspan=10 class="text-center">Cargando datos ...</td></tr>');

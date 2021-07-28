@@ -58,8 +58,8 @@
 																		<td>06-05-2019</td>
 																		<td>10-05-2019</td>
 																		<td class="text-center">
-																			<!--<form action="{{url('regularizacion_estudiantesPostBachillerato_postDetalleSolicitudesRecibidasDepartamentalPorConcluir')}}" method="POST" target="_blank">-->
-																			<form action="{{url(form_url)}}" method="POST" target="_blank">
+																			<!--<form action="{{path('regularizacion_estudiantesPostBachillerato_postDetalleSolicitudesRecibidasDepartamentalPorConcluir')}}" method="POST" target="_blank">-->
+																			<form action="{{path(form_url)}}" method="POST" target="_blank">
 																				{% set csrf_token = csrf_token('form-view-detail-'~loop.index) %}
 																				<input type="hidden" name="token" value="{{ csrf_token }}">
 																				<input type="hidden" name="tramite_id" id="tramite_id" value="{{loop.index}}">

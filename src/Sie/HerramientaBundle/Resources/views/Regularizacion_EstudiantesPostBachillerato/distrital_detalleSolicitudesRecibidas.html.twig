@@ -164,7 +164,7 @@
 												$.ajax({
 													type:'POST',
 													//url: Routing.generate('regularizacion_estudiantesPostBachillerato_buscarUE', { sie: val }),
-													url: '{{url("regularizacion_estudiantesPostBachillerato_buscarUE")}}',
+													url: '{{path("regularizacion_estudiantesPostBachillerato_buscarUE")}}',
 													data:form,
 													processData: false,
 													contentType: false,
@@ -215,7 +215,7 @@
 												var tbody = $('.tbody-valid-ue');
 												$.ajax({
 													type:'POST',
-													url: '{{url("regularizacion_estudiantesPostBachillerato_listarUEValidas")}}',
+													url: '{{path("regularizacion_estudiantesPostBachillerato_listarUEValidas")}}',
 													data:form,
 													dataType: 'json',
 													contentType: false,
@@ -343,7 +343,7 @@
 											}
 											$.ajax({
 													type: 'POST',
-													url: '{{url("regularizacion_estudiantesPostBachillerato_postEnviarSolicitudUnidadEducativa")}}',
+													url: '{{path("regularizacion_estudiantesPostBachillerato_postEnviarSolicitudUnidadEducativa")}}',
 													data: form,
 													dataType: 'json',
 													contentType: false,

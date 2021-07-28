@@ -665,7 +665,7 @@
 											var btnTmp = (typeof(btnTxt)!='undefined')?btnTxt.val():'Terminar trámite';
 											$.ajax({
 													type: 'POST',
-													url: '{{url("regularizacion_estudiantesPostBachillerato_postEnviarSolicitudDepartamentalPorConcluir")}}',
+													url: '{{path("regularizacion_estudiantesPostBachillerato_postEnviarSolicitudDepartamentalPorConcluir")}}',
 													data: form,
 													dataType: 'json',
 													contentType: false,
