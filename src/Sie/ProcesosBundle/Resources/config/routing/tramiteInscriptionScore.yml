@@ -92,5 +92,5 @@ tramite_modificacion_calificaciones_acta_imprimir:
     { _controller: SieProcesosBundle:TramiteInscriptionScore:actaImprimir }
 
 tramite_download_inscriptionScore_yearOld:
-    path:     /ficgp/{idStudent}/{sie}/{idTramite}/{codigoRude}/{gestion}
+    path:     /ficgp/{{idTramite}
     defaults: { _controller: SieProcesosBundle:TramiteInscriptionScore:requestInsCalYearOld }  

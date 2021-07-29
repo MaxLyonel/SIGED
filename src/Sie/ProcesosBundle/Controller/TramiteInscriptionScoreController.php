@@ -736,7 +736,7 @@ class TramiteInscriptionScoreController extends Controller{
 
             $sendDataRequest = array(
                 'idTramite'=>$idTramite,
-                'urlreporte'=> $this->generateUrl('tramite_download_inscriptionScore_yearOld', array('idStudent'=>$objStudent->getId(),'sie'=>$sie,'idTramite'=>$idTramite, 'codigoRude'=>$codigoRude, 'gestion'=>$gestion))
+                'urlreporte'=> $this->generateUrl('tramite_download_inscriptionScore_yearOld', array('idTramite'=>$idTramite))
             );
 
             $response->setStatusCode(200);
@@ -2078,16 +2078,16 @@ class TramiteInscriptionScoreController extends Controller{
     }
 
 
-    public function requestInsCalYearOldAction(Request $request, $idStudent,$sie,$idTramite, $codigoRude, $gestion){
+    public function requestInsCalYearOldAction(Request $request,$idTramite){
 
         $response = new Response();
-
-        $codigoQR = 'FICGP'.$idTramite.'|'.$codigoRude.'|'.$sie.'|'.$gestion;
+        $gestion = $this->session->get('currentyear');
+        $codigoQR = 'FICGP'.$idTramite.'|'.$gestion;
 
         $data = $this->session->get('userId').'|'.$gestion.'|'.$idTramite;
         //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
         $response->headers->set('Content-type', 'application/pdf');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$sie.'_'.$this->session->get('currentyear'). '.pdf'));
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$idTramite.'_'.$this->session->get('currentyear'). '.pdf'));
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_regu_ins_pas_calif_V2_eea.rptdesign&tramite_id='.$idTramite.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
