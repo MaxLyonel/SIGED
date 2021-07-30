@@ -7,6 +7,8 @@ use \Symfony\Component\HttpFoundation\Request;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionEliminados;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+
 
 class RemoveInscriptionController extends Controller {
 
@@ -32,7 +34,7 @@ class RemoveInscriptionController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        if (in_array($this->session->get('roluser'), array(7,8.10)) ) {
+        if (!in_array($this->session->get('roluser'), array(8)) ) {
             return $this->redirect($this->generateUrl('login'));
         }
         //set the student and inscriptions data
@@ -46,8 +48,11 @@ class RemoveInscriptionController extends Controller {
             //get the result of search
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
             //verificamos si existe el estudiante y si es menor a 15
+            $gestion = filter_var($form['gestion'],FILTER_SANITIZE_NUMBER_INT);
+            $gestion = is_numeric($gestion)?$gestion:-1;
+
             if ($student) {
-                $dataInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getInscriptionHistoryEstudenWhitObservation($form['codigoRude'], $this->session->get('roluser'));
+                $dataInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getInscriptionHistoryEstudenWhitObservation($form['codigoRude'], $this->session->get('roluser'),$gestion);
             }
             $sw = true;
             //check if the result has some value
@@ -68,9 +73,21 @@ class RemoveInscriptionController extends Controller {
     }
 
     private function craeteformsearch() {
+        $gestionActual=$this->session->get('currentyear');
+        $cantidadGestionPasada = 8;
+        $tmp = range($gestionActual,$gestionActual-$cantidadGestionPasada);
+
+        $gestion= array();
+        foreach ($tmp as $g)
+        {
+            $gestion[$g]=$g;
+        }
+
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('remove_inscription_sie_index'))
                 ->add('codigoRude', 'text', array('label' => 'RUDE', 'attr' => array('class' => 'form-control', 'pattern' => '[A-Za-z0-9\sñÑ]{3,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
+                ->add('gestion', ChoiceType::class, array('label' => 'GESTIÓN', 'attr' => array('class' => 'form-control', 'maxlength' => '8', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase'), 'choices'  =>$gestion ))
+                
                 ->add('buscar', 'submit', array('label' => 'Buscar'))
                 ->getForm();
         return $form;
@@ -101,7 +118,13 @@ class RemoveInscriptionController extends Controller {
     /**
      * Remove the inscription
      */
-    public function removeAction($gestion, $eiid, Request $request) {
+    public function removeAction($gestion, $eiid, Request $request)
+    {
+        if (!in_array($this->session->get('roluser'), array(8)) )
+        {
+            return $this->redirect($this->generateUrl('login'));
+        }
+
         $sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
