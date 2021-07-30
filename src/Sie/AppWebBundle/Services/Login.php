@@ -304,7 +304,7 @@ class Login {
                             a.gestion_tipo_id = '".$gestion."' and
                             (a.cargo_tipo_id = 1 or a.cargo_tipo_id = 12 ) and
                             a.es_vigente_administrativo is true and
-                            b.institucioneducativa_tipo_id = 5 and                 
+                            b.institucioneducativa_tipo_id in (2,5) and                 
                             f.id = 9 and
                             e.esactivo is true
                 ) z";
