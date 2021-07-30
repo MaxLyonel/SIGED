@@ -689,8 +689,13 @@ class EstudianteRepository extends EntityRepository {
      * * HISTORIAL DEL ALUMNO INCLUYENDO OBSERVACIONES
      * * HISTORIAL DEL ALUMNO INCLUYENDO OBSERVACIONES
      */
-    public function getInscriptionHistoryEstudenWhitObservation($rude, $roluser) {
+    public function getInscriptionHistoryEstudenWhitObservation($rude, $roluser,$gestion=null) {
 /**/
+        if($gestion==null)
+        {
+            $gestion= date('Y');
+        }
+
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb
                 ->select('eo.esactivo as obsActivo, ei.id as inscripcionid, oi.observacion as ObsTipoDesc', 'eo.obs as Obs', 'oi.id as idObsTipo', 'eo.id as idObservacion', 'e.id idStudent, n.nivel as nivel', 'g.grado as grado', 'p.paralelo as paralelo', 't.turno as turno', 'em.estadomatricula as estadoMatricula', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'ei.fechaInscripcion', 'i.id as sie', 'i.institucioneducativa','emini.estadomatricula as estadoMatriculaInicio')
@@ -712,10 +717,10 @@ class EstudianteRepository extends EntityRepository {
                 ->andwhere('ei.estadomatriculaTipo IN (:matricula)')
                 //->andwhere('it.id = :ittipo')
                 ->setParameter('rude', $rude)
-                ->setParameter('gestion', 2021)
+                ->setParameter('gestion', $gestion)
                 ;
             if($roluser == 8){
-                $arrMat = array(4,9);
+                $arrMat = array(4,9,5);
             }else{
                 $arrMat = array(9);
             }
