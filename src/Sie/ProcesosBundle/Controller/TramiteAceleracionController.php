@@ -1513,10 +1513,11 @@ class TramiteAceleracionController extends Controller
             ->join('SieAppWebBundle:OrgcurricularTipo', 'orgt', 'WITH', 'inst.orgcurricularTipo = orgt.id')
             ->where('inst.id = :idInstitucion')
             ->andWhere('mi.gestionTipo = :gestion')
-            ->andWhere('mi.cargoTipo = 1')
+            ->andWhere('mi.cargoTipo in (1,12)')
             ->andWhere('mi.esVigenteAdministrativo is true')
             ->setParameter('idInstitucion', $institucioneducativa_id)
             ->setParameter('gestion', $gestion_id)
+            ->orderBy("mi.cargoTipo")
             ->getQuery()
             ->getSingleResult();
         $queryEstudiante = $em->getRepository('SieAppWebBundle:Estudiante')->createQueryBuilder('est')
