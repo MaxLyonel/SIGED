@@ -1517,7 +1517,6 @@ class TramiteAceleracionController extends Controller
             ->andWhere('mi.esVigenteAdministrativo is true')
             ->setParameter('idInstitucion', $institucioneducativa_id)
             ->setParameter('gestion', $gestion_id)
-            ->orderBy("mi.cargoTipo")
             ->getQuery()
             ->getSingleResult();
         $queryEstudiante = $em->getRepository('SieAppWebBundle:Estudiante')->createQueryBuilder('est')
