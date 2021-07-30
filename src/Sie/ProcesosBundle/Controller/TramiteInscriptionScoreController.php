@@ -161,7 +161,7 @@ class TramiteInscriptionScoreController extends Controller{
         foreach ($inscripciones as $key => $value) {
             $inscripcionesArray[] = array(
                 'idInscripcion'=>$value['id'],
-                'sie'=>$value['sie'],
+                'sie'=>$this->session->get('ie_id'),
                 'institucioneducativa'=>$value['institucioneducativa'],
                 'gestion'=>$value['gestion'],
                 'nivel'=>$value['nivel'],
