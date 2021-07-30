@@ -103,11 +103,11 @@ class TrasladoController extends Controller {
                     ->leftjoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
                     ->where('ei.estudiante = :id')
                     ->andwhere('iec.gestionTipo = :gestion')
-                    ->andwhere('ei.estadomatriculaTipo = :matricula')
+                    ->andwhere('ei.estadomatriculaTipo IN (:matricula) ')
                     ->andWhere('it = :idTipo')
                     ->setParameter('id', $entities->getId())
                     ->setParameter('gestion', $this->session->get('currentyear'))
-                    ->setParameter('matricula', '4')
+                    ->setParameter('matricula', array(4,101))
                     ->setParameter('idTipo', 1)
                     ->getQuery();
             $inscriptionOfStudent = $query->getResult();
@@ -186,11 +186,11 @@ class TrasladoController extends Controller {
                     ->leftjoin('SieAppWebBundle:InstitucioneducativaTipo', 'it', 'WITH', 'i.institucioneducativaTipo = it.id')
                     ->where('iec.gestionTipo = :gestion')
                     ->andwhere('ei.estudiante = :id')
-                    ->andwhere('ei.estadomatriculaTipo = :mat')
+                    ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                     ->andWhere('it = :idTipo')
                     ->setParameter('gestion', $this->session->get('currentyear'))
                     ->setParameter('id', $entities->getId())
-                    ->setParameter('mat', 4)
+                    ->setParameter('mat', array(4,101))
                     ->setParameter('idTipo',1)
                     ->getQuery();
             $objLastUe = $query->getResult();
@@ -657,11 +657,11 @@ class TrasladoController extends Controller {
                 ->where('e.codigoRude = :id')
                 ->andwhere('iec.gestionTipo = :gestion')
                 ->andWhere('it = :idTipo')
-                ->andwhere('ei.estadomatriculaTipo = :mat')
+                ->andwhere('ei.estadomatriculaTipo IN (:mat)')
                 ->setParameter('id', $id)
                 ->setParameter('gestion', $this->session->get('currentyear'))
                 ->setParameter('idTipo',1)
-                ->setParameter('mat', 4)
+                ->setParameter('mat', array(4,101))
                 ->orderBy('ei.fechaInscripcion', 'ASC')
                 ->getQuery();
         try {
