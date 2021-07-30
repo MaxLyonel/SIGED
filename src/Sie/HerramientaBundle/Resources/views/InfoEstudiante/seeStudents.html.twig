@@ -311,12 +311,12 @@
                                    {% endif %}                                    
 
 
-                                    {#by krlos notas 28.05.2021#}
+                                    {#by krlos notas 28.05.2021 commented 30.07.21
                                     {% if swRegisterCalifications %}
                                         {% if imprimirLibreta == false %}
                                             {% if gestion >= 2021 and data.estadomatriculaId in [4] %}
 
-                                                {% if gestion >= 2021 and nivel == 13 and grado >= 5 and app.session.get('acceso_total') and app.session.get('ue_modular') == false %}
+                                                {% if gestion >= 2021 and nivel == 13 and grado >= 5 and app.session.get('acceso_total') %}
                                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                                         <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                             <i class="fa fa-list"></i>
@@ -335,7 +335,7 @@
                                             {% endif %}
                                         {% endif %}
                                     {% endif %}
-
+                                    #}
                                     {# Esto es para las unidades educativas que son Guanawek en la gestion 2020 #}
                                     {% if app.session.get('esGuanawek') and app.session.get('esGuanawek')==1 %}
                                             {% if gestion > 2019 and nivel == 13 and grado >= 5 %}
