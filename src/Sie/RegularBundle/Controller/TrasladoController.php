@@ -96,7 +96,7 @@ class TrasladoController extends Controller {
 //            ));
             $inscription2 = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
             $query = $inscription2->createQueryBuilder('ei')
-                    ->select('IDENTITY(iec.nivelTipo) as nivelTipo,IDENTITY(iec.gradoTipo) as gradoTipo,IDENTITY(iec.paraleloTipo) as paraleloTipo,
+                    ->select('IDENTITY(iec.nivelTipo) as nivelTipo,IDENTITY(iec.gradoTipo) as gradoTipo,IDENTITY(iec.paraleloTipo) as paraleloTipo, IDENTITY(ei.estadomatriculaTipo) as matriculaId,
                       IDENTITY(iec.turnoTipo) as turnoTipo, ei.id as studentInscrId, IDENTITY(iec.institucioneducativa) as institucioneducativa')
                     ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso=iec.id')
                     ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
@@ -130,8 +130,7 @@ class TrasladoController extends Controller {
                                                                                                     $inscriptionOfStudent[0]['turnoTipo'],                                                                                                    $this->session->get('currentyear'),
                                                                                                     $inscriptionOfStudent[0]['institucioneducativa']);
 
-
-          if($inscriptionOfStudent[0]['nivelTipo']==11 || $inscriptionOfStudent[0]['nivelTipo']==1){
+          if($inscriptionOfStudent[0]['nivelTipo']==11 || $inscriptionOfStudent[0]['nivelTipo']==1 || in_array($inscriptionOfStudent[0]['matriculaId'], array(101))){
               // reset($objNota);
               // while ($val = current($objNota)) {
               //   if($val['notaCualitativa']){
