@@ -39,8 +39,8 @@
                 		<td><span class="label label-{% if registro.bim1 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim1}}</span></td>
                 		<td><span class="label label-{% if registro.bim2 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim2}}</span></td>
                 		<td><span class="label label-{% if registro.bim3 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim3}}</span></td>
-                        	<td>-
-                            	{#<a href="{{path('herramienta_infoconsolidation_enabledOpe',{'sie': registro.codigo_sie})}}" class="btn btn-xs btn-warning" onclick="return confirm('¿Está segura/o de restablecer el registro?');"><i class="fa fa-fw fa-edit"></i> Restablecer</a>#}
+                        	<td>
+                            	<a href="{{path('herramienta_infoconsolidation_enabledOpe',{'sie': registro.codigo_sie})}}" class="btn btn-xs btn-warning" onclick="return confirm('¿Está segura/o de restablecer el registro?');"><i class="fa fa-fw fa-edit"></i> Restablecer</a>
                         	</td>
                 	</tr>
                 {% endfor %}
