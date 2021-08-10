@@ -156,7 +156,7 @@ class TramiteInscriptionScoreController extends Controller{
         //     $response->setData('No tiene tuición sobre el estudiante');
         //     return $response;   
         // }
-
+/*
         $inscripcionesArray = [];
         foreach ($inscripciones as $key => $value) {
             $inscripcionesArray[] = array(
@@ -176,6 +176,41 @@ class TramiteInscriptionScoreController extends Controller{
                 // 'ruta'=>$this->generateUrl('tramite_modificacion_calificaciones_formulario', array('flujoTipo'=>$flujoTipo,'idInscripcion'=>$value['id']))
             );
         }
+*/
+        $queryUbication = "select    
+                        d.id as sie,
+                        d.institucioneducativa as nombreUE,
+                        substring(f.codigo,1,1) as departamento,
+                        f.lugar as distrito,
+                        e.zona  || ' - ' || e.direccion as direccion,
+                        g.obs_cerrada                        
+                        from  institucioneducativa d
+                        inner join jurisdiccion_geografica e on d.le_juridicciongeografica_id=e.id
+                        inner join lugar_tipo f on e.lugar_tipo_id_distrito=f.id
+                        INNER JOIN estadoinstitucion_tipo g on     d.estadoinstitucion_tipo_id=g.id
+                        where d.id='".$sie."'";
+                        
+
+        $query = $em->getConnection()->prepare($queryUbication);        
+        $query->execute();
+        $dataUbication = $query->fetchAll();
+        
+        $inscripcionesArray[] = array(
+                'idInscripcion'=>'',
+                'sie'=>$this->session->get('ie_id'),
+                'institucioneducativa'=>$dataUbication[0]['nombreue'],
+                'gestion'=>'',
+                'nivel'=>'',
+                'grado'=>'',
+                'paralelo'=>'',
+                'turno'=>'',
+                'estadomatricula'=>'',
+                'estadomatriculaId'=>'',
+                'idNivel'=>'',
+                'departamento'=>$em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($dataUbication[0]['departamento'])->getDepartamento(),
+                'distrito'=>$dataUbication[0]['distrito']
+                // 'ruta'=>$this->generateUrl('tramite_modificacion_calificaciones_formulario', array('flujoTipo'=>$flujoTipo,'idInscripcion'=>$value['id']))
+            );        
 
         // OBTENEMOS EL DATO DEL DIRECTOR
         $user = $this->container->get('security.context')->getToken()->getUser();
