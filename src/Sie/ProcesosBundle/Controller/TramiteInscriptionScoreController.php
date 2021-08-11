@@ -493,8 +493,12 @@ class TramiteInscriptionScoreController extends Controller{
                             ->innerJoin('SieAppWebBundle:DistritoTipo','dt','with','jg.distritoTipo = dt.id')
                             ->innerJoin('SieAppWebBundle:DepartamentoTipo','dep','with','dt.departamentoTipo = dep.id')
                             ->where('e.codigoRude = :rude')
+                            ->andwhere('ie.institucioneducativaTipo = :tipoUE')
+                            ->andwhere('ei.estadomatriculaTipo = :matriculaId')
                             // ->andWhere('ie.id = :sie')
                             ->setParameter('rude', $codigoRude)
+                            ->setParameter('tipoUE', 1)
+                            ->setParameter('matriculaId', 5)
                             // ->setParameter('sie', $sie)
                             ->addOrderBy('get.id','DESC')
                             ->addOrderBy('nt.id','DESC')
@@ -509,6 +513,7 @@ class TramiteInscriptionScoreController extends Controller{
             }
             next($inscripciones);
         } 
+
         if(!$swhasInscription){
          $datos =array(
               "cuantitativas" => '',
