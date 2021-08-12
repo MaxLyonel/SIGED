@@ -121,6 +121,15 @@
                                                 </button>
                                             </div>
                                         {% endif %}
+                                        {#
+                                        {% if gestion == 2021 and true %}
+                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registre Apoderado">
+                                                <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="RegisterParents({{data.estInsId}});" >
+                                                    <i class="fa fa-user"></i>
+                                                </button>
+                                            </div>
+                                        {% endif %}                                          
+                                        #}
                                         {# APODERADO BONO FAMILIA #}
                                         {# {% if gestion == 2020 and true %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado Bono Familia">
@@ -200,7 +209,6 @@
             }
         });
     };
-
     var getNotas = function (idInscripcionEspecial) {
         $.ajax({
             type: 'post',

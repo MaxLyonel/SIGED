@@ -519,7 +519,28 @@
 
 
       };
+    var RegisterParents = function(idInscripcion){
+     $.ajax({
+         type: 'post',
+         data: ({idInscripcion: idInscripcion }),
+         url: "{{ path('special_registerparents_index') }}",
+         beforeSend: function () {
+             $('#modal').empty();
+         },
+         success: function (data) {
+             $('#modal').empty();
+             $('#modal').append(data);
+         },
+         statusCode: {
+             500: function () {
 
+             },
+             404: function () {
+
+             }
+         }
+     });
+   }; 
 
     </script>
 {%endblock%}
