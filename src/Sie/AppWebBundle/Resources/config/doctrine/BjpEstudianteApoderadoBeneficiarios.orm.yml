@@ -1,0 +1,193 @@
+Sie\AppWebBundle\Entity\BjpEstudianteApoderadoBeneficiarios:
+    type: entity
+    table: bjp_estudiante_apoderado_beneficiarios
+    indexes:
+        IDX_F99912EEC861DD7C:
+            columns:
+                - apoderado_tipo_id
+    uniqueConstraints:
+        uq_apoderado_inscripcion3_bjp:
+            columns:
+                - codigo_rude
+        uq_apoderado_inscripcion2_bjp:
+            columns:
+                - persona_id
+                - estudiante_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        institucioneducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        nivelTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nivel_tipo_id
+        gradoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: grado_tipo_id
+        paraleloTipoId:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+            column: paralelo_tipo_id
+        turnoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: turno_tipo_id
+        estudianteInscripcionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estudiante_inscripcion_id
+        estudianteId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: estudiante_id
+        codigoRude:
+            type: string
+            nullable: false
+            length: 18
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        carnetEst:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: carnet_est
+        complementoEst:
+            type: string
+            nullable: false
+            length: 2
+            fixed: false
+            comment: ''
+            default: ''
+            column: complemento_est
+        paternoEst:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: paterno_est
+        maternoEst:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: materno_est
+        nombreEst:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: nombre_est
+        fechaNacimientoEst:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_nacimiento_est
+        personaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: persona_id
+        carnetTut:
+            type: string
+            nullable: false
+            length: 15
+            fixed: false
+            comment: ''
+            default: '0'
+            column: carnet_tut
+        complementoTut:
+            type: string
+            nullable: false
+            length: 2
+            fixed: false
+            comment: ''
+            default: ''
+            column: complemento_tut
+        paternoTut:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+            column: paterno_tut
+        maternoTut:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+            column: materno_tut
+        nombreTut:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+            column: nombre_tut
+        segipIdTut:
+            type: smallint
+            nullable: false
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: segip_id_tut
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaActualizacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_actualizacion
+        observacion:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+    manyToOne:
+        apoderadoTipo:
+            targetEntity: ApoderadoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                apoderado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
