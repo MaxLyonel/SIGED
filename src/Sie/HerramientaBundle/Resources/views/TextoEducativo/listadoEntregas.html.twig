@@ -1,0 +1,53 @@
+
+							{% if listadoEntregas|length>0 %}
+							<div class="row" style="padding:1rem">
+								<div class="col-sm-12" style="padding:0;">
+									<a href="{{path('herramienta_textoEducativo_generarReporte',{sie:sie,gestion:gestion})}}" target="_blank" title="Descargue el Reporte de Entrega de Textos Educativos una vez que hayan sido registrados TODOS los cursos">
+										<i class="fa fa-file-pdf-o fa-3x text-danger" aria-hidden="true"></i> 
+										Descargar Reporte</a>
+								</div>
+								<div class="col-sm-12" style="padding:0;font-size:11px">
+									<mark class="small-text">Descargue el Reporte de Entrega de Textos Educativos una vez que hayan sido registrados <b>TODOS</b> los cursos.</mark>
+								</div>
+							</div>
+							{% endif %}
+
+							<table class="table table-striped table-condensed">
+							  <thead>
+								<tr>
+
+								  <th scope="col">#</th>
+								  <th scope="col">{{tipoPeriodo}}</th>
+								  <th scope="col">Recibido</th>
+								  <th scope="col">Estudiantes</th>
+								  <th scope="col">Textos</th>
+								  <th scope="col">Dif.</th>
+								  <th scope="col">Recepción</th>
+								  <th scope="col">Obs.</th>
+								  <th scope="col"></th>
+								</tr>
+							  </thead>
+							  <tbody>
+							  	{% for i in listadoEntregas %}
+							  	{% set diferencia  = i.cantidad -estudiantes|length %}
+							  	{% set recibido  = (i.recibido==1)?'Si':'No' %}
+							  	{% set fechaEntrega  = (i.fechaEntrega)?i.fechaEntrega|date('d/m/Y'):'' %}
+
+								<tr class='tr-texto-educativo-{{i.id}}'>
+
+								  <th scope="row">{{loop.index}}</th>
+								  <td>{{i.trimestreSemestre}}</td>
+								  <td>{{recibido}}</td>
+								  <td>{{estudiantes|length}}</td>
+								  <td>{{i.cantidad}}</td>
+								  <td>{{diferencia}} </td>
+								  <td>{{fechaEntrega}}</td>
+								  <td>{{i.observacion}}</td>
+								  <td class="text-center">
+									<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="Eliminar" onclick="deleteEntregaTextoEducativo({{i.id}})"><i class="fa fa-trash fa-2x fg-danger"></i></a>
+								  </td>
+								  
+								</tr>
+							  	{% endfor %}
+							  </tbody>
+							</table>

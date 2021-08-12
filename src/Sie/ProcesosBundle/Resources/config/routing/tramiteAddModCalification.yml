@@ -58,5 +58,5 @@ tramite_add_mod_cal_acta_imprimir:
     defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:actaImprimir }
 
 tramite_add_mod_download_requet:
-    path:     /famcgp/{idStudent}/{sie}/{idTramite}/{codigoRude}/{gestion}
+    path:     /famcgp/{idTramite}
     defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:requestInsCalYearOld }  

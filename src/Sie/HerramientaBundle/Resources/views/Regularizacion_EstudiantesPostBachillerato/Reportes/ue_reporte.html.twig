@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SIGED | Herramienta web</title>
+		<style type="text/css">
+			.header-th
+			{
+				background-color:grey;
+				color:white;
+			}
+			.text-td
+			{
+				border:1px solid grey;
+			}
+			.center
+			{
+				text-align: center;
+			}
+			.upper
+			{
+				text-transform:uppercase !important;
+			}
+			.left
+			{
+				text-align: left;
+			}
+			.right
+			{
+				text-align: right;
+			}
+			.text-12
+			{
+				font-size: 12px !import;
+			}
+			table.table-12 tr td
+			{
+				font-size: 11px !import;
+			}
+		</style>
+	</head>
+	<body>
+			<table  width="100%" cellspacing="0" cellpadding="0" border="0" class="table-12">
+				<thead>
+					<tr>
+						<th class="center">
+							<img src="{{asset('img/escudoDeBoliviaReporte.png')}}" width="100px">
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="center">Estado Plurinacional de Bolivia</td>
+					</tr>
+					<tr>
+						<td class="center">Ministerio de Educación</td>
+					</tr>
+					<tr >
+						<td class="center" >
+							<h2>Evaluación al solicitante</h2>
+						</td>
+					</tr>
+					<tr>
+						<td class="right">
+							Trámite: <b>{{tramite}}</b>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<br>
+			<br>
+			
+			<table  width="100%" cellspacing="0" cellpadding="6" border="1" class="table-12">
+				<thead>
+					<tr>
+						<th colspan="3">Datos del Estudiante</th>
+					</tr>
+				</thead>
+				<tbody>
+				  <tr>
+				    <th scope="row" width="20%" class="header-th">CÓDIGO RUDE:</th>
+				    <td width="25%">{{estudiante.codigoRude}} </td>
+				    <th scope="row" width="20%" class="header-th">NOMBRE:</th>
+				    <td width="35%">{{estudiante.nombre}}</td>
+				  </tr>
+				  <tr>
+				    <th scope="row" width="25%" class="header-th">APELLIDO PATERNO:</th>
+				    <td width="25%">{{estudiante.paterno}}</td>
+				    <th scope="row" width="25%" class="header-th">APELLIDO MATERNO:</th>
+				    <td width="25%">{{estudiante.materno}}</td>
+				  </tr>
+				  <tr>
+				    <th scope="row" width="25%" class="header-th">C.I:</th>
+				    <td width="25%">{{estudiante.carnetIdentidad}} {{estudiante.complemento}}</td>
+				    <th scope="row" width="25%" class="header-th" style="font-size:13px !important;">FECHA DE NACIMIENTO:</th>
+				    <td width="25%">{{estudiante.fechaNacimiento|date('d/m/Y')}}</td>
+				  </tr>
+				</tbody>
+			</table>
+			
+			<br>
+			<br>
+			{% if institucioneducativa %}
+			<table  width="100%" cellspacing="0" cellpadding="6" border="1" class="table-12">
+				<thead>
+					<tr>
+						<th colspan="3">Datos de la Unidad Educativa</th>
+					</tr>
+				</thead>
+				<tbody>
+				  <tr>
+				    <th scope="row" width="15%" class="header-th">CÓDIGO SIE:</th>
+				    <td width="15%">{{institucioneducativa.id}}</td>
+				    <th scope="row" width="20%" class="header-th" style="font-size:10px !important;">NOMBRE DE LA UNIDAD EDUCATIVA:</th>
+				    <td width="50%">{{institucioneducativa.institucioneducativa}} </td>
+				  </tr>
+				</tbody>
+			</table>
+			{% endif %}
+
+			<br>
+			<br>
+			{% set materias  = [] %}
+			<table width="100%" cellspacing="0" cellpadding="4" border="1" class="table-12">
+				<thead>
+					<tr>
+						<th colspan="5">Datos de la Inscripción</th>
+					</tr>
+				</thead>
+			</table>
+			<table width="100%" cellspacing="0" cellpadding="4" border="0" class="table-12">
+				<tbody>
+					<tr>
+						<th style="background-color:grey; color:white;" width="5%">#</th>
+						<th style="background-color:grey; color:white;" width="20%">INSCRIPCIÓN</th>
+						<th style="background-color:grey; color:white;" width="15%">GESTIÓN</th>
+						<th style="background-color:grey; color:white;" width="45%">NIVEL</th>
+						<th style="background-color:grey; color:white;" width="15%">GRADO</th>
+					</tr>
+					{% if tablaInscripciones %}
+						{% for m in tablaInscripciones %}
+						{% set primeraColumna = '5%' %}
+						{% set segundaColumna = '20%' %}
+						{% set terceraColumna = '15%' %}
+						{% set cuartaColumna =  '45%' %}
+						{% set quintaColumna =  '15%' %}
+						<tr class="regularizacion-materias-inscritas-{{loop.index}}">
+							<th scope="row" width="{{primeraColumna}}">{{loop.index}}</th>
+							<td width="{{segundaColumna}}">Inscripción {{loop.index}}</td>
+							<td width="{{terceraColumna}}">{{m.gestion}}</td>
+							<td width="{{cuartaColumna}}">{{m.nivel}}</td>
+							<td width="{{quintaColumna}}">{{m.grado}}</td>
+							{% set materias = materias|merge([m|json_encode]) %}
+							<!--<td><button type="button" class="btn btn-primary yearOld btn-sm btn-register-grade" data-id="{{m.id}}" data-tramite="{{tramite}}" data-inscripciones="{{m|json_encode}}" onclick="abrirModalVerCalificaciones(this)">Ver notas</button></td>-->
+						</tr>
+						
+						<tr>
+							<td colspan="5"></td>
+						</tr>
+
+						{% set materiaTmp = m %}
+						<tr>
+							<td colspan="5">
+								<table  width="100%" cellspacing="0" cellpadding="6" border="1" class="table-12">
+									<tbody>
+									  <tr>
+									    <th scope="row" width="25%" class="header-th">TURNO:</th>
+									    <td width="25%">{{materiaTmp.turno}} </td>
+									    <th scope="row" width="25%" class="header-th">PARALELO:</th>
+									    <td width="25%">{{materiaTmp.paralelo}}</td>
+									  </tr>
+									  <tr>
+									  </tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+
+						<tr>
+							<td colspan="5"></td>
+						</tr>
+
+						<tr>
+							<td colspan="5">
+							<table width="100%" cellspacing="0" cellpadding="4" border="1" class="table-12 table-sm">
+								<thead>
+									<tr>
+									  <th scope="row" width="85%" class="header-th">ASIGNATURA</th>
+									  <th scope="row" width="15%" class="header-th center">CALIFICACIÓN</th>
+									  
+									</tr>
+								</thead>
+								<tbody>
+									{% for j in materiaTmp.materias %}
+									<tr>
+										<td width="85%">{{j.nombre}}</td>
+										<td width="15%" class="right">{{j.nota}}</td>
+										
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="5"></td>
+						</tr>
+
+						<table  width="100%" cellspacing="0" cellpadding="6" border="1" class="table-12">
+							<thead>
+								<tr>
+									<th colspan="3">Datos de la Evaluación - Inscripción {{loop.index}}</th>
+								</tr>
+							</thead>
+							<tbody>
+							  <tr>
+							    <th scope="row" width="25%" class="header-th" style="font-size:11px !important;">FECHA DE INICIO:</th>
+							    <td width="25%">......../......../................</td>
+							    <th scope="row" width="25%" class="header-th" style="font-size:11px !important;">FECHA DE FINALIZACIÓN</th>
+							    <td width="25%">......../......../................</td>
+							  </tr>
+							  <tr>
+							    <th scope="row" width="40%" class="header-th">ESTADO: <span style="font-size:8px;">(*) El Evaluado APROBO/REPROBO</span></th>
+							    <td width="60%">{#(m.estado_aprobacion)?'APROBO':'REPROBO'#}</td>
+							  </tr>
+							</tbody>
+						</table>
+
+						<tr>
+							<td colspan="5"><br></td>
+						</tr>
+
+
+						{% endfor %}
+
+					{% else %}
+						<tr><td colspan="6">No existen datos de inscripciones</td></tr>
+					{% endif %}
+				</tbody>
+			</table>
+			
+			<br>
+			<br>
+			
+			{% for i in 0..12 %}<br>{% endfor %}
+			<table  width="100%" cellspacing="0" cellpadding="0" border="0" class="table-12">
+				<tbody>
+					<tr>
+						<td width="33%" >{% for i in 0..70 %}.{% endfor %}</td>
+						<td width="33%" >{% for i in 0..70 %}.{% endfor %}</td>
+						<td width="33%" >{% for i in 0..70 %}.{% endfor %}</td>
+					</tr>
+					<tr>
+						<td width="33%" >
+							Directora(o) de la Unidad Educativa
+						</td>
+						<td width="33%" >
+							Representante de la Comisión Técnica Pedagógica de la Unidad Educativa
+						</td>
+						<td width="33%" >
+							Madre, Padre de familia, apoderado, tutor del Estudiante o Solicitante
+						</td>
+					</tr>
+					<tr>
+						<td>Nombre:</td>
+						<td>Nombre:</td>
+						<td>Nombre:</td>
+					</tr>
+					<tr>
+						<td>C.I.:</td>
+						<td>C.I.:</td>
+						<td>C.I.:</td>
+					</tr>
+					<tr>
+						<td class="center">Sello y firma</td>
+						<td class="center">Sello y firma</td>
+						<td class="center">Firma</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<br><br>
+			<table  width="100%" cellspacing="0" cellpadding="0" border="0" class="table-12">
+				<tbody>
+					<tr>
+						<td width="80%" align="top" >  </td>
+						<td width="20%" class="right" rowspan="6">
+							<img src="@{{codigoQR}}" width="100px">
+						</td>
+					</tr>
+					{% for i in 1..4 %}
+					<tr><td></td></tr>
+					{% endfor %}
+					<tr>
+						<td> Lugar: {% for i in 0..113 %}.{% endfor %} y Fecha:......../......../................ </td>
+					</tr>
+				</tbody>
+			</table>
+
+	</body>
+
+</html>

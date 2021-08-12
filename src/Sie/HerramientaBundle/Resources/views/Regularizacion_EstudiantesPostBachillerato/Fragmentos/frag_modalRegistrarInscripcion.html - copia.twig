@@ -1,0 +1,88 @@
+	<!--Modal registrar inscripción-->
+	<div class="modal fade" id="modal-create-inscription" tabindex="-1" role="dialog" aria-labelledby="modal-crear-inscripcion">
+		<form action="#" method="POST" class="form-create-inscription">
+			<input type="hidden" name="token" value="{{ csrf_token('form-create-inscription') }}">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="modal-crear-inscripcion">Registrar inscripción</h4>
+					</div>
+					
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-xs-12">
+								<div class="row" style="padding-top:1rem">
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">Gestión:</label>
+											<div class="col-xs-12 col-sm-9">
+												<select name="register_gestion" id="register_gestion" class="form-control" required>
+													<option></option>
+													{% for y in range(2020,2009) %}
+													<option value="{{y}}">{{y}}</option>
+													{% endfor %}
+												</select>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">SIE:</label>
+											<div class="col-xs-12 col-sm-9">
+												<input type="text" class="form-control" name="register_sie" id="register_sie" required>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="row" style="padding-top:1rem">
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">Nivel:</label>
+											<div class="col-xs-12 col-sm-9">
+												<input type="text" class="form-control" name="register_nivel" id="register_nivel" required>
+											</div>
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">Grado:</label>
+											<div class="col-xs-12 col-sm-9">
+												<input type="text" class="form-control" name="register_grado" id="register_grado" required>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="row" style="padding-top:1rem">
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">Paralelo:</label>
+											<div class="col-xs-12 col-sm-9">
+												<input type="text" class="form-control" name="register_paralelo" id="register_paralelo" required>
+											</div>
+										</div>
+									</div>
+
+									<div class="col-xs-12 col-sm-6">
+										<div class="form-group">
+											<label class="col-xs-12 col-sm-3 control-label">Turno:</label>
+											<div class="col-xs-12 col-sm-9">
+												<input type="text" class="form-control" name="register_turno" id="register_turno" required>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+						<button type="submit" class="btn btn-success btn-create-inscription">Registrar</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>

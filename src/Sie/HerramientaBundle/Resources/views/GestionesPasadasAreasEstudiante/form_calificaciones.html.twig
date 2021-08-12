@@ -1,3 +1,4 @@
+{% set conEspecialidad = 0 %}
 <form id="formCalificaciones" name="formCalificaciones" style="background: #BDD6E5;">
     <input type="hidden" name="areaid" value="{{areaid}}" />
     <input type="hidden" name="inscripcionid" value="{{inscripcionid}}" />
@@ -6,21 +7,26 @@
             {% if tiene_especialidad %}
                 <h4>Especialidad: {{especialidadEstudiante.especialidadTecnicoHumanisticoTipo.especialidad}}</h4>
             {% else %}
-                <div class="form-group">
-                    <label for="especialidades" class="col-md-4 col-md-offset-2 control-label text-right"><strong>Seleccionar Especialidad:</strong></label>
-                    <div class="col-md-4">
-                        {% if especialidades %}
-                            <select id="especialidades" name="especialidades" class="form-control">
-                                <option value="0">Seleccionar...</option>
-                                {% for especialidad in especialidades %}
-                                    <option value="{{especialidad.iethId}}">{{especialidad.especialidad}}</option>
-                                {% endfor %}
-                            </select>
-                        {% else %}
-                            <input type="hidden" id="especialidades" name="especialidades" value="0" />
-                        {% endif %}
+                {% if esSexto %}
+                    <h5 class="text-danger">La/El estdudiante no cuenta con especialidad registrada en la gestión anterior</h5>
+                {% else %}
+                    <div class="form-group">
+                        <label for="especialidades" class="col-md-4 col-md-offset-2 control-label text-right"><strong>Seleccionar Especialidad:</strong></label>
+                        <div class="col-md-4">
+                            {% if especialidades %}
+                                {% set conEspecialidad = 1 %}
+                                <select id="especialidades" name="especialidades" class="form-control">
+                                    <option value="0">Seleccionar...</option>
+                                    {% for especialidad in especialidades %}
+                                        <option value="{{especialidad.iethId}}">{{especialidad.especialidad}}</option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <input type="hidden" id="especialidades" name="especialidades" value="0" />
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
+                {% endif %}
             {% endif %}
         </div>
     {% endif %}
@@ -35,7 +41,7 @@
         <tbody>
             <tr>
                 {% set cantidad = 0 %}
-                {% for nota in libreta %}                    
+                {% for nota in libreta %}
                     {% if nota.notaTipoId in estudianteNotaArray|keys %}
                         {% set cuantitativa = estudianteNotaArray[nota.notaTipoId] %}
                         {% set cantidad = cantidad + 1 %}
@@ -51,7 +57,7 @@
     <div style="background: #EEEEEE; text-align: center; padding: 5px;">
         <button type="button" class="btn btn-default" onclick="cerrarFormCalificaciones({{areaid}})">Cerrar</button>        
         {% if cantidad == 0 %}
-            <button type="button" class="btn btn-success" onclick="guardarCalificaciones({{areaid}},{{gestion}},{{nivelid}},{{gradoid}});">Guardar Calificaciones</button>
+            <button type="button" class="btn btn-success" onclick="guardarCalificaciones({{areaid}},{{gestion}},{{nivelid}},{{gradoid}},{{conEspecialidad}});">Guardar Calificaciones</button>
         {% endif %}
     </div>
 </form>

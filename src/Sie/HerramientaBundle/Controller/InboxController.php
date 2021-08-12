@@ -737,15 +737,15 @@ class InboxController extends Controller {
       } else {
         $objObsQA = null;
       }
-
-      if($objObsQA){
+      //$this->session->set('donwloadLibreta', false);
+      /*if($objObsQA){
         return $this->render($this->session->get('pathSystem') . ':Inbox:list_inconsistencia.html.twig', array(
           'objObsQA' => $objObsQA,
           'sie' =>  $form['sie'],
           'institucion' => $ieducativa->getInstitucioneducativa(),
           'gestion' => $form['gestion']
         ));
-      } else {
+      } else {*/
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
           'personalAdmform' => $this->InfoStudentForm('herramienta_info_personal_adm_index', 'Personal Administrativo',$data)->createView(),
@@ -759,7 +759,7 @@ class InboxController extends Controller {
           'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
           'closeOperativoRudeform' => $this->CloseOperativoRudeForm('herramienta_inbox_close_operativo_rude', 'Cerrar Operativo RUDE',$data)->createView(),
         ));
-      }
+      // }
     }
 
     /**
@@ -1258,9 +1258,35 @@ class InboxController extends Controller {
           $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
           
             if($registroConsol){
-              $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
-              $fieldOpe = 'setBim' .$operativo;
-              $registroConsol->$fieldOpe(2);
+
+                $queryCheckCal = 'select * from sp_validacion_regular_web_2021_med(:gestion, :sie, :ope)';
+                $query = $em->getConnection()->prepare($queryCheckCal);
+                $query->bindValue(':gestion', $form['gestion']);
+                $query->bindValue(':sie', $form['sie']);
+                $query->bindValue(':ope', 6);
+                $query->execute();
+                $inconsistenciaCal = $query->fetchAll();                
+                
+                if(sizeof($inconsistenciaCal)>0){
+                  return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+                  'observation' => true,
+                  'inconsistencia' => $inconsistenciaCal,
+                  'objObsQA' => false,
+                  'validacionPersonal' => false,
+                  'institucion' =>  $form['sie'],
+                  'gestion' => $form['gestion'],
+                  'periodo' => $periodo)); 
+
+                }else{
+
+                  $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
+                  if($operativo == 1){
+                      $fieldOpe = 'setBim' .$operativo;
+                      $registroConsol->$fieldOpe(2);
+                      $this->session->set('donwloadLibreta', true);
+                  }                  
+
+                }
 
             }else{
               $registroConsol = new RegistroConsolidacion();

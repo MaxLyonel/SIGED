@@ -23,7 +23,7 @@ class SegipController extends Controller {
         $this->session = new Session();
     }
 
-    public function indexAction() {
+    public function indexAction(Request $request) {
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         $roluser = $this->session->get('roluser');

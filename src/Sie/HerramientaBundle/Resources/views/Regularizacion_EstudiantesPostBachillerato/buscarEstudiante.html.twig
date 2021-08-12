@@ -1,0 +1,173 @@
+								{% if estudiante %}
+								<div class="container-fluid-">
+									{#
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											<a href="#" class="btn btn-success">Ver Historial</a>
+										</div>
+									</div>
+									#}
+
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											<fieldset>
+												<legend>Datos del estudiante</legend>
+													<div class="row" style="padding-top:1rem">
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Nombre(s):</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.nombre}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Materno:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.materno}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">Paterno:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.paterno}}</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<br>
+													<div class="row" style="padding-top:1rem">
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">R.U.D.E.:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control target-rude">{{estudiante.codigoRude|trim}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">C.I.:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.carnetIdentidad}} {{estudiante.complemento}}</div>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12 col-sm-4">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label">F. Nacimiento:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<div class="form-control">{{estudiante.fechaNacimiento|date('d/m/Y')}}</div>
+																</div>
+															</div>
+														</div>
+													</div>
+											</fieldset>
+										</div>
+									</div>
+
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											<button type="button" class="btn btn-warning yearOld" data-toggle="modal" data-target="#modal-create-inscription">Registrar inscripción</button>
+										</div>
+									</div>
+
+									<!--Tabla inscripcion-->
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12 table-responsive ">
+											<table class="table table-striped">
+												<thead>
+													<tr>
+														<th>#</th>
+														<th>Inscripción</th>
+														<th>Gestión</th>
+														<th>Nivel</th>
+														<th>Grado</th>
+														<th width="5%"></th>
+													</tr>
+												</thead>
+												<tbody class="tbody-subject-assignment">
+													{# for m in regularizacion_materias_inscritas %}
+													<tr class="regularizacion-materias-inscritas-{{m.id}}">
+														<th scope="row">{{m.id}}</th>
+														<td> Inscripción {{m.id}}</td>
+														<td class="data-gestion">{{m.gestion}}</td>
+														<td class="data-nivel">{{m.nivel}}</td>
+														<td class="data-grado">{{m.grado}}</td>
+
+														<td width="5%">
+															<button type="button" class="btn btn-danger btn-xs btn-remove-inscripction" data-inscription={{m.id}} onclick="formRemoveInscription(this)">Eliminar</button>
+														</td>
+													</tr>
+													{% endfor #}
+												</tbody>
+											</table>
+										</div>
+									</div><!--FIN Tabla inscripcion-->
+
+									<div class="row" style="padding-top:1rem">
+										<form action="#" method="POST" class="form-send-request" enctype="multipart/form-data">
+										<input type="hidden" name="token" value="{{ csrf_token('form-send-request') }}">
+										<input type="hidden" name="request_inscriptions" id="request_inscriptions" class="request-inscriptions">
+										<input type="hidden" name="request_estudiante" id="request_estudiante" class="request-estudiante" value="{{estudiante.codigoRude}}">
+										<div class="col-xs-12">
+											<fieldset>
+												<legend>Creación y envio del informe</legend>
+													<div class="row">
+														<div class="col-xs-12">
+															<mark>Los campos marcados con <span class='text-danger text'>*</span> son requeridos.</mark>
+														</div>
+														<div class="col-xs-12" style="margin-bottom:1rem">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label"><sup class='text-danger text'>*</sup> Seleccionar distrito:</label>
+																<div class="col-xs-12 col-sm-9 col-md-3">
+																	<select name="request_distrito" id="request_distrito" class="form-control" required>
+																		<option value="" selected>Seleccionar distrito</option>
+																		{% for d in distritos %}
+																			<option value="{{d.id}}">{{d.distrito}}</option>
+																		{% endfor %}
+																	</select>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label"><sup class='text-danger text'>*</sup> Adjuntar documentos del interesado:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<input type="file" name="request_fileDocsInteresado" id="request_fileDocsInteresado" accept="application/pdf" required>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12">
+															<div class="form-group">
+																<label class="col-xs-12 col-sm-3 control-label"><sup class='text-danger text'>*</sup> Adjuntar informe:</label>
+																<div class="col-xs-12 col-sm-9">
+																	<input type="file" name="request_fileInforme" id="request_fileInforme" accept="application/pdf" required>
+																</div>
+															</div>
+														</div>
+														<div class="col-xs-12" style="padding-top:1rem">
+															<div class="form-group">
+																<div class="col-xs-12 col-sm-12">
+																	<button type="submit" class="btn btn-primary btn-send-request-distrital">Enviar a la Distrital</button>
+																</div>
+															</div>
+														</div>
+													</div>
+											</fieldset>
+										</div>
+										</form>
+									</div>
+								</div>
+								{% else %}
+								<div class="container-fluid">
+									<div class="row" style="padding-top:1rem">
+										<div class="col-xs-12">
+											No existe resultados
+										</div>
+									</div>
+								</div>
+								{% endif %}

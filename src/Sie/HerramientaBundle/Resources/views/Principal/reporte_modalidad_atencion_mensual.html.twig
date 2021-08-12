@@ -1,0 +1,45 @@
+
+	{% set meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'] %}
+	<div class="table-responsive">
+		{% if (datosReporte)  %}
+		<div class="row">
+			<div class="col-md-12">
+				<a href="{{ path('siged_exportar_excel_resultados_reporte_modalidad_atencion', { 'gestionInput': gestion,'departamentoInput':departamento,'distritoInput':distrito,'mesInput':mes}) }}" role="button"><img width="50px" src="{{ asset('img/excel-xls-icon.png') }}"> Descargar reporte </a>
+			</div>
+		</div>
+		<br>
+		{% endif %}
+		<table class="table" id="dataTable-modalidad">
+			{% if mes > 0 and mes <=12 %}
+				<caption class="text-center h3">Mes: {{meses[mes-1]}}</caption>
+			{% endif %}
+		  <thead class="thead-dark">
+		    <tr>
+		      <th scope="col">#</th>
+		      <th scope="col">Departamento</th>
+		      <th scope="col">Distrito</th>
+		      <th scope="col">Institución educativa</th>
+		      <th scope="col">Modalidad de atención</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  	{% if (datosReporte)  %}
+			  	{% for dato in datosReporte %}
+			    <tr>
+			      <td scope="row">{{loop.index}}</td>
+			      <td scope="row">{{ dato.des_dep }}</td>
+			      <td scope="row">{{ dato.des_dis }}</td>
+			      <td scope="row">{{ dato.institucioneducativa }}</td>
+			      <td scope="row">{{ dato.modalidad_atencion }}</td>
+			    </tr>
+			  	{% endfor %}
+		  	{% else %}
+			    <tr>
+			      <th scope="row" colspan="6">No existen datos</th>
+			    </tr>
+		  	{% endif %}
+
+		  </tbody>
+		</table>
+	</div>
+

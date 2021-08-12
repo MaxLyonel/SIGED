@@ -58,6 +58,10 @@ sie_especial_info_students:
     resource: "@SieEspecialBundle/Resources/config/routing/infoStudents.yml"
     prefix:   /espsie/infoStudents
 
+sie_special_register_parents:
+    resource: "@SieEspecialBundle/Resources/config/routing/registerparents.yml"
+    prefix:   /espsie/registerparents
+
 index:
     path:     /index
     defaults: { _controller: SieEspecialBundle:InfoEspecial:index }
@@ -66,3 +70,4 @@ index:
 sie_herramienta_info_operativo_salud_administrativo_maestro:
     resource: "@SieHerramientaBundle/Resources/config/routing/operativoSaludAdministrativoMaestro.yml"
     prefix:   /acceso/operativo-salud/administrativo-maestro
+

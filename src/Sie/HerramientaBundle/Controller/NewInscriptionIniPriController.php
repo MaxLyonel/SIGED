@@ -38,7 +38,7 @@ class NewInscriptionIniPriController extends Controller
     // index method
 
     public function indexAction(Request $request){
-      //disabled option by krlos
+     //disabled option by krlos
      //return $this->redirect($this->generateUrl('login'));
      if (in_array($this->session->get('roluser'), array(8,7,10))){
 

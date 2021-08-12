@@ -56,6 +56,10 @@
                                             {% if objValidateUePlena or app.session.get('ue_modular') or app.session.get('ue_regularizar') or app.session.get('ue_noturna') or app.session.get('ue_tecteg') or app.session.get('ue_general') or app.session.get('ue_humanistica') %}
                                               {{form(form)}}
                                             {% endif %}
+                                            {% if objValidateUePlena %}
+                                                <br />
+                                                <a href="{{ path('gp_areas_estudiante_index', {'op': 1})}}" class="btn btn-block btn-facebook">Adición/Eliminación de áreas</a>
+                                            {% endif %}
                                         </li>
                                         <li><br/></li>
                                         <li>

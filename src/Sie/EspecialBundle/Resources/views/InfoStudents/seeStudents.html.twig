@@ -33,7 +33,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        {% if gestion >= app.session.get('currentyear') and app.session.get('roluser') == 9 %}
+                        {% if (gestion >= app.session.get('currentyear') and app.session.get('roluser') == 9) or (gestion == 2020 and app.session.get('roluser') == 9 and app.session.get('ie_id') in [81890019,41920048]) %}
                         {# {% if onlyview == false and gestion >= app.session.get('currentyear') and app.session.get('roluser') == 9 %} #}
                             <button type="button" class="btn btn-md btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" >
                                 <i class="fa fa-user"></i> Inscripción
@@ -105,7 +105,7 @@
                                         </div>
                                     </td>
                                     <td>
-                                        {% if areaEspecial in ['Intelectual','Auditiva','Visual'] and gestion == 2020 and operativo_fin == false %}
+                                        {% if (areaEspecial in ['Intelectual','Auditiva','Visual'] and gestion == 2020 and operativo_fin == false) or (areaEspecial in ['Intelectual','Auditiva','Visual'] and gestion == 2020 and app.session.get('roluser') == 9 and app.session.get('ie_id') in [81890019,41920048]) %}
                                         {# {% if onlyview == false and areaEspecial in ['Intelectual','Auditiva','Visual'] and gestion >= app.session.get('currentyear') and operativo_fin == false %} #}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                                 <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}});" >
@@ -113,7 +113,7 @@
                                                 </button>
                                             </div>
                                         {% endif %}
-                                        {% if gestion == app.session.get('currentyear') and gestion >= 2020 %}
+                                        {% if gestion == app.session.get('currentyear') %}
                                         {# {% if onlyview == false and gestion >= app.session.get('currentyear') %} #}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                                 <button type="button" class="btn btn-circle btn-danger" data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
@@ -121,6 +121,15 @@
                                                 </button>
                                             </div>
                                         {% endif %}
+                                        {#
+                                        {% if gestion == 2021 and true %}
+                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registre Apoderado">
+                                                <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="RegisterParents({{data.estInsId}});" >
+                                                    <i class="fa fa-user"></i>
+                                                </button>
+                                            </div>
+                                        {% endif %}                                          
+                                        #}
                                         {# APODERADO BONO FAMILIA #}
                                         {# {% if gestion == 2020 and true %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Apoderado Bono Familia">
@@ -200,7 +209,6 @@
             }
         });
     };
-
     var getNotas = function (idInscripcionEspecial) {
         $.ajax({
             type: 'post',

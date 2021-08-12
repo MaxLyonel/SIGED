@@ -40,8 +40,9 @@ class ChangeMatriculaController extends Controller {
         $this->aCursosOld = $this->fillCursosOld();
         $this->arrQuestion = array(
         0 => "...",
-        1 => "Nunca asistio a clases",
-      2 => "Asistio algunos dias a clases", );
+        1 => "Nunca asistio a clases", //retiro abandono
+        2 => "Asistio algunos dias a clases", //En tolerancia
+    );
     }
 
     public function indexAction(Request $request){
@@ -55,8 +56,8 @@ class ChangeMatriculaController extends Controller {
             'infoStudent'         => json_decode($infoStudent,true),
             'infoUnidadEducativa' => unserialize($infoUe),
             'form'                => $this->matriculaForm($infoStudent, $infoUe)->createView(),
-            'student' => $objStudent
-
+            'student' => $objStudent,
+            'enTolerancia' => $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneBy(array('id'=>101))
         ));
     }
 
@@ -186,12 +187,23 @@ class ChangeMatriculaController extends Controller {
         $swChangeStatus = true;
         try {
         
-          if($form['questionStatus']==1){
+          switch ($form['questionStatus'])
+          {
+            case 1:
+              $updateMatricula = 6;
+            break;
+            case 2:
+              $updateMatricula = 101;
+            break;
+          }
+
+          /*if($form['questionStatus']==1)
+          {
             $updateMatricula = 6;
           }else{
             $updateMatricula = 6;
             // $updateMatricula = 9;
-          }
+          }*/
 
           if($swChangeStatus){
 
