@@ -295,20 +295,21 @@ class InboxController extends Controller {
 
         $ie_id=$this->session->get('ie_id');
         $_gestion=$this->session->get('currentyear');
+        $this->session->set('esGuanawek',0);
+        //change the year to current year after that ....
         $esGuanawek=$this->esGuanawek($ie_id,$gestion=2020);
         if($esGuanawek)
         {
-          $operativoPerUe=1;
-          $_gestion=2020;
+          /*$operativoPerUe=1;
+          $_gestion=2020;*/
           $this->session->set('esGuanawek',1);
         }
-        else
-        {
+        //else{
           // $this->session->set('ue_general', (array_search("$this->unidadEducativa",$this->arrUeGeneral,true)!=false)?true:false);
           $operativoPerUe = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToStudent(array('sie'=> $this->session->get('ie_id'), 'gestion'=>$this->session->get('currentyear')-1));
           $_gestion=$this->session->get('currentyear');
-          $this->session->set('esGuanawek',0);
-        }
+          //$this->session->set('esGuanawek',0);
+        //}
 
         $this->operativoUe = $operativoPerUe;
         //get the current year

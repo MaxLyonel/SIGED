@@ -33,7 +33,31 @@ class NewInscriptionExtranjeroController extends Controller{
         $this->userlogged = $this->session->get('userId');
         
     }
-    
+    private function esGuanawek($ie_id,$gestion){
+      $return=false;
+      $tecnico_humanistico=4; //institucioneducativa_humanistico_tecnico_tipo_id 
+      $departamentos=array();
+      $em = $this->getDoctrine()->getManager();
+      $db = $em->getConnection();
+      $query = '
+      select * 
+      from 
+      institucioneducativa_humanistico_tecnico 
+      where 
+      institucioneducativa_humanistico_tecnico_tipo_id = ? 
+      and gestion_tipo_id = ?
+      and institucioneducativa_id = ?';
+
+      $stmt = $db->prepare($query);
+      $params = array($tecnico_humanistico,$gestion,$ie_id);
+      $stmt->execute($params);
+      $guanawek=$stmt->fetchAll();
+
+      if($guanawek)
+        $return=true;
+
+      return $return;
+    }      
 
     public function indexAction(Request $request){
       //disabled option by krlos
@@ -41,7 +65,10 @@ class NewInscriptionExtranjeroController extends Controller{
      if (in_array($this->session->get('roluser'), array(8,7,10))){
 
      }else{
-      return $this->redirect($this->generateUrl('login'));  
+      //to do the ue cal diff
+      if(!($this->esGuanawek($this->session->get('ie_id'),$gestion=2020))){
+        return $this->redirect($this->generateUrl('login'));
+      }
      }
 
     	$em = $this->getDoctrine()->getManager();
