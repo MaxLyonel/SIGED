@@ -85,7 +85,7 @@
                             <i class="fa fa-file-text-o" ></i>
                         </a>
                     {# by krlos inscription #}
-                    {% if (gestion == 2020) and (app.session.get('esGuanawek') and app.session.get('esGuanawek')==1) %}
+                    {% if (gestion == 2021) and (app.session.get('esGuanawek') and app.session.get('esGuanawek')==1) %}
                         {% if ( nivel in [11] and grado in [2]) or( nivel in [12] and grado in [1,2,3,4,5,6]) or ( nivel in [13] and grado in [1,2,3,4,5,6])%}
                         <a class="btn btn-menu tooltips" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}');" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripción con Rude">
                             <i class="fa fa-user"></i>
