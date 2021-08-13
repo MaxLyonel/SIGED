@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 
 /**
  * Estudiante controller.
@@ -67,13 +68,27 @@ class ModCiLocalidadController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+        $esGuanawek = false;
         // $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude'], 'segipId' => 0));
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
         //verificamos si existe el estudiante
         
         if ($student) {
             //*******VERIFICANDO QUE LA/EL ESTUDIANTE TENGA INSCRIPCIÓN EN LA GESTIÓN ACTUAL
-            $objUe = $em->getRepository('SieAppWebBundle:Estudiante')->getUeIdbyEstudianteId($student->getId(), $this->session->get('currentyear'));
+            $ie_id=$this->session->get('ie_id');
+            $esGuanawek=$this->session->get('esGuanawek');
+            if($esGuanawek)
+            {
+                $_gestion=2020;
+                $objUe = $em->getRepository('SieAppWebBundle:Estudiante')->getUeIdbyEstudianteId_SinMatricula($student->getId(), $_gestion);
+                $esGuanawek= true;
+            }
+            else
+            {
+                $_gestion=$this->session->get('currentyear');
+                //$objUe = $em->getRepository('SieAppWebBundle:Estudiante')->getUeIdbyEstudianteId($student->getId(), $this->session->get('currentyear'));
+                $objUe = $em->getRepository('SieAppWebBundle:Estudiante')->getUeIdbyEstudianteId($student->getId(), $_gestion);
+            }
             
             if (!$objUe) {
                 $message = "La/El estudiante con código RUDE: " . $student->getCodigoRude() . ", no presenta inscripción para la presente gestión.";
@@ -142,10 +157,17 @@ class ModCiLocalidadController extends Controller {
             
             $message = "Resultado de la búsqueda:";
             $this->addFlash('successcilocalidad', $message);
+
+            $form=$this->createFormStudent($infoStudent[0])->createView();
+            if($esGuanawek)
+                $form=$this->createFormStudentGuanawek($infoStudent[0])->createView();
+
             return $this->render($this->session->get('pathSystem') . ':ModCiLocalidad:result.html.twig', array(
-                'form' => $this->createFormStudent($infoStudent[0])->createView(),
+                //'form' => $this->createFormStudent($infoStudent[0])->createView(),
+                'form' => $form,
                 'carnetIdentidad' => $infoStudent[0]['carnetIdentidad'],
-                'codigoRude' => $student->getCodigoRude()
+                'codigoRude' => $student->getCodigoRude(),
+                'esGuanawek' => $esGuanawek,
             ));
         } else {
             $message = "La/El Estudiante con código RUDE: ".$form['codigoRude'].", no existe y/o no cuenta con errores.";
@@ -185,6 +207,60 @@ class ModCiLocalidadController extends Controller {
             ->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{3,10}', 'maxlength' => 10, 'style' => 'text-transform:uppercase', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Si el Carnet de Identidad es extranjero, debe omitir la parte 'E-', pero debe escribir los ceros que contenga el C.I.")))
             ->add('complemento', 'text', array('label' => 'Complemento', 'data' => $data['complemento'], 'required' => false, 'attr' => array('maxlength' => 2, 'pattern' => '[0-9a-zA-Z]{2}', 'style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedición del C.I. Por favor NO coloque abreviaturas de Departamentos")))
             ->add('fechaNacimiento', 'date', array('widget' => 'single_text', 'format' => 'dd-MM-yyyy', 'label' => 'Fecha de Nacimiento', 'data' => $data['fechaNacimiento'], 'required' => true, 'attr' => array('class' => 'form-control calendario')));
+        
+        $formStudent->add('save', 'submit', array('label' => 'Guardar cambios'));
+
+        return $formStudent->getForm();
+    }
+
+    private function createFormStudentGuanawek($data)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $formStudent = $this->createFormBuilder()
+            ->setAction($this->generateUrl('modificar_genero_save'))
+            ->add('idStudent', 'hidden', array('data' => $data['idStudent']));
+
+            if (!$data['paterno']) {
+                $formStudent->add('paterno', 'text', array('label' => 'Paterno', 'data' => $data['paterno'], 'required' => false, 'attr' => array('class' => 'form-control' )));
+            } else {
+                $formStudent->add('paterno', 'text', array('label' => 'Paterno', 'data' => $data['paterno'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)));
+            }
+
+            if (!$data['materno']) {
+                $formStudent->add('materno', 'text', array('label' => 'Materno', 'data' => $data['materno'], 'required' => false, 'attr' => array('class' => 'form-control')));
+            } else {
+                $formStudent->add('materno', 'text', array('label' => 'Materno', 'data' => $data['materno'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)));
+            }
+            
+            if (!$data['nombre']) {
+                $formStudent->add('nombre', 'text', array('label' => 'Nombre', 'data' => $data['nombre'], 'required' => false, 'attr' => array('class' => 'form-control')));
+            } else {
+                $formStudent->add('nombre', 'text', array('label' => 'Nombre', 'data' => $data['nombre'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)));
+            }
+            $generos = [1,2];
+            $formStudent
+            //->add('genero', 'text', array('label' => 'Género', 'data' => $data['genero'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
+             ->add('genero', 'entity', array(
+             'class' => 'SieAppWebBundle:GeneroTipo',
+             'query_builder' => function (EntityRepository $e) use ($generos)
+             {
+                 return $e->createQueryBuilder('gt')
+                         ->where('gt.id in (:ids)')
+                         ->setParameter('ids', $generos)
+                         ->orderBy('gt.id', 'ASC');
+             },
+             'empty_value' => 'Selecionar...',
+             'required'=>true,
+             'attr' => array('class' => 'form-control')
+             //'data'=>($data['genero'] != null)?$em->getReference('SieAppWebBundle:GeneroTipo', $data['genero']):''
+             ))
+            ->add('pais', 'text', array('label' => 'Pais', 'data' => strtoupper($data['pais']), 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
+            ->add('departamento', 'text', array('label' => 'Departamento', 'data' => strtoupper($data['departamento']), 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
+            ->add('provincia', 'text', array('label' => 'Provincia', 'data' => strtoupper($data['provincia']), 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
+            ->add('localidad', 'text', array('label' => 'Localidad', 'data' => strtoupper($data['localidadNac']), 'attr' => array('class' => 'form-control', 'disabled' => true ,'style' => 'text-transform:uppercase', 'maxlength' => 50)))
+            ->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => true, 'attr' => array('class' => 'form-control', 'disabled' => true , 'pattern' => '[0-9]{3,10}', 'maxlength' => 10, 'style' => 'text-transform:uppercase', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Si el Carnet de Identidad es extranjero, debe omitir la parte 'E-', pero debe escribir los ceros que contenga el C.I.")))
+            ->add('complemento', 'text', array('label' => 'Complemento', 'data' => $data['complemento'], 'required' => false, 'attr' => array('maxlength' => 2, 'disabled' => true, 'pattern' => '[0-9a-zA-Z]{2}', 'style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedición del C.I. Por favor NO coloque abreviaturas de Departamentos")))
+            ->add('fechaNacimiento', 'date', array('widget' => 'single_text', 'format' => 'dd-MM-yyyy', 'label' => 'Fecha de Nacimiento', 'data' => $data['fechaNacimiento'], 'required' => false, 'attr' => array('class' => 'form-control calendario','disabled' => true)));
         
         $formStudent->add('save', 'submit', array('label' => 'Guardar cambios'));
 
@@ -265,6 +341,8 @@ class ModCiLocalidadController extends Controller {
                 ];
                 
                 $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnetIdentidad, $data, 'prod', 'academico');
+                //quitamos la validacion solo para guanawek
+                
         
                 if($resultado) {
                     if(isset($form['ci'])){
@@ -332,4 +410,191 @@ class ModCiLocalidadController extends Controller {
             return $this->redirectToRoute('modificar_ci_localidad_index');
         }
     }
+
+
+    public function saveGeneroAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+            $form = $request->get('form');
+
+            $genero = "";
+
+            $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']);
+            $oldDataStudent = clone $student;
+            $oldDataStudent = (array)$oldDataStudent;
+
+            if($student)
+            {
+                if(isset($form['genero']))
+                {
+                    $genero = $em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['genero']);
+                }
+                else
+                {
+                    $genero = $student->getGeneroTipo();
+                }
+
+                $data = [
+                   'genero'=>$genero
+                ];
+                
+                $esGuanawek=$this->session->get('esGuanawek');
+                //quitamos la validacion solo para guanawek
+                $resultado = true;
+                if($esGuanawek==false)
+                    $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnetIdentidad, $data, 'prod', 'academico');
+                
+                if($resultado)
+                {
+                    if(isset($form['genero']))
+                    {
+                        $student->setGeneroTipo($genero);
+                    }
+                    
+                    $student->setSegipId(1);
+                    $em->persist($student);
+                    $em->flush();
+
+                    $newDataStudent = (array)$student;
+                    $this->get('funciones')->setLogTransaccion(
+                        $student->getId(),
+                        'estudiante',
+                        'U',
+                        '',
+                        $newDataStudent,
+                        $oldDataStudent,
+                        'SIGED',
+                        json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                    );
+
+                    $mensaje = "Se realizó el proceso satisfactoriamente. Los datos de la/el estudiante:".$student->getCodigoRude().", se corrigieron correctamente.";
+                    $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave' => $student->getCodigoRude(), 'validacionReglaTipo' => 3));
+                    
+                    if($vproceso)
+                    {
+                        $this->ratificar($vproceso);
+                    }
+
+                } else {
+                    $message = 'Operación no realizada. Los datos ingresados no fueron validados por SEGIP.';
+                    $this->addFlash('noticilocalidad', $message);
+                    return $this->redirectToRoute('modificar_ci_localidad_index');
+                }
+            } else {
+                $message = 'Operación no realizada. No existe la/el estudiante.';
+                $this->addFlash('noticilocalidad', $message);
+                return $this->redirectToRoute('modificar_ci_localidad_index');
+            }
+
+            $em->getConnection()->commit();
+            $message = 'Operación realizada correctamente.';
+            $this->addFlash('goodcilocalidad', $message);
+            return $this->redirectToRoute('modificar_ci_localidad_index');
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            $message = 'Operación no realizada. Ocurrió un error interno.';
+            $this->addFlash('noticilocalidad', $message);
+            return $this->redirectToRoute('modificar_ci_localidad_index');
+        }
+    }
+
+
+    private function esGuanawek($ie_id,$gestion)
+    {
+      $return=false;
+      $tecnico_humanistico=4; //institucioneducativa_humanistico_tecnico_tipo_id 
+      $departamentos=array();
+      $em = $this->getDoctrine()->getManager();
+      $db = $em->getConnection();
+      $query = '
+      select * 
+      from 
+      institucioneducativa_humanistico_tecnico 
+      where 
+      institucioneducativa_humanistico_tecnico_tipo_id = ? 
+      and gestion_tipo_id = ?
+      and institucioneducativa_id = ?';
+
+      $stmt = $db->prepare($query);
+      $params = array($tecnico_humanistico,$gestion,$ie_id);
+      $stmt->execute($params);
+      $guanawek=$stmt->fetchAll();
+
+      if($guanawek)
+        $return=true;
+
+      return $return;
+    }
+
+    private function ratificar($vproceso)
+    {
+        $defaultController = new DefaultCont();
+        $defaultController->setContainer($this->container);
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+
+        $arrayRegistro = null;
+
+        try {
+            // Antes
+            $arrayRegistro['id'] = $vproceso->getId();
+            $arrayRegistro['fecha_proceso'] = $vproceso->getFechaProceso();
+            $arrayRegistro['validacion_regla_tipo_id'] = $vproceso->getValidacionReglaTipo()->getId();
+            $arrayRegistro['llave'] = $vproceso->getLlave();
+            $arrayRegistro['gestion_tipo_id'] = $vproceso->getGestionTipoId();
+            $arrayRegistro['periodo_tipo_id'] = $vproceso->getPeriodoTipoId();
+            $arrayRegistro['es_activo'] = $vproceso->getEsActivo();
+            $arrayRegistro['obs'] = $vproceso->getObs();
+            $arrayRegistro['institucioneducativa_id'] = $vproceso->getInstitucioneducativaId();
+            $arrayRegistro['lugar_tipo_id_distrito'] = $vproceso->getLugarTipoIdDistrito();
+            $arrayRegistro['solucion_tipo_id'] = $vproceso->getSolucionTipoId();
+            $arrayRegistro['omitido'] = $vproceso->getOmitido();
+
+            $antes = json_encode($arrayRegistro);
+
+            // despues
+            $arrayRegistro = null;
+
+            $vproceso->setEsActivo(true);
+            $em->persist($vproceso);
+            $em->flush();
+            // $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
+
+            $arrayRegistro['id'] = $vproceso->getId();
+            $arrayRegistro['fecha_proceso'] = $vproceso->getFechaProceso();
+            $arrayRegistro['validacion_regla_tipo_id'] = $vproceso->getValidacionReglaTipo()->getId();
+            $arrayRegistro['llave'] = $vproceso->getLlave();
+            $arrayRegistro['gestion_tipo_id'] = $vproceso->getGestionTipoId();
+            $arrayRegistro['periodo_tipo_id'] = $vproceso->getPeriodoTipoId();
+            $arrayRegistro['es_activo'] = $vproceso->getEsActivo();
+            $arrayRegistro['obs'] = $vproceso->getObs();
+            $arrayRegistro['institucioneducativa_id'] = $vproceso->getInstitucioneducativaId();
+            $arrayRegistro['lugar_tipo_id_distrito'] = $vproceso->getLugarTipoIdDistrito();
+            $arrayRegistro['solucion_tipo_id'] = $vproceso->getSolucionTipoId();
+            $arrayRegistro['omitido'] = $vproceso->getOmitido();
+
+            $despues = json_encode($arrayRegistro);
+
+            // registro del log
+            $resp = $defaultController->setLogTransaccion(
+                $vproceso->getId(),
+                'validacion_proceso',
+                'U',
+                json_encode(array('browser' => $_SERVER['HTTP_USER_AGENT'],'ip'=>$_SERVER['REMOTE_ADDR'])),
+                $this->session->get('userId'),
+                '',
+                $despues,
+                $antes,
+                'SIGED',
+                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );
+
+            $em->getConnection()->commit();
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+        }
+    }
+
 }
