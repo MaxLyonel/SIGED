@@ -1326,6 +1326,8 @@ class InboxController extends Controller {
               switch ($periodo)
               {
                   case 1: $registroConsol->setBim1('2'); break;//VOLVERLO DINAMICO
+                  case 2: $registroConsol->setBim2('2'); break;//VOLVERLO DINAMICO
+                  case 3: $registroConsol->setBim3('2'); break;//VOLVERLO DINAMICO
               }
               $em->persist($registroConsol);
               $em->flush();
