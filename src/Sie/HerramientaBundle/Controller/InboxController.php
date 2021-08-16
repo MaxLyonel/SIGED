@@ -1324,15 +1324,23 @@ class InboxController extends Controller {
                           
               $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
               if($operativo<4){
+                if($this->session->get('esGuanawek')){
+                  $registroConsol->setBim1('2');
+                  $registroConsol->setBim2('2');
+                  $registroConsol->setBim3('2');
+
+                }else{
                   $fieldOpe = 'setBim' .$operativo;
                   $registroConsol->$fieldOpe(2);
-                  $registroConsol->setFecha(new \DateTime("now"));
+                  
+                }
               }
               /*switch ($periodo)
               {
                   case 1: $registroConsol->setBim1('2'); break;//VOLVERLO DINAMICO
                   
               }*/
+              $registroConsol->setFecha(new \DateTime("now"));
               $em->persist($registroConsol);
               $em->flush();
               $em->getConnection()->commit();
