@@ -277,6 +277,23 @@ class EstudianteRepository extends EntityRepository {
         return $qb->getQuery()->getResult();
     }
 
+    public function getUeIdbyEstudianteId_SinMatricula($id, $gestion) {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+                ->select('IDENTITY(iec.institucioneducativa) as ueId')
+                ->from('SieAppWebBundle:Estudiante', 'e')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->where('ei.estudiante = :id')
+                ->andwhere('iec.gestionTipo = :gestion')
+                //->andwhere('ei.estadomatriculaTipo = :matricula')
+                ->setParameter('id', $id)
+                ->setParameter('gestion', $gestion)
+                //->setParameter('matricula', 4)
+        ;
+        return $qb->getQuery()->getResult();
+    }
+
     public function getHistoryInscriptionEfectivo($id) {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb
