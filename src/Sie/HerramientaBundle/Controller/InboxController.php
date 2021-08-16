@@ -1322,13 +1322,17 @@ class InboxController extends Controller {
                           'periodo' => $operativo));              
           }else{
                           
-              $registroConsol->setFecha(new \DateTime("now"));
-              switch ($periodo)
+              $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
+              if($operativo<4){
+                  $fieldOpe = 'setBim' .$operativo;
+                  $registroConsol->$fieldOpe(2);
+                  $registroConsol->setFecha(new \DateTime("now"));
+              }
+              /*switch ($periodo)
               {
                   case 1: $registroConsol->setBim1('2'); break;//VOLVERLO DINAMICO
-                  case 2: $registroConsol->setBim2('2'); break;//VOLVERLO DINAMICO
-                  case 3: $registroConsol->setBim3('2'); break;//VOLVERLO DINAMICO
-              }
+                  
+              }*/
               $em->persist($registroConsol);
               $em->flush();
               $em->getConnection()->commit();
