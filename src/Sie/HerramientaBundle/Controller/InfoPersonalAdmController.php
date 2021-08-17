@@ -1019,8 +1019,12 @@ class InfoPersonalAdmController extends Controller {
      */
 
     private function formSearch($gestionactual) {
-        
-        $gestiones = array($gestionactual => $gestionactual, $gestionactual - 1 => $gestionactual - 1, $gestionactual - 2 => $gestionactual - 2, $gestionactual - 3 => $gestionactual - 3, $gestionactual - 4 => $gestionactual - 4, $gestionactual - 5 => $gestionactual - 5);
+        $gestiones = [];
+
+        for($i=$gestionactual;$i>=2009;$i--){
+            $gestiones[$i]=$i;
+        }
+        // $gestiones = array($gestionactual => $gestionactual, $gestionactual - 1 => $gestionactual - 1, $gestionactual - 2 => $gestionactual - 2, $gestionactual - 3 => $gestionactual - 3, $gestionactual - 4 => $gestionactual - 4, $gestionactual - 5 => $gestionactual - 5);
 
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('herramienta_info_personal_adm_index'))

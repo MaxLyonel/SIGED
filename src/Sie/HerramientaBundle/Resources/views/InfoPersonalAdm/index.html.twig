@@ -207,7 +207,7 @@
                                                 {% set formacion = personal.formacionTipo %}
                                                 <tr {% if persona.id in personal_no_idioma|keys or persona.id in personal_no_genero|keys %}class="danger text-danger"{% endif %}>
                                                     <td data-title="N°">{{ loop.index }}</td>
-                                                    <td data-title="Carnet">{{ persona.carnet }}</td>
+                                                    <td data-title="Carnet">{{ persona.carnet }}{% if persona.complemento != null or persona.complemento != '' %}-{{persona.complemento}}{% endif %}</td>
                                                     <td data-title="Paterno">{{ persona.paterno }}</td>
                                                     <td data-title="Materno">{{ persona.materno }}</td>
                                                     <td data-title="Nombre(s)">{{ persona.nombre }}</td>
