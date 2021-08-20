@@ -436,7 +436,7 @@ class DocumentoController extends Controller {
          */
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("
-            select d.id as documento_id, d.tramite_id as tramite_id, cast(left(d.documento_serie_id,(char_length(d.documento_serie_id)-(case ds.gestion_id when 2010 then 2 when 2013 then 2 else 1 end))) as integer) as numero_serie, right(d.documento_serie_id,2) as tipo_serie
+            select d.id as documento_id, d.tramite_id as tramite_id, cast(left(d.documento_serie_id,(char_length(d.documento_serie_id)-(case ds.gestion_id when 2010 then 2 when 2013 then 2 else 1 end))) as varchar) as numero_serie, right(d.documento_serie_id,2) as tipo_serie
             , mt.id as estadomatricula_id, mt.estadomatricula as estadomatricula
             , case mt.id when 5 then true when 26 then true when 37 then true when 55 then true when 58 then true else false end as promovido
             , case d.documento_estado_id when 1 then true else false end as documento_estado
