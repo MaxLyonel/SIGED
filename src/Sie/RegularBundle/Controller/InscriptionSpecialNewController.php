@@ -24,6 +24,11 @@ class InscriptionSpecialNewController extends Controller
      */ 
     public function indexAction()
     {
+       if (in_array($this->session->get('roluser'), array(8))){
+
+       }else{
+        return $this->redirect($this->generateUrl('login'));  
+       }      
         
         return $this->render($this->session->get('pathSystem') . ':InscriptionSpecialNew:index.html.twig', array(
                 // ...
@@ -50,6 +55,11 @@ class InscriptionSpecialNewController extends Controller
         return $form;
      }
     public function findAction(Request $request ){
+       if (in_array($this->session->get('roluser'), array(8))){
+
+       }else{
+        return $this->redirect($this->generateUrl('login'));  
+       }        
       //get values to send by post
       $form = $request->get('form');
       // return $this->redirectToRoute('principal_web');
