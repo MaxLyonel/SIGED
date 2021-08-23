@@ -96,7 +96,8 @@ class CursosLargosController extends Controller {
         return $this->render('SiePermanenteBundle:CursosLargos:index.html.twig', array(
             'exist' => $exist,
             'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
-            'areatematica' => $areatematica
+            'areatematica' => $areatematica,
+            'gestion' =>$gestion
            // 'cursosLargos' => $cursosLargos
 
 
@@ -256,7 +257,7 @@ class CursosLargosController extends Controller {
                 ->add('subarea', 'choice', array('required' => true, 'choices' => $subareaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
               //  ->add('areatematica', 'choice', array('required' => true, 'choices' => $areatematicaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
-                ->add('programa', 'choice', array('label' => 'Programa', 'required' => true, 'choices' => $programaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
+                //->add('programa', 'choice', array('label' => 'Programa', 'required' => true, 'choices' => $programaArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control')))
                 ->add('especialidad', 'choice', array( 'required' => true, 'choices' => $espUEArray, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'listarNiveles(this.value)')))
                 ->add('nivel', 'choice', array( 'required' => true, 'choices' => $niv, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'mostrarHoras(this.value)')))
                 ->add('horas', 'text', array( 'label' => 'horas','required' => false, 'attr' => array('class' => 'form-control','readonly' => true)))
@@ -286,7 +287,7 @@ class CursosLargosController extends Controller {
 
     public function createCursoLargoAction(Request $request){
 
-       // dump($request);die;
+       //dump($request);die;
         $em = $this->getDoctrine()->getManager();
         //LLama a variables de Sesion
         $institucion = $this->session->get('ie_id');
@@ -322,6 +323,7 @@ class CursosLargosController extends Controller {
             //Invoca a una funcion de Base de Datos Necesaria para cualquier INSERT, para que se reinicie la secuencia de ingreso de datos
           //  $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
             // Realiza un INSERT para la creacion de un curso nuevo con los datos extraidos de la vista
+
             try{
                 
                 $institucioncurso = new  InstitucioneducativaCurso();
@@ -341,7 +343,7 @@ class CursosLargosController extends Controller {
                 $em->persist($institucioncurso);
                // $em->flush($institucioncurso);
 
-                if($form['programa']==40)
+               /*  if($form['programa']==40)
                 {
                     $programaid =1;
                 }elseif($form['programa']==41)
@@ -350,16 +352,17 @@ class CursosLargosController extends Controller {
                 }elseif($form['programa']==42)
                 {
                     $programaid =4;
-                }
+                } */
 
             //   dump($em->getRepository('SieAppWebBundle:PermanenteCursoc ortoTipo')->find(99));DIE;
 
                // $em->getConnection()->beginTransaction();
+               //dump($institucioncurso);die;
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('permanente_institucioneducativa_cursocorto');")->execute();
                 $institucioncursocorto = new PermanenteInstitucioneducativaCursocorto();
                 $institucioncursocorto  ->setInstitucioneducativaCurso($institucioncurso);
                 $institucioncursocorto  ->setSubAreaTipo($em->getRepository('SieAppWebBundle:PermanenteSubAreaTipo')->findOneBy(array('id' => $form['subarea'])));
-                $institucioncursocorto  ->setProgramaTipo($em->getRepository('SieAppWebBundle:PermanenteProgramaTipo')->findOneBy(array('id' => $form['programa'])));
+                $institucioncursocorto  ->setProgramaTipo($em->getRepository('SieAppWebBundle:PermanenteProgramaTipo')->findOneBy(array('id' => 0)));
                 $institucioncursocorto  ->setAreatematicaTipo($em->getRepository('SieAppWebBundle:PermanenteAreaTematicaTipo')->find(10));
                 $institucioncursocorto  ->setCursocortoTipo($em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->find(0));
                 $institucioncursocorto  ->setEsabierto(true);
