@@ -336,13 +336,12 @@
                                             {% endif %}
                                         {% endif %}
                                     {% endif %}
-                                    
-                                    {% if gestion >= 2021 and data.estadomatriculaId in [4,101] and false %}
-                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registre Apoderado">
-                                            <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="RegisterParents({{data.eInsId}});" >
-                                                <i class="fa fa-user"></i>
-                                            </button>
-                                        </div>
+                                    {% if gestion >= 2021 and nivel >= 12 and data.estadomatriculaId in [4,101] and true %}
+                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registre Apoderado">
+                                                <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="RegisterParents({{data.eInsId}});" >
+                                                    <i class="fa fa-user"></i>
+                                                </button>
+                                            </div>
                                     {% endif %}
                                     
                                     {# Esto es para las unidades educativas que son Guanawek en la gestion 2020 #}

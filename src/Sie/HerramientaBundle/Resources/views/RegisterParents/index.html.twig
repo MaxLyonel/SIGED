@@ -45,6 +45,7 @@ input {
                                 <div class="pull-left">
                                     <h3 class="panel-title">Registrar Apoderado - Busqueda por CI</h3>
                                     <button class="btn btn-success" v-on:click="isHidden = !isHidden"><strong  v-if="isHidden">Cerrar</strong><strong  v-else>Abrir</strong> Formulario de Busqueda</button>
+                                    <button type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>
                                 </div>
                                 <div class="pull-right">
                                     {# <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button> #}
@@ -63,7 +64,7 @@ input {
                                                 <input type="text" v-model="newPerson.complemento" id="form_complemento" name="form[complemento]" required="required" class="form-control" placeholder="Complemento" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="18" autocomplete="off" style="text-transform:uppercase">
                                                 
                                                 <button v-on:click="lookforPerson()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar </button>
-                                                <button type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>
+                                                
                                             </div>
                                         </div>
                                         </div><!-- /.form-body -->
@@ -189,7 +190,7 @@ input {
                 <th scope="col">NOMBRE(S)</th>
                 <th scope="col">FECHA NACIMIENTO</th>
                 <th scope="col">PARENTESCO</th>
-                <th scope="col">OPCION</th>
+                {# <th scope="col">OPCION</th> #}
                 <th scope="col">OPCION BJP</th>
                 </tr>
             </thead>
@@ -201,7 +202,7 @@ input {
                 <td>${parent.nombre}</td>
                 <td> ${parent.fechaNacimiento}</td>						
                 <td> ${parent.apoderadoTipo}</td>
-                <td><a v-if="!swExistParentBJP" href="#" @click="removeParent(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td>
+                {# <td><a v-if="!swExistParentBJP" href="#" @click="removeParent(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td> #}
                 <td> <a v-if="!swExistParentBJP" href="#" @click="assignParentBJP(parent)" > <i class="fa fa-book text-success"></i>Beneficiario BJP </a></td>
                 </tr>
             </tbody>
