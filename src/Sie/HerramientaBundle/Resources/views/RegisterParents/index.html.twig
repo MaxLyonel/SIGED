@@ -37,21 +37,54 @@ input {
                 <div class="row">
                     <div class="col-md-12">
 
-                      
+
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class="alert " style="padding:10px">
+                                    <h5 class="text-lilac">Datos del Curso</h5>
+                                        <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                                            <tbody><tr>
+                                                    <th>Nivel</th><td>${DBStudent.nivel}</td>
+                                                    <th>Turno</th><td>${DBStudent.turno}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Grado</th><td>${DBStudent.grado}</td>
+                                                    <th>Paralelo</th><td>${DBStudent.paralelo}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                            
+                                        <h5 class="text-info">Datos del Estudiante ${DBStudent.studentYearOld}</h5>
+                                        <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                                            <tbody><tr>
+                                                <th>Codigo Rude</th><td style="color:#0086DD">${DBStudent.rude}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Estudiante</th><td style="color:#0086DD"><b>${DBStudent.student}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <th>Estado de matrícula</th><td>${DBStudent.matricula}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                </div>                                  
+                            </div>
+                        </div>                      
                        
                         <!-- Start inline form -->
-                        <div class="panel rounded shadow" >
+                        <div class="panel rounded shadow" v-if="swRegistryBJP == true" >
                             <div class="panel-heading">
+                         
                                 <div class="pull-left">
                                     <h3 class="panel-title">Registrar Apoderado - Busqueda por CI</h3>
                                     <button class="btn btn-success" v-on:click="isHidden = !isHidden"><strong  v-if="isHidden">Cerrar</strong><strong  v-else>Abrir</strong> Formulario de Busqueda</button>
                                     <button type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>
                                 </div>
                                 <div class="pull-right">
-                                    {# <button class="btn btn-sm" data-action="collapse" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button> #}
-                                    {# <button class="btn btn-sm" data-action="remove" data-container="body" data-toggle="tooltip" data-placement="top" data-title="Remove" data-original-title="" title=""><i class="fa fa-times"></i></button> #}
                                 </div>
-                                <div class="clearfix"></div>
+                                <div class="clearfix">
+                                </div>                                   
+
                             </div><!-- /.panel-heading -->
                             <div class="panel-body no-padding" v-if="isHidden">
                                 <h5 class="bg-success"></h5>
@@ -72,179 +105,184 @@ input {
                                     
                                 </form>
                             </div><!-- /.panel-body -->
-                    </div><!-- /.panel --><!--/ End inline form -->
-                </div>
-            </div>
-
-            
- 
-        <div v-if="buscando" class="text-center">
-            <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
-        </div>        
-
-        <div v-if="searchActive">
-            <small>            
-                <div class="row">
-                    <div class="col-xs-12 col-lg-12">
-                        
-                        <div class="panel-danger">
-                            <div class="panel-heading">
-                            </div>
-                            <div class="panel-body">
-                            <h4><strong>Datos de la persona</strong></h4>
-
-
-                            <form>
-                                <fieldset>
-                                
-                                <legend>
-                                    Registre la Informacion
-                                </legend>
-                                <div class="box">
-                                    <label for="First Name">
-                                    CI:
-                                    </label>
-                                    <input type="text" id="FirstName" class="form-control" placeholder="Paterno" required v-model="newPerson.ci" :disabled="existPerson ? '':disabled">
-                                    
-                                </div>
-                                <div class="box">
-                                    <label for="First Name">
-                                    Complemento:
-                                    </label>
-                                    <input type="text" id="FirstName" class="form-control" placeholder="Complemento" required v-model="newPerson.complemento" :disabled="existPerson ? '':disabled">
-                                    
-                                </div>
-                                <div class="box">
-                                    <label for="First Name">
-                                    Fecha Nacimiento (dd-mm-aaaa):
-                                    </label>
-                                    <input type="text" id="form_idfecnac" class="form-control jupper" placeholder="dd-mm-aaaa"  v-model="newPerson.fecNac" :disabled="existPerson ? '':disabled">
-                                    
-                                </div>
-                                <div class="box">
-                                    <label for="First Name">
-                                    Paterno:
-                                    </label>
-                                    <input type="text" id="FirstName" class="form-control" placeholder="Paterno" required v-model="newPerson.paterno" :disabled="existPerson ? '':disabled" style="text-transform:uppercase">
-                                </div>
-                                <div class="box">
-                                    <label for="second Name">
-                                    Materno:
-                                    </label>
-                                    <input type="text" id="secondName" class="form-control" placeholder="Materno" required v-model="newPerson.materno" :disabled="existPerson ? '':disabled" style="text-transform:uppercase">
-                                </div>                                                               
-                                <div class="box">
-                                    <label for="name">
-                                    Nombre:
-                                    </label>
-                                    <input type="text" id="name" class="form-control" placeholder="Nombre" required v-model="newPerson.nombre" :disabled="existPerson ? '':disabled" style="text-transform:uppercase">
-                                </div>
-
-                                <div class="box">
-                                    <label for="name">
-                                    Parentesco:
-                                    </label>
-                                    <select name="arrApode" id="idarrGenero" v-model="newPerson.parentescoId" class="custom-select form-control" v-model="newPerson.apoderado">  
-                                    <option v-for="item in DBApoderado"  :value="item.apoderadoId">${ item.apoderado }</option>       
-                                    </select>                                
-                                </div>                                
-                                
-
-                                <div class="box" v-if="!existPerson">
-                                    <label for="name">
-                                    Genero:
-                                    </label>
-                                    <select name="arrGenero" id="idarrGenero" v-model="newPerson.generoId" class="custom-select form-control" v-model="newPerson.genero">  
-                                    <option v-for="item in DBGenero"  :value="item.generoId">${ item.genero }</option>       
-                                    </select>                                
-                                </div>
-                                
-                                <div class="box">                                    
-                                    <input type="buttton" value="Registrar" @click.prevent='saveParents' class="btn btn-success" id="btn">
-                                </div>
-                                
-                                </fieldset>
-                            </form>        
-                                                            
-                                </br>     
-        
-        
-                                </br> 
-                                
-                            </div>
-                        </div>       
-                        
+                        </div><!-- /.panel -->
+                        <!--/ End inline form -->
                     </div>
                 </div>
-            </small>
+
+            
+                <div v-if="swRegistryBJP == true" >
+                    <div v-if="buscando" class="text-center">
+                        <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                    </div>        
+
+                    <div v-if="searchActive">
+                        <small>            
+                            <div class="row">
+                                <div class="col-xs-12 col-lg-12">
+                                    
+                                    <div class="panel-danger">
+                                        <div class="panel-heading">
+                                        </div>
+                                        <div class="panel-body">
+                                        <h4><strong>Datos de la persona</strong></h4>
+
+
+                                        <form>
+                                            <fieldset>
+                                            
+                                            <legend>
+                                                Registre la Informacion
+                                            </legend>
+                                            <div class="box">
+                                                <label for="First Name">
+                                                CI:
+                                                </label>
+                                                <input type="text" id="FirstName" class="form-control" placeholder="Paterno" required v-model="newPerson.ci" :disabled="existPerson ? '':disabled">
+                                                
+                                            </div>
+                                            <div class="box">
+                                                <label for="First Name">
+                                                Complemento:
+                                                </label>
+                                                <input type="text" id="FirstName" class="form-control" placeholder="Complemento" required v-model="newPerson.complemento" :disabled="existPerson ? '':disabled">
+                                                
+                                            </div>
+                                            <div class="box">
+                                                <label for="First Name">
+                                                Fecha Nacimiento (dd-mm-aaaa):
+                                                </label>
+                                                <input type="text" id="form_idfecnac" class="form-control jupper" placeholder="dd-mm-aaaa"  v-model="newPerson.fecNac" :disabled="existPerson ? '':disabled">
+                                                
+                                            </div>
+                                            <div class="box">
+                                                <label for="First Name">
+                                                Paterno:
+                                                </label>
+                                                <input type="text" id="FirstName" class="form-control" placeholder="Paterno" required v-model="newPerson.paterno" :disabled="existPerson ? '':disabled" style="text-transform:uppercase">
+                                            </div>
+                                            <div class="box">
+                                                <label for="second Name">
+                                                Materno:
+                                                </label>
+                                                <input type="text" id="secondName" class="form-control" placeholder="Materno" required v-model="newPerson.materno" :disabled="existPerson ? '':disabled" style="text-transform:uppercase">
+                                            </div>                                                               
+                                            <div class="box">
+                                                <label for="name">
+                                                Nombre:
+                                                </label>
+                                                <input type="text" id="name" class="form-control" placeholder="Nombre" required v-model="newPerson.nombre" :disabled="existPerson ? '':disabled" style="text-transform:uppercase">
+                                            </div>
+
+                                            <div class="box">
+                                                <label for="name">
+                                                Parentesco:
+                                                </label>
+                                                <select name="arrApode" id="idarrGenero" v-model="newPerson.parentescoId" class="custom-select form-control" v-model="newPerson.apoderado">  
+                                                <option v-for="item in DBApoderado"  :value="item.apoderadoId">${ item.apoderado }</option>       
+                                                </select>                                
+                                            </div>                                
+                                            
+
+                                            <div class="box" v-if="!existPerson">
+                                                <label for="name">
+                                                Genero:
+                                                </label>
+                                                <select name="arrGenero" id="idarrGenero" v-model="newPerson.generoId" class="custom-select form-control" v-model="newPerson.genero">  
+                                                <option v-for="item in DBGenero"  :value="item.generoId">${ item.genero }</option>       
+                                                </select>                                
+                                            </div>
+                                            
+                                            <div class="box">                                    
+                                                <input type="buttton" value="Registrar" @click.prevent='saveParents' class="btn btn-success" id="btn">
+                                            </div>
+                                            
+                                            </fieldset>
+                                        </form>        
+                                                                        
+                                            </br>     
+                    
+                    
+                                            </br> 
+                                            
+                                        </div>
+                                    </div>       
+                                    
+                                </div>
+                            </div>
+                        </small>
+                    </div>
+
+                    <div class="col-md-12" v-if="swConfirm">
+                        <table class="table">
+                        <thead>
+                            <tr>
+                            
+                            <th scope="col">CI-COMPLEMENTO</th>
+                            <th scope="col">PATERNO</th>
+                            <th scope="col">MATERNO</th>
+                            <th scope="col">NOMBRE(S)</th>
+                            <th scope="col">FECHA NACIMIENTO</th>
+                            <th scope="col">PARENTESCO</th>
+                            {# <th scope="col">OPCION</th> #}
+                            <th scope="col">OPCION BJP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(parent, index) in DBParents">
+                            <td>${parent.carnet} </td>
+                            <td>${parent.paterno}</td>
+                            <td>${parent.materno}</td>
+                            <td>${parent.nombre}</td>
+                            <td> ${parent.fechaNacimiento}</td>						
+                            <td> ${parent.apoderadoTipo}</td>
+                            {# <td><a v-if="!swExistParentBJP" href="#" @click="removeParent(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td> #}
+                            <td> <a v-if="!swExistParentBJP" href="#" @click="assignParentBJP(parent)" > <i class="fa fa-book text-success"></i>Beneficiario BJP </a></td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>        
+                    
+                    <div class="col-md-12" v-if="swExistParentBJP">
+                    </br>
+                     {# <h3 class="panel-title"><strong> Tutor beneficiario BJP registrado:</strong></h3> #}
+                        <table class="table" >
+                        <thead>
+                            <tr>
+                                <th colspan="7" style="text-align: center;"><strong class="text"> Tutor beneficiario BJP registrado:</strong></th>
+                            </tr>
+                            <tr>
+                            
+                            <th scope="col">CI-COMPLEMENTO</th>
+                            <th scope="col">PATERNO</th>
+                            <th scope="col">MATERNO</th>
+                            <th scope="col">NOMBRE(S)</th>
+                            <th scope="col">FECHA NACIMIENTO</th>
+                            <th scope="col">PARENTESCO</th>
+                            <th scope="col">OPCION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="success" v-for="(parent, index) in DBParentBJP">
+                            <td>${parent.carnet} </td>
+                            <td>${parent.paterno}</td>
+                            <td>${parent.materno}</td>
+                            <td>${parent.nombre}</td>
+                            <td> ${parent.fechaNacimiento}</td>						
+                            <td> ${parent.apoderadoTipo}</td>
+                            <td><a href="#" @click="removeParentBJP(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td>
+                            </tr>
+                        </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div v-if="swRegistryBJP == false" >
+                    <h1 style="text-align: center;text-transform: uppercase;color: #d94f14;">${messageRegistryBJP}</h1>
+                </div>
+
+            </div>
         </div>
-
-        <div class="col-md-12" v-if="swConfirm">
-            <table class="table">
-            <thead>
-                <tr>
-                
-                <th scope="col">CI-COMPLEMENTO</th>
-                <th scope="col">PATERNO</th>
-                <th scope="col">MATERNO</th>
-                <th scope="col">NOMBRE(S)</th>
-                <th scope="col">FECHA NACIMIENTO</th>
-                <th scope="col">PARENTESCO</th>
-                {# <th scope="col">OPCION</th> #}
-                <th scope="col">OPCION BJP</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(parent, index) in DBParents">
-                <td>${parent.carnet} </td>
-                <td>${parent.paterno}</td>
-                <td>${parent.materno}</td>
-                <td>${parent.nombre}</td>
-                <td> ${parent.fechaNacimiento}</td>						
-                <td> ${parent.apoderadoTipo}</td>
-                {# <td><a v-if="!swExistParentBJP" href="#" @click="removeParent(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td> #}
-                <td> <a v-if="!swExistParentBJP" href="#" @click="assignParentBJP(parent)" > <i class="fa fa-book text-success"></i>Beneficiario BJP </a></td>
-                </tr>
-            </tbody>
-            </table>
-        </div>        
-        
-        <div class="col-md-12" v-if="swExistParentBJP">
-        </br>
-         {# <h3 class="panel-title"><strong> Tutor beneficiario BJP registrado:</strong></h3> #}
-            <table class="table" >
-            <thead>
-                <tr>
-                    <th colspan="7" style="text-align: center;"><strong class="text"> Tutor beneficiario BJP registrado:</strong></th>
-                </tr>
-                <tr>
-                
-                <th scope="col">CI-COMPLEMENTO</th>
-                <th scope="col">PATERNO</th>
-                <th scope="col">MATERNO</th>
-                <th scope="col">NOMBRE(S)</th>
-                <th scope="col">FECHA NACIMIENTO</th>
-                <th scope="col">PARENTESCO</th>
-                <th scope="col">OPCION</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="success" v-for="(parent, index) in DBParentBJP">
-                <td>${parent.carnet} </td>
-                <td>${parent.paterno}</td>
-                <td>${parent.materno}</td>
-                <td>${parent.nombre}</td>
-                <td> ${parent.fechaNacimiento}</td>						
-                <td> ${parent.apoderadoTipo}</td>
-                <td><a href="#" @click="removeParentBJP(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td>
-                </tr>
-            </tbody>
-            </table>
-        </div>
-
-
-      </div>
-    </div>
   </div>
 </div><!-- /.modal-dialog -->
 <script>
@@ -272,7 +310,10 @@ var app = new Vue({
         DBParents:{},
         DBApoderado:{},
         newPerson:{personId:'',ci:'', carnet:'', valSegip:'',complemento:'',paterno:'',materno:'',nombre:'',fecNac:'',parentescoId:'',idInscription:{{idInscription}}},
+        DBStudent:{studentId:'',ci:'', carnet:'{{arrStudent.carnet}}', complemento:'{{arrStudent.studentYearOld}}',student:'{{arrStudent.student}}',fechaNacimiento:'',idInscription:{{idInscription}},studentYearOld:{{arrStudent.studentYearOld}}, nivel:'{{arrStudent.nivel}}', grado:'{{arrStudent.grado}}', paralelo:'{{arrStudent.paralelo}}', turno:'{{arrStudent.turno}}', rude:'{{arrStudent.rude}}' , matricula:'{{arrStudent.matricula}}' },
         existPerson:false,
+        swRegistryBJP:'{{swRegistryBJP}}',
+        messageRegistryBJP:'{{messageRegistryBJP}}',
         swConfirm:false,
         swExistParentBJP:false,
         message:'',
