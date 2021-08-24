@@ -39,7 +39,11 @@ class TrasladoController extends Controller {
     public function indexAction(Request $request) {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
+        $userName = $sesion->get('userName');
         // return $this->redirectToRoute('principal_web');
+        if ($userName != 6724503) {
+            return $this->redirect($this->generateUrl('login'));
+        }        
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
