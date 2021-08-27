@@ -41,7 +41,7 @@ class TrasladoController extends Controller {
         $id_usuario = $sesion->get('userId');
         $userName = $sesion->get('userName');
         // return $this->redirectToRoute('principal_web');
-        if ($userName != 6724503) {
+        if ($userName != 6724503 or $userName != 3846452) {
             return $this->redirect($this->generateUrl('login'));
         }        
         if (!isset($id_usuario)) {
