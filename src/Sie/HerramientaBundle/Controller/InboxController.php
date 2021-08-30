@@ -353,6 +353,7 @@ class InboxController extends Controller {
             'entities' => $entities,
 
             'esGuanawek' => $esGuanawek,
+            'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($ie_id,$this->session->get('currentyear'),14),
         ));
     }
 
@@ -747,6 +748,7 @@ class InboxController extends Controller {
           'gestion' => $form['gestion']
         ));
       } else {*/
+        
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
           'personalAdmform' => $this->InfoStudentForm('herramienta_info_personal_adm_index', 'Personal Administrativo',$data)->createView(),
@@ -759,6 +761,9 @@ class InboxController extends Controller {
           'objObsQA' => $objObsQA,          
           'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
           'closeOperativoRudeform' => $this->CloseOperativoRudeForm('herramienta_inbox_close_operativo_rude', 'Cerrar Operativo RUDE',$data)->createView(),
+
+          'operativoBonoJPform' => $this->InfoStudentForm('operativo_bono_jp_cerrar', 'Cerrar Operativo Bono JP',$data)->createView(),
+          'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($form['sie'],$form['gestion'],14),
         ));
       // }
     }

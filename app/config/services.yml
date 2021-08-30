@@ -90,3 +90,9 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             router: "@router"
+
+    operativoUtils:
+        class: Sie\AppWebBundle\Services\OperativoUtils
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"
