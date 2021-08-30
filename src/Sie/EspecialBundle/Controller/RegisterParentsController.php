@@ -34,13 +34,61 @@ class RegisterParentsController extends Controller {
     public function indexAction(Request $request){
     	// get the send values
         $idInscription = $request->get('idInscripcion');
+        
+        // get info about the inscription
+        $arrStudent = $this->getInfoStudent($idInscription);
+    		
+
+    	if($arrStudent['studentYearOld']<=17){
+    		$message='';
+    		$swRegistryBJP = true;
+    	}else{
+			$message='Estudiante fuera de rango de la Edad requerida para el registro BJP';
+			$swRegistryBJP = false;
+    	}   
+    	
+        // get the years old about the student
+
 		// list the apoderado
 		//$listStudentsParents = $this->listStudentsParents($idInscription);
-		        
-        return $this->render('SieEspecialBundle:RegisterParents:index.html.twig', array(
-                'idInscription' => $idInscription
+        return $this->render($this->session->get('pathSystem') . ':RegisterParents:index.html.twig', array(
+                'idInscription' => $idInscription,
+                'arrStudent' => $arrStudent,
+                'swRegistryBJP' => $swRegistryBJP,
+                'messageRegistryBJP' => $message,
         ));    
     }
+
+    private function getInfoStudent($idInscription){
+
+		$em= $this->getDoctrine()->getManager();
+        $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscription);    	
+        $sql = "select public.sp_obtener_edad(to_date('".$objStudentInscription->getEstudiante()->getFechaNacimiento()->format('Y-m-d')."','YYYY-MM-DD'),to_date('2021-12-31','YYYY-MM-DD'))";
+		$query = $em->getConnection()->prepare($sql);
+		$query->execute();
+		$dataStudent = $query->fetch();
+		// arrStudent
+		$arrStudent = array(
+
+			'rude'        =>$objStudentInscription->getEstudiante()->getCodigoRude(),
+			'student'     =>$objStudentInscription->getEstudiante()->getPaterno().' '.$objStudentInscription->getEstudiante()->getMaterno().' '.$objStudentInscription->getEstudiante()->getNombre(),
+            'fecNac'      =>$objStudentInscription->getEstudiante()->getFechaNacimiento(),
+            'carnet'      =>$objStudentInscription->getEstudiante()->getCarnetIdentidad(),
+            'complemento' =>$objStudentInscription->getEstudiante()->getComplemento(),
+            'studentYearOld' => $dataStudent['sp_obtener_edad'],
+
+
+			'nivel'=>$objStudentInscription->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
+			'grado'=>$objStudentInscription->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
+			'paralelo'=>$objStudentInscription->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
+			'turno'=>$objStudentInscription->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno(),
+			'matricula'=>$objStudentInscription->getEstadomatriculaTipo()->getEstadomatricula(),
+
+		);    	
+		return $arrStudent;
+    }
+
+
     public function loadDataAction( Request $request ){
     	
     	$response = new JsonResponse();
@@ -136,9 +184,9 @@ class RegisterParentsController extends Controller {
 
       $arrApoderadoTipo = array();
       foreach ($objApoderadoTipo as $value) {
-          if(in_array( $value->getId(), array(1,2,8)) ){
+          //if(in_array( $value->getId(), array(1,2,8)) ){
               $arrApoderadoTipo[] = array('apoderadoId' => $value->getId(),'apoderado' => $value->getApoderado());                
-          }
+          //}
       }                
  
         $searchActive = true;
