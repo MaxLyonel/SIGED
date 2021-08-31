@@ -43,7 +43,10 @@ class TrasladoController extends Controller {
 
         
         // return $this->redirectToRoute('principal_web');
-        if (!in_array($userName, array(6724503,3846452,8335918,5609814 ))) {
+        $arrayUser = array(6724503,3846452,8335918,5609814,
+          1903534,7601269,'76460741F',12408349,5598692,10847510,6979685,'76091541G',12816826,5629007,5586495,10841255,5623407,5626516,
+         );
+        if (!in_array($userName, $arrayUser)) {
             return $this->redirect($this->generateUrl('login'));
         }        
         if (!isset($id_usuario)) {
