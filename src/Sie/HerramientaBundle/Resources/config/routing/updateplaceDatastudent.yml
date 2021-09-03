@@ -1,0 +1,14 @@
+UpdatePlaceDataStudent_index:
+    path:     /
+    defaults: { _controller: "SieHerramientaBundle:UpdatePlaceDataStudent:index" }
+    options:
+        expose: true
+UpdatePlaceDataStudent_result:
+    path:     /result
+    defaults: { _controller: "SieHerramientaBundle:UpdatePlaceDataStudent:result" }    
+
+UpdatePlaceDataStudent__updatestudentmodeoneD:
+    path:     /updateStudentD
+    defaults: { _controller: "SieHerramientaBundle:UpdatePlaceDataStudent:updateStudentD" }
+    options:
+        expose: true             
