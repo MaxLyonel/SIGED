@@ -34,7 +34,7 @@ class ModCiLocalidadController extends Controller {
      */
     public function indexAction() {
         $em = $this->getDoctrine()->getManager();
-
+        return $this->redirect($this->generateUrl('login'));
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
