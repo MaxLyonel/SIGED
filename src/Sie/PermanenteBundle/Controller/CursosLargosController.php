@@ -83,7 +83,7 @@ class CursosLargosController extends Controller {
                 $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['programa']][$uEducativa['cursolargo']] [$uEducativa['acreditacion']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto'], 'iecId'=> $uEducativa['iecid']);
 
             }
-         //   dump($aInfoUnidadEductiva);die;
+         //dump($aInfoUnidadEductiva);die;
         } else {
             $message = 'No existe información del Centro de Educación  para la gestión seleccionada.';
             $this->addFlash('warninresult', $message);
@@ -149,11 +149,11 @@ class CursosLargosController extends Controller {
             $subareaArray = array();
 
             foreach ($subarea as $value) {
-                if (($value->getId() != 0 )) {
+                    if (($value->getId() != 0 && $value->getObs()=='t')) {
                     $subareaArray[$value->getId()] = $value->getSubArea();
                 }
             }
-
+          
 
             $programaArray = array();
             foreach ($programa as $value) {
@@ -225,7 +225,7 @@ class CursosLargosController extends Controller {
             }
 
 
-            $sie= $this->session->get('ie_id');
+            $sie= $this->session->get('ie_id'); 
             $em = $this->getDoctrine()->getManager();
             $query = $em->getConnection()->prepare('	select distinct sest.id , sest.especialidad
 				from institucioneducativa ined
@@ -238,13 +238,13 @@ class CursosLargosController extends Controller {
             $query->bindValue(':sie', $sie);
             $query->execute();
             $espUE= $query->fetchAll();
-
+            
             $espUEArray = array();
             foreach ($espUE as $value) {
 
                 $espUEArray[$value['id']] =$value['especialidad'];
             }
-
+            
             $prov = array();
             $muni = array();
             $pob = array();
@@ -285,19 +285,15 @@ class CursosLargosController extends Controller {
         }
     }
 
-    public function createCursoLargoAction(Request $request){
-
-       //dump($request);die;
+    public function createCursoLargoAction(Request $request){//dump($request);die;
         $em = $this->getDoctrine()->getManager();
         //LLama a variables de Sesion
         $institucion = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $sucursal = $this->session->get('ie_subcea');
-        $periodo = $this->session->get('ie_per_cod');
-
-           //recibe los datos del formulario de vista
-            $form = $request->get('form');
-        //dump($form);die;
+        $periodo = $this->session->get('ie_per_cod'); 
+        //recibe los datos del formulario de vista
+        $form = $request->get('form'); //dump($form);die;
         $query = $em->getConnection()->prepare('
                 select b.id as especialidadid, b.especialidad as especialidad,d.id as acreditacionid,d.acreditacion as acreditacion,c.id espacredid,e.id as supinsacredid, g.id  as supinstperiodoid
                     from superior_facultad_area_tipo a  
@@ -318,12 +314,10 @@ class CursosLargosController extends Controller {
             $query->execute();
             $idpersup= $query->fetch();
             $em->getConnection()->beginTransaction();
-          //  dump($idpersup['supinstperiodoid']);die;
-          //       dump($form['programa']);die;
+          //dump($idpersup);
             //Invoca a una funcion de Base de Datos Necesaria para cualquier INSERT, para que se reinicie la secuencia de ingreso de datos
-          //  $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
+            //  $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
             // Realiza un INSERT para la creacion de un curso nuevo con los datos extraidos de la vista
-
             try{
                 
                 $institucioncurso = new  InstitucioneducativaCurso();
@@ -340,7 +334,7 @@ class CursosLargosController extends Controller {
                 $institucioncurso ->setSuperiorInstitucioneducativaPeriodo($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo')->findOneBy(array('id' => $idpersup['supinstperiodoid'])));
                 $institucioncurso ->setFechaInicio(new \DateTime($form['fechaInicio']));
                 $institucioncurso ->setFechaFin(new \DateTime($form['fechaFin']));
-                $em->persist($institucioncurso);
+                $em->persist($institucioncurso); 
                // $em->flush($institucioncurso);
 
                /*  if($form['programa']==40)
@@ -352,12 +346,8 @@ class CursosLargosController extends Controller {
                 }elseif($form['programa']==42)
                 {
                     $programaid =4;
-                } */
-
-            //   dump($em->getRepository('SieAppWebBundle:PermanenteCursoc ortoTipo')->find(99));DIE;
-
-               // $em->getConnection()->beginTransaction();
-               //dump($institucioncurso);die;
+                } */                
+               
                 $em->getConnection()->prepare("select * from sp_reinicia_secuencia('permanente_institucioneducativa_cursocorto');")->execute();
                 $institucioncursocorto = new PermanenteInstitucioneducativaCursocorto();
                 $institucioncursocorto  ->setInstitucioneducativaCurso($institucioncurso);
@@ -372,8 +362,8 @@ class CursosLargosController extends Controller {
                 $institucioncursocorto  ->setLugarTipoMunicipio($em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $form['municipio'])));
                 $institucioncursocorto  ->setLugarDetalle($form['lugar']);
                 $em->persist($institucioncursocorto);
-               // $em->flush(); 
-
+               // $em->flush();              
+               
                 $query = $em->getConnection()->prepare('
                     select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditacion, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo 
                     from superior_acreditacion_especialidad sae
@@ -389,27 +379,32 @@ class CursosLargosController extends Controller {
                 $query->bindValue(':niv', $form['nivel']);
                 $query->bindValue(':esp', $form['especialidad']);
                 $query->execute();
-                $listamodulos= $query->fetchAll();
-
+                $listamodulos= $query->fetchAll(); //dump($listamodulos);die;
                 $i =0;
-                $modulosArray = array();
-                foreach ($listamodulos as $value) {
-                    $modulosArray[$i] =$value['idsmp'];
-                   // $em->getConnection()->beginTransaction();
-                    $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
-                    $institucioncursoferta = new InstitucioneducativaCursoOferta();
-                    $institucioncursoferta ->setInsitucioneducativaCurso($institucioncurso);
-                    $institucioncursoferta ->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(2));
-                    $institucioncursoferta->setSuperiorModuloPeriodo($em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findOneBy(array('id' =>$value['idsmp'])));
-                    $em->persist($institucioncursoferta);
-                    //$em->flush($institucioncursoferta);
-                    $i++;
+                $modulosArray = array();                
+                //validar que el curso tenga modulos creados en la malla curricular
+                if($listamodulos){
+                    foreach ($listamodulos as $value) {
+                        $modulosArray[$i] =$value['idsmp'];
+                       // $em->getConnection()->beginTransaction();
+                        $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_oferta');")->execute();
+                        $institucioncursoferta = new InstitucioneducativaCursoOferta();
+                        $institucioncursoferta ->setInsitucioneducativaCurso($institucioncurso);
+                        $institucioncursoferta ->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(2));
+                        $institucioncursoferta->setSuperiorModuloPeriodo($em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->findOneBy(array('id' =>$value['idsmp'])));
+                        $em->persist($institucioncursoferta);
+                        //$em->flush($institucioncursoferta);
+                        $i++;
+                    } 
+                     $em->flush($institucioncursoferta);
+                    $em->getConnection()->commit();
+                    $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
+                    return $this->redirect($this->generateUrl('herramienta_per_cursos_largos_index'));
                 }
-                 $em->flush($institucioncursoferta);
-                $em->getConnection()->commit();
-                $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron actualizados correctamente.');
-                return $this->redirect($this->generateUrl('herramienta_per_cursos_largos_index'));
-
+                else{ //En caso de que la mencion asignada al curso no tenga modulos creados
+                    $this->get('session')->getFlashBag()->add('advertencia', 'La mención seleccionada no tiene módulos registrados, se sugiere verificar la malla curricular.');
+                    return $this->redirect($this->generateUrl('herramienta_per_cursos_largos_index'));
+                }
             }catch(Exception $ex){
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron guardados.');
@@ -822,10 +817,12 @@ class CursosLargosController extends Controller {
         $aInfoUeducativa = unserialize($infoUe);
         $aInfoUeducativaCurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId'];
         $idcurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
+        $idacreditacion=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['acreditacionid'];
+        $idespecialidad=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['cursolargoid'];
         $sie= $this->session->get('ie_id');
         $gestion=$this->session->get('ie_gestion');
         try{
-            $query = $em->getConnection()->prepare('
+             /* $query = $em->getConnection()->prepare('
             		select iec.id as idcurso, smp.id as idsmp,smp.horas_modulo as horas, smt.id as idsmt, smt.modulo, ieco.id as idieco, iecom.id as idiecom
                     from institucioneducativa_curso iec
                     inner join institucioneducativa_curso_oferta ieco on ieco.insitucioneducativa_curso_id = iec.id
@@ -836,8 +833,69 @@ class CursosLargosController extends Controller {
                     ');
             $query->bindValue(':idcurso', $idcurso);
             $query->execute();
-            $listamodcurso= $query->fetchAll();
-
+            $listamodcurso= $query->fetchAll();  */          
+            //Preguntamos si el centro tiene facilitadires registrados a la especialidad.
+            $query = $em->getConnection()->prepare('select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditacion, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo
+                ,ieco.id as idieco, iecom.id as idiecom 
+                from superior_acreditacion_especialidad sae
+                inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+                inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+                inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+                inner join superior_institucioneducativa_acreditacion sia on sae.id  =sia.acreditacion_especialidad_id
+                inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
+                inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
+                inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
+                inner JOIN institucioneducativa_curso_oferta ieco on  smp.id = ieco.superior_modulo_periodo_id
+                inner JOIN institucioneducativa_curso_oferta_maestro iecom on ieco.id = iecom.institucioneducativa_curso_oferta_id
+                where sat.id =:idacreditacion and sfat.id=40 and sest.id=:idespecialidad and sia.institucioneducativa_id=:sie');
+                $query->bindValue(':sie', $sie);
+                $query->bindValue(':idacreditacion', $idacreditacion);
+                $query->bindValue(':idespecialidad', $idespecialidad);
+                $query->execute();
+                $facilitadores= $query->fetchAll();
+            /* dump($idacreditacion);
+            dump($idespecialidad);
+            dump($sie);die; */
+            if($facilitadores){
+                $query = $em->getConnection()->prepare('select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditacion, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo
+                ,ieco.id as idieco, iecom.id as idiecom 
+                from superior_acreditacion_especialidad sae
+                inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+                inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+                inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+                inner join superior_institucioneducativa_acreditacion sia on sae.id  =sia.acreditacion_especialidad_id
+                inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
+                inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
+                inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
+                inner JOIN institucioneducativa_curso_oferta ieco on  smp.id = ieco.superior_modulo_periodo_id
+                inner JOIN institucioneducativa_curso_oferta_maestro iecom on ieco.id = iecom.institucioneducativa_curso_oferta_id
+                where sat.id =:idacreditacion and sfat.id=40 and sest.id=:idespecialidad and sia.institucioneducativa_id=:sie');
+                $query->bindValue(':sie', $sie);
+                $query->bindValue(':idacreditacion', $idacreditacion);
+                $query->bindValue(':idespecialidad', $idespecialidad);
+                $query->execute();
+                $listamodcurso= $query->fetchAll(); //dump($listamodcurso);die;
+            }else{
+                $query = $em->getConnection()->prepare('select sae.id as idsae, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditacion, sat.acreditacion, sia.id as idsia, sip.id as idsip, smp.id as idsmp, smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo
+                ,ieco.id as idieco, iecom.id as idiecom 
+                from superior_acreditacion_especialidad sae
+                inner join superior_acreditacion_tipo sat on sae.superior_acreditacion_tipo_id = sat.id
+                inner join 	superior_especialidad_tipo sest on sae.superior_especialidad_tipo_id =sest.id
+                inner join superior_facultad_area_tipo sfat on sest.superior_facultad_area_tipo_id = sfat.id
+                inner join superior_institucioneducativa_acreditacion sia on sae.id  =sia.acreditacion_especialidad_id
+                inner join superior_institucioneducativa_periodo sip on sia.id = sip.superior_institucioneducativa_acreditacion_id
+                inner join superior_modulo_periodo smp on smp.institucioneducativa_periodo_id = sip.id
+                inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
+                left JOIN institucioneducativa_curso_oferta ieco on  smp.id = ieco.superior_modulo_periodo_id
+                left JOIN institucioneducativa_curso_oferta_maestro iecom on ieco.id = iecom.institucioneducativa_curso_oferta_id
+                where sat.id =:idacreditacion and sfat.id=40 and sest.id=:idespecialidad and sia.institucioneducativa_id=:sie');
+                $query->bindValue(':sie', $sie);
+                $query->bindValue(':idacreditacion', $idacreditacion);
+                $query->bindValue(':idespecialidad', $idespecialidad);
+                $query->execute();
+                $listamodcurso= $query->fetchAll(); 
+            }
+            //Obtiene el listado de facilitadores registrados
             $query = $em->getConnection()->prepare('
             select a.id, a.persona_id, a.institucioneducativa_id,a.gestion_tipo_id,a.es_vigente_administrativo,
             b.id as idformacion, b.formacion,(c.paterno||\' \'||c.materno||\' \'||c.nombre) as nombre, c.carnet
@@ -857,8 +915,7 @@ class CursosLargosController extends Controller {
             $listamaestroArray = array();
                 foreach ($listamaestro as $value) {
                     $listamaestroArray[$value['id']] =$value['nombre'];
-                }
-            // dump($listamaestroArray);die;
+                }          
             $form = $this->createFormBuilder()
             ->add('cursoscortos', 'hidden', array('data' => $idcurso))
             ->getForm();
