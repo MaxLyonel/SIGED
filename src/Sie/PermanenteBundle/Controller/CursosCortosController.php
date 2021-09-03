@@ -176,7 +176,7 @@ class CursosCortosController extends Controller {
             $subareaArray = array();
 
             foreach ($subarea as $value) {
-                if ($value->getId() != 0 ) {
+                if ($value->getId() != 0 && $value->getObs()=='t' ) {
                     $subareaArray[$value->getId()] = $value->getSubArea();
                 }
             }
@@ -411,7 +411,7 @@ class CursosCortosController extends Controller {
 
             $subareaArray= array();
             foreach ($subarea as $value) {
-                if ($value->getId() != 0) {
+                if ($value->getId() != 0 && $value->getObs()=='t' ) {
                     $subareaArray[$value->getId()] = $value->getSubArea();
                 }
             }
