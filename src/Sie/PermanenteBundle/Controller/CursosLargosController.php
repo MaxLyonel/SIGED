@@ -341,9 +341,11 @@ class CursosLargosController extends Controller {
         //recibe los datos del formulario de vista
         $form = $request->get('form'); //dump($form['horas']);die;
         //validar que el curso tenga las horas completas para cada el nivel seleccionado
-        $horasTotal = $this->validaHorasCurso($institucion,$form['nivel'],$form['especialidad'],$gestion);     
-        $horasSolicitado = $form['horas'];
-        if((int)$horasSolicitado == $horasTotal ){//si el nivel seleccionado cumple con el total de horas
+        $horas = $this->validaHorasCurso($institucion,$form['nivel'],$form['especialidad'],$gestion);
+        $horasTotal = (int)$horas["tothoras"];
+        $horasSol = $form['horas'];
+        $horasSolicitado= (int)$form['horas'];        
+        if($horasSolicitado == $horasTotal ){ //dump("siii");die;//si el nivel seleccionado cumple con el total de horas
             $query = $em->getConnection()->prepare('
             select b.id as especialidadid, b.especialidad as especialidad,d.id as acreditacionid,d.acreditacion as acreditacion,c.id espacredid,e.id as supinsacredid, g.id  as supinstperiodoid
                 from superior_facultad_area_tipo a  
@@ -460,7 +462,7 @@ class CursosLargosController extends Controller {
                 $this->get('session')->getFlashBag()->add('newError', 'Los datos no fueron guardados.');
                 return $this->redirect($this->generateUrl('herramienta_per_cursos_largos_index'));
             }
-        }else{//si el nivel seleccionado no cumple con el total de horas            
+        }else{//si el nivel seleccionado no cumple con el total de horas
             $this->get('session')->getFlashBag()->add('newError', 'Debe completar el registro de todos lo módulos para la especialidad solicitada. Se recomienda verificar la Malla Curricular.');
             return $this->redirect($this->generateUrl('herramienta_per_cursos_largos_index'));
         }
