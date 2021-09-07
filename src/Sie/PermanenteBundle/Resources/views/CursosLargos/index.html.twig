@@ -3,8 +3,6 @@
 {% block contentoption %}
 
     <div class="header-content" id="principal">
-
-
         <h2><i class="fa fa-users"></i> Cursos y alumnos <span>Lista de cursos y alumnos del centro de educación permanente.</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
@@ -27,7 +25,16 @@
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div>
-        
+    <div class="row">
+        <div id= "mengestioncurso" class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>        
+    </div>        
                 
     {% if exist == 1 %}
         {% if gestion < 2021 %}
@@ -1304,6 +1311,7 @@
 //            $('#before'+idco).fadeOut();
 //            $('#after'+idco).fadeOut();
         }
+         
 
     </script>
     <style>
@@ -1356,6 +1364,7 @@
             from {opacity: 0;}
             to {opacity: 1;}
         }
+        
     </style>
 
 {%endblock%}
