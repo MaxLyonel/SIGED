@@ -323,7 +323,7 @@ class OlimReporteController extends Controller{
 		$tutor 	= empty($tutor)?-1:$tutor;
 		$gestion = empty($gestion)?-1:$gestion;
 
-        $arch 			= 'Inscripción-Olimpiada-Robótica-'.date('Y').'_'.date('YmdHis').'.pdf';
+        $arch 			= 'Olimpiada-Robótica-'.date('Y').'_'.date('YmdHis').'.pdf';
         $response 		= new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
