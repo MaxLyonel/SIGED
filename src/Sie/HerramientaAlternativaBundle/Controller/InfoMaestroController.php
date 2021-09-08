@@ -198,7 +198,8 @@ class InfoMaestroController extends Controller {
         ));
     }
     public function registrarPersonaAction(Request $request){
-        
+        //NO PERMITIR REGISTRO DE PERSONAS
+        return $this->redirect($this->generateUrl('login'));
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('sie_persona_datos');
         $persona = unserialize($form['persona']);
