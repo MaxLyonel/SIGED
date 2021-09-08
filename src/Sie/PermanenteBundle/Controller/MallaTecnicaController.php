@@ -1073,15 +1073,34 @@ group by  idsae,idespecialidad,especialidad,idacr,acreditacion,idsia,idsip
                     $supmodtipo = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($idmodulo);
                     $em->remove($supmodtipo);
                     $em->flush();                   
-                }else {
-                    $em->getConnection()->beginTransaction();
-                    $supmodper = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($idspm);  
-                    $em->remove($supmodper);
-                    $em->flush();
-        
-                    $supmodtipo = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($idmodulo);
-                    $em->remove($supmodtipo);
-                    $em->flush();
+                }else { //dump($idspm);die;
+                    //$em->getConnection()->beginTransaction();
+                    //preguntamos si ya se registro el curso con el modulo a eliminar
+                    $verifica = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBySuperiorModuloPeriodo($idspm);  
+                    if ($verifica){
+                        $curso_ofertamaestro = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findOneBySuperiorModuloPeriodo($idspm);
+                        $em->remove($curso_ofertamaestro);
+                        $em->flush();
+
+                        $supmodper = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($idspm);  
+                        $em->remove($supmodper);
+                        $em->flush();
+            
+                        $supmodtipo = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($idmodulo);
+                        $em->remove($supmodtipo);
+                        $em->flush();
+
+                    }else{
+                        
+                        $supmodper = $em->getRepository('SieAppWebBundle:SuperiorModuloPeriodo')->find($idspm);  
+                        $em->remove($supmodper);
+                        $em->flush();
+            
+                        $supmodtipo = $em->getRepository('SieAppWebBundle:SuperiorModuloTipo')->find($idmodulo);
+                        $em->remove($supmodtipo);
+                        $em->flush();
+                    }
+                    
                 }                
     
                 $em->getConnection()->commit();
