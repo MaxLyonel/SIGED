@@ -127,15 +127,12 @@ class CursosLargosController extends Controller {
             $turno = $em->getRepository('SieAppWebBundle:TurnoTipo')->findAll();
            // $especialidad= $em->getRepository('SieAppWebBundle:SuperiorFacultadAreaTipo')->findAll();
 
-
             $em = $this->getDoctrine()->getManager();
             $query = $em->getConnection()->prepare('select * from superior_facultad_area_tipo	
-                where institucioneducativa_tipo_id =5
-	    ');
+                where institucioneducativa_tipo_id =5');
             $query->execute();
             $progArea= $query->fetchAll();
-        //    dump($progArea);
-
+      
             $progAreaArray = array();
             foreach ($progArea as $value) {
                 $progAreaArray[$value['id']] =$value['facultad_area'];
@@ -152,8 +149,7 @@ class CursosLargosController extends Controller {
                     if (($value->getId() != 0 && $value->getObs()=='t')) {
                     $subareaArray[$value->getId()] = $value->getSubArea();
                 }
-            }
-          
+            }          
 
             $programaArray = array();
             foreach ($programa as $value) {
