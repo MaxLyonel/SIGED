@@ -841,7 +841,8 @@ class EstudianteSocioeconomicoController extends Controller {
      *
      */
     public function createAction(Request $request) {
-
+        //NO PERMITIR REGISTRO DE PERSONAS
+        return $this->redirect($this->generateUrl('login'));
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 

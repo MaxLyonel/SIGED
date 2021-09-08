@@ -178,6 +178,8 @@ class PersonaController extends Controller
     }
     
     public function personaupdateAction(Request $request) {        
+        //NO PERMITIR REGISTRO DE PERSONAS
+        return $this->redirect($this->generateUrl('login'));
         $form = $request->get('sie_usuarios_persona_edit');
 
         $em = $this->getDoctrine()->getManager();

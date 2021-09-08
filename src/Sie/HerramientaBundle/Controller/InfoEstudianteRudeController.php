@@ -1220,6 +1220,8 @@ class InfoEstudianteRudeController extends Controller {
     }
 
     public function saveFormApoderadoAction(Request $request){
+        //NO PERMITIR REGISTRO DE PERSONAS
+        return $this->redirect($this->generateUrl('login'));
         /*
          //////////////////////////////////////////////////////////////////////////
          /////////////////// Registro de apoderado TUTOR O PADRE  /////////////////
