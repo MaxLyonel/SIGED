@@ -41,9 +41,11 @@ class RegisterParentsController extends Controller {
 
     	if($arrStudent['studentYearOld']<=17){
     		$message='';
+    		$message2='';
     		$swRegistryBJP = true;
     	}else{
-			$message='Estudiante fuera de rango de la Edad requerida para el registro BJP';
+			$message='Estudiante fuera de rango de edad para el registro Bono Juancito Pinto.';
+			$message2=' Verificar su regsitro de FECHA DE NACIMIENTO.';
 			$swRegistryBJP = false;
     	}   
     	
@@ -56,6 +58,7 @@ class RegisterParentsController extends Controller {
                 'arrStudent' => $arrStudent,
                 'swRegistryBJP' => $swRegistryBJP,
                 'messageRegistryBJP' => $message,
+                'messageRegistryBJP2' => $message2,
         ));    
     }
 

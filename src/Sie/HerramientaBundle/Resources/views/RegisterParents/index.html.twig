@@ -54,7 +54,7 @@ input {
                                             </tbody>
                                         </table>
                                             
-                                        <h5 class="text-info">Datos del Estudiante ${DBStudent.studentYearOld}</h5>
+                                        <h5 class="text-info">Datos del Estudiante </h5>
                                         <table class="table table-condensed table-bordered" style="background:#EEEEEE">
                                             <tbody><tr>
                                                 <th>Codigo Rude</th><td style="color:#0086DD">${DBStudent.rude}</td>
@@ -76,7 +76,7 @@ input {
                             <div class="panel-heading">
                          
                                 <div class="pull-left">
-                                    <h3 class="panel-title">Registrar Apoderado - Busqueda por CI</h3>
+                                    <h3 class="panel-title">Registrar Beneficiario - Busqueda por CI</h3>
                                     <button class="btn btn-success" v-on:click="isHidden = !isHidden"><strong  v-if="isHidden">Cerrar</strong><strong  v-else>Abrir</strong> Formulario de Busqueda</button>
                                     <button type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>
                                 </div>
@@ -131,9 +131,6 @@ input {
                                         <form>
                                             <fieldset>
                                             
-                                            <legend>
-                                                Registre la Informacion
-                                            </legend>
                                             <div class="box">
                                                 <label for="First Name">
                                                 CI:
@@ -225,7 +222,7 @@ input {
                             <th scope="col">FECHA NACIMIENTO</th>
                             <th scope="col">PARENTESCO</th>
                             {# <th scope="col">OPCION</th> #}
-                            <th scope="col">OPCION BJP</th>
+                            <th scope="col">TUTOR BENEFICIARIO</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -237,7 +234,7 @@ input {
                             <td> ${parent.fechaNacimiento}</td>						
                             <td> ${parent.apoderadoTipo}</td>
                             {# <td><a v-if="!swExistParentBJP" href="#" @click="removeParent(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td> #}
-                            <td> <a v-if="!swExistParentBJP" href="#" @click="assignParentBJP(parent)" > <i class="fa fa-book text-success"></i>Beneficiario BJP </a></td>
+                            <td> <a v-if="!swExistParentBJP" href="#" @click="assignParentBJP(parent)" > <i class="fa fa-pencil text-success"></i> Seleccionar Beneficiario </a></td>
                             </tr>
                         </tbody>
                         </table>
@@ -249,7 +246,7 @@ input {
                         <table class="table" >
                         <thead>
                             <tr>
-                                <th colspan="7" style="text-align: center;"><strong class="text"> Tutor beneficiario BJP registrado:</strong></th>
+                                <th colspan="7" style="text-align: center;"><strong class="text"> Tutor beneficiario Bono Juancito Pinto registrado:</strong></th>
                             </tr>
                             <tr>
                             
@@ -279,6 +276,10 @@ input {
 
                 <div v-if="swRegistryBJP == false" >
                     <h1 style="text-align: center;text-transform: uppercase;color: #d94f14;">${messageRegistryBJP}</h1>
+                    <h4 style="text-align: center;text-transform: uppercase;color: #FF4f14;">${messageRegistryBJP2}</h4>
+                     <p style="text-align: right;" >
+                        <button style="text-align: right;"  type="button" class="btn btn-warning mr-5" data-dismiss="modal">Cerrar</button>
+                    </p>
                 </div>
 
             </div>
@@ -314,6 +315,7 @@ var app = new Vue({
         existPerson:false,
         swRegistryBJP:'{{swRegistryBJP}}',
         messageRegistryBJP:'{{messageRegistryBJP}}',
+        messageRegistryBJP2:'{{messageRegistryBJP2}}',
         swConfirm:false,
         swExistParentBJP:false,
         message:'',
@@ -378,9 +380,9 @@ var app = new Vue({
             this.message   = false;
             
             Swal.fire({
-                title: 'Registrar Persona?',
+                title: 'Registrar Beneficiario?',
                 text: "esta seguro de CONTINUAR con el registro",
-                type: 'question',
+                type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -488,9 +490,9 @@ var app = new Vue({
             this.existPerson   = false;
             this.message   = false;
             Swal.fire({
-                title: 'Eliminar Asignación BJP?',
+                title: 'Eliminar asignación de Beneficiario?',
                 text: "esta seguro de CONTINUAR con la eliminación",
-                type: 'question',
+                type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
@@ -538,9 +540,9 @@ var app = new Vue({
             this.existPerson   = false;
             this.message   = false;
             Swal.fire({
-                title: 'Asignar Persona?',
-                text: "esta seguro de CONTINUAR con la asignación de la Persona como beneficiario para el BJP",
-                type: 'question',
+                title: 'Asignar Beneficiario?',
+                text: "Esta seguro de CONFIRMAR la asignación de la Persona como beneficiario para el Bono Juancito Pinto",
+                type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
