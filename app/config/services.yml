@@ -90,3 +90,9 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             router: "@router"
+
+    buscarPersonaUtils:
+        class: Sie\AppWebBundle\Services\BuscarPersonaUtils
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"
