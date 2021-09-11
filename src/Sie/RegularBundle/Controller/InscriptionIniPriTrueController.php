@@ -44,10 +44,6 @@ class InscriptionIniPriTrueController extends Controller {
       //disabled option by krlos
      //return $this->redirect($this->generateUrl('login'));
      if (in_array($this->session->get('roluser'), array(8,10,7))){
-      $arrInscriptionUser =$this->get('funciones')->getuserInscriptions($this->session->get('userId'));
-      if(sizeof($arrInscriptionUser)>0){
-        return $this->redirect($this->generateUrl('login'));
-      }
      }else{
       return $this->redirect($this->generateUrl('login'));  
      }

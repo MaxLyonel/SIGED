@@ -182,7 +182,6 @@ class Segip {
 			$datosVerificacion = $opcional;
 			$datosVerificacion = new \ArrayObject($opcional);
 			$datosVerificacion['ci']=$carnet;
-			
 			list($lista_campo,$tipo_persona,$rawDatosEnvidosSegip) = $this->getJsonDatosVerificacion($datosVerificacion);
 			
 			//DATOS DE PRUEBA, QUITAR EN PRODUCCION
@@ -198,7 +197,6 @@ class Segip {
 			//$lista_campo = json_encode($respuestaJson,JSON_UNESCAPED_SLASHES);
 			//$tipo_persona = 1;//1: nacional, 2:extranjero
 			//DATOS DE PRUEBA, QUITAR EN PRODUCCION
-			
 			$url = $this->getUrlBase($env)."personas/contrastacion/?lista_campo=$lista_campo&tipo_persona=$tipo_persona";
 			$response = $this->client->request(
 			    'GET', 
@@ -221,7 +219,8 @@ class Segip {
 	{
 		$respuestaJson = array();
 		$tipo_persona = 1; //nacional
-		$datosMinimos = 3;
+		$datosMinimos = 0;
+
 		foreach ($datosVerificacion as $key => $valor)
 		{
 			switch ($key)
@@ -249,14 +248,18 @@ class Segip {
 					$valor = str_replace('-','/',$valor);
 					//$datosMinimos++;
 				break;
+				default:
+					$newKey=null;
+					$valor = null;
+				break;
 			}
-			$respuestaJson[$newKey]=trim($valor);
+			if($newKey)
+				$respuestaJson[$newKey]=trim($valor);
 			if (in_array($key, $camposMinimosRequeridos))
 			{
 				$datosMinimos++;
 			}
 		}
-
 		//verificacion de si extranjero
 		if(array_key_exists('extranjero', $datosVerificacion)==true)
 			$tipo_persona=2; //extranjero
@@ -337,10 +340,36 @@ class Segip {
 		return $esCorrecto;
 	}
 
+	private function retirarCamposVacios($datosEnviadosSegip)
+	{
+		$return = array();
+		if(count($datosEnviadosSegip)>0)
+		{
+			foreach ($datosEnviadosSegip as $key => $value)
+			{
+				if($key != 'ComplementoVisible' && $key != 'Complemento')
+				{
+					if($value == '')
+					{
+						unset($datosEnviadosSegip[$key]);
+					}
+				}
+			}
+			$return = $datosEnviadosSegip;
+		}
+		return $return;
+	}
+
 	/*Nueva funcion 26/08/2021*/
 	private function verificacionDatosEnviadosYRecibidos($datosRecibidosSegip,$datosEnviadosSegip)
 	{
 		$datosValidos =true;
+		$datosEnviadosSegip_copy = $datosEnviadosSegip;
+
+		// retiramos los campos con valor vacio que se envian al segip, sin tomar en cuenta el Complemento y ComplementoVisible
+		// Esto funciona pero solo se retornara los campos DISTINTOS DE VACIOS ... por favor considerarlo 
+		//$datosEnviadosSegip = $this->retirarCamposVacios($datosEnviadosSegip);
+
 		if(count($datosEnviadosSegip)>=3)//verificamos que al menos se envien 3 datos
 		{
 			try
@@ -348,7 +377,7 @@ class Segip {
 				$datosRecibidosSegip_decode=json_decode($datosRecibidosSegip);
 				foreach ($datosEnviadosSegip as $key => $value)
 				{
-					if($key !='Complemento')
+					if($key != 'ComplementoVisible' && $key != 'Complemento')
 					{
 						if($datosRecibidosSegip_decode->{$key} != 1 )
 						{
@@ -357,6 +386,7 @@ class Segip {
 						}
 					}
 				}
+
 				//verificamos el complemento
 				if(array_key_exists('Complemento', $datosEnviadosSegip)==true)
 				{

@@ -35,11 +35,7 @@ class ChangeParaleloController extends Controller {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         
-         if (in_array($this->session->get('roluser'), array(8,10,7))){
-            $arrInscriptionUser =$this->get('funciones')->getuserInscriptions($this->session->get('userId'));
-            if(sizeof($arrInscriptionUser)>0){
-                return $this->redirect($this->generateUrl('login'));
-            }            
+         if (in_array($this->session->get('roluser'), array(8,10,7))){            
          }else{
           return $this->redirect($this->generateUrl('login'));  
          }        
