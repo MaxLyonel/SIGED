@@ -146,7 +146,7 @@ class CursosLargosController extends Controller {
             $subareaArray = array();
 
             foreach ($subarea as $value) {
-                    if (($value->getId() != 0 && $value->getObs()=='t')) {
+                    if (($value->getId() != 0 && $value->getEsActivo() === true)) {
                     $subareaArray[$value->getId()] = $value->getSubArea();
                 }
             }          
