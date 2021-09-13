@@ -48,10 +48,6 @@ class TrasladoController extends Controller {
          );
 
         // if (!in_array($userName, $arrayUser)) {
-        $arrInscriptionUser =$this->get('funciones')->getuserInscriptions($this->session->get('userId'));
-        if(sizeof($arrInscriptionUser)>0){
-            return $this->redirect($this->generateUrl('login'));
-        }        
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
