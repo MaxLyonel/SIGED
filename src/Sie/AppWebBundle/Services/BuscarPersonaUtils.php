@@ -78,4 +78,41 @@ class BuscarPersonaUtils
 		return $personaDatos;
 	}
 
+	public function buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1)
+	{
+		$personas = null;
+		$arrayCampos1 = array('carnet','complemento','fechaNacimiento'); // campos minimos para buscar persona
+		$arrayCampos2 = array('carnet','complemento','fechaNacimiento','paterno');
+		$arrayCampos3 = array('carnet','complemento','fechaNacimiento','paterno','materno');
+		$arrayCampos4 = array('carnet','complemento','fechaNacimiento','paterno','materno','nombre');
+
+		if($conCI==false)
+		{
+			unset($arrayCampos1['carnet']);
+			unset($arrayCampos2['carnet']);
+			unset($arrayCampos3['carnet']);
+			unset($arrayCampos4['carnet']);
+		}
+		$arrayCampos = [$arrayCampos1,$arrayCampos2,$arrayCampos3,$arrayCampos4];
+
+		$persona = null;
+
+		foreach ($arrayCampos as $a)
+		{
+			$personaDatos = $this->generarCamposValoresPersona($arrayDatosPersona,$a);
+			if($personaDatos != null)
+			{
+				$personaDatos['segipId'] = $segipId;
+				$personas = $this->em->getRepository('SieAppWebBundle:Persona')->findBy($personaDatos);
+
+				if(count($personas) == 1)
+					break;
+			}
+		}
+		if($personas != null && count($personas)==1)
+			$personas = $personas[0];
+
+		return $personas;
+	}
+
 }
