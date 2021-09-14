@@ -236,11 +236,12 @@ class RegisterParentsController extends Controller {
       );
       
       // do the validation on segip if the person is not in SIE DB
-      $answerSegip = true;
+      $answerSegip = false;
       $message = "";
       if($valSegip == 'true'){
-		// $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
-		$answerSegip = true;
+		$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
+		//dump($answerSegip);die;
+		//$answerSegip = true;
 		if($answerSegip){	
 			$newPerson = $this->registerNewPerson($arrParametros, $carnet, $generoId);
 			$personId = $newPerson->getId();
@@ -271,7 +272,6 @@ class RegisterParentsController extends Controller {
       
 		// list the apoderado
 		$listStudentsParents = $this->listStudentsParents($idInscription);
-		
 
         $response->setStatusCode(200);
         $response->setData(array(
@@ -280,7 +280,8 @@ class RegisterParentsController extends Controller {
                 'swConfirm'=>(sizeof($listStudentsParents)>=1)?true:false,
                 'arrParentBJP'=>$parentBjp,
                 'swExistParentBJP'=>(sizeof($parentBjp)>=1)?true:false,
-                'message'=>$message
+                'messagesegip'=>$message,
+                'answerSegip'=>$answerSegip,
             )
 
         ));
