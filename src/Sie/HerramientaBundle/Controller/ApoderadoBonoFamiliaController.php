@@ -485,6 +485,8 @@ class ApoderadoBonoFamiliaController extends Controller {
     }
 
     public function registrarAction(Request $request){
+        //NO PERMITIR REGISTRO DE PERSONAS
+        return $this->redirect($this->generateUrl('login'));
         $response = new JsonResponse();
         $apoderado = $request->get('apoderado');
         $idInscripcion = $request->get('idInscripcion');

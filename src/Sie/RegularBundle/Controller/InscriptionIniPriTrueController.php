@@ -43,8 +43,7 @@ class InscriptionIniPriTrueController extends Controller {
     public function indexAction() {
       //disabled option by krlos
      //return $this->redirect($this->generateUrl('login'));
-     if (in_array($this->session->get('roluser'), array(8))){
-
+     if (in_array($this->session->get('roluser'), array(8,10,7))){
      }else{
       return $this->redirect($this->generateUrl('login'));  
      }

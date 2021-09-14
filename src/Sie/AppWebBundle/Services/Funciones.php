@@ -2008,5 +2008,21 @@ class Funciones {
         $entities = $query->getResult();
 
         return $entities;                
+    } 
+
+    public function getuserInscriptions($userId){
+        $query = $this->em->getConnection()->prepare("
+            select b.rol_tipo_id,(select rol from rol_tipo where id=b.rol_tipo_id) as rol,a.persona_id,c.codigo as cod_dis,a.esactivo,a.id as user_id
+            from usuario a 
+                inner join usuario_rol b on a.id=b.usuario_id 
+                inner join lugar_tipo c on b.lugar_tipo_id=c.id
+            where substring(c.codigo,1,1) in ('7') and codigo not in ('04') and b.rol_tipo_id not in (2,3,9,29,26,21,14,39,6) and a.esactivo='t'and a.id = ".$userId);
+
+        $query->execute();
+        $userInscriptions = $query->fetchAll();
+
+        return $userInscriptions;
     }    
+
+
 }
