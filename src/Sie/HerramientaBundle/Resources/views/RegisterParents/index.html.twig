@@ -94,7 +94,7 @@ input {
                                 <div class="pull-right">
                                 </div>
                                 <div class="clearfix">
-                                <div v-if="!answerSegip" class="alert alert-danger" role="alert">${messagesegip}</div>
+                                <div v-if="answerSegip" class="alert alert-danger" role="alert">${messagesegip}</div>
                                 </div>                                   
 
                             </div><!-- /.panel-heading -->
@@ -334,7 +334,7 @@ var app = new Vue({
         messagesegip:'',
         disabled:'',
         searchActive:false,
-        answerSegip:true,
+        answerSegip:false,
         isHidden: false
         
         
@@ -352,7 +352,7 @@ var app = new Vue({
             this.message   = false;
             this.swConfirm = false;
             this.swExistParentBJP = false;
-            this.answerSegip = true;
+            this.answerSegip = false;
             if(this.newPerson.ci.length == 0){
             this.message = 'debe introducir un carnet';
             this.buscando = false;
@@ -393,7 +393,7 @@ var app = new Vue({
             this.searchActive=true;
             this.existPerson   = true;
             this.message   = false;
-            this.answerSegip   = true;            
+            this.answerSegip   = false;            
             Swal.fire({
                 title: 'Registrar Beneficiario?',
                 text: "esta seguro de CONTINUAR con el registro",
@@ -459,7 +459,7 @@ var app = new Vue({
             this.searchActive=false;
             this.existPerson   = false;
             this.message   = false;
-            this.answerSegip   = true;
+            this.answerSegip   = false;
             Swal.fire({
                 title: 'Eliminar Persona?',
                 text: "esta seguro de CONTINUAR con la eliminación",
@@ -508,7 +508,7 @@ var app = new Vue({
             this.searchActive=false;
             this.existPerson   = false;
             this.message   = false;
-            this.answerSegip   = true;
+            this.answerSegip   = false;
             Swal.fire({
                 title: 'Eliminar asignación de Beneficiario?',
                 text: "esta seguro de CONTINUAR con la eliminación",
@@ -559,7 +559,7 @@ var app = new Vue({
             this.searchActive=false;
             this.existPerson   = false;
             this.message   = false;
-            this.answerSegip   = true;
+            this.answerSegip   = false;
             Swal.fire({
                 title: 'Asignar Beneficiario?',
                 text: "Esta seguro de CONFIRMAR la asignación de la Persona como beneficiario para el Bono Juancito Pinto",

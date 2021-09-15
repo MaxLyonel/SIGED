@@ -236,7 +236,7 @@ class RegisterParentsController extends Controller {
       );
       
       // do the validation on segip if the person is not in SIE DB
-      $answerSegip = false;
+      $answerSegip = true;
       $message = "";
       if($valSegip == 'true'){
 		$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
@@ -281,7 +281,7 @@ class RegisterParentsController extends Controller {
                 'arrParentBJP'=>$parentBjp,
                 'swExistParentBJP'=>(sizeof($parentBjp)>=1)?true:false,
                 'messagesegip'=>$message,
-                'answerSegip'=>$answerSegip,
+                'answerSegip'=>!$answerSegip,
             )
 
         ));
