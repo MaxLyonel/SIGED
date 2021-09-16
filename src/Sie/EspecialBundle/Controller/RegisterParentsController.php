@@ -121,7 +121,8 @@ class RegisterParentsController extends Controller {
     	$em = $this->getDoctrine()->getManager();
     	// set the variables
     	$ci = $request->get('ci');
-    	$complemento = ($request->get('complemento')!='')?$request->get('complemento'):'';
+
+    	$complemento = ($request->get('complemento')!='')?mb_strtoupper($request->get('complemento'), "utf-8"):'';
 		// conditio nto find the person
 		$arrayCondition2['complemento'] = $complemento;
         $arrayCondition2['carnet'] = $ci;
@@ -207,7 +208,7 @@ class RegisterParentsController extends Controller {
         return $response;        
     }
 
-    public function saveParentsAction(Request $request){
+    public function saveParentsAction(Request $request){dump($request);die;
     	// ini vars
     	$response = new JsonResponse();
     	$em = $this->getDoctrine()->getManager();
@@ -251,7 +252,7 @@ class RegisterParentsController extends Controller {
       	// not thing to do 
       }
 
-
+dump($request);die;
       if($answerSegip){
     	//save the apoderado
 		$nuevoApoderado = new ApoderadoInscripcion();

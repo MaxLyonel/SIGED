@@ -227,7 +227,7 @@ input {
                         <thead>
                             <tr>
                             
-                            <th scope="col">CI-COMPLEMENTO</th>
+                            <th scope="col">CI COMPLEMENTO</th>
                             <th scope="col">PATERNO</th>
                             <th scope="col">MATERNO</th>
                             <th scope="col">NOMBRE(S)</th>
@@ -239,7 +239,7 @@ input {
                         </thead>
                         <tbody>
                             <tr v-for="(parent, index) in DBParents">
-                            <td>${parent.carnet} </td>
+                            <td>${parent.carnet} ${parent.complemento} </td>
                             <td>${parent.paterno}</td>
                             <td>${parent.materno}</td>
                             <td>${parent.nombre}</td>
