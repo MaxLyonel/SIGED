@@ -575,7 +575,7 @@ class CursosLargosController extends Controller {
             $subareaArray = array();
 
             foreach ($subarea as $value) {
-                if (($value->getId() == 1 )||($value->getId() == 2 )) {
+                if (($value->getId() == 5  )||($value->getId() == 6 )) {
                     $subareaArray[$value->getId()] = $value->getSubArea();
                 }
             }
@@ -706,7 +706,7 @@ class CursosLargosController extends Controller {
                 ->add('fechaInicio', 'date', array('widget' => 'single_text','format' => 'dd-MM-yyyy','data' => new \DateTime($institucioncurso->getFechaInicio()->format('d-m-Y')), 'required' => false, 'attr' => array('class' => 'form-control calendario')))
                 ->add('fechaFin', 'date', array('widget' => 'single_text','format' => 'dd-MM-yyyy','data' => new \DateTime($institucioncurso->getFechaFin()->format('d-m-Y')), 'required' => false, 'attr' => array('class' => 'form-control calendario')))
                 ->add('subarea', 'choice', array('required' => true, 'choices' => $subareaArray, 'data' => $institucioncursocorto->getSubareaTipo()->getId() , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
-                ->add('programa', 'choice', array('required' => true, 'choices' => $programaArray, 'data' => $institucioncursocorto->getProgramaTipo()->getId() , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
+                //->add('programa', 'choice', array('required' => true, 'choices' => $programaArray, 'data' => $institucioncursocorto->getProgramaTipo()->getId() , 'attr' => array('class' => 'form-control', 'data-placeholder' => 'Seleccionar...', 'data-placeholder' => 'Seleccionar...')))
                // ->add('especialidad', 'choice', array( 'required' => true, 'choices' => $espUEArray, 'data' => $idesp,'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','readonly' => true, 'onchange' => 'listarNiveles(this.value)')))
                // ->add('nivel', 'choice', array( 'required' => true, 'choices' => $nivelArray,'data' => $idnivel , 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','readonly' => true, 'onchange' => 'mostrarHoras(this.value)')))
                 ->add('nivel', 'text', array( 'required' => true, 'data' => $nivEsp, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control','readonly' => true)))
@@ -771,8 +771,9 @@ class CursosLargosController extends Controller {
 
             $em->flush($institucioncurso);
             $institucioncursocorto  ->setInstitucioneducativaCurso($institucioncurso);
-            $institucioncursocorto  ->setSubAreaTipo($em->getRepository('SieAppWebBundle:PermanenteSubAreaTipo')->findOneBy(array('id' => $form['subarea'])));
-            $institucioncursocorto  ->setProgramaTipo($em->getRepository('SieAppWebBundle:PermanenteProgramaTipo')->findOneBy(array('id' => $form['programa'])));
+            $institucioncursocorto  ->setSubAreaTipo($em->getRepository('SieAppWebBundle:PermanenteSubAreaTipo')->findOneBy(array('id' => $form['subarea'])));            
+            //$institucioncursocorto  ->setProgramaTipo($em->getRepository('SieAppWebBundle:PermanenteProgramaTipo')->findOneBy(array('id' => $form['programa'])));
+            $institucioncursocorto  ->setProgramaTipo($em->getRepository('SieAppWebBundle:PermanenteProgramaTipo')->findOneBy(array('id' => 0)));                                      
             //$institucioncursocorto  ->setAreatematicaTipo($em->getRepository('SieAppWebBundle:PermanenteAreaTematicaTipo')->findOneBy(array('id' => $form['areatematica'])));
            // $institucioncursocorto  ->setCursocortoTipo($em->getRepository('SieAppWebBundle:PermanenteCursocortoTipo')->findOneBy(array('id' => $form['cursosCortos'])));
             $institucioncursocorto  ->setPoblacionTipo($em->getRepository('SieAppWebBundle:PermanentePoblacionTipo')->findOneBy(array('id' => $form['poblacion'])));
