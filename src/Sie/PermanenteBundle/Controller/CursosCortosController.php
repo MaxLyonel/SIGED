@@ -410,8 +410,8 @@ class CursosCortosController extends Controller {
             }
 
             $subareaArray= array();
-            foreach ($subarea as $value) {
-                if ($value->getId() != 0 && $value->getObs()=='t' ) {
+            foreach ($subarea as $value) { 
+                if ($value->getId() != 0 && $value->getEsActivo() === true ) {
                     $subareaArray[$value->getId()] = $value->getSubArea();
                 }
             }
