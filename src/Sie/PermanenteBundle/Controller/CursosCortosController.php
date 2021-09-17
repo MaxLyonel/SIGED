@@ -176,7 +176,7 @@ class CursosCortosController extends Controller {
             $subareaArray = array();
 
             foreach ($subarea as $value) {
-                if ($value->getId() != 0 ) {
+                if ($value->getId() != 0 && $value->getObs()=='t' ) {
                     $subareaArray[$value->getId()] = $value->getSubArea();
                 }
             }
@@ -410,8 +410,8 @@ class CursosCortosController extends Controller {
             }
 
             $subareaArray= array();
-            foreach ($subarea as $value) {
-                if ($value->getId() != 0) {
+            foreach ($subarea as $value) { 
+                if ($value->getId() != 0 && $value->getEsActivo() === true ) {
                     $subareaArray[$value->getId()] = $value->getSubArea();
                 }
             }
@@ -610,7 +610,7 @@ class CursosCortosController extends Controller {
 
     public function deleteCursoCortoAction(Request $request){
         //create the DB conexion
-      //  dump($request);die;
+      //dump($request);die;
         $em= $this->getDoctrine()->getManager();
         $db = $em->getConnection();
 
@@ -766,7 +766,7 @@ class CursosCortosController extends Controller {
             ->add('horasmaestro', 'hidden', array('data' => $horasmodulo))
             ->add('gestion', 'hidden', array('data' => $gestion))
             ->add('cursoscortos', 'hidden', array('data' => $idcurso))
-            ->add('horas', 'text', array( 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'onblur'=>'rangosHorasCM(this)', 'maxlength' => '3')))
+            //->add('horas', 'text', array( 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'onblur'=>'rangosHorasCM(this)', 'maxlength' => '3')))
             //->add('busqueda', 'text', array( 'required' => false, 'attr' => array('autocomplete' => 'on', 'class' => 'form-control')))
 
             ->getForm();
@@ -807,7 +807,7 @@ class CursosCortosController extends Controller {
         $institucion = $this->session->get('ie_id');
         $gestion = $this->session->get('ie_gestion');
         $periodo = $this->session->get('ie_per_cod');
-        $horas = $form['horas'];
+        //$horas = $form['horas'];
       //  dump($horas);die;
         try
         {
@@ -824,7 +824,7 @@ class CursosCortosController extends Controller {
             {
                 $institucioncursoferta = new InstitucioneducativaCursoOferta();
                 $institucioncursoferta ->setInsitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('id' => $form['cursoscortos'])));
-                $institucioncursoferta ->setHorasmes($horas);
+                //$institucioncursoferta ->setHorasmes($horas);
                 $institucioncursoferta ->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find(1));
 
                 $em->persist($institucioncursoferta);
@@ -844,7 +844,7 @@ class CursosCortosController extends Controller {
             $institucioncursofermaestro = new InstitucioneducativaCursoOfertaMaestro();
 
             $institucioncursofermaestro  ->setInstitucioneducativaCursoOferta($institucioncursoferta);
-            $institucioncursofermaestro  ->setHorasMes($horas);
+           // $institucioncursofermaestro  ->setHorasMes($horas);
             $institucioncursofermaestro  ->setMaestroInscripcion($em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneBy(array('id' => $form['facilitador'])));
 
             $em->persist($institucioncursofermaestro);
@@ -914,7 +914,7 @@ class CursosCortosController extends Controller {
                 ->add('horasmaestro', 'hidden', array('data' => $horasmodulo))
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('cursoscortos', 'hidden', array('data' => $idcurso))
-                ->add('horas', 'text', array( 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'onblur'=>'rangosHorasCM(this)', 'maxlength' => '3')))
+                //->add('horas', 'text', array( 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'onblur'=>'rangosHorasCM(this)', 'maxlength' => '3')))
 
                 //->add('busqueda', 'text', array( 'required' => false, 'attr' => array('autocomplete' => 'on', 'class' => 'form-control')))
 
@@ -1037,7 +1037,7 @@ class CursosCortosController extends Controller {
                 ->add('horasmaestro', 'hidden', array('data' => $horasmodulo))
                 ->add('gestion', 'hidden', array('data' => $gestion))
                 ->add('cursoscortos', 'hidden', array('data' => $idcurso))
-               ->add('horas', 'text', array( 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'onblur'=>'rangosHorasCM(this)', 'maxlength' => '3')))
+               //->add('horas', 'text', array( 'required' => true, 'attr' => array('autocomplete' => 'off', 'class' => 'form-control', 'onblur'=>'rangosHorasCM(this)', 'maxlength' => '3')))
 
                 //->add('busqueda', 'text', array( 'required' => false, 'attr' => array('autocomplete' => 'on', 'class' => 'form-control')))
 

@@ -3,8 +3,6 @@
 {% block contentoption %}
 
     <div class="header-content" id="principal">
-
-
         <h2><i class="fa fa-users"></i> Cursos y alumnos <span>Lista de cursos y alumnos del centro de educación permanente.</span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aqui:</span>
@@ -27,365 +25,682 @@
             </ol>
         </div><!-- /.breadcrumb-wrapper -->
     </div>
-
+    <div class="row">
+        <div id= "mengestioncurso" class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('newError') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>        
+    </div>        
+                
     {% if exist == 1 %}
-        <div class="body-content animated fadeIn">
-            <div class="row">
-                <div id= "mengestioncurso" class="col-md-12">
-                    {% for flashMessage in app.session.flashbag.get('deletecursomensaje') %}
-                        <div class="alert alert-warning alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
-                        </div>
-                    {% endfor %}
+        {% if gestion < 2021 %}
+            <div class="body-content animated fadeIn">
+                <div class="row">
+                    <div id= "mengestioncurso" class="col-md-12">
+                        {% for flashMessage in app.session.flashbag.get('deletecursomensaje') %}
+                            <div class="alert alert-warning alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div id= "mengestioncurso" class="col-md-12">
-                    {% for flashMessage in app.session.flashbag.get('newOk') %}
-                        <div class="alert alert-success alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
+                <div class="row">
+                    <div id= "mengestioncurso" class="col-md-12">
+                        {% for flashMessage in app.session.flashbag.get('newOk') %}
+                            <div class="alert alert-success alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div> 
+                <div class="row">
+                    <div id= "mengestioncurso" class="col-md-12">
+                        {% for flashMessage in app.session.flashbag.get('newError') %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div> 
 
-            <div class="row">
-                <div id= "mengestioncurso" class="col-md-12">
-                    {% for flashMessage in app.session.flashbag.get('newError') %}
-                        <div class="alert alert-danger alert-dismissible" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
+                <div class="col-md-4">
+                    <div class="tab">
+                        <button class="tablinks" onclick="openCity(event, 'uno')" id="defaultOpen">Abiertos</button>
+                        <button class="tablinks" onclick="openCity(event, 'dos')">Cerrados</button>
+                        <button class="tablinks" onclick="openCity(event, 'tres')">Todos</button>
+                    </div>
 
+                    <div id="uno" class="tabcontent " >
 
-            <div class="col-md-4">
+                            <small>
+                                <div class="tree well">
+                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
+                                            <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                                                <i class="fa fa-cubes"></i> Nuevo Curso
+                                            </button>
+                                        </div>
+                                        {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">#}
+                                            {#<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">#}
+                                                {#<i class="fa fa-list"></i> Listado de Cursos#}
+                                            {#</button>#}
+                                        {#</div>#}
+                                    {% endif%}
 
-
-            <div class="tab">
-                <button class="tablinks" onclick="openCity(event, 'uno')" id="defaultOpen">Abiertos</button>
-                <button class="tablinks" onclick="openCity(event, 'dos')">Cerrados</button>
-                <button class="tablinks" onclick="openCity(event, 'tres')">Todos</button>
-            </div>
-
-            <div id="uno" class="tabcontent " >
-
-                    <small>
-                        <div class="tree well">
-                            {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
-                                    <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
-                                        <i class="fa fa-cubes"></i> Nuevo Curso
-                                    </button>
-                                </div>
-                                {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">#}
-                                    {#<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">#}
-                                        {#<i class="fa fa-list"></i> Listado de Cursos#}
-                                    {#</button>#}
-                                {#</div>#}
-                            {% endif%}
-
-                            {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
-                            {% if (subareaKey==1) %}
-                                    <ul>
-                                        {% for programaKey, dataPrograma in dataSubarea %}
-                                        <li>
-                                            <span><i class="icon-minus-sign"></i>{{ programaKey}}</span>
+                                    {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
+                                    {% if (subareaKey==1) %}
                                             <ul>
-                                        {% for cursolargoKey, dataCursolargo in dataPrograma %}
-                                                        <li>
-                                                        <span><i class="icon-minus-sign"></i>{{ cursolargoKey}}</span>
-                                                        <ul>
-                                                            {% for acreditacionKey, dataAcreditacion in dataCursolargo %}
-                                                                            <li>
-                                                                                <span><i class="icon-minus-sign"></i>{{ acreditacionKey }}</span>
-                                                                                <ul>
-                                                                                    {% for iecidKey, dataIecid in dataAcreditacion %}
-                                                                                        <li>
-                                                                                            <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
-                                                                                            <ul>
-                                                                                                {% for paraleloKey, dataParalelo in dataIecid %}
-                                                                                                    <li>
-                                                                                                   {#  <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span> #}
+                                                {% for programaKey, dataPrograma in dataSubarea %}
+                                                <li>
+                                                    <span><i class="icon-minus-sign"></i>{{ programaKey}}</span>
+                                                    <ul>
+                                                {% for cursolargoKey, dataCursolargo in dataPrograma %}
+                                                                <li>
+                                                                <span><i class="icon-minus-sign"></i>{{ cursolargoKey}}</span>
+                                                                <ul>
+                                                                    {% for acreditacionKey, dataAcreditacion in dataCursolargo %}
+                                                                                    <li>
+                                                                                        <span><i class="icon-minus-sign"></i>{{ acreditacionKey }}</span>
+                                                                                        <ul>
+                                                                                            {% for iecidKey, dataIecid in dataAcreditacion %}
+                                                                                                <li>
+                                                                                                    <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                                                    <ul>
+                                                                                                        {% for paraleloKey, dataParalelo in dataIecid %}
+                                                                                                            <li>
+                                                                                                        {#  <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span> #}
+
+                                                                                                            {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
+                                                                                                                    <button class="btn btn-circle btn-success btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                                        {{ paraleloKey }}
+                                                                                                                    </button>
+                                                                                                                </div>
+                                                                                                            {% endif %}
+
+                                                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modulos">
+                                                                                                                <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                                    <i class="fa fa-columns"></i>
+                                                                                                                    {#{{ iecidKey }}#}
+                                                                                                                </button>
+                                                                                                            </div>
+                                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
+                                                                                                                    <button class="btn btn-circle btn-success btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
+                                                                                                                        <i class="fa fa-group"></i>
+                                                                                                                    </button>
+                                                                                                                </div>
+
+
+
+                                                                                                            </li>
+                                                                                            {% endfor %}
+
+                                                                                        </ul>
+                                                                                    </li>
+                                                                                            {% endfor %}
+                                                                                        </ul>
+                                                                                    </li>
+                                                                                {% endfor %}
+
+                                                                </ul>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>
+                                                {% endfor %}
+                                            </ul>
+                                    {% endif %}
+                                    {% endfor %}
+
+
+                                </div>
+                            </small>
+
+                    </div>
+
+                    <div id="dos" class="tabcontent">
+
+
+                        <small>
+                            <div class="tree well">
+                                {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
+                                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                                            <i class="fa fa-cubes"></i> Nuevo Curso
+                                        </button>
+                                    </div>
+
+                                    {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">#}
+                                        {#<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">#}
+                                            {#<i class="fa fa-list"></i> Listado de Cursos#}
+                                        {#</button>#}
+                                    {#</div>#}
+                                {% endif%}
+
+                                {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
+                                    {% if (subareaKey==0) %}
+                                        <ul>
+                                            {% for programaKey, dataPrograma in dataSubarea %}
+                                                <li>
+                                                    <span><i class="icon-minus-sign"></i>{{ programaKey}}</span>
+                                                    <ul>
+                                                        {% for cursolargoKey, dataCursolargo in dataPrograma %}
+                                                            <li>
+                                                                <span><i class="icon-minus-sign"></i>{{ cursolargoKey}}</span>
+                                                                <ul>
+                                                                    {% for acreditacionKey, dataAcreditacion in dataCursolargo %}
+                                                                        <li>
+                                                                            <span><i class="icon-minus-sign"></i>{{ acreditacionKey }}</span>
+                                                                            <ul>
+                                                                                {% for iecidKey, dataIecid in dataAcreditacion %}
+                                                                                    <li>
+                                                                                        <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                                        <ul>
+                                                                                            {% for paraleloKey, dataParalelo in dataIecid %}
+                                                                                                            <li>
+                                                                                                            <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span>
+
 
                                                                                                     {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
                                                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
-                                                                                                            <button class="btn btn-circle btn-success btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
-                                                                                                                {{ paraleloKey }}
+                                                                                                            <button class="btn btn-circle btn-danger btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                                <i class="fa fa-info"></i>
                                                                                                             </button>
                                                                                                         </div>
                                                                                                     {% endif %}
 
-                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modulos">
-                                                                                                        <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataParalelo.infoUe}} ');">
-                                                                                                            <i class="fa fa-columns"></i>
+                                                                                                    {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">#}
+                                                                                                        {#<button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataIdcurso.infoUe}} ');">#}
+                                                                                                            {#<i class="fa fa-columns"></i>#}
                                                                                                             {#{{ iecidKey }}#}
+                                                                                                        {#</button>#}
+                                                                                                    {#</div>#}
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
+                                                                                                        <button class="btn btn-circle btn-danger btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
+                                                                                                            <i class="fa fa-group"></i>
                                                                                                         </button>
                                                                                                     </div>
-                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
-                                                                                                            <button class="btn btn-circle btn-success btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
-                                                                                                                <i class="fa fa-group"></i>
+
+
+
+
+                                                                                                </li>
+                                                                                            {% endfor %}
+
+                                                                                        </ul>
+                                                                                    </li>
+                                                                                {% endfor %}
+                                                                            </ul>
+                                                                        </li>
+                                                                    {% endfor %}
+
+                                                                </ul>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                {% endfor %}
+
+
+                            </div>
+                        </small>
+                    </div>
+
+                    <div id="tres" class="tabcontent">
+
+                        <small>
+                            <div class="tree well">
+                                {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
+                                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                                            <i class="fa fa-cubes"></i> Nuevo Curso
+                                        </button>
+                                    </div>
+                                    {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">#}
+                                        {#<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">#}
+                                            {#<i class="fa fa-list"></i> Listado de Cursos#}
+                                        {#</button>#}
+                                    {#</div>#}
+                                {% endif%}
+
+                                {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
+
+                                    <ul>
+                                        {% for programaKey, dataPrograma in dataSubarea %}
+                                            <li>
+                                                <span><i class="icon-minus-sign"></i>{{ programaKey}}</span>
+                                                <ul>
+                                                    {% for cursolargoKey, dataCursolargo in dataPrograma %}
+                                                        <li>
+                                                            <span><i class="icon-minus-sign"></i>{{ cursolargoKey}}</span>
+                                                            <ul>
+                                                                {% for acreditacionKey, dataAcreditacion in dataCursolargo %}
+                                                                    <li>
+                                                                        <span><i class="icon-minus-sign"></i>{{ acreditacionKey }}</span>
+                                                                        <ul>
+                                                                            {% for iecidKey, dataIecid in dataAcreditacion %}
+                                                                                <li>
+                                                                                    <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                                    <ul>
+                                                                                        {% for paraleloKey, dataParalelo in dataIecid %}
+                                                                                                            <li>
+                                                                                                        
+
+
+                                                                                                {% if (dataParalelo.esabierto) %}
+
+                                                                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
+                                                                                                                    <button class="btn btn-circle btn-success btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                                        {{ paraleloKey }}
+                                                                                                                    </button>
+                                                                                                                </div>
+                                                                                                            {% endif %}
+
+                                                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modulos">
+                                                                                                                <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                                    <i class="fa fa-columns"></i>
+                                                                                                                    {#{{ iecidKey }}#}
+                                                                                                                </button>
+                                                                                                            </div>
+                                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
+                                                                                                                    <button class="btn btn-circle btn-success btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
+                                                                                                                        <i class="fa fa-group"></i>
+                                                                                                                    </button>
+                                                                                                                </div>
+                                                                                                {% else %}
+                                                                                                <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span>
+                                                                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
+                                                                                                            <button class="btn btn-circle btn-danger btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                                <i class="fa fa-info"></i>
                                                                                                             </button>
                                                                                                         </div>
+                                                                                                    {% endif %}
+
+                                                                                                    {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">#}
+                                                                                                    {#<button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataIdcurso.infoUe}} ');">#}
+                                                                                                    {#<i class="fa fa-columns"></i>#}
+                                                                                                    {#{{ iecidKey }}#}
+                                                                                                    {#</button>#}
+                                                                                                    {#</div>#}
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
+                                                                                                        <button class="btn btn-circle btn-danger btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
+                                                                                                            <i class="fa fa-group"></i>
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                {% endif %}
 
 
 
-                                                                                                    </li>
-                                                                                    {% endfor %}
+                                                                                            </li>
+                                                                                        {% endfor %}
 
-                                                                                </ul>
-                                                                            </li>
-                                                                                    {% endfor %}
-                                                                                </ul>
-                                                                            </li>
-                                                                        {% endfor %}
+                                                                                    </ul>
+                                                                                </li>
+                                                                            {% endfor %}
+                                                                        </ul>
+                                                                    </li>
+                                                                {% endfor %}
 
-                                                        </ul>
-                                                    </li>
+                                                            </ul>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+
+                                {% endfor %}
+
+
+                            </div>
+                        </small>
+
+                    </div>
+                </div>
+
+                <div class='col-md-8'>
+                    <div id="idstudents"></div>
+                </div>
+            </div>
+        {% else %} <!-- Ajustes según nuevos limeamientos 2021-->
+            <div class="body-content animated fadeIn">
+                <div class="row">
+                    <div id= "mengestioncurso" class="col-md-12">
+                        {% for flashMessage in app.session.flashbag.get('deletecursomensaje') %}
+                            <div class="alert alert-warning alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div  class="col-md-12">
+                        {% for flashMessage in app.session.flashbag.get('advertencia') %}
+                            <div class="alert alert-warning alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong><i class='fa fa-exclamation'></i></strong> {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div id= "mengestioncurso" class="col-md-12">
+                        {% for flashMessage in app.session.flashbag.get('newOk') %}
+                            <div class="alert alert-success alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div id= "mengestioncurso" class="col-md-12">
+                        {% for flashMessage in app.session.flashbag.get('newError') %}
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Contenido tab-->
+                <div class="col-md-4">
+                    <div class="tab">
+                        <button class="tablinks" onclick="openCity(event, 'uno')" id="defaultOpen">Abiertos</button>
+                        <button class="tablinks" onclick="openCity(event, 'dos')">Cerrados</button>
+                        <button class="tablinks" onclick="openCity(event, 'tres')">Todos</button>
+                    </div>
+
+                    <div id="uno" class="tabcontent " >
+                        <small>
+                            <div class="tree well">
+                                {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
+                                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                                            <i class="fa fa-cubes"></i> Nuevo Curso
+                                        </button>
+                                    </div>                                
+                                {% endif %}
+                                {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
+                                {% if (subareaKey==1) %}
+                                    <ul>
+                                        {% for programaKey, dataPrograma in dataSubarea %}
+                                        <li>
+                                            <span><i class="icon-minus-sign"></i>{{ programaKey}}</span>
+                                            <ul>                                        
+                                                {% for cursolargoKey, dataCursolargo in dataPrograma %}
+                                                <li>                                                
+                                                    {% for acreditacionKey, dataAcreditacion in dataCursolargo %}                                                    
+                                                            <span><i class="icon-minus-sign"></i>{{ acreditacionKey }}</span>
+                                                            <ul>
+                                                                {% for iecidKey, dataIecid in dataAcreditacion %}
+                                                                    <li>
+                                                                        <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                        <ul>
+                                                                            {% for paraleloKey, dataParalelo in dataIecid %}
+                                                                                <li> 
+                                                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
+                                                                                            <button class="btn btn-circle btn-success btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                {{ paraleloKey }}
+                                                                                            </button>
+                                                                                        </div>
+                                                                                    {% endif %}
+                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modulos">
+                                                                                        <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                            <i class="fa fa-columns"></i>
+                                                                                            {#{{ iecidKey }}#}
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
+                                                                                        <button class="btn btn-circle btn-success btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
+                                                                                            <i class="fa fa-group"></i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                </li>
+                                                                            {% endfor %}
+                                                                        </ul>
+                                                                    </li>                                                        
+                                                                {% endfor %}
+                                                            </ul>                                                    
+                                                    {% endfor %}                                                
+                                                </li>
                                                 {% endfor %}
                                             </ul>
                                         </li>
                                         {% endfor %}
                                     </ul>
-                            {% endif %}
-                            {% endfor %}
+                                {% endif %}
+                                {% endfor %}
 
 
-                        </div>
-                    </small>
-
-            </div>
-
-            <div id="dos" class="tabcontent">
-
-
-                <small>
-                    <div class="tree well">
-                        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
-                                <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
-                                    <i class="fa fa-cubes"></i> Nuevo Curso
-                                </button>
                             </div>
-
-                            {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">#}
-                                {#<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">#}
-                                    {#<i class="fa fa-list"></i> Listado de Cursos#}
-                                {#</button>#}
-                            {#</div>#}
-                        {% endif%}
-
-                        {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
-                            {% if (subareaKey==0) %}
-                                <ul>
-                                    {% for programaKey, dataPrograma in dataSubarea %}
-                                        <li>
-                                            <span><i class="icon-minus-sign"></i>{{ programaKey}}</span>
-                                            <ul>
-                                                {% for cursolargoKey, dataCursolargo in dataPrograma %}
-                                                    <li>
-                                                        <span><i class="icon-minus-sign"></i>{{ cursolargoKey}}</span>
-                                                        <ul>
-                                                            {% for acreditacionKey, dataAcreditacion in dataCursolargo %}
-                                                                <li>
-                                                                    <span><i class="icon-minus-sign"></i>{{ acreditacionKey }}</span>
-                                                                    <ul>
-                                                                        {% for iecidKey, dataIecid in dataAcreditacion %}
-                                                                            <li>
-                                                                                <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
-                                                                                <ul>
-                                                                                    {% for paraleloKey, dataParalelo in dataIecid %}
-                                                                                                    <li>
-                                                                                                    <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span>
-
-
-                                                                                            {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
-                                                                                                    <button class="btn btn-circle btn-danger btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
-                                                                                                        <i class="fa fa-info"></i>
-                                                                                                    </button>
-                                                                                                </div>
-                                                                                            {% endif %}
-
-                                                                                            {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">#}
-                                                                                                {#<button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataIdcurso.infoUe}} ');">#}
-                                                                                                    {#<i class="fa fa-columns"></i>#}
-                                                                                                    {#{{ iecidKey }}#}
-                                                                                                {#</button>#}
-                                                                                            {#</div>#}
-                                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
-                                                                                                <button class="btn btn-circle btn-danger btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
-                                                                                                    <i class="fa fa-group"></i>
-                                                                                                </button>
-                                                                                            </div>
-
-
-
-
-                                                                                        </li>
-                                                                                    {% endfor %}
-
-                                                                                </ul>
-                                                                            </li>
-                                                                        {% endfor %}
-                                                                    </ul>
-                                                                </li>
-                                                            {% endfor %}
-
-                                                        </ul>
-                                                    </li>
-                                                {% endfor %}
-                                            </ul>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
-                        {% endfor %}
-
-
+                        </small>
                     </div>
-                </small>
-            </div>
 
-            <div id="tres" class="tabcontent">
+                    <div id="dos" class="tabcontent">
+                        <small>
+                            <div class="tree well">
+                                {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
+                                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                                            <i class="fa fa-cubes"></i> Nuevo Curso
+                                        </button>
+                                    </div>
+                                    {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">#}
+                                        {#<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">#}
+                                            {#<i class="fa fa-list"></i> Listado de Cursos#}
+                                        {#</button>#}
+                                    {#</div>#}
+                                {% endif %}
 
-                <small>
-                    <div class="tree well">
-                        {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
-                                <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
-                                    <i class="fa fa-cubes"></i> Nuevo Curso
-                                </button>
-                            </div>
-                            {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">#}
-                                {#<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">#}
-                                    {#<i class="fa fa-list"></i> Listado de Cursos#}
-                                {#</button>#}
-                            {#</div>#}
-                        {% endif%}
-
-                        {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
-
-                            <ul>
-                                {% for programaKey, dataPrograma in dataSubarea %}
-                                    <li>
-                                        <span><i class="icon-minus-sign"></i>{{ programaKey}}</span>
+                                {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
+                                    {% if (subareaKey==0) %}
                                         <ul>
-                                            {% for cursolargoKey, dataCursolargo in dataPrograma %}
+                                            {% for programaKey, dataPrograma in dataSubarea %}
                                                 <li>
-                                                    <span><i class="icon-minus-sign"></i>{{ cursolargoKey}}</span>
+                                                    <span><i class="icon-minus-sign"></i>{{ programaKey}}</span>
                                                     <ul>
-                                                        {% for acreditacionKey, dataAcreditacion in dataCursolargo %}
+                                                        {% for cursolargoKey, dataCursolargo in dataPrograma %}
                                                             <li>
-                                                                <span><i class="icon-minus-sign"></i>{{ acreditacionKey }}</span>
-                                                                <ul>
-                                                                    {% for iecidKey, dataIecid in dataAcreditacion %}
-                                                                        <li>
-                                                                            <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                {# <span><i class="icon-minus-sign"></i>{{ cursolargoKey}}</span> #}                                                                
+                                                                    {% for acreditacionKey, dataAcreditacion in dataCursolargo %}                                                                        
+                                                                            <span><i class="icon-minus-sign"></i>{{ acreditacionKey }}</span>
                                                                             <ul>
-                                                                                {% for paraleloKey, dataParalelo in dataIecid %}
-                                                                                                    <li>
-                                                                                                   
-
-
-                                                                                        {% if (dataParalelo.esabierto) %}
-
-                                                                                             {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                {% for iecidKey, dataIecid in dataAcreditacion %}
+                                                                                    <li>
+                                                                                        <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                                        <ul>
+                                                                                            {% for paraleloKey, dataParalelo in dataIecid %}
+                                                                                                <li>
+                                                                                                    <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span>
+                                                                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
                                                                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
-                                                                                                            <button class="btn btn-circle btn-success btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
-                                                                                                                {{ paraleloKey }}
+                                                                                                            <button class="btn btn-circle btn-danger btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                                <i class="fa fa-info"></i>
                                                                                                             </button>
                                                                                                         </div>
                                                                                                     {% endif %}
 
-                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modulos">
-                                                                                                        <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataParalelo.infoUe}} ');">
-                                                                                                            <i class="fa fa-columns"></i>
+                                                                                                    {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">#}
+                                                                                                        {#<button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataIdcurso.infoUe}} ');">#}
+                                                                                                            {#<i class="fa fa-columns"></i>#}
                                                                                                             {#{{ iecidKey }}#}
+                                                                                                        {#</button>#}
+                                                                                                    {#</div>#}
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
+                                                                                                        <button class="btn btn-circle btn-danger btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
+                                                                                                            <i class="fa fa-group"></i>
                                                                                                         </button>
                                                                                                     </div>
-                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
-                                                                                                            <button class="btn btn-circle btn-success btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
-                                                                                                                <i class="fa fa-group"></i>
-                                                                                                            </button>
-                                                                                                        </div>
-                                                                                        {% else %}
-                                                                                         <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span>
-                                                                                            {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
-                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
-                                                                                                    <button class="btn btn-circle btn-danger btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
-                                                                                                        <i class="fa fa-info"></i>
-                                                                                                    </button>
-                                                                                                </div>
-                                                                                            {% endif %}
-
-                                                                                            {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">#}
-                                                                                            {#<button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataIdcurso.infoUe}} ');">#}
-                                                                                            {#<i class="fa fa-columns"></i>#}
-                                                                                            {#{{ iecidKey }}#}
-                                                                                            {#</button>#}
-                                                                                            {#</div>#}
-                                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
-                                                                                                <button class="btn btn-circle btn-danger btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
-                                                                                                    <i class="fa fa-group"></i>
-                                                                                                </button>
-                                                                                            </div>
-                                                                                        {% endif %}
-
-
-
+                                                                                                </li>
+                                                                                            {% endfor %}
+                                                                                        </ul>
                                                                                     </li>
                                                                                 {% endfor %}
-
                                                                             </ul>
-                                                                        </li>
+                                                                        
                                                                     {% endfor %}
-                                                                </ul>
+
+                                                                
                                                             </li>
                                                         {% endfor %}
-
                                                     </ul>
                                                 </li>
                                             {% endfor %}
                                         </ul>
-                                    </li>
+                                    {% endif %}
                                 {% endfor %}
-                            </ul>
 
-                        {% endfor %}
 
+                            </div>
+                        </small>
+                    </div>
+
+                    <div id="tres" class="tabcontent">
+
+                        <small>
+                            <div class="tree well">
+                                {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Nuevo Curso">
+                                        <button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="nuevoCurso();">
+                                            <i class="fa fa-cubes"></i> Nuevo Curso
+                                        </button>
+                                    </div>
+                                    {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Listado de Cursos">#}
+                                        {#<button class="btn btn-lilac btn-xs btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="listaCurso();">#}
+                                            {#<i class="fa fa-list"></i> Listado de Cursos#}
+                                        {#</button>#}
+                                    {#</div>#}
+                                {% endif%}
+
+                                {% for subareaKey, dataSubarea in aInfoUnidadEductiva %}
+
+                                    <ul>
+                                        {% for programaKey, dataPrograma in dataSubarea %}
+                                            <li>
+                                                <span><i class="icon-minus-sign"></i>{{ programaKey}}</span>
+                                                <ul>
+                                                    {% for cursolargoKey, dataCursolargo in dataPrograma %}
+                                                        <li>
+                                                           {#  <span><i class="icon-minus-sign"></i>{{ cursolargoKey}}</span> #}
+                                                            
+                                                                {% for acreditacionKey, dataAcreditacion in dataCursolargo %}
+                                                                    
+                                                                        <span><i class="icon-minus-sign"></i>{{ acreditacionKey }}</span>
+                                                                        <ul>
+                                                                            {% for iecidKey, dataIecid in dataAcreditacion %}
+                                                                                <li>
+                                                                                    <span><i class="icon-minus-sign"></i>{{ iecidKey }}</span>
+                                                                                    <ul>
+                                                                                        {% for paraleloKey, dataParalelo in dataIecid %}
+                                                                                                            <li>
+                                                                                                        
+
+
+                                                                                                {% if (dataParalelo.esabierto) %}
+
+                                                                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
+                                                                                                                    <button class="btn btn-circle btn-success btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                                        {{ paraleloKey }}
+                                                                                                                    </button>
+                                                                                                                </div>
+                                                                                                            {% endif %}
+
+                                                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modulos">
+                                                                                                                <button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                                    <i class="fa fa-columns"></i>
+                                                                                                                    {#{{ iecidKey }}#}
+                                                                                                                </button>
+                                                                                                            </div>
+                                                                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
+                                                                                                                    <button class="btn btn-circle btn-success btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
+                                                                                                                        <i class="fa fa-group"></i>
+                                                                                                                    </button>
+                                                                                                                </div>
+                                                                                                {% else %}
+                                                                                                <span><i class="icon-minus-sign"></i>{{ paraleloKey }}</span>
+                                                                                                    {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
+                                                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Información del Curso">
+                                                                                                            <button class="btn btn-circle btn-danger btn-stroke" onclick="mostrarCurso('{{ dataParalelo.infoUe}} ');">
+                                                                                                                <i class="fa fa-info"></i>
+                                                                                                            </button>
+                                                                                                        </div>
+                                                                                                    {% endif %}
+
+                                                                                                    {#<div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscritos">#}
+                                                                                                    {#<button class="btn btn-circle btn-success btn-stroke"  data-toggle="modal" data-target=".bs-example-modal-table" onclick="modulosCurso('{{ dataIdcurso.infoUe}} ');">#}
+                                                                                                    {#<i class="fa fa-columns"></i>#}
+                                                                                                    {#{{ iecidKey }}#}
+                                                                                                    {#</button>#}
+                                                                                                    {#</div>#}
+                                                                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Inscripciones">
+                                                                                                        <button class="btn btn-circle btn-danger btn-stroke"  onclick="inscripcionEstudiantes( '{{ dataParalelo.iecId }}');">
+                                                                                                            <i class="fa fa-group"></i>
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                {% endif %}
+
+
+
+                                                                                            </li>
+                                                                                        {% endfor %}
+
+                                                                                    </ul>
+                                                                                </li>
+                                                                            {% endfor %}
+                                                                        </ul>
+                                                                    
+                                                                {% endfor %}
+
+                                                            
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+
+                                {% endfor %}
+
+
+                            </div>
+                        </small>
 
                     </div>
-                </small>
-
+                </div>            
+                <div class='col-md-8'>
+                    <div id="idstudents"></div>
+                </div>
             </div>
-
-            </div>
-
-            <div class='col-md-8'>
-                <div id="idstudents"></div>
+        {% endif %}
+    {% else %}
+        <div class="row">
+            <div  class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('advertencia') %}
+                    <div class="alert alert-warning alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-exclamation'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-            <!--/div-->
-            <!--/ End mail page -->
-        {#</div>#}
-    {% else %}
+       
         {% if (app.session.get('ie_per_estado') == '1') or (app.session.get('ie_per_estado') == '3')%}
             <div class="body-content animated fadeIn">
                 <div class="row">
@@ -396,12 +711,12 @@
                     </div>
                 </div>
             </div>
-        {% endif%}
-    {% endif%}
+        {% endif %}
+    {% endif %}
 
     <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" id="modal">
 
-    </div><
+    </div>
 
 
 
@@ -996,6 +1311,7 @@
 //            $('#before'+idco).fadeOut();
 //            $('#after'+idco).fadeOut();
         }
+         
 
     </script>
     <style>
@@ -1048,6 +1364,7 @@
             from {opacity: 0;}
             to {opacity: 1;}
         }
+        
     </style>
 
 {%endblock%}
