@@ -297,3 +297,7 @@ sie_institucioneducativa_report_vul:
 sie_tramite_gp_areasestudiante:
     resource: "@SieHerramientaBundle/Resources/config/routing/tramitegpareasestudiante.yml"
     prefix:   /sie/tramite/areasestudiante
+
+sie_academico_UpdatePlaceDataStudent:
+    resource: "@SieHerramientaBundle/Resources/config/routing/updateplaceDatastudent.yml"
+    prefix:   /sie/updateplacedatastudent
