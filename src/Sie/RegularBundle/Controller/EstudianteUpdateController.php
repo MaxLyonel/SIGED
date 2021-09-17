@@ -657,8 +657,11 @@ class EstudianteUpdateController extends Controller {
                 'nombre'=>$form['nombre'],
                 'fecha_nacimiento'=>$form['fechaNacimiento']);
 
-            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['ci'],$arrParametros,'prod', 'academico');
+            if(strlen($form['extranjero'])!=0)
+                $arrParametros['extranjero'] = $form['extranjero'];
 
+            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['ci'],$arrParametros,'prod', 'academico');
+            
         }
             
         

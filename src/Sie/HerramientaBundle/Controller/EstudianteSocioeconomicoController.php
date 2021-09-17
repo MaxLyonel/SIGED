@@ -841,7 +841,9 @@ class EstudianteSocioeconomicoController extends Controller {
      *
      */
     public function createAction(Request $request) {
-
+        //NO PERMITIR REGISTRO DE PERSONAS
+        //return $this->redirect($this->generateUrl('login'));
+        //NO SE REALIZO GRANDES CAMBIOS HABILITADO 14/09/2021
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
 
@@ -1019,8 +1021,8 @@ class EstudianteSocioeconomicoController extends Controller {
                         if($personaAnterior){
                             // SI EXISTE LA PERSONA PERO SUS DATOS NO SON IGUALES
                             // ACTUALIZAMOS EL NUMERO DE CARNET CON EL CARACTER ESPECIAL
-                            $personaAnterior->setCarnet($personaAnterior->getCarnet().'±');
-                            $em->flush();
+                           // $personaAnterior->setCarnet($personaAnterior->getCarnet().'±');
+                            //$em->flush();
                         }
 
                         $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();
@@ -1158,8 +1160,8 @@ class EstudianteSocioeconomicoController extends Controller {
                         if($personaAnterior){
                             // SI EXISTE LA PERSONA PERO SUS DATOS NO SON IGUALES
                             // ACTUALIZAMOS EL NUMERO DE CARNET CON EL CARACTER ESPECIAL
-                            $personaAnterior->setCarnet($personaAnterior->getCarnet().'±');
-                            $em->flush();
+                            //$personaAnterior->setCarnet($personaAnterior->getCarnet().'±');
+                            //$em->flush();
                         }
 
                         $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('persona');")->execute();

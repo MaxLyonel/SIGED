@@ -293,6 +293,9 @@ class ApoderadoNuevoController extends Controller {
     }
 
     public function registrarAction(Request $request){
+        //NO PERMITIR REGISTRO DE PERSONAS
+        //return $this->redirect($this->generateUrl('login'));
+        //NO SE REALIZO GRANDES CAMBIOS HABILITADO 14/09/2021
         $response = new JsonResponse();
         $apoderado = $request->get('apoderado');
         $idInscripcion = $request->get('idInscripcion');
@@ -400,7 +403,7 @@ class ApoderadoNuevoController extends Controller {
                                 ]);
                             }
                             
-                            $persona->setCarnet($persona->getCarnet().'±');
+                            //$persona->setCarnet($persona->getCarnet().'±');
                             $em->flush();
                                 
                         }

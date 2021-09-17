@@ -141,7 +141,7 @@ class BusquedasController extends Controller
                     //VERIFICANDO TUISION JURISDICCIÓN                                        
                     //dump($this->session->get('roluserlugarid'));dump($po);die;
                     
-                    if (count($potuision) == 0){
+                    if (count($potuision) > 0){
                         $accion = 'okuser';
                         
                     }else{

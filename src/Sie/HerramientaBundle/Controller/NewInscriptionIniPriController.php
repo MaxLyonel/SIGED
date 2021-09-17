@@ -65,8 +65,7 @@ class NewInscriptionIniPriController extends Controller
     public function indexAction(Request $request){
      //disabled option by krlos
      //return $this->redirect($this->generateUrl('login'));
-     if (in_array($this->session->get('roluser'), array(8,7,10))){
-
+     if (in_array($this->session->get('roluser'), array(8,10,7))){
      }else{
      	//to do the ue cal diff
      	if(!($this->esGuanawek($this->session->get('ie_id'),$gestion=2020))){

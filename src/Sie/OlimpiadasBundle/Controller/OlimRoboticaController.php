@@ -296,7 +296,8 @@ class OlimRoboticaController extends Controller{
         return $form;
     }
 
-    public function actualizarCategoriaAction($grupoProyectoId, $categoriaId){
+    public function actualizarCategoriaAction($grupoProyectoId, $categoriaId,$tutorCi){
+        $url = '';
         $em = $this->getDoctrine()->getManager();
         $grupoProyecto = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($grupoProyectoId);
 
@@ -307,6 +308,7 @@ class OlimRoboticaController extends Controller{
 
         $grupoProyectoInscr = $em->getRepository('SieAppWebBundle:OlimInscripcionGrupoProyecto')->findBy(array('olimGrupoProyecto' => $grupoProyecto));
 
+        $gestion = date('Y');
         if($grupoProyectoInscr){
             $cont = 1;
             $estudianteValido = array();
@@ -339,6 +341,7 @@ class OlimRoboticaController extends Controller{
                     $em->flush();
                     $status = 200;
                     $mensaje = "Confirmación realizada exitosamente.";
+                    $url = $this->generateUrl('olimRoboticaReporte_inscripcion_export',array('tutor' => $tutorCi,'gestion'=>$gestion));
                 }
             } else {
                 $status = 500;
@@ -350,10 +353,10 @@ class OlimRoboticaController extends Controller{
         }
 
         $response = new JsonResponse();
-
         return $response->setData([
             'status'=> $status,
-            'mensaje' => $mensaje
+            'mensaje' => $mensaje,
+            'url' => $url
         ]);
     }
 }
