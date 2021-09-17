@@ -3,7 +3,7 @@ Sie\AppWebBundle\Entity\PermanenteSubAreaTipo:
     table: permanente_sub_area_tipo
     id:
         id:
-            type: integer
+            type: smallint
             nullable: false
             unsigned: false
             comment: ''
@@ -24,4 +24,9 @@ Sie\AppWebBundle\Entity\PermanenteSubAreaTipo:
             length: null
             fixed: false
             comment: ''
+        esActivo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_activo
     lifecycleCallbacks: {  }

@@ -711,7 +711,7 @@ class StudentsInscriptionsController extends Controller {
     }
 
     public function studentsInscriptionAction(Request $request){
-      // dump($request);die;
+       //dump($request);die;
       //ini json var
       $response = new JsonResponse();
       // get the send values 
@@ -727,7 +727,7 @@ class StudentsInscriptionsController extends Controller {
         $arrYearStudent =$this->get('funciones')->getTheCurrentYear(date('d-m-Y', strtotime($newFecNac)), '30-6-'.date('Y'));
         $yearStudent = $arrYearStudent['age'];
 
-        if($yearStudent>15){
+        if($yearStudent>=15){
 
           // check if the student has an inscription on this course
           $objCurrentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$studentId,'institucioneducativaCurso'=>$iecId));
