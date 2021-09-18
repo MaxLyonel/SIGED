@@ -94,7 +94,8 @@ input {
                                 <div class="pull-right">
                                 </div>
                                 <div class="clearfix">
-                                <div v-if="!answerSegip" class="alert alert-danger" role="alert">${messagesegip}</div>
+                                    <div v-if="answerSegip" class="alert alert-danger" role="alert">${messagesegip}</div>
+                                    <div v-if="messageAsig" class="alert alert-info" role="alert"><div :style="{ background: itemColor}">${messageAsig}</div></div>
                                 </div>                                   
 
                             </div><!-- /.panel-heading -->
@@ -147,14 +148,14 @@ input {
                                                 <label for="First Name">
                                                 CI:
                                                 </label>
-                                                <input type="text" id="FirstName" class="form-control" placeholder="Paterno" required v-model="newPerson.ci" :disabled="existPerson ? '':disabled">
+                                                <input type="text" id="ci" class="form-control" placeholder="Paterno" required v-model="newPerson.ci" :disabled="existPerson ? '':disabled">
                                                 
                                             </div>
                                             <div class="box">
                                                 <label for="First Name">
                                                 Complemento:
                                                 </label>
-                                                <input type="text" id="FirstName" class="form-control" placeholder="Complemento" required v-model="newPerson.complemento" :disabled="existPerson ? '':disabled">
+                                                <input type="text" id="complemento" class="form-control" placeholder="Complemento" required v-model="newPerson.complemento" :disabled="existPerson ? '':disabled">
                                                 
                                             </div>
                                             <div class="box">
@@ -190,7 +191,17 @@ input {
                                                 <select name="arrApode" id="idarrGenero" v-model="newPerson.parentescoId" class="custom-select form-control" v-model="newPerson.apoderado">  
                                                 <option v-for="item in DBApoderado"  :value="item.apoderadoId">${ item.apoderado }</option>       
                                                 </select>                                
-                                            </div>                                
+                                            </div>
+
+                                            <div class="box">
+                                                <label for="name">
+                                                Extranjero:
+                                                </label>
+                                                <select name="arrApode" id="idarrGenero" v-model="newPerson.extranjero" class="custom-select form-control" v-model="newPerson.apoderado">  
+                                                <option value="0">No</option>
+                                                <option value="1">Si</option>
+                                                </select>                                
+                                            </div>                                                                              
                                             
 
                                             <div class="box" v-if="!existPerson">
@@ -227,7 +238,7 @@ input {
                         <thead>
                             <tr>
                             
-                            <th scope="col">CI-COMPLEMENTO</th>
+                            <th scope="col">CI COMPLEMENTO</th>
                             <th scope="col">PATERNO</th>
                             <th scope="col">MATERNO</th>
                             <th scope="col">NOMBRE(S)</th>
@@ -239,7 +250,7 @@ input {
                         </thead>
                         <tbody>
                             <tr v-for="(parent, index) in DBParents">
-                            <td>${parent.carnet} </td>
+                            <td>${parent.carnet} ${parent.complemento} </td>
                             <td>${parent.paterno}</td>
                             <td>${parent.materno}</td>
                             <td>${parent.nombre}</td>
@@ -334,7 +345,9 @@ var app = new Vue({
         messagesegip:'',
         disabled:'',
         searchActive:false,
-        answerSegip:true,
+        answerSegip:false,
+        messageAsig:false,
+        itemColor: false,
         isHidden: false
         
         
@@ -352,7 +365,9 @@ var app = new Vue({
             this.message   = false;
             this.swConfirm = false;
             this.swExistParentBJP = false;
-            this.answerSegip = true;
+            this.answerSegip = false;
+            this.itemColor=false;
+            this.messageAsig=false;
             if(this.newPerson.ci.length == 0){
             this.message = 'debe introducir un carnet';
             this.buscando = false;
@@ -393,7 +408,9 @@ var app = new Vue({
             this.searchActive=true;
             this.existPerson   = true;
             this.message   = false;
-            this.answerSegip   = true;            
+            this.answerSegip   = false;  
+            this.itemColor=false;    
+            this.messageAsig=false;      
             Swal.fire({
                 title: 'Registrar Beneficiario?',
                 text: "esta seguro de CONTINUAR con el registro",
@@ -459,7 +476,9 @@ var app = new Vue({
             this.searchActive=false;
             this.existPerson   = false;
             this.message   = false;
-            this.answerSegip   = true;
+            this.answerSegip   = false;
+            this.itemColor=false;
+            this.messageAsig=false;
             Swal.fire({
                 title: 'Eliminar Persona?',
                 text: "esta seguro de CONTINUAR con la eliminación",
@@ -508,7 +527,9 @@ var app = new Vue({
             this.searchActive=false;
             this.existPerson   = false;
             this.message   = false;
-            this.answerSegip   = true;
+            this.answerSegip   = false;
+            this.itemColor=false;
+            this.messageAsig=false;
             Swal.fire({
                 title: 'Eliminar asignación de Beneficiario?',
                 text: "esta seguro de CONTINUAR con la eliminación",
@@ -559,7 +580,9 @@ var app = new Vue({
             this.searchActive=false;
             this.existPerson   = false;
             this.message   = false;
-            this.answerSegip   = true;
+            this.answerSegip   = false;
+            this.messageAsig=false;
+            this.itemColor=false;
             Swal.fire({
                 title: 'Asignar Beneficiario?',
                 text: "Esta seguro de CONFIRMAR la asignación de la Persona como beneficiario para el Bono Juancito Pinto",
@@ -577,6 +600,8 @@ var app = new Vue({
                         if(response.status == 200){
                             this.DBParentBJP = response.data.datos.arrParentBJP;
                             this.swExistParentBJP = response.data.datos.swExistParentBJP;
+                            this.messageAsig = response.data.datos.message;
+                            this.itemColor = response.data.datos.itemColor;
                             this.searchActive = false;
                             this.isHidden = false;
 
