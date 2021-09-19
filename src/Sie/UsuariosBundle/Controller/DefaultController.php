@@ -445,8 +445,9 @@ class DefaultController extends Controller
         
         
         //LEE TODOS LOS ROLES PARA MOSTRAR CUALQUIERA
-        $idsrol = '';
+        $idsrol = array();
         $rolesasignar = $em->getRepository('SieAppWebBundle:RolRolesAsignacion')->findAll();
+
         foreach ($rolesasignar as $roles){
             $idsrol[] = $roles->getRoles()->getId();
         }        
@@ -575,7 +576,7 @@ class DefaultController extends Controller
     public function usuarionuevoAction($personaid) {        
         $em = $this->getDoctrine()->getManager();        
         $persona = $em->getRepository('SieAppWebBundle:Persona')->find($personaid);
-        
+
         //LEYENDO ROLES QUE PUEDE CREAR EL USUARIO        
         $idsrol = $em->getRepository('SieAppWebBundle:RolRolesAsignacion')->getFindRolesByUsername($this->session->get('roluser'),$this->session->get('rol_ids'));
                 
@@ -601,68 +602,102 @@ class DefaultController extends Controller
         )); 
     }
     
-    public function userinsertAction(Request $request) {
+    public function userinsertAction(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $data = $request->get('sie_usuarios_form');
+
         $response = new JsonResponse();
-//        print_r($data['maestroinsid']);
-//        die('g');
-        try {
-            if ($data['accion'] === 'userinsert'){    
+        //        print_r($data['maestroinsid']);
+        //        die('g');
+        try
+        {
+            if ($data['accion'] === 'userinsert')
+            {
                 $persona = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find($data['idpersona']);
-                $usuario = new Usuario();
-                $usuario->setPersona($persona);
-                $usuario->setUsername(trim($persona->getCarnet().$persona->getComplemento()));
-                $usuario->setEsactivo('true');
-                $usuario->setPassword(md5(trim($persona->getCarnet().$persona->getComplemento())));
-                $usuario->setFechaRegistro(new \DateTime('now'));
-                $usuario->setPassword2('nuevo_en_espera');
-                $em->persist($usuario);
-                $em->flush();
-                
-                $persona->setActivo('1');
-                $persona->setEsVigente('1');
-                $persona->setEsvigenteApoderado('1');
-                $em->persist($persona);
-                $em->flush();
+
+                if($persona)
+                {
+                    $usuario = $this->getDoctrine()->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('persona'=>$persona->getId() ));
+                    $usuarioVerificacionUsername = $this->getDoctrine()->getRepository('SieAppWebBundle:Usuario')->findBy(array('username'=>$persona->getCarnet() ));
+
+                    if(count($usuarioVerificacionUsername)==1)
+                    {
+                        if($usuario == null )
+                        {
+                            $usuario = new Usuario();
+                            $usuario->setPersona($persona);
+                            $usuario->setUsername( 
+                                trim($persona->getCarnet()).trim($persona->getComplemento())
+                            );
+                            $usuario->setEsactivo('true');
+                            $usuario->setPassword(md5( trim($persona->getCarnet()).trim($persona->getComplemento()) ));
+                            $usuario->setFechaRegistro(new \DateTime('now'));
+                            $usuario->setPassword2('nuevo_en_espera');
+                            $em->persist($usuario);
+                            $em->flush();
+                        }
+                        $persona->setActivo('1');
+                        $persona->setEsVigente('1');
+                        $persona->setEsvigenteApoderado('1');
+                        $em->persist($persona);
+                        $em->flush();
+                    }
+                    else
+                    {
+                        $em->getConnection()->rollback();
+                        return $response->setData(array('mensaje' => 'Ya exixte un usuario con el nombre de usuario: '.$persona->getCarnet()));
+                    }
+                }
+                else
+                {
+                    $em->getConnection()->rollback();
+                    return $response->setData(array('mensaje' => 'No existe la persona a la cual se le quiere asignar roles.'));
+                }
             }
-            if ($data['accion'] === 'new'){
+            if ($data['accion'] === 'new')
+            {
                 $persona = $this->getDoctrine()->getRepository('SieAppWebBundle:Persona')->find($data['idpersona']);
                 $usuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('persona'=>$data['idpersona']));
             }
-//            if ($data['accion'] === 'update'){    
-//                $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($data['idusuario']);
-//                //ELIMINA ROLES ANTERIORES
-//                $rolesusuario = $em->getRepository('SieAppWebBundle:UsuarioRol')->findByUsuario($usuario);
-//                
-//                foreach ($rolesusuario as $value) {                    
-//                    $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->find($value->getId());
-//                    $em->remove($usuariorol);
-//                    $em->flush();
-//                }
-//            }
+            //            if ($data['accion'] === 'update'){    
+            //                $usuario = $em->getRepository('SieAppWebBundle:Usuario')->find($data['idusuario']);
+            //                //ELIMINA ROLES ANTERIORES
+            //                $rolesusuario = $em->getRepository('SieAppWebBundle:UsuarioRol')->findByUsuario($usuario);
+            //                
+            //                foreach ($rolesusuario as $value) {                    
+            //                    $usuariorol = $em->getRepository('SieAppWebBundle:UsuarioRol')->find($value->getId());
+            //                    $em->remove($usuariorol);
+            //                    $em->flush();
+            //                }
+            //            }
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('usuario_rol');");
             $query->execute();
 
             $form_x = $request->get('sie_usuarios_form');
+
             $multiple = $form_x['rolTipo'];
                         
             $lugids = explode(",", $data['lugtipids']);
             $i = 0;
             
-            foreach ($multiple as $value) {
+            foreach ($multiple as $value)
+            {
                 $rolTipo = $this->getDoctrine()->getRepository('SieAppWebBundle:RolTipo')->find($value);
                 //dump($rolTipo);die;
                 $usuariorol = new UsuarioRol();
                 $usuariorol->setRolTipo($rolTipo);
                 $usuariorol->setUsuario($usuario);
                 $usuariorol->setEsactivo('true');
-                $usuariorol->setLugarTipo($this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($lugids[$i]));                
+                $usuariorol->setLugarTipo($this->getDoctrine()->getRepository('SieAppWebBundle:LugarTipo')->find($lugids[$i]));
                 //$usuariorol->setCircunscripcionTipo();
-                if (($rolTipo->getId() == '7') || ($rolTipo->getId() == '8') || ($rolTipo->getId() == '20')){
+                if (($rolTipo->getId() == '7') || ($rolTipo->getId() == '8') || ($rolTipo->getId() == '20'))
+                {
                     $usuariorol->setSubSistema('');
-                }else{
+                }
+                else
+                {
                     $usuariorol->setSubSistema($rolTipo->getSubSistema());
                 }
 
@@ -671,7 +706,8 @@ class DefaultController extends Controller
                 $i = $i + 1;
             }
             
-            if ($data['accion'] === 'userinsert'){
+            if ($data['accion'] === 'userinsert')
+            {
                 
                 $this->get('funciones')->setLogTransaccion(
                     $usuario->getId(),
@@ -686,27 +722,30 @@ class DefaultController extends Controller
                 
                 $em->getConnection()->commit();
                 return $response->setData(array('accion' => $data['accion'], 'mensaje' => 'Proceso realizado exitosamente.','username' => $persona->getCarnet(),'usuarioid' =>$usuario->getId()));
-                }
-            if ($data['accion'] === 'new'){
-//                if (($maestroOn == '1') && ($this->session->get('ie_activo') == '1')){//SI ES DIRECTOR CAMBIA SU CARGO A ES DIRECTOR
-//                    $maestroinscr = $this->getDoctrine()->getRepository('SieAppWebBundle:MaestroInscripcion')->find($data['maestroinsid']);//es_vigente_administrativo
-//                    $maestroinscr->setEsvigenteAdministrativo('1');
-//                    $maestroinscr->setCargoTipo($this->getDoctrine()->getRepository('SieAppWebBundle:CargoTipo')->find('1'));//DIRECTOR
-//                    $em->persist($usuariorol);
-//                    $em->flush();
-//                }
+            }
+            if ($data['accion'] === 'new')
+            {
+                //                if (($maestroOn == '1') && ($this->session->get('ie_activo') == '1')){//SI ES DIRECTOR CAMBIA SU CARGO A ES DIRECTOR
+                //                    $maestroinscr = $this->getDoctrine()->getRepository('SieAppWebBundle:MaestroInscripcion')->find($data['maestroinsid']);//es_vigente_administrativo
+                //                    $maestroinscr->setEsvigenteAdministrativo('1');
+                //                    $maestroinscr->setCargoTipo($this->getDoctrine()->getRepository('SieAppWebBundle:CargoTipo')->find('1'));//DIRECTOR
+                //                    $em->persist($usuariorol);
+                //                    $em->flush();
+                //                }
                 $em->getConnection()->commit();
                 return $response->setData(array('accion' => $data['accion'], 'mensaje' => 'Proceso realizado exitosamente.'));
-                }
-            if ($data['accion'] === 'update'){
+            }
+            if ($data['accion'] === 'update')
+            {
                 $em->getConnection()->commit();
                 return $response->setData(array('accion' => $data['accion'], 'mensaje' => 'Proceso realizado exitosamente.'));
-                }
-            } 
-        catch (Exception $ex) {
+            }
+        } 
+        catch (Exception $ex)
+        {
             $em->getConnection()->rollback();
             return $response->setData(array('mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!'.$ex));
-            }
+        }
     }
     
     public function userroleditAction($usuarioid) {

@@ -80,4 +80,32 @@ class PermanenteSubAreaTipo
     {
         return $this->obs;
     }
+    /**
+     * @var boolean
+     */
+    private $esActivo;
+
+
+    /**
+     * Set esActivo
+     *
+     * @param boolean $esActivo
+     * @return PermanenteSubAreaTipo
+     */
+    public function setEsActivo($esActivo)
+    {
+        $this->esActivo = $esActivo;
+    
+        return $this;
+    }
+
+    /**
+     * Get esActivo
+     *
+     * @return boolean 
+     */
+    public function getEsActivo()
+    {
+        return $this->esActivo;
+    }
 }

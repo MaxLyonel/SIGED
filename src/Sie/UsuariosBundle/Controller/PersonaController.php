@@ -64,7 +64,7 @@ class PersonaController extends Controller
             );
             
             $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $arrayDatosPersona, 'prod', 'academico');
-            
+
             if($personaValida == false)
             {
                 //throw new \Exception("Datos de Persona no encontrada en el SEGIP", 1);
@@ -73,10 +73,9 @@ class PersonaController extends Controller
             else
             {
                 $arrayDatosPersona['carnet']=$form['carnet'];
-                $arrayDatosPersona['fechaNacimiento']=$fecha;
+                $arrayDatosPersona['fechaNacimiento']=str_replace('/','-',$fecha);
                 unset($arrayDatosPersona['fecha_nacimiento']);
-                $persona = $this->get('buscarpersonautils')->buscarPersona($arrayDatosPersona,$conCI=true, $segipId=1);
-                
+                $persona = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
                 if($persona== null)
                 {
                     $newpersona = new Persona();            

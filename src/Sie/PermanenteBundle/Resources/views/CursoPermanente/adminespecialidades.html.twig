@@ -45,11 +45,11 @@
 
             <div class="panel-heading">
                <h4>
-                   Especialidades - {{ cantesp }}
+                   Menciones - {{ cantesp }}
                </h4>
             </div>
             <div class="panel-body">
-                <p>Listado de todas las especialidades permitidas para los centros autorizados a proporcionar las mismas en cursos de Educación Permanente</p>
+                <p>Listado de todas las menciones permitidas para los centros autorizados a proporcionar las mismas en cursos de Educación Permanente</p>
                 <br>
                 <button type="button" class="btn btn-danger" onclick="nuevaEspecialidad();" >Nuevo</button>
                 <br>
@@ -60,7 +60,7 @@
                             <thead>
                             <tr>
                                 <th class="text-center border-right">N°</th>
-                                <th class="text-center border-right">Especialidad</th>
+                                <th class="text-center border-right">Mención</th>
                                 <th class="text-center border-right">Técnico Básico</th>
                                 <th class="text-center border-right">Técnico Auxiliar</th>
                                 <th class="text-center border-right">Técnico Medio</th>
@@ -236,7 +236,7 @@
         };
 
         var eliminarEspecialidad= function (idesp) {
-           // alert(idesp);
+           //alert(idesp);
             $.ajax({
                 type: 'post',
                 url: "{{ path('herramienta_per_especialidad_acreditacion_delete') }}",
@@ -248,7 +248,7 @@
                 success: function (data) {console.log(data);
                    // $('#mengestioncurso').html("<div class='alert alert-success alert-dismissible' role='alert'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button><strong>"+data.mensaje+"</strong></div>");
                    // $("#mengestioncurso").empty();
-                     window.location.href =  Routing.generate('herramienta_permanente_admin_especialidades');
+                      window.location.href =  Routing.generate('herramienta_permanente_admin_especialidades');
                 },
 
                 statusCode: {
