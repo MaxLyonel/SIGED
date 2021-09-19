@@ -128,7 +128,7 @@ class RegisterParentsController extends Controller {
 		$arrayCondition2['complemento'] = $complemento;
         $arrayCondition2['carnet'] = $ci;
         // to look for person wiht segip 1
-        //$arrayCondition2['segipId'] = 1;
+        $arrayCondition2['segipId'] = 1;
 		// set the response variables
 		$existPerson = false;
 		$valSegip = true;
@@ -550,7 +550,7 @@ class RegisterParentsController extends Controller {
 			    "fechaNacimiento" => $ap['fechaNacimiento']->format('d-m-Y'),
 			    "apoderadoTipoId" => $ap['apoderadoTipo'] ,
 			    "personaid" => $ap['personaid'] ,
-			    "apoderadoTipo" => $em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($ap['apoderadoTipo'])->getApoderado() ,
+			    "apoderadoTipo" => $em->getRepository('SieAppWebBundle:BjpApoderadoTipo')->find($ap['apoderadoTipo'])->getApoderado() ,
         	);
         }
 
