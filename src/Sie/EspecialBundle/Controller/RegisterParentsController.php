@@ -40,13 +40,13 @@ class RegisterParentsController extends Controller {
         $arrStudent = $this->getInfoStudent($idInscription);
     		
 
-    	if($arrStudent['studentYearOld']<20){
+    	if($arrStudent['studentYearOld']<21){
     		$message='';
     		$message2='';
     		$swRegistryBJP = true;
     	}else{
 			$message='Estudiante fuera de rango de edad para el registro Bono Juancito Pinto.';
-			$message2=' Verificar su regsitro de FECHA DE NACIMIENTO.';
+			$message2=' Verificar su registro de FECHA DE NACIMIENTO.';
 			$swRegistryBJP = false;
     	}   
     	
