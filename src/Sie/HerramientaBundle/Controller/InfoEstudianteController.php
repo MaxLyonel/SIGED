@@ -88,8 +88,7 @@ class InfoEstudianteController extends Controller {
         $form['gestion'] = $form['gestion'];
         $form['sie'] = $form['sie'];
         if ($form['gestion'] == $this->session->get('currentyear')) {
-            $objObsQAbjp = $this->getObservationQA($form);  
-            dump($objObsQAbjp);      
+            $objObsQAbjp = $this->getObservationQA($form);     
         } else {
             $objObsQAbjp = null;
         }       
