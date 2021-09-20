@@ -77,7 +77,6 @@ class BusquedasController extends Controller
         if ($formNacional->isValid())
         {
             $persona = $formNacional->getData();
-            //dump($persona);
             
             /*
             $data = $formNacional->getData();
@@ -100,6 +99,10 @@ class BusquedasController extends Controller
                 'complemento'=>$complemento,
                 'fecha_nacimiento' => $fecha
             );
+
+            if($persona['extranjero']=='1')
+                $arrayDatosPersona['extranjero']='E';
+
             $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['ci'], $arrayDatosPersona, 'prod', 'academico');
             
             if( $personaValida )
