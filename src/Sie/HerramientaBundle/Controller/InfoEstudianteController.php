@@ -98,7 +98,9 @@ class InfoEstudianteController extends Controller {
         }else{
             $swRegisterPersonBjp = true;
         }
-$swRegisterPersonBjp = true;
+        $objObsQA = null;
+        $objObsQA = $objObsQAbjp;
+
         $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getInfoUeducativaBySieGestion($form['sie'], $form['gestion']);
         $exist = true;
         $tieneSextoSec = false;
