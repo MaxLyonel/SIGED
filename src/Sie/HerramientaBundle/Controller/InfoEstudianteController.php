@@ -84,7 +84,7 @@ class InfoEstudianteController extends Controller {
         }
     
         // get the QA BJP observactions
-        $form['reglas'] = '51,52,53,54,55,56,57,58,59,60,61,62,63';
+        $form['reglas'] = '12,13,26,24,25,8,15,20,11,37,63,60,61,62';
         $form['gestion'] = $form['gestion'];
         $form['sie'] = $form['sie'];
         if ($form['gestion'] == $this->session->get('currentyear')) {
@@ -98,7 +98,7 @@ class InfoEstudianteController extends Controller {
         }else{
             $swRegisterPersonBjp = true;
         }
-
+$swRegisterPersonBjp = true;
         $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getInfoUeducativaBySieGestion($form['sie'], $form['gestion']);
         $exist = true;
         $tieneSextoSec = false;
