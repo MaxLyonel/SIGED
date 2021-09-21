@@ -622,7 +622,7 @@ class DefaultController extends Controller
                     $usuario = $this->getDoctrine()->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('persona'=>$persona->getId() ));
                     $usuarioVerificacionUsername = $this->getDoctrine()->getRepository('SieAppWebBundle:Usuario')->findBy(array('username'=>$persona->getCarnet() ));
 
-                    if(count($usuarioVerificacionUsername)==1)
+                    if(count($usuarioVerificacionUsername)==0 || count($usuarioVerificacionUsername)==1 )
                     {
                         if($usuario == null )
                         {
@@ -647,7 +647,7 @@ class DefaultController extends Controller
                     else
                     {
                         $em->getConnection()->rollback();
-                        return $response->setData(array('mensaje' => 'Ya exixte un usuario con el nombre de usuario: '.$persona->getCarnet()));
+                        return $response->setData(array('mensaje' => 'Ya existe un usuario con el nombre de usuario: '.$persona->getCarnet()));
                     }
                 }
                 else
