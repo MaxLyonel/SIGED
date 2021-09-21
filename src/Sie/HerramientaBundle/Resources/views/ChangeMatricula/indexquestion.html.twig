@@ -76,7 +76,7 @@
                          {{form_widget(form.classdays)}}
                       </div>
 
-                      <div class="form-group">
+                      <div id="div-justificativo" class="form-group" style="display: block">
                         <label for="inputPassword6">Justificativo</label>
                         {{form_widget(form.observation)}}
                       </div>
@@ -117,6 +117,10 @@
                 case 2:
                     matriculaMessage = '{{tolerancia}}';
                 break;
+
+                case 3:
+                    matriculaMessage = 'EFECTIVO';
+                break;
             }
 
         }else{
@@ -130,7 +134,8 @@
              return;
 
         }
-        if(observation ==''){
+
+        if(observation =='' && chooseAnswer != 3){
             Swal.fire({
                 icon: 'error',
                 title: 'Tiene que registrar el Justificativo',
@@ -193,11 +198,25 @@
 
     function myFunctionSH(me) {
       var x = document.getElementById("myDIV");
+      var justificativo = document.getElementById("div-justificativo");
       if (me.value == 2) {
         x.style.display = "block";
       } else {
         x.style.display = "none";
       }
+
+      if (me.value == 3)
+      {
+        $('#form_observation').removeAttr('required');
+        justificativo.style.display = "none";
+      } 
+      else
+      {
+        $('#form_observation').attr('required');
+        justificativo.style.display = "block";
+      }
+
+
     }
 
 </script>

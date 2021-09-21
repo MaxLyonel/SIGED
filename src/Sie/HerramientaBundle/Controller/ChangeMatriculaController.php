@@ -42,6 +42,7 @@ class ChangeMatriculaController extends Controller {
         0 => "...",
         1 => "Nunca asistio a clases", //retiro abandono
         2 => "Asistio algunos dias a clases", //En tolerancia
+        3 => "Asistio",
     );
     }
 
@@ -193,7 +194,11 @@ class ChangeMatriculaController extends Controller {
               $updateMatricula = 6;
             break;
             case 2:
-              $updateMatricula = 101;
+              $updateMatricula = 101;//tolerancia
+            break;
+            break;
+            case 3:
+              $updateMatricula = 4;//efectivo
             break;
           }
 
@@ -218,6 +223,7 @@ class ChangeMatriculaController extends Controller {
             //find to update
             $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($infoStudent['eInsId']);         
             $oldInscriptionStudent = clone $currentInscrip;
+            
             $currentInscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($updateMatricula));
             $em->persist($currentInscrip);
             $em->flush();
