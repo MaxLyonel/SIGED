@@ -82,7 +82,7 @@ class InfoEstudianteController extends Controller {
         }else{
             $swRegisterCalifications = true;
         }
-
+    
         // get the QA BJP observactions
         $form['reglas'] = '51,52,53,54,55,56,57,58,59,60,61,62,63';
         $form['gestion'] = $form['gestion'];
@@ -685,7 +685,8 @@ class InfoEstudianteController extends Controller {
 
         //get the values throght the infoUe
         $sie = $aInfoUeducativa['requestUser']['sie'];
-        $swRegisterCalifications = $aInfoUeducativa['requestUser']['swRegisterCalifications'];
+        //$swRegisterCalifications = $aInfoUeducativa['requestUser']['swRegisterCalifications'];
+        $swRegisterCalifications = true;
         $swRegisterPersonBjp = $aInfoUeducativa['requestUser']['swRegisterPersonBjp'];
         $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         $nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];
@@ -912,7 +913,7 @@ class InfoEstudianteController extends Controller {
 
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
         $dependencia = $institucioneducativa->getDependenciaTipo()->getId(); // 3 privada
-
+        
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
                     'iecId'=>$iecId,
