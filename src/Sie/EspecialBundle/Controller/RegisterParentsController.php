@@ -39,16 +39,21 @@ class RegisterParentsController extends Controller {
         // get info about the inscription
         $arrStudent = $this->getInfoStudent($idInscription);
     		
-
-    	if($arrStudent['studentYearOld']<21){
-    		$message='';
-    		$message2='';
-    		$swRegistryBJP = true;
-    	}else{
-			$message='Estudiante fuera de rango de edad para el registro Bono Juancito Pinto.';
-			$message2=' Verificar su registro de FECHA DE NACIMIENTO.';
-			$swRegistryBJP = false;
-    	}   
+        if($this->session->get('pathSystem')=='SieEspecialBundle'){
+            $swRegistryBJP = true;
+            $message='';
+            $message2='';
+        }else{
+        	if($arrStudent['studentYearOld']<21){
+        		$message='';
+        		$message2='';
+        		$swRegistryBJP = true;
+        	}else{
+    			$message='Estudiante fuera de rango de edad para el registro Bono Juancito Pinto.';
+    			$message2=' Verificar su registro de FECHA DE NACIMIENTO.';
+    			$swRegistryBJP = false;
+        	}   
+        }
     	
         // get the years old about the student
 
@@ -387,7 +392,7 @@ class RegisterParentsController extends Controller {
       	$idInscription= $request->get('idInscription');
 
       	// remove the partent selected
-	    $removeApoderado = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($idremove);	    	
+	    $removeApoderado = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcion')->find($idremove);	    	
     	$em->remove($removeApoderado);
       	$em->flush();
 
