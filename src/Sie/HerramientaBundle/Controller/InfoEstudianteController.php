@@ -689,7 +689,8 @@ class InfoEstudianteController extends Controller {
         $sie = $aInfoUeducativa['requestUser']['sie'];
         //$swRegisterCalifications = $aInfoUeducativa['requestUser']['swRegisterCalifications'];
         $swRegisterCalifications = true;
-        $swRegisterPersonBjp = $aInfoUeducativa['requestUser']['swRegisterPersonBjp'];
+        // $swRegisterPersonBjp = $aInfoUeducativa['requestUser']['swRegisterPersonBjp'];
+        $swRegisterPersonBjp = true;
         $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         $nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];
         $grado = $aInfoUeducativa['ueducativaInfoId']['gradoId'];
