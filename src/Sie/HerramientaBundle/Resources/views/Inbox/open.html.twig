@@ -142,6 +142,26 @@
                     </div>
                 </div>
 
+
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('images/juancito.jpg')}}" alt="Operativo Bono Juancito Pinto">
+                    &nbsp;
+                    <div class="caption text-center">
+                        <h4>Operativo Bono JP</h4>
+                        <div class="thumbnail-action">
+                            {% if operativoBonoJP %}
+                                <a href="{{path('operativo_bono_jp_ddjj',{sie:data.ieducativa.id,gestion:data.gestion})}}" target="_blank" class="btn btn-success btn-md btn-block">Descargar DDJJ</a>
+                            {% else %}
+                            {{form_start(operativoBonoJPform, { 'attr':{'id':'formCerrarBonoJs' }} )}}
+                                {{form_widget(operativoBonoJPform.next)}}
+                            {{form_end(operativoBonoJPform)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <div class="row">
             <div id="answerClose" style="overflow: scroll; width: 100%; height:300px" class="col-lg-3 col-md-6 col-sm-12 col-xs-12"></div>
@@ -212,6 +232,73 @@
                         },
                         404: function () {
 
+                        }
+                    }
+                });
+            } else{ 
+                return false;
+            }
+        };
+
+        $('#formCerrarBonoJs').on('submit',function (e)
+        {
+            e.preventDefault();
+            closeOperativoBonoJS();
+        });
+        var closeOperativoBonoJS = function(){
+            if(confirm('¿Está segura/o de cerrar el operativo Bono Juancito Pinto?')){
+                formData = $('#formCerrarBonoJs').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('operativo_bono_jp_cerrar'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerClose").empty();
+                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data)
+                    {
+                        var res= data;
+                        var status = res.status;
+                        var msj = res.msj;
+                        var urlReporte = res.urlReporte;
+                        var observacionesBonpJP = res.observacionesBonpJP;
+                        var contenedor = $('#formCerrarBonoJs');
+                        if(status==200)
+                        {
+                            if(observacionesBonpJP)
+                            {
+                                $("#answerClose").empty();
+                                var obs ='<ol class="list-group"><li class="list-group-item" style="background-color:#63D3E9;color:white"><h4>'+observacionesBonpJP.length+' Inconsistencias / Observaciones</h4></li>';
+                                for (var i in observacionesBonpJP)
+                                {
+                                    obs+='<li class="list-group-item list-group-item-danger">'+observacionesBonpJP[i].observacion+'</li>';
+                                }
+                                obs+='</ol>';
+                                $("#answerClose").html(obs);
+                            }
+                            else
+                            {
+                                var aHref='<a href="'+urlReporte+'" target="_blank" class="btn btn-success btn-md btn-block">Descargar DDJJ</a>';
+                                if(typeof(contenedor)!='undefined')
+                                {
+                                    $('#formCerrarBonoJs').html('');
+                                    $('#formCerrarBonoJs').html(aHref);
+                                }
+                                alert('Ocurrio un error por favor vuelva a intentarlo.');
+                            }
+                        }
+                        else
+                        {
+                            alert('Ocurrio un error por favor vuelva a intentarlo.');
+                        }
+                    },
+                    statusCode: {
+                        500: function () {
+                            alert('Acaba de ocurrir un error de servidor.');
+                        },
+                        404: function () {
+                            alert('Ocurrio un error por favor vuelva a intentarlo.');
                         }
                     }
                 });

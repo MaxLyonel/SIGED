@@ -82,7 +82,24 @@ class InfoEstudianteController extends Controller {
         }else{
             $swRegisterCalifications = true;
         }
-
+    
+        // get the QA BJP observactions
+        $form['reglas'] = '12,13,26,24,25,8,15,20,11,37,63,60,61,62';
+        $form['gestion'] = $form['gestion'];
+        $form['sie'] = $form['sie'];
+        if ($form['gestion'] == $this->session->get('currentyear')) {
+            $objObsQAbjp = $this->getObservationQA($form);     
+        } else {
+            $objObsQAbjp = null;
+        }       
+        // check QA on UE
+        if($objObsQAbjp){
+            $swRegisterPersonBjp = false;
+        }else{
+            $swRegisterPersonBjp = true;
+        }
+        $objObsQA = null;
+        $objObsQA = $objObsQAbjp;
 
         $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getInfoUeducativaBySieGestion($form['sie'], $form['gestion']);
         $exist = true;
@@ -95,7 +112,7 @@ class InfoEstudianteController extends Controller {
                 $sinfoUeducativa = serialize(array(
                     'ueducativaInfo' => array('nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno']),
                     'ueducativaInfoId' => array('paraleloId' => $uEducativa['paraleloId'], 'turnoId' => $uEducativa['turnoId'], 'nivelId' => $uEducativa['nivelId'], 'gradoId' => $uEducativa['gradoId'], 'cicloId' => $uEducativa['cicloTipoId'], 'iecId' => $uEducativa['iecId']),
-                    'requestUser' => array('sie' => $form['sie'], 'gestion' => $form['gestion'], 'swRegisterCalifications' => $swRegisterCalifications)
+                    'requestUser' => array('sie' => $form['sie'], 'gestion' => $form['gestion'], 'swRegisterCalifications' => $swRegisterCalifications, 'swRegisterPersonBjp' => $swRegisterPersonBjp)
                 ));
 
                 //send the values to the next steps
@@ -670,7 +687,10 @@ class InfoEstudianteController extends Controller {
 
         //get the values throght the infoUe
         $sie = $aInfoUeducativa['requestUser']['sie'];
-        $swRegisterCalifications = $aInfoUeducativa['requestUser']['swRegisterCalifications'];
+        //$swRegisterCalifications = $aInfoUeducativa['requestUser']['swRegisterCalifications'];
+        $swRegisterCalifications = true;
+        // $swRegisterPersonBjp = $aInfoUeducativa['requestUser']['swRegisterPersonBjp'];
+        $swRegisterPersonBjp = true;
         $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
         $nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];
         $grado = $aInfoUeducativa['ueducativaInfoId']['gradoId'];
@@ -896,12 +916,13 @@ class InfoEstudianteController extends Controller {
 
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
         $dependencia = $institucioneducativa->getDependenciaTipo()->getId(); // 3 privada
-
+        
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
                     'iecId'=>$iecId,
                     'sie' => $sie,
                     'swRegisterCalifications' => $swRegisterCalifications,
+                    'swRegisterPersonBjp' => $swRegisterPersonBjp,
                     'turno' => $turno,
                     'nivel' => $nivel,
                     'grado' => $grado,

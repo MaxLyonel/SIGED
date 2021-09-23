@@ -14,6 +14,7 @@ use Sie\AppWebBundle\Entity\Estudiante;
 use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\ApoderadoInscripcion;
 use Sie\AppWebBundle\Entity\BjpApoderadoInscripcion;
+use Sie\AppWebBundle\Entity\BjpApoderadoInscripcionBeneficiarios;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 
@@ -34,13 +35,69 @@ class RegisterParentsController extends Controller {
     public function indexAction(Request $request){
     	// get the send values
         $idInscription = $request->get('idInscripcion');
+        
+        // get info about the inscription
+        $arrStudent = $this->getInfoStudent($idInscription);
+    		
+        if($this->session->get('pathSystem')=='SieEspecialBundle'){
+            $swRegistryBJP = true;
+            $message='';
+            $message2='';
+        }else{
+        	if($arrStudent['studentYearOld']<21){
+        		$message='';
+        		$message2='';
+        		$swRegistryBJP = true;
+        	}else{
+    			$message='Estudiante fuera de rango de edad para el registro Bono Juancito Pinto.';
+    			$message2=' Verificar su registro de FECHA DE NACIMIENTO.';
+    			$swRegistryBJP = false;
+        	}   
+        }
+    	
+        // get the years old about the student
+
 		// list the apoderado
 		//$listStudentsParents = $this->listStudentsParents($idInscription);
-		        
-        return $this->render('SieEspecialBundle:RegisterParents:index.html.twig', array(
-                'idInscription' => $idInscription
+        return $this->render($this->session->get('pathSystem') . ':RegisterParents:index.html.twig', array(
+                'idInscription' => $idInscription,
+                'arrStudent' => $arrStudent,
+                'swRegistryBJP' => $swRegistryBJP,
+                'messageRegistryBJP' => $message,
+                'messageRegistryBJP2' => $message2,
         ));    
     }
+
+    private function getInfoStudent($idInscription){
+
+		$em= $this->getDoctrine()->getManager();
+        $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscription);    	
+        $sql = "select public.sp_obtener_edad(to_date('".$objStudentInscription->getEstudiante()->getFechaNacimiento()->format('Y-m-d')."','YYYY-MM-DD'),to_date('2021-12-31','YYYY-MM-DD'))";
+		$query = $em->getConnection()->prepare($sql);
+		$query->execute();
+		$dataStudent = $query->fetch();
+		// arrStudent
+		$arrStudent = array(
+
+			'rude'        =>$objStudentInscription->getEstudiante()->getCodigoRude(),
+			'student'     =>$objStudentInscription->getEstudiante()->getPaterno().' '.$objStudentInscription->getEstudiante()->getMaterno().' '.$objStudentInscription->getEstudiante()->getNombre(),
+            'fecNac'      =>$objStudentInscription->getEstudiante()->getFechaNacimiento(),
+            'carnet'      =>$objStudentInscription->getEstudiante()->getCarnetIdentidad(),
+            'complemento' =>$objStudentInscription->getEstudiante()->getComplemento(),
+            'studentYearOld' => $dataStudent['sp_obtener_edad'],
+
+
+			'nivel'=>$objStudentInscription->getInstitucioneducativaCurso()->getNivelTipo()->getNivel(),
+			'grado'=>$objStudentInscription->getInstitucioneducativaCurso()->getGradoTipo()->getGrado(),
+			'paralelo'=>$objStudentInscription->getInstitucioneducativaCurso()->getParaleloTipo()->getParalelo(),
+			'turno'=>$objStudentInscription->getInstitucioneducativaCurso()->getTurnoTipo()->getTurno(),
+			'matricula'=>$objStudentInscription->getEstadomatriculaTipo()->getEstadomatricula(),
+
+		);    	
+		return $arrStudent;
+    }
+
+
     public function loadDataAction( Request $request ){
     	
     	$response = new JsonResponse();
@@ -70,12 +127,13 @@ class RegisterParentsController extends Controller {
     	$em = $this->getDoctrine()->getManager();
     	// set the variables
     	$ci = $request->get('ci');
-    	$complemento = ($request->get('complemento')!='')?$request->get('complemento'):'';
+
+    	$complemento = ($request->get('complemento')!='')?mb_strtoupper($request->get('complemento'), "utf-8"):'';
 		// conditio nto find the person
 		$arrayCondition2['complemento'] = $complemento;
         $arrayCondition2['carnet'] = $ci;
         // to look for person wiht segip 1
-        //$arrayCondition2['segipId'] = 1;
+        $arrayCondition2['segipId'] = 1;
 		// set the response variables
 		$existPerson = false;
 		$valSegip = true;
@@ -132,13 +190,13 @@ class RegisterParentsController extends Controller {
           }
       }
       // get parentesco data
-      $objApoderadoTipo = $em->getRepository('SieAppWebBundle:ApoderadoTipo')->findAll();
+      $objApoderadoTipo = $em->getRepository('SieAppWebBundle:BjpApoderadoTipo')->findAll();
 
       $arrApoderadoTipo = array();
       foreach ($objApoderadoTipo as $value) {
-          if(in_array( $value->getId(), array(1,2,8)) ){
+          //if(in_array( $value->getId(), array(1,2,8)) ){
               $arrApoderadoTipo[] = array('apoderadoId' => $value->getId(),'apoderado' => $value->getApoderado());                
-          }
+          //}
       }                
  
         $searchActive = true;
@@ -173,6 +231,7 @@ class RegisterParentsController extends Controller {
 		$parentescoId= $request->get('parentescoId');
 		$idInscription= $request->get('idInscription');
 		$generoId= $request->get('generoId');
+        $extranjero= $request->get('extranjero');
 
 
       // buil the person data
@@ -188,8 +247,9 @@ class RegisterParentsController extends Controller {
       $answerSegip = true;
       $message = "";
       if($valSegip == 'true'){
-		// $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
-		$answerSegip = true;
+		$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
+		//dump($answerSegip);die;
+		//$answerSegip = true;
 		if($answerSegip){	
 			$newPerson = $this->registerNewPerson($arrParametros, $carnet, $generoId);
 			$personId = $newPerson->getId();
@@ -202,15 +262,20 @@ class RegisterParentsController extends Controller {
 
       if($answerSegip){
     	//save the apoderado
-		$nuevoApoderado = new ApoderadoInscripcion();
-		$nuevoApoderado->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($parentescoId));
+		$nuevoApoderado = new BjpApoderadoInscripcion();
+		$nuevoApoderado->setApoderadoTipo($em->getRepository('SieAppWebBundle:BjpApoderadoTipo')->find($parentescoId));
 		$nuevoApoderado->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($personId));
 		$nuevoApoderado->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscription));
 		$nuevoApoderado->setObs('');
 		$nuevoApoderado->setEsValidado(1);
 		$nuevoApoderado->setFechaRegistro(new \DateTime('now'));
 		$em->persist($nuevoApoderado);
-		$em->flush();  
+		
+
+        $objPerson = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet'=>$ci));
+        $objPerson->setEsExtranjero($extranjero);
+        $em->persist($objPerson);
+        $em->flush();  
       }else{
       	$message = "Validacion segip: Error en el registro de los datos personales";
       }
@@ -220,7 +285,6 @@ class RegisterParentsController extends Controller {
       
 		// list the apoderado
 		$listStudentsParents = $this->listStudentsParents($idInscription);
-		
 
         $response->setStatusCode(200);
         $response->setData(array(
@@ -229,7 +293,8 @@ class RegisterParentsController extends Controller {
                 'swConfirm'=>(sizeof($listStudentsParents)>=1)?true:false,
                 'arrParentBJP'=>$parentBjp,
                 'swExistParentBJP'=>(sizeof($parentBjp)>=1)?true:false,
-                'message'=>$message
+                'messagesegip'=>$message,
+                'answerSegip'=>!$answerSegip,
             )
 
         ));
@@ -288,7 +353,7 @@ class RegisterParentsController extends Controller {
                             p.fechaNacimiento,
                             IDENTITY(ai.apoderadoTipo) AS apoderadoTipo
                         ')
-                        ->from('SieAppWebBundle:ApoderadoInscripcion','ai')
+                        ->from('SieAppWebBundle:BjpApoderadoInscripcion','ai')
                         ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','ai.estudianteInscripcion = ei.id')
                         ->innerJoin('SieAppWebBundle:Persona','p','with','ai.persona = p.id')
 
@@ -310,7 +375,7 @@ class RegisterParentsController extends Controller {
 			    "fechaNacimiento" => $ap['fechaNacimiento']->format('d-m-Y'),
 			    "apoderadoTipoId" => $ap['apoderadoTipo'] ,
 			    "personaid" => $ap['personaid'] ,
-			    "apoderadoTipo" => $em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($ap['apoderadoTipo'])->getApoderado() ,
+			    "apoderadoTipo" => $em->getRepository('SieAppWebBundle:BjpApoderadoTipo')->find($ap['apoderadoTipo'])->getApoderado() ,
         	);
         }
 
@@ -327,7 +392,7 @@ class RegisterParentsController extends Controller {
       	$idInscription= $request->get('idInscription');
 
       	// remove the partent selected
-	    $removeApoderado = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find($idremove);	    	
+	    $removeApoderado = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcion')->find($idremove);	    	
     	$em->remove($removeApoderado);
       	$em->flush();
 
@@ -357,7 +422,7 @@ class RegisterParentsController extends Controller {
       	$idInscription= $request->get('idInscription');
 
       	// remove the partent selected
-	    $removeApoderadoBJP = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcion')->find($idremove);	    	
+	    $removeApoderadoBJP = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcionBeneficiarios')->find($idremove);	    	
     	$em->remove($removeApoderadoBJP);
       	$em->flush();
 
@@ -391,39 +456,56 @@ class RegisterParentsController extends Controller {
 
     	$apoderadoInscription = $request->get('apoderadoInscription');
     	$idStudentInscription = $request->get('idStudentInscription');
+        // get the years old about person
+        list($dayPer, $monthPer, $yearPer) = explode('-',$apoderadoInscription['fechaNacimiento']);
+        $arrYearsOld = implode('-',array($yearPer,$monthPer,$dayPer));
     	
+        $sql = "select public.sp_obtener_edad(to_date('".$arrYearsOld."','YYYY-MM-DD'),to_date('2021-12-31','YYYY-MM-DD'))";
+        $query = $em->getConnection()->prepare($sql);
+        $query->execute();
+        $datayearPerson = $query->fetch();
+        //dump($datayearPerson['sp_obtener_edad']);die;
 
-      // dump($apoderadoInscription);
-      // dump($apoderadoInscription['apoderadoTipoId']);
-      // die;
     	// look for the bjp person 
-    	$obParentBjp = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcion')->findOneBy(array('estudianteInscripcion'=>$idStudentInscription));
-
-    	if(sizeof($obParentBjp)>0){
-    		$message='Ya existe beneficiario BJP';
-    	}else{
-			//save the apoderado
-			$obParentBjp = new BjpApoderadoInscripcion();
-			$obParentBjp->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($apoderadoInscription['apoderadoTipoId']));
-			$obParentBjp->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($apoderadoInscription['personaid']));
-			$obParentBjp->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idStudentInscription));
-			$obParentBjp->setObs('');
-			$obParentBjp->setEsValidado(1);
-			$obParentBjp->setFechaRegistro(new \DateTime('now'));
-			$em->persist($obParentBjp);
-			$em->flush();      		
-    	}
+    	$obParentBjp = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcionBeneficiarios')->findOneBy(array('estudianteInscripcion'=>$idStudentInscription));
+        $message = '';
+        $itemColor='';
+        if ($datayearPerson['sp_obtener_edad']>18) {
+            // code...
+        	if(sizeof($obParentBjp)>0){
+        		$message='Ya existe beneficiario BJP';
+                $itemColor='#f0ae68';
+        	}else{
+    			//save the apoderado
+    			$obParentBjp = new BjpApoderadoInscripcionBeneficiarios();
+    			$obParentBjp->setApoderadoTipo($em->getRepository('SieAppWebBundle:BjpApoderadoTipo')->find($apoderadoInscription['apoderadoTipoId']));
+    			$obParentBjp->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($apoderadoInscription['personaid']));
+    			$obParentBjp->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idStudentInscription));
+    			$obParentBjp->setObs('');
+    			$obParentBjp->setEsValidado(1);
+    			$obParentBjp->setFechaRegistro(new \DateTime('now'));
+    			$em->persist($obParentBjp);
+    			$em->flush();   
+                $message='Beneficiario Bono Juancito Pinto registrado!';  
+                $itemColor = '#7bbf8b'; 		
+        	}
+        }else{
+            $message='Beneficiario Bono Juancito Pinto NO registrado. Menor de Edad';  
+            $itemColor='#f0ae68';
+        }
       
+
 		// list the apoderado bjp
 		$parentBjp = $this->listParentBjp($idStudentInscription);
+		$swExistParentBJP = (sizeof($parentBjp)>=1)?true:false;
 		
-		$message = '';
         $response->setStatusCode(200);
         $response->setData(array(
             'datos'=>array(
                 //'swExistParentBJP'=>$swExistParentBJP,
                 'arrParentBJP'=>$parentBjp,
-                'swExistParentBJP'=>(sizeof($parentBjp)>=1)?true:false,
+                'swExistParentBJP'=> $swExistParentBJP,
+                'itemColor'=> $itemColor,
                 'message'=>$message
             )
 
@@ -451,7 +533,7 @@ class RegisterParentsController extends Controller {
                             p.fechaNacimiento,
                             IDENTITY(ai.apoderadoTipo) AS apoderadoTipo
                         ')
-                        ->from('SieAppWebBundle:BjpApoderadoInscripcion','ai')
+                        ->from('SieAppWebBundle:BjpApoderadoInscripcionBeneficiarios','ai')
                         ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','ai.estudianteInscripcion = ei.id')
                         ->innerJoin('SieAppWebBundle:Persona','p','with','ai.persona = p.id')
 
@@ -473,7 +555,7 @@ class RegisterParentsController extends Controller {
 			    "fechaNacimiento" => $ap['fechaNacimiento']->format('d-m-Y'),
 			    "apoderadoTipoId" => $ap['apoderadoTipo'] ,
 			    "personaid" => $ap['personaid'] ,
-			    "apoderadoTipo" => $em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($ap['apoderadoTipo'])->getApoderado() ,
+			    "apoderadoTipo" => $em->getRepository('SieAppWebBundle:BjpApoderadoTipo')->find($ap['apoderadoTipo'])->getApoderado() ,
         	);
         }
 

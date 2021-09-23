@@ -298,6 +298,13 @@ sie_tramite_gp_areasestudiante:
     resource: "@SieHerramientaBundle/Resources/config/routing/tramitegpareasestudiante.yml"
     prefix:   /sie/tramite/areasestudiante
 
+
+# operativo bono JP
+sie_operativo_bonojp:
+    resource: "@SieHerramientaBundle/Resources/config/routing/operativoBonoJP.yml"
+    prefix:   /operativo-bonojp
+
 sie_academico_UpdatePlaceDataStudent:
     resource: "@SieHerramientaBundle/Resources/config/routing/updateplaceDatastudent.yml"
     prefix:   /sie/updateplacedatastudent
+

@@ -1,0 +1,31 @@
+operativo_bono_jp_cerrar:
+    path:     /cerrar
+    defaults: { _controller: SieHerramientaBundle:OperativoBonoJP:cerrar}
+    options:
+        expose: true
+
+operativo_bono_jp_abrir:
+    path:     /abrir/{id}
+    defaults: { _controller: SieHerramientaBundle:OperativoBonoJP:abrir}
+    options:
+        expose: true
+
+operativo_bono_jp_seguimiento:
+    path:     /seguimiento
+    defaults: { _controller: SieHerramientaBundle:OperativoBonoJP:seguimiento}
+    options:
+        expose: true
+
+
+operativo_bono_jp_mostrarDatos:
+    path:     /mostrar-datos-seguimiento
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:mostrarDatos"}
+    options:
+         expose: true
+
+
+operativo_bono_jp_ddjj:
+    path:     /ddjj/{sie}/{gestion}
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:ddjj"}
+    options:
+         expose: true
