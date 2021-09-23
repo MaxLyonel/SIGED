@@ -24,7 +24,7 @@
                             {% set idioma1 = '' %}
                             {% set idioma2 = '' %}
                             {% set idioma3 = '' %}
-                            {{dump(lista_detalle)}}
+
                             {% for detalle in lista_detalle %}
                                 <tr id="rowListaDetalle{{ loop.index }}" class="tr-observacion-{{detalle.id}}">
                                     <td data-title="No.">{{ loop.index }}</td>
