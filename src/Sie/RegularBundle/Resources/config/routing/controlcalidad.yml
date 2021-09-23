@@ -81,3 +81,16 @@ ccalidad_resolver_inconsistencias_grados_sin_idioma_ensenanza_aula:
     defaults: { _controller: "SieRegularBundle:ControlCalidad:calidad_resolverInconsistenciasGradosSinEnsenanzaAula"}
     options:
          expose: true
+
+inconsistencia_buscar_persona:
+    path:     /calidad/buscar-persona
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:calidad_buscarPersona"}
+    options:
+         expose: true
+
+#calidad: BJP 2021-Apoderados con SEGIP INCONSISTENTE regla 60,61,62"
+ccalidad_resolver_inconsistencias_segip:
+    path:     /calidad/resolver-inconsistencias-segip
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:calidad_resolverInconsistenciasSegip"}
+    options:
+         expose: true

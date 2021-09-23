@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 use Sie\AppWebBundle\Entity\ValidacionOmisionHistoricaEstudiante;
 use Sie\AppWebBundle\Entity\IdiomaTipo;
+use Sie\AppWebBundle\Entity\Persona;
 
 /**
  * Gestión de Menú Controller.
@@ -1268,6 +1269,382 @@ class ControlCalidadController extends Controller {
                     $msj    = 'Debe selecionar la primera, segunda y tercera lengua del proceso pedagógico';
                 else
                     $msj    = 'Debe selecionar la primera, segunda y tercera lengua en el ámbito escolar';
+            }
+            $response = new JsonResponse($data,$status);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+        }
+        else
+        {
+            return $this->redirect($this->generateUrl('login'));
+        }
+    }
+
+
+    public function calidad_buscarPersonaAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $esAjax=$request->isXmlHttpRequest();
+        $request_id = $request->get('id');
+        $request_id = filter_var($request_id,FILTER_SANITIZE_NUMBER_INT);
+        $request_id = is_numeric($request_id)?$request_id:-1;
+
+        $data=null;
+        $status= 404;
+        $msj='Ocurrio un error, por favor vuelva a intentarlo.';
+        try
+        {
+            if($esAjax && $request_id >0)
+            {
+                $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($request_id);
+                if($persona)
+                {
+                    $serializer = $this->get('serializer');
+                    $data= array(
+                        'carnet' => $persona->getCarnet(),
+                        'complemento' => $persona->getComplemento(),
+                        'fechaNacimiento' => $persona->getFechaNacimiento()->format('d-m-Y'),
+                        'nombre' => $persona->getNombre(),
+                        'paterno' => $persona->getPaterno(),
+                        'materno' => $persona->getMaterno(),
+                        'extranjero' => $persona->getEsExtranjero(),
+                    );
+                    //$data = $serializer->serialize($persona, 'json');
+                    $status= 200;
+                    $msj='Persona encontrada';
+                }
+                else
+                {
+                    $data=null;
+                    $status= 404;
+                    $msj='No existe la persona.';
+                }
+            }
+            else
+            {
+                $data=null;
+                $status= 404;
+                $msj='Ocurrio un error, por favor vuelva a intentarlo.';
+            }
+        }
+        catch(Exception $e)
+        {
+            $data=null;
+            $status= 404;
+            $msj='Ocurrio un error, por favor vuelva a intentarlo.';
+        }
+        
+        $response = new JsonResponse($data,$status);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+    }
+
+    public function verificaRelacionTablaMaestroInscripcion ($idPersona)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+
+        $query ='
+            SELECT *
+            FROM
+            "public".persona
+            INNER JOIN "public".maestro_inscripcion ON "public".maestro_inscripcion.persona_id = "public".persona."id"
+            INNER JOIN "public".cargo_tipo ON "public".maestro_inscripcion.cargo_tipo_id = "public".cargo_tipo."id"
+            WHERE
+            "public".persona."id" = ?
+        ';
+        $stmt = $db->prepare($query);
+        $params = array($idPersona);
+        $stmt->execute($params);
+        $datos=$stmt->fetchAll();
+
+        return $datos;
+    }
+
+    /*
+    //regla nro. 60
+    public function calidad_resolver_inconsistencias_apoderado ($persona, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $data   = NULL;
+        $status = 404;
+        $msj    = 'Acaba de ocurrir un error desconocido, por favor vuelva a intentarlo';
+
+        list($request_carnet, $request_complemento, $request_fechaNacimiento) = $datosPersona;
+        list($request_llave , $request_inconsistencia , $request_ue) = $datosInconsistencia;
+
+        if( $personaValida )
+        {
+            $arrayDatosPersona['carnet']=$request_carnet;
+            unset($arrayDatosPersona['fecha_nacimiento']);
+            $arrayDatosPersona['fechaNacimiento']=$request_fechaNacimiento;
+            //$persona = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
+            $persona = $em->getRepository('SieAppWebBundle:Persona')->find(array('id'=>$request_llave));
+            $observacion = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find(array('id'=>$request_inconsistencia,'InstitucionEducativa'=>$request_ue));
+            if($persona && $observacion)
+            {
+                try
+                {
+                    $em->getConnection()->beginTransaction();
+                    //asignamos el carnet
+                    $persona->setCarnet($request_carnet);
+                    $persona->setComplemento($request_complemento);
+                    $persona->setSegipId(1);
+                    //ahora cambiamos el estado de la observación
+                    $observacion->setEsActivo('t');
+                    //guardamos los datos
+                    $em->persist($persona);
+                    $em->persist($observacion);
+                    $em->flush();
+                    //Confirmamos los cambios
+                    $em->getConnection()->commit();
+                    $data   = $observacion->getId();
+                    $status = 200;
+                    $msj    = 'La observación fue corregida exitosamente';
+                }
+                catch (Exception $e)
+                {
+                    $em->getConnection()->rollback();
+                    $data   = NULL;
+                    $status = 404;
+                    $msj    = 'La observación no pudo ser corregida, ocurrio un error desconocido, por favor vuelva a intentarlo.';
+                }
+            }
+            else
+            {
+                $data   = NULL;
+                $status = 404;
+                $msj    = 'No existe la persona, por favor vuelva a intentarlo';
+            }
+        }
+        else
+        {
+            $data   = NULL;
+            $status = 404;
+            $msj    = 'Los datos enviados no son validos según SEGIP.';
+        }
+        return array($data,$status,$msj);
+    }
+    //regla nro. 61
+    public function calidad_resolver_inconsistencias_apoderadoAdministrativo ($persona, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia)
+    {
+    }
+    //regla nro. 62
+    public function calidad_resolver_inconsistencias_maestroAdministrativo ($personaA, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia)
+    */
+
+    public function calidad_resolver_inconsistencias_persona ($personaA, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia,$request_tipo)
+    {
+        $em = $this->getDoctrine()->getManager();
+        list($request_carnet, $request_complemento, $request_fechaNacimiento) = $datosPersona;
+        list($request_llave , $request_inconsistencia , $request_ue) = $datosInconsistencia;
+
+        $personaTieneRelacionOtraTabla = $this->verificaRelacionTablaMaestroInscripcion($request_llave);
+
+        $data = NULL;
+        $status = 404;
+        $msj = 'Acaba de ocurrir un error desconocido, por favor vuelva a intentarlo.';
+
+        if($personaValida)
+        {
+            if($personaA)
+            {
+                try
+                {
+                    $em->getConnection()->beginTransaction();
+                    $personaB = $em->getRepository('SieAppWebBundle:Persona')->find(array('carnet'=>$personaA->getCarnet(), 'complemento'=>$personaA->getComplemento(),'fechaNacimiento'=>$personaA->getFechaNacimiento() ) );
+
+                    if( $personaB == null)
+                    {
+                        $personaA->setCarnet($request_carnet);
+                        $personaA->setComplemento($request_complemento);
+                        $em->persist($personaA);
+                    }
+                    else
+                    {
+                        //BJP 2021-Apoderados con SEGIP INCONSISTENTE (regla 60)
+                        if( $request_tipo == 60 )
+                        {
+                            //apoderado - inscripcion
+                            $apoderadoInscripciones = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find(array( 'persona' => $personaA ) );
+                            foreach ($apoderadoInscripciones as $ai)
+                            {
+                                $ai->setPersona($personaB);
+                                $em->persist($mi);
+                            }
+                        }
+
+                        //BJP 2021-Usuarios APODERADOS Y ADMINISTRATIVOS con SEGIP INCONSISTENTE (regla 61)
+                        if( $request_tipo == 61 )
+                        {
+                            //apoderado - inscripcion
+                            $apoderadoInscripciones = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find(array( 'persona' => $personaA ) );
+                            foreach ($apoderadoInscripciones as $ai)
+                            {
+                                $ai->setPersona($personaB);
+                                $em->persist($mi);
+                            }
+
+                            $maestroInscripciones = $em->getRepository('SieAppWebBundle:PersonalAdministrativoInscripcion')->find(array( 'persona' => $personaA ) );
+                            //administrativos - inscripcion
+                            foreach ($maestroInscripciones as $mi)
+                            {
+                                $mi->setPersona($personaB);
+                                $em->persist($mi);
+                            }
+                        }
+
+                        //BJP 2021-Maestros MAESTROS Y ADMINISTRATIVOS con SEGIP INCONSISTENTE (regla 62)
+                        if( $request_tipo == 62 )
+                        {
+                            //apoderado - inscripcion
+                            $apoderadoInscripciones = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find(array( 'persona' => $personaA ) );
+                            foreach ($apoderadoInscripciones as $ai)
+                            {
+                                $ai->setPersona($personaB);
+                                $em->persist($mi);
+                            }
+
+                            $maestroInscripciones = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find(array( 'persona' => $personaA ) );
+                            //maestro - inscripcion
+                            foreach ($maestroInscripciones as $mi)
+                            {
+                                $mi->setPersona($personaB);
+                                $em->persist($mi);
+                            }
+                        }
+                    }
+                    $em->flush();
+                    $em->getConnection()->commit();
+                    $data   = $observacion->getId();
+                    $status = 200;
+                    $msj    = 'La observación fue corregida exitosamente';
+                }
+                catch (Exception $e)
+                {
+                    $em->getConnection()->rollback();
+                    $data   = NULL;
+                    $status = 404;
+                    $msj    = 'Acaba de ocurrir un error desconocido, no se resolvio la inconsistencia por favor vuelva a intentarlo.';
+                }
+            }
+            else
+            {
+                $data   = NULL;
+                $status = 404;
+                $msj    = 'La persona con la inconsistencia no existe.';
+            }
+        }
+        else
+        {
+            $data   = NULL;
+            $status = 404;
+            $msj    = 'Los datos enviados no son validos según SEGIP.';
+        }
+        return array($data,$status,$msj);
+    }
+
+    public function calidad_resolverInconsistenciasSegipAction(Request $request)
+    {
+        $esAjax=$request->isXmlHttpRequest();
+        if($esAjax)
+        {
+            $em = $this->getDoctrine()->getManager();
+            $form = $request->request->all();
+
+            $request_carnet = filter_var(trim($form['carnet']),FILTER_SANITIZE_NUMBER_INT);
+            $request_extranjero = isset($form['extranjero'])?true:false;
+            $request_complemento = trim($form['complemento']);
+            $request_fechaNacimiento = trim($form['fecha_nacimiento']);
+            
+            $request_tipo = filter_var($form['tipo'],FILTER_SANITIZE_NUMBER_INT);
+            $request_llave = filter_var($form['id'],FILTER_SANITIZE_NUMBER_INT);
+            $request_inconsistencia = filter_var($form['inconsistencia'],FILTER_SANITIZE_NUMBER_INT);
+            $request_ue = filter_var($form['ue'],FILTER_SANITIZE_NUMBER_INT);
+
+            $request_carnet = empty($request_carnet)?-1:$request_carnet;
+            $request_fechaNacimiento = empty($request_fechaNacimiento)?-1:$request_fechaNacimiento;
+
+            $request_tipo = empty($request_tipo)?-1:$request_tipo;
+
+            $request_tipo = ($request_tipo==60 || $request_tipo==61 || $request_tipo==62)?$request_tipo:-1;
+            $request_llave = empty($request_llave)?-1:$request_llave;
+            $request_inconsistencia = empty($request_inconsistencia)?-1:$request_inconsistencia;
+            $request_ue = empty($request_ue)?-1:$request_ue;
+
+            $data   = NULL;
+            $status = 404;
+            $msj    = 'Acaba de ocurrir un error desconocido, por favor vuelva a intentarlo';
+
+            if( $request_carnet >0 && $request_fechaNacimiento>0 && $request_tipo >0)
+            {
+                if($request_llave>0 && $request_inconsistencia>0 && $request_ue>0)
+                {
+
+                    $fecha = str_replace('-','/',$request_fechaNacimiento);
+                    $complemento = strlen($request_complemento) == 0 ? '':$request_complemento;
+                    $arrayDatosPersona = array(
+                        //'carnet'=>$form['carnet'],
+                        'complemento'=>$complemento,
+                        'fecha_nacimiento' => $fecha
+                    );
+
+                    if($request_extranjero)
+                        $arrayDatosPersona['extranjero']='extranjero';
+                    
+                    $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($request_carnet, $arrayDatosPersona, 'prod', 'academico');
+                    $persona = $em->getRepository('SieAppWebBundle:Persona')->find(array('id'=>$request_llave));
+                    $observacion = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find(array('id'=>$request_inconsistencia,'InstitucionEducativa'=>$request_ue));
+
+                    if($observacion)
+                    {
+                        $datosPersona = array($request_carnet , $request_complemento , $request_fechaNacimiento);
+                        $datosInconsistencia = array($request_llave , $request_inconsistencia , $request_ue);
+
+                        /*
+                        switch ($request_tipo)
+                        {
+                            case 60: //apoderados con segip inconsistente
+                                list($data,$status,$msj) = $this->calidad_resolver_inconsistencias_apoderado($persona, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia);
+                            break;
+
+                            case 61: //apoderados - administrativos con segip inconsistente
+                                list($data,$status,$msj) = $this->calidad_resolver_inconsistencias_apoderadoAdministrativo($persona, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia);
+                            break;
+
+                            case 62: //maestros - administrativos con segip inconsistente
+                                list($data,$status,$msj) = $this->calidad_resolver_inconsistencias_maestroAdministrativo($persona, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia);
+                            break;
+                        }
+                        */
+                        list($data,$status,$msj) = $this->calidad_resolver_inconsistencias_persona($persona, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia,$request_tipo);
+                        if( $status == 200 )
+                        {
+                            //guardamos los datos
+                            $observacion->setEsActivo('t');
+                            $em->persist($observacion);
+                            $em->flush();
+                        }
+                    }
+                    else
+                    {
+                        $data   = NULL;
+                        $status = 404;
+                        $msj    = 'Acaba de ocurrir un error, no existe la inconsistencia.';
+                    }
+                }
+                else
+                {
+                    $data   = NULL;
+                    $status = 404;
+                    $msj    = 'Acaba de ocurrir un error desconocido, por favor vuelva a intentarlo';
+                }
+            }
+            else
+            {
+                $data   = NULL;
+                $status = 404;
+                $msj    = 'Por favor complete los campos requeridos.';
             }
             $response = new JsonResponse($data,$status);
             $response->headers->set('Content-Type', 'application/json');

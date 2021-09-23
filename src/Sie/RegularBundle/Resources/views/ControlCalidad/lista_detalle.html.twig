@@ -24,7 +24,7 @@
                             {% set idioma1 = '' %}
                             {% set idioma2 = '' %}
                             {% set idioma3 = '' %}
-
+                            {{dump(lista_detalle)}}
                             {% for detalle in lista_detalle %}
                                 <tr id="rowListaDetalle{{ loop.index }}" class="tr-observacion-{{detalle.id}}">
                                     <td data-title="No.">{{ loop.index }}</td>
@@ -179,7 +179,23 @@
                                             {% set idioma3 = '3. Lengua menos hablada (poco frecuente)' %}
                                             <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
                                         {% endif %}
+                                    
+                                        {#
+                                            BJP 2021-Apoderados con SEGIP INCONSISTENTE regla -> 60
+                                            BJP 2021-Usuarios (APODERADOS Y ADMINISTRATIVOS) con SEGIP INCONSISTENTE regla -> 61
+                                            BJP 2021-Maestros (MAESTROS Y ADMINISTRATIVOS) con SEGIP INCONSISTENTE regla -> 62
+                                        #}
+                                        {% if regla.id == 60 or regla.id == 61 or regla.id == 62 %}
+                                            <!--Resolver-->
+                                            <button class="btn btn-success" onclick="seleccionarInconsistenciaSegip({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-segip',{{detalle.id}},{{regla.id}})">Solucionar observación</button>
+                                            <!--Omitir-->
+                                            <form action="{{path('ccalidad_omitir')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
+                                            </form>
+                                        {% endif %}
                                     {% endif %}
+                                    
                                     {# Para Distritos #}
                                     {% if app.session.get('roluser') == 10 %}
                                         {% if regla.id in [24,26]  %}
@@ -592,6 +608,107 @@
     </form>
 </div>
 
+
+<!--Modal para solucionar inconsistenci de segip-->
+<div class="modal fade" id="modal-inconsistencia-segip" tabindex="-1" role="dialog" aria-labelledby="modal-inconsistencia-segip">
+    <form action="#" method="POST" class="form-resolve-inconsistency-segip">
+        <input type="hidden" name="token" value="{{ csrf_token('modal-inconsistencia-segip') }}">
+        <input type="hidden" id="form_id" name="id" value="">
+        <input type="hidden" id="form_inconsistencia" name="inconsistencia" value="">
+        <input type="hidden" id="form_ue" name="ue" value="">
+        {#<input type="hidden" id="form_tipo" name="tipo" value="{{TIPO_REGLA}}">#}
+        <input type="hidden" id="form_tipo" name="tipo" value="">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id=""> Soilucionar inconsistencia SEGIP</h4>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row" style="padding-top:1rem">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> Nombres </label>
+                                        <div class="col-xs-12 col-sm-6 form_nombre">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem;">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> Paterno </label>
+                                        <div class="col-xs-12 col-sm-6 form_paterno">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem;">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label">Materno </label>
+                                        <div class="col-xs-12 col-sm-6 form_materno">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="row" style="padding-top:1rem">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> Carnet </label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <input type="text" class="form-control" id="form_carnet" name="carnet" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem;">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> Complemento </label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <input type="text" class="form-control" id="form_complemento" name="complemento" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem;">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label">Fecha nacimiento </label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <input type="text" class="form-control" id="form_fecha_nacimiento" name="fecha_nacimiento" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem">
+                                <div class="col-xs-12 col-sm-12">
+                                  <div class="checkbox">
+                                    <label class="col-xs-12 col-sm-6 control-label">
+                                      <input type="checkbox" id="form_extranjero" name="extranjero"> ¿Es extranjero?
+                                    </label>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success btn-resolver-inconsistencia-segip">Solucionar observación</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
 {% block javascripts %}
     <script>
 
@@ -885,6 +1002,12 @@
         resolverInconsistenciaIdiomaAula(this,e);
     });
 
+    $("#form_fecha_nacimiento").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
+    $('.form-resolve-inconsistency-segip').on('submit',function(e)
+    {
+        resolverInconsistenciaSegip(this,e);
+    });
+
     $('.modal').on('hidden.bs.modal', function ()
     {
       var form=$(this).find('.form-resolve-inconsistency-desayuno');
@@ -920,6 +1043,62 @@
                 input1.val(_id);
                 input2.val(_inconsistencia);
                 abrirModal(_form);
+            }
+            else
+                alert('Acaba de ocurrir un error, por favor vuelva a interntarlo');
+        }
+        else
+            alert('Acaba de ocurrir un error, por favor vuelva a interntarlo');
+    }
+
+    var buscarPersona = function (id,callback,callbackError)
+    {
+        $.ajax({
+            type:'POST',
+            url:'{{ path("inconsistencia_buscar_persona") }}',
+            data:{id:id},
+            dataType: 'json',
+           //processData: false,
+           //contentType: false,
+            success:callback,
+            error: callbackError,
+        });
+    }
+
+    var seleccionarInconsistenciaSegip= function(_ue,_id,_form,_inconsistencia,regla)
+    {
+        var form=$('#'+_form);
+        if(typeof(form)!='undefined')
+        {
+            var input    = form.find('#form_ue');
+            var input1   = form.find('#form_id');
+            var input2   = form.find('#form_inconsistencia');
+
+            if(typeof(input)!='undefined' && typeof(input1)!='undefined' && typeof(input2)!='undefined')
+            {
+                input.val(_ue);
+                input1.val(_id);
+                input2.val(_inconsistencia);
+
+                buscarPersona(_id,
+                function(data)
+                {
+                    var persona = data.data;
+                    form.find('.form_nombre').html(persona.nombre);
+                    form.find('.form_paterno').html(persona.paterno);
+                    form.find('.form_materno').html(persona.materno);
+
+                    form.find('#form_tipo').val(regla);
+                    form.find('#form_carnet').val(persona.carnet);
+                    form.find('#form_complemento').val(persona.complemento);
+                    form.find('#form_fecha_nacimiento').val(persona.fechaNacimiento);
+                    abrirModal(_form);
+                },
+                function(data)//en caso de error llamara a esta funcion
+                {
+                    alert('Acaba de ocurrir un error, no se pudo obtener dato de la persona, por favor vuelva a intentarlo.');
+                    return;
+                });
             }
             else
                 alert('Acaba de ocurrir un error, por favor vuelva a interntarlo');
@@ -1187,5 +1366,95 @@
                 }
         });
     }
+
+
+    var resolverInconsistenciaSegip = function (_form,e)
+    {
+        e.preventDefault();
+        var form=$(_form);
+        var carnet = form.find('#form_carnet');
+        var complemento = form.find('#form_complemento');
+        var fechaNacimiento = form.find('#form_fecha_nacimiento');
+
+        if(typeof(carnet)=='undefined' || (typeof(carnet)!='undefined' && carnet.val()=='' ) )
+        {
+            alert('Debe llenar el campo carnet.');
+            return;
+        }
+        if(typeof(fechaNacimiento)=='undefined' || (typeof(fechaNacimiento)!='undefined' && fechaNacimiento.val()=='' ) )
+        {
+            alert('Debe llenar el campo fecha de nacimiento.');
+            return;
+        }
+        var q=confirm('¿Está seguro de proceder?');
+        if(q==false)
+        {
+            return;
+        }
+        var _btn_submit='btn-resolver-inconsistencia-segip';
+        $.ajax({
+                type: 'POST',
+                url: '{{path("ccalidad_resolver_inconsistencias_segip")}}',
+                data: form.serialize(),
+                {#
+                /*dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData:false,*/
+                #}
+                beforeSend: function()
+                {
+                    deshabilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-segip',_btn_submit,'Solucionando observación ...');
+                },
+                success: function(data)
+                {
+                    var status  = data.status;
+                    var msj     = data.msj;
+                    var id      = data.data;
+                    if(status==200)
+                    {
+                        if(id!=null && msj!=null)
+                        {
+                            cerrarModal('modal-inconsistencia-sin-idioma-ensenanza-aula');
+                            $('.tr-observacion-'+id).fadeOut();
+                            $('.tr-observacion-'+id).remove();
+                            $(form)[0].reset();
+                            alert(msj);
+                        }
+                        else
+                        {
+                            alert('Acaba de ocurrir un error por favor vuelva a intentarlo.');
+                        }
+                    }
+                    else
+                    {
+                        alert(msj);
+                    }
+                    habilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-segip',_btn_submit,'Solucionar observación');
+                },
+                error:function (xhr)
+                {
+                    habilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-segip',_btn_submit,'Solucionar observación');
+                    try
+                    {
+                        var data    = JSON.parse(xhr.responseText);
+                        var msj     = data.msj;
+                        var status  = data.status;
+                        if(status== 404)
+                            alert(data.msj);
+                        else
+                            alert('Acaba de ocurrir un error por favor vuelva a intentarlo');
+                    }
+                    catch(e)
+                    {
+                        alert('Acaba de ocurrir un error por favor vuelva a intentarlo');
+                    }
+                }
+        });
+    }
+
     </script>
 {% endblock %}
