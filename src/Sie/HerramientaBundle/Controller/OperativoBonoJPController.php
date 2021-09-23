@@ -53,8 +53,8 @@ class OperativoBonoJPController extends Controller
 		$observacionesBonpJP = null;
 		try
 		{
-			$observacionesBonpJP = $this->puedeCerrarOperativo($request_gestion,$request_sie);
-			if(!$observacionesBonpJP)
+			list($observacionesBonpJP, $observacionesControlCalidad) = $this->puedeCerrarOperativo($request_gestion,$request_sie);
+			if(!$observacionesBonpJP && !$observacionesControlCalidad)
 			{
 				if($esAjax && $request_sie >0 && $request_gestion >0)
 				{
@@ -71,11 +71,12 @@ class OperativoBonoJPController extends Controller
 		{
 			$data=null;
 			$status= 404;
-			$msj=$e->getMessage();
+			$msj='Ocurrio un error al cerrar el operativo, por favor vuelva a intentarlo.';
 		}
+		$observaciones = array_merge($observacionesBonpJP,$observacionesControlCalidad);
 		$response = new JsonResponse($data,$status);
 		$response->headers->set('Content-Type', 'application/json');
-		return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj,'urlReporte'=>$reporte,'observacionesBonpJP'=>$observacionesBonpJP));
+		return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj,'urlReporte'=>$reporte,'observacionesBonpJP'=>$observaciones));
 	}
 
 	public function abrirAction(Request $request,$id)
@@ -184,9 +185,37 @@ class OperativoBonoJPController extends Controller
 		$stmt = $db->prepare($query);
 		$params = array($gestion,$sie);
 		$stmt->execute($params);
-		$observacionesBonpJP=$stmt->fetchAll();
 
-		return $observacionesBonpJP;
+		$observacionesBonpJP = $stmt->fetchAll();
+		$observacionesControlCalidad = $this->getObservacionesControlCalidad(array('gestion' => $gestion,'sie' => $sie));
+
+		if($observacionesBonpJP == null)
+			$observacionesBonpJP = [];
+		
+		if($observacionesControlCalidad == null)
+			$observacionesControlCalidad = [];
+
+		return array($observacionesBonpJP, $observacionesControlCalidad);
+	}
+
+	private function getObservacionesControlCalidad($data)
+	{
+		$data['reglas'] = '12,13,26,24,25,8,15,20,11,37,63,60,61,62';
+		// added to 2021 about qa
+		$years = $data['gestion'].' ,'.$data['gestion'];
+
+		$em = $this->getDoctrine()->getManager();
+		$query = $em->getConnection()->prepare("
+		select vp.obs as observacion
+		from validacion_proceso vp
+		where vp.institucion_educativa_id = '".$data['sie']."' and vp.gestion_tipo_id in (".$years.")
+		and vp.validacion_regla_tipo_id in (".$data['reglas'].")
+		and vp.es_activo = 'f'
+		");
+		$query->execute();
+		$objobsQA = $query->fetchAll();
+
+		return $objobsQA;
 	}
 
 	public function mostrarDatosAction(Request $request)
