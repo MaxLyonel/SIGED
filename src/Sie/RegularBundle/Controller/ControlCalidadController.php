@@ -1433,7 +1433,7 @@ class ControlCalidadController extends Controller {
     public function calidad_resolver_inconsistencias_maestroAdministrativo ($personaA, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia)
     */
 
-    public function calidad_resolver_inconsistencias_persona ($personaA, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia,$request_tipo)
+    public function calidad_resolver_inconsistencias_persona ($personaObs, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia,$request_tipo,$observacion)
     {
         $em = $this->getDoctrine()->getManager();
         list($request_carnet, $request_complemento, $request_fechaNacimiento) = $datosPersona;
@@ -1444,21 +1444,40 @@ class ControlCalidadController extends Controller {
         $data = NULL;
         $status = 404;
         $msj = 'Acaba de ocurrir un error desconocido, por favor vuelva a intentarlo.';
-
+        
         if($personaValida)
         {
-            if($personaA)
+            if($personaObs)
             {
                 try
                 {
                     $em->getConnection()->beginTransaction();
-                    $personaB = $em->getRepository('SieAppWebBundle:Persona')->find(array('carnet'=>$personaA->getCarnet(), 'complemento'=>$personaA->getComplemento(),'fechaNacimiento'=>$personaA->getFechaNacimiento() ) );
+                    $qb = $em->createQueryBuilder();
+                    //$personaOk = $em->getRepository('SieAppWebBundle:Persona')->findBy(array('carnet'=>$personaObs->getCarnet(), 'complemento'=>$personaObs->getComplemento(),'fechaNacimiento'=>$personaObs->getFechaNacimiento() ,'id <>'=>$request_llave) );
 
-                    if( $personaB == null)
+                    $personaOk = $qb->select('p')
+                         ->from('SieAppWebBundle:Persona', 'p')
+                         ->where('p.carnet = :carnet')
+                         ->andWhere('p.complemento = :complemento')
+                         ->andWhere('p.fechaNacimiento = :fechaNacimiento')
+                         ->setParameters( array('carnet'=>$request_carnet, 'complemento'=>$request_complemento,'fechaNacimiento'=>new \DateTime($request_fechaNacimiento)) )
+                         ->getQuery()
+                         ->getOneOrNullResult();
+
+                    $idPersonaObs = -1;
+                    $idPersonaOk = -1;
+                    if($personaObs)
+                        $idPersonaObs = $personaObs->getId();
+
+                    if($personaOk)
+                        $idPersonaOk = $personaOk->getId();
+
+                    if( $personaOk == null || ($idPersonaObs == $idPersonaOk) )
                     {
-                        $personaA->setCarnet($request_carnet);
-                        $personaA->setComplemento($request_complemento);
-                        $em->persist($personaA);
+                        $personaObs->setCarnet($request_carnet);
+                        $personaObs->setComplemento($request_complemento);
+                        $personaObs->setFechaNacimiento(new \DateTime($request_fechaNacimiento));
+                        $em->persist($personaObs);
                     }
                     else
                     {
@@ -1466,11 +1485,19 @@ class ControlCalidadController extends Controller {
                         if( $request_tipo == 60 )
                         {
                             //apoderado - inscripcion
-                            $apoderadoInscripciones = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find(array( 'persona' => $personaA ) );
+                            $apoderadoInscripciones = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array( 'persona' => $personaObs ) );
                             foreach ($apoderadoInscripciones as $ai)
                             {
-                                $ai->setPersona($personaB);
-                                $em->persist($mi);
+                                if($ai)
+                                {
+                                    $existe = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array( 'persona' => $personaOk , 'id' => $ai->getId() ) );
+                                    //if($ai->getPersona()->getId() != $personaOk->getId())
+                                    if(!$existe)
+                                    {
+                                        $ai->setPersona($personaOk);
+                                        $em->persist($ai);
+                                    }
+                                }
                             }
                         }
 
@@ -1478,19 +1505,35 @@ class ControlCalidadController extends Controller {
                         if( $request_tipo == 61 )
                         {
                             //apoderado - inscripcion
-                            $apoderadoInscripciones = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find(array( 'persona' => $personaA ) );
+                            $apoderadoInscripciones = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array( 'persona' => $personaObs ) );
                             foreach ($apoderadoInscripciones as $ai)
                             {
-                                $ai->setPersona($personaB);
-                                $em->persist($mi);
+                                if($ai)
+                                {
+                                    $existe = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array( 'persona' => $personaOk , 'id' => $ai->getId() ) );
+                                    //if($ai->getPersona()->getId() != $personaOk->getId())
+                                    if(!$existe)
+                                    {
+                                        $ai->setPersona($personaOk);
+                                        $em->persist($ai);
+                                    }
+                                }
                             }
 
-                            $maestroInscripciones = $em->getRepository('SieAppWebBundle:PersonalAdministrativoInscripcion')->find(array( 'persona' => $personaA ) );
                             //administrativos - inscripcion
+                            $maestroInscripciones = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array( 'persona' => $personaObs ) );
                             foreach ($maestroInscripciones as $mi)
                             {
-                                $mi->setPersona($personaB);
-                                $em->persist($mi);
+                                if($mi)
+                                {
+                                    $existe = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array( 'persona' => $personaOk , 'id' => $mi->getId() ) );
+                                    //if($mi->getPersona()->getId() != $personaOk->getId())
+                                    if(!$existe)
+                                    {
+                                        $mi->setPersona($personaOk);
+                                        $em->persist($mi);
+                                    }
+                                }
                             }
                         }
 
@@ -1498,24 +1541,44 @@ class ControlCalidadController extends Controller {
                         if( $request_tipo == 62 )
                         {
                             //apoderado - inscripcion
-                            $apoderadoInscripciones = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->find(array( 'persona' => $personaA ) );
+                            $apoderadoInscripciones = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array( 'persona' => $personaObs ) );
                             foreach ($apoderadoInscripciones as $ai)
                             {
-                                $ai->setPersona($personaB);
-                                $em->persist($mi);
+                                if($ai)
+                                {
+                                    $existe = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array( 'persona' => $personaOk , 'id' => $ai->getId() ) );
+                                    //dump($ai->getPersona()->getId().' != '.$personaOk->getId());
+                                    //if($ai->getPersona()->getId() != $personaOk->getId())
+                                    if(!$existe)
+                                    {
+                                        $ai->setPersona($personaOk);
+                                        $em->persist($ai);
+                                    }
+                                }
                             }
 
-                            $maestroInscripciones = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find(array( 'persona' => $personaA ) );
                             //maestro - inscripcion
+                            $maestroInscripciones = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array( 'persona' => $personaObs ) );
                             foreach ($maestroInscripciones as $mi)
                             {
-                                $mi->setPersona($personaB);
-                                $em->persist($mi);
+                                if($mi)
+                                {
+                                    $existe = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findBy(array( 'persona' => $personaOk , 'id' => $mi->getId() ) );
+                                    //dump($mi->getPersona()->getId().' != '.$personaOk->getId());
+                                    //if($mi->getPersona()->getId() != $personaOk->getId())
+                                    if(!$existe)
+                                    {
+                                        $mi->setPersona($personaOk);
+                                        $em->persist($mi);
+                                    }
+                                }
                             }
                         }
+                        $em->remove($personaObs);
                     }
                     $em->flush();
                     $em->getConnection()->commit();
+
                     $data   = $observacion->getId();
                     $status = 200;
                     $msj    = 'La observación fue corregida exitosamente';
@@ -1617,7 +1680,7 @@ class ControlCalidadController extends Controller {
                             break;
                         }
                         */
-                        list($data,$status,$msj) = $this->calidad_resolver_inconsistencias_persona($persona, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia,$request_tipo);
+                        list($data,$status,$msj) = $this->calidad_resolver_inconsistencias_persona($persona, $personaValida,$arrayDatosPersona,$datosPersona,$datosInconsistencia,$request_tipo,$observacion);
                         if( $status == 200 )
                         {
                             //guardamos los datos
