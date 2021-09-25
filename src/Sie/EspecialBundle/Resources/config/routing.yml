@@ -71,3 +71,7 @@ sie_herramienta_info_operativo_salud_administrativo_maestro:
     resource: "@SieHerramientaBundle/Resources/config/routing/operativoSaludAdministrativoMaestro.yml"
     prefix:   /acceso/operativo-salud/administrativo-maestro
 
+#operativo registro apoderado
+#sie_especial_operativo_apoderado:
+#    resource: "@SieEspecialBundle/Resources/config/routing/operativoRegistroApoderado.yml"
+#    prefix:   /acceso/operativo-apoderado

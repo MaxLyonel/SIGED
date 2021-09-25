@@ -94,7 +94,8 @@ class InfoEspecialController extends Controller{
      //render the view
      return $this->render('SieEspecialBundle:InfoEspecial:index.html.twig', array(
                'arrInfoCentro' => $arrInfoCentro,
-               'objCentro'    => $objCentro[0]
+               'objCentro'    => $objCentro[0],
+
            ));
    }
 
@@ -138,7 +139,7 @@ class InfoEspecialController extends Controller{
     } else {
       $request->getSession()->set('onlyview', false);
     }
-
+    
     $dataInfo = array('id' => $data['idInstitucion'], 'gestion' => $data['gestion'], 'institucioneducativa' => $data['institucioneducativa']);
     return $this->render($this->session->get('pathSystem') . ':InfoEspecial:open.html.twig', array(
                 'centroform' => $this->InfoStudentForm('herramienta_especial_info_centro_index', 'Centro Educativo', $data)->createView(),
@@ -151,7 +152,9 @@ class InfoEspecialController extends Controller{
                 
                 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
                  
-                'data'=>$dataInfo
+                'data'=>$dataInfo,
+                'operativoBonoJPform' => $this->cerrarOperativoForm('operativo_bono_jp_cerrar', 'Cerrar Operativo Bono JP',$data)->createView(),
+                'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($data['idInstitucion'],$data['gestion'],14),
     ));
 
   }
@@ -184,6 +187,30 @@ class InfoEspecialController extends Controller{
                       ->add('gestion', 'hidden', array('data' => $data['gestion']))
                       ->add('sie', 'hidden', array('data' => $data['idInstitucion']))//81880091
                       ->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-facebook btn-md btn-block')))
+                      ->getForm()
+      ;
+  }
+
+
+  private function cerrarOperativoForm($goToPath, $nextButton, $data)
+  {
+      //$this->unidadEducativa = $this->getAllUserInfo($this->session->get('userName'));
+      $onClick = '';
+      $this->unidadEducativa = $data['idInstitucion'];
+      switch ($nextButton)
+      {
+        case 'Cerrar Operativo Bono JP':
+            $onClick='';
+         break;
+        default:
+          $onClick = '';
+        break;
+      }
+      return $this->createFormBuilder()
+                      ->setAction($this->generateUrl($goToPath))
+                      ->add('gestion', 'hidden', array('data' => $data['gestion']))
+                      ->add('sie', 'hidden', array('data' => $data['idInstitucion']))
+                      ->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-facebook btn-md btn-block', 'onclick'=>$onClick )))
                       ->getForm()
       ;
   }

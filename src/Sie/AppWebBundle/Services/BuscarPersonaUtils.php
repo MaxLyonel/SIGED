@@ -65,14 +65,18 @@ class BuscarPersonaUtils
 	public function generarCamposValoresPersona($arrayDatosPersona,$campos)
 	{
 		$personaDatos = null;
+		$array_keys = array_keys($arrayDatosPersona);
 		if(count($campos)>=3)
 		{
 			foreach ($campos as $value)
 			{
-				if($value == 'fechaNacimiento')
-					$personaDatos[$value] = new \DateTime($arrayDatosPersona[$value]);
-				else
-					$personaDatos[$value] = trim(strtoupper($arrayDatosPersona[$value]));
+				if(in_array($value,$array_keys))
+				{
+					if($value == 'fechaNacimiento')
+						$personaDatos[$value] = new \DateTime($arrayDatosPersona[$value]);
+					else
+						$personaDatos[$value] = trim(strtoupper($arrayDatosPersona[$value]));
+				}
 			}
 		}
 		return $personaDatos;
@@ -104,7 +108,6 @@ class BuscarPersonaUtils
 			{
 				$personaDatos['segipId'] = $segipId;
 				$personas = $this->em->getRepository('SieAppWebBundle:Persona')->findBy($personaDatos);
-
 				if(count($personas) == 1)
 					break;
 			}

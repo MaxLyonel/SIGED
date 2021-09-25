@@ -5,9 +5,9 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * BjpApoderadoInscripcion
+ * BjpApoderadoInscripcionBeneficiarios
  */
-class BjpApoderadoInscripcion
+class BjpApoderadoInscripcionBeneficiarios
 {
     /**
      * @var integer
@@ -35,11 +35,6 @@ class BjpApoderadoInscripcion
     private $fechaModificacion;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\BjpApoderadoTipo
-     */
-    private $apoderadoTipo;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\Persona
      */
     private $persona;
@@ -48,6 +43,11 @@ class BjpApoderadoInscripcion
      * @var \Sie\AppWebBundle\Entity\EstudianteInscripcion
      */
     private $estudianteInscripcion;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\BjpApoderadoTipo
+     */
+    private $apoderadoTipo;
 
 
     /**
@@ -64,7 +64,7 @@ class BjpApoderadoInscripcion
      * Set obs
      *
      * @param string $obs
-     * @return BjpApoderadoInscripcion
+     * @return BjpApoderadoInscripcionBeneficiarios
      */
     public function setObs($obs)
     {
@@ -87,7 +87,7 @@ class BjpApoderadoInscripcion
      * Set esValidado
      *
      * @param integer $esValidado
-     * @return BjpApoderadoInscripcion
+     * @return BjpApoderadoInscripcionBeneficiarios
      */
     public function setEsValidado($esValidado)
     {
@@ -110,7 +110,7 @@ class BjpApoderadoInscripcion
      * Set fechaRegistro
      *
      * @param \DateTime $fechaRegistro
-     * @return BjpApoderadoInscripcion
+     * @return BjpApoderadoInscripcionBeneficiarios
      */
     public function setFechaRegistro($fechaRegistro)
     {
@@ -133,7 +133,7 @@ class BjpApoderadoInscripcion
      * Set fechaModificacion
      *
      * @param \DateTime $fechaModificacion
-     * @return BjpApoderadoInscripcion
+     * @return BjpApoderadoInscripcionBeneficiarios
      */
     public function setFechaModificacion($fechaModificacion)
     {
@@ -153,33 +153,10 @@ class BjpApoderadoInscripcion
     }
 
     /**
-     * Set apoderadoTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\BjpApoderadoTipo $apoderadoTipo
-     * @return BjpApoderadoInscripcion
-     */
-    public function setApoderadoTipo(\Sie\AppWebBundle\Entity\BjpApoderadoTipo $apoderadoTipo = null)
-    {
-        $this->apoderadoTipo = $apoderadoTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get apoderadoTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\BjpApoderadoTipo 
-     */
-    public function getApoderadoTipo()
-    {
-        return $this->apoderadoTipo;
-    }
-
-    /**
      * Set persona
      *
      * @param \Sie\AppWebBundle\Entity\Persona $persona
-     * @return BjpApoderadoInscripcion
+     * @return BjpApoderadoInscripcionBeneficiarios
      */
     public function setPersona(\Sie\AppWebBundle\Entity\Persona $persona = null)
     {
@@ -202,7 +179,7 @@ class BjpApoderadoInscripcion
      * Set estudianteInscripcion
      *
      * @param \Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion
-     * @return BjpApoderadoInscripcion
+     * @return BjpApoderadoInscripcionBeneficiarios
      */
     public function setEstudianteInscripcion(\Sie\AppWebBundle\Entity\EstudianteInscripcion $estudianteInscripcion = null)
     {
@@ -219,5 +196,28 @@ class BjpApoderadoInscripcion
     public function getEstudianteInscripcion()
     {
         return $this->estudianteInscripcion;
+    }
+
+    /**
+     * Set apoderadoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\BjpApoderadoTipo $apoderadoTipo
+     * @return BjpApoderadoInscripcionBeneficiarios
+     */
+    public function setApoderadoTipo(\Sie\AppWebBundle\Entity\BjpApoderadoTipo $apoderadoTipo = null)
+    {
+        $this->apoderadoTipo = $apoderadoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get apoderadoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\BjpApoderadoTipo 
+     */
+    public function getApoderadoTipo()
+    {
+        return $this->apoderadoTipo;
     }
 }

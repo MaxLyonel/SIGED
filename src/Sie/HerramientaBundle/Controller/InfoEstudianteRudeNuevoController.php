@@ -2190,7 +2190,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     $em->flush();
 
                     $idPersona = $nuevaPersona->getId();
-                    */
+                    
                     // REGISTRAMOS LOS DATOS DE LA PERSONA
                     $nuevaPersona = new Persona();
                     //$nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find(98));
@@ -2226,6 +2226,68 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     $em->flush();
 
                     $idPersona = $nuevaPersona->getId();
+                    */
+                    
+                    $fecha = str_replace('-','/',$form['fechaNacimiento']);
+                    $complemento = $form['complemento'] == ''? '':$form['complemento'];
+                    $arrayDatosPersona = array(
+                        //'carnet'=>$form['carnet'],
+                        'complemento'=>$complemento,
+                        'paterno'=>$form['paterno'],
+                        'materno'=>$form['materno'],
+                        'nombre'=>$form['nombre'],
+                        'fecha_nacimiento' => $fecha
+                    );
+                    if(isset($form['extranjero']))
+                        $arrayDatosPersona['extranjero'] = 'extranjero';
+                    
+                    $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $arrayDatosPersona, 'prod', 'academico');
+
+                    if($personaValida)//verificamos que se persona valida por segip
+                    {
+                        // REGISTRAMOS LOS DATOS DE LA PERSONA
+                        $nuevaPersona = new Persona();
+                        //$nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find(98));
+                        $nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find(0));
+                        $nuevaPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['genero']));
+                        $nuevaPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find(7));
+                        $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find(0));
+                        $nuevaPersona->setCarnet($form['carnet']);
+                        $nuevaPersona->setComplemento(mb_strtoupper($form['complemento'],'utf-8'));
+                        $nuevaPersona->setCelular($form['celular']);
+                        $nuevaPersona->setRda(0);
+                        $nuevaPersona->setPaterno(mb_strtoupper($form['paterno'],'utf-8'));
+                        $nuevaPersona->setMaterno(mb_strtoupper($form['materno'],'utf-8'));
+                        $nuevaPersona->setNombre(mb_strtoupper($form['nombre'],'utf-8'));
+                        if(isset($form['estado_civil']))
+                        {
+                            $nuevaPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find($form['estado_civil']));
+                        }
+                        if(isset($form['apellido_esposo']))
+                        {
+                            $nuevaPersona->setApellidoEsposo(mb_strtoupper($form['apellido_esposo'],'utf-8'));
+                        }
+                        $nuevaPersona->setCorreo($form['correo']);
+                        $nuevaPersona->setFechaNacimiento(new \DateTime($form['fechaNacimiento']));
+                        /*if($form['idPersona'] == 'segip'){
+                            $nuevaPersona->setSegipId(1);
+                        }else{
+                            $nuevaPersona->setSegipId(1);
+                        }*/
+                        $nuevaPersona->setSegipId(1);
+                        $nuevaPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedido));
+                        $em->persist($nuevaPersona);
+                        $em->flush();
+                        $idPersona = $nuevaPersona->getId();
+                    }
+                    else
+                    {
+                        $response = new JsonResponse();
+                        return $response->setData([
+                            'status'=>404,
+                            'msg'=>'Los datos no son validos según SEGIP.'
+                        ]);
+                    }
                 }
             }
             else
@@ -2341,7 +2403,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
                 }
             }
 
-        }else{
+        }
+        else
+        {
 
             // SI SE INDICA QUE EL ESTUDIANTE NO TIENE ASIGNADO EL APODERADO
             // SE ELIMINA EL REGISTRO DE APODERADO 
