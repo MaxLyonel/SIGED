@@ -1286,7 +1286,7 @@ class InboxController extends Controller {
                 }else{
 
                   $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
-                  if($operativo == 1){
+                  if($operativo == 2){
                       $fieldOpe = 'setBim' .$operativo;
                       $registroConsol->$fieldOpe(2);
                       $this->session->set('donwloadLibreta', true);
