@@ -243,6 +243,10 @@ class RegisterParentsController extends Controller {
         'fecha_nacimiento'=>$fecNac
       );
       
+      if($extranjero == 1){
+        $arrParametros['extranjero'] = 'e';
+      }
+      
       // do the validation on segip if the person is not in SIE DB
       $answerSegip = true;
       $message = "";
