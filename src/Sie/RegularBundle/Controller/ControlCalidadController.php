@@ -1718,5 +1718,75 @@ class ControlCalidadController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
     }
+    /////////////////////////////////////////////////////////////////////////////////modifcar estado
+        public function incosistenciaEstadoEstudianteSegipAction(Request $request) {
+
+            $defaultController = new DefaultCont();
+            $defaultController->setContainer($this->container);
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            try{
+                $gestion = $this->session->get('idGestionCalidad');
+                $form = $request->get('formFer');
+
+
+                // dump($form); exit();
+                $idestado= $form['estado'];
+                $id= $form['idDetalle'];
+                $rude= $form['llave'];
+                $idgestion= $form['idgestion'];
+
+
+                $datos = $em->createQuery('SELECT ei
+                FROM SieAppWebBundle:Estudiante AS e
+                INNER JOIN SieAppWebBundle:EstudianteInscripcion AS ei WITH e.id = ei.estudiante
+                INNER JOIN SieAppWebBundle:InstitucioneducativaCurso AS ic WITH ei.institucioneducativaCurso = ic.id
+                WHERE e.codigoRude = :codigo_rude1
+                AND ic.gestionTipo = :gestion_tipo_id1 ')
+                ->setParameter('codigo_rude1', $rude)
+                ->setParameter('gestion_tipo_id1', $idgestion);
+
+                $dato = $datos->getResult();
+
+                $valor=$dato['0'];
+                // dump($valor); 
+
+                $e= ($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($valor->getId()));
+                // dump($e);
+                $e->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($idestado));
+
+                // dump($e); exit();
+
+                /*$objEstInsCambioestado = new EstudianteInscripcionCambioestado();
+                $objEstInsCambioestado->setEstadomatriculaTipo($form['idestado']);
+                $objEstInsCambioestado->setUsuarioId($this->session->get('userId'));*/
+                // $objEstInsCambioestado->setEstudianteInscripcion( $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($dato[6]->getId()) );
+                $em->flush();
+                $em->persist($e);
+
+                // retiramos la observacion regla 63 estado_matricula inconsistente
+                $observacion = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave'=>$form['idDetalle']));
+                if($observacion)
+                {
+                  $observacion->setEsActivo('t');
+                  $em->persist($observacion);
+                  $em->flush();
+                }
+                $em->getConnection()->commit(); 
+
+            }catch(Exception $ex){
+                // $em->getConnection()->rollback();
+            }
+
+        $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
+        $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
+        $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
+        return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
+
+            // dump($this->redirect($this->generateUrl('ccalidad_list', array('id'=>5, 'gestion' => $gestion)))); exit();
+        // return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $e->getId(), 'gestion' => $gestion)));
+        // return $this->redirect($this->generateUrl('ccalidad_list', array('id' => 5, 'gestion' => $gestion)));
+        }
+    /////////////////////////////////////////////////////////////////////////////////modifcar estado fin
 
 }
