@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 namespace Sie\RegularBundle\Controller;
 
@@ -357,8 +357,15 @@ class ControlCalidadController extends Controller {
         }
 
         $lista_detalle = $query->getResult();
+        
+        //listar estado
+        $query = $em->getConnection()->prepare("SELECT id,estadomatricula from estadomatricula_tipo  WHERE (id='4' OR id='6' OR id='10') ORDER BY estadomatricula asc");
+        $query->execute();
+        $lista_estado = $query->fetchAll();
+        // dump($lista_estado);die;
+        
 
-        return $this->render('SieRegularBundle:ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla,'idiomas'=>$idiomas));
+        return $this->render('SieRegularBundle:ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla,'idiomas'=>$idiomas,'lista_estado'=>$lista_estado));
     }
 
     public function omitirAction(Request $request) {
