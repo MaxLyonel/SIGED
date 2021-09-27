@@ -255,7 +255,6 @@ class InfoMaestroController extends Controller {
                 }
             }
         }
-
         return $this->render($this->session->get('pathSystem') . ':InfoMaestro:index.html.twig', array(
                 'maestro' => $maestro,
                 'institucion' => $institucion,
@@ -996,6 +995,11 @@ class InfoMaestroController extends Controller {
                         $em->flush();
                     }
                 }
+
+                // Eliminados la inscripcion de salud
+                $maestroInscripcionEstadosalud = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneBy(array('maestroInscripcion'=>$maestroInscripcion->getId()));
+                if($maestroInscripcionEstadosalud) 
+                    $em->remove($maestroInscripcionEstadosalud);
 
                 //eliminamos el registro de inscripcion del maestro
                 $em->remove($maestroInscripcion);
