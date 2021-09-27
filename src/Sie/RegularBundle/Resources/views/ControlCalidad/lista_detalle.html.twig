@@ -33,6 +33,8 @@
                                     <td data-title="Unidad Educativa">{{detalle.institucionEducativaId}}</td>
                                     <td data-title="Acciones">
                                     {# Para Unidades Educativas y Distritos #}
+                                    
+                                    
                                     {% if app.session.get('roluser') in [9,10] %}
                                         {% if regla.id == 2 or regla.id == 3 or regla.id == 4 or regla.id == 6 or regla.id == 8 or regla.id == 12 or regla.id == 13 or regla.id == 16 %}
                                             <form action="{{path('ccalidad_verificar')}}" method="post">
@@ -707,6 +709,11 @@
         </div>
     </form>
 </div>
+
+
+
+
+
 
 
 {% block javascripts %}
@@ -1455,6 +1462,7 @@
                 }
         });
     }
+    
 
     </script>
 {% endblock %}

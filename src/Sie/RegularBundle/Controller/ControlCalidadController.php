@@ -357,7 +357,7 @@ class ControlCalidadController extends Controller {
         }
 
         $lista_detalle = $query->getResult();
-
+      
         return $this->render('SieRegularBundle:ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla,'idiomas'=>$idiomas));
     }
 
@@ -1718,5 +1718,6 @@ class ControlCalidadController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
     }
+
 
 }
