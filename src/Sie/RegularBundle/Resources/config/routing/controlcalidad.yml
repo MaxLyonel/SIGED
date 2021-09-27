@@ -96,7 +96,3 @@ ccalidad_resolver_inconsistencias_segip:
          expose: true
          
          
-#modifcar datos de stado estudiante
-cInconsistencia_estado_estudiante_segip:
-    path:     /incosistenciaEstadoEstudianteSegip
-    defaults: { _controller: "SieRegularBundle:ControlCalidad:incosistenciaEstadoEstudianteSegip" }
