@@ -1,5 +1,4 @@
  <?php
-
 namespace Sie\RegularBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
