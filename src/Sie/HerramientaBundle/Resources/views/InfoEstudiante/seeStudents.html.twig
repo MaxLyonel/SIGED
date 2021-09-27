@@ -197,7 +197,7 @@
                                             </button>
                                         {% else %} #}
                                         
-                                            {% if data.estadomatriculaId == 4 or data.estadomatriculaId == 6 or data.estadomatriculaId == 101 %}
+                                            {% if data.estadomatriculaId in [4,6,101,5] %}
                                                 <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
                                                     {{data.estadomatricula}}
                                                 </button>                                            
