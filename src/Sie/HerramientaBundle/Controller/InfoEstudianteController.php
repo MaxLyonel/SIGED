@@ -916,6 +916,13 @@ class InfoEstudianteController extends Controller {
 
         $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
         $dependencia = $institucioneducativa->getDependenciaTipo()->getId(); // 3 privada
+    // add validation to show califications option
+    $showOptInscription = true;    
+    if($this->get('funciones')->getuserAccessToCalifications($this->session->get('userId'))){
+        $showOptInscription = false;
+    }
+    $this->session->set('showOptInscription',$showOptInscription);
+    // end add validation to show califications option
         
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,

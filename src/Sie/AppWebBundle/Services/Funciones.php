@@ -2024,5 +2024,35 @@ class Funciones {
         return $userInscriptions;
     }    
 
+    public function getuserAccessToCalifications($userId){
+        
+        $queryAccess = "
+          select *
+          from (
+          select b.rol_tipo_id,(select rol from rol_tipo where id=b.rol_tipo_id) as rol,a.persona_id,c.codigo as cod_dis,a.esactivo,a.id as user_id
+          from usuario a 
+            inner join usuario_rol b on a.id=b.usuario_id 
+              inner join lugar_tipo c on b.lugar_tipo_id=c.id
+          where substring(c.codigo,1,1) in ('7','8','9','0','1','3','6','0') and codigo not in ('04') and b.rol_tipo_id not in (2,3,9,29,26,21,14,39,6) and a.esactivo='t'
+          union all
+          select f.rol_tipo_id,(select rol from rol_tipo where id=f.rol_tipo_id) as rol,a.persona_id,d.codigo as cod_dis,e.esactivo,e.id as user_id
+          from maestro_inscripcion a
+            inner join institucioneducativa b on a.institucioneducativa_id=b.id
+              inner join jurisdiccion_geografica c on b.le_juridicciongeografica_id=c.id
+                inner join lugar_tipo d on d.lugar_nivel_id=7 and c.lugar_tipo_id_distrito=d.id
+                  inner join usuario e on a.persona_id=e.persona_id
+                    inner join usuario_rol f on e.id=f.usuario_id
+          where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and substring(d.codigo,1,1) in ('7','8','9','0','1','3','6','0') and e.esactivo='t') a
+            where user_id=".$userId.";
+           
+        ";        
+        $query = $this->em->getConnection()->prepare($queryAccess);
+
+        $query->execute();
+        $userInscriptions = $query->fetchAll();
+
+        return $userInscriptions;
+    }       
+
 
 }

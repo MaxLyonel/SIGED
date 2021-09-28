@@ -2635,10 +2635,14 @@ class Notas{
         );
     }
 
-    public function literal($idNota){
-        $tipoNota = $this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNota);
-        $bim = array('titulo'=>$tipoNota->getNotaTipo(),'abrev'=>$tipoNota->getAbrev());
-        
+    public function literal($idNota)
+    {
+        $bim = -1;
+        if($idNota!=null)
+        {
+            $tipoNota = $this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNota);
+            $bim = array('titulo'=>$tipoNota->getNotaTipo(),'abrev'=>$tipoNota->getAbrev());
+        }
         return $bim;
     }
 
