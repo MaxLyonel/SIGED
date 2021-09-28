@@ -247,10 +247,10 @@ class OperativoBonoJPController extends Controller
 
 	public function ddjjAction(Request $request, $sie,$gestion)
 	{
-		//$pdf=$this->container->getParameter('urlreportweb') . 'reg_lst_textos_educativos_v1.rptdesign&__format=pdf'.'&codue='.$sie.'&gestion='.$gestion;
-		$pdf='http://127.0.0.1:63020/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-Textos-Educativos\reg_lst_textos_educativos_v1.rptdesign&__format=pdf'.'&codue='.$sie.'&gestion='.$gestion;
+		$pdf=$this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
+		//$pdf='http://127.0.0.1:53246/viewer/preview?__report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
 		
-		$status = 200;
+		$status = 200;	
 		$arch           = 'DECLARACION_JURADA_BONO_JUANCITO_PINTO-'.date('Y').'_'.date('YmdHis').'.pdf';
 		$response       = new Response();
 		$response->headers->set('Content-type', 'application/pdf');
