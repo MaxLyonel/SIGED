@@ -381,6 +381,15 @@ class RemoveInscriptionController extends Controller {
                 $em->remove($objRude);
             }
             $em->flush();
+            
+            //eliminados los datos de la tabla bjp_apoderado_inscripcion 
+            $bjpApoderadoInscripcion = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $eiid ));
+            foreach ($bjpApoderadoInscripcion as $element)
+            {
+                $em->remove($element);
+            }
+            $em->flush();
+
 
             //END to remove all info about RUDE
 
