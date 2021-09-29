@@ -1778,8 +1778,8 @@ class ControlCalidadController extends Controller {
                 if($observacion)
                 {
                   $observacion->setEsActivo('t');
-                  $em->persist($observacion);
                   $em->flush();
+                  $em->persist($observacion);
                 }
                 $em->getConnection()->commit(); 
 
