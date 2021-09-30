@@ -345,8 +345,14 @@
                                                                     <i class="fa fa-list"></i>
                                                                 </button>
                                                             </div>
-
+                                                        {% else %}
+                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta">
+                                                                <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
+                                                                  <i class="fa fa-print" style="color:#FFFFFF"></i>
+                                                                </a>
+                                                            </div>
                                                         {% endif %}
+                                                        
                                                     {% endif %}
                                                 {% endif %}
                                             {% endif %}
@@ -446,14 +452,14 @@
                                             </div>
                                         {% else %}
                                             {# commented by krlos 21.09.21 #}
-                                            {% if  imprimirLibreta == true %}
+                                            {# {% if  imprimirLibreta == true %}
                                                 <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta">
                                                     <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                                       <i class="fa fa-print" style="color:#FFFFFF"></i>
                                                     </a>
                                                 </div>
 
-                                            {% endif %}                                           
+                                            {% endif %}  #}                                          
                                            
                                         {% endif %}
                                     {% endif %}
