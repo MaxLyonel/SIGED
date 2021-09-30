@@ -681,6 +681,7 @@ class InfoEstudianteController extends Controller {
     }
 
     public function seeStudentsAction(Request $request) {
+
         //get the info ue
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
@@ -803,6 +804,7 @@ class InfoEstudianteController extends Controller {
         if($gestion == 2020){
             $estadosPermitidosImprimir = array(5,55);
         }
+        // dump($operativo);exit();
 
         if($tipoUE){
             /*
@@ -811,9 +813,10 @@ class InfoEstudianteController extends Controller {
             if($gestion == $this->session->get('currentyear')){
                 // Unidades educativas plenas, modulares y humanisticas
                 // if(in_array($tipoUE['id'], array(1,3,5,6,7)) and (($operativo >= 2 and $gestion < 2019) or ($gestion >= 2019 and $operativo >= 5))) {
-                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo == 2 ) {
+                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 2 ) {
                     $imprimirLibreta = true;
                 }
+                // dump($imprimirLibreta);exit();
                 // Unidades educativas tecnicas tecnologicas
                 if(in_array($tipoUE['id'], array(2)) and $operativo >= 4){
                     $imprimirLibreta = true;
