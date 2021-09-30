@@ -279,7 +279,7 @@ class OperativoUtils
 		from usuario a 
 		  inner join usuario_rol b on a.id=b.usuario_id 
 			inner join lugar_tipo c on b.lugar_tipo_id=c.id
-		where codigo not in (\'04\') and b.rol_tipo_id not in (2,3,9,29,26,21,14,39,6) and a.esactivo=\'t\'
+		where codigo not in (\'04\') and b.rol_tipo_id not in (2,3,9,29,26,21,14,39,6,34) and a.esactivo=\'t\'
 		union all
 		select f.rol_tipo_id,(select rol from rol_tipo where id=f.rol_tipo_id) as rol,a.persona_id,d.codigo as cod_dis,e.esactivo,e.id as user_id
 		from maestro_inscripcion a
