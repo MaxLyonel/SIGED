@@ -2024,8 +2024,8 @@ class Funciones {
         return $userInscriptions;
     }    
 
-    public function getuserAccessToCalifications($userId){
-        
+    public function getuserAccessToCalifications($userId, $valor){
+        $valorIds = implode(',', $valor);
         $queryAccess = "
           select *
           from (
@@ -2036,7 +2036,7 @@ class Funciones {
                 inner join lugar_tipo d on d.lugar_nivel_id=7 and c.lugar_tipo_id_distrito=d.id
                   inner join usuario e on a.persona_id=e.persona_id
                     inner join usuario_rol f on e.id=f.usuario_id
-          where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and substring(d.codigo,1,1) in ('7','8','9','1','3','6','0') and e.esactivo='t') a
+          where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and substring(d.codigo,1,1) in ('".$valorIds."') and e.esactivo='t') a
             where user_id=".$userId.";
            
         ";        
