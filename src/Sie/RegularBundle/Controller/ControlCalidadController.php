@@ -1507,6 +1507,23 @@ class ControlCalidadController extends Controller {
                                     }
                                 }
                             }
+
+                            //bjp - apoderado - inscripcion
+                            $bjpApoderadoInscripciones = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcion')->findBy(array( 'persona' => $personaObs ) );
+                            foreach ($bjpApoderadoInscripciones as $bai)
+                            {
+                                if($bai)
+                                {
+                                    $existe = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array( 'persona' => $personaOk , 'id' => $bai->getId() ) );
+                                    //dump($ai->getPersona()->getId().' != '.$personaOk->getId());
+                                    //if($ai->getPersona()->getId() != $personaOk->getId())
+                                    if(!$existe)
+                                    {
+                                        $bai->setPersona($personaOk);
+                                        $em->persist($bai);
+                                    }
+                                }
+                            }
                         }
 
                         //BJP 2021-Usuarios APODERADOS Y ADMINISTRATIVOS con SEGIP INCONSISTENTE (regla 61)
@@ -1524,6 +1541,23 @@ class ControlCalidadController extends Controller {
                                     {
                                         $ai->setPersona($personaOk);
                                         $em->persist($ai);
+                                    }
+                                }
+                            }
+
+                            //bjp - apoderado - inscripcion
+                            $bjpApoderadoInscripciones = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcion')->findBy(array( 'persona' => $personaObs ) );
+                            foreach ($bjpApoderadoInscripciones as $bai)
+                            {
+                                if($bai)
+                                {
+                                    $existe = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array( 'persona' => $personaOk , 'id' => $bai->getId() ) );
+                                    //dump($ai->getPersona()->getId().' != '.$personaOk->getId());
+                                    //if($ai->getPersona()->getId() != $personaOk->getId())
+                                    if(!$existe)
+                                    {
+                                        $bai->setPersona($personaOk);
+                                        $em->persist($bai);
                                     }
                                 }
                             }
