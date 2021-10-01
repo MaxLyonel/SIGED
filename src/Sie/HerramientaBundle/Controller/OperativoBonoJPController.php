@@ -69,7 +69,7 @@ class OperativoBonoJPController extends Controller
 			else
 			{
 				$data=null;
-				$status= 404;
+				$status= 200;
 				$msj='No se puedo cerrar el operativo, todavia tiene inconsistencias.';
 			}
 		}
