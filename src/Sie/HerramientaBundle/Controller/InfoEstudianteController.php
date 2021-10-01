@@ -685,6 +685,7 @@ class InfoEstudianteController extends Controller {
         //get the info ue
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
+        
 
         //get the values throght the infoUe
         $sie = $aInfoUeducativa['requestUser']['sie'];
@@ -943,11 +944,22 @@ class InfoEstudianteController extends Controller {
         if($this->get('funciones')->getuserAccessToCalifications($this->session->get('userId'),$valor)){
             $showOptInscription = false;
         }
-    }
-    
+    }  
     
    
     $this->session->set('showOptInscription',$showOptInscription);
+    //verificacion de estado de la UE en la gestion actual
+    $estado = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->createQueryBuilder('op')
+                ->select('op')               
+                ->where('op.institucioneducativa='.$sie)
+                ->andWhere("op.gestionTipoId=".$gestion)
+                ->getQuery()
+                ->getResult();
+    if($estado){
+        $this->session->set('estado',$estado[0]->getEstadoMenu()); 
+    }else{
+        $this->session->set('estado',''); 
+    }   
     // end add validation to show califications option
         
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
