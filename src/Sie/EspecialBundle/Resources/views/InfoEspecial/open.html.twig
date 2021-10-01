@@ -223,7 +223,7 @@
                         var contenedor = $('#formCerrarBonoJs');
                         if(status==200)
                         {
-                            if(observacionesBonpJP)
+                            if(observacionesBonpJP && observacionesBonpJP.length>0)
                             {
                                 $("#answerClose").empty();
                                 var obs ='<ol class="list-group"><li class="list-group-item" style="background-color:#63D3E9;color:white"><h4>'+observacionesBonpJP.length+' Inconsistencias / Observaciones</h4></li>';
@@ -236,13 +236,13 @@
                             }
                             else
                             {
+                                $("#answerClose").empty();
                                 var aHref='<a href="'+urlReporte+'" target="_blank" class="btn btn-success btn-md btn-block">Descargar DDJJ</a>';
                                 if(typeof(contenedor)!='undefined')
                                 {
                                     $('#formCerrarBonoJs').html('');
                                     $('#formCerrarBonoJs').html(aHref);
                                 }
-                                alert('Ocurrio un error por favor vuelva a intentarlo.');
                             }
                         }
                         else

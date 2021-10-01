@@ -1210,7 +1210,7 @@ class InfoConsolidationController extends Controller {
       $estado2 = 0;
       $estado3 = 0;
       $estado4 = 0;
-      if($operativo == 1 or $operativo == 2)
+      if($operativo == 0 or $operativo == 1 or $operativo == 2)
       {
         $estado1 = 2;
         $estado2 = 0;
