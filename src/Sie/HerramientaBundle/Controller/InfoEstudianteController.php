@@ -681,9 +681,11 @@ class InfoEstudianteController extends Controller {
     }
 
     public function seeStudentsAction(Request $request) {
+
         //get the info ue
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
+        
 
         //get the values throght the infoUe
         $sie = $aInfoUeducativa['requestUser']['sie'];
@@ -803,6 +805,7 @@ class InfoEstudianteController extends Controller {
         if($gestion == 2020){
             $estadosPermitidosImprimir = array(5,55);
         }
+        // dump($operativo);exit();
 
         if($tipoUE){
             /*
@@ -811,9 +814,10 @@ class InfoEstudianteController extends Controller {
             if($gestion == $this->session->get('currentyear')){
                 // Unidades educativas plenas, modulares y humanisticas
                 // if(in_array($tipoUE['id'], array(1,3,5,6,7)) and (($operativo >= 2 and $gestion < 2019) or ($gestion >= 2019 and $operativo >= 5))) {
-                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo == 2 ) {
+                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 2 ) {
                     $imprimirLibreta = true;
                 }
+                // dump($imprimirLibreta);exit();
                 // Unidades educativas tecnicas tecnologicas
                 if(in_array($tipoUE['id'], array(2)) and $operativo >= 4){
                     $imprimirLibreta = true;
@@ -940,11 +944,22 @@ class InfoEstudianteController extends Controller {
         if($this->get('funciones')->getuserAccessToCalifications($this->session->get('userId'),$valor)){
             $showOptInscription = false;
         }
-    }
-    
+    }  
     
    
     $this->session->set('showOptInscription',$showOptInscription);
+    //verificacion de estado de la UE en la gestion actual
+    $estado = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->createQueryBuilder('op')
+                ->select('op')               
+                ->where('op.institucioneducativa='.$sie)
+                ->andWhere("op.gestionTipoId=".$gestion)
+                ->getQuery()
+                ->getResult();
+    if($estado){
+        $this->session->set('estado',$estado[0]->getEstadoMenu()); 
+    }else{
+        $this->session->set('estado',''); 
+    }   
     // end add validation to show califications option
         
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
