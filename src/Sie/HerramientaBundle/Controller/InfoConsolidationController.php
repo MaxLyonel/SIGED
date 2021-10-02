@@ -1206,7 +1206,20 @@ class InfoConsolidationController extends Controller {
       ));
 
       $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
-      $estado1 = 0;
+      switch ($operativo) {
+          case 2:
+              $objRegistroConsolidado->setBim2(0);
+              break;
+          case 3:
+              $objRegistroConsolidado->setBim3(0);
+              break;
+          
+          default:
+              // code...
+              break;
+      }
+
+ /*     $estado1 = 0;
       $estado2 = 0;
       $estado3 = 0;
       $estado4 = 0;
@@ -1229,7 +1242,7 @@ class InfoConsolidationController extends Controller {
       $objRegistroConsolidado->setBim2($estado2);
       $objRegistroConsolidado->setBim3($estado3);
       $objRegistroConsolidado->setBim4($estado4);
-
+*/
       $em->persist($objRegistroConsolidado);
       $em->flush();
 
