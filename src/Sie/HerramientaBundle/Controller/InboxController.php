@@ -1286,11 +1286,12 @@ class InboxController extends Controller {
                 }else{
 
                   $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
-                  if($operativo == 1 or $operativo == 2)
+                  $operativo = ($operativo < 1)?1:$operativo;
+                  if($operativo == 1 or $operativo == 2  or $operativo == 3)
                   {
                       $fieldOpe = 'setBim' .$operativo;
-                      //$registroConsol->$fieldOpe(2);
-                      $registroConsol->setBim1(2);
+                      $registroConsol->$fieldOpe(2);
+                      //$registroConsol->setBim1(2);
                       $this->session->set('donwloadLibreta', true);
                   }
 

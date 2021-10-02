@@ -59,12 +59,18 @@ class OperativoBonoJPController extends Controller
 				if($esAjax && $request_sie >0 && $request_gestion >0)
 				{
 					list($data,$status,$msj)=$this->get('operativoutils')->cerrarOperativo($request_sie,$request_gestion,$request_estado);
-					$reporte = $this->generateUrl('operativo_bono_jp_ddjj',array("sie"=>$request_sie,"gestion"=>$request_gestion));
+					if($status == 200)
+					{
+						//$this->registrarDatosBonoBJP($request_sie, $request_gestion);
+						$reporte = $this->generateUrl('operativo_bono_jp_ddjj',array("sie"=>$request_sie,"gestion"=>$request_gestion));
+					}
 				}
 			}
 			else
 			{
+				$data=null;
 				$status= 200;
+				$msj='No se puedo cerrar el operativo, todavia tiene inconsistencias.';
 			}
 		}
 		catch(Exception $e)
@@ -248,7 +254,7 @@ class OperativoBonoJPController extends Controller
 	public function ddjjAction(Request $request, $sie,$gestion)
 	{
 		$pdf=$this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
-		//$pdf='http://127.0.0.1:53246/viewer/preview?__report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
+		//$pdf='http://127.0.0.1:63170/viewer/preview?__report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
 		
 		$status = 200;	
 		$arch           = 'DECLARACION_JURADA_BONO_JUANCITO_PINTO-'.date('Y').'_'.date('YmdHis').'.pdf';
@@ -263,5 +269,33 @@ class OperativoBonoJPController extends Controller
 		return $response;
 	}
 
+	public function registrarDatosBonoBJP($sie, $gestion)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$db = $em->getConnection();
+
+		$query = '
+		INSERT INTO public.bjp_estudiante_apoderado_beneficiarios(
+			institucioneducativa_id, nivel_tipo_id, grado_tipo_id, paralelo_tipo_id,
+			turno_tipo_id, estudiante_inscripcion_id, estudiante_id, codigo_rude,
+			carnet_est, complemento_est, paterno_est, materno_est, nombre_est,
+			fecha_nacimiento_est, persona_id, carnet_tut, complemento_tut,
+			paterno_tut, materno_tut, nombre_tut, apoderado_tipo_id, segip_id_tut,
+			fecha_registro, fecha_actualizacion, observacion,estadomatricula_tipo_id)
+ select a.institucioneducativa_id,a.nivel_tipo_id,a.grado_tipo_id,a.paralelo_tipo_id,a.turno_tipo_id,c.estudiante_inscripcion_id,b.estudiante_id,e.codigo_rude,e.carnet_identidad,e.complemento,e.paterno,e.materno,e.nombre,e.fecha_nacimiento,c.persona_id
+ ,d.carnet,d.complemento,d.paterno,d.materno,d.nombre,c.apoderado_tipo_id,d.segip_id,current_date,null as fecha_actualizacion,null as observacion,b.estadomatricula_tipo_id
+ from institucioneducativa_curso a
+ inner join estudiante_inscripcion b on a.id=b.institucioneducativa_curso_id
+ inner join bjp_apoderado_inscripcion_beneficiarios c on b.id=c.estudiante_inscripcion_id
+ inner join persona d on c.persona_id=d.id
+ inner join estudiante e on b.estudiante_id=e.id
+ where a.gestion_tipo_id= ?
+ and a.institucioneducativa_id = ?;
+		';
+		$stmt = $db->prepare($query);
+		$params = array($gestion,$sie);
+		$stmt->execute($params);
+		$requisitos=$stmt->fetch();
+	}
 
 }
