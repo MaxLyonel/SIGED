@@ -196,11 +196,15 @@
                                                 {{data.estadomatricula}}
                                             </button>
                                         {% else %} #}
-                                        
+
                                             {% if data.estadomatriculaId in [4,6,101,5] %}
-                                                <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
-                                                    {{data.estadomatricula}}
-                                                </button>                                            
+                                                {% if app.session.get('ue_modular') %}
+                                                    <strong style="color:#000;border:2px;"> {{data.estadomatricula}}</strong>
+                                                {% else %}
+                                                    <button type="button" class="btn btn-success btn-stroke btn-xs" data-toggle="modal" data-target=".bs-example-modal-table" onclick="changeMatricula('{{infoUe}}','{{jsnInfoStudent}}');">
+                                                        {{data.estadomatricula}}
+                                                    </button>
+                                                {% endif %}
                                             {% else %}
                                                 <strong style="color:#000;border:2px;"> {{data.estadomatricula}}</strong>
                                             {% endif %}
