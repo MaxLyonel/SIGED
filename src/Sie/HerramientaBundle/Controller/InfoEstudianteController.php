@@ -939,12 +939,12 @@ class InfoEstudianteController extends Controller {
             $showOptInscription = false;
         }
     }
-    if(date('d')>'02'){
+    /*if(date('d')>'02'){
         $valor= array('7','8','9','1','3','6','0');
         if($this->get('funciones')->getuserAccessToCalifications($this->session->get('userId'),$valor)){
             $showOptInscription = false;
         }
-    }  
+    }  */
     
    
     $this->session->set('showOptInscription',$showOptInscription);
