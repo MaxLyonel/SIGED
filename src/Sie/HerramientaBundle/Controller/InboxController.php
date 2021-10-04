@@ -1265,14 +1265,18 @@ class InboxController extends Controller {
           
             if($registroConsol){
 
+                // se deshabilita las inconsistencias
+                /*
                 $queryCheckCal = 'select * from sp_validacion_regular_web_2021_med(:gestion, :sie, :ope)';
                 $query = $em->getConnection()->prepare($queryCheckCal);
                 $query->bindValue(':gestion', $form['gestion']);
                 $query->bindValue(':sie', $form['sie']);
                 $query->bindValue(':ope', 6);
                 $query->execute();
-                $inconsistenciaCal = $query->fetchAll();                
-                
+                $inconsistenciaCal = $query->fetchAll();
+                */
+                $inconsistenciaCal = array ();
+
                 if(sizeof($inconsistenciaCal)>0){
                   return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
                   'observation' => true,
