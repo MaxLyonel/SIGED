@@ -1758,7 +1758,7 @@ class ControlCalidadController extends Controller {
                 $dato = $datos->getResult();
 
                 $valor=$dato['0'];
-                // dump($valor); 
+                // dump($valor); exit();
 
                 $e= ($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($valor->getId()));
                 // dump($e);
@@ -1772,11 +1772,14 @@ class ControlCalidadController extends Controller {
                 // $objEstInsCambioestado->setEstudianteInscripcion( $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($dato[6]->getId()) );
                 $em->flush();
                 $em->persist($e);
+                // dump($form['idDetalle']); exit();
 
                 // retiramos la observacion regla 63 estado_matricula inconsistente
-                $observacion = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave'=>$form['idDetalle']));
+                $observacion = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave'=>$form['llave']));
+                // dump($observacion); exit();
                 if($observacion)
                 {
+                // dump($observacion); exit();
                   $observacion->setEsActivo('t');
                   $em->flush();
                   $em->persist($observacion);
@@ -1784,7 +1787,7 @@ class ControlCalidadController extends Controller {
                 $em->getConnection()->commit(); 
 
             }catch(Exception $ex){
-                // $em->getConnection()->rollback();
+                $em->getConnection()->rollback();
             }
 
         $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
