@@ -1,0 +1,74 @@
+tramite_per_certificacion_cursos_largos_index:
+    path:    /indexCL
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:index}
+    options:
+         expose: true
+
+tramite_certificado_tecnico_busca_listar_mencion:
+    path:    /indexCL/menciones
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:certTecBuscaListaEspecialidad}
+    options:
+         expose: true         
+tramite_certificado_permanente_busca_listar_nivel:
+    path:    /indexCL/niveles
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:certTecBuscaListaNivel}
+    options:
+         expose: true
+tramite_certificado_permanente_registro_lista:
+    path:     /certificado/permanente/registro/lista
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:certTecRegistroLista }
+tramite_certificado_permanente_registro_inscripcion_historial:
+    path:     /certificado/permanente/registro/inscripcion/historial
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:certPerRegistroInscripcionHistorial }
+    methods:  [POST]
+tramite_certificado_permanente_registro_guarda:
+    path:     /certificado/permanente/registro/guarda
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:certTecRegistroGuarda }
+
+#TECNICO DEPARTAMENTAL    
+tramite_per_certificacion_cursos_largos_departamento_index:
+    path:    /indexCLDEP
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:formularioDepartamental}
+    options:
+         expose: true
+certificacion_per_enviosolicitud_Dep:
+    path:    /enviarTramitePer
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:certPerRegistroGuardaDep }
+#TECNICO NACIONAL
+tramite_per_certificacion_cursos_largos_nacional_index:
+    path:    /indexCLNAC
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:formularioNacional}
+    options:
+         expose: true
+certificacion_per_enviosolicitud_Nac:
+    path:    /enviarTramitePerNac
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:certPerRegistroGuardaNac }
+#IMPRESIONES DEPARTAMENTO
+tramite_impresion_certificacion_per:
+    path:    /index/impresion/permanente
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:formularioHabilitadosImpresion}
+    options:
+         expose: true
+tramite_impresion_certificado_permanente_lista_habilitados:
+    path:     /certificado/permanente/habilitados/lista
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:certTecRegistroListaHabilitados }
+    options:
+         expose: true
+tramite_impresion_certificado_permanente_imprimir:
+    path:     /certificado/permanente/imprimir
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:imprimir }
+#COMPROBANTE DE INICIO DE TRAMITE
+tramite_certificacion_permanente_comprobante:
+    path:     /reporte/permanente
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptComprobanteDirector }
+tramite_certificacion_permanente_comprobante_devuelto:
+    path:     /reporte/permanente/devuelto
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptComprobanteDirectorDevuelto }       
+    
+ 
+         
+
+
+
+
+         
