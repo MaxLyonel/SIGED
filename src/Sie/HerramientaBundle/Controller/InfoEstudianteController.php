@@ -926,26 +926,20 @@ class InfoEstudianteController extends Controller {
     $showOptInscription = true;    
     //dpto no habilitados (st,lp,bn);
     // echo ">".date('d');exit();
-    if ((date('d')=='30') or (date('d')=='01')) {
+    /*if ((date('d')=='30') or (date('d')=='01')) {
         $valor= array('7','2','8');
-        if($this->get('funciones')->getuserAccessToCalifications($this->session->get('userId'),$valor)){
-            $showOptInscription = false;
-        }
     }
     //dpto no habilitados (cbb,ch,tj,or,pt);
     if((date('d')=='02') or (date('d')=='03')){
         $valor= array('3','1','6','4','5');
-        if($this->get('funciones')->getuserAccessToCalifications($this->session->get('userId'),$valor)){
-            $showOptInscription = false;
-        }
+        
     }
-    /*if(date('d')>'02'){
-        $valor= array('7','8','9','1','3','6','0');
-        if($this->get('funciones')->getuserAccessToCalifications($this->session->get('userId'),$valor)){
+    if(date('d')>'02'){       
             $showOptInscription = false;
-        }
-    }  */
-    
+    }  
+    if($this->get('funciones')->getuserAccessToCalifications($this->session->get('userId'),$valor)){
+            $showOptInscription = false;
+    }*/  
    
     $this->session->set('showOptInscription',$showOptInscription);
     //verificacion de estado de la UE en la gestion actual
