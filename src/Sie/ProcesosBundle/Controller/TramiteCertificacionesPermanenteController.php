@@ -498,7 +498,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                             $gestionActual=2021;
                             //GUARDAR UN REGISTRO EN LA TABLA CERTIFICADO_PERMANENTE
                             //dump($institucion_id,$estudianteInscripcionId,$gestionActual,$especialidad,$nivel,$mensaje['idtramite']);die;
-                            $mensajeCertificadoPermanente = $this->guardaCertificadopermanente($institucion_id,$estudianteInscripcionId,$gestionActual,1,$especialidad,$nivel,$mensaje['idtramite'],'','');
+                            $mensajeCertificadoPermanente = $this->guardaCertificadopermanente($institucion_id,$estudianteInscripcionId,$gestionActual,1,$especialidad,$nivel,$mensaje['idtramite'],'','',1);
                            // dump($mensajeCertificadoPermanente);die;
                             if($mensajeCertificadoPermanente['dato']=== true){
                                 $nombre = $estudianteInscripcion->getEstudiante()->getNombre();
@@ -613,7 +613,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
     /**
      * FUNCION QUE REGISTRA EL TRAMITE NUEVO EN LA TABLA DE CERTIFICADO_PERMANENTE
      */
-    function guardaCertificadopermanente($idInstitucion,$idEstudianteInscripcion,$idGestion,$estado,$idMencion,$idNivel,$idTramite,$nroCertificado,$obs){
+    function guardaCertificadopermanente($idInstitucion,$idEstudianteInscripcion,$idGestion,$estado,$idMencion,$idNivel,$idTramite,$nroCertificado,$obs,$caso){
         //dump($idInstitucion,$idEstudianteInscripcion,$idGestion,$estado,$idMencion,$idNivel,$idTramite,$nroCertificado,$obs);die;
         $em = $this->getDoctrine()->getManager();
         $institucion    = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($idInstitucion);
@@ -632,32 +632,47 @@ class TramiteCertificacionesPermanenteController extends Controller {
         }else{
             $obs='';
         }
-        //$em->getConnection()->beginTransaction();
-        try {
-            /**
-            * insert certificado_permanente
-            */
-            $certificadoPermanente =  new CertificadoPermanente();
-            $certificadoPermanente ->setInstitucioneducativa($institucion);
-            $certificadoPermanente ->setEstudianteInscripcion($estudiante);
-            $certificadoPermanente ->setGestionTipo($gestion);
-            $certificadoPermanente ->setEstado(1);
-            $certificadoPermanente ->setSuperiorEspecialidadTipo($mencion);
-            $certificadoPermanente ->setSuperiorAcreditacionTipo($nivel);
-            $certificadoPermanente ->setTramite($tramite);
-            $certificadoPermanente ->setFechaRegistro(new \DateTime(date('Y-m-d')));
-            $certificadoPermanente ->setObs($obs);
-            $em->persist($certificadoPermanente);
-            $em->flush();
-            $mensaje['dato'] = true;
-            $mensaje['msg'] = 'Se guardó correctamente';
-            return $mensaje;
-        } catch (\Exception $ex) {
-            //$em->getConnection()->rollback();
-            $mensaje['dato'] = false;
-            $mensaje['msg'] = '¡Ocurrio un error al guardar la informacion en la tabla certificado_permanente.!</br>'.$ex->getMessage();
-            return $mensaje;    
-        }   
+        switch ($caso){
+            case 1: //Director                    
+                    //$em->getConnection()->beginTransaction();
+                    try {
+                        /**
+                        * insert certificado_permanente
+                        */
+                        $certificadoPermanente =  new CertificadoPermanente();
+                        $certificadoPermanente ->setInstitucioneducativa($institucion);
+                        $certificadoPermanente ->setEstudianteInscripcion($estudiante);
+                        $certificadoPermanente ->setGestionTipo($gestion);
+                        $certificadoPermanente ->setEstado(1);
+                        $certificadoPermanente ->setSuperiorEspecialidadTipo($mencion);
+                        $certificadoPermanente ->setSuperiorAcreditacionTipo($nivel);
+                        $certificadoPermanente ->setTramite($tramite);
+                        $certificadoPermanente ->setFechaRegistro(new \DateTime(date('Y-m-d')));
+                        $certificadoPermanente ->setObs($obs);
+                        $em->persist($certificadoPermanente);
+                        $em->flush();
+                        $mensaje['dato'] = true;
+                        $mensaje['msg'] = 'Se guardó correctamente';
+                        return $mensaje;
+                    } catch (\Exception $ex) {
+                        //$em->getConnection()->rollback();
+                        $mensaje['dato'] = false;
+                        $mensaje['msg'] = '¡Ocurrio un error al guardar la informacion en la tabla certificado_permanente.!</br>'.$ex->getMessage();
+                        return $mensaje;    
+                    }
+                break;
+            default: //Departamental o Nacional 
+                    //dump("aqui");die;
+                    $certificadoPermanente =  $em->getRepository('SieAppWebBundle:CertificadoPermanente')->findOneBy(array('institucioneducativa'=>$idInstitucion,'gestionTipo'=>$this->session->get('currentyear'),'tramite'=>$idTramite));
+                    $certificadoPermanente->setEstado(2);
+                    $em->flush();
+                    $mensaje['dato'] = true;
+                    $mensaje['msg'] = 'Se actualizó correctamente';
+                    return $mensaje;
+                break;    
+        }
+       
+          
 
 
     }
@@ -793,6 +808,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         dump($tareaSiguienteSi);
         dump($tareaSiguienteNo);
         dump($this->session->get('userId')); */
+        $idGestion=2021; //pendiente
         $mensaje = $this->get('wftramite')->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tareaActual,$tabla,$id_tabla,$observacion,$varevaluacion,$idTramite,$datos,'',$lugarTipoDistrito_id);        
         if ($varevaluacion==='SI'){
             $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
@@ -844,7 +860,8 @@ class TramiteCertificacionesPermanenteController extends Controller {
                     $lugarTipoDistrito_id
                 );
                 if ($enviarTramite['dato'] == true){
-                    //SE ACTUALIZA EL REGISTRO L ESTADO 2=CONCLUIDO
+                    //SE ACTUALIZA EL REGISTRO AL ESTADO 2=CONCLUIDO
+                    $registroActualizado = $this->guardaCertificadopermanente($id_tabla,$estudianteInscripcionId,$idGestion,2,$idMencion,$idNivel,$idTramite,'','',2);
                     $respuesta = 1;
                     $msg = $enviarTramite['msg'];
                 }else{

@@ -112,10 +112,10 @@
                                             <td>{{ participante.fecha_nacimiento }}</td>
                                             <td>
                                                 {% if participante.estado == 1  %}
-                                                    <span class="label label-warning rounded">Tram. en proceso</span>
+                                                    <span class="label label-warning rounded">En proceso</span>
                                                 {% endif %}    
                                                 {% if participante.estado  == 2 %}
-                                                        <span class="label label-warning rounded">Tram. Concluido</span>
+                                                        <span class="label label-success rounded">Concluido</span>
                                                         {% set registro = false %}
                                                 {% endif %}
                                                 {% if participante.estado  == 3 %}
