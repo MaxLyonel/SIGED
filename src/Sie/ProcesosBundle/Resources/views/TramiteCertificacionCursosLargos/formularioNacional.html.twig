@@ -1,0 +1,306 @@
+{% extends 'layoutPermanente.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+    </style>
+{% endblock %}
+
+{% block contentBread %}
+    <ol class="breadcrumb">
+        <li>
+            <i class="fa fa-home"></i>
+            <a href="{{path('tramite_homepage')}}">Perfil</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        {% block contentSearchBread %}
+        {% endblock %}
+    </ol>
+{% endblock %}
+
+{% block contentoption %}
+
+<div class="row">
+.
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div id= "mengestioncurso" class="col-md-12">
+                {% for flashMessage in app.session.flashbag.get('newError') %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                    </div>
+                {% endfor %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="panel shadow">
+                    <div id="tour-15" style="display: block;" class="panel-body">
+                     <style="min-width: 20px;">No. Trámite Tramite recepcionado:  {{idtramite}}</style>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="panel shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h4 class="panel-title"><strong><i class='fa fa-home'></i></strong>  Centro de Educación Permanente:  {{sieDatos.institucioneducativa}} - {{sie}}  </h4>
+                        </div>
+                        <div class="pull-right">
+                            {# <input type="submit" name="botonAceptar" id="botonAceptar" class="btn btn-primary" value="Registrar" disabled="true" /> #}
+                            {# <a class="btn btn-lilac" href="{{ path('tramite_certificado_tecnico_registro_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir</a> #}
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>                   
+                    <div id="tour-15" style="display: block;" class="panel-body">
+                        <h4>Datos del Participante</h4>                   
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped tableprocess datatable" id="table">
+                                <thead>
+                                    <tr>                        
+                                        <th>Rude</th>
+                                        <th>CI</th>
+                                        <th>Complemento</th>
+                                        <th>Nombre</th>
+                                        <th>Paterno</th>
+                                        <th>Materno</th>                            
+                                        <th>Mención</th>
+                                        <th>Nivel</th>
+                                        <th>Detalle del Participante</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                    <td>{{datosParticipante.codigoRude}}</td>
+                                    <td>{{datosParticipante.carnetIdentidad}}</td>
+                                    <td>{{datosParticipante.complemento}}</td>
+                                    <td>{{datosParticipante.nombre}}</td>
+                                    <td>{{datosParticipante.paterno}}</td>
+                                    <td>{{datosParticipante.materno}}</td>
+                                    <td>{{mencion.especialidad}}</td>
+                                    <td>{{nivel.acreditacion}}</td>
+                                    <td style="text-align:center;">
+                                        <buttom onclick="participanteHistorialCalificaciones('{{ datosInscripcionParticipante.id|base64_encode }}','{{ idMencion|base64_encode }}','{{ idNivel|base64_encode }}');" data-toggle="modal" class="btn  btn-primary btn-stroke btn-xs" data-toggle="tooltip" data-placement="top" title="Ver Calificaciones" data-target=".bs-example-modal-table">Ver Detalle</buttom>                                               
+                                    </td>                                 
+                                    </tr>
+                                </tbody>
+                            </table>    
+                        </div>
+                        <h4>Evaluación</h4>
+                        <h4>¿Autorizar el trámite?</h4>
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="siprocededep" type="radio" name="radiotypedep" value="si"  onclick="muestraobs()" >
+                                    <label for="siprocededep"><b>Si</b></label>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="rdio rdio-theme circle">
+                                    <input id="noprocededep" type="radio" name="radiotypedep" value="no" onclick="muestraobs()">
+                                    <label for="noprocededep"><b>No</b></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="NOBTH" style="display: none;">
+                            <div class="col-md-12">
+                                <strong>Si desea devolver el trámite puede emitir una observacion</strong>
+                            </div>                            
+                            <div class="col-md-8" id="obs" style="display: none">
+                                <textarea class="form-control" rows="5" id="obstxt" ></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="panel-footer">
+                            <div class="row">                                
+                                <div class="col-md-2 col-md-offset-5">
+                                <button class="btn btn-primary" id="btn_accion" title="Finalizar Solicitud" onclick="enviarTramite()" >Enviar trámite</button>                                
+                                </div>
+                            </div> 
+                    </div> 
+                </div>
+            </div>
+        </div>        
+    </div>
+</div>    
+
+<aside>
+    <!-- Start table in modal element -->
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div id="participanteHistorialCalificaciones" class="table-responsive">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <!--/ End table in modal element -->
+</aside>
+{% endblock %}
+
+{% block javascripts %}
+{{parent()}}
+<script>
+function participanteHistorialCalificaciones(inscripcion, especialidad, nivel) {
+        peticion = $.ajax({
+            type: 'POST',
+            url: '{{ path('tramite_certificado_permanente_registro_inscripcion_historial') }}',
+            data: {'inscripcion': inscripcion, 'especialidad': especialidad, 'nivel': nivel},
+            beforeSend: function () {
+                $("#participanteHistorialCalificaciones").empty();
+                $("#participanteHistorialCalificaciones").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+            },
+            success: function (data) {
+                $('#participanteHistorialCalificaciones').empty();
+                $("#participanteHistorialCalificaciones").append(data);
+            },
+            error: function(xhr) {
+                $("#participanteHistorialCalificaciones").empty();
+                $("#participanteHistorialCalificaciones").append('<div style="text-align:center">ERROR</div>');
+            },
+        })
+        .fail(function( jqXHR, textStatus, errorThrown ) {
+            $("#participanteHistorialCalificaciones").empty();
+            $("#participanteHistorialCalificaciones").append('<div style="text-align:center">ERROR FATAl</div>');
+        });
+}
+function muestraobs(){
+    var respuesta=$('input:radio[name=radiotypedep]:checked').val();
+    var respuesta2=$('input:radio[name=radiotypedevolucion]:checked').val();
+    if(respuesta=='si'){ 
+        $('#NOBTH').hide();           
+        var idNivel={{idNivel}};        
+        if(idNivel == 1 || idNivel == 20 ) {
+            $('#btn_accion').prop('title','Habilitar impresión y Finalizar trámite');
+            $("#btn_accion").html('Habilitar impresión y Finalizar trámite');
+        }else{
+            $('#btn_accion').prop('title','Habilitar impresión y Finalizar trámite.');
+            $("#btn_accion").html('Habilitar impresión y Finalizar trámite');
+        }
+    }else {
+        $('#NOBTH').show();
+        $('#obs').show(2000);            
+        $('#btn_accion').prop('title','Devolver el trámite a la instancia correspondiente');
+        $("#btn_accion").html('Devolver el trámite');
+    }
+}
+function enviarTramite(){
+    var idNivel={{idNivel}};
+    var idParticipante= {{ datosInscripcionParticipante.id }};
+    var idMencion = {{idMencion}};
+    var respuesta=$('input:radio[name=radiotypedep]:checked').val();
+    var respuesta2=$('input:radio[name=radiotypedevolucion]:checked').val();
+    console.log (respuesta);
+    if(respuesta=='si'){
+        if(idNivel == 1 || idNivel == 20 ) {
+            swal("Advertencia", "El trámite recibido es de nivel BASICO o AUXILIAR, en ese caso no le corresponde realizar la habilitación de la impresión.", "warning");
+        }else{
+            swal({
+            title: "¿Está Segura/o de finalizar el trámite?",
+            text: "La autorización de trámite habilitará la impresión del certificación para el nivel MEDIO.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Continuar"],
+            }).then(function(willDelete)  {
+            if (willDelete) {
+                var imagen = '{{ asset("img/loading96.gif") }}';
+                $.ajax({
+                    type: 'post',
+                    url: "{{ path('certificacion_per_enviosolicitud_Nac') }}",
+                    data:{idTramite:{{idtramite}},sie:{{sie}},flujoTipo:{{flujoTipo}},varevaluacion:'SI',idNivel:idNivel,idMencion:idMencion,idParticipante:idParticipante,sw:0},
+                    dataType : 'json',
+                    beforeSend: function () {
+                    swal({
+                        title: "Enviando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen,
+                        buttons: false
+                    });
+                    },
+                    success: function (data) { 
+                        console.log(data);
+                        if(data.estado == 1){
+                            swal(data.msg);                      
+                            location.href = "{{ path('wf_tramite_index') }}";
+                        }else{
+                            swal(data.msg);
+                        }
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();
+                    }
+                });
+                
+            }
+            });
+        }
+    }else{
+            swal({
+            title: "¿Está Segura/o de devolver el trámite?",
+            text: "El trámite de certificación será devuelta a la instancia correspondiente.",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Continuar"],
+            }).then(function(willDelete)  {
+            if (willDelete) {
+                var imagen = '{{ asset("img/loading96.gif") }}';
+                var observacion = obstxt=$('#obstxt').val();
+                if(respuesta == 'no' ){
+                    if(obstxt == ''){
+                        swal("Advertencia", "Debe registrar alguna observación para devolver el trámite.", "warning");
+                        return false;}
+                }
+                $.ajax({
+                    type: 'post',
+                    url: "{{ path('certificacion_per_enviosolicitud_Nac') }}",
+                    data:{idTramite:{{idtramite}},sie:{{sie}},flujoTipo:{{flujoTipo}},varevaluacion:'NO',idNivel:idNivel,observacion:observacion,idMencion:idMencion,idParticipante:idParticipante,sw:1},
+                    dataType : 'json',
+                    beforeSend: function () {
+                    swal({
+                        title: "Enviando...",
+                        text: "Espere un momento por favor",
+                        icon: imagen,
+                        buttons: false
+                    });
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if(data.estado == 1){
+                            swal(data.msg);                      
+                            location.href = "{{ path('wf_tramite_index') }}";
+                        }else{
+                            swal(data.msg);
+                        }                 
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();
+                    }
+                });
+            }
+            });
+
+    }
+    
+
+    
+
+}
+        
+ </script>
+ {% endblock %}
+      
