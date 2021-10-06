@@ -714,6 +714,12 @@ class InstitucioneducativaController extends Controller {
                 $sesion->set('ie_per_estado', '0');
         }
         //dump($estadoOperativo,$rutaObservaciones);die;
+        // to resolve the operatvio CEPEAD only to 2 weeks 
+        if($this->session->get('ie_id')==80730796){
+            $sesion->set('ie_per_estado', '3');
+            $sesion->set('ie_operativo', '!En operativo de regularización!');
+        }
+
         return $this->render($this->session->get('pathSystem') . ':Principal:menuprincipal.html.twig',array('estadoOperativo'=>$estadoOperativo,'rutaObservaciones'=>$rutaObservaciones));
     }
 
