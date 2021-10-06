@@ -474,7 +474,7 @@ class RegisterParentsController extends Controller {
     	$obParentBjp = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcionBeneficiarios')->findOneBy(array('estudianteInscripcion'=>$idStudentInscription));
         $message = '';
         $itemColor='';
-        if ($datayearPerson['sp_obtener_edad']>18) {
+        if ($datayearPerson['sp_obtener_edad']>=18) {
             // code...
         	if(sizeof($obParentBjp)>0){
         		$message='Ya existe beneficiario BJP';
