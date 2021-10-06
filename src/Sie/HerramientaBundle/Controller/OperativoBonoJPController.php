@@ -244,7 +244,7 @@ class OperativoBonoJPController extends Controller
 		$distrito = is_numeric($distrito)?$distrito:-1;
 		$gestion = is_numeric($gestion)?$gestion:-1;
 
-		$datos=$this->get('operativoutils')->getUnidadesEducativas($departamento,$distrito,$gestion,$this->estado);
+		$datos=$this->get('operativoutils')->getUnidadesEducativas($departamento,$distrito,$gestion,$this->estado,$tipoUENopermitidos=array(3));
 		return $this->render('SieHerramientaBundle:BonoJP:mostrarDatosOperativoBonoJP.html.twig',array(
 			'datos' => $datos,
 			'periodo' => $ieTipo,

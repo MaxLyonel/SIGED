@@ -168,7 +168,7 @@ class OperativoUtils
 		return array($data,$status,$msj);
 	}
 
-	public function getUnidadesEducativas($departamento,$distrito,$gestion,$estado)
+	public function getUnidadesEducativas($departamento,$distrito,$gestion,$estado,$tipoUENopermitidos=array(-1))
 	{
 		$ue=array();
 		$db = $this->em->getConnection();
@@ -187,6 +187,7 @@ class OperativoUtils
 				where c.estadoinstitucion_tipo_id=10 
 				and c.institucioneducativa_tipo_id = ?
 				and f.gestion_tipo_id =?
+				and c.dependencia_tipo_id not in (?)
 				--and c.institucioneducativa_acreditacion_tipo_id=1 
 				--and orgcurricular_tipo_id=1 
 			) a
@@ -198,7 +199,7 @@ class OperativoUtils
 		";
 
 		$stmt = $db->prepare($query);
-		$params = array($ie_tipo,$gestion,$estado,$gestion,$distrito,$departamento);
+		$params = array($ie_tipo,$gestion,implode(',',$tipoUENopermitidos),$estado,$gestion,$distrito,$departamento);
 		$stmt->execute($params);
 		$ue=$stmt->fetchAll();
 
