@@ -345,13 +345,16 @@
                                                                     <i class="fa fa-list"></i>
                                                                 </button>
                                                             </div>
+                                                        {% else %}
+
                                                             {# ingrementado el boton de descargar libreta #}
-                                                            {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta">
+
+                                                        {% endif %}
+                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                                                   <i class="fa fa-print" style="color:#FFFFFF"></i>
                                                                 </a>
-                                                            </div> #}
-                                                        {% endif %}
+                                                            </div>                                                        
 
                                                     {% endif %}
                                                 {% endif %}
@@ -440,9 +443,7 @@
                                     
                                     {# IMPRESION DE LIBRETA #}
                                     {% if  imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir or app.session.get('roluser') in [7,8,9,10] %}
-                                        {% if (data.estadomatriculaId == 4) %}
-                                        {# {{ dump(app.session.get('currentyear')) }} #}
-                                        {# {% if (gestion < app.session.get('currentyear') and data.estadomatriculaId != 4) %} #}
+                                        {% if (gestion < app.session.get('currentyear') and data.estadomatriculaId != 4) %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta">
                                                 <a class="btn btn-circle btn-warning" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                                   <i class="fa fa-print" style="color:#FFFFFF"></i>
