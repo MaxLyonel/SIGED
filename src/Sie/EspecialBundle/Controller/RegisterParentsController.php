@@ -362,6 +362,7 @@ class RegisterParentsController extends Controller {
                         ->innerJoin('SieAppWebBundle:Persona','p','with','ai.persona = p.id')
 
                         ->where('ei.id = :inscriptionId')
+                        ->andWhere('p.segipId = 1')
                         ->setParameter('inscriptionId', $inscriptionId)
                         ->orderBy('ai.id','DESC');
 		$parents = $parents           ->getQuery()
@@ -542,6 +543,7 @@ class RegisterParentsController extends Controller {
                         ->innerJoin('SieAppWebBundle:Persona','p','with','ai.persona = p.id')
 
                         ->where('ei.id = :inscriptionId')
+                        ->andWhere('p.segipId = 1')
                         ->setParameter('inscriptionId', $inscriptionId)
                         ->orderBy('ai.id','DESC');
 		$parents = $parents           ->getQuery()
