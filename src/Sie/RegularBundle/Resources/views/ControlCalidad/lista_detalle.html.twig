@@ -640,6 +640,7 @@
                                     <div class="form-group">
                                         <label class="col-xs-12 col-sm-6 control-label"> Nombres </label>
                                         <div class="col-xs-12 col-sm-6 form_nombre">
+                                            <input type="text" class="form-control" id="form_nombre" name="nombre" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -649,6 +650,7 @@
                                     <div class="form-group">
                                         <label class="col-xs-12 col-sm-6 control-label"> Paterno </label>
                                         <div class="col-xs-12 col-sm-6 form_paterno">
+                                            <input type="text" class="form-control" id="form_paterno" name="paterno" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -658,6 +660,7 @@
                                     <div class="form-group">
                                         <label class="col-xs-12 col-sm-6 control-label">Materno </label>
                                         <div class="col-xs-12 col-sm-6 form_materno">
+                                            <input type="text" class="form-control" id="form_materno" name="materno" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -1136,9 +1139,9 @@
                 function(data)
                 {
                     var persona = data.data;
-                    form.find('.form_nombre').html(persona.nombre);
-                    form.find('.form_paterno').html(persona.paterno);
-                    form.find('.form_materno').html(persona.materno);
+                    form.find('#form_nombre').val(persona.nombre);
+                    form.find('#form_paterno').val(persona.paterno);
+                    form.find('#form_materno').val(persona.materno);
 
                     form.find('#form_tipo').val(regla);
                     form.find('#form_carnet').val(persona.carnet);
@@ -1427,6 +1430,26 @@
         var carnet = form.find('#form_carnet');
         var complemento = form.find('#form_complemento');
         var fechaNacimiento = form.find('#form_fecha_nacimiento');
+
+        var nombre = form.find('#form_nombre');
+        var paterno = form.find('#form_paterno');
+        var materno = form.find('#form_materno');
+
+        if(typeof(nombre)=='undefined' || (typeof(nombre)!='undefined' && nombre.val()=='' ) )
+        {
+            alert('Debe llenar el campo nombre.');
+            return;
+        }
+        if(typeof(paterno)=='undefined' || (typeof(paterno)!='undefined' && paterno.val()=='' ) )
+        {
+            alert('Debe llenar el campo paterno.');
+            return;
+        }
+        if(typeof(materno)=='undefined' || (typeof(materno)!='undefined' && materno.val()=='' ) )
+        {
+            alert('Debe llenar el campo materno.');
+            return;
+        }
 
         if(typeof(carnet)=='undefined' || (typeof(carnet)!='undefined' && carnet.val()=='' ) )
         {

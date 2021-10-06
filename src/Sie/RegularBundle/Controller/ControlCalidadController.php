@@ -1472,6 +1472,14 @@ class ControlCalidadController extends Controller {
                          ->getQuery()
                          ->getOneOrNullResult();
 
+                    if( $personaOk )
+                    {
+                        $personaOk->setNombre($arrayDatosPersona['nombre']);
+                        $personaOk->setPaterno($arrayDatosPersona['primer_apellido']);
+                        $personaOk->setMaterno($arrayDatosPersona['segundo_apellido']);
+                        $em->persist($personaOk);
+                    }
+
                     $idPersonaObs = -1;
                     $idPersonaOk = -1;
                     if($personaObs)
@@ -1485,6 +1493,10 @@ class ControlCalidadController extends Controller {
                         $personaObs->setCarnet($request_carnet);
                         $personaObs->setComplemento($request_complemento);
                         $personaObs->setFechaNacimiento(new \DateTime($request_fechaNacimiento));
+
+                        $personaObs->setNombre($arrayDatosPersona['nombre']);
+                        $personaObs->setPaterno($arrayDatosPersona['primer_apellido']);
+                        $personaObs->setMaterno($arrayDatosPersona['segundo_apellido']);
                         $em->persist($personaObs);
                     }
                     else
@@ -1661,7 +1673,15 @@ class ControlCalidadController extends Controller {
             $request_extranjero = isset($form['extranjero'])?true:false;
             $request_complemento = trim($form['complemento']);
             $request_fechaNacimiento = trim($form['fecha_nacimiento']);
-            
+
+            $request_nombre = trim($form['nombre']);
+            $request_paterno = trim($form['paterno']);
+            $request_materno = trim($form['materno']);
+
+            $request_nombre = isset($request_nombre) ? $request_nombre : '' ;
+            $request_paterno = isset($request_paterno) ? $request_paterno : '' ;
+            $request_materno = isset($request_materno) ? $request_materno : '' ;
+
             $request_tipo = filter_var($form['tipo'],FILTER_SANITIZE_NUMBER_INT);
             $request_llave = filter_var($form['id'],FILTER_SANITIZE_NUMBER_INT);
             $request_inconsistencia = filter_var($form['inconsistencia'],FILTER_SANITIZE_NUMBER_INT);
@@ -1681,7 +1701,7 @@ class ControlCalidadController extends Controller {
             $status = 404;
             $msj    = 'Acaba de ocurrir un error desconocido, por favor vuelva a intentarlo';
 
-            if( $request_carnet >0 && $request_fechaNacimiento>0 && $request_tipo >0)
+            if( $request_carnet >0 && $request_fechaNacimiento>0 && $request_tipo >0 && strlen($request_nombre) >0 && strlen($request_paterno)>0 && strlen($request_materno)>0)
             {
                 if($request_llave>0 && $request_inconsistencia>0 && $request_ue>0)
                 {
@@ -1690,6 +1710,9 @@ class ControlCalidadController extends Controller {
                     $complemento = strlen($request_complemento) == 0 ? '':$request_complemento;
                     $arrayDatosPersona = array(
                         //'carnet'=>$form['carnet'],
+                        'nombre' => $request_nombre,
+                        'primer_apellido' => $request_paterno,
+                        'segundo_apellido' => $request_materno,
                         'complemento'=>$complemento,
                         'fecha_nacimiento' => $fecha
                     );
