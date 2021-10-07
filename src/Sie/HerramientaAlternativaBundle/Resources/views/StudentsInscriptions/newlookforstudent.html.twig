@@ -137,6 +137,17 @@
                               <label for="Nombre(s)">Localidad</label>
                               <input type="input" class="form-control" id="" placeholder="Localidad" v-model="newStudent.localidad" maxlength="50" autocomplete="off" style="text-transform:uppercase">
                           </div>
+
+                          
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-3">
+                                <label for="ext">Extranejero</label>
+                                <select name="arrApode" id="idarrGenero" v-model="newStudent.extranjero" class="custom-select form-control" v-model="newPerson.apoderado">  
+                                <option value="0">No</option>
+                                <option value="1">Si</option>
+                                </select> 
+                          </div>                          
                         </div>
                         </br> 
                         
@@ -218,6 +229,17 @@
                                   <input type="input" class="form-control" id="" placeholder="Localidad" v-model="newStudent.localidad" maxlength="50" autocomplete="off" style="text-transform:uppercase">
                               </div>
                             </div>
+
+                          <div class="row">
+                            <div class="col-sm-3">
+                                  <label for="ext">Extranejero</label>
+                                  <select name="arrApode" id="idarrGenero" v-model="newStudent.extranjero" class="custom-select form-control" v-model="newPerson.apoderado">  
+                                  <option value="0">No</option>
+                                  <option value="1">Si</option>
+                                  </select> 
+                            </div>                          
+                          </div>                            
+
                             </br>
                             
                           </form>
@@ -817,7 +839,7 @@ var app = new Vue({
           this.dataStudent = this.newStudent;
           this.dataStudent.expedidoId2 = this.newStudent.expedidoId; 
         }
-
+        this.dataStudent.extranjero = this.newStudent.extranjero;
                 /*validate the file attached
         if(this.showupfile){
             if (typeof this.informe != 'object') {
