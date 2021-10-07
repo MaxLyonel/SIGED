@@ -1,0 +1,41 @@
+especial_chagestatusstudent_index:
+    path:    /
+    defaults: { _controller: SieEspecialBundle:ChangeStatusStudent:index }
+
+especial_chagestatusstudent_result:
+    path:    /result
+    defaults: { _controller: SieEspecialBundle:ChangeStatusStudent:result }
+
+especial_chagestatusstudent_save:
+    path: /save
+    defaults: { _controller: SieEspecialBundle:ChangeStatusStudent:save }
+
+especial_chagestatusstudent_modify:
+    path: /modify
+    defaults: { _controller: SieEspecialBundle:ChangeStatusStudent:modify }
+
+especial_chagestatusstudent_remove:
+    path: /remove
+    defaults: { _controller: SieEspecialBundle:ChangeStatusStudent:remove }
+
+especial_chagestatusstudent_result_param:
+    path:    /{rude}/{gestion}/resultparam/
+    defaults: { _controller: SieEspecialBundle:ChangeStatusStudent:resultparam }
+
+especial_chagestatusstudent_maincambioestado:
+    path:     /maincambioestado
+    defaults: { _controller: "SieEspecialBundle:ChangeStatusStudent:mainCambioEstado" }
+    options:
+       expose: true
+
+especial_chagestatusstudent_verificarcambio:
+    path:     /verificarcambio
+    defaults: { _controller: "SieEspecialBundle:ChangeStatusStudent:verificarCambio" }
+    options:
+       expose: true
+
+especial_chagestatusstudent_savecambioestado:
+    path:     /savecambioestado
+    defaults: { _controller: "SieEspecialBundle:ChangeStatusStudent:saveCambioEstado" }
+    options:
+       expose: true

@@ -75,3 +75,10 @@ sie_herramienta_info_operativo_salud_administrativo_maestro:
 #sie_especial_operativo_apoderado:
 #    resource: "@SieEspecialBundle/Resources/config/routing/operativoRegistroApoderado.yml"
 #    prefix:   /acceso/operativo-apoderado
+index:
+    path:     /index
+    defaults: { _controller: SieEspecialBundle:ChangeStatusStudent:index }
+
+sie_especial_chagestatusstudent:
+    resource: "@SieEspecialBundle/Resources/config/routing/chagestatusstudent.yml"
+    prefix:   /sie/changestatus

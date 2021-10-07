@@ -617,7 +617,9 @@ class StudentsInscriptionsController extends Controller {
         'nombre'=>$nombre,
         'fecha_nacimiento'=>$fecNac
       );
-      
+      if($request->get('extranjero') == 1){
+        $arrParametros['extranjero'] = 'e';
+      }      
       if(!$withoutsegip){
         // get info segip
         $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');        

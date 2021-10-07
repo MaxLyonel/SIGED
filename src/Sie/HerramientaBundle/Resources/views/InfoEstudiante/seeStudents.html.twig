@@ -349,18 +349,20 @@
 
                                                             {# ingrementado el boton de descargar libreta #}
 
-                                                        {% endif %}
-                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta">
-                                                                <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
-                                                                  <i class="fa fa-print" style="color:#FFFFFF"></i>
-                                                                </a>
-                                                            </div>                                                        
-
+                                                        {% endif %}                                                      
+                                                        {# aqui linreta #}
                                                     {% endif %}
+                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta">
+                                                            <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
+                                                              <i class="fa fa-print" style="color:#FFFFFF"></i>
+                                                            </a>
+                                                        </div>  
                                                 {% endif %}
                                             {% endif %}
                                         {% endif %}
                                     {% endif %}
+
+
                                     {% if gestion >= 2021 and nivel >= 12 and data.estadomatriculaId in [4,101] and swRegisterPersonBjp and app.session.get('estado') != 14  %}                                       
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registre Apoderado">
                                                 <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="RegisterParents({{data.eInsId}});" >
@@ -370,23 +372,25 @@
                                     {% endif %}
                                     
                                     {# Esto es para las unidades educativas que son Guanawek en la gestion 2020 #}
-                                    {% if app.session.get('esGuanawek') and app.session.get('esGuanawek')==1 %}
-                                            {% if gestion > 2019 and nivel == 13 and grado >= 5 %}
 
-                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                        <i class="fa fa-list"></i>
-                                                    </button>
-                                                </div>
-                                            {% else %}
-                                                {% if gestion > 2019 %}
-                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                        <i class="fa fa-list"></i>
-                                                    </button>
-                                                </div>
-                                                {% endif %}
+                                    {# {{ app.session.get('esGuanawek') }} #}
+                                    {% if app.session.get('esGuanawek') and app.session.get('esGuanawek')==1 %}
+                                        {% if gestion > 2019 and nivel == 13 and grado >= 5 %}
+
+                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                    <i class="fa fa-list"></i>
+                                                </button>
+                                            </div>
+                                        {% else %}
+                                            {% if gestion > 2019 %}
+                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                    <i class="fa fa-list"></i>
+                                                </button>
+                                            </div>
                                             {% endif %}
+                                        {% endif %}
                                     {% endif %}
 
                                     
