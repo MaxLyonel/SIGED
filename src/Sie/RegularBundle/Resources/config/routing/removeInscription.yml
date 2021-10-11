@@ -15,3 +15,8 @@ remove_inscription_sie_remove:
 remove_inscription_sie_result_quest:
     path:     /sie/quest/{rude}
     defaults: { _controller: SieRegularBundle:RemoveInscription:quest }
+
+
+remove_inscription_alternativa_sie_remove:
+    path:     /alternativa/{periodo}/{idstudent}/{nivel}/{grado}/{paralelo}/{turno}/{sie}/{gestion}/{eiid}
+    defaults: { _controller: SieRegularBundle:RemoveInscription:removeAlternativa }
