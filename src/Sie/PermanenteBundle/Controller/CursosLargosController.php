@@ -2764,15 +2764,13 @@ class CursosLargosController extends Controller {
                 $em->flush();
 
             }
-                 //  dump($socioeconomico);die;
-            $inscripcionestudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idinscripcion);
-            $em->remove($inscripcionestudiante);
-            $em->flush();
-
             if ($objRude) {
                 $em->remove($objRude);
+                $em->flush();
             }
-            $em->flush();            
+            $inscripcionestudiante = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idinscripcion);
+            $em->remove($inscripcionestudiante);
+            $em->flush();           
 
             $em->getConnection()->commit();
 
