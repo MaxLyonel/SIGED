@@ -1794,6 +1794,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
             $fechaNacimiento = $request->get('fechaNacimiento');
             $esExtranjero=filter_var($request->get('esExtranjero'),FILTER_SANITIZE_NUMBER_INT);
             $documentoNro=$request->get('documentoNro');
+            $extranjero_segip=$request->get('extranjero_segip');
 
             $data=array();
             if($esExtranjero==0)//es nacional
@@ -1805,6 +1806,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     'nombre'=>$nombre,
                     'fecha_nacimiento'=>$fechaNacimiento
                 );
+                if ($extranjero_segip)  $parametros['extranjero'] = '2';
 
                 // $respuesta = $this->get('sie_app_web.segip')->verificarPersona($carnet, $complemento, $paterno, $materno, $nombre, $fechaNacimiento, 'prod', 'academico');
                 $persona = $this->get('sie_app_web.segip')->buscarPersonaPorCarnet($carnet, $parametros, 'prod', 'academico');

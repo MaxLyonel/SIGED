@@ -185,6 +185,7 @@ var t_buscarTutor = function(){
     var t_materno = $('#tb_materno').val();
     var t_nombre = $('#tb_nombre').val();
     var t_fechaNacimiento = $('#tb_fechaNacimiento').val();
+    var pb_es_extranjero_t_segip = $('#pb_es_extranjero_t_segip').is(':checked');
 
     // Validamos si la fecha de nacimiento es correcta
     var t_df = t_fechaNacimiento.split('-');
@@ -215,6 +216,7 @@ var t_buscarTutor = function(){
                 paterno: t_paterno,
                 materno: t_materno,
                 nombre: t_nombre,
+                extranjero_segip: pb_es_extranjero_t_segip,
                 fecha_nacimiento: t_fechaNacimiento
             };
 
@@ -240,7 +242,7 @@ var t_buscarTutor = function(){
             
             $.ajax({
                 type: 'get',
-                url: Routing.generate('info_estudiante_rude_nuevo_buscar_persona',{'carnet':t_carnet, 'complemento':t_complemento, 'paterno':t_paterno, 'materno': t_materno, 'nombre': t_nombre, 'fechaNacimiento': t_fechaNacimiento,'esExtranjero':t_es_extranjero,'documentoNro':t_nro_identidad}),
+                url: Routing.generate('info_estudiante_rude_nuevo_buscar_persona',{'carnet':t_carnet, 'complemento':t_complemento, 'paterno':t_paterno, 'materno': t_materno, 'nombre': t_nombre, 'fechaNacimiento': t_fechaNacimiento,'esExtranjero':t_es_extranjero,'documentoNro':t_nro_identidad,'extranjero_segip': pb_es_extranjero_t_segip}),
                 beforeSend: function(){
                     $('#t_mensaje').empty();
                     t_cambiarFondoMensaje(1);
