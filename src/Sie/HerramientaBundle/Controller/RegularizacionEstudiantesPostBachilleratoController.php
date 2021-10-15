@@ -3997,7 +3997,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 
 		$inscripcionValida = true;
 
-		$query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial(?) where nivel_tipo_id_r=? and grado_tipo_id_r=? order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
+		$query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial(?) where nivel_tipo_id_r=? and grado_tipo_id_r=? and estadomatricula_tipo_id_fin_r in (5) order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
 		$params = array($rude,$nivel,$grado);
 		$query->execute($params);
 		$dataInscription = $query->fetchAll();
