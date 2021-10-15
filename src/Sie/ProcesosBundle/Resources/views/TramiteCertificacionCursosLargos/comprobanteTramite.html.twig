@@ -110,8 +110,7 @@ function imprimirComprobanteCentro(){
     $('#tablaParticipantes tbody').find('tr').each(function() {
         let tds = $(this).find('td');
         datos.push({idinscripcion: tds.eq(0).data("id"), idtramite: tds.eq(1).text()});
-    });
-    
+    });    
     swal({
         title: "Se mostrará el comprobante de inicio de tramite",
         text: "Se generará un documento PDF, como comprobante de  trámites iniciados. Se recomienda guardar e imprimir el mismo.",
@@ -136,9 +135,6 @@ function imprimirComprobanteCentro(){
                 }, 3000);                
             }
         });
-    
-   
-    
 }
 
 </script>

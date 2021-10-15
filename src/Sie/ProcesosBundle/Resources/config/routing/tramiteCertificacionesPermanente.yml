@@ -54,16 +54,35 @@ tramite_impresion_certificado_permanente_lista_habilitados:
     defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:certTecRegistroListaHabilitados }
     options:
          expose: true
-tramite_impresion_certificado_permanente_imprimir:
+tramite_impresion_certificado_permanente_imprimirCertificado:
     path:     /certificado/permanente/imprimir
-    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:imprimir }
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:imprimirCertificado }
 #COMPROBANTE DE INICIO DE TRAMITE
 tramite_certificacion_permanente_comprobante:
     path:     /reporte/permanente
     defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptComprobanteDirector }
 tramite_certificacion_permanente_comprobante_devuelto:
     path:     /reporte/permanente/devuelto
-    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptComprobanteDirectorDevuelto }       
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptComprobanteDirectorDevuelto }
+#REPORTES ESTADISTICOS A NIVEL CENTRO DEPARTAMENTAL NACIONAL
+tramite_impresion_certificacion_per_reportes:
+    path:     /reporte/permanente/reportes
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:CertificacionesEstadisticos }
+tramite_impresion_certificacion_per_reportes_datos:
+    path:     /reporte/permanente/reportes/datos
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:datosCertificacionesEstadisticos }
+#REPORTES DE CANTIDAD DE CERTIFICADOS ENTREGADOS
+tramite_impresion_certificacion_entregados_datos:
+    path:     /reporte/permanente/reportes/entregados
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptCertificadosEntregados }
+tramite_impresion_certificacion_lista_habilitados:
+    path:     /reporte/permanente/habilitados/impresion
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptParticipantesHabilitadosNacional }
+
+    
+
+
+
     
  
          

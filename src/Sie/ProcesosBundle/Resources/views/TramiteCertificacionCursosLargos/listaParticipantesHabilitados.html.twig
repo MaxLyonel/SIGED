@@ -29,53 +29,37 @@
                     <div class="panel">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h4 class="panel-title">C.E.A.: {{infoAutorizacionCentro}}</h4>
+                                <h4 class="panel-title">C.E.A.: {{ datosCentro.institucioneducativa}} - {{infoAutorizacionCentro}} </h4>
                             </div>
                             <div class="pull-right">
-                                {# <input type="submit" name="botonAceptar" id="botonAceptar" class="btn btn-primary" value="Registrar" disabled="true" /> #}
-                                {# <a class="btn btn-lilac" href="{{ path('tramite_certificado_tecnico_registro_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir</a> #}
                             </div>
                             <div class="clearfix"></div>
                         </div>
-                        <div class="panel-body">
-                            {# {% if infoAutorizacionCentro.tec_basico == 0 and listaParticipante[0].nivel == 1 %}
-                                <div class="alert alert-danger">
-                                    <strong>Alerta!</strong> No cuenta con la autorización correspondiente según R.U.E. para la emisión de certificados a nivel básico.
-                                </div>
-                            {% endif %}
-                            {% if infoAutorizacionCentro.tec_auxiliar == 0 and listaParticipante[0].nivel == 2 %}
-                                <div class="alert alert-danger">
-                                    <strong>Alerta!</strong> No cuenta con la autorización correspondiente según R.U.E. para la emisión de certificados a nivel auxiliar.
-                                </div>
-                            {% endif %}
-                            {% if infoAutorizacionCentro.tec_medio == 0 and listaParticipante[0].nivel == 3 %}
-                                <div class="alert alert-danger">
-                                    <strong>Alerta!</strong> No cuenta con la autorización correspondiente según R.U.E. para la emisión de certificados a nivel medio.
-                                </div>
-                            {% endif %} #}
-
-                            <table id="tablaParticipantes" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                        <div class="panel-body">                            
+                            <table id="tablaParticipantesHabilitados" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
                                         <th style="width:50px; text-align:center;">#</th>
+                                        <th style="text-align:center;">Nro. Trámite</th>
                                         <th style="text-align:center;">Código RUDEAL</th>
-                                        <th style="text-align:center;">C.I.</th>
-                                        <th style="text-align:center;">Complemento</th>
+                                        <th style="text-align:center;">Nombre</th>
                                         <th style="text-align:center;">Paterno</th>
                                         <th style="text-align:center;">Materno</th>
-                                        <th style="text-align:center;">Nombre</th>
+                                        <th style="text-align:center;">C.I.</th>
+                                        <th style="text-align:center;">Complemento</th>
                                         <th style="text-align:center;">Fecha de nacimiento</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
                                         <th>#</th>
+                                        <th>Nro. Trámite</th>
                                         <th>Código RUDEAL</th>
-                                        <th>C.I.</th>
-                                        <th>Complemento</th>
+                                        <th>Nombre</th>
                                         <th>Paterno</th>
                                         <th>Materno</th>
-                                        <th>Nombre</th>
+                                        <th>C.I.</th>
+                                        <th>Complemento</th>
                                         <th>Fecha y Lugar de Nacimiento</th>
                                         <th style="text-align:center;">
                                             &nbsp;
@@ -86,29 +70,39 @@
                                     {% for participante in listaParticipante %}
                                         {% set registro = true %}
                                         <tr>
-                                            <td style="text-align:center;">
-                                            {# <buttom onclick="participanteHistorial('{{ participante.id|base64_encode }}','{{ participante.especialidad_id|base64_encode }}','{{ participante.nivel|base64_encode }}');" data-toggle="modal" class="btn btn-circle btn-primary btn-stroke btn-xs" data-toggle="tooltip" data-placement="top" title="Ver Calificaciones" data-target=".bs-example-modal-table">{{ loop.index }}</buttom> #}
+                                            <td style="text-align:center;" data-id="{{ participante.id }}" >
                                             {{ loop.index }}
-                                            </td> 
+                                            </td>
+                                            <td>{{ participante.tramite_id }}</td>
                                             <td>{{ participante.codigo_rude }}</td>
-                                            <td>{{ participante.carnet_identidad }}</td>
-                                            <td>{{ participante.complemento }}</td>
+                                            <td>{{ participante.nombre }}</td>
                                             <td>{{ participante.paterno }}</td>
                                             <td>{{ participante.materno }}</td>
-                                            <td>{{ participante.nombre }}</td>
-                                            <td>{{ participante.fecha_nacimiento }}</td>
-                                            
+                                            <td>{{ participante.carnet_identidad }}</td>
+                                            <td>{{ participante.complemento }}</td>
+                                            <td>{{ participante.fecha_nacimiento }}</td>                                            
                                         </tr>
                                     {% endfor %}
                                 </tbody>
                             </table>                           
                         </div><!-- /.panel-body -->
                         <div class="panel-footer">
+                        {% if listaParticipante  %} 
                             <div class="row">                                
-                                <div class="col-md-2 col-md-offset-5">
-                                <input type="submit" class="btn btn-primary" value="Generar Certificados" onclick="imprimirCertificados()" />
+                                <div class="col-md-4 col-md-offset-5">                        
+                                <button class="btn btn-primary" id="btn_imprimir" title="Imprimir Comprobante" onclick="imprimirCertificados()" ><i class='fa fa-print'></i> Generar Certificados</button>                                
                                 </div>
-                            </div> 
+                                <form name="comprobante_certificado" method="post" action="{{ path('tramite_impresion_certificado_permanente_imprimirCertificado') }}" target="_blank">
+                                    <input type="hidden" name="sie" value="{{ infoAutorizacionCentro }}"/>
+                                    <input type="hidden" name="centro" value="{{ datosCentro.institucioneducativa }}"/>
+                                    <input type="hidden" name="mencion" value="{{ mencionDatos.especialidad }}"/>
+                                    <input type="hidden" name="nivel" value="{{ nivelDatos.acreditacion }}"/>
+                                    <input type="hidden" name="idMencion" value="{{ mencionDatos.id }}"/>
+                                    <input type="hidden" name="idnivel" value="{{ nivelDatos.id }}"/>
+                                    <input type="hidden" name="datos_certificado" id="datos_certificado"/>
+                                </form>
+                            </div>
+                         {% endif %}   
                         </div>                
                     </div>
                 
@@ -120,44 +114,42 @@
 {% endblock %}
 {% block javascripts %}
     {{parent()}}
-    <script>
+<script>
     function imprimirCertificados(){
-        swal({
-            title: "¿Está Segura/o de generar los certificados ?",
-            text: "Se generará un documento pdf, el cual incluye todos los certificados de los participantes mostrados en la lista.",
-            icon: "warning",
-            buttons: true,
-            dangerMode: true,
-            buttons: ["Cancelar", "Continuar"],
-            }).then(function(willDelete)  {
-                if (willDelete) {
-                    var imagen = '{{ asset("img/loading96.gif") }}';
-                    $.ajax({
-                        type: 'post',
-                        url: "{{ path('tramite_impresion_certificado_permanente_imprimir') }}",
-                        data:{sw:0},
-                        dataType : 'json',
-                        beforeSend: function () {
-                        swal({
-                            title: "Enviando...",
-                            text: "Espere un momento por favor",
-                            icon: imagen,
-                            buttons: false
-                        });
-                        },
-                        success: function (data) {
-                            console.log(data);
-                                                         
-                        },
-                        complete: function () {
-                            swal.stopLoading();
-                            swal.close();
-                        }
-                    });
-                }
-            });
+    let datos_certificado = [];
+    $('#tablaParticipantesHabilitados tbody').find('tr').each(function() {
+        let tds = $(this).find('td');
+        datos_certificado.push({idinscripcion: tds.eq(0).data("id"), idtramite: tds.eq(1).text()});
+    });
+    swal({
+        title: "¿Está Segura/o de generar los certificados ?",
+        text: "Se generará un documento pdf, el cual incluye todos los certificados de los participantes mostrados en la lista.",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+        buttons: ["Cancelar", "Continuar"],
+        }).then(function(willDelete)  {
+            if (willDelete) {
+                var imagen = '{{ asset("img/loading96.gif") }}';
+                document.getElementById('datos_certificado').value = JSON.stringify(datos_certificado);
+                document.comprobante_certificado.submit();
+                swal({
+                    title: "Generando...",
+                    text: "Espere un momento por favor",
+                    icon: imagen,
+                    buttons: false
+                });
+                setTimeout(function(){
+                    swal.stopLoading();
+                    swal.close();
+                }, 3000);
+                $('#btn_imprimir').hide();//pendiente
+
+            }
+        });
     }
-    </script>
+    
+</script>
 {% endblock %}
 
 

@@ -1,0 +1,277 @@
+{% extends 'layoutPermanente.html.twig' %}
+{% block stylesheets %}
+{{ parent() }}
+    <style>
+        
+    </style>
+{% endblock %}
+{% block contentoption %}
+<div class="header-content">
+    <h2><i class="fa fa-th-large"></i>Certificaciones<span>Subsistema de Educación Permanente</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <ol class="breadcrumb">
+            <li class="active">
+                <div class="btn-green date-picker">
+                
+                </div>
+            </li>
+        </ol>
+    </div>
+</div>
+<div class="body-content animated fadeIn">
+    <div class = "row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel text-center rounded shadow">
+            {% if formBusqueda is defined  %}
+                {{form_start(formBusqueda, { 'attr': {'data-toggle': 'validator','role': "form"} } )}}
+                    <form class="form-horizontal">
+                        <div class="form-body">
+                            <div class="form-group no-margin">
+                                <div class="row">                                                
+                                    <div class="col-md-2">
+                                        Gestión
+                                    </div>
+                                    <div class="col-md-2">
+                                        
+                                    </div>                                                
+                                </div>
+                                <div class="row">                                                
+                                    <div class="col-md-2">
+                                        {{ form_widget(formBusqueda.gestion) }}
+                                    </div>                                                
+                                    <div class="col-md-2">
+                                        {{ form_widget(formBusqueda.search,{ 'attr':{'class':'btn btn-warning mb-15 btn-block' } } ) }}
+                                    </div>
+                                </div>                                            
+                            </div>
+                        </div>
+                    </form>
+                {{form_end(formBusqueda)}}
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="panel text-center rounded shadow">
+                <div class="panel-body bg-lilac rounded">
+                    {#  <h5 class="text-uc"><b>{% if infoEntidad[0]["nombre"] is defined %}{{ infoEntidad[0]["nombre"] }}{% endif %}</b></h5> #}
+                    <h5 class="text-uc"><b>BOLIVIA</b></h5>
+                </div>
+            </div>       
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="row">                                       
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel panel-default shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"><i class='fa fa-download'></i> Generar reporte de certificados entregados a nivel Nacional</h3>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">                            
+                            <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_entregados_datos') }}" method="POST">
+                              {#  <input type="hidden" name="gestion" value="{{gestion}}"  /> #}                                     
+                                <button type="submit" id="submit"  title="Descargar reporte"><i class="fa fa-file-pdf-o"></i>  Cantidad de certificados entregados </button>
+                            </form>
+                            {% if (app.session.get('roluser') == 8 or app.session.get('roluser') == 43) %}
+                            <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_lista_habilitados') }}" method="POST">
+                              {#  <input type="hidden" name="gestion" value="{{gestion}}"  /> #}                                     
+                                <button type="submit" id="submit"  title="Descargar reporte habilitados"><i class="fa fa-file-pdf-o"></i>  Lista de participantes habilitados para la entrega de certificados </button>
+                            </form>
+                            {% endif %}
+
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>     
+            <div class="row">                                       
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel panel-default shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"><i class='fa fa-sort-amount-asc'></i> Certificados entregados a nivel Nacional</h3>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+            <div class="row">                                       
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel panel-default shadow">
+                        <div class="panel-body">
+                            <!-- Start project overview -->
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div id="" style="height:300px;">
+                                       {#  {% if infoEstadistica is defined %}
+                                        <span class="text-primary pull-right"><b>{{(infoEstadistica[0]['total_general'])|number_format(0, ',', '.')}}</b></span><span class="text-primary"><b>Total</b></span>
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                            </div>
+                                        </div><!-- /.progress -->   
+                                        {% endif %} #}       
+                                        {% set contadorColor = 0 %}      
+                                        {% for data in infoSubEntidad %}
+                                            {% set cantidad = data.total_inscrito %}  
+                                            {% set totalGeneral = data['total_general'] %} 
+                                            {% set porcentaje = (cantidad * 100)/(totalGeneral)%} 
+                                            {% set id = data.codigo %}
+                                            {% set nombre = data.nombre %} 
+                                            {% set rol = data.rolusuario %}
+                                            {% set gestion = data.gestion %}
+                                            <form name="form" role="form" action="{{ path('sie_alt_reportes') }}" method="POST">
+                                                {# <input type="hidden" name="codigo" value="{{id|base64_encode}}" /> #}
+                                                <input type="hidden" name="rol" value="{{rol}}" />
+                                                <input type="hidden" name="gestion" value="{{ gestion }}" />
+                                                {# <input type="hidden" name="periodo" value="{{ periodo }}" /> #}
+                                                <button type="submit" id="submit{{id}}" style="display:none;"></button>
+                                                <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit{{rol}}').click();">
+                                                    <span class="pull-right" style="width:50px; text-align:right"><b>{{cantidad|number_format(0, ',', '.')}}</b></span><span class="">{{nombre}}</span>
+                                                </a>    
+                                                <div class="progress progress-xs">
+                                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0" aria-valuemax="100" style="width: {{porcentaje}}%">
+                                                            
+                                                        </div>
+                                                    </div><!-- /.progress -->
+                                            </form> 
+                                        {% endfor %}                                    
+                                    </div>
+                                </div>                               
+                            </div>                            
+                        </div><!-- /.panel-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">     
+            <div class="row">                                       
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel panel-default shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"><i class='fa fa-sort-amount-asc'></i> Estado</h3>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">                                       
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel panel-default shadow">
+                        <div class="panel-body">
+                            <!-- Start project overview -->
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div id="chartContainerEstado" style="height:300px;"> </div> 
+                                </div>
+                            </div>                            
+                        </div><!-- /.panel-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">     
+            <div class="row">                                       
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel panel-default shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"><i class='fa fa-sort-amount-asc'></i> Género</h3>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">                                       
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="panel panel-default shadow">
+                        <div class="panel-body">
+                            <!-- Start project overview -->
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div id="chartContainerGenero" style="height:300px;"> </div> 
+                                </div>   
+                                
+                            </div>                            
+                        </div><!-- /.panel-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+</div>
+                  
+
+ 
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/highcharts/highcharts.js')}}"></script>
+    <script src="{{ asset('js/highcharts/funnel.js')}}"></script>
+    <script src="{{ asset('js/highcharts/highcharts-3d.js')}}"></script>
+    <script src="{{ asset('js/highcharts/exporting.js')}}"></script>
+    <script>
+        $(document).ready(function() {
+            Highcharts.setOptions({
+                lang: {
+                    decimalPoint: ',',
+                    thousandsSep: '.'
+                }
+            });
+            {% autoescape %}
+                {% if mensaje is defined %}
+                    {{ mensaje|raw }}   
+                {% endif %} 
+            {% endautoescape %}
+
+            {% autoescape %}
+                {% if datoGraficoPoblacion is defined %}
+                    {{ datoGraficoPoblacion|raw }}
+                {% endif %} 
+            {% endautoescape %}
+            {% autoescape %}
+                {% if datoGraficoDependencia is defined %}
+                    {{ datoGraficoDependencia|raw }}
+                {% endif %} 
+            {% endautoescape %}
+            {% autoescape %}
+                {% if datoGraficoGenero is defined %}
+                    {{ datoGraficoGenero|raw }}
+                {% endif %} 
+            {% endautoescape %}
+             {% autoescape %}
+                {% if datoGraficoEstado is defined %}
+                    {{ datoGraficoEstado|raw }}
+                {% endif %} 
+            {% endautoescape %}
+
+            $(function () {
+                //chartContainerPoblacionLoad();
+                //chartContainerDependenciaLoad();
+                chartContainerGeneroLoad();
+                chartContainerEstadoLoad();
+            });  
+
+            function seeGraphic (infoTipo,infoCodigo,infoRol) {
+                $("#modal-page").modal(
+                    {
+                        show: true,
+                        backdrop: 'static',
+                        keyboard: false
+                    }
+                );                 
+            };
+        });
+    </script>
+
+{% endblock %}
