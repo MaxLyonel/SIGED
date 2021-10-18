@@ -2034,7 +2034,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             ");
         }
 
-        if($rol == 8 or $rol == 20 or $rol == 43) // Tecnico Nacional
+        if($rol == 8 or $rol == 20 ) // Tecnico Nacional
         {
             $queryEntidad = $em->getConnection()->prepare("
             with tabla as (
@@ -2215,7 +2215,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
      */
     public function buscarCertificadoEstados($gestionId,$idRol,$codigo){
         $em = $this->getDoctrine()->getManager();
-        if($idRol === 8 or $idRol === 20 or $idRol == 43  ){
+        if($idRol === 8 or $idRol === 20   ){
             $queryEntidad = $em->getConnection()->prepare("
             SELECT 1 as tipo_id,'Estado' as tipo_nombre,cp.estado as id, CASE cp.estado  WHEN 1 then 'En proceso' when 2 then 'Concluido' when 3  then 'Entregado' END as estado  , count(*) as total_certificados
                 FROM certificado_permanente cp
@@ -2309,7 +2309,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                         order by lt5.id, lt5.codigo, lt5.lugar                    
             ");
         }
-        if($rol == 8 or $rol == 20 or $rol == 43) // Tecnico Nacional
+        if($rol == 8 or $rol == 20 ) // Tecnico Nacional
         {
             $queryEntidad = $em->getConnection()->prepare("
                 SELECT 'Departamento' as nombreArea, lt4.codigo as codigo, lt4.lugar  as nombre, 7 as rolUsuario 
@@ -2412,7 +2412,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
     }
     public function datosCertificadosEntregados($rol, $gestionId,$codigo){ //dump($rol, $gestionId,$codigo);die;
         $em = $this->getDoctrine()->getManager();
-        if($rol==8  or $rol == 43){
+        if($rol==8 ){
             $queryEntidad = $em->getConnection()->prepare("
             SELECT 'Departamento' as nombreDepartamento, lt4.codigo as codigo, lt4.lugar  as nombre, lt4.id,lt4.lugar,lt4.codigo
             , count(*) as total_certificado_entregado
@@ -2514,30 +2514,23 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $pdf->SetFont('', 'B', 9);
             $pdf->SetFillColor(221, 221, 221);
             
-            $pdf->Cell(0, 8, 'LISTA DE PARTICIPANTES', 1, 1, "", 'L', 0, '', 0, true);
+            $pdf->Cell(0, 8, 'LISTA DE PARTICIPANTES HABILITADOS PARA LA IMPRESIÓN DE CERTIFICADOS - NIVEL MEDIO', 1, 1, "", 'L', 0, '', 0, true);
             //$tramites = json_decode($request->get('datos'), true);
             $habilitados = $this->getHabilitadosImpresion($rol,$gestionId);
             //dump($habilitados);die;
-            $pdf->SetFont('', '', 9);
+            $pdf->SetFont('', '', 8);
             $contenido = '<table border="1" cellpadding="1.5">';
             $contenido .= '<tr style="background-color:#ddd;">
                 <td alignt="center" height="10" style="line-height: 14px;" width="5%"><b>Nro.</b></td>
-                <td alignt="center" height="14" style="line-height: 14px;" width="10%"><b>Nro Tramite</b></td>
-                <td alignt="center" height="14" style="line-height: 14px;" width="10%"><b>SIE</b></td>
-                <td alignt="center" height="14" style="line-height: 14px;" width="20%"><b>RUDE</b></td>
-                <td alignt="center" height="14" style="line-height: 14px;" width="10%"><b>C.I.</b></td>
-                <td alignt="center" height="14" style="line-height: 14px;" width="15%"><b>Nombres y Apellidos</b></td>
-                <td alignt="center" height="14" style="line-height: 14px;" width="10%"><b>Nivel</b></td>
-                <td alignt="center" height="14" style="line-height: 14px;" width="20%"><b>Mención</b></td>
+                <td alignt="center" height="10" style="line-height: 14px;" width="10%"><b>Nro Tramite</b></td>
+                <td alignt="center" height="10" style="line-height: 14px;" width="10%"><b>SIE</b></td>
+                <td alignt="center" height="10" style="line-height: 14px;" width="20%"><b>RUDE</b></td>
+                <td alignt="center" height="10" style="line-height: 14px;" width="10%"><b>C.I.</b></td>
+                <td alignt="center" height="10" style="line-height: 14px;" width="15%"><b>Nombres y Apellidos</b></td>
+                <td alignt="center" height="10" style="line-height: 14px;" width="10%"><b>Nivel</b></td>
+                <td alignt="center" height="10" style="line-height: 14px;" width="20%"><b>Mención</b></td>
                 </tr>';
-                foreach($habilitados as $index => $item) {
-                    //OBETENEMOS LOS DATOS DE ESTUDIANTE
-                    /* $datosParticipante = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('ei')
-                    ->select('e.codigoRude,e.paterno,e.materno,e.nombre,e.carnetIdentidad,e.complemento')
-                    ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'with', 'ei.estudiante = e.id')
-                    ->where('ei.id='.$item['idinscripcion'])
-                    ->getQuery()
-                    ->getResult(); //dump($item['']);die; */
+                foreach($habilitados as $index => $item) {                    
                     $ci = $habilitados[0]['carnet_identidad'].($habilitados[0]['complemento'] == '' ? '' : '-'.$habilitados[0]['complemento']);
                     $contenido .= '<tr>
                         <td alignt="center">'.($index + 1).'</td>
