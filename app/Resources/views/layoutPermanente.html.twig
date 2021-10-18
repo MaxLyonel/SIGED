@@ -83,6 +83,7 @@
             <link rel="stylesheet" type="text/css" href="CSS.css">
             <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
             <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+             <link href="{{asset('juegos/assets/global/plugins/bower_components/datatables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
         </head>
     {%endblock%}
     <!--/ END HEAD -->
@@ -393,7 +394,7 @@
                         </li>
                     {% endif %}
 
-                    {% if (app.session.get('roluser') == 8) %} {#NACIONAL#}
+                    {% if (app.session.get('roluser') == 8 or app.session.get('roluser') ==43 ) %} {#NACIONAL#}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
@@ -416,7 +417,27 @@
                                <li><a href="{{path('herramienta_permanente_admin_curso_corto')}}">Administración Cursos Cortos </a></li>
                                 <li><a href="{{path('herramienta_permanente_admin_especialidades')}}">Especialidades Cursos Largos </a></li>
                             </ul>
-                        </li>      
+                        </li>
+                        <li class="">
+                            <a href="{{path('wf_tramite_index')}}">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Trámites</span>
+                                {# <span class="selected"></span> #}
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="{{path('tramite_impresion_certificacion_per')}}">
+                                <span class="icon"><i class="fa fa-print"></i></span>
+                                <span class="text">Impresión</span>                               
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="{{path('tramite_impresion_certificacion_per_reportes')}}">
+                                <span class="icon"><i class="fa fa-line-chart"></i></span>
+                                <span class="text">Reportes Certificación</span>
+                                
+                            </a>
+                        </li>  
                         
                     {% endif %}
 
@@ -432,7 +453,27 @@
                                 <li><a href="{{path('herramienta_per_ceducativa_crear_periodo')}}">Habilitar Gestión </a></li>
                                 <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
                             </ul>
+                        </li>
+                        <li class="">
+                            <a href="{{path('wf_tramite_index')}}">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Trámites</span>
+                                {# <span class="selected"></span> #}
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="{{path('tramite_impresion_certificacion_per')}}">
+                                <span class="icon"><i class="fa fa-print"></i></span>
+                                <span class="text">Impresión</span>                               
+                            </a>
                         </li>                        
+                        <li class="">
+                            <a href="{{path('tramite_impresion_certificacion_per_reportes')}}">
+                                <span class="icon"><i class="fa fa-line-chart"></i></span>
+                                <span class="text">Reportes Certificación</span>
+                                {# <span class="selected"></span> #}
+                            </a>
+                        </li>                          
                     {% endif %}
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
@@ -447,6 +488,13 @@
                                 <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
                             </ul>
                         </li>
+                        <li class="">
+                            <a href="{{path('wf_tramite_index')}}">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Trámites</span>
+                                {# <span class="selected"></span> #}
+                            </a>
+                        </li>
                     {% endif %}
                     {% if app.session.get('roluser') == 9 %}{#DIRECTOR#}
                         <li class="submenu">
@@ -459,7 +507,14 @@
                                 <li><a href="{{path('estudiante_index')}}">Busqueda de Estudiante/Participante </a></li>                               
                                 <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
                             </ul>
-                        </li>                      
+                        </li>
+                        <li class="">
+                            <a href="{{path('wf_tramite_index')}}">
+                                <span class="icon"><i class="fa fa-home"></i></span>
+                                <span class="text">Trámites</span>
+                                {# <span class="selected"></span> #}
+                            </a>
+                        </li>                     
                     {% endif %}
                 </ul><!-- /.sidebar-menu -->
                
@@ -1005,6 +1060,8 @@
 
 
             <!--/ END PAGE LEVEL PLUGINS -->
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/jquery.dataTables.min.js')}}"></script>
+            <script src="{{asset('juegos/assets/global/plugins/bower_components/datatables/js/dataTables.bootstrap.min.js')}}"></script>
 
             <!-- START @PAGE LEVEL SCRIPTS -->
             <script src="{{asset('webPermanente/assets/admin/js/apps.js')}}"></script>
@@ -1029,6 +1086,8 @@
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
             <!--/ END GOOGLE ANALYTICS -->
+            <script src="{{ asset('js/initialize.js')}}"></script>
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 
             <script>
