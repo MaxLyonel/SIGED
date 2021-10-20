@@ -30,12 +30,6 @@ use Sie\AppWebBundle\Entity\SuperiorAcreditacionTipo;
 use Sie\AppWebBundle\Entity\TramiteTipo;
 use Sie\AppWebBundle\Entity\CertificadoPermanente;
 
-
-
-
-
-
-
 class TramiteCertificacionesPermanenteController extends Controller {
     public $session;
     public $idInstitucion;
@@ -43,8 +37,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
     
     public function __construct() {
         $this->session = new Session();      
-    }
-    
+    }    
 
     /**
      * Definicion de funciones
@@ -57,35 +50,11 @@ class TramiteCertificacionesPermanenteController extends Controller {
          */
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = new \DateTime();
-        $route = $request->get('_route');       
-
+        $gestionActual = new \DateTime();       
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
-
         $sie= $this->session->get('ie_id');
-        $gestion=$this->session->get('ie_gestion');
-
-       /*  //validation if the user is logged
-        if (!isset($id_usuario)) {
-            return $this->redirect($this->generateUrl('login'));
-        }
-
-        $defaultTramiteController = new defaultTramiteController();
-        $defaultTramiteController->setContainer($this->container);
-
-        //$activeMenu = $defaultTramiteController->setActiveMenu($route);
-
-        // $rolPermitido = array(8,13);
-        $rolPermitido = array(9,8);
-
-        $esValidoUsuarioRol = $defaultTramiteController->isRolUsuario($id_usuario,$rolPermitido);
-
-        if (!$esValidoUsuarioRol){
-            $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'No puede acceder al módulo, revise sus roles asignados e intente nuevamente'));
-            return $this->redirect($this->generateUrl('tramite_homepage'));
-        } */
-        //$routing, $institucionEducativaId, $gestionId, $especialidadId, $nivelId
+        $gestion=$this->session->get('ie_gestion');       
         $gestion = $gestionActual->format('Y');
 
         //Se obtiene el idFlujo en caso de ser nuevo envio si es devolucion devuelve idTramite 
@@ -138,7 +107,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             {                
                 $tareasDatos[] = array('tramiteDetalle'=>$wfd->getTramiteDetalle());
             }       
-            //dump($tareasDatos[1]['tramiteDetalle']->getObs());die;
+           
             $datosParticipante = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('ei')
                                 ->select('e,ei')
                                 ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'with', 'ei.estudiante = e.id')
@@ -181,7 +150,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                     where sia.gestion_tipo_id = ".$gestionId."::double precision and sia.institucioneducativa_id = ".$institucionEducativaId."
                     order by seti.especialidad");
         $queryEntidad->execute();
-        $objEntidad = $queryEntidad->fetchAll(); //dump($objEntidad);die;
+        $objEntidad = $queryEntidad->fetchAll();
         return $objEntidad; 
     }
     /**
@@ -240,7 +209,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $institucionEducativaId = "";
         }
         $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl($routing))               
+                ->setAction($this->generateUrl($routing))
                 ->add('sie', 'number', array('label' => 'SIE', 'attr' => array('value' => $institucionEducativaId, 'class' => 'form-control','disabled' => 'disabled','placeholder' => 'Código de institución educativa', 'onInput' => 'valSie()', ' onchange' => 'valSieFocusOut()', 'pattern' => '[0-9]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))                
                 ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control', 'onchange' => 'listar_especialidad(this.value)'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) {
@@ -278,7 +247,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
      * Funcion que permite lista estudiantes segun sie, gestion, mencion y nivel
      * 
      */
-    public function certTecRegistroListaAction(Request $request) {//dump($request);die;
+    public function certTecRegistroListaAction(Request $request) {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = new \DateTime();
@@ -299,7 +268,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $nivel = $form['nivel'];
                 $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
                 try {
-                    $entityParticipantes = $this->getEstudiantesPermanente($sie,$gestion,$especialidad,$nivel);  //dump($entityParticipantes);die;  
+                    $entityParticipantes = $this->getEstudiantesPermanente($sie,$gestion,$especialidad,$nivel); 
                     $datosBusqueda = base64_encode(serialize($form));
                     return $this->render('SieProcesosBundle:TramiteCertificacionCursosLargos:listaParticipantes.html.twig', array(
                         'formBusqueda' => $this->creaFormBuscaCentroEducacionPermanente('tramite_certificado_permanente_registro_lista',$sie,$gestion,$especialidad,$nivel,$form['flujotipo'],$form['idTramite'])->createView(),
@@ -496,11 +465,11 @@ class TramiteCertificacionesPermanenteController extends Controller {
                         //VERIFICAMOS SI GUARDO CORRECTAMENTE
                         //$mensaje['dato']= true;
                         if($mensaje['dato'] === true){// $mensaje['idtramite']=123;
-                            $gestionActual=2021;
+                            $gestionActual=new \DateTime();
                             //GUARDAR UN REGISTRO EN LA TABLA CERTIFICADO_PERMANENTE
-                            //dump($institucion_id,$estudianteInscripcionId,$gestionActual,$especialidad,$nivel,$mensaje['idtramite']);die;
+                           
                             $mensajeCertificadoPermanente = $this->guardaCertificadopermanente($institucion_id,$estudianteInscripcionId,$gestionActual,1,$especialidad,$nivel,$mensaje['idtramite'],'','',1);
-                           // dump($mensajeCertificadoPermanente);die;
+                         
                             if($mensajeCertificadoPermanente['dato']=== true){
                                 $nombre = $estudianteInscripcion->getEstudiante()->getNombre();
                                 $paterno = $estudianteInscripcion->getEstudiante()->getPaterno();
@@ -529,8 +498,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                         }else{
                             $respuesta = 0;
                             $msg = $mensaje['msg'];
-                        }
-                        //return  new JsonResponse(array('estado' => $respuesta, 'msg' => $msg));
+                        }                       
                     }
                     $institucioneducativaNombre = $institucioneducativa->getInstitucioneducativa();
                     return $this->render('SieProcesosBundle:TramiteCertificacionCursosLargos:comprobanteTramite.html.twig', array('lista'=>$lista,
@@ -615,7 +583,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
      * FUNCION QUE REGISTRA EL TRAMITE NUEVO EN LA TABLA DE CERTIFICADO_PERMANENTE
      */
     function guardaCertificadopermanente($idInstitucion,$idEstudianteInscripcion,$idGestion,$estado,$idMencion,$idNivel,$idTramite,$nroCertificado,$obs,$caso){
-        //dump($idInstitucion,$idEstudianteInscripcion,$idGestion,$estado,$idMencion,$idNivel,$idTramite,$nroCertificado,$obs);die;
+       
         $em = $this->getDoctrine()->getManager();
         if( $idInstitucion || $idEstudianteInscripcion || $idMencion || $idNivel )
         {   
@@ -635,8 +603,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             }else{
                 $obs='';
             }
-        }
-        //dump("dasd");die;
+        }    
         
         switch ($caso){
             case 1: //Director                    
@@ -697,10 +664,6 @@ class TramiteCertificacionesPermanenteController extends Controller {
                     return $mensaje;
                 break;    
         }
-       
-          
-
-
     }
 
     /**
@@ -753,7 +716,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         ->orderBy("td.flujoProceso")
         ->getQuery()
         ->getResult();
-        $tareasDatos = array(); dump($tareasDatos);
+        $tareasDatos = array();
         if($tareasDatos){
             foreach($wfdatos as $wfd)
             {                
@@ -761,7 +724,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             }
             $obs=$tareasDatos[3]['tramiteDetalle']->getObs();
         }$obs = empty($obs)?'':$obs;
-       // dump($obs);die;
+    
         return $this->render('SieProcesosBundle:TramiteCertificacionCursosLargos:formularioDepartamento.html.twig', array(
             'datosParticipante'=>$datosParticipante[1],
             'datosInscripcionParticipante'=>$datosParticipante[0],
@@ -815,7 +778,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             }
         }
         // OBTENEMOS LA TAREA ACTUAL Y SIGUIENTE
-        $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite'); //dump($tarea);
+        $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite'); 
         $tareaActual = '';
         $tareaSiguienteSi = '';
         $tareaSiguienteNo = '';
@@ -828,12 +791,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $tareaSiguienteNo = $t['tarea_siguiente'];
             }
         }
-        /* dump("*****PRIMERA TAREA ***");
-        dump($tarea, $varevaluacion);
-        dump($tareaActual);
-        dump($tareaSiguienteSi);
-        dump($tareaSiguienteNo);
-        dump($this->session->get('userId')); */
+       
         $idGestion=$sesion->get('currentyear'); //gestion actual        
         $mensaje = $this->get('wftramite')->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tareaActual,$tabla,$id_tabla,$observacion,$varevaluacion,$idTramite,$datos,'',$lugarTipoDistrito_id);        
         if ($varevaluacion==='SI'){
@@ -964,7 +922,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
 
      //NACIONAL
      //====================FORMULARIO NACIONAL===========================
-    public function formularioNacionalAction(Request $request){ //dump($request);die;
+    public function formularioNacionalAction(Request $request){ 
         $em = $this->getDoctrine()->getManager();
         $idTramite = $id = $request->get('id');
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
@@ -1047,13 +1005,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             if ($t['condicion'] == 'NO') {
                 $tareaSiguienteNo = $t['tarea_siguiente'];
             }
-        }//dump($tareaSiguienteSi,$tareaSiguienteNo);die;
-        /* dump("*****PRIMERA TAREA ***");
-        dump($tarea, $varevaluacion);
-        dump($tareaActual);
-        dump($tareaSiguienteSi);
-        dump($tareaSiguienteNo);
-        dump($this->session->get('userId')); */
+        }
         
         $mensaje = $this->get('wftramite')->guardarTramiteEnviado($usuario,$rol,$flujotipo,$tareaActual,$tabla,$id_tabla,'',$varevaluacion,$idTramite,json_encode($datos, JSON_UNESCAPED_UNICODE),'',$lugarTipoDistrito_id);
         if($mensaje['dato']=== true){
@@ -1176,7 +1128,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         if($institucionEducativaId==0){
             $institucionEducativaId = "";
         }
-        //dump()
+       
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl($routing))                
                 ->add('sie', 'number', array('label' => 'SIE', 'attr' => array('value' => $institucionEducativaId, 'class' => 'form-control', 'placeholder' => 'Código de institución educativa', 'onInput' => 'valSie()', ' onchange' => 'valSieFocusOut()', 'pattern' => '[0-9]{6,8}', 'maxlength' => '8', 'autocomplete' => 'on', 'style' => 'text-transform:uppercase')))
@@ -1294,7 +1246,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         return $msg;
     }
     
-    public function imprimirCertificadoAction(Request $request){//dump($request);die;
+    public function imprimirCertificadoAction(Request $request){
          //RECUPERAMOS LOS DATOS DEL FORMULARIO
         $em = $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
@@ -1311,7 +1263,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $queryMaestroUE =  $this->datosDirector($sie,$gestionId);
         //RECUPERAMOS LOS DATOS DEL LUGAR FECHA INICIO - FIN DEL CURSO LARGO
         $datosCurso = $this->datosCurso($sie,$gestionId,$idNivel,$idMencion);
-        //dump($datosCurso);die;
+       
       
         $pdf = $this->container->get("white_october.tcpdf")->create(
            'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
@@ -1384,7 +1336,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'with', 'ei.estudiante = e.id')
             ->where('ei.id='.$item['idinscripcion'])
             ->getQuery()
-            ->getResult(); //dump($item['']);die;
+            ->getResult(); 
            $ci = $datosParticipante[0]['carnetIdentidad'].($datosParticipante[0]['complemento'] == '' ? '' : '-'.$datosParticipante[0]['complemento']);
            $pdf->SetFont('helvetica', '', 10);
            $pdf->Text(23, 62, 'C.I.'.$ci);
@@ -1441,7 +1393,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             //Se cambia el estado a 3 = ENTREGADO
             $nroCertificado = 666;
             $respuesta = $this->guardaCertificadopermanente('','',$gestionId,3,'','',$item['idtramite'],$nroCertificado,'',2);
-            //dump($respuesta);die;
+           
                 
            
        }// FIN DEL FOR 
@@ -1505,7 +1457,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         ->orderBy("mi.cargoTipo")
         ->getQuery()
         ->getSingleResult();
-     //dump($queryMaestroUE['maestro']);die;
+   
      return   $queryMaestroUE;   
     }
     //COMPROBANTES PARA DIRECTOR DE TRAMITES
@@ -1587,7 +1539,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'with', 'ei.estudiante = e.id')
                 ->where('ei.id='.$item['idinscripcion'])
                 ->getQuery()
-                ->getResult(); //dump($item['']);die;
+                ->getResult();
                 $ci = $datosParticipante[0]['carnetIdentidad'].($datosParticipante[0]['complemento'] == '' ? '' : '-'.$datosParticipante[0]['complemento']);
                 $contenido .= '<tr>
                     <td>'.($index + 1).'</td>
@@ -1612,7 +1564,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf->Output("Comprobante.pdf", 'I');
         return true;
     }
-    public function rptComprobanteDirectorDevueltoAction(Request $request){// dump($request);die;
+    public function rptComprobanteDirectorDevueltoAction(Request $request){
        //RECUPERAMOS LOS DATOS DEL TRAMITE INICIADO
        $em = $this->getDoctrine()->getManager();
        $sie = $request->get('sie');
@@ -1716,7 +1668,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                ->innerJoin('SieAppWebBundle:Estudiante', 'e', 'with', 'ei.estudiante = e.id')
                ->where('ei.id='.$request->get('idInscripcion'))
                ->getQuery()
-               ->getResult(); //dump($item['']);die;
+               ->getResult();
                $ci = $datosParticipante[0]['carnetIdentidad'].($datosParticipante[0]['complemento'] == '' ? '' : '-'.$datosParticipante[0]['complemento']);
                $contenido .= '<tr>
                    <td> 1 </td>
@@ -1745,7 +1697,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
     }
     //REPORTES ESTADISTICOS A NIVEL (CENTRO DEPARTAMENTO NACIONAL)
     public function CertificacionesEstadisticosAction(Request $request){
-        $sesion = $request->getSession();
+        $sesion = $request->getSession(); 
         $id_usuario = $sesion->get('userId');
         $em = $this->getDoctrine()->getManager();
         $gestionId = $this->session->get('currentyear');//GESTION ACTUAL
@@ -1766,7 +1718,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $chartGenero= $this->chartPie($entityEstadisticaGenero[1],"Certificados emitidos según genero",$gestionId,"Participantes","chartContainerGenero");
         }else{$chartGenero='';}
         //Totales de certificados entregados por departamento
-        $totalesCertifEntregadosDepartamento = $this->buscaSubEntidadRolEspecial($idRol,$gestionId,$codigo); //dump($totalesCertifEntregadosDepartamento );die;
+        $totalesCertifEntregadosDepartamento = $this->buscaSubEntidadRolEspecial($idRol,$gestionId,$codigo);
         if(count($totalesCertifEntregadosDepartamento)>0 and isset($totalesCertifEntregadosDepartamento)){
             $totalgeneral=0;
             foreach ($totalesCertifEntregadosDepartamento as $key => $dato) {
@@ -1780,8 +1732,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $totalesCertifEntregadosDepartamento = '';
         }
         //Totales de certificados por estado 1=Iniciados,2=consluidos,3=entregados
-        $totalCertifPorEstados = $this->buscarCertificadoEstados($gestionId,$idRol,$codigo);
-       // dump($totalCertifPorEstados[1]);die;
+        $totalCertifPorEstados = $this->buscarCertificadoEstados($gestionId,$idRol,$codigo);       
         if($totalCertifPorEstados){
             $chartEstado= $this->chartSemiPieDonut3d($totalCertifPorEstados[1],"Trámite de certificados según estado",$gestionId,"Participantes","chartContainerEstado");
         }else{$chartEstado='';}
@@ -1808,7 +1759,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         );
     }
 
-    public function datosCertificacionesEstadisticosAction(Request $request){// dump($request);die;
+    public function datosCertificacionesEstadisticosAction(Request $request){
         $sesion = $request->getSession();
         $idRol = $sesion->get('roluser');
         $form = $request->get('form');
@@ -1823,7 +1774,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             }else{
                 $codigo = 0;//NIVEL DEPARTAMENTAL // PENDIENTE
             }
-        } //dump($codigo,$idRol,$gestion);die;
+        }
         $area = 0;
         $entityEstadisticaGenero = $this->buscaEstadisticaPermanenteCertificadosAreaRol($codigo,$idRol,$gestion);
         $chartGenero= $this->chartPie($entityEstadisticaGenero[1],"Certificados emitidos según genero",$gestion,"Participantes","chartContainerGenero");
@@ -1841,7 +1792,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             }
         } else {
             $reportesEntregados = null;
-        } //dump($reportesEntregados);die;
+        }
         return $this->render('SieProcesosBundle:TramiteCertificacionCursosLargos:reportesCertificacionPermanente.html.twig', array(
             /* 'infoEntidad'=>$entidad,
             'gestion'=>$gestion,
@@ -1860,7 +1811,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
     /**
      * FUNCION QUE MUESTRA TOTALES POR GENERO SEGUN ROL
      */
-    public function buscaEstadisticaPermanenteCertificadosAreaRol($codigo,$rol,$gestion){
+    public function buscaEstadisticaPermanenteCertificadosAreaRol($codigo,$rol,$gestion){ 
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = $gestion;
@@ -2085,7 +2036,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $aDato[$dato['tipo_id']]['dato'][0] = array('detalle'=>'Total','subdetalle'=>'', 'cantidad'=>$cantidadParcial);
             $aDato[$dato['tipo_id']]['dato'][$dato['id']] = array('detalle'=>$dato['nombre'],'subdetalle'=>$dato['subnombre'], 'cantidad'=>$dato['cantidad']);
         }
-        //dump($aDato);die;
+        
         return $aDato;
     }
     public function chartPie($entity,$titulo,$subTitulo,$nombreLabel,$contenedor) {
@@ -2251,13 +2202,12 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $aDato[$dato['tipo_id']]['dato'][0] = array('detalle'=>'Total','cantidad'=>$totalgeneral);
             $aDato[$dato['tipo_id']]['dato'][$dato['id']] = array('detalle'=>$dato['estado'], 'cantidad'=>$dato['total_certificados']);
         }
-        //dump($aDato);die;
         return $aDato;
     }
     /**
      * Funcion que devuelve los totales de CERTIFICADOS ENTREGADOS A NIVEL NACIONAL
      */
-    public function buscaSubEntidadRolEspecial($rol,$gestion,$area) { //dump($rol,$gestion,$area);die;
+    public function buscaSubEntidadRolEspecial($rol,$gestion,$area) { 
         /*
          * Define la zona horaria y halla la fecha actual
          */
@@ -2350,7 +2300,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         //$rol = $request->get('rol'); // recibir el rol puede ser nacional o deparatamento
         //$gestionId = $request->get('gestion');
         //RECUPERAMOS EL CODIGO DE DEPARTAMENTO
-       // dump($rol);die;
+     
         if($rol == 7){
             $personaId = $this->session->get('personaId');
             $codigoDepartamento = $this->getCodigoDepartamento($rol,$personaId);
@@ -2359,7 +2309,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $codigo=0;
         }        
         //RECUPERAMOS LOS DATOS DE LOS CERTIFICADOS ENTREGADOS POR DEPARATMENTOS      
-        //dump($rol,$gestionId,$codigo);die;
+      
         $queryReportesEntregados =  $this->datosCertificadosEntregados($rol,$gestionId,$codigo);       
         $pdf = $this->container->get("white_october.tcpdf")->create(
             'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
@@ -2410,7 +2360,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf->writeHTML($contenido, true, false, true, false, 'C');
         $pdf->Output("ReposrtesEntregados.pdf", 'I');
     }
-    public function datosCertificadosEntregados($rol, $gestionId,$codigo){ //dump($rol, $gestionId,$codigo);die;
+    public function datosCertificadosEntregados($rol, $gestionId,$codigo){ 
         $em = $this->getDoctrine()->getManager();
         if($rol==8 ){
             $queryEntidad = $em->getConnection()->prepare("
@@ -2447,8 +2397,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             ); 
         }     
         $queryEntidad->execute();
-        $objEntidad = $queryEntidad->fetchAll();
-        //dump($objEntidad);die;
+        $objEntidad = $queryEntidad->fetchAll();       
         return $objEntidad;
     }
     public function getCodigoDepartamento($rol,$personaId){
@@ -2466,7 +2415,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             return $objEntidad[0];
     }
     //REPORTES DE LISTA DE PARTICIPANTES HABILITADOS PARA LA ENTREGA DE CERTIFICADOS
-    public function rptParticipantesHabilitadosNacionalAction(Request $request){ //dump($request);die;    
+    public function rptParticipantesHabilitadosNacionalAction(Request $request){     
             $sesion = $request->getSession();
             $em = $this->getDoctrine()->getManager();
             $gestionId = $this->session->get('currentyear');//GESTION ACTUAL //pendiente de obtener la gestion del formulario
@@ -2517,7 +2466,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $pdf->Cell(0, 8, 'LISTA DE PARTICIPANTES HABILITADOS PARA LA IMPRESIÓN DE CERTIFICADOS - NIVEL MEDIO', 1, 1, "", 'L', 0, '', 0, true);
             //$tramites = json_decode($request->get('datos'), true);
             $habilitados = $this->getHabilitadosImpresion($rol,$gestionId);
-            //dump($habilitados);die;
+           
             $pdf->SetFont('', '', 8);
             $contenido = '<table border="1" cellpadding="1.5">';
             $contenido .= '<tr style="background-color:#ddd;">
