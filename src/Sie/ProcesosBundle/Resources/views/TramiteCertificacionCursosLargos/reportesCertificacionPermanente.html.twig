@@ -68,7 +68,7 @@
                     <div class="panel panel-default shadow">
                         <div class="panel-heading">
                             <div class="pull-left">
-                                <h3 class="panel-title"><i class='fa fa-download'></i> Generar reporte de certificados entregados a nivel Nacional</h3>
+                                <h3 class="panel-title"><i class='fa fa-download'></i> Generar reporte de certificados entregados</h3>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -77,7 +77,7 @@
                               {#  <input type="hidden" name="gestion" value="{{gestion}}"  /> #}                                     
                                 <button type="submit" id="submit"  title="Descargar reporte"><i class="fa fa-file-pdf-o"></i>  Cantidad de certificados entregados </button>
                             </form>
-                            {% if (app.session.get('roluser') == 8 or app.session.get('roluser') == 43) %}
+                            {% if (app.session.get('roluser') == 8) %}
                             <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_lista_habilitados') }}" method="POST">
                               {#  <input type="hidden" name="gestion" value="{{gestion}}"  /> #}                                     
                                 <button type="submit" id="submit"  title="Descargar reporte habilitados"><i class="fa fa-file-pdf-o"></i>  Lista de participantes habilitados para la entrega de certificados </button>
