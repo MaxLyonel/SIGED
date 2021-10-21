@@ -392,9 +392,8 @@ class TramiteCertificacionesPermanenteController extends Controller {
     
     public function certTecRegistroGuardaAction(Request $request) {
         date_default_timezone_set('America/La_Paz');
-        $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = new \DateTime();
         $sesion = $request->getSession();
+        $gestionActual = $this->session->get('currentyear');
         $id_usuario = $sesion->get('userId');
          //validation if the user is logged
          if (!isset($id_usuario)) {
@@ -465,11 +464,9 @@ class TramiteCertificacionesPermanenteController extends Controller {
                         //VERIFICAMOS SI GUARDO CORRECTAMENTE
                         //$mensaje['dato']= true;
                         if($mensaje['dato'] === true){// $mensaje['idtramite']=123;
-                            $gestionActual=new \DateTime();
+                            $gestionActual= $this->session->get('currentyear');
                             //GUARDAR UN REGISTRO EN LA TABLA CERTIFICADO_PERMANENTE
-                           
-                            $mensajeCertificadoPermanente = $this->guardaCertificadopermanente($institucion_id,$estudianteInscripcionId,$gestionActual,1,$especialidad,$nivel,$mensaje['idtramite'],'','',1);
-                         
+                            $mensajeCertificadoPermanente = $this->guardaCertificadopermanente($institucion_id,$estudianteInscripcionId,$gestionActual,1,$especialidad,$nivel,$mensaje['idtramite'],'','',1);                           
                             if($mensajeCertificadoPermanente['dato']=== true){
                                 $nombre = $estudianteInscripcion->getEstudiante()->getNombre();
                                 $paterno = $estudianteInscripcion->getEstudiante()->getPaterno();
