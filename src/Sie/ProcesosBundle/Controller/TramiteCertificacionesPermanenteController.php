@@ -1153,7 +1153,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $nivel = $form['nivel'];
                  //validacion de tuicion sobre el centro
                 $usuarioRol = $this->session->get('roluser');
-                $verTuicionUnidadEducativa = $this->verTuicionUnidadEducativa($id_usuario, $sie, $usuarioRol);//pendiente
+                $verTuicionUnidadEducativa = $this->verTuicionUnidadEducativa($id_usuario, $sie, $usuarioRol);
                 if ($verTuicionUnidadEducativa != ''){
                     $this->session->getFlashBag()->set('newError', array('title' => 'Error', 'message' => $verTuicionUnidadEducativa));
                     return $this->redirect($this->generateUrl('tramite_impresion_certificacion_per'));
@@ -1164,15 +1164,15 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 try {
                     //SE OBTIENE LA LISTA DE PARTICIPANTES CON TRAMITE CONLUIDO
                     $entityParticipantes = $this->getEstudiantesHabilitadosPermanente($sie,$gestion,$especialidad,$nivel);
-                    $datosBusqueda = base64_encode(serialize($form));
+                    //$datosBusqueda = base64_encode(serialize($form));
                     return $this->render('SieProcesosBundle:TramiteCertificacionCursosLargos:listaParticipantesHabilitados.html.twig', array(
                         'formBusqueda' => $this->creaFormBuscaCentroEducacionPermanenteImpresion('tramite_impresion_certificado_permanente_lista_habilitados',$sie,$gestion,$especialidad,$nivel)->createView(),
-                        'titulo' => 'Registro',
-                        'subtitulo' => 'Trámite',
+                       /*  'titulo' => 'Registro',
+                        'subtitulo' => 'Trámite', */
                         'listaParticipante' => $entityParticipantes,
                         'datosCentro' =>$institucioneducativa,
                         'infoAutorizacionCentro' => $sie,
-                        'datosBusqueda' => $datosBusqueda,                       
+                        /* 'datosBusqueda' => $datosBusqueda,  */                      
                         'especialidad'=>$especialidad,
                         'nivel'=>$nivel,
                         'mencionDatos' => $mencionDatos,
