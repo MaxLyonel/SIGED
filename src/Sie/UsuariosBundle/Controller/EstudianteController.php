@@ -37,7 +37,8 @@ class EstudianteController extends Controller
                 'primer_apellido'=>$form['InputPaterno'],
                 'segundo_apellido'=>$form['InputMaterno'],
                 'nombre'=>$form['InputNombre'],
-                'fecha_nacimiento'=>$form['fechaNacimiento']['day'].'-'.$form['fechaNacimiento']['mount'].'-'.$form['fechaNacimiento']['year']
+                'fecha_nacimiento'=>$form['fechaNacimiento']['day'].'-'.$form['fechaNacimiento']['mount'].'-'.$form['fechaNacimiento']['year'],
+                'e'=>1
             );
 
             $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $form['InputCarnet'],$arrParametros,'prod', 'academico');
