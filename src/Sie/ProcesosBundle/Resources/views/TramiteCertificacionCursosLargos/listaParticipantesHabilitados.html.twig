@@ -1,4 +1,4 @@
-{% include 'SieProcesosBundle:TramiteCertificacionCursoslargos:impresionesCertificados.html.twig' %}
+{% extends 'SieProcesosBundle:TramiteCertificacionCursosLargos:impresionesCertificados.html.twig' %}
 {% block contentsearch %}
     {% if listaParticipante is defined  %}
  <div class="container-fluid">    
@@ -110,7 +110,7 @@
     {% endif %}
 {% endblock %}
 {% block javascripts %}
-    
+    {{parent()}}
 <script>
     function imprimirCertificados(){
     let datos_certificado = [];

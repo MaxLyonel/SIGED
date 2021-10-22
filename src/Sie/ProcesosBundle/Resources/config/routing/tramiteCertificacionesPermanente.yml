@@ -71,6 +71,9 @@ tramite_impresion_certificacion_per_reportes:
 tramite_impresion_certificacion_per_reportes_datos:
     path:     /reporte/permanente/reportes/datos
     defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:datosCertificacionesEstadisticos }
+tramite_impresion_certificacion_lista_habilitadosXLS:
+    path:     /reporte/permanente/reportes/datos/xls
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptHabilitadosNacional }
 #REPORTES DE CANTIDAD DE CERTIFICADOS ENTREGADOS
 tramite_impresion_certificacion_entregados_datos:
     path:     /reporte/permanente/reportes/entregados
