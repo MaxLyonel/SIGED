@@ -1803,23 +1803,6 @@ class TramiteCertificacionesPermanenteController extends Controller {
         if($totalCertifPorEstados){
             $chartEstado= $this->chartSemiPieDonut3d($totalCertifPorEstados[1],"Trámite de certificados según estado",$gestionId,"Participantes","chartContainerEstado");
         }else{$chartEstado='';}
-        /* $entityEstadisticaGenero = $this->buscaEstadisticaPermanenteCertificadosAreaRol($codigo,$idRol,$gestion);
-        $chartGenero= $this->chartPie($entityEstadisticaGenero[1],"Certificados emitidos según genero",$gestion,"Participantes","chartContainerGenero");
-        //REPORTES ENTREGADOS SEGUN ROL INGRESADO
-        $reportesEntregados = $this->buscaSubEntidadRolEspecial($idRol,$gestion,$area);
-        if(count($reportesEntregados)>0 and isset($reportesEntregados)){
-            $totalgeneral=0;
-            foreach ($reportesEntregados as $key => $dato) {
-                $totalgeneral=$totalgeneral+ $dato['total_inscrito'];
-            }
-            foreach ($reportesEntregados as $key => $dato) {
-             $reportesEntregados[$key]['total_general'] = $totalgeneral;
-                $reportesEntregados[$key]['gestion'] = $gestion;
-                //$reportesEntregados[$key]['periodo'] = $periodo;
-            }
-        } else {
-            $reportesEntregados = null;
-        } */
         return $this->render('SieProcesosBundle:TramiteCertificacionCursosLargos:reportesCertificacionPermanente.html.twig', array(
             'infoSubEntidad'=>$totalesCertifEntregadosDepartamento,
             'datoGraficoGenero'=>$chartGenero,
@@ -2392,7 +2375,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         //http://127.0.0.1:49787/viewer/frameset?__report=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes%5Clista_habilitados_nacional.rptdesign&__format=html&__svg=true&__locale=es_BO&__timezone=America%2FLa_Paz&__masterpage=true&__rtl=false&__cubememsize=10&__resourceFolder=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes&1828857951
         $urlbase= 'http://127.0.0.1:49787/viewer/frameset?__report=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes%5C';
-        //$this->container->getParameter('urlreportweb')
+        $urlproduccion=$this->container->getParameter('urlreportweb');
         $response->setContent(file_get_contents($urlbase . 'lista_habilitados_nacional.rptdesign&__format=xlsx&Gestion='.$gestion));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
