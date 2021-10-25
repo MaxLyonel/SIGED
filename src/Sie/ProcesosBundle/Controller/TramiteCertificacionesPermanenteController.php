@@ -2547,4 +2547,38 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $objEntidad = $queryEntidad->fetchAll();
             return $objEntidad;
     }
+    //GENERA LLISTA XLS DE HABILITADOS A IMPRESION PARA NACIONAL
+    public function rptGeneraListaHabilitadosAction(Request $request){
+       //RECUPERAMOS LOS DATOS DEL FORMULARIO
+       $em = $this->getDoctrine()->getManager();
+       $sesion = $request->getSession();
+       $sie = $request->get('sie');
+       $centro = $request->get('centro');
+       $mencion = $request->get('mencion');
+       $nivel = $request->get('nivel');
+       $idNivel = $request->get('idnivel');
+       $idMencion = $request->get('idMencion');
+       $gestion = $this->session->get('currentyear');
+       //cambiar estado a 3 = entregado
+       $tramites = json_decode($request->get('datos_certificado'), true); dump($tramites);die;       
+        foreach($tramites as $index => $item) {
+            $respuesta = $this->guardaCertificadopermanente('','',$gestion,3,'','',$item['idtramite'],$nroCertificado,'',2);
+        }
+      
+       //Generar listado en xls
+        $arch = 'Lista_habilitados_Medio_'.$mencion.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/vnd.ms-excel');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        //http://127.0.0.1:49787/viewer/frameset?__report=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes%5Clista_habilitados_nacional.rptdesign&__format=html&__svg=true&__locale=es_BO&__timezone=America%2FLa_Paz&__masterpage=true&__rtl=false&__cubememsize=10&__resourceFolder=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes&1828857951
+        $urlbase= 'http://127.0.0.1:49787/viewer/frameset?__report=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes%5C';
+        $urlproduccion=$this->container->getParameter('urlreportweb');
+        $response->setContent(file_get_contents($urlbase . 'lista_habilitados_nacional.rptdesign&__format=xlsx&Gestion='.$gestion));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+         
+    }
 }

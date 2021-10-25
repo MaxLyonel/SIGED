@@ -81,6 +81,10 @@ tramite_impresion_certificacion_entregados_datos:
 tramite_impresion_certificacion_lista_habilitados:
     path:     /reporte/permanente/habilitados/impresion
     defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptParticipantesHabilitadosNacional }
+#GENERA LISTA DE HABILITADOS NACIONAL
+tramite_genera_lista_habilitados:
+    path:     /reporte/permanente/genera/lista/habilitados/
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptGeneraListaHabilitados }
 
     
 
