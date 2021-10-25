@@ -840,7 +840,8 @@ class TramiteAddModCalificationController extends Controller {
                     $request->getSession()
                             ->getFlashBag()
                             ->add('errorTAMC', 'El trámite no puede ser aprobado, porque la solicitud modificará el estado de matrícula de la inscripción a promovido, pero el estudiante ya tiene otra inscripción del mismo nivel y grado con estado promovido o efectivo.');
-                    return $this->redirectToRoute('tramite_modificacion_calificaciones_recepcion_verifica_departamento', array('id'=>$idTramite, 'tipo'=>'idtramite'));
+                    //return $this->redirectToRoute('tramite_modificacion_calificaciones_recepcion_verifica_departamento', array('id'=>$idTramite, 'tipo'=>'idtramite'));
+                    return $this->redirectToRoute('tramite_add_mod_cal_recepcion_verifica_departamento', array('id'=>$idTramite, 'tipo'=>'idtramite'));
                 }
             }
             /*=====  End of VERIFICACION  ======*/
