@@ -1,0 +1,57 @@
+Sie\AppWebBundle\Entity\PreinsEstudianteInscripcionJustificativo:
+    type: entity
+    table: preins_estudiante_inscripcion_justificativo
+    indexes:
+        IDX_FACE0DAAD06118ED:
+            columns:
+                - preins_justificativo_tipo_id
+        IDX_FACE0DAAE215A75A:
+            columns:
+                - preins_estudiante_inscripcion_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaInscripcion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_inscripcion
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            default: now()
+            column: fecha_registro
+        obs:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+    manyToOne:
+        preinsJustificativoTipo:
+            targetEntity: PreinsJustificativoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                preins_justificativo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        preinsEstudianteInscripcion:
+            targetEntity: PreinsEstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                preins_estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
