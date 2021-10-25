@@ -200,14 +200,12 @@ class EstudianteController extends Controller
         $em->getConnection()->beginTransaction();
         $data = $request->request->all();
         $form = $data['busquedaDatosTotForm'];
-        // dump($form);die;
         $response = new JsonResponse();
         //check if the SIE is on ALTERNATIVA
         $swOnAlternativa = $this->validateOnAlternativa($form);
         if($swOnAlternativa && $form['InputCi']==''){
           return $response->setData(array('error'=>true,'mensaje' => '¡Proceso detenido! Los campos Carnet de Identidad y/o complemento son requeridos!')); 
         }
-
         //dump($form); die;
         $sieentiy = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['Sie']);
         if ($sieentiy){
@@ -219,7 +217,8 @@ class EstudianteController extends Controller
                 // Generamos el rude del estudiante
                 $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
                 $query->bindValue(':sie', $form['Sie']);            
-                $query->bindValue(':gestion', date('Y'));
+                //$query->bindValue(':gestion', date('Y'));
+                $query->bindValue(':gestion', $form['Gestion']);
                 $query->execute();
                 $codigorude = $query->fetchAll();
                 
