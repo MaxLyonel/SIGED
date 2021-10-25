@@ -308,3 +308,9 @@ sie_academico_UpdatePlaceDataStudent:
     resource: "@SieHerramientaBundle/Resources/config/routing/updateplaceDatastudent.yml"
     prefix:   /sie/updateplacedatastudent
 
+sie_regularizacion_IncoherenciasExterior:
+    resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionincoherenciasexterior.yml"
+    prefix:   /sie/regularizacionGPIncoherenciasEXterior
+
+
+

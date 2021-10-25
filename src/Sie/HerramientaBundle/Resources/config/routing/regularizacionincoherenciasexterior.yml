@@ -1,0 +1,280 @@
+#selected_students_index:
+#    path:     /
+#    defaults: { _controller: SieHerramientaBundle:SelectedStudents:index }
+#
+#selected_students_buscar:
+#    path:     /buscar
+#    defaults: { _controller: SieHerramientaBundle:SelectedStudents:buscar }
+#    options:
+#         expose: true
+#
+#selected_students_registryStudent:
+#    path:     /registryStudent
+#    defaults: { _controller: SieHerramientaBundle:SelectedStudents:registryStudent }
+#    options:
+#         expose: true         
+#
+#selected_students_loadData:
+#    path:     /loadData
+#    defaults: { _controller: SieHerramientaBundle:SelectedStudents:loadData }
+#    options:
+#         expose: true
+#
+#selected_students_removeStudent:
+#    path:     /removeStudent
+#    defaults: { _controller: SieHerramientaBundle:SelectedStudents:removeStudent }
+#    options:
+#         expose: true         
+#
+#selected_students_closeRegistry:
+#    path:     /closeRegistry
+#    defaults: { _controller: SieHerramientaBundle:SelectedStudents:closeRegistry }
+#    options:
+#         expose: true#
+
+#Dpartamental
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getRegistrarHistorial: #enlace a la pagina de registro de calificaciones
+    path:     /departamental/registrar-historial
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:getRegularizacionRegistrarHistorial }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_postRegistrarHistorial: #enlace para enviar los datos de .la solicitud a la distrital
+    path:     /departamental/enviar-solicitud
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:postRegularizacionRegistrarHistorial }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_buscarEstudiante:
+    path:     /departamental/buscar-estudiante
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:regularizacionBuscarEstudiante }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_buscarNivel:
+    path:     /departamental/buscar-nivel/{gestion}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:regularizacionBuscarNivel, gestion:-1}
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_buscarGrado:
+    path:     /departamental/buscar-grado/{gestion}/{nivel}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:regularizacionBuscarGrado,gestion:-1,nivel:-1 }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_crearInscripcion:
+    path:     /departamental/crear-inscripcion
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:regularizacionCrearInscripcion }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_borrarInscripcion:
+    path:     /departamental/borrar-inscripcion/{id}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:regularizacionBorrarInscripcion }
+    options:
+        expose: true
+
+#regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getMaterias:
+#    path:     /departamental/crear-inscripcion/{id}
+#    defaults: { _controller: SieHerramientaBundle:Regularizacion_EstudiantesPBIncoherenciaExterior:getRegularizacionMaterias }
+#    options:
+#        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_registrarNota:
+    path:     /departamental/crear-inscripcion
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:regularizacionRegistrarNota }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getSolicitudeRecibidasDepartamental: #enlace a la pagina de solicitudes recibidas
+    path:     /departamental/solicitudes-recibidas
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:getRegularizacionSolicitudesRecibidasDepartamental }
+    options:
+        expose: true
+
+regularizacion_IncoherenciasExterior_postDetalleSolicitudesRecibidasDepartamentalPorConcluir: #enlace a la pagina de con detalle de solicitudes recibidas de un tramite que ya paso por la UE
+    path:     /departamental/detalle-solicitudes-recibidas/por-concluir
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:postRegularizacionDetalleSolicitudesRecibidasDepartamentalPorConcluir }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_postEnviarSolicitudDepartamentalPorConcluir: #enlace para enviar los datos de la solicitud a la departamental, una vez que haya pasado por la departamental, distrial, ue y distrital y este en la etapa acepatcion o rechazo
+    path:     /departamental/aprobar-rechazar-solicitud
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:postEnviarSolicitudDepartamentalPorConcluir }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_verificarInscripcion: #enlace para enviar los datos de la solicitud a la departamental, una vez que haya pasado por la departamental, distrial, ue y distrital y este en la etapa acepatcion o rechazo
+    path:     /departamental/verificar-inscripcion
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:verificarInscripcion }
+    options:
+        expose: true
+
+#Distrital
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getSolicitudeRecibidasDistrital: #enlace a la pagina de solicitudes recibidas
+    path:     /distrital/solicitudes-recibidas
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:getRegularizacionSolicitudesRecibidasDistrital }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoExterior_postDetalleSolicitudeRecibidasDistrital: #enlace a la pagina de con detalle de solicitudes recibidas
+    path:     /distrital/detalle-solicitudes-recibidas
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:postRegularizacionDetalleSolicitudesRecibidasDistrital }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_postEnviarSolicitudUnidadEducativa: #enlace para enviar los datos de .la solicitud a la unidad educativa
+    path:     /distrital/enviar-solicitud
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:postEnviarSolicitudUnidadEducativa }
+    options:
+        expose: true
+
+#regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_postDetalleSolicitudeRecibidasDistritalPorConcluir: #enlace a la pagina de con detalle de solicitudes recibidas de un tramite que ya paso por la UE
+#    path:     /distrital/detalle-solicitudes-recibidas/por-concluir
+#    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:postRegularizacionDetalleSolicitudesRecibidasDistritalPorConcluir }
+#    options:
+#        expose: true
+
+regularizacion_estudiantesPostBachilleratoExt_postDetalleSolicitudeRecibidasDistritalPorConcluir: #enlace a la pagina de con detalle de solicitudes recibidas de un tramite que ya paso por la UE
+    path:     /distrital/detalle-solicitudes-recibidas/por-concluir
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:postRegularizacionDetalleSolicitudesRecibidasDistritalPorConcluir }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_buscarUE:
+    path:     /distrital/buscar-unidad-educativa
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:regularizacionBuscarUE }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_listarUEValidas:
+    path:     /distrital/listar-unidades-educativas-validas
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:regularizacionListarUEValidas }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_postEnviarSolicitudDistritalPorConcluir: #enlace para enviar los datos de la solicitud a la departamental, una vez que haya pasado por la departamental, distrial, ue y distrital y este en la etapa final de la solicitud
+    path:     /distrital/enviar-solicitud-nuevamente
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:postEnviarSolicitudDistritalPorConcluir }
+    options:
+        expose: true
+
+
+#UE
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getSolicitudeRecibidasUE: #enlace a la pagina de solicitudes recibidas
+    path:     /ue/solicitudes-recibidas
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:getRegularizacionSolicitudesRecibidasUE }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_postDetalleSolicitudeRecibidasUE: #enlace a la pagina de con detalle de solicitudes recibidas
+    path:     /ue/detalle-solicitudes-recibidas
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:postRegularizacionDetalleSolicitudesRecibidasUE }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getDetalleInscripcion:
+    path:     /ue/obtener-detalle-inscripcion
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:getDetalleInscripcion }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getMaterias:
+    path:     /ue/obtener-materias
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:getMaterias }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getTurnos:
+    path:     /ue/obtener-turnos
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:getTurnosApartirDeParalelo }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getParalelos:
+    path:     /ue/obtener-paralelos
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:getParalelosApartirDeTurno }
+    options:
+        expose: true
+
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_postEnviarSolicitudDistrital: #enlace para enviar los datos de .la solicitud a la unidad educativa
+    path:     /ue/enviar-solicitud
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:postEnviarSolicitudDistrital }
+    options:
+        expose: true
+
+
+#Rutas genericas para todas la instancias
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getSolicitudes: #Obtiene todas las solicitudes, dependiento el tipo
+    path:     /todas/solicitudes/{tipo}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:getSolicitudes }
+    options:
+        expose: true
+
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getSolicitudesDepartamental: #Obtiene todas las solicitudes de la departamental, dependiento el tipo
+    path:     /departamental/solicitudes/{tipo}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:getSolicitudesDepartamental }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getSolicitudesDistrital: #Obtiene todas las solicitudes de la departamental, dependiento el tipo
+    path:     /distrital/solicitudes/{tipo}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:getSolicitudesDistrital }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_getSolicitudesUE: #Obtiene todas las solicitudes de la departamental, dependiento el tipo
+    path:     /eu/solicitudes/{tipo}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:getSolicitudesUE }
+    options:
+        expose: true
+
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_mostrarAdjunto: #Obtiene todas las solicitudes de la departamental, dependiento el tipo
+    path:     /mostrar-adjunto/{tramite}/{archivo}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:mostrarAdjunto }
+    options:
+        expose: true
+
+
+
+#REPORTES
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_reporteDepartamental: 
+    path:     /departamental/reporte/{idtramite}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:reporteDepartamental}
+    options:
+        expose: true
+
+#regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_reporteDistrital: 
+#    path:     /distrital/reporte/{tramite}
+#    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:reporteDistrital }
+#    options:
+#        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_reporteUE: 
+    path:     /ue/reporte/{idtramite}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:reporteUE }
+    options:
+        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_reporteUEActaSupletoria: 
+    path:     /ue/reporte/acta-supletoria/{idtramite}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:reporteUEActaSupletoria }
+    options:
+        expose: true
+
+#regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_reporteDistritalPorConcluir: 
+#    path:     /distrital/reporte-por-concluir/{tramite}
+#    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:reporteDistritalPorConcluir }
+#    options:
+#        expose: true
+
+regularizacion_estudiantesPostBachilleratoIncoherenciasExterior_reporteDepartamentalPorConcluirConclusionEstudios: 
+    path:     /departamental/reporte-por-concluir/conclusion-estudios/{idtramite}
+    defaults: { _controller: SieHerramientaBundle:RegularizacionEstudiantesPBIncoherenciasExterior:reporteDepartamentalPorConcluirConclusionEstudios }
+    options:
+        expose: true
+        
