@@ -1,0 +1,21 @@
+preinscription_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:PreInscription:index }
+
+preinscription_cargar:
+    path:     /cargar
+    defaults: { _controller: SieAppWebBundle:PreInscription:cargar }
+    options:
+         expose: true
+
+preinscription_buscar:
+    path:     /buscar
+    defaults: { _controller: SieAppWebBundle:PreInscription:buscar }
+    options:
+         expose: true
+
+preinscription_registryClaim:
+    path:     /registryClaim
+    defaults: { _controller: SieAppWebBundle:PreInscription:registryClaim }
+    options:
+         expose: true         

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>PreInscription</title>
+	<link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+	<link href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
+	<style>
+		body{
+			background: #EEEEEE;
+			margin: 0;
+			padding: 0;
+		}
+		[v-cloak]{
+			display: none;
+		}
+		.jupper{
+			text-transform: uppercase;
+		}
+		.titulo{
+			margin-bottom: 15px;
+		}
+		.caja{
+			background: #FFFFFF;
+			padding: 10px;
+			width: 800px;
+			margin-top: 50px;
+			/*margin-left: auto;*/
+			/*margin-right: auto;*/
+		}
+		.caja h2{
+			text-align: center;
+		}
+		.tab-pane{
+			padding-top: 10px;
+		}
+		.secundario{
+			color:#CCCCCC;
+			font-style: italic;
+			font-size: 0.8em;
+		}
+		.respuesta p{
+			margin-bottom: 10px;
+		}
+		.respuesta h3{
+			text-align: center;
+			margin-bottom: 15px;
+		}
+		.respuesta .botones{
+			text-align: center;
+		}
+		.cortina{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background: #CCCCCC;
+			opacity: 0.6;
+			z-index: 100;
+			text-align: center;
+			font-size: 1.5em;
+			padding-top: 200px;
+		}
+		.form-control .popover {
+  			width:600px;
+  			height:250px;
+		}
+
+		.popover {
+		  	/*max-width: 700px;*/
+		  	width: 600px;
+		  	background: #EFF7FF;
+		  	color: #11BCFB;
+		}
+		.subtitulo{
+			font-size: 1.2em;
+		}
+		article { display: block; text-align: left; width: 650px; margin: 0 auto; }
+	</style>
+</head>
+<body>
+	<div id="app" v-cloak>
+		<div v-if="cortina" class="cortina">
+			{# <i class="fa fa-refresh fa-spin"></i> Procesando... #}
+		</div>
+		<div class="container">
+
+			<div class="row">
+				  
+				<div class="col-md-6 col-xs-12 col-md-offset-3 caja">
+					<h2 class="titulo">Pre-Inscription </h2>
+					<div  class="contenido">
+						<p class="subtitulo">FORMULARIO DE PRE INSCRIPCIÓN PARA EL SORTEO DE PLAZAS EN UNIDADES EDUCATIVAS DE ALTA DEMANDA PARA EDUCACIÓN INICIAL Y PRIMER AÑO DE ESCOLARIDAD DE EDUCACIÓN PRIMARIA Y SECUNDARIA</p>
+						<p></p>
+						<div class="row">
+							<div class="col-md-12">
+								<div role="tabpanel">
+									<!-- Nav tabs -->
+									<ul class="nav nav-tabs" role="tablist">
+										<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
+											<a role="tab" data-toggle="tab">Datos Personales Padre/Madre/Tutor</a>
+										</li>
+									</ul>
+									<!-- Tab panes -->
+									<div class="tab-content">
+										<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+											<div class="row">
+												<div class="form-group col-md-4">
+													<label>Carnet</label>
+													<input type="text" v-model="dataParent.carnet" class="form-control jupper" maxlength="10" v-on:keypress="numerico"  :disabled="swdata ? '':disabled">
+												</div>
+												<div class="form-group col-md-4">
+													<label>Complemento <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El complemento consta de 2 dígitos que se usan para diferenciar números de carnet idénticos, no es lo mismo que el lugar de expedición, por favor NO colocar abreviaturas de departamentos" data-trigger="hover"></i> </label>
+													<input type="text" v-model="dataParent.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico" :disabled="swdata ? '':disabled">
+												</div>
+												<div class="form-group col-md-4">
+													<label>Fecha Nacimiento </label>
+													<input type="text" v-model="dataParent.fechaNacimiento" class="form-control jupper" maxlength="10" v-on:keypress="" :disabled="swdata ? '':disabled">
+												</div>		
+											</div>
+											<div class="row">
+												<div class="form-group col-md-4">
+													<label>Paterno</label>
+													<input type="text" v-model="dataParent.paterno" class="form-control jupper" maxlength="15" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
+												</div>
+												<div class="form-group col-md-4">
+													<label>Materno </i> </label>
+													<input type="text" v-model="dataParent.materno" class="form-control jupper" maxlength="15" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
+												</div>
+												<div class="form-group col-md-4">
+													<label>Nombre(s) </label>
+													<input type="text" v-model="dataParent.nombre" class="form-control jupper" maxlength="20" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
+												</div>		
+											</div>
+											<div class="row">
+												<div class="form-group col-md-4">
+													<div class="form-check">
+													<input class="form-check-input" v-model="dataParent.forign" type="checkbox" value="" id="flexCheckIndeterminate" :disabled="swdata ? '':disabled">
+													<label class="form-check-label" for="flexCheckIndeterminate">
+														Extranjero?
+													</label>
+													</div>	
+												</div>
+											</div>																					
+										</div>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+						<br>
+
+						
+
+						<div class="col-md-12 text-center" v-show="!swdata">
+							<button type="button" class="btn btn-primary" @click="consultar">Verificar </button>
+						</div>
+					</div>
+
+					<div v-if="swdata" class="respuesta">
+
+						<div class="alert" :class="[{'alert-success':datos.status == 'success'}, {'alert-warning':datos.status == 'warning'}]">
+							Segip: Datos Validados correctamente...<br>														
+						</div>
+
+						<form>
+							<div class="panel panel-default">
+								<div class="panel-heading">Dirección de residencia del padre, madre o tutor</div>
+								<div class="panel-body">
+									<div class="form-row">
+										<div class="form-group col-md-12">
+										<label for="job">Dirección de su residencia (Zona/avenida/calle/N°/teléfono):</label>
+										<input type="text" class="form-control" id="job">
+										</div>
+									
+									</div>							
+								</div>
+							</div>
+
+							<div class="panel panel-default">
+								<div class="panel-heading"> Dirección actual del trabajo del padre, madre o tutor </div>
+								<div class="panel-body">
+																
+										<div class="form-row">
+											<div class="form-group col-md-6">
+											<label for="job">Nombre del lugar de trabajo:</label>
+											<input type="text" class="form-control" id="job">
+											</div>
+											<div class="form-group col-md-6">
+											<label for="Municipio">Municipio:</label>
+											<input type="text" class="form-control" id="Municipio">
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-6">
+											<label for="job">Zona/Villa:</label>
+											<input type="text" class="form-control" id="job">
+											</div>
+											<div class="form-group col-md-6">
+											<label for="Municipio">Avenida/Calle/N°:</label>
+											<input type="text" class="form-control" id="Municipio">
+											</div>
+										</div>	
+										<div class="form-row">
+											<div class="form-group col-md-6">
+												<label for="job">Teléfono/Celular:</label>
+												<input type="text" class="form-control" id="job">
+											</div>
+											<div class="form-group col-md-6">
+												<label for="Municipio">Avenida/Calle/N°:</label>
+												<input type="text" class="form-control" id="Municipio">
+											</div>
+										</div>
+										<div class="form-row">
+											<div class="form-group col-md-6">
+												<button type="button" class="btn btn-primary" @click="saveAddrress">Registrar </button>
+											</div>
+
+										</div>
+															
+								</div>
+							</div>						
+						</form>						
+						
+						<div>
+
+				
+						</div>
+
+					</div>
+
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+	<script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+	<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+	<script src="{{asset('js/inputmask.js')}}"></script>
+	<script>
+		$(function () {
+			
+		})
+
+		var app = new Vue({
+		    delimiters: ['${', '}'],
+		    el: '#app',
+		    data: {
+		    	state: {isSending: false},
+		    	errores: [],
+		    	opcion: 1,
+		    	niveles: [],
+		    	grados: [],
+		    	gradosDisponibles: [],
+		    	apoderado: {
+		    		carnet: '',
+		    		complemento: ''
+		    	},
+				dataParent:{
+					carnet: '',
+		    		complemento: '',
+		    		nombre: '',
+		    		paterno: '',
+		    		materno: '',
+		    		fechaNacimiento: '',
+				},
+		    	estudiante: {
+		    		/*codigoRude: '4073040820205783 809700692017061 718500012020019',*/
+					codigoRude: '',
+					codigoRudeId: '',
+		    		carnet: '',
+		    		complemento: '',
+		    		nombre: '',
+		    		paterno: '',
+		    		materno: '',
+		    		fechaNacimiento: '',
+		    		nivel: '',
+					estId: '',
+		    		grado: ''
+		    	},
+				dataClaim: {persona:{swchangeTutor:false,paterno:'',materno:'',nombre:''}, student:{}} ,
+				DBTiposReclamos: {},
+				DBObservationsStudent: {},
+				DBTutorInfo: {},
+		    	validado: false,
+		    	cortina: false,
+				showFormReclamo:false,
+		    	datos: [],
+
+				status:'',
+                code:'',
+                message:'',                
+                swdata:'',
+				disabled:false,            
+                
+		    	
+		    },
+		    mounted(){
+
+		    },
+		    methods: {
+		    	actualizarGrados(){
+		    		if (this.estudiante.nivel == 11) {
+		    			this.estudiante.grado = '1';
+		    			this.gradosDisponibles = [];
+		    			console.log(this.grados);
+		    			let me = this;
+		    			$.each(this.grados, function(index, val) {
+		    				console.log(val);
+		    				if (val.id == 1 || val.id == 2) {
+		    				 	me.gradosDisponibles.push(me.grados[index]);
+		    				}
+		    			});
+		    		}else{
+		    			this.gradosDisponibles = this.grados;
+		    		}
+		    	},
+		    	requestChangeTutor(){
+
+					this.showFormReclamo = true;
+					this.estudiante.nombre = this.datos.arrStudent.nombre;
+					this.estudiante.paterno = this.datos.arrStudent.paterno;
+					this.estudiante.materno = this.datos.arrStudent.materno;
+					this.estudiante.estId = this.datos.arrStudent.estId;
+					this.estudiante.estInsId = this.datos.arrStudent.estInsId;
+					/*this.estudiante.idObsBono = this.datos.arrStudent.idObsBono;*/
+					this.estudiante.codigoRudeId = this.datos.arrStudent.codigoRude;
+					this.estudiante.institucioneducativaId = this.datos.arrStudent.institucioneducativaId;
+					this.DBTiposReclamos = [{id:17, tipoReclamo:'Cambio de Tutor'}];
+					this.DBObservationsStudent = this.datos.arrObservationsStudent;
+					this.DBTutorInfo = this.datos.arrTutorInfo;
+					this.dataClaim.persona.swchangeTutor = true;
+					this.dataClaim.persona.nombre='';
+					this.dataClaim.persona.paterno='';
+					this.dataClaim.persona.materno='';
+					this.dataClaim.persona.ci='';
+					this.dataClaim.persona.complemento='';
+					this.dataClaim.persona.correo='';
+					this.dataClaim.persona.celular='';
+
+		    	},
+		    	consultar(){
+		    		this.errores = [];
+		    		this.state.isSending = false;
+		    		
+		    		if (this.opcion == 1) {
+		    			if (this.dataParent.carnet == '') {
+		    				this.errores.push('Carnet del solicitante');
+		    			}
+		    			if (this.dataParent.fechaNacimiento == '') {
+		    				this.errores.push('Fecha Nacimiento del solicitante');
+		    			}	
+		    			if (this.dataParent.nombre == '') {
+		    				this.errores.push('Nombre del solicitante');
+		    			}											
+		    		}
+		    			    	
+		    		if (this.errores.length > 0) {
+			    		let texto = '<div class="errores">';
+			    		$.each(this.errores, function (i, value) {
+	                        texto = texto + '<li>' + value + '</li>';
+	                    });
+	                    texto = texto + '</div>';
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:texto,
+		    		  		type:'warning'
+		    			});
+		    			return false;
+		    		}
+		    		this.datos = [];
+		    		this.validado = false;
+		    		this.cortina = true;
+					this.swdata=false;
+					this.disabled=false;
+	    			Swal.fire({
+	    		  		title:'Procesando',
+	    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-search fa-spin"></i> Espere un momento</div> ',
+	    		  		type:'info',
+	    		  		showConfirmButton: false,
+	    			});
+		    		axios.post(Routing.generate('preinscription_buscar', { dataParent: this.dataParent, opcion: this.opcion}))
+		    			.then(response => {
+		    				if (response.data.status === 'error') {
+			    				Swal.fire(
+	    					  		'Aviso',
+	    					  		response.data.msg,
+	    					  		'info'
+	    						)
+		    				}
+
+		    				if (response.data.status == 'success') {
+		    					Swal.close();
+								
+		    					this.datos = response.data.datos;
+
+								this.status=this.datos.status;
+								this.code=this.datos.code;
+								this.message=this.datos.message;                
+								this.swdata=this.datos.swdata;
+								this.disabled=this.datos.swdata;  								
+								this.dataParent=this.datos.dataParent;
+
+		    					this.validado = true;
+		    				}
+		    				this.cortina = false;
+		    			})
+		    			.catch(e => {
+		    				Swal.fire(
+    					  		'Aviso',
+    					  		'No se pudo realizar la verficación',
+    					  		'error'
+    						)
+		    				this.cortina = false;
+		    			});
+		    	},
+				saveAddrress(){
+
+				},
+				validEmail(email){
+					var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+					return re.test(email);
+				},			
+				registryClaim(){
+					this.errores = [];
+				
+					if (typeof this.dataClaim.persona.nombre  === "undefined") {
+						this.errores.push('Nombre(s)');
+					}
+
+					if (typeof this.dataClaim.persona.ci  === "undefined") {
+						this.errores.push('CI');
+					}
+					/*
+					if (typeof this.dataClaim.persona.paterno  === "undefined") {
+						this.errores.push('Paterno');
+					}
+					if (typeof this.dataClaim.persona.materno  === "undefined") {
+						this.errores.push('Materno');
+					}					
+					if (typeof this.dataClaim.persona.complemento  === "undefined") {
+						this.errores.push('complemento');
+					}
+					if (typeof this.dataClaim.persona.correo  === "undefined") {
+						this.errores.push('correo');
+					}
+					if(!this.validEmail(this.dataClaim.persona.correo)){
+		    			this.errores.push('Correo Electrónico incorrecto');
+					}					
+					*/
+					if (typeof this.dataClaim.persona.celular  === "undefined") {
+						this.errores.push('celular');
+					}
+					if (typeof this.dataClaim.persona.correo  === "undefined") {
+						this.dataClaim.persona.correo='';
+					}		
+					
+		    		if (this.errores.length > 0) {
+			    		let texto = '<div class="errores">';
+			    		$.each(this.errores, function (i, value) {
+	                        texto = texto + '<li>' + value + '</li>';
+	                    });
+	                    texto = texto + '</div>';
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:texto,
+		    		  		type:'warning'
+		    			});
+		    			return false;
+		    		}
+
+                	Swal.fire({
+                        title: 'Enviar solicitud de Reclamo',
+                        text: "Esta seguro de CONTINUAR?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+						if (result.value) {  
+							this.state.isSending = true;
+							this.dataClaim.student = this.estudiante;
+							
+							axios.post(Routing.generate('claim_bjp_registryClaim', this.dataClaim ))
+								.then(response => {
+									if (response.data.status === 'error') {
+										Swal.fire(
+											'Aviso',
+											response.data.msg,
+											'info'
+										)
+									}
+
+									if (response.data.status == 'success') {
+										
+										Swal.fire(
+											'Aviso',
+											'Datos registrados correctamente, el reclamo será atendida por la Institución Educativa',
+											'success'
+										)
+										this.cortina = false;
+										this.cerrar();
+									}
+									
+								})
+								.catch(e => {
+									Swal.fire(
+										'Aviso',
+										'No se pudo realizar la verficación',
+										'error'
+									)
+									this.cortina = false;
+								});	
+
+						}
+	                })
+
+										
+
+				},			
+		    	cerrar(){
+		    		this.validado = false;
+		    		this.opcion = 1;
+		    		this.apoderado.carnet = '';
+		    		this.apoderado.complemento = '';
+		    		this.estudiante.codigoRude = '';
+		    		this.estudiante.carnet = '';
+		    		this.estudiante.complemento = '';
+		    		this.estudiante.nombre = '';
+		    		this.estudiante.paterno = '';
+		    		this.estudiante.materno = '';
+		    		this.estudiante.fechaNacimiento = '';
+		    		this.estudiante.nivel = '';
+		    		this.estudiante.grado = '';
+		    	},
+		    	validarFormatoFecha(campo) {
+	    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+	    	        if ((campo.match(RegExPattern)) && (campo!='')) {
+	    	            return true;
+	    	        } else {
+	    	            return false;
+	    	        }
+		    	},
+		    	numerico: function(event){
+		    	    var k = event.charCode || event.keyCode;
+		    	    if ((k < 48 || k > 57) //NUmeros
+		    	        && (k != 13) //ENTER
+		    	        && (k != 8) //retroceso
+		    	        && (k != 9) //tab
+		    	    ){
+		    	        event.preventDefault();
+		    	        return false;
+		    	    }
+		    	},
+		    	alfabetico: function(event){
+	                var k = event.charCode || event.keyCode;
+	                if ((k < 97 || k > 122)//letras minusculas
+	                    && (k < 65 || k > 90) //letras mayusculas
+	                    && (k != 13) //ENTER
+	                    && (k != 8) //retroceso
+	                    && (k != 9) //tab
+	                    && (k != 241) //ñ
+	                     && (k != 209) //Ñ
+	                     && (k != 32) //espacio
+	                     && (k != 225) //á
+	                     && (k != 233) //é
+	                     && (k != 237) //í
+	                     && (k != 243) //ó
+	                     && (k != 250) //ú
+	                     && (k != 193) //Á
+	                     && (k != 201) //É
+	                     && (k != 205) //Í
+	                     && (k != 211) //Ó
+	                     && (k != 218) //Ú
+	                     && (k != 44) //coma ,
+	                     && (k != 46) //punto .
+	                ){
+	                	event.preventDefault();
+	                	return false;
+	                }
+	            },
+		    	alfanumerico: function(event){
+	                var k = event.charCode || event.keyCode;
+	                if ((k < 97 || k > 122)//letras minusculas
+	                    && (k < 65 || k > 90) //letras mayusculas
+	                    && (k < 48 || k > 57) //NUmeros
+	                    && (k != 13) //ENTER
+	                    && (k != 8) //retroceso
+	                    && (k != 9) //tab
+	                    && (k != 241) //ñ
+	                     && (k != 209) //Ñ
+	                     && (k != 32) //espacio
+	                     && (k != 225) //á
+	                     && (k != 233) //é
+	                     && (k != 237) //í
+	                     && (k != 243) //ó
+	                     && (k != 250) //ú
+	                     && (k != 193) //Á
+	                     && (k != 201) //É
+	                     && (k != 205) //Í
+	                     && (k != 211) //Ó
+	                     && (k != 218) //Ú
+	                     && (k != 44) //coma ,
+	                     && (k != 46) //punto .
+	                ){
+	                	event.preventDefault();
+	                	return false;
+	                }
+	            },
+		    }
+		});
+	</script>
+</body>
+</html>

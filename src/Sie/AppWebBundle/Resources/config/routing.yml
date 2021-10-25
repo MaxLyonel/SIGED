@@ -296,3 +296,7 @@ sie_app_web_institucionalizacion:
 sie_app_web_personalhealth:
     resource: "@SieAppWebBundle/Resources/config/routing/personalhealth.yml"
     prefix:   /sie/personalhealth
+
+sie_app_web_preinscription:
+    resource: "@SieAppWebBundle/Resources/config/routing/preinscription.yml"
+    prefix:   /preinscription       
