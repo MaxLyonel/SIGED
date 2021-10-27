@@ -2061,6 +2061,54 @@ class Funciones {
         $userInscriptions = $query->fetchAll();
 
         return $userInscriptions;
-    }       
+    }  
+
+    public function getUEspreInscription($idDepto){
+        
+        $queryUes = "
+         select g.id,  g.institucioneducativa
+            from institucioneducativa g
+                inner join jurisdiccion_geografica h on g.le_juridicciongeografica_id=h.id
+                     inner join distrito_tipo i on h.distrito_tipo_id = i.id
+                        inner join departamento_tipo dt on (i.departamento_tipo_id = dt.id)
+                            inner join preins_institucioneducativa_curso_cupo pin on (g.id = pin.institucioneducativa_id )
+                            where dt.id = '".$idDepto."';           
+        ";   
+
+        $query = $this->em->getConnection()->prepare($queryUes);
+
+        $query->execute();
+        $uesPreins = $query->fetchAll();
+
+        return $uesPreins;
+    }         
+    public function chooseUE($idDepto, $sie, $gestion){
+        
+        $queryUes = "
+         select *
+            from institucioneducativa g
+                inner join jurisdiccion_geografica h on g.le_juridicciongeografica_id=h.id
+                     inner join distrito_tipo i on h.distrito_tipo_id = i.id
+                        inner join departamento_tipo dt on (i.departamento_tipo_id = dt.id)
+                            inner join preins_institucioneducativa_curso_cupo pin on (g.id = pin.institucioneducativa_id )
+                                inner join dependencia_tipo dpt on (g.dependencia_tipo_id = dpt.id)
+                                    inner join institucioneducativa_tipo int on (g.institucioneducativa_tipo_id = int.id)
+                                        inner join estadoinstitucion_tipo eitt on (g.estadoinstitucion_tipo_id = eitt.id)
+                            where dt.id = '".$idDepto."' and  g.id = '".$sie."' and pin.gestion_tipo_id = '".$gestion."';           
+        ";   
+
+        $query = $this->em->getConnection()->prepare($queryUes);
+
+        $query->execute();
+        $uesPreins = $query->fetchAll();
+
+        return $uesPreins;
+    }      
+    
+    public function getAllJustify(){
+        $allJustify = $this->em->getRepository('SieAppWebBundle:PreinsJustificativoTipo')->findAll();
+
+        return $allJustify;
+    }
 
 }
