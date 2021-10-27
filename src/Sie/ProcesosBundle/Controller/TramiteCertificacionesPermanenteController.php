@@ -638,9 +638,11 @@ class TramiteCertificacionesPermanenteController extends Controller {
                         /**
                         * update certificado_permanente
                         */
-                      
+                        //$fechaActual = new \DateTime(date('Y-m-d'));
                         $certificadoPermanente = $em->getRepository('SieAppWebBundle:CertificadoPermanente')->findOneBy(array('tramite' => $idTramite));                       
                         $certificadoPermanente ->setEstado(3);
+                        $certificadoPermanente ->setNumeroCertificado($nroCertificado);
+                        $certificadoPermanente ->setFechaModificacion(new \DateTime(date('Y-m-d')));
                         $em->persist($certificadoPermanente);
                         $em->flush();
                         $mensaje['dato'] = true;
@@ -1180,6 +1182,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                         'listaParticipante' => $entityParticipantes,
                         'datosCentro' =>$institucioneducativa,
                         'infoAutorizacionCentro' => $sie,
+                        'gestion'=>$gestion,
                         /* 'datosBusqueda' => $datosBusqueda,  */                      
                         'especialidad'=>$especialidad,
                         'nivel'=>$nivel,
@@ -1349,8 +1352,11 @@ class TramiteCertificacionesPermanenteController extends Controller {
             ->innerJoin('SieAppWebBundle:DepartamentoTipo', 'd', 'with', 'e.expedido = d.id')
             ->where('ei.id='.$item['idinscripcion'])
             ->getQuery()
-            ->getResult(); 
-            //dump($datosParticipante[0]['sigla']);die;
+            ->getResult();
+            
+            //SE GENERA CODIGO ALEATORIO PARA EL REGISTRO POR CADA CERTIFICADO GENERADO
+            $nroCertificado = 'PER-'.''.$this->generaCodigo(6);
+            $respuesta = $this->guardaCertificadopermanente('','',$gestionId,3,'','',$item['idtramite'],$nroCertificado,'',2); 
             //obtenemos la firma aleatoria del DDE
             $resultado = $this->obtieneFirma($lugar_id);
             $firmaDDE = base64_decode($resultado['firma']); 
@@ -1359,7 +1365,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             //$datosQr=$this->obtenerDatosQr();
             $datosQr = $sie.' '.$centro.' '.$mencion.' '.$nivel.' '.$datosParticipante[0]['id'].' '.$datosParticipante[0]['codigoRude'].' '.$datosParticipante[0]['nombre'].' '.$datosParticipante[0]['materno'].' '.$datosParticipante[0]['paterno'].' '.$datosParticipante[0]['carnetIdentidad'];
             //dump($datosQr);die;
-            $pdf->write2DBarcode($datosQr, 'QRCODE,L', 20, 30, 45, 45, $style, 'N');
+            $pdf->write2DBarcode($nroCertificado.' '.$datosQr, 'QRCODE,L', 20, 30, 45, 45, $style, 'N');
             $pdf->Ln(1);
             
             //$pdf->Cell(0, 0, 'sasa', 0, 1);
@@ -1437,10 +1443,6 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $firmas.='</table>';
             // set style for barcode
             $pdf->writeHTML($firmas, true, false, true, false, '');
-            //Se cambia el estado a 3 = ENTREGADO
-            $nroCertificado = 666;
-            $respuesta = $this->guardaCertificadopermanente('','',$gestionId,3,'','',$item['idtramite'],$nroCertificado,'',2);
-           
        }// FIN DEL FOR 
         //$pdf->Output('example_050.pdf', 'I');
         $pdf->Output($queryMaestroUE['sie']."Impresion_Certificados_Permanente".date('YmdHis').".pdf", 'I');
@@ -1526,8 +1528,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
      return   $queryMaestroUE;   
     }
     //COMPROBANTES PARA DIRECTOR DE TRAMITES
-    public function rptComprobanteDirectorAction(Request $request){
-        
+    public function rptComprobanteDirectorAction(Request $request){        
         //RECUPERAMOS LOS DATOS DEL TRAMITE INICIADO
         $em = $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
@@ -1627,7 +1628,6 @@ class TramiteCertificacionesPermanenteController extends Controller {
         // print a block of text using Write()
         //$pdf->Write(0, $txt, '', 0, 'C', true, 0, false, false, 0);     
         $pdf->Output("Comprobante.pdf", 'I');
-        return true;
     }
     public function rptComprobanteDirectorDevueltoAction(Request $request){
        //RECUPERAMOS LOS DATOS DEL TRAMITE INICIADO
@@ -1756,9 +1756,6 @@ class TramiteCertificacionesPermanenteController extends Controller {
        // print a block of text using Write()
        //$pdf->Write(0, $txt, '', 0, 'C', true, 0, false, false, 0);     
        $pdf->Output("Comprobante.pdf", 'I');
-       return true;
-
-
     }
     //REPORTES ESTADISTICOS A NIVEL (CENTRO DEPARTAMENTO NACIONAL)
     public function CertificacionesEstadisticosAction(Request $request){
@@ -2626,27 +2623,40 @@ class TramiteCertificacionesPermanenteController extends Controller {
        $nivel = $request->get('nivel');
        $idNivel = $request->get('idnivel');
        $idMencion = $request->get('idMencion');
-       $gestion = $this->session->get('currentyear');
+       $gestion = $request->get('gestion');
        //cambiar estado a 3 = entregado
-       $tramites = json_decode($request->get('datos_certificado'), true); dump($tramites);die; //PENDIENTE     
-        foreach($tramites as $index => $item) {
+       $tramites = json_decode($request->get('datos_certificado'), true); //dump($tramites);die; //PENDIENTE
+       //$entityParticipantes = $this->getEstudiantesHabilitadosPermanente($sie,$gestion,$idMencion,$idNivel); //dump($entityParticipantes);die;
+       $nroCertificado='CERTIFICADOS GENERADOS PARA NIVEL MEDIO'; 
+       foreach($tramites as $index => $item) {
             $respuesta = $this->guardaCertificadopermanente('','',$gestion,3,'','',$item['idtramite'],$nroCertificado,'',2);
-        }
+        } 
       
        //Generar listado en xls
-        $arch = 'Lista_habilitados_Medio_'.$mencion.'_'.$gestion.'_'.date('YmdHis').'.xls';
+        $arch = 'Lista_habilitados_Medio_Nacional'.$mencion.'_'.$gestion.'_'.date('YmdHis').'.xls';
         $response = new Response();
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         //http://127.0.0.1:49787/viewer/frameset?__report=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes%5Clista_habilitados_nacional.rptdesign&__format=html&__svg=true&__locale=es_BO&__timezone=America%2FLa_Paz&__masterpage=true&__rtl=false&__cubememsize=10&__resourceFolder=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes&1828857951
-        $urlbase= 'http://127.0.0.1:49787/viewer/frameset?__report=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes%5C';
+        $urlbase= 'http://127.0.0.1:65432/viewer/preview?__report=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes%5C';
         $urlproduccion=$this->container->getParameter('urlreportweb');
-        $response->setContent(file_get_contents($urlbase . 'lista_habilitados_nacional.rptdesign&__format=xlsx&Gestion='.$gestion));
+        
+        //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_departamental_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&Departamento='.$codigoArea));
+
+        $response->setContent(file_get_contents($urlbase . 'lista_habilitados_Nacional_Medio.rptdesign&__format=xlsx&sie='.$sie.'&gestion='.$gestion.'&idMencion='.$idMencion.'&idNivel='.$idNivel));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
          
+    }
+
+    public function generaCodigo($longitud){
+        $key = '';
+        $pattern = '1234567890abcdefghijklmnopqrstuvwxyz-PERMANENTE';
+        $max = strlen($pattern)-1;
+        for($i=0;$i < $longitud;$i++) $key .= $pattern{mt_rand(0,$max)};
+        return $key;
     }
 }

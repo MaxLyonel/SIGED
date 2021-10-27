@@ -88,8 +88,9 @@
                             <div class="row">                                
                                 <div class="col-md-4 col-md-offset-5">
                                  {% if (app.session.get('roluser') == 8) %}                       
-                                    <button class="btn btn-primary" id="btn_imprimir" title="Imprimir Comprobante" onclick="imprimirCertificados(1)" ><i class='fa fa-print'></i> Generar lista de habilitados</button>
+                                    <button class="btn btn-primary" id="btn_imprimir" title="Imprimir Comprobante" onclick="imprimirCertificados(1)" ><i class='fa fa-download'></i> Generar lista de habilitados</button>
                                     <form name="comprobante_certificado" method="post" action="{{ path('tramite_genera_lista_habilitados') }}" target="_blank">
+                                    <input type="hidden" name="gestion" value="{{ gestion }}"/>
                                     <input type="hidden" name="sie" value="{{ infoAutorizacionCentro }}"/>
                                     <input type="hidden" name="centro" value="{{ datosCentro.institucioneducativa }}"/>
                                     <input type="hidden" name="mencion" value="{{ mencionDatos.especialidad }}"/>
@@ -102,6 +103,7 @@
                                  {% if (app.session.get('roluser') == 7) %}  
                                   <button class="btn btn-primary" id="btn_imprimir" title="Imprimir Comprobante" onclick="imprimirCertificados(2)" ><i class='fa fa-print'></i> Generar Certificados</button>
                                     <form name="comprobante_certificado" method="post" action="{{ path('tramite_impresion_certificado_permanente_imprimirCertificado') }}" target="_blank">
+                                    <input type="hidden" name="gestion" value="{{ gestion }}"/>
                                     <input type="hidden" name="sie" value="{{ infoAutorizacionCentro }}"/>
                                     <input type="hidden" name="centro" value="{{ datosCentro.institucioneducativa }}"/>
                                     <input type="hidden" name="mencion" value="{{ mencionDatos.especialidad }}"/>
