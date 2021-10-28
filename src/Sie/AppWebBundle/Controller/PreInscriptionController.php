@@ -40,6 +40,7 @@ class PreInscriptionController extends Controller
         $em = $this->getDoctrine()->getManager();
         // VALIDAMOS DATOS DEL ESTUDIANTE
         $arrStudent = array();
+        $arrJustify = array();
         $carnet= $dataParent['carnet'];
          // buil the person data
         $arrParametros = array(
@@ -57,23 +58,29 @@ class PreInscriptionController extends Controller
         // do the validation on segip
         $answerSegip = true;
         $message = "";
-//        dump($arrParametros);
+        $arrJjustify = array();
+        // dump($carnet);
+        // dump($arrParametros);
         $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
-//        dump($answerSegip);die;
+        // dump($answerSegip);die;
         //$answerSegip = true;
         if($answerSegip){   
-                $status='success';
-                $code=200;
-                $message='registrado correctamente';
-                $swdata = true;       
-        }else{
-                $status='error';
-                $code=404;
-                $message='validacion segip: Datos Equivocados';     
-                $swdata = false;       
-        }
+            $status='success';
+            $code=200;
+            $message='registrado correctamente';
+            $swdata = $answerSegip;       
         
-      
+            $allJustify = $this->get('funciones')->getAllJustify();   
+            
+            foreach ($allJustify as $value) {
+                $arrJustify[]=array('id' => $value->getId(),'justificativo' => $value->getJustificativo() );
+            }
+        }else{
+            $status='warning';
+            $code=404;
+            $message='validacion segip: Datos Equivocados';     
+            $swdata = $answerSegip;       
+        }     
       
         return $response->setData([
             'status'=>'success',
@@ -82,20 +89,102 @@ class PreInscriptionController extends Controller
                 'code'=>$code,
                 'message'=>$message,                
                 'swdata'=>$swdata,                
-                'dataParent'=>$dataParent,                
-
-               /* 'statusApoderado'=>$statusApoderado,
-                'msgApoderado'=>$msgApoderado,
-                'statusEstudiante'=>$statusEstudiante,
-                'msgEstudiante'=>$msgEstudiante,
-                //'arrApoderadoInfo'=>$arrApoderadoInfo,
-                'showFormReclamo'=>false,
-                'arrStudent'=>$arrStudent,
-                'arrTiposReclamos'=>$arrTiposReclamos,
-                'arrObservationsStudent'=>$arrObservationsStudent,
-                'arrTutorInfo'=>$arrTutorInfo,*/
+                'dataParent'=>$dataParent,
+                'dataJustify'=>$arrJustify,
             )
         ]);
+    }
+
+    public function getUEsAction(Request $request){
+        $response = new JsonResponse();
+        //get send values
+        $idDepto = $request->get('departamento');
+        $uespreInscription = $this->get('funciones')->getUEspreInscription($idDepto);   
+        $arrUes = array();
+        if(sizeof($uespreInscription)>0){
+            foreach ($uespreInscription as $value) {
+                $arrUes[]=array('id'=>$value['id'], 'institucioneducativa'=> $value['institucioneducativa']);
+            }
+
+            $status='success';
+            $code=200;
+            $message='data encontrada correctamente';
+            $swues = true;               
+
+        }else{
+
+            $status='error';
+            $code=404;
+            $message='No se tienen Unidad Educativas de alta demanda';     
+            $swues = false;             
+
+        }
+
+       return $response->setData([
+            'status'=>'success',
+            'datos'=>array(
+                'status'=>$status,
+                'code'=>$code,
+                'message'=>$message,                
+                'swues'=>$swues,                
+                'dataUEs'=>$arrUes,
+            )
+        ]);          
+    }
+    public function chooseUEAction(Request $request){
+        
+        $response = new JsonResponse();
+        //get send values
+        $idDepto = $request->get('departamento');
+        $sie = $request->get('sie');
+        $gestion = $this->session->get('currentyear');        
+
+        $uepreInscription = $this->get('funciones')->chooseUE($idDepto, $sie, $gestion);   
+
+        $arrUe = array();
+        if(sizeof($uepreInscription)>0){
+            foreach ($uepreInscription as $value) {
+                
+                $arrUe[]=array(
+                    'sie'=>$value['institucioneducativa_id'], 
+                    'institucioneducativa'=> $value['institucioneducativa'],
+                    'dependencia'=> $value['dependencia'],
+                    'descripcion'=> $value['descripcion'],
+                    'estadoinstitucion'=> $value['estadoinstitucion'],
+                    'departamento'=> $value['departamento'],
+                    'distrito'=> $value['distrito'],
+                    'gestion'=> $value['gestion_tipo_id'],
+                );
+            }
+
+            $status='success';
+            $code=200;
+            $message='data encontrada correctamente';
+            $swues = true;               
+
+        }else{
+
+            $status='error';
+            $code=404;
+            $message='No se tienen Unidad Educativas de alta demanda';     
+            $swues = false;             
+
+        }
+        
+
+
+       return $response->setData([
+            'status'=>'success',
+            'datos'=>array(
+                'status'=>$status,
+                'code'=>$code,
+                'message'=>$message,                
+                'swues'=>$swues,                
+                'dataUnEd'=>$arrUe,
+            )
+        ]);         
+
+
     }
 
     public function registryClaimAction(Request $request){

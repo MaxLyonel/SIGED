@@ -23,7 +23,7 @@
 		.caja{
 			background: #FFFFFF;
 			padding: 10px;
-			width: 800px;
+			width: 820px;
 			margin-top: 50px;
 			/*margin-left: auto;*/
 			/*margin-right: auto;*/
@@ -169,7 +169,7 @@
 									<div class="form-row">
 										<div class="form-group col-md-12">
 										<label for="job">Dirección de su residencia (Zona/avenida/calle/N°/teléfono):</label>
-										<input type="text" class="form-control" id="job">
+										<input type="text" class="form-control" id="addrr" v-model="addrressParent.dirresidencia" :disabled="swParentAddress ==true">
 										</div>
 									
 									</div>							
@@ -183,42 +183,230 @@
 										<div class="form-row">
 											<div class="form-group col-md-6">
 											<label for="job">Nombre del lugar de trabajo:</label>
-											<input type="text" class="form-control" id="job">
+											<input type="text" class="form-control" id="job" v-model="addrressParent.lugarTrabajo" :disabled="swParentAddress ==true">
 											</div>
 											<div class="form-group col-md-6">
 											<label for="Municipio">Municipio:</label>
-											<input type="text" class="form-control" id="Municipio">
+											<input type="text" class="form-control" id="Municipio" v-model="addrressParent.municipio" :disabled="swParentAddress ==true">
 											</div>
 										</div>
 										<div class="form-row">
 											<div class="form-group col-md-6">
 											<label for="job">Zona/Villa:</label>
-											<input type="text" class="form-control" id="job">
+											<input type="text" class="form-control" id="zona" v-model="addrressParent.zona" :disabled="swParentAddress ==true">
 											</div>
 											<div class="form-group col-md-6">
 											<label for="Municipio">Avenida/Calle/N°:</label>
-											<input type="text" class="form-control" id="Municipio">
+											<input type="text" class="form-control" id="avenida" v-model="addrressParent.avenida" :disabled="swParentAddress ==true">
 											</div>
 										</div>	
 										<div class="form-row">
 											<div class="form-group col-md-6">
 												<label for="job">Teléfono/Celular:</label>
-												<input type="text" class="form-control" id="job">
+												<input type="text" class="form-control" id="fono" v-model="addrressParent.fono":disabled="swParentAddress ==true">
 											</div>
-											<div class="form-group col-md-6">
+											{# <div class="form-group col-md-6">
 												<label for="Municipio">Avenida/Calle/N°:</label>
-												<input type="text" class="form-control" id="Municipio">
-											</div>
+												<input type="text" class="form-control" id="municipio" v-model="addrressParent.avenida"> 
+											</div> #}
 										</div>
+										
 										<div class="form-row">
-											<div class="form-group col-md-6">
-												<button type="button" class="btn btn-primary" @click="saveAddrress">Registrar </button>
+											<div class="form-group col-md-12">
+												<button type="button" class="btn btn-primary" @click="saveAddrress" v-show="!swParentAddress" >Registrar </button>
 											</div>
 
 										</div>
 															
 								</div>
 							</div>						
+
+							<div class="panel panel-default" v-show="swParentAddress">
+								<div class="panel-heading">Seleccionar Departamento y Unidad Educativa</div>
+								<div class="panel-body">
+									<div class="form-row">
+										<div class="form-group col-md-3">
+	                                        <label for="depto">Departamento</label>
+	                                        <select name="arrPais" id="idarrPais_dept" class="custom-select form-control" v-model="ueInfo.departamento" v-on:change="getUES" :disabled="swuned == true">  
+	                                          <option v-for="item in departamentos" :value="item.id">${ item.depto }</option>
+	                                        </select>	
+										</div>
+	                                    <div class="col-sm-7">
+	                                        <label for="provincia">Unidad Educativa</label>
+	                                        <select name="arrPais" id="ues" class="custom-select form-control" v-model="ueInfo.sie" :disabled="swuned == true">  
+	                                          <option v-for="itemd in dataUEs"  :value="itemd.id">${itemd.id} - ${ itemd.institucioneducativa }</option>
+	                                        </select>
+	                                    </div>										
+	                                    <div class="col-sm-2">
+	                                        <button type="button" class="btn btn-md btn-warning" @click="chooseUE" v-if="!(this.dataUnEd.length > 0)" >Seleccionar </button>
+	                                    </div>											                                    
+									
+									</div>
+								</div>
+							</div>
+
+							<div class="panel panel-default"  v-if="(this.dataUnEd.length > 0)">
+								<div class="panel-heading">Informacion Unidad Educativa</div>
+								<div class="panel-body">
+
+									<div class="table-responsive">
+                                            <table class="table table-hover table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Código RUE</th>
+                                                        <th>Institución Educativa</th>                                            
+                                                        <th>Dependencia</th>                                            
+                                                        <th>Tipo</th>
+                                                        <th>Estado</th>
+                                                        <th>Departamento</th>
+                                                        <th>Distrito</th>
+                                                        <th>Opciones</th>
+                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="(infoUnEd, index) in dataUnEd">
+                                                        <td>${infoUnEd.sie}</td>
+                                                        <td>${infoUnEd.institucioneducativa}</td>
+                                                        <td>${infoUnEd.dependencia}</td>
+                                                        <td>${infoUnEd.descripcion}</td>
+                                                        <td>${infoUnEd.estadoinstitucion}</td>
+                                                        <td>${infoUnEd.departamento}</td>
+                                                        <td>${infoUnEd.distrito}</td>
+
+                                                        <td class="text-center"> 
+                                                        	<small>
+                                                            <table class="table ">
+	                                                            <tr>
+	                                                                <td>
+	                                                                <a href="#" @click="registryStudent" >
+	                                                                    <i class="fa fa-user" > Registrar Estudiante</i>
+	                                                                </a>
+	                                                                </td>
+	                                                            	<td>
+	                                                                <a href="#" class="btn-xs" @click="removeInfoUnEd(index)"><i class="fa fa-trash"> Eliminar</i></a>
+	                                                                </td>
+	                                                            </tr>                                                                              
+                                                            </table>                         
+                                                            </small>
+                                                        </td> 
+                                                    </tr>  
+                                                </tbody>
+                                            </table>
+                                        </div>								
+									
+								</div>
+							</div>
+
+
+							<div class="panel panel-default" v-if="swstudent">
+								<div class="panel-heading">Registre Estudiante para la Pre-Inscripcion</div>
+								<div class="panel-body">
+
+									<div class="row">
+										<div class="form-group col-md-4">
+											<label>Carnet</label>
+											<input type="text" v-model="student.carnet" class="form-control jupper" maxlength="10" v-on:keypress="numerico"  >
+										</div>
+										<div class="form-group col-md-4">
+											<label>Complemento <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El complemento consta de 2 dígitos que se usan para diferenciar números de carnet idénticos, no es lo mismo que el lugar de expedición, por favor NO colocar abreviaturas de departamentos" data-trigger="hover"></i> </label>
+											<input type="text" v-model="student.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico" >
+										</div>
+										<div class="form-group col-md-4">
+											<label>Fecha Nacimiento </label>
+											<input type="text" v-model="student.fechaNacimiento" class="form-control jupper" maxlength="10" v-on:keypress="" >
+										</div>		
+									</div>
+									<div class="row">
+										<div class="form-group col-md-4">
+											<label>Paterno</label>
+											<input type="text" v-model="student.paterno" class="form-control jupper" maxlength="15" v-on:keypress="alfabetico" >
+										</div>
+										<div class="form-group col-md-4">
+											<label>Materno </i> </label>
+											<input type="text" v-model="student.materno" class="form-control jupper" maxlength="15" v-on:keypress="alfabetico" >
+										</div>
+										<div class="form-group col-md-4">
+											<label>Nombre(s) </label>
+											<input type="text" v-model="student.nombre" class="form-control jupper" maxlength="20" v-on:keypress="alfabetico" >
+										</div>		
+									</div>
+									<div class="row">
+										<div class="form-group col-md-4">
+											<div class="form-check">
+											<input class="form-check-input" v-model="student.forign" type="checkbox" value="" id="flexCheckIndeterminate" >
+											<label class="form-check-label" for="flexCheckIndeterminate">
+												Extranjero?
+											</label>
+											</div>	
+										</div>
+									</div>	
+
+
+										<div class="form-row">
+											<div class="form-group col-md-6">
+											<label for="Municipio">Municipio:</label>
+											<input type="text" class="form-control" id="Municipio" v-model="student.municipio" >
+											</div>
+											<div class="form-group col-md-6">
+											<label for="job">Zona/Villa:</label>
+											<input type="text" class="form-control" id="zona" v-model="student.zona" >
+											</div>											
+										</div>
+										<div class="form-row">
+
+											<div class="form-group col-md-6">
+											<label for="Municipio">Avenida/Calle/N°:</label>
+											<input type="text" class="form-control" id="avenida" v-model="student.avenida" >
+											</div>
+										</div>	
+										<div class="form-row">
+											<div class="form-group col-md-6">
+												<label for="job">Teléfono/Celular:</label>
+												<input type="text" class="form-control" id="fono" v-model="student.fono">
+											</div>
+										</div>	
+
+
+									{# 	<div v-for="category in categories">    
+										    <input type="checkbox" v-model.number="item.category" :id="'category_' + category.id" :value="category.id" @change="save"/>
+										    <label>{{ item.category }} : {{ category.id }}</label>
+										</div>	 #}									
+
+										<div class="form-row">
+										    <ul>
+										        <li v-for="(option, index) in dataJustify" :key="index">
+										          <input type="checkbox" :id="index" :value="option.id" v-model="checkedNames" @change="openJustify(option.id)">
+										          <label :for="index">${ option.justificativo }</label>
+										        </li>
+										      </ul>
+										      <span>Checked names: ${ checkedNames } sampel: ${showOptionBrothers}</span>
+											{# <div class="form-group col-md-6">
+												<div  v-for="justify in dataJustify">
+												  <input type="checkbox" :value="justify.id" :id="justify.id" value="justify.id" v-model.number="checkedNames" @click="openJustify(justify.id)">
+												  <label :for="justify.id">${justify.justificativo}</label>
+												 </div>
+												 <span>Checked names: ${ checkedNames } ${showOptionBrothers}</span>
+												  <br>
+											</div> #}
+										</div>
+								  
+									
+
+
+
+
+
+
+									<div class="col-md-12 text-center" >
+										<button type="button" class="btn btn-primary" @click="consultar">Verificar </button>
+									</div>
+
+
+																		
+								</div>
+							</div>														
+
 						</form>						
 						
 						<div>
@@ -227,7 +415,12 @@
 						</div>
 
 					</div>
-
+					<br>
+					<br>
+					
+					<div v-if="datos.status =='warning'" class="alert" :class="[{'alert-success':datos.status == 'warning'}, {'alert-warning':datos.status == 'warning'}]">
+						<p v-if="datos.status =='warning'" >Segip: Datos NO validados correctamente...</p>
+					</div>
 				</div>
 				
 			</div>
@@ -261,31 +454,28 @@
 		    		complemento: ''
 		    	},
 				dataParent:{
-					carnet: '',
+					carnet: '4926577',
 		    		complemento: '',
-		    		nombre: '',
-		    		paterno: '',
-		    		materno: '',
-		    		fechaNacimiento: '',
+		    		nombre: 'ROGELIA MODESTA',
+		    		paterno: 'FLORES',
+		    		materno: 'QUISPE',
+		    		fechaNacimiento: '15-06-1982',
 				},
-		    	estudiante: {
+				
+		    	student: {
 		    		/*codigoRude: '4073040820205783 809700692017061 718500012020019',*/
-					codigoRude: '',
-					codigoRudeId: '',
+					// codigoRude: '',
+					// codigoRudeId: '',
 		    		carnet: '',
 		    		complemento: '',
 		    		nombre: '',
 		    		paterno: '',
 		    		materno: '',
 		    		fechaNacimiento: '',
-		    		nivel: '',
-					estId: '',
-		    		grado: ''
+		   //  		nivel: '',
+					// estId: '',
+		   //  		grado: ''
 		    	},
-				dataClaim: {persona:{swchangeTutor:false,paterno:'',materno:'',nombre:''}, student:{}} ,
-				DBTiposReclamos: {},
-				DBObservationsStudent: {},
-				DBTutorInfo: {},
 		    	validado: false,
 		    	cortina: false,
 				showFormReclamo:false,
@@ -295,8 +485,30 @@
                 code:'',
                 message:'',                
                 swdata:'',
-				disabled:false,            
-                
+                swnodata:'',
+                swuned:false,
+				disabled:false, 
+				swstudent:false, 
+				disabledaddress:false, 
+				showOptionBrothers:false, 
+				allDataRequest:{},           
+                addrressParent:{},
+                swParentAddress:false,
+                departamentos:[ {"id":1,"depto":"Chuquisaca"},
+                				{"id":2,"depto":"La Paz"},
+                				{"id":3,"depto":"Cochabamba"},
+                				{"id":4,"depto":"Oruro"},
+                				{"id":5,"depto":"Potosi"},
+                				{"id":6,"depto":"Tarija"},
+                				{"id":7,"depto":"Santa Cruz"},
+                				{"id":8,"depto":"Beni"},
+                				{"id":9,"depto":"Pando"}],
+                ueInfo:{},
+                dataUEs:{},
+                dataJustify:{},
+                dataUnEd:{},
+                checkedNames: []
+
 		    	
 		    },
 		    mounted(){
@@ -319,30 +531,7 @@
 		    			this.gradosDisponibles = this.grados;
 		    		}
 		    	},
-		    	requestChangeTutor(){
 
-					this.showFormReclamo = true;
-					this.estudiante.nombre = this.datos.arrStudent.nombre;
-					this.estudiante.paterno = this.datos.arrStudent.paterno;
-					this.estudiante.materno = this.datos.arrStudent.materno;
-					this.estudiante.estId = this.datos.arrStudent.estId;
-					this.estudiante.estInsId = this.datos.arrStudent.estInsId;
-					/*this.estudiante.idObsBono = this.datos.arrStudent.idObsBono;*/
-					this.estudiante.codigoRudeId = this.datos.arrStudent.codigoRude;
-					this.estudiante.institucioneducativaId = this.datos.arrStudent.institucioneducativaId;
-					this.DBTiposReclamos = [{id:17, tipoReclamo:'Cambio de Tutor'}];
-					this.DBObservationsStudent = this.datos.arrObservationsStudent;
-					this.DBTutorInfo = this.datos.arrTutorInfo;
-					this.dataClaim.persona.swchangeTutor = true;
-					this.dataClaim.persona.nombre='';
-					this.dataClaim.persona.paterno='';
-					this.dataClaim.persona.materno='';
-					this.dataClaim.persona.ci='';
-					this.dataClaim.persona.complemento='';
-					this.dataClaim.persona.correo='';
-					this.dataClaim.persona.celular='';
-
-		    	},
 		    	consultar(){
 		    		this.errores = [];
 		    		this.state.isSending = false;
@@ -377,6 +566,7 @@
 		    		this.cortina = true;
 					this.swdata=false;
 					this.disabled=false;
+					this.swnodata=false;
 	    			Swal.fire({
 	    		  		title:'Procesando',
 	    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-search fa-spin"></i> Espere un momento</div> ',
@@ -402,9 +592,13 @@
 								this.code=this.datos.code;
 								this.message=this.datos.message;                
 								this.swdata=this.datos.swdata;
-								this.disabled=this.datos.swdata;  								
+								this.swnodata=this.datos.swdata;
+								this.disabled=this.datos.swdata;
 								this.dataParent=this.datos.dataParent;
+								this.dataJustify=this.datos.dataJustify;
 
+								// this.allDataRequest.push(this.datos.dataParent);
+								this.allDataRequest['dataParent'] =  this.datos.dataParent;
 		    					this.validado = true;
 		    				}
 		    				this.cortina = false;
@@ -419,6 +613,180 @@
 		    			});
 		    	},
 				saveAddrress(){
+					this.swParentAddress=false;
+					this.disabledaddress=false;
+                	Swal.fire({
+                        title: 'Registrar informacion de Dirección del padre, madre o tutor',
+                        text: "Esta seguro de CONTINUAR?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	
+						if (result.value) {
+							this.swParentAddress=true;
+							this.disabledaddress=true;
+							// this.allDataRequest.push(this.addrressParent);
+							this.allDataRequest['addrressParent'] = this.addrressParent;
+						}
+	                })					
+
+				},
+                getUES(){
+                    var me = this;
+
+                    if( me.ueInfo.departamento > 0){
+                         axios.post(Routing.generate('preinscription_getUES', me.ueInfo ))
+                            .then(response => {
+                                if (response.status == 200) {
+			    					this.datos = response.data.datos;
+
+									this.status=this.datos.status;
+									this.code=this.datos.code;
+									this.message=this.datos.message;                
+									this.swues=this.datos.swues;
+									// this.disabled=this.datos.swdata;
+									this.dataUEs=this.datos.dataUEs;
+									//this.allDataRequest.push(this.datos.dataParent);
+
+
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                }
+                                if( response.status == 202){
+                                    //this.respuesta = response.data;
+                                }
+
+                                this.buscando = false;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                this.buscando = false;
+                            });
+                    }else{
+                    }
+
+                },				
+                chooseUE(){
+
+                    var me = this;
+                    me.swuned = false;
+
+                	Swal.fire({
+                        title: 'Seleccionar Unidad Educativa para la Pre-Inscription',
+                        text: "Esta seguro de CONTINUAR?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	
+	                    if( me.ueInfo.departamento > 0 && me.ueInfo.sie > 0){
+	                         axios.post(Routing.generate('preinscription_chooseUE', me.ueInfo ))
+	                            .then(response => {
+	                                if (response.status == 200) {
+				    					this.datos = response.data.datos;
+
+										this.status=this.datos.status;
+										this.code=this.datos.code;
+										this.message=this.datos.message;                
+										this.swuned=this.datos.swues;
+										// this.disabled=this.datos.swdata;
+										this.dataUnEd=this.datos.dataUnEd;
+										//this.allDataRequest.push(this.datos.dataParent);
+										this.allDataRequest['ueInfo'] = me.ueInfo;
+
+	                                    $('[data-toggle="tooltip"]').tooltip();
+	                                }
+	                                if( response.status == 202){
+	                                    //this.respuesta = response.data;
+	                                }
+
+	                                this.buscando = false;
+	                            })
+	                            .catch(e => {
+	                                console.log(e);
+	                                this.buscando = false;
+	                            });
+	                    }else{
+	                    }   
+	                })					
+
+
+
+
+             	
+
+
+
+                },
+				removeInfoUnEd(ikey){
+
+					this.swstudent = false;
+
+                	Swal.fire({
+                        title: 'Eliminar Unidad Educativa seleccionada',
+                        text: "Esta seguro de CONTINUAR?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	
+						if (result.value) {
+							if(ikey == 0){
+                        		this.dataUnEd.shift();												
+                        		this.swuned = false;
+							}
+							
+						}
+	                })					
+
+                    
+
+
+				},
+				registryStudent(){
+					this.swstudent = false;
+                	Swal.fire({
+                        title: 'Registrar Esudainte para la Pre-Inscription',
+                        text: "Esta seguro de CONTINUAR?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	
+						if (result.value) {
+                        		this.swstudent = true;
+							
+						}
+	                })						
+
+					
+
+				},
+				openJustify(){
+					me = this;
+					me.showOptionBrothers = false;
+					// console.log(this.checkedNames);
+                    $.each(this.checkedNames, function(index, val) {
+                    	// console.log(val);
+                        if (val == 1) {
+                        	console.log(val);
+                        	// this.showOptionBrothers = val;
+                            me.showOptionBrothers=true;
+                        }
+                    });					
+                        
 
 				},
 				validEmail(email){
