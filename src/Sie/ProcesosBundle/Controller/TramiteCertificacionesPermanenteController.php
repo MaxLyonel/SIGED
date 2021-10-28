@@ -1528,7 +1528,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
      return   $queryMaestroUE;   
     }
     //COMPROBANTES PARA DIRECTOR DE TRAMITES
-    public function rptComprobanteDirectorAction(Request $request){        
+    public function rptComprobanteDirectorAction(Request $request){
         //RECUPERAMOS LOS DATOS DEL TRAMITE INICIADO
         $em = $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
@@ -1627,7 +1627,8 @@ class TramiteCertificacionesPermanenteController extends Controller {
         //$pdf->writeHTML($titulo, true, false, true, false, '');
         // print a block of text using Write()
         //$pdf->Write(0, $txt, '', 0, 'C', true, 0, false, false, 0);     
-        $pdf->Output("Comprobante.pdf", 'I');
+        $pdf->Output("Comprobante.pdf", 'D');
+        
     }
     public function rptComprobanteDirectorDevueltoAction(Request $request){
        //RECUPERAMOS LOS DATOS DEL TRAMITE INICIADO
@@ -1755,7 +1756,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
        //$pdf->writeHTML($titulo, true, false, true, false, '');
        // print a block of text using Write()
        //$pdf->Write(0, $txt, '', 0, 'C', true, 0, false, false, 0);     
-       $pdf->Output("Comprobante.pdf", 'I');
+       $pdf->Output("ComprobanteDevuelto.pdf", 'D');
     }
     //REPORTES ESTADISTICOS A NIVEL (CENTRO DEPARTAMENTO NACIONAL)
     public function CertificacionesEstadisticosAction(Request $request){
