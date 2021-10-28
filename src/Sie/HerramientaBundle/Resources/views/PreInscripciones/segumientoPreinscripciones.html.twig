@@ -4,7 +4,6 @@
 
 	<!-- Start page header -->
 	<div class="header-content">
-
 		<h2><i class="fa fa-table"></i> Seguimiento <span>Preinscripciones <b>{{ ('now'|date('Y'))+1 }}</b></span></h2>
 		<div class="breadcrumb-wrapper hidden-xs">
 			<span class="label">Usted esta aquí:</span>
@@ -14,7 +13,6 @@
 					<a href="dashboard.html">Recibidos</a>
 					<i class="fa fa-angle-right"></i>
 				</li>
-
 				<li class="active">Index</li>
 			</ol>
 		</div><!-- /.breadcrumb-wrapper -->
@@ -96,19 +94,21 @@
 			</div>
 		</div>
 		
-		<div class="row div-data">
-			<div class="panel">
-				<div class="panel-heading">
-					<div class="pull-left">
-						<h3 class="panel-title">Información</h3>
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="panel rounded shadow">
+					<div class="panel panel-primary shadow">
+						<div class="panel-heading">
+							<div class="pull-left">
+								<h3 class="panel-title">Lista de preinscritos</h3>
+							</div>
+							<div class="clearfix"></div>
+						</div><!-- /.panel-heading -->
+						<div class="panel-body ">
+							<div class="div-mostrar-resultados"></div>
+						</div><!-- /.panel-body --> 
 					</div>
-					<div class="clearfix"></div>
-				</div><!-- /.panel-heading -->
-				<div class="panel-body no-padding">
-					<div class="table-responsive div-mostrar-resultados" style="margin-top: -1px;">
-
-					</div>
-				</div><!-- /.panel-body -->
+				</div>
 			</div>
 		</div>
 	</div>
@@ -132,7 +132,7 @@
                 {
                     $(".div-mostrar-resultados").empty();
                     $(".div-mostrar-resultados").html(data);
-                    //$('#dataTable-modalidad').DataTable( {});
+                    $('.div-mostrar-resultados').find('table').DataTable( {});
                 },
                 error: function (data) {
                     $(".div-mostrar-resultados").empty();
@@ -208,7 +208,7 @@
 		                        }
 		                        catch(e)
 		                        {
-		                            $(".select-ue").html('<option>El distrito no tiene unidades educativas</option>');
+		                            $(".select-ue").html('<option value="0">El distrito no tiene unidades educativas</option>');
 		                        }
 		                    },
 		                    error: function (data) {

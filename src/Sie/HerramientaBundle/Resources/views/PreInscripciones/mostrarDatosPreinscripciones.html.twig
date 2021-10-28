@@ -1,4 +1,4 @@
-<div class="container--fuild">
+<div class="container-fuild" style="padding: 0.5em">
 	<div class="row">
 		<div class="col-md-12">
 			<div class="table-responsive">
@@ -6,11 +6,12 @@
 				  <thead class="thead-dark">
 				    <tr>
 				      <th scope="col" width="3%">#</th>
-				      <th scope="col" width="10%">Carnet</th>
-				      <th scope="col" width="15%">Paterno</th>
-				      <th scope="col" width="15%">Materno</th>
-				      <th scope="col" width="15%">Nombres</th>
-				      <th scope="col" width="7%">Nivel</th>
+				      <th scope="col" width="7%">Carnet</th>
+				      <th scope="col" width="10%">Paterno</th>
+				      <th scope="col" width="10%">Materno</th>
+				      <th scope="col" width="10%">Nombres</th>
+				      <th scope="col" width="7%">F. Nacimiento</th>
+				      <th scope="col" width="15%">Nivel</th>
 				      <th scope="col" width="7%">Grado</th>
 				      <th scope="col" width="7%">F. Inscripción</th>
 				    </tr>
@@ -19,14 +20,14 @@
 				  	{% for d in datos %}
 				    <tr class="tr-estado-reporte-{{d.id}}">
 				      <th scope="row">{{loop.index}}</th>
-				      <td>{{d.carnet}} {{d.complemento}}</td>
+				      <td>{{d.carnet_identidad}} {{d.complemento}}</td>
 				      <td>{{d.paterno}}</td>
 				      <td>{{d.materno}}</td>
 				      <td>{{d.nombre}}</td>
-				      <td>{{d.fecha_nacimiento}}</td>
+				      <td>{{d.fecha_nacimiento | date('d/m/Y')}}</td>
 				      <td>{{d.nivel}}</td>
 				      <td>{{d.grado}}</td>
-				      <td>{{d.fecha_inscripcion}}</td>
+				      <td>{{d.fecha_inscripcion | date ('d/m/Y H:i:s')}}</td>
 				    </tr>
 				  	{% endfor %}
 				  	{% if datos|length<=0 %}
