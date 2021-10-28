@@ -312,5 +312,6 @@ sie_regularizacion_IncoherenciasExterior:
     resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionincoherenciasexterior.yml"
     prefix:   /sie/regularizacionGPIncoherenciasEXterior
 
-
-
+sie_preinscripcion_sorteo_padre:
+    resource: "@SieHerramientaBundle/Resources/config/routing/preinscripcionsorteohijo.yml"
+    prefix: /sie/sorteopreinscripcion

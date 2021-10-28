@@ -704,6 +704,18 @@
                                 <li><a href="{{ path('regularizacion_rue_index')}}">Fecha de Fundación</a></li>
                             </ul>
                         </li>
+                    {% endif %}         
+                    {% if app.session.get('roluser') in [5,6,7,8,9,10] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">Pre-inscripción</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('preinscripcion_sorteo_index')}}">Fecha de sorteo</a></li>
+                            </ul>
+                        </li>
                     {% endif %}                                        
 x                    {% if false %}
                         <li class="submenu">
