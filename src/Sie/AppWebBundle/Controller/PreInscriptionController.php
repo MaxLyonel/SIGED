@@ -9,6 +9,14 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityRepository;
 
+use Sie\AppWebBundle\Entity\PreinsPersona; 
+use Sie\AppWebBundle\Entity\PreinsEstudiante; 
+use Symfony\Component\HttpFoundation\Response;
+use Sie\AppWebBundle\Entity\PreinsEstudianteInscripcion; 
+use Sie\AppWebBundle\Entity\PreinsApoderadoInscripcion; 
+use Sie\AppWebBundle\Entity\PreinsEstudianteInscripcionJustificativo; 
+use Sie\AppWebBundle\Entity\PreinsEstudianteInscripcionHermanos; 
+
 class PreInscriptionController extends Controller
 {
  /*   public function indexAction()
@@ -185,6 +193,370 @@ class PreInscriptionController extends Controller
         ]);         
 
 
+    }
+
+    public function  getLevelUEAction(Request $request){
+
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+
+        //get send values
+        $idDepto = $request->get('departamento');
+        $sie = $request->get('sie');
+        $gestion = $this->session->get('currentyear');        
+
+        $objLevels = $this->get('funciones')->getLevelUE($sie, $gestion);
+        $aniveles = array();
+        if($objLevels){
+
+            foreach ($objLevels as $nivel) {
+                $aniveles[] = array('id'=> $nivel[1], 'level'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel());
+            }   
+
+            $status='success';
+            $code=200;
+            $message='data encontrada correctamente';
+            $swlevel = true;  
+        }else{
+            $status='error';
+            $code=404;
+            $message='data NO encontrada correctamente';     
+            $swlevel = false;  
+        }        
+
+       
+
+      return $response->setData([
+            'status'=>'success',
+            'datos'=>array(
+                'status'=>$status,
+                'code'=>$code,
+                'message'=>$message,                
+                'swlevel'=>$swlevel,                
+                'dataLevel'=>$aniveles,
+            )
+        ]);             
+
+    }
+
+    public function  getGradosUEAction(Request $request){
+
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+
+        //get send values
+        $idDepto = $request->get('departamento');
+        $sie = $request->get('sie');
+        $idnivel = $request->get('nivel');
+        $gestion = $this->session->get('currentyear');        
+// dump($sie);
+// dump($idnivel);
+// dump($gestion);
+// die;
+        $em = $this->getDoctrine()->getManager();
+        //get grado
+        $agrados = array();
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $query = $entity->createQueryBuilder('iec')
+                ->select('(iec.gradoTipo)')
+                ->where('iec.institucioneducativa = :sie')
+                ->andWhere('iec.nivelTipo = :idnivel')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->setParameter('sie', $sie)
+                ->setParameter('idnivel', $idnivel)
+                ->setParameter('gestion', $gestion)
+                ->distinct()
+                ->orderBy('iec.gradoTipo', 'ASC')
+                ->getQuery();
+        $aGrados = $query->getResult();
+
+        $agrados = array();
+        
+        foreach ($aGrados as $grado) {
+            if($idnivel == 12 && $grado[1]==1){
+                $agrados[$grado[1]] = array('id'=>$grado[1], 'grado'=>$em->getRepository('SieAppWebBundle:GradoTipo')->find($grado[1])->getGrado() );
+            }
+            if($idnivel == 13 && $grado[1]==1){
+                $agrados[$grado[1]] = array('id'=>$grado[1], 'grado'=>$em->getRepository('SieAppWebBundle:GradoTipo')->find($grado[1])->getGrado() );
+            }
+            if($idnivel == 11){
+                $agrados[$grado[1]] = array('id'=>$grado[1], 'grado'=>$em->getRepository('SieAppWebBundle:GradoTipo')->find($grado[1])->getGrado() );
+            }            
+        }
+
+
+        $status='success';
+        $code=200;
+        $message='data encontrada correctamente';
+        $swgrado = true;  
+
+      return $response->setData([
+            'status'=>'success',
+            'datos'=>array(
+                'status'=>$status,
+                'code'=>$code,
+                'message'=>$message,                
+                'swgrado'=>$swgrado,                
+                'dataGrados'=>$agrados,
+            )
+        ]);  
+
+
+      return $response;        
+           
+
+    }    
+
+    public function findBrotherAction(Request $request){
+
+        $response = new JsonResponse();
+        //get send values
+        
+        $codigoRude = $request->get('codigoRude'); 
+        $gestion = $this->session->get('currentyear');
+        $sie = $request->get('sie'); 
+
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select('e.paterno,e.materno,e.nombre, ei.id')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->where('e.codigoRude = :id')
+                ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('iec.institucioneducativa = :sie')
+                ->setParameter('sie', $sie)
+                ->setParameter('id', $codigoRude)
+                ->setParameter('gestion', $gestion)
+                ->orderBy('iec.gestionTipo', 'DESC')
+                ->getQuery();
+                // dump($query->getSQL());die;
+            $objInfoInscription = $query->getResult();
+            
+            if(sizeof($objInfoInscription)>=1){
+
+                $status='success';
+                $code=200;
+                $message='data encontrada correctamente';
+                $swbrother = true;
+
+                $arrBrother[] = array(
+                    'paterno'=>$objInfoInscription[0]['paterno'],
+                    'materno'=>$objInfoInscription[0]['materno'],
+                    'nombre'=>$objInfoInscription[0]['nombre'],
+                    'idEstIns'=>$objInfoInscription[0]['id'],
+                );
+
+            }
+            else{
+                $status='error';
+                $code=404;
+                $message='data NO encontrada correctamente';     
+                $swbrother = false; 
+                $arrBrother = false;
+            }
+            // dump($arrBrother);die;
+            // dump($arrBrother);die;
+
+              return $response->setData([
+                    'status'=>'success',
+                    'datos'=>array(
+                        'status'=>$status,
+                        'code'=>$code,
+                        'message'=>$message,                
+                        'swbrother'=>$swbrother,                
+                        'dataBrother'=>$arrBrother,
+                    )
+                ]);              
+    }
+
+
+    public function saveAllDataAction(Request $request){
+
+
+        $dataParent = $request->get('dataParent');
+        $addrressParent = $request->get('addrressParent');
+        $ueInfo = $request->get('ueInfo');
+        $brother = $request->get('brother');
+        $student = $request->get('student');
+        $justify = $request->get('justify');
+    // dump($dataParent);
+    // dump($addrressParent);
+    // dump($ueInfo);
+    // dump($brother);
+    // dump($student);
+    // dump($justify);
+    // die;
+
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction(); 
+
+        try {
+            ////////////////////////////////////////
+            // this is to the new person request////
+            ////////////////////////////////////////
+
+
+            $newPreinsPersona = $em->getRepository('SieAppWebBundle:PreinsPersona')->findOneBy(array('carnet' => $dataParent['carnet'], 'complemento'=>$dataParent['complemento'] ));
+
+            
+            if(sizeof($newPreinsPersona)>0){
+
+
+            }else{
+
+                $newPreinsPersona = new PreinsPersona();
+                $newPreinsPersona->setCarnet($dataParent['carnet']);
+                $newPreinsPersona->setComplemento($dataParent['complemento']);
+                $newPreinsPersona->setPaterno(mb_strtoupper($dataParent['paterno'], 'utf-8'));
+                $newPreinsPersona->setMaterno(mb_strtoupper($dataParent['materno'], 'utf-8'));
+                $newPreinsPersona->setNombre(mb_strtoupper($dataParent['nombre'], 'utf-8'));
+                $newPreinsPersona->setFechaNacimiento(new \DateTime($dataParent['fechaNacimiento']));  
+                $newPreinsPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($dataParent['genero']));  
+                $newPreinsPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));  
+
+                // $newPreinsPersona->setNomLugTrab($dataParent['lugarTrabajo']);
+                $newPreinsPersona->setMunLugTrab($addrressParent['municipio']);
+                $newPreinsPersona->setZonaLugTrab($addrressParent['zona']);
+                $newPreinsPersona->setAvenidaLugTrab($addrressParent['avenida']);
+                $newPreinsPersona->setCelularLugTrab($addrressParent['fono']);
+                $newPreinsPersona->setSegipId(1);
+
+
+
+                $em->persist($newPreinsPersona);
+            }
+
+            ////////////////////////////////////////
+            // this is to the new student////
+            ////////////////////////////////////////
+            //  
+            $newPreinsEstudiante = new PreinsEstudiante();
+            $newPreinsEstudiante->setCarnetIdentidad($student['carnet']);
+            $newPreinsEstudiante->setComplemento('');
+            $newPreinsEstudiante->setPaterno(mb_strtoupper($student['paterno'], 'utf-8'));
+            $newPreinsEstudiante->setMaterno(mb_strtoupper($student['materno'], 'utf-8'));
+            $newPreinsEstudiante->setNombre(mb_strtoupper($student['nombre'], 'utf-8'));
+            $newPreinsEstudiante->setFechaNacimiento(new \DateTime($student['fechaNacimiento']));
+
+            $newPreinsEstudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find(1));
+            $newPreinsEstudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(1));
+
+
+            $em->persist($newPreinsEstudiante);
+
+            ////////////////////////////////////////
+            // this is to the new PreinsEstudianteInscripcion////
+            ////////////////////////////////////////
+            $newPreinsEstudianteInscripcion = new PreinsEstudianteInscripcion();
+            $newPreinsEstudianteInscripcion->setPreinsEstudiante($em->getRepository('SieAppWebBundle:PreinsEstudiante')->find($newPreinsEstudiante->getId()));  
+            $ojbInstCursoCupo = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->findOneBy(array('institucioneducativa' => $ueInfo['sie']));
+            $newPreinsEstudianteInscripcion->setPreinsInstitucioneducativaCursoCupo($em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->find($ojbInstCursoCupo->getId()));  
+            $newPreinsEstudianteInscripcion->setMunicipioVive($student['municipio']);
+            $newPreinsEstudianteInscripcion->setZonaVive($student['zona']);
+            $newPreinsEstudianteInscripcion->setAvenidaVive($student['avenida']);
+            $newPreinsEstudianteInscripcion->setCelular($student['fono']);            
+            $newPreinsEstudianteInscripcion->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(1));  
+
+            $newPreinsEstudianteInscripcion->setFechaInscripcion(new \DateTime('now'));
+            $newPreinsEstudianteInscripcion->setFechaRegistro(new \DateTime('now'));
+
+            $em->persist($newPreinsEstudianteInscripcion);
+            ////////////////////////////////////////
+            // this is to the new  PreinsApoderadoInscripcion////
+            ////////////////////////////////////////
+            $newPreinsApoderadoInscripcion = new PreinsApoderadoInscripcion();
+            $newPreinsApoderadoInscripcion->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($dataParent['parentesco']));
+            $newPreinsApoderadoInscripcion->setPreinsPersona($em->getRepository('SieAppWebBundle:PreinsPersona')->find($newPreinsPersona->getId()));
+            $newPreinsApoderadoInscripcion->setPreinsEstudianteInscripcion($em->getRepository('SieAppWebBundle:PreinsEstudianteInscripcion')->find($newPreinsEstudianteInscripcion->getId()));
+            $newPreinsApoderadoInscripcion->setFechaRegistro(new \DateTime('now'));
+
+            $em->persist($newPreinsApoderadoInscripcion);
+
+            ////////////////////////////////////////
+            // this is to the new  PreinsApoderadoInscripcion////
+            ////////////////////////////////////////
+            if(sizeof($justify)>0){
+                foreach ($justify as $value) {
+                    $newPreinsEstudianteInscripcionJustificativo = new PreinsEstudianteInscripcionJustificativo();
+
+                    $newPreinsEstudianteInscripcionJustificativo->setPreinsEstudianteInscripcion($em->getRepository('SieAppWebBundle:PreinsEstudianteInscripcion')->find($newPreinsEstudianteInscripcion->getId()));
+                    $newPreinsEstudianteInscripcionJustificativo->setPreinsJustificativoTipo($em->getRepository('SieAppWebBundle:PreinsJustificativoTipo')->find($value));
+
+                    $newPreinsEstudianteInscripcionJustificativo->setFechaInscripcion(new \DateTime('now'));
+                    $newPreinsEstudianteInscripcionJustificativo->setFechaRegistro(new \DateTime('now'));                    
+
+                    $em->persist($newPreinsEstudianteInscripcionJustificativo);
+
+                }            
+            }
+
+            ////////////////////////////////////////
+            // this is to the new  PreinsEstudianteInscripcionHermanos////
+            ////////////////////////////////////////
+            if(sizeof($brother)>0 && $student['codigoRude']!=''){
+
+                $newPreinsEstudianteInscripcionHermanos = new PreinsEstudianteInscripcionHermanos();
+
+                $newPreinsEstudianteInscripcionHermanos->setEstudianteInscripcion($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($brother[0]['idEstIns']));
+                $newPreinsEstudianteInscripcionHermanos->setPreinsEstudianteInscripcion($em->getRepository('SieAppWebBundle:PreinsEstudianteInscripcion')->find($newPreinsEstudianteInscripcion->getId()));
+
+                $newPreinsEstudianteInscripcionHermanos->setFechaRegistro(new \DateTime('now'));
+
+                $em->persist($newPreinsEstudianteInscripcionHermanos);            
+
+            }
+
+            // save all data
+            $em->flush();            
+            // Try and commit the transaction
+            $em->getConnection()->commit();    
+
+            $status='success';
+            $code=200;
+            $message='registrado correctamente...';
+            $swdata = true;       
+    
+        } catch (Exception $e) {
+            $em->getConnection()->rollback();
+            $status='warning';
+            $code=404;
+            $message='No registrado...';     
+            $swdata = false; 
+
+        }
+
+        return $response->setData([
+            'status'=>'success',
+            'datos'=>array(
+                'status'=>$status,
+                'code'=>$code,
+                'message'=>$message,                
+                'swdata'=>$swdata,  
+                'numTramite'=>$newPreinsEstudianteInscripcion->getId(),  
+                'urlreporte'=> $this->generateUrl('preinscription_preinspdf', array('idTramite'=>$newPreinsEstudianteInscripcion->getId()))              
+
+            )
+        ]);        
+    }
+
+    public function preinspdfAction(Request $request, $idTramite){
+            $pdf=$this->container->getParameter('urlreportweb') . 'reg_preins_formulario.rptdesign&__format=pdf'.'&preinscripcion='.$idTramite;
+            //$pdf='http://127.0.0.1:63170/viewer/preview?_report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&_format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
+            
+            $status = 200;  
+            $arch           = 'DECLARACION_PREINSCRIPCIÓN-'.date('Y').'_'.date('YmdHis').'.pdf';
+            $response       = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            $response->setContent(file_get_contents($pdf));
+            $response->setStatusCode($status);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+            return $response;
     }
 
     public function registryClaimAction(Request $request){

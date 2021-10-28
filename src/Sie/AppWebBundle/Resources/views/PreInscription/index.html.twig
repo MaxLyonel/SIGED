@@ -87,7 +87,7 @@
 			<div class="row">
 				  
 				<div class="col-md-6 col-xs-12 col-md-offset-3 caja">
-					<h2 class="titulo">Pre-Inscription </h2>
+					<h2 class="titulo">PRE-INSCRIPCIÓN </h2>
 					<div  class="contenido">
 						<p class="subtitulo">FORMULARIO DE PRE INSCRIPCIÓN PARA EL SORTEO DE PLAZAS EN UNIDADES EDUCATIVAS DE ALTA DEMANDA PARA EDUCACIÓN INICIAL Y PRIMER AÑO DE ESCOLARIDAD DE EDUCACIÓN PRIMARIA Y SECUNDARIA</p>
 						<p></p>
@@ -113,7 +113,7 @@
 													<input type="text" v-model="dataParent.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico" :disabled="swdata ? '':disabled">
 												</div>
 												<div class="form-group col-md-4">
-													<label>Fecha Nacimiento </label>
+													<label>Fecha Nacimiento (dd-mm-aaa)</label>
 													<input type="text" v-model="dataParent.fechaNacimiento" class="form-control jupper" maxlength="10" v-on:keypress="" :disabled="swdata ? '':disabled">
 												</div>		
 											</div>
@@ -123,7 +123,7 @@
 													<input type="text" v-model="dataParent.paterno" class="form-control jupper" maxlength="15" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
 												</div>
 												<div class="form-group col-md-4">
-													<label>Materno </i> </label>
+													<label>Materno  </label>
 													<input type="text" v-model="dataParent.materno" class="form-control jupper" maxlength="15" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
 												</div>
 												<div class="form-group col-md-4">
@@ -131,7 +131,22 @@
 													<input type="text" v-model="dataParent.nombre" class="form-control jupper" maxlength="20" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
 												</div>		
 											</div>
+
 											<div class="row">
+
+												<div class="form-group col-md-4">
+													<label>Parentesco</label>
+			                                        <select name="arrParen" id="idarrParen" class="custom-select form-control" v-model="dataParent.parentesco" v-on:change="" :disabled="swdata ? '':disabled">  
+			                                          	<option v-for="item in dbParentesco" :value="item.id">${ item.parentesco }</option>
+			                                        </select>														
+													
+												</div>
+												<div class="form-group col-md-4">
+													<label>Genero </label>
+													<select name="arrGen" id="idarrGen" class="custom-select form-control" v-model="dataParent.genero" v-on:change="" :disabled="swdata ? '':disabled"> 
+														<option v-for="item in dbGenero" :value="item.id">${ item.genero }</option>
+													</select>														
+												</div>
 												<div class="form-group col-md-4">
 													<div class="form-check">
 													<input class="form-check-input" v-model="dataParent.forign" type="checkbox" value="" id="flexCheckIndeterminate" :disabled="swdata ? '':disabled">
@@ -139,8 +154,19 @@
 														Extranjero?
 													</label>
 													</div>	
+												</div>														
+											</div>
+{# 
+											<div class="row">
+												<div class="form-group col-md-12">
+													<div class="form-check">
+													<input class="form-check-input" v-model="dataParent.forign" type="checkbox" value="" id="flexCheckIndeterminate" :disabled="swdata ? '':disabled">
+													<label class="form-check-label" for="flexCheckIndeterminate">
+														Extranjero?
+													</label>
+													</div>	
 												</div>
-											</div>																					
+											</div>	 #}																				
 										</div>
 										
 									</div>
@@ -169,7 +195,8 @@
 									<div class="form-row">
 										<div class="form-group col-md-12">
 										<label for="job">Dirección de su residencia (Zona/avenida/calle/N°/teléfono):</label>
-										<input type="text" class="form-control" id="addrr" v-model="addrressParent.dirresidencia" :disabled="swParentAddress ==true">
+										{# <input rows="3" class="form-control" id="" > #}
+										 <textarea class="form-control jupper" id="addrr" rows="3" v-model="addrressParent.dirresidencia" :disabled="swParentAddress ==true"></textarea>
 										</div>
 									
 									</div>							
@@ -183,21 +210,21 @@
 										<div class="form-row">
 											<div class="form-group col-md-6">
 											<label for="job">Nombre del lugar de trabajo:</label>
-											<input type="text" class="form-control" id="job" v-model="addrressParent.lugarTrabajo" :disabled="swParentAddress ==true">
+											<input type="text" class="form-control jupper" id="job" v-model="addrressParent.lugarTrabajo" :disabled="swParentAddress ==true">
 											</div>
 											<div class="form-group col-md-6">
 											<label for="Municipio">Municipio:</label>
-											<input type="text" class="form-control" id="Municipio" v-model="addrressParent.municipio" :disabled="swParentAddress ==true">
+											<input type="text" class="form-control jupper" id="Municipio" v-model="addrressParent.municipio" :disabled="swParentAddress ==true">
 											</div>
 										</div>
 										<div class="form-row">
 											<div class="form-group col-md-6">
 											<label for="job">Zona/Villa:</label>
-											<input type="text" class="form-control" id="zona" v-model="addrressParent.zona" :disabled="swParentAddress ==true">
+											<input type="text" class="form-control jupper" id="zona" v-model="addrressParent.zona" :disabled="swParentAddress ==true">
 											</div>
 											<div class="form-group col-md-6">
 											<label for="Municipio">Avenida/Calle/N°:</label>
-											<input type="text" class="form-control" id="avenida" v-model="addrressParent.avenida" :disabled="swParentAddress ==true">
+											<input type="text" class="form-control jupper" id="avenida" v-model="addrressParent.avenida" :disabled="swParentAddress ==true">
 											</div>
 										</div>	
 										<div class="form-row">
@@ -313,7 +340,7 @@
 											<input type="text" v-model="student.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico" >
 										</div>
 										<div class="form-group col-md-4">
-											<label>Fecha Nacimiento </label>
+											<label>Fecha Nacimiento (dd-mm-aaa)</label>
 											<input type="text" v-model="student.fechaNacimiento" class="form-control jupper" maxlength="10" v-on:keypress="" >
 										</div>		
 									</div>
@@ -332,7 +359,16 @@
 										</div>		
 									</div>
 									<div class="row">
-										<div class="form-group col-md-4">
+
+										<div class="form-group col-md-6">
+											<label>Genero </label>
+											<select name="arrGens" id="idarrGens" class="custom-select form-control" v-model="student.genero" v-on:change=""> 
+												<option v-for="item in dbGenero" :value="item.id">${ item.genero }</option>
+											</select>														
+										</div>									
+
+
+										<div class="form-group col-md-6">
 											<div class="form-check">
 											<input class="form-check-input" v-model="student.forign" type="checkbox" value="" id="flexCheckIndeterminate" >
 											<label class="form-check-label" for="flexCheckIndeterminate">
@@ -346,24 +382,24 @@
 										<div class="form-row">
 											<div class="form-group col-md-6">
 											<label for="Municipio">Municipio:</label>
-											<input type="text" class="form-control" id="Municipio" v-model="student.municipio" >
+											<input type="text" class="form-control jupper" id="Municipio" v-model="student.municipio" >
 											</div>
 											<div class="form-group col-md-6">
 											<label for="job">Zona/Villa:</label>
-											<input type="text" class="form-control" id="zona" v-model="student.zona" >
+											<input type="text" class="form-control jupper" id="zona" v-model="student.zona" >
 											</div>											
 										</div>
 										<div class="form-row">
 
 											<div class="form-group col-md-6">
 											<label for="Municipio">Avenida/Calle/N°:</label>
-											<input type="text" class="form-control" id="avenida" v-model="student.avenida" >
+											<input type="text" class="form-control jupper" id="avenida" v-model="student.avenida" >
 											</div>
 										</div>	
 										<div class="form-row">
 											<div class="form-group col-md-6">
 												<label for="job">Teléfono/Celular:</label>
-												<input type="text" class="form-control" id="fono" v-model="student.fono">
+												<input type="text" class="form-control jupper" id="fono" v-model="student.fono">
 											</div>
 										</div>	
 
@@ -373,33 +409,84 @@
 										    <label>{{ item.category }} : {{ category.id }}</label>
 										</div>	 #}									
 
+
+
 										<div class="form-row">
-										    <ul>
-										        <li v-for="(option, index) in dataJustify" :key="index">
-										          <input type="checkbox" :id="index" :value="option.id" v-model="checkedNames" @change="openJustify(option.id)">
-										          <label :for="index">${ option.justificativo }</label>
-										        </li>
-										      </ul>
-										      <span>Checked names: ${ checkedNames } sampel: ${showOptionBrothers}</span>
-											{# <div class="form-group col-md-6">
-												<div  v-for="justify in dataJustify">
-												  <input type="checkbox" :value="justify.id" :id="justify.id" value="justify.id" v-model.number="checkedNames" @click="openJustify(justify.id)">
-												  <label :for="justify.id">${justify.justificativo}</label>
-												 </div>
-												 <span>Checked names: ${ checkedNames } ${showOptionBrothers}</span>
-												  <br>
-											</div> #}
-										</div>
-								  
+											<div class="form-group col-md-6">
+		                                        <label for="level">Nivel de educación:</label>
+		                                        <select name="arrLevel" id="idarrPais_Level" class="custom-select form-control" v-model="ueInfo.nivel" v-on:change="getGrados">  
+		                                          <option v-for="item in dataLevel" :value="item.id">${ item.level }</option>
+		                                        </select>	
+											</div>
+		                                    <div class="col-md-6">
+		                                        <label for="provincia">Año de escolaridad:</label>
+		                                        <select name="arrGrado" id="grado" class="custom-select form-control" v-model="ueInfo.grado" >  
+		                                          <option v-for="item in dataGrados" :value="item.id" >${item.grado}</option>
+		                                        </select>
+		                                    </div>											                                    
+										
+										</div>										
+
+
+
+
+										<div class="form-row">
+											<div class="form-group col-md-12">
+												<label for="provincia">Justificativo:</label>
+											    <ul>
+											        <li v-for="(option, index) in dataJustify" :key="index">
+											          <input type="checkbox" :id="index" :value="option.id" v-model="checkedNames" @change="openJustify(option.id)">
+											          <label :for="index">${ option.justificativo }</label>
+											        </li>
+											      </ul>
+										      	{# <span>Checked names: ${ checkedNames } sampel: ${showOptionBrothers}</span> #}
+										     </div>
+										</div>								
+
+
+										<div class="form-row" v-if="showOptionBrothers">
+											<div class="form-group col-md-12">
+												<div class="table-responsive">
+			                                            <table class="table table-hover table-bordered">
+			                                                <thead>
+			                                                    <tr>
+			                                                        <th>Buscar hermana/o por Código RUDE</th>
+			                                                        <th></th>
+			                                                        
+			                                                    </tr>
+			                                                </thead>
+			                                                <tbody>
+			                                                	<tr>
+			                                                		<td>
+			                                                			<input type="text"  class="form-control jupper" maxlength="20" v-on:keypress="alfanumerico" placeholder="Código RUDE" v-model="student.codigoRude">
+			                                                		</td>
+			                                                		<td>
+			                                                			<button type="button" class="btn btn-md btn-warning mb-2" @click="findBrother"><i  class="fa fa-search"></i> Buscar</button>
+			                                                		</td>
+			                                                	</tr>
+			                                                	{# ${dataBrotherSelected} #}
+		                                                        <tr v-for="(brother, index) in dataBrother">
+		                                                            <td class="text-left border-right" colspan="2">${ index + 1} - ${brother.paterno} ${brother.materno} ${brother.nombre}
+		                                                            </td>
+		                                                            {# <td><a class="btn btn btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Eliminar"  @click='removeRequest(index)'> <i class="fa fa-trash text-danger"></i> </a></td>
+		                                                            <td>
+		                                                            <a v-on:click="seleccionarInscripcion(index)" class="btn btn btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Registrar Notas"> <i class=" fa fa-pencil text-success"  ></i> </a></td>
+		                                                             #}
+		                                                            
+		                                                        </tr>			                                                	
+
+			                                                </tbody>
+			                                            </table>	
+			                                    </div>											 
+		                                    </div>											 
+										</div>									  										
 									
 
-
-
-
-
-
-									<div class="col-md-12 text-center" >
-										<button type="button" class="btn btn-primary" @click="consultar">Verificar </button>
+									</br>
+									</br>
+									
+									<div class="col-md-12text-center" >
+										<button type="button" class="btn btn-primary btn-lg btn-block" @click="saveAllData">REGISTRAR PRE INSCRIPCIÓN  </button>
 									</div>
 
 
@@ -409,10 +496,7 @@
 
 						</form>						
 						
-						<div>
 
-				
-						</div>
 
 					</div>
 					<br>
@@ -421,6 +505,24 @@
 					<div v-if="datos.status =='warning'" class="alert" :class="[{'alert-success':datos.status == 'warning'}, {'alert-warning':datos.status == 'warning'}]">
 						<p v-if="datos.status =='warning'" >Segip: Datos NO validados correctamente...</p>
 					</div>
+
+					<div  v-if="urlreporte">
+		                <div class="panel panel-primary">
+		                    <div class="panel-heading">
+		                        <h3 class="panel-title"> <i class="fa fa-file-pdf-o"></i> Solicitud enviada</h3>
+		                    </div>
+		                    <div class="panel-body">
+		                        <div class="alert alert-success">
+		                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		                            Trámite Nro. <b class="text-success">${numTramite}</b> enviado exitosamente.
+		                        </div>
+		                        <div class="text-center">
+		                            <a v-bind:href="urlreporte"><b> <i class="fa fa-file-pdf-o fa-2x"></i> Descargar formulario</b></a>
+		                        </div>
+		                    </div>
+		                </div>			
+					</div>	
+									
 				</div>
 				
 			</div>
@@ -460,11 +562,13 @@
 		    		paterno: 'FLORES',
 		    		materno: 'QUISPE',
 		    		fechaNacimiento: '15-06-1982',
+		    		parentesco: '',
+		    		genero: '',
 				},
 				
 		    	student: {
 		    		/*codigoRude: '4073040820205783 809700692017061 718500012020019',*/
-					// codigoRude: '',
+					codigoRude: '',
 					// codigoRudeId: '',
 		    		carnet: '',
 		    		complemento: '',
@@ -472,6 +576,10 @@
 		    		paterno: '',
 		    		materno: '',
 		    		fechaNacimiento: '',
+		    		municipio: '',
+		    		zona: '',
+		    		avenida: '',
+		    		fono: '',
 		   //  		nivel: '',
 					// estId: '',
 		   //  		grado: ''
@@ -486,13 +594,17 @@
                 message:'',                
                 swdata:'',
                 swnodata:'',
+                urlreporte:'',
+                numTramite:'',
                 swuned:false,
 				disabled:false, 
 				swstudent:false, 
 				disabledaddress:false, 
 				showOptionBrothers:false, 
 				allDataRequest:{},           
-                addrressParent:{},
+                addrressParent:{
+                	dirresidencia:''
+                },
                 swParentAddress:false,
                 departamentos:[ {"id":1,"depto":"Chuquisaca"},
                 				{"id":2,"depto":"La Paz"},
@@ -503,10 +615,25 @@
                 				{"id":7,"depto":"Santa Cruz"},
                 				{"id":8,"depto":"Beni"},
                 				{"id":9,"depto":"Pando"}],
-                ueInfo:{},
+                
+                dbParentesco:[  
+                				{"id":1,"parentesco":"Padre"},
+                				{"id":2,"parentesco":"Madre"},
+                				{"id":8,"parentesco":"Tutor"},
+                			],
+                dbGenero:[  
+                				{"id":1,"genero":"Masculino"},
+                				{"id":2,"genero":"Femenino"},
+                			],
+
+                ueInfo:{nivel:'',grado:''},
                 dataUEs:{},
-                dataJustify:{},
                 dataUnEd:{},
+                dataLevel:{},
+                dataGrados:{},
+                dataJustify:{},
+                dataBrother:{'codigoRude':''},
+                dataBrotherSelected:[],
                 checkedNames: []
 
 		    	
@@ -545,6 +672,12 @@
 		    			}	
 		    			if (this.dataParent.nombre == '') {
 		    				this.errores.push('Nombre del solicitante');
+		    			}	
+		    			if (this.dataParent.parentesco == '') {
+		    				this.errores.push('Parentesco del solicitante');
+		    			}	
+		    			if (this.dataParent.genero == '') {
+		    				this.errores.push('Genero del solicitante');
 		    			}											
 		    		}
 		    			    	
@@ -613,6 +746,31 @@
 		    			});
 		    	},
 				saveAddrress(){
+
+	    			this.errores = [];
+
+	    			if (this.addrressParent.dirresidencia == '') {
+	    				this.errores.push('Dirección de su residencia del solicitante');
+	    			}
+											
+		    		
+		    			    	
+		    		if (this.errores.length > 0) {
+			    		let texto = '<div class="errores">';
+			    		$.each(this.errores, function (i, value) {
+	                        texto = texto + '<li>' + value + '</li>';
+	                    });
+	                    texto = texto + '</div>';
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:texto,
+		    		  		type:'warning'
+		    			});
+		    			return false;
+		    		}					
+
+					
+
 					this.swParentAddress=false;
 					this.disabledaddress=false;
                 	Swal.fire({
@@ -684,36 +842,39 @@
                         confirmButtonText: 'Si, proceder',
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
+                    	if (result.value) {
+
+		                    if( me.ueInfo.departamento > 0 && me.ueInfo.sie > 0){
+		                         axios.post(Routing.generate('preinscription_chooseUE', me.ueInfo ))
+		                            .then(response => {
+		                                if (response.status == 200) {
+					    					this.datos = response.data.datos;
+
+											this.status=this.datos.status;
+											this.code=this.datos.code;
+											this.message=this.datos.message;                
+											this.swuned=this.datos.swues;
+											// this.disabled=this.datos.swdata;
+											this.dataUnEd=this.datos.dataUnEd;
+											//this.allDataRequest.push(this.datos.dataParent);
+											this.allDataRequest['ueInfo'] = me.ueInfo;
+
+		                                    $('[data-toggle="tooltip"]').tooltip();
+		                                }
+		                                if( response.status == 202){
+		                                    //this.respuesta = response.data;
+		                                }
+
+		                                this.buscando = false;
+		                            })
+		                            .catch(e => {
+		                                console.log(e);
+		                                this.buscando = false;
+		                            });
+		                    }else{
+		                    }   
+                    	}
                     	
-	                    if( me.ueInfo.departamento > 0 && me.ueInfo.sie > 0){
-	                         axios.post(Routing.generate('preinscription_chooseUE', me.ueInfo ))
-	                            .then(response => {
-	                                if (response.status == 200) {
-				    					this.datos = response.data.datos;
-
-										this.status=this.datos.status;
-										this.code=this.datos.code;
-										this.message=this.datos.message;                
-										this.swuned=this.datos.swues;
-										// this.disabled=this.datos.swdata;
-										this.dataUnEd=this.datos.dataUnEd;
-										//this.allDataRequest.push(this.datos.dataParent);
-										this.allDataRequest['ueInfo'] = me.ueInfo;
-
-	                                    $('[data-toggle="tooltip"]').tooltip();
-	                                }
-	                                if( response.status == 202){
-	                                    //this.respuesta = response.data;
-	                                }
-
-	                                this.buscando = false;
-	                            })
-	                            .catch(e => {
-	                                console.log(e);
-	                                this.buscando = false;
-	                            });
-	                    }else{
-	                    }   
 	                })					
 
 
@@ -738,14 +899,15 @@
                         confirmButtonText: 'Si, proceder',
                         cancelButtonText: 'Cancelar'
                     }).then((result) => {
-                    	
-						if (result.value) {
-							if(ikey == 0){
-                        		this.dataUnEd.shift();												
-                        		this.swuned = false;
+                    	if (result.value) {
+							if (result.value) {
+								if(ikey == 0){
+	                        		this.dataUnEd.shift();												
+	                        		this.swuned = false;
+								}
+								
 							}
-							
-						}
+                    	}
 	                })					
 
                     
@@ -754,8 +916,9 @@
 				},
 				registryStudent(){
 					this.swstudent = false;
+					me = this;
                 	Swal.fire({
-                        title: 'Registrar Esudainte para la Pre-Inscription',
+                        title: 'Registrar Estudiante para la Pre-Inscription',
                         text: "Esta seguro de CONTINUAR?",
                         type: 'question',
                         showCancelButton: true,
@@ -766,12 +929,66 @@
                     }).then((result) => {
                     	
 						if (result.value) {
-                        		this.swstudent = true;
+                        	this.swstudent = true;
+
+	                         axios.post(Routing.generate('preinscription_getLevelUE', me.ueInfo ))
+	                            .then(response => {
+	                                if (response.status == 200) {
+				    					this.datos = response.data.datos;
+
+										this.status=this.datos.status;
+										this.code=this.datos.code;
+										this.message=this.datos.message;                
+										// this.swlevel=this.datos.swlevel;
+										// this.disabled=this.datos.swdata;
+										this.dataLevel=this.datos.dataLevel;
+										//this.allDataRequest.push(this.datos.dataParent);
+										// this.allDataRequest['ueInfo'] = me.ueInfo;
+
+	                                    $('[data-toggle="tooltip"]').tooltip();
+	                                }
+	                                if( response.status == 202){
+	                                    //this.respuesta = response.data;
+	                                }
+
+	                                this.buscando = false;
+	                            })
+	                            .catch(e => {
+	                                console.log(e);
+	                                this.buscando = false;
+	                            });                        		
 							
 						}
 	                })						
 
 					
+
+				},
+				getGrados(){
+					getGrados = '';
+	                 axios.post(Routing.generate('preinscription_getGradosUE', me.ueInfo ))
+	                    .then(response => {
+	                        if (response.status == 200) {
+		    					this.datos = response.data.datos;
+
+								this.status=this.datos.status;
+								this.code=this.datos.code;
+								this.message=this.datos.message;     
+								this.dataGrados=this.datos.dataGrados;
+								
+
+	                            $('[data-toggle="tooltip"]').tooltip();
+	                        }
+	                        if( response.status == 202){
+	                            //this.respuesta = response.data;
+	                        }
+
+	                        this.buscando = false;
+	                    })
+	                    .catch(e => {
+	                        console.log(e);
+	                        this.buscando = false;
+	                    });   					
 
 				},
 				openJustify(){
@@ -781,12 +998,142 @@
                     $.each(this.checkedNames, function(index, val) {
                     	// console.log(val);
                         if (val == 1) {
-                        	console.log(val);
+                        	// console.log(val);
                         	// this.showOptionBrothers = val;
                             me.showOptionBrothers=true;
+                        }else{
+                        	//this.dataBrother.shift();
                         }
                     });					
                         
+
+				},
+
+				findBrother(){
+					me = this;
+					me.student.sie=me.ueInfo.sie;
+	                 axios.post(Routing.generate('preinscription_findBrother', me.student ))
+	                    .then(response => {
+	                        if (response.status == 200) {
+		    					this.datos = response.data.datos;
+
+								
+								this.code=this.datos.code;
+								this.status=this.datos.status;
+								this.message=this.datos.message;     
+								this.swbrother=this.datos.swbrother;     
+								this.dataBrother=this.datos.dataBrother;
+								this.dataBrother.codigoRude=me.student.codigoRude;
+								// this.allDataRequest['dataBrother']=this.dataBrother;
+								// this.dataBrotherSelected.push(this.dataBrother);
+								
+
+	                            $('[data-toggle="tooltip"]').tooltip();
+	                        }
+	                        if( response.status == 202){
+	                            //this.respuesta = response.data;
+	                        }
+
+	                        this.buscando = false;
+	                    })
+	                    .catch(e => {
+	                        console.log(e);
+	                        this.buscando = false;
+	                    });   
+				},
+				saveAllData(){
+					
+					me = this;
+		    		this.errores = [];
+		    		
+		    		
+	    			if (this.student.fechaNacimiento == '') {
+	    				this.errores.push('Fecha Nacimiento del postulante');
+	    			}	
+	    			if (this.student.nombre == '') {
+	    				this.errores.push('Nombre del postulante');
+	    			}		
+	    			if (this.ueInfo.nivel == '') {
+	    				this.errores.push('Nivel de educación del postulante');
+	    			}		
+	    			if (this.ueInfo.grado == '') {
+	    				this.errores.push('Año de escolaridad del postulante');
+	    			}	
+		    			    	
+		    		if (this.errores.length > 0) {
+			    		let texto = '<div class="errores">';
+			    		$.each(this.errores, function (i, value) {
+	                        texto = texto + '<li>' + value + '</li>';
+	                    });
+	                    texto = texto + '</div>';
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:texto,
+		    		  		type:'warning'
+		    			});
+		    			return false;
+		    		}
+
+
+                	Swal.fire({
+                        title: 'Registrar solicitud de Pre-Inscription',
+                        text: "Esta seguro de CONTINUAR?",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                    	
+						if (result.value) {
+                        	this.swstudent = true;
+
+
+                        	me.allDataRequest['brother']=me.dataBrother;
+                        	me.allDataRequest['student']=me.student;
+                        	me.allDataRequest['justify']=me.checkedNames;
+
+	                         axios.post(Routing.generate('preinscription_saveAllData', me.allDataRequest ))
+	                            .then(response => {
+	                                if (response.status == 200) {
+				    					this.datos = response.data.datos;
+
+										this.status=this.datos.status;
+										this.code=this.datos.code;
+										this.message=this.datos.message;                
+										this.dataLevel=this.datos.dataLevel;
+										
+										this.numTramite=this.datos.numTramite;
+										this.urlreporte=this.datos.urlreporte;
+
+										this.dataParent={};
+										this.addrressParent={};
+										this.dataBrother={};
+										this.dataParent={};
+										this.student={};
+										this.dataUnEd={};
+										this.swdata =false;
+										this.disabled =false;
+										
+										this.swstudent=false;
+
+	                                    $('[data-toggle="tooltip"]').tooltip();
+	                                }
+	                                if( response.status == 202){
+	                                    //this.respuesta = response.data;
+	                                }
+
+	                                this.buscando = false;
+	                            })
+	                            .catch(e => {
+	                                console.log(e);
+	                                this.buscando = false;
+	                            });                        		
+							
+						}
+	                })	
+					// this.swstudent = false;
 
 				},
 				validEmail(email){

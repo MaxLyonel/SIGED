@@ -24,4 +24,34 @@ preinscription_chooseUE:
     path:     /chooseUE
     defaults: { _controller: SieAppWebBundle:PreInscription:chooseUE }
     options:
+         expose: true  
+
+preinscription_getLevelUE:
+    path:     /getLevelUE
+    defaults: { _controller: SieAppWebBundle:PreInscription:getLevelUE }
+    options:
+         expose: true   
+         
+preinscription_getGradosUE:
+    path:     /getGradosUE
+    defaults: { _controller: SieAppWebBundle:PreInscription:getGradosUE }
+    options:
+         expose: true  
+
+preinscription_findBrother:
+    path:     /findBrother
+    defaults: { _controller: SieAppWebBundle:PreInscription:findBrother }
+    options:
+         expose: true    
+                   
+preinscription_saveAllData:
+    path:     /saveAllData
+    defaults: { _controller: SieAppWebBundle:PreInscription:saveAllData }
+    options:
+         expose: true   
+
+preinscription_preinspdf:
+    path:     /preinspdf/{idTramite}
+    defaults: { _controller: SieAppWebBundle:PreInscription:preinspdf }
+    options:
          expose: true         

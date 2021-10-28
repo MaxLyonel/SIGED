@@ -2111,4 +2111,24 @@ class Funciones {
         return $allJustify;
     }
 
+    public function getLevelUE($sie, $gestion){
+
+        $objLevels = $this->em->createQueryBuilder()
+            ->select('IDENTITY(iec.nivelTipo)')
+            ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
+            ->where('iec.institucioneducativa = :sie')
+            ->andwhere('iec.gestionTipo = :gestion')
+            ->setParameter('sie', $sie)
+            ->setParameter('gestion', $gestion )
+            ->orderBy('iec.nivelTipo', 'ASC')
+            ->distinct()
+            ->getQuery()
+            ->getResult();  
+        
+        return($objLevels);
+
+
+
+    }
+
 }
