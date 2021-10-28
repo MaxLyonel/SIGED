@@ -249,7 +249,8 @@ class OperativoUtils
 		$departamentos_array = array();
 		foreach ($departamentos as $value)
 		{
-			$departamentos_array[] = array('id'=>$value->getId(),'codigo'=>$value->getCodigo(),'depto'=>$value->getDepartamento());
+			if ($value->getId() >0)
+				$departamentos_array[] = array('id'=>$value->getId(),'codigo'=>$value->getCodigo(),'depto'=>$value->getDepartamento());
 		}
 		return $departamentos_array;
 	}
