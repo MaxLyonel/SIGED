@@ -1,0 +1,23 @@
+preinscripcion_sorteo_index:
+  path:     /
+  defaults: { _controller: SieHerramientaBundle:PreinscripcionSorteo:index }
+  options:
+    expose: true
+
+preinscripcion_sorteo_result:
+  path:     /result/
+  defaults: { _controller: SieHerramientaBundle:PreinscripcionSorteo:result }
+
+preinscripcion_sorteo_save:
+  path:     /save/
+  defaults: { _controller: SieHerramientaBundle:PreinscripcionSorteo:save }
+
+# regularizacion_rue_impresionDDJJ:
+preinscripcion_fecha_impresionSORTEO:
+  path:     /impresiodSORTEO/
+  defaults: { _controller: SieHerramientaBundle:PreinscripcionSorteo:impresionSORTEO }
+
+# # regularizacion_rue_impresion_seguimiento:
+# preinscripcion_sorteo_segimiento:  
+#   path:     /impresionSeguimiento/
+#   defaults: { _controller: SieHerramientaBundle:PreinscripcionSorteo:impresionSeguimiento }
