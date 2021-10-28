@@ -104,7 +104,8 @@
                         </div>
                     </div>
                 </div>
-            </div>     
+            </div> 
+             {% if (app.session.get('roluser') == 8) %}    
             <div class="row">                                       
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="panel panel-default shadow">
@@ -116,7 +117,8 @@
                         </div>
                     </div>
                 </div>
-            </div>            
+            </div>
+            {% endif %}            
             <div class="row">                                       
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="panel panel-default shadow">
@@ -213,7 +215,7 @@
                             <!-- Start project overview -->
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div id="chartContainerGenero" style="height:300px;"> </div> 
+                                    <div id="chartContainerGenero" style="height:300px;">ASAS </div> 
                                 </div>   
                                 
                             </div>                            

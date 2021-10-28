@@ -1241,7 +1241,9 @@ class TramiteCertificacionesPermanenteController extends Controller {
         }
         return $msg;
     }
-    
+    /**
+     * FUNCION  QUE IMPRIME LOS CERTIFICADOS DE BASICO Y AUXILIAR
+     */
     public function imprimirCertificadoAction(Request $request){
          //RECUPERAMOS LOS DATOS DEL FORMULARIO
         $em = $this->getDoctrine()->getManager();
@@ -1363,13 +1365,14 @@ class TramiteCertificacionesPermanenteController extends Controller {
            
            //DATOS PARA GENERAR EL CODIGO QR
             //$datosQr=$this->obtenerDatosQr();
-            $datosQr = $sie.' '.$centro.' '.$mencion.' '.$nivel.' '.$datosParticipante[0]['id'].' '.$datosParticipante[0]['codigoRude'].' '.$datosParticipante[0]['nombre'].' '.$datosParticipante[0]['materno'].' '.$datosParticipante[0]['paterno'].' '.$datosParticipante[0]['carnetIdentidad'];
-            //dump($datosQr);die;
+            $datosQr = $sie.' '.$centro.' '.$mencion.' '.$nivel.' '.$datosParticipante[0]['id'].' '.$datosParticipante[0]['codigoRude'].' '.$datosParticipante[0]['nombre'].' '.$datosParticipante[0]['materno'].' '.$datosParticipante[0]['paterno'].' '.$datosParticipante[0]['carnetIdentidad'];            
             $pdf->write2DBarcode($nroCertificado.' '.$datosQr, 'QRCODE,L', 20, 30, 45, 45, $style, 'N');
-            $pdf->Ln(1);
-            
-            //$pdf->Cell(0, 0, 'sasa', 0, 1);
-            //$pdf->write1DBarcode('0123456789', 'C128C', '', '', '', 18, 0.4, $style, 'N');
+            //$pdf->Ln(1);
+            //GENERA CODIGO DE BARRAS
+            //$pdf->Cell(0, 0, 'CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9', 0, 1);
+            //$pdf->write1DBarcode('CODE 39', 'C39', '', '', '', 18, 0.4, $style, 'N');
+            $pdf->Cell(20, 6, '', 0, 0, 'L'); 
+            $pdf->write1DBarcode('0123456789', 'C128C', '', '', '', 13, 0.4, $style, 'N');//pendiente
             
             $ci = $datosParticipante[0]['carnetIdentidad'].($datosParticipante[0]['complemento'] == '' ? '' : '-'.$datosParticipante[0]['complemento']).' '.$datosParticipante[0]['sigla']; 
             
