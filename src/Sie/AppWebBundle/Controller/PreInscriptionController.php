@@ -418,7 +418,7 @@ class PreInscriptionController extends Controller
                 $newPreinsPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($dataParent['genero']));  
                 $newPreinsPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));  
 
-                $newPreinsPersona->setNomLugTrab(mb_strtoupper($dataParent['lugarTrabajo'], 'utf-8'));
+                $newPreinsPersona->setNomLugTrab(mb_strtoupper($addrressParent['lugarTrabajo'], 'utf-8'));
                 $newPreinsPersona->setMunLugTrab(mb_strtoupper($addrressParent['municipio'], 'utf-8'));
                 $newPreinsPersona->setZonaLugTrab(mb_strtoupper($addrressParent['zona'], 'utf-8'));
                 $newPreinsPersona->setAvenidaLugTrab(mb_strtoupper($addrressParent['avenida'], 'utf-8'));
