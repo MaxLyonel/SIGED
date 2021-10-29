@@ -117,8 +117,8 @@
 													<input type="text" v-model="dataParent.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico" :disabled="swdata ? '':disabled">
 												</div>
 												<div class="form-group col-md-4">
-													<label>Fecha Nacimiento (dd-mm-aaa)</label>
-													<input type="text" v-model="dataParent.fechaNacimiento" class="form-control jupper" maxlength="10" v-on:keypress="" :disabled="swdata ? '':disabled">
+													<label>Fecha Nacimiento (dd-mm-aaaa)</label>
+													<input type="text" v-model="dataParent.fechaNacimiento" class="form-control jupper fecha" maxlength="10" v-on:keypress="" :disabled="swdata ? '':disabled">
 												</div>		
 											</div>
 											<div class="row">
@@ -182,6 +182,19 @@
 						
 
 						<div class="col-md-12 text-center" v-show="!swdata">
+							<div class="card" style="box-shadow: 1px 1px 5px grey">
+								<div class="form-group col-md-12">
+									<div class="form-check">
+										<canvas id="canvas" style="box-shadow: 1px 1px 5px grey;padding: 1em;" width="350" height="60"></canvas>
+									</div>
+								</div>
+								<div class="form-group col-md-12">
+									<div class="form-check">
+										<input name="code" class="form-check-input" placeholder="Ingrese el captcha" />
+									</div>
+								</div>
+							</div>
+
 							<button type="button" class="btn btn-primary" @click="consultar">Verificar </button>
 						</div>
 					</div>
@@ -344,8 +357,8 @@
 											<input type="text" v-model="student.complemento" class="form-control jupper" maxlength="2" v-on:keypress="alfanumerico" >
 										</div>
 										<div class="form-group col-md-4">
-											<label>Fecha Nacimiento (dd-mm-aaa)</label>
-											<input type="text" v-model="student.fechaNacimiento" class="form-control jupper" maxlength="10" v-on:keypress="" >
+											<label>Fecha Nacimiento (dd-mm-aaaa)</label>
+											<input type="text" v-model="student.fechaNacimiento" class="form-control jupper fecha" maxlength="10" v-on:keypress="" >
 										</div>		
 									</div>
 									<div class="row">
@@ -540,9 +553,19 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 	<script src="{{asset('js/inputmask.js')}}"></script>
+	<script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.min.js')}}"></script>
+	<script src="{{asset('js/jquery-captcha.min.js')}}"></script>
+
 	<script>
+		var captcha = null;
 		$(function () {
-			
+			captcha = new Captcha($('#canvas'),{length: 5, autoRefresh: true, caseSensitive: true, width: 350, height: 60});
+			$(".fecha").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
+			//const ans = captcha.valid($('input[name="code"]').val());
+			//$('#valid').on('click', function() {
+			//	const ans = captcha.valid($('input[name="code"]').val());
+			//	console.log(ans);
+			//})
 		})
 
 		var app = new Vue({
@@ -698,6 +721,19 @@
 		    			});
 		    			return false;
 		    		}
+
+		    		// Verificamos el Captcha
+		    		const ans = captcha.valid($('input[name="code"]').val());
+		    		if(ans == false)
+		    		{
+		    			Swal.fire({
+		    				title:'Captcha invalido, intente nuevamente',
+		    				type:'warning'
+		    			});
+		    			captcha.refresh();
+		    			return false;
+		    		}
+
 		    		this.datos = [];
 		    		this.validado = false;
 		    		this.cortina = true;
