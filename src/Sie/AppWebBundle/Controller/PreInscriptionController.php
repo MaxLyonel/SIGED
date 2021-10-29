@@ -410,7 +410,7 @@ class PreInscriptionController extends Controller
 
                 $newPreinsPersona = new PreinsPersona();
                 $newPreinsPersona->setCarnet($dataParent['carnet']);
-                $newPreinsPersona->setComplemento($dataParent['complemento']);
+                $newPreinsPersona->setComplemento(mb_strtoupper($dataParent['complemento'], 'utf-8'));
                 $newPreinsPersona->setPaterno(mb_strtoupper($dataParent['paterno'], 'utf-8'));
                 $newPreinsPersona->setMaterno(mb_strtoupper($dataParent['materno'], 'utf-8'));
                 $newPreinsPersona->setNombre(mb_strtoupper($dataParent['nombre'], 'utf-8'));
