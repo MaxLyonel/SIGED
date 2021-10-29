@@ -2066,7 +2066,7 @@ class Funciones {
     public function getUEspreInscription($idDepto){
         
         $queryUes = "
-         select g.id,  g.institucioneducativa
+         select distinct(g.id),  g.institucioneducativa
             from institucioneducativa g
                 inner join jurisdiccion_geografica h on g.le_juridicciongeografica_id=h.id
                      inner join distrito_tipo i on h.distrito_tipo_id = i.id
@@ -2094,8 +2094,8 @@ class Funciones {
                                 inner join dependencia_tipo dpt on (g.dependencia_tipo_id = dpt.id)
                                     inner join institucioneducativa_tipo int on (g.institucioneducativa_tipo_id = int.id)
                                         inner join estadoinstitucion_tipo eitt on (g.estadoinstitucion_tipo_id = eitt.id)
-                            where dt.id = '".$idDepto."' and  g.id = '".$sie."' and pin.gestion_tipo_id = '".$gestion."';           
-        ";   
+                            where dt.id = '".$idDepto."' and  g.id = '".$sie."' and pin.gestion_tipo_id = '".$gestion." '           
+        limit 1";   
 
         $query = $this->em->getConnection()->prepare($queryUes);
 
@@ -2113,19 +2113,30 @@ class Funciones {
 
     public function getLevelUE($sie, $gestion){
 
-        $objLevels = $this->em->createQueryBuilder()
-            ->select('IDENTITY(iec.nivelTipo)')
-            ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
-            ->where('iec.institucioneducativa = :sie')
-            ->andwhere('iec.gestionTipo = :gestion')
-            ->setParameter('sie', $sie)
-            ->setParameter('gestion', $gestion )
-            ->orderBy('iec.nivelTipo', 'ASC')
-            ->distinct()
-            ->getQuery()
-            ->getResult();  
+        // $objLevels = $this->em->createQueryBuilder()
+        //     ->select('IDENTITY(iec.nivelTipo)')
+        //     ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
+        //     ->where('iec.institucioneducativa = :sie')
+        //     ->andwhere('iec.gestionTipo = :gestion')
+        //     ->setParameter('sie', $sie)
+        //     ->setParameter('gestion', $gestion )
+        //     ->orderBy('iec.nivelTipo', 'ASC')
+        //     ->distinct()
+        //     ->getQuery()
+        //     ->getResult();  
+        $queryUes = "
+         select distinct(pin.nivel_tipo_id)
+            from preins_institucioneducativa_curso_cupo pin
+                where  pin.institucioneducativa_id = '".$sie."' and pin.gestion_tipo_id = '".$gestion." ' 
+                order by pin.nivel_tipo_id
+                ";   
+
+        $query = $this->em->getConnection()->prepare($queryUes);
+
+        $query->execute();
+        $uesPreins = $query->fetchAll();        
         
-        return($objLevels);
+        return($uesPreins);
 
 
 

@@ -148,7 +148,7 @@ class PreInscriptionController extends Controller
         $gestion = $this->session->get('currentyear');        
 
         $uepreInscription = $this->get('funciones')->chooseUE($idDepto, $sie, $gestion);   
-
+// dump($uepreInscription);die;
         $arrUe = array();
         if(sizeof($uepreInscription)>0){
             foreach ($uepreInscription as $value) {
@@ -210,7 +210,8 @@ class PreInscriptionController extends Controller
         if($objLevels){
 
             foreach ($objLevels as $nivel) {
-                $aniveles[] = array('id'=> $nivel[1], 'level'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel());
+                // $aniveles[] = array('id'=> $nivel[1], 'level'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel());
+                $aniveles[] = array('id'=> $nivel['nivel_tipo_id'], 'level'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel['nivel_tipo_id'])->getNivel());
             }   
 
             $status='success';
@@ -256,12 +257,12 @@ class PreInscriptionController extends Controller
         $em = $this->getDoctrine()->getManager();
         //get grado
         $agrados = array();
-        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $entity = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo');
         $query = $entity->createQueryBuilder('iec')
                 ->select('(iec.gradoTipo)')
                 ->where('iec.institucioneducativa = :sie')
                 ->andWhere('iec.nivelTipo = :idnivel')
-                ->andwhere('iec.gestionTipo = :gestion')
+                ->andwhere('iec.gestionTipoId = :gestion')
                 ->setParameter('sie', $sie)
                 ->setParameter('idnivel', $idnivel)
                 ->setParameter('gestion', $gestion)
@@ -417,10 +418,10 @@ class PreInscriptionController extends Controller
                 $newPreinsPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($dataParent['genero']));  
                 $newPreinsPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));  
 
-                // $newPreinsPersona->setNomLugTrab($dataParent['lugarTrabajo']);
-                $newPreinsPersona->setMunLugTrab($addrressParent['municipio']);
-                $newPreinsPersona->setZonaLugTrab($addrressParent['zona']);
-                $newPreinsPersona->setAvenidaLugTrab($addrressParent['avenida']);
+                $newPreinsPersona->setNomLugTrab(mb_strtoupper($dataParent['lugarTrabajo'], 'utf-8'));
+                $newPreinsPersona->setMunLugTrab(mb_strtoupper($addrressParent['municipio'], 'utf-8'));
+                $newPreinsPersona->setZonaLugTrab(mb_strtoupper($addrressParent['zona'], 'utf-8'));
+                $newPreinsPersona->setAvenidaLugTrab(mb_strtoupper($addrressParent['avenida'], 'utf-8'));
                 $newPreinsPersona->setCelularLugTrab($addrressParent['fono']);
                 $newPreinsPersona->setSegipId(1);
 
@@ -441,7 +442,7 @@ class PreInscriptionController extends Controller
             $newPreinsEstudiante->setNombre(mb_strtoupper($student['nombre'], 'utf-8'));
             $newPreinsEstudiante->setFechaNacimiento(new \DateTime($student['fechaNacimiento']));
 
-            $newPreinsEstudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find(1));
+            $newPreinsEstudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($student['genero']));
             $newPreinsEstudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(1));
 
 
@@ -452,11 +453,11 @@ class PreInscriptionController extends Controller
             ////////////////////////////////////////
             $newPreinsEstudianteInscripcion = new PreinsEstudianteInscripcion();
             $newPreinsEstudianteInscripcion->setPreinsEstudiante($em->getRepository('SieAppWebBundle:PreinsEstudiante')->find($newPreinsEstudiante->getId()));  
-            $ojbInstCursoCupo = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->findOneBy(array('institucioneducativa' => $ueInfo['sie']));
+            $ojbInstCursoCupo = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->findOneBy(array('institucioneducativa' => $ueInfo['sie'], 'nivelTipo'=>$ueInfo['nivel'], 'gradoTipo'=>$ueInfo['grado']));
             $newPreinsEstudianteInscripcion->setPreinsInstitucioneducativaCursoCupo($em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->find($ojbInstCursoCupo->getId()));  
-            $newPreinsEstudianteInscripcion->setMunicipioVive($student['municipio']);
-            $newPreinsEstudianteInscripcion->setZonaVive($student['zona']);
-            $newPreinsEstudianteInscripcion->setAvenidaVive($student['avenida']);
+            $newPreinsEstudianteInscripcion->setMunicipioVive(mb_strtoupper($student['municipio'], 'utf-8'));
+            $newPreinsEstudianteInscripcion->setZonaVive(mb_strtoupper($student['zona'], 'utf-8'));
+            $newPreinsEstudianteInscripcion->setAvenidaVive(mb_strtoupper($student['avenida'], 'utf-8'));
             $newPreinsEstudianteInscripcion->setCelular($student['fono']);            
             $newPreinsEstudianteInscripcion->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(1));  
 
