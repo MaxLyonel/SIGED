@@ -118,7 +118,7 @@
 												</div>
 												<div class="form-group col-md-4">
 													<label>Fecha Nacimiento (dd-mm-aaaa)</label>
-													<input type="text" v-model="dataParent.fechaNacimiento" class="form-control jupper " maxlength="10" v-on:keypress="" :disabled="swdata ? '':disabled">
+													<input type="text" v-model="dataParent.fechaNacimiento" class="form-control jupper " maxlength="10" v-on:keypress="" :disabled="swdata ? '':disabled" placeholder="dd-mm-aaaa">
 												</div>		
 											</div>
 											<div class="row">
@@ -361,7 +361,7 @@
 										</div>
 										<div class="form-group col-md-4">
 											<label>Fecha Nacimiento (dd-mm-aaaa)</label>
-											<input type="text" v-model="student.fechaNacimiento" class="form-control jupper " maxlength="10" v-on:keypress="" >
+											<input type="text" v-model="student.fechaNacimiento" class="form-control jupper " placeholder="dd-mm-aaaa" maxlength="10" v-on:keypress="" >
 										</div>		
 									</div>
 									<div class="row">
