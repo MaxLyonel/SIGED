@@ -445,6 +445,11 @@ class DefaultController extends Controller {
                 $layout = 'layoutHerramientaAlternativa.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaAlternativaBundle");
                 break;
+            case 'ue_alta_demanda.minedu.gob.bo':
+                $this->session->set('pathSystem', "AppWebBundle");
+                return $this->render('SieAppWebBundle:PreInscription:index.html.twig');
+                break;              
+
         }
 
 
