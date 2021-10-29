@@ -61,6 +61,6 @@ sie_procesos_tramite_inscription_score:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteInscriptionScore.yml"
     prefix:   /sie/tramite/inscriptionscore
 
-ie_procesos_tramite_modificacion_calificaciones:
+sie_procesos_tramite_modificacion_calificaciones:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteAddModCalification.yml"
     prefix:   /sie/tramite/tramiteAddModCalification
