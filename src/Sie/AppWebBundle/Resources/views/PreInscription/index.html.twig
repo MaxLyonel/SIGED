@@ -1099,6 +1099,9 @@
 	    			if (this.ueInfo.grado == '') {
 	    				this.errores.push('Año de escolaridad del postulante');
 	    			}	
+	    			if (this.student.genero == '') {
+	    				this.errores.push('Genero del postulante');
+	    			}
 		    			    	
 		    		if (this.errores.length > 0) {
 			    		let texto = '<div class="errores">';
