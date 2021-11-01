@@ -76,8 +76,7 @@
                             {# <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_entregados_datos') }}" method="POST">
                                 <button type="submit" id="submit"  title="Descargar reporte"><i class="fa fa-file-pdf-o"></i>  Cantidad de certificados entregados </button>
                             </form> #}
-                            {% if (app.session.get('roluser') == 8) %}
-                            
+                            {% if (app.session.get('roluser') == 8) %}                            
                             <div class= "row">
                                 <div class="col-lg-6 col-md-8 col-sm-8 col-xs-8">
                                             <span>Lista de participantes habilitados para la entrega de certificados  a nivel Medio</span>
@@ -97,8 +96,6 @@
                                     </form>
                                 </div>
                             </div>
-                            
-                            
                             {% endif %}
                             <div class="clearfix"></div>
                         </div>

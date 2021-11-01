@@ -1542,13 +1542,12 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf = $this->container->get("white_october.tcpdf")->create(
             'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
         );
-        // $pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+       
         $pdf->SetAuthor('Lupita');
         $pdf->SetTitle('Comprobante de Trámite');
         $pdf->SetSubject('Report PDF');
         $pdf->SetPrintHeader(false);
-        $pdf->SetPrintFooter(true, -10);
-        // $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 058', PDF_HEADER_STRING, array(10,10,0), array(255,255,255));
+        $pdf->SetPrintFooter(true, -10);      
         $pdf->SetKeywords('TCPDF, PDF, COMPROBANTE');
         $pdf->setFontSubsetting(true);
         $pdf->SetMargins(10, 15, 10, true);
@@ -1570,8 +1569,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
 
         $pdf->Ln(5);
         $pdf->SetFont('', '', 7);
-        $pdf->SetTextColor(20, 20, 20);
-        //$pdf->Cell(0, 6, date('d/m/Y'), 0, "", 'R', false);
+        $pdf->SetTextColor(20, 20, 20);      
         $pdf->SetFillColor(221, 221, 221);
         $pdf->SetFont('', '', 9);
         $pdf->Ln(2);
@@ -1588,8 +1586,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf->Cell(162, 6, ($request->get('nivel') ? $request->get('nivel') : ''), 0, 1, 'L', false);
         $pdf->Ln(6);
         $pdf->SetFont('', 'B', 9);
-        $pdf->SetFillColor(221, 221, 221);
-        
+        $pdf->SetFillColor(221, 221, 221);        
         $pdf->Cell(0, 8, 'LISTA DE PARTICIPANTES', 1, 1, "", 'L', 0, '', 0, true);
         $tramites = json_decode($request->get('datos'), true);
         $pdf->SetFont('', '', 9);
@@ -1627,11 +1624,8 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $firmas.='</table>';
         $pdf->writeHTML($contenido, true, false, true, false, '');
         $pdf->writeHTML($firmas, true, false, true, false, '');
-        //$pdf->writeHTML($titulo, true, false, true, false, '');
-        // print a block of text using Write()
-        //$pdf->Write(0, $txt, '', 0, 'C', true, 0, false, false, 0);     
-        $pdf->Output("Comprobante.pdf", 'D');
-        
+        $pdf->Output("ComprobanteSolicitudDirector".date('YmdHis').".pdf", 'D');
+            
     }
     public function rptComprobanteDirectorDevueltoAction(Request $request){
        //RECUPERAMOS LOS DATOS DEL TRAMITE INICIADO
@@ -1755,11 +1749,8 @@ class TramiteCertificacionesPermanenteController extends Controller {
        // $firmas.='<tr><td align="right" colspan="3"><br/><span style="font-size: 6px;"><br/>Fecha de Impresión: '.date('d/m/Y H:i:s').'</span></td></tr>';
        $firmas.='</table>';
        $pdf->writeHTML($contenido, true, false, true, false, '');
-       $pdf->writeHTML($firmas, true, false, true, false, '');
-       //$pdf->writeHTML($titulo, true, false, true, false, '');
-       // print a block of text using Write()
-       //$pdf->Write(0, $txt, '', 0, 'C', true, 0, false, false, 0);     
-       $pdf->Output("ComprobanteDevuelto.pdf", 'D');
+       $pdf->writeHTML($firmas, true, false, true, false, '');          
+       $pdf->Output("ComprobanteSolicitudDirectorDevuelto".date('YmdHis').".pdf", 'D');
     }
     //REPORTES ESTADISTICOS A NIVEL (CENTRO DEPARTAMENTO NACIONAL)
     public function CertificacionesEstadisticosAction(Request $request){
@@ -2577,21 +2568,10 @@ class TramiteCertificacionesPermanenteController extends Controller {
                         <td>'.$habilitados[$index]['especialidad'].'</td>
                         </tr>';
                 }
-            $contenido .= '</table><br><br>';        
-            //$firmas='<br><br><br><br><br><br><br><br><table cellpadding="0.5" style="font-size: 8px;">';
-            //$firmas.='<tr><td align="center" width="36%"><br/></td>
-            //<td align="center" width="36%"><br/><br/><br/><br/>_____________________________<br/>Directora(or) Unidad Educativa<br>'.$queryMaestroUE['maestro'].'<br>Sello y Firma</td>
-            //<td align="center" width="28%"><br/><br/><table border="1"><tr><td><br/><br/><br/><br/><br/><br/>VoBo<br/>Directora(or) Distrital de Educación</td></tr></table></td></tr>';
-            // $firmas.='<tr><td align="right" colspan="3"><br/><span style="font-size: 6px;"><br/>Fecha de Impresión: '.date('d/m/Y H:i:s').'</span></td></tr>';
-            //$firmas.='</table>';
+            $contenido .= '</table><br><br>';
             $pdf->writeHTML($contenido, true, false, true, false, '');
-            //$pdf->writeHTML($firmas, true, false, true, false, '');
-            //$pdf->writeHTML($titulo, true, false, true, false, '');
-            // print a block of text using Write()
-            //$pdf->Write(0, $txt, '', 0, 'C', true, 0, false, false, 0);
             //$pdf->Output($queryMaestroUE['sie']."Impresion_Certificados_Permanente".date('YmdHis').".pdf", 'I');    
-            $pdf->Output("ListaHabilitadosMedio".date('YmdHis')."pdf", 'I');
-            return true;
+            $pdf->Output("ListaHabilitadosNivelMedio".date('YmdHis').".pdf", 'I');
     }
     
     public function getHabilitadosImpresion($rol,$gestionId){

@@ -88,7 +88,7 @@
                         <div class="col-md-4 col-md-offset-5">                        
                         <button class="btn btn-primary" id="btn_imprimir" title="Imprimir Comprobante" onclick="imprimirComprobanteCentro()" ><i class='fa fa-print'></i>  Imprimir comprobante</button>                                
                         </div>
-                        <form name="comprobante" method="post" action="{{ path('tramite_certificacion_permanente_comprobante') }}" target="_blank">
+                        <form name="comprobante" method="post" action="{{ path('tramite_certificacion_permanente_comprobante') }}">
                             <input type="hidden" name="sie" value="{{ sie }}"/>
                             <input type="hidden" name="centro" value="{{ institucioneducativa }}"/>
                             <input type="hidden" name="mencion" value="{{ mencion }}"/>
