@@ -1535,7 +1535,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         //RECUPERAMOS LOS DATOS DEL TRAMITE INICIADO
         $em = $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
-        $sie = $request->get('sie');
+        //$sie = $request->get('sie');
         $gestionId=$sesion->get('currentyear'); //gestion actual 
         //RECUPERAMOS LOS DATOS DEL DIRECTOR  O ENCARGADO DL CENTRO
         $queryMaestroUE =  $this->datosDirector($sie,$gestionId);
