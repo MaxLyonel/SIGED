@@ -1538,7 +1538,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         //$sie = $request->get('sie');
         $gestionId=$sesion->get('currentyear'); //gestion actual 
         //RECUPERAMOS LOS DATOS DEL DIRECTOR  O ENCARGADO DL CENTRO
-        $queryMaestroUE =  $this->datosDirector($sie,$gestionId);
+        //$queryMaestroUE =  $this->datosDirector($sie,$gestionId);
         $pdf = $this->container->get("white_october.tcpdf")->create(
             'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
         );
