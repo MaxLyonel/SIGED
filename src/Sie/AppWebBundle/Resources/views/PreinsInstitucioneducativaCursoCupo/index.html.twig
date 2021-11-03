@@ -51,6 +51,10 @@
                             {# <td>{{ entity.observacion }}</td> #}
                             <td>{{ entity.cantidadCupos }}</td>
                             <td>
+                                <form action="{{path('uealtademanda_editar')}}" method="post" style="display:inline-block">
+                                    <input type="hidden" name="iduealtadem" value="{{entity.id}}">
+                                    <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
+                                </form>                            
                             <ul>
                                 <li>
                                     <a href="{{ path('uealtademanda_show', { 'id': entity.id }) }}">show</a>
