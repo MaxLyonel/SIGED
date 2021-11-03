@@ -1547,7 +1547,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf->SetTitle('Comprobante de Trámite');
         $pdf->SetSubject('Report PDF');
         $pdf->SetPrintHeader(false);
-        $pdf->SetPrintFooter(true, -10);      
+        $pdf->SetPrintFooter(true, 0);      
         $pdf->SetKeywords('TCPDF, PDF, COMPROBANTE');
         $pdf->setFontSubsetting(true);
         $pdf->SetMargins(10, 15, 10, true);
@@ -1591,7 +1591,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $tramites = json_decode($request->get('datos'), true);
         $pdf->SetFont('', '', 9);
         $contenido = '<table border="1" cellpadding="1.5">';
-        $contenido .= '<tr style="background-color:#ddd;">
+        $contenido .= '<tr style="background-color:#dddddd;">
             <td alignt="center" height="10" style="line-height: 14px;" width="5%"><b>Nro.</b></td>
             <td alignt="center" height="14" style="line-height: 14px;" width="13%"><b>Trámite</b></td>
             <td alignt="center" height="14" style="line-height: 14px;" width="25%"><b>RUDE</b></td>
