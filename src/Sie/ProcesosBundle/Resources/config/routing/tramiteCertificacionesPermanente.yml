@@ -59,7 +59,7 @@ tramite_impresion_certificado_permanente_imprimirCertificado:
     defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:imprimirCertificado }
 #COMPROBANTE DE INICIO DE TRAMITE
 tramite_certificacion_permanente_comprobante:
-    path:     /reporte/permanente
+    path:     /reporte/permanente/comprobante
     defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptComprobanteDirector }
 tramite_certificacion_permanente_comprobante_devuelto:
     path:     /reporte/permanente/devuelto

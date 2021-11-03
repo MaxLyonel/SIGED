@@ -1531,7 +1531,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
      return   $queryMaestroUE;   
     }
     //COMPROBANTES PARA DIRECTOR DE TRAMITES
-    public function rptComprobanteDirectorAction(Request $request){
+    public function rptComprobanteDirectorAction(Request $request){//dump($request);die;
         //RECUPERAMOS LOS DATOS DEL TRAMITE INICIADO
         $em = $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
@@ -1588,9 +1588,9 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf->SetFont('', 'B', 9);
         $pdf->SetFillColor(221, 221, 221);        
         $pdf->Cell(0, 8, 'LISTA DE PARTICIPANTES.', 1, 1, "", 'L', 0, '', 0, true);
-        $tramites = json_decode($request->get('datos'), true);
+        /*$tramites = json_decode($request->get('datos'), true);
         $pdf->SetFont('', '', 9);
-        $contenido = '<table border="1" cellpadding="1.5">';
+         $contenido = '<table border="1" cellpadding="1.5">';
         $contenido .= '<tr style="background-color:#dddddd;">
             <td alignt="center" height="14" style="line-height: 14px;" width="5%"><b>Nro.</b></td>
             <td alignt="center" height="14" style="line-height: 14px;" width="13%"><b>Trámite</b></td>
@@ -1625,7 +1625,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $firmas.='</table>';
         $pdf->writeHTML($contenido, true, false, true, false, '');
         $pdf->Ln(6);
-        $pdf->writeHTML($firmas, true, false, true, false, '');
+        $pdf->writeHTML($firmas, true, false, true, false, ''); */
         $pdf->Output("ComprobanteSolicitudDirector".date('YmdHis').".pdf", 'D');
             
     }
