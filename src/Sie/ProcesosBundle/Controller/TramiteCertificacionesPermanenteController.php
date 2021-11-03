@@ -1123,7 +1123,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 ->add('gestion', 'entity', array('data' => $entidadGestionTipo, 'empty_value' => 'Seleccione Gestión', 'attr' => array('class' => 'form-control', 'onchange' => 'listar_especialidad(this.value)'), 'class' => 'Sie\AppWebBundle\Entity\GestionTipo',
                     'query_builder' => function(EntityRepository $er) {
                         return $er->createQueryBuilder('gt')
-                                ->where('gt.id > 2019')
+                                ->where('gt.id > 2020')
                                 ->orderBy('gt.id', 'DESC');
                     },
                 ))
@@ -1448,7 +1448,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $pdf->writeHTML($firmas, true, false, true, false, '');
        }// FIN DEL FOR 
         //$pdf->Output('example_050.pdf', 'I');
-        $pdf->Output($queryMaestroUE['sie']."Impresion_Certificados_Permanente".date('YmdHis').".pdf", 'I');
+        $pdf->Output($queryMaestroUE['sie']."Impresion_Certificados_Permanente".date('YmdHis').".pdf", 'D');
         //return true;
     }
     /***
@@ -2422,7 +2422,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             }
         $contenido .= '</table><br><br>';        
         $pdf->writeHTML($contenido, true, false, true, false, 'C');
-        $pdf->Output("ReposrtesEntregados.pdf", 'I');
+        $pdf->Output("ReportesEntregados.pdf", 'I');
     }
     //REPORTE DE LISTA DE HABILITADOS A NIvEL NACIONAL
     public function rptHabilitadosNacionalAction(Request $request) {
@@ -2571,7 +2571,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $contenido .= '</table><br><br>';
             $pdf->writeHTML($contenido, true, false, true, false, '');
             //$pdf->Output($queryMaestroUE['sie']."Impresion_Certificados_Permanente".date('YmdHis').".pdf", 'I');    
-            $pdf->Output("ListaHabilitadosNivelMedio".date('YmdHis').".pdf", 'I');
+            $pdf->Output("ListaHabilitadosNivelMedio".date('YmdHis').".pdf", 'D');
     }
     
     public function getHabilitadosImpresion($rol,$gestionId){
@@ -2622,12 +2622,12 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         //http://127.0.0.1:49787/viewer/frameset?__report=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes%5Clista_habilitados_nacional.rptdesign&__format=html&__svg=true&__locale=es_BO&__timezone=America%2FLa_Paz&__masterpage=true&__rtl=false&__cubememsize=10&__resourceFolder=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes&1828857951
-        $urlbase= 'http://127.0.0.1:65432/viewer/preview?__report=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes%5C';
+        $urlbase= 'http://127.0.0.1:60430/viewer/preview?__report=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes%5C';
         $urlproduccion=$this->container->getParameter('urlreportweb');
         
         //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_departamental_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&Departamento='.$codigoArea));
 
-        $response->setContent(file_get_contents($urlbase . 'lista_habilitados_Nacional_Medio.rptdesign&__format=xlsx&sie='.$sie.'&gestion='.$gestion.'&idMencion='.$idMencion.'&idNivel='.$idNivel));
+        $response->setContent(file_get_contents($urlbase . 'lista_habilitados_nacional_medio.rptdesign&__format=xlsx&sie='.$sie.'&gestion='.$gestion.'&idMencion='.$idMencion.'&idNivel='.$idNivel));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

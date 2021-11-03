@@ -82,7 +82,7 @@
                                             <span>Lista de participantes habilitados para la entrega de certificados  a nivel Medio</span>
                                 </div> 
                                 <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-                                    <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_lista_habilitados') }}" method="POST">
+                                    <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_lista_habilitados') }}" method="POST" target="_blank">
                                     {#  <input type="hidden" name="gestion" value="{{gestion}}"  /> #}  
                                         <button name="botonPdf" id="botonPdf" title="Descargar reporte habilitados en formato  PDF" class="btn btn-googleplus"><i class="fa fa-file-pdf-o"></i>
                                         </button>
@@ -212,7 +212,7 @@
                             <!-- Start project overview -->
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div id="chartContainerGenero" style="height:300px;">ASAS </div> 
+                                    <div id="chartContainerGenero" style="height:300px;"> </div> 
                                 </div>   
                                 
                             </div>                            
@@ -222,6 +222,34 @@
             </div>
         </div>
     </div>    
+</div>
+
+
+<div class="row">
+    <div class="alert alert-success">
+        <span class="alert-icon"><i class="fa fa-info"></i></span>
+        <div class="notification-info">
+            <ul class="clearfix notification-meta">
+                <li class="pull-left notification-sender"><span><a>Certificación de Cursos Largos: </a></span> Se refiere al reconocimiento que se hace a las y los participantes a la conclusión de los procesos formativos y de cualificación. </li>
+                <li class="pull-right notification-time"></li>
+
+                <li class="pull-left notification-sender"><span><a>Nivel de Acreditación: </a></span> Se refiere a la estructura del ámbito de Educación Técnica Tecnológica y Productiva de Personas Jóvenes y Adultas, que comprende los nivel de acreditación: i) Técnico Básico; ii) Técnico Auxiliar; iii) Técnico Medio. </li>
+                <li class="pull-right notification-time"></li>
+                
+                <li class="pull-left notification-sender"><span><a>Centro de Educación Permanente: </a></span> Instituciones financiadas y administradas por el Estado. Por tanto, son gratuitas. </li>
+                <li class="pull-right notification-time"></li>
+                
+                <li class="pull-left notification-sender"><span><a>Certificación en estado "EN PROCESO": </a></span> La solicitud de certificación aún no se encuentra culminada. </li>
+                <li class="pull-right notification-time"></li>
+                
+                 <li class="pull-left notification-sender"><span><a>Certificación en estado "CONCLUIDO": </a></span> La solicitud de certificación culminó el proceso de certificación. </li>
+                <li class="pull-right notification-time"></li>
+
+                <li class="pull-left notification-sender"><span><a>Certificación en estado "ENTREGADO": </a></span> El certificado del/la participante ya fue generado. </li>
+                <li class="pull-right notification-time"></li>                       
+            </ul>
+        </div>
+    </div> 
 </div>
                   
 
