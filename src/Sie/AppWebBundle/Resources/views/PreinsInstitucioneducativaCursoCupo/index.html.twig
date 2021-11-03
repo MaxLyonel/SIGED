@@ -1,0 +1,78 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Cambio Estado Inscripción <span>Participante</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li class="active">Index</li>
+            </ol>
+        </div>
+    </div>  
+<div class="body-content animated fadeIn">
+    <div class="row">
+
+        <div class="col-md-12">
+            <h1>Lista Pre-Inscription Institucioneducativa Curso Cupo </h1>
+                <ul >
+                    <li>
+                        <a style="align:right;" href="{{ path('uealtademanda_new') }}" class="btn btn-success">
+                            Nueva UE de alta demanda
+                        </a>
+                    </li>
+                </ul>            
+            <div class="table-responsive">
+                <table id="myTable" class="table table-bordered table-hover cf dataTable no-footer" role="grid" aria-describedby="myTable_info">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Gestiontipoid</th>
+                            <th>Fecharegistro</th>
+                            <th>Fechamodificacion</th>
+                            <th>Observacion</th>
+                            <th>Cantidadcupos</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for entity in entities %}
+                        <tr>
+                            <td><a href="{{ path('uealtademanda_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                            {# <td>{{ entity.gestionTipoId }}</td> #}
+                            <td>{{ entity.institucioneducativa.id }}</td>
+                            <td>{{ entity.institucioneducativa }}</td>
+
+                            {# <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td> #}
+                            {# <td>{% if entity.fechaModificacion %}{{ entity.fechaModificacion|date('Y-m-d H:i:s') }}{% endif %}</td> #}
+                            <td>{{ entity.nivelTipo }}</td>
+                            <td>{{ entity.gradoTipo }}</td>
+                            {# <td>{{ entity.observacion }}</td> #}
+                            <td>{{ entity.cantidadCupos }}</td>
+                            <td>
+                            <ul>
+                                <li>
+                                    <a href="{{ path('uealtademanda_show', { 'id': entity.id }) }}">show</a>
+                                </li>
+                                <li>
+                                    <a href="{{ path('uealtademanda_edit', { 'id': entity.id }) }}">edit</a>
+                                </li>
+                            </ul>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>    
+
+        </div>
+    </div>
+</div>
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">
+
+    </div><!-- /.modal -->
+
+
+
+    {% endblock %}

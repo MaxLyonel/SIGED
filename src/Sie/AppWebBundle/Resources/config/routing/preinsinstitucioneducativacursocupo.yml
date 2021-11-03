@@ -1,0 +1,34 @@
+uealtademanda:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:PreinsInstitucioneducativaCursoCupo:index" }
+
+uealtademanda_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:PreinsInstitucioneducativaCursoCupo:show" }
+
+uealtademanda_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:PreinsInstitucioneducativaCursoCupo:new" }
+
+uealtademanda_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:PreinsInstitucioneducativaCursoCupo:create" }
+    methods:  POST
+
+uealtademanda_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:PreinsInstitucioneducativaCursoCupo:edit" }
+
+uealtademanda_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:PreinsInstitucioneducativaCursoCupo:update" }
+    methods:  [POST, PUT]
+
+uealtademanda_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:PreinsInstitucioneducativaCursoCupo:delete" }
+    methods:  [POST, DELETE]
+
+uealtademanda_editar:
+    path:     /editar
+    defaults: { _controller: "SieAppWebBundle:PreinsInstitucioneducativaCursoCupo:editar" }
