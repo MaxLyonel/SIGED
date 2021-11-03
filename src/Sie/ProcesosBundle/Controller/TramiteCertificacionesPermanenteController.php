@@ -1587,7 +1587,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf->Ln(6);
         $pdf->SetFont('', 'B', 9);
         $pdf->SetFillColor(221, 221, 221);        
-        $pdf->Cell(0, 8, 'LISTA DE PARTICIPANTES', 1, 1, "", 'L', 0, '', 0, true);
+        $pdf->Cell(0, 8, 'LISTA DE PARTICIPANTES.', 1, 1, "", 'L', 0, '', 0, true);
         $tramites = json_decode($request->get('datos'), true);
         $pdf->SetFont('', '', 9);
         $contenido = '<table border="1" cellpadding="1.5">';
@@ -1615,7 +1615,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                     <td>'.($datosParticipante[0]['nombre'].' '.$datosParticipante[0]['paterno'].' '.$datosParticipante[0]['materno']).'</td>
                     </tr>';
             }
-        $contenido .= '</table><br><br>';        
+        $contenido .= '</table>';        
         $firmas='<br><br><br><br><br><br><br><br><table cellpadding="0.5" style="font-size: 8px;">';
         $firmas.='<tr><td align="center" width="36%"><br/></td>
         <td align="center" width="36%"><br/><br/><br/><br/>_____________________________<br/>Directora(or) Unidad Educativa<br>'.$queryMaestroUE['maestro'].'<br>Sello y Firma</td>
