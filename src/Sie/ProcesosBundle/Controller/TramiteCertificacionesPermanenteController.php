@@ -1573,7 +1573,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf->SetFillColor(221, 221, 221);
         $pdf->SetFont('', '', 9);
         $pdf->Ln(2);
-        $pdf->Cell(33, 6, 'Código SIE:', 0, "", 'R', true);
+        /*$pdf->Cell(33, 6, 'Código SIE:', 0, "", 'R', true);
         $pdf->Cell(162, 6, $sie, 0, 1, 'L', false);
         $pdf->Ln(1);
         $pdf->Cell(33, 6, 'Centro:', 0, "", 'R', true);
@@ -1587,7 +1587,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf->Ln(6);
         $pdf->SetFont('', 'B', 9);
         $pdf->SetFillColor(221, 221, 221);        
-        $pdf->Cell(0, 8, 'LISTA DE PARTICIPANTES.', 1, 1, "", 'L', 0, '', 0, true);
+        $pdf->Cell(0, 8, 'LISTA DE PARTICIPANTES.', 1, 1, "", 'L', 0, '', 0, true);*/
         /*$tramites = json_decode($request->get('datos'), true);
         $pdf->SetFont('', '', 9);
          $contenido = '<table border="1" cellpadding="1.5">';
@@ -1626,7 +1626,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf->writeHTML($contenido, true, false, true, false, '');
         $pdf->Ln(6);
         $pdf->writeHTML($firmas, true, false, true, false, ''); */
-        $pdf->Output("ComprobanteSolicitudDirector".date('YmdHis').".pdf", 'D');
+        $pdf->Output("comprobanteSolicitudDirector".date('YmdHis').".pdf", 'D');
             
     }
     public function rptComprobanteDirectorDevueltoAction(Request $request){
