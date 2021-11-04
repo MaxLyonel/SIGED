@@ -1531,7 +1531,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
      return   $queryMaestroUE;   
     }
     //COMPROBANTES PARA DIRECTOR DE TRAMITES
-    public function rptComprobanteDirectorAction(Request $request){dump($request);die;
+    public function rptComprobanteDirectorAction(Request $request){//dump($request);die;
         //RECUPERAMOS LOS DATOS DEL TRAMITE INICIADO
         $em = $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
