@@ -32,3 +32,11 @@ uealtademanda_delete:
 uealtademanda_editar:
     path:     /editar
     defaults: { _controller: "SieAppWebBundle:PreinsInstitucioneducativaCursoCupo:editar" }
+
+mostrar_grado_curso:
+    path:     /mostrar_grado_curso
+    defaults: { _controller: "SieAppWebBundle:PreinsInstitucioneducativaCursoCupo:mostrar_grado_curso" }
+
+guardar_editar_preinscripcion:
+    path:     /guardar_editar_preinscripcion
+    defaults: { _controller: "SieAppWebBundle:PreinsInstitucioneducativaCursoCupo:guardar_editar_preinscripcion" }

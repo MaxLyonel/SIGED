@@ -16,13 +16,13 @@
 
         <div class="col-md-12">
             <h1>Lista Pre-Inscription Institucioneducativa Curso Cupo </h1>
-                <ul >
+                {# <ul >
                     <li>
                         <a style="align:right;" href="{{ path('uealtademanda_new') }}" class="btn btn-success">
                             Nueva UE de alta demanda
                         </a>
                     </li>
-                </ul>            
+                </ul>   #}          
             <div class="table-responsive">
                 <table id="myTable" class="table table-bordered table-hover cf dataTable no-footer" role="grid" aria-describedby="myTable_info">
                     <thead>
@@ -56,12 +56,12 @@
                                     <button type="submit" class="btn-link"><i class="fa fa-edit text-warning"></i> Editar</button>
                                 </form>                            
                             <ul>
-                                <li>
+                               {#  <li>
                                     <a href="{{ path('uealtademanda_show', { 'id': entity.id }) }}">show</a>
                                 </li>
                                 <li>
                                     <a href="{{ path('uealtademanda_edit', { 'id': entity.id }) }}">edit</a>
-                                </li>
+                                </li> #}
                             </ul>
                             </td>
                         </tr>

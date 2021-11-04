@@ -1,0 +1,72 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+<div class="container">
+	<div class="row">
+	<h2>UNIDAD EDUCATIVA : {{entity.institucioneducativa.id}} - {{entity.institucioneducativa}}</h2>
+	<hr>
+		<div class="col-md-9">
+			<div class="panel panel-success">
+				<div class="panel-heading">
+					<label>Formulario</label>
+				</div>
+				<div class="panel-body">
+					<form class="form-horizontal" role="form" action="{{path('guardar_editar_preinscripcion')}}" method="post">
+					<input type="hidden" name="id" id="id" value="{{entity.id}}">
+						<div class="form-group">
+							<label class="control-label col-sm-3" >SELECCIONAR NIVEL :</label>
+							<div class="col-sm-9">
+								<select name="nivel_tipo_id" id="nivel_tipo_id" onchange="mostrar_grado(this.value,'{{entity.institucioneducativa.id}}')" class="form-control" required>
+									<option></option>
+									{% for obj1 in nivel_tipo%}
+										<option value="{{obj1.nivel_tipo_id}}">{{obj1.nivel_tipo}}</option>
+									{% endfor%}
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-3" for="pwd">SELECCIONAR GRADO :</label>
+							<div class="col-sm-9">
+								<select name="idgrado" id="idgrado12" class="form-control" required>
+									<option></option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-3" for="pwd">CUPO :</label>
+							<div class="col-sm-9">
+								<input type="number" name="cupo" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-3" for="pwd">OBSERVACIONES :</label>
+							<div class="col-sm-9">
+								<textarea name="obj" class="form-control"></textarea>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-9">
+								<button type="submit" class="btn btn-success btn-lg">GUARDAR</button>
+								<a href="" class="btn btn-success btn-lg">CANCELAR</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	function mostrar_grado(nivel_tipo_id,id_sie){ //alert(idgestion)
+		$.post('{{path('mostrar_grado_curso')}}', {nivel_tipo_id:nivel_tipo_id,id_sie:id_sie}, function(data) {
+			$("#idgrado12").empty();
+  
+	        $.each(data.arrGrado, function (i, value) {
+	              $("#idgrado12").append('<option value="' + value.id_grado + '">' + value.grado + '</option>');
+	        });
+
+		});
+	}
+</script>
+{% endblock %}

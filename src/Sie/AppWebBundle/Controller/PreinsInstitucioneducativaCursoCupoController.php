@@ -4,6 +4,7 @@ namespace Sie\AppWebBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Sie\AppWebBundle\Entity\PreinsInstitucioneducativaCursoCupo;
 use Sie\AppWebBundle\Form\PreinsInstitucioneducativaCursoCupoType;
@@ -223,8 +224,82 @@ class PreinsInstitucioneducativaCursoCupoController extends Controller
     }
 
     public function editarAction(Request $request){
-        dump($request);
-        die;
+        $em = $this->getDoctrine()->getManager();
+        $id=$request->get('iduealtadem');
 
-    }    
+        $entities = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->find($id);
+        $entities2 = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->findBy(array('institucioneducativa' =>$entities->getInstitucioneducativa()));
+        // echo ">".$id;exit();
+        // dump($entities2); exit();
+        $nivel_tipo = array();
+            foreach ($entities2 as $cur) {
+                $nivel_tipo[] = array(
+                    'id' => $cur->getId(),
+                    'nivel_tipo_id' => $cur->getNivelTipo()->getId(),
+                    'nivel_tipo' => $cur->getNivelTipo()->getNivel(),
+                    
+                );
+            }
+        // dump($nivel_tipo); exit();
+        return $this->render('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo:edit_preinscripcion.html.twig', array(
+            'nivel_tipo'      => $nivel_tipo,
+            'entity'      => $entities,
+        ));
+
+    } 
+    public function mostrar_grado_cursoAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $response = new JsonResponse();
+        $nivel_tipo_id=$request->get('nivel_tipo_id');
+        $id_sie=$request->get('id_sie');
+
+
+        // echo $nivel_tipo_id.'>>> '.$id_sie;exit();
+        $entities2 = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->findBy(array('institucioneducativa' =>$id_sie,'nivelTipo'=>$nivel_tipo_id));
+        // echo ">".$id;exit();
+        // dump($entities2); exit();
+        $nivel_grado = array();
+        foreach ($entities2 as $cur) {
+            $nivel_grado[] = array(
+                'id_grado' => $cur->getGradoTipo()->getId(),
+                'grado' => $cur->getGradoTipo()->getGrado(),
+            );
+        }
+
+        $arrResponse = array(
+            'arrGrado' => $nivel_grado
+          );
+        // dump($arrResponse); exit();
+          $response->setStatusCode(200);
+          $response->setData($arrResponse);
+          return $response;
+
+        // dump($nivel_grado); exit();
+    }   
+    public function guardar_editar_preinscripcionAction(Request $request){
+        // dump($request);die;
+        $em = $this->getDoctrine()->getManager();
+        $id=$request->get('id');
+        $nivel_tipo_id=$request->get('nivel_tipo_id');
+        $idgrado=$request->get('idgrado');
+        $cupo=$request->get('cupo');
+        $obj=mb_strtoupper($request->get('obj'),'utf-8');
+
+        // echo ">".$nivel_tipo_id;exit();
+        // $GuardarPreinscripcion= new PreinsInstitucioneducativaCursoCupo();
+        $GuardarPreinscripcion = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->find($id);
+        // dump($GuardarPreinscripcion);die;
+        $GuardarPreinscripcion->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel_tipo_id));
+        $GuardarPreinscripcion->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find($idgrado));
+        // $GuardarEspecialidad->setInstitucioneducativa($institucioneducativa_id);
+        $GuardarPreinscripcion->setCantidadCupos($cupo);
+        $GuardarPreinscripcion->setObservacion($obj);
+        // $em->persist($GuardarPreinscripcion);
+        $em->flush();
+        //do the commit of DB
+        // $em->getConnection()->commit();
+        $message = 'Operación realizada correctamente';
+        $this->addFlash('goodstate', $message);
+        return $this->redirectToRoute('uealtademanda');
+    }
 }
