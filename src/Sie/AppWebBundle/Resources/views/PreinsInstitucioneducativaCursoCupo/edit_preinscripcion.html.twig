@@ -36,7 +36,7 @@
 						<div class="form-group">
 							<label class="control-label col-sm-3" for="pwd">CUPO :</label>
 							<div class="col-sm-9">
-								<input type="number" name="cupo" class="form-control">
+								<input type="text" maxlength="3" onkeypress="return valideKey(event);" name="cupo" class="form-control">
 							</div>
 						</div>
 						<div class="form-group">
@@ -48,7 +48,7 @@
 						<div class="form-group">
 							<div class="col-sm-9">
 								<button type="submit" class="btn btn-success btn-lg">GUARDAR</button>
-								<a href="" class="btn btn-success btn-lg">CANCELAR</a>
+								<a href="{{path('uealtademanda')}}" class="btn btn-success btn-lg">CANCELAR</a>
 							</div>
 						</div>
 					</form>
@@ -58,15 +58,22 @@
 	</div>
 </div>
 <script>
-	function mostrar_grado(nivel_tipo_id,id_sie){ //alert(idgestion)
-		$.post('{{path('mostrar_grado_curso')}}', {nivel_tipo_id:nivel_tipo_id,id_sie:id_sie}, function(data) {
-			$("#idgrado12").empty();
-  
-	        $.each(data.arrGrado, function (i, value) {
-	              $("#idgrado12").append('<option value="' + value.id_grado + '">' + value.grado + '</option>');
-	        });
+function valideKey(evt){
+  var code = (evt.which) ? evt.which : evt.keyCode;
+  if(code==8) {  return true;
+  } else if(code>=48 && code<=57) {  return true;
+  } else{  return false;
+  }
+}
+function mostrar_grado(nivel_tipo_id,id_sie){ //alert(idgestion)
+	$("#idgrado12").val('');
+	$.post('{{path('mostrar_grado_curso')}}', {nivel_tipo_id:nivel_tipo_id,id_sie:id_sie}, function(data) {
+		// $("#idgrado12").empty();
+        $.each(data.arrGrado, function (i, value) {
+              $("#idgrado12").append('<option value="' + value.id_grado + '">' + value.grado + '</option>');
+        });
 
-		});
-	}
+	});
+}
 </script>
 {% endblock %}

@@ -230,7 +230,8 @@ class PreinsInstitucioneducativaCursoCupoController extends Controller
         $entities = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->find($id);
         $entities2 = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->findBy(array('institucioneducativa' =>$entities->getInstitucioneducativa()));
         // echo ">".$id;exit();
-        // dump($entities2); exit();
+        /*dump($entities2); exit();
+        $entities2=array_unique($entities2,SORT_NUMERIC);*/
         $nivel_tipo = array();
             foreach ($entities2 as $cur) {
                 $nivel_tipo[] = array(

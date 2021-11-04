@@ -718,6 +718,12 @@
                             <ul>
                                 <li><a href="{{ path('preinscripciones_seguimiento')}}">Fecha de sorteo</a></li>
                             </ul>
+                            <ul>
+                                <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de tutor</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="{{path('uealtademanda')}}">Modificar cupo</a></li>
+                            </ul>
                         </li>
                     {% endif %}
 
@@ -753,7 +759,23 @@
                                 <li><a href="{{ path('regularizacion_cut_index')}}"> Caso 6 </a></li>
                             </ul>
                         </li>
-                    {% endif %}                    
+                    {% endif %}   
+                    {# line 725--> app/Resources/views/layoutHerramienta.html.twig #}
+                    {# Cambio de tutor BJP 2021 #}
+                    {# {% if app.session.get('roluser') in [9,10,8,7] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Bono JP - {{ 'now'|date('Y') }}</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de tutor</a></li>
+                            </ul>
+                        </li>
+                    {% endif %} #}
+
+
                     {#
                     {% if  app.session.get('roluser') == 9 or app.session.get('roluser') == 20 or app.session.get('roluser') == 8   %}
                         <li class="submenu">
