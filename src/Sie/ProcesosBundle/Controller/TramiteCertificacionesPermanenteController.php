@@ -1678,7 +1678,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf->Ln(6);
         $pdf->writeHTML($firmas, true, false, true, false, ''); 
         $pdf->Output("comprobanteDirector_".date('YmdHis').".pdf", 'D');
-        return false;
+        die();
     }
     public function rptComprobanteDirectorDevueltoAction(Request $request){
        //RECUPERAMOS LOS DATOS DEL TRAMITE INICIADO
