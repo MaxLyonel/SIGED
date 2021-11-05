@@ -53,3 +53,15 @@ operativo_bono_jp_cambiarEstadoTutores:
     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:cambiarEstadoTutores"}
     options:
          expose: true
+
+buscar_tutor_ci_persona:
+    path:     /buscar_tutor_ci_persona
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscar_tutor_ci_persona"}
+    options:
+         expose: true
+# ////fernando
+buscar_validar_persona_ci_segip:
+    path:     /buscar_validar_persona_ci_segip
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscar_validar_persona_ci_segip"}
+    options:
+         expose: true

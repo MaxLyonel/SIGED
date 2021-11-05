@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityRepository;
+use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\Institucioneducativa;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion;
@@ -299,6 +300,21 @@ class OperativoBonoJPController extends Controller
 		$requisitos=$stmt->fetch();
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	public function formularioCambiarTutorAction()
 	{
 		return $this->render('SieHerramientaBundle:BonoJP:fomularioCambiarTutor.html.twig');
@@ -467,6 +483,55 @@ class OperativoBonoJPController extends Controller
 		$response = new JsonResponse($data,$status);
 		$response->headers->set('Content-Type', 'application/json');
 		return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+	}
+	public function buscar_validar_persona_ci_segipAction(Request $request){
+		$ci = $request->get('ci');
+		$complemento = $request->get('complemento');
+		// echo ">".$ci;
+		$em = $this->getDoctrine()->getManager();
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet' => $ci));
+        $estado = false;
+        $mensaje = "";
+        // dump($persona); exit();
+        if($persona){
+            $datos = array(
+                'complemento'=>$persona->getComplemento(),
+                'primer_apellido'=>$persona->getPaterno(),
+                'segundo_apellido'=>$persona->getMaterno(),
+                'nombre'=>$persona->getNombre(),
+                'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y')
+            );       
+	        $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($ci,$datos,'prod','academico');
+	        // dump($resultadoPersona);exit();
+	        if($resultadoPersona){ 
+	        	$data = array(
+	        		0 => $ci,
+				    1 => $persona->getPaterno(),
+				    2 => $persona->getMaterno(),
+				    3 => $persona->getNombre(),
+				    4 => $persona->getFechaNacimiento()->format('d-m-Y'),
+				    5 => $persona->getId()
+				);			 
+	            $mensaje = "Válido SEGIP";
+	            $estado = true;
+	        } else {
+	        	$data = array( 0 => 0);
+	            $mensaje = "No se realizó la validación con SEGIP. Debe actualizar la información a través del módulo: Modificación de Datos.";
+	        } 
+        }else{
+        	$data = array( 0 => 0);
+        	$mensaje = "No se realizó la validación con SEGIP. No existe información de la/el estudiante.";
+        }
+   		return new JsonResponse($data);
+
+        // return new JsonResponse(array('estado' => $estado, 'mensaje' => $mensaje));
+
+		/*$data=null;
+		$status= 404;*/
+		/*$response = new JsonResponse();
+		$response->headers->set('Content-Type', 'application/json');
+		return $response->setData(array('data'=>1,'status'=>1,'msj'=>1));*/
+
 	}
 
 }
