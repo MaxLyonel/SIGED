@@ -382,13 +382,13 @@ class PreInscriptionController extends Controller
         $brother = $request->get('brother');
         $student = $request->get('student');
         $justify = $request->get('justify');
-    // dump($dataParent);
-    // dump($addrressParent);
-    // dump($ueInfo);
-    // dump($brother);
-    // dump($student);
-    // dump($justify);
-    // die;
+     //dump($dataParent);
+     //dump($addrressParent);
+     //dump($ueInfo);
+     //dump($brother);
+     //dump($student);
+     //dump($justify);
+    
 
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
@@ -418,14 +418,23 @@ class PreInscriptionController extends Controller
                 $newPreinsPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($dataParent['genero']));  
                 $newPreinsPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));  
 
+                $residencia = explode('/',$addrressParent['dirresidencia']);
+                $campos = array('setZona','setAvenida','setCalle','setNumero','setCelular');
+                if(count($residencia) > 0)
+                {
+                    for($i = 0; $i < count($residencia); $i++)
+                    {
+                        $campo = $campos[$i];
+                        $newPreinsPersona->{$campo}(mb_strtoupper($residencia[$i], 'utf-8'));
+                    }
+                }
+
                 $newPreinsPersona->setNomLugTrab(mb_strtoupper($addrressParent['lugarTrabajo'], 'utf-8'));
                 $newPreinsPersona->setMunLugTrab(mb_strtoupper($addrressParent['municipio'], 'utf-8'));
                 $newPreinsPersona->setZonaLugTrab(mb_strtoupper($addrressParent['zona'], 'utf-8'));
                 $newPreinsPersona->setAvenidaLugTrab(mb_strtoupper($addrressParent['avenida'], 'utf-8'));
                 $newPreinsPersona->setCelularLugTrab($addrressParent['fono']);
                 $newPreinsPersona->setSegipId(1);
-
-
 
                 $em->persist($newPreinsPersona);
             }
@@ -443,8 +452,9 @@ class PreInscriptionController extends Controller
             $newPreinsEstudiante->setFechaNacimiento(new \DateTime($student['fechaNacimiento']));
 
             $newPreinsEstudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($student['genero']));
-            $newPreinsEstudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(1));
+            $newPreinsEstudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
 
+            $newPreinsEstudiante->setLocalidadNac(mb_strtoupper($student['lugarNacimiento'], 'utf-8'));
 
             $em->persist($newPreinsEstudiante);
 
@@ -902,6 +912,30 @@ class PreInscriptionController extends Controller
 
         return false;
     }    
+    public function verificacion_datosAction(Request $request){
+        $ci = $request->get('ci');
+        $compl = $request->get('compl');
+
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:PreinsApoderadoInscripcion');
+        $query = $entity->createQueryBuilder('ai')
+                ->select('ai')
+                ->leftjoin('SieAppWebBundle:PreinsPersona', 'p', 'WITH', 'p.id=ai.preinsPersona')
+                ->where('p.carnet = :carnet')
+                ->andwhere('p.complemento = :complemento')
+                ->setParameter('carnet', $ci)
+                ->setParameter('complemento', $compl)
+                ->getQuery();
+        $lista_estado = $query->getResult();
+        // $lista_estado = $query->fetchAll();
+        // dump($lista_estado); exit();
+        return $this->render('SieAppWebBundle:PreInscription:listar_busqueda_preinscripcion.html.twig',array
+        (
+            'lista_estado'=>$lista_estado
+        ));
+        // return $this->render('SieAppWebBundle:PreInscription:index.html.twig');
+
+    }  
 
 
 }

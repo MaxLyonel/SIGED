@@ -724,4 +724,116 @@ class BjpEstudianteApoderadoBeneficiarios
     {
         return $this->apoderadoTipo;
     }
+    /**
+     * @var integer
+     */
+    private $estadoId;
+
+    /**
+     * @var integer
+     */
+    private $generoTipoEstId;
+
+    /**
+     * @var integer
+     */
+    private $generoTipoTutId;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstadomatriculaTipo
+     */
+    private $estadomatriculaTipo;
+
+
+    /**
+     * Set estadoId
+     *
+     * @param integer $estadoId
+     * @return BjpEstudianteApoderadoBeneficiarios
+     */
+    public function setEstadoId($estadoId)
+    {
+        $this->estadoId = $estadoId;
+    
+        return $this;
+    }
+
+    /**
+     * Get estadoId
+     *
+     * @return integer 
+     */
+    public function getEstadoId()
+    {
+        return $this->estadoId;
+    }
+
+    /**
+     * Set generoTipoEstId
+     *
+     * @param integer $generoTipoEstId
+     * @return BjpEstudianteApoderadoBeneficiarios
+     */
+    public function setGeneroTipoEstId($generoTipoEstId)
+    {
+        $this->generoTipoEstId = $generoTipoEstId;
+    
+        return $this;
+    }
+
+    /**
+     * Get generoTipoEstId
+     *
+     * @return integer 
+     */
+    public function getGeneroTipoEstId()
+    {
+        return $this->generoTipoEstId;
+    }
+
+    /**
+     * Set generoTipoTutId
+     *
+     * @param integer $generoTipoTutId
+     * @return BjpEstudianteApoderadoBeneficiarios
+     */
+    public function setGeneroTipoTutId($generoTipoTutId)
+    {
+        $this->generoTipoTutId = $generoTipoTutId;
+    
+        return $this;
+    }
+
+    /**
+     * Get generoTipoTutId
+     *
+     * @return integer 
+     */
+    public function getGeneroTipoTutId()
+    {
+        return $this->generoTipoTutId;
+    }
+
+    /**
+     * Set estadomatriculaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EstadomatriculaTipo $estadomatriculaTipo
+     * @return BjpEstudianteApoderadoBeneficiarios
+     */
+    public function setEstadomatriculaTipo(\Sie\AppWebBundle\Entity\EstadomatriculaTipo $estadomatriculaTipo = null)
+    {
+        $this->estadomatriculaTipo = $estadomatriculaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get estadomatriculaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EstadomatriculaTipo 
+     */
+    public function getEstadomatriculaTipo()
+    {
+        return $this->estadomatriculaTipo;
+    }
 }
