@@ -229,6 +229,7 @@ class PreinsInstitucioneducativaCursoCupoController extends Controller
 
         $entities = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->find($id);
         $entities2 = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->findBy(array('institucioneducativa' =>$entities->getInstitucioneducativa()));
+        // dump($entities); exit();
         // echo ">".$id;exit();
         /*dump($entities2); exit();
         $entities2=array_unique($entities2,SORT_NUMERIC);*/
@@ -281,8 +282,8 @@ class PreinsInstitucioneducativaCursoCupoController extends Controller
         // dump($request);die;
         $em = $this->getDoctrine()->getManager();
         $id=$request->get('id');
-        $nivel_tipo_id=$request->get('nivel_tipo_id');
-        $idgrado=$request->get('idgrado');
+        /*$nivel_tipo_id=$request->get('nivel_tipo_id');
+        $idgrado=$request->get('idgrado');*/
         $cupo=$request->get('cupo');
         $obj=mb_strtoupper($request->get('obj'),'utf-8');
 
@@ -290,8 +291,8 @@ class PreinsInstitucioneducativaCursoCupoController extends Controller
         // $GuardarPreinscripcion= new PreinsInstitucioneducativaCursoCupo();
         $GuardarPreinscripcion = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->find($id);
         // dump($GuardarPreinscripcion);die;
-        $GuardarPreinscripcion->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel_tipo_id));
-        $GuardarPreinscripcion->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find($idgrado));
+            // $GuardarPreinscripcion->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel_tipo_id));
+            // $GuardarPreinscripcion->setGradoTipo($em->getRepository('SieAppWebBundle:GradoTipo')->find($idgrado));
         // $GuardarEspecialidad->setInstitucioneducativa($institucioneducativa_id);
         $GuardarPreinscripcion->setCantidadCupos($cupo);
         $GuardarPreinscripcion->setObservacion($obj);

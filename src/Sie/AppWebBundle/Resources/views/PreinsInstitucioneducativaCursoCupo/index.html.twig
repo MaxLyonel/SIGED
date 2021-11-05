@@ -28,11 +28,11 @@
                     <thead>
                         <tr>
                             <th>Id</th>
-                            <th>Gestiontipoid</th>
-                            <th>Fecharegistro</th>
-                            <th>Fechamodificacion</th>
-                            <th>Observacion</th>
-                            <th>Cantidadcupos</th>
+                            <th>SIE</th>
+                            <th>INSTITUCION</th>
+                            <th>NIVEL</th>
+                            <th>GRADO</th>
+                            <th>CANTIDAD</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -49,7 +49,7 @@
                             <td>{{ entity.nivelTipo }}</td>
                             <td>{{ entity.gradoTipo }}</td>
                             {# <td>{{ entity.observacion }}</td> #}
-                            <td>{{ entity.cantidadCupos }}</td>
+                            <td><span class="label label-primary" style="border-style:double;font-size:15px;">{{ entity.cantidadCupos }}</span></td>
                             <td>
                                 <form action="{{path('uealtademanda_editar')}}" method="post" style="display:inline-block">
                                     <input type="hidden" name="iduealtadem" value="{{entity.id}}">
