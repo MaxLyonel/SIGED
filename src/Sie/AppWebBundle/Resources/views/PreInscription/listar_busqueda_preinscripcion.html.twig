@@ -1,0 +1,31 @@
+<div class="row">
+	<div class="col-xs-12">
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Nº</th>
+						<th>CODIGO TRAMITE</th>
+						<th>FECHA</th>
+						<th>ACCION</th>
+					</tr>
+				</thead>
+				<tbody>
+				{% set cont = 0 %}
+					{% for obj in lista_estado %}
+					{% set cont = cont +1 %}
+					<tr>
+						<td>{{ cont }}</td>
+						<td><span class="label label-default" style="border-style:double;font-size:15px;">{{ obj.id }}</span></td>
+						<td>{{ obj.fechaRegistro|date('Y-m-d H:i:s') }}</td>
+						<td>
+							<a href="{{path('preinscription_preinspdf',{idTramite:obj.id})}}" target="_black" class="btn btn-warning"><span class="fa fa-file-pdf-o"></span> IMPRIMIR</a>
+						</td>
+					</tr>
+					{% endfor %}
+					
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
