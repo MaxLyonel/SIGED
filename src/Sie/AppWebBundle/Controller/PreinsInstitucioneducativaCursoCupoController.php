@@ -304,4 +304,5 @@ class PreinsInstitucioneducativaCursoCupoController extends Controller
         $this->addFlash('goodstate', $message);
         return $this->redirectToRoute('uealtademanda');
     }
+   
 }

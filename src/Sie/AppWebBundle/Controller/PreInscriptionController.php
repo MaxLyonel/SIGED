@@ -912,6 +912,30 @@ class PreInscriptionController extends Controller
 
         return false;
     }    
+    public function verificacion_datosAction(Request $request){
+        $ci = $request->get('ci');
+        $compl = $request->get('compl');
+
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:PreinsApoderadoInscripcion');
+        $query = $entity->createQueryBuilder('ai')
+                ->select('ai')
+                ->leftjoin('SieAppWebBundle:PreinsPersona', 'p', 'WITH', 'p.id=ai.preinsPersona')
+                ->where('p.carnet = :carnet')
+                ->andwhere('p.complemento = :complemento')
+                ->setParameter('carnet', $ci)
+                ->setParameter('complemento', $compl)
+                ->getQuery();
+        $lista_estado = $query->getResult();
+        // $lista_estado = $query->fetchAll();
+        // dump($lista_estado); exit();
+        return $this->render('SieAppWebBundle:PreInscription:listar_busqueda_preinscripcion.html.twig',array
+        (
+            'lista_estado'=>$lista_estado
+        ));
+        // return $this->render('SieAppWebBundle:PreInscription:index.html.twig');
+
+    }  
 
 
 }

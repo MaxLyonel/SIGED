@@ -55,3 +55,8 @@ preinscription_preinspdf:
     defaults: { _controller: SieAppWebBundle:PreInscription:preinspdf }
     options:
          expose: true         
+verificacion_datos:
+    path:     /verificacion_datos
+    defaults: { _controller: SieAppWebBundle:PreInscription:verificacion_datos }
+    options:
+         expose: true       
