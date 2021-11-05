@@ -8,12 +8,30 @@
     <div class="row">
         <div class="col-md-12">
          <div class="col-md-12 col-lg-12  col-sm-12">
-           <div class="panel panel-secondary">
-                <div class="panel-heading">
-                <strong></strong>
-                </div>
+           <div class="panel panel-secondary">                
                 <div class="panel-body">
-                Lista de participantes que terminarón el curso largo satisfactoriamente.
+                <strong>Lista de participantes que terminarón el curso largo satisfactoriamente.</strong><br>
+                    <div class="row">
+                        <div class="alert alert-warning">
+                            <span class="alert-icon"><i class="fa fa-info"></i></span>
+                            <div class="notification-info">
+                                <ul class="clearfix notification-meta">
+                                    <li class="pull-left notification-sender"><span class="label label-warning rounded">En proceso</span> Indica que el trámite aún se encuentra en proceso de autorización por la instancia correspondiente. </li>
+                                    <li class="pull-right notification-time"></li></br>
+
+                                    <li class="pull-left notification-sender"><span class="label label-success rounded">Concluido</span> Indica que el trámite se encuentra concluido o autorizado para la impresión del certtificado. </li>
+                                    <li class="pull-right notification-time"></li> </br>
+                                    
+                                    <li class="pull-left notification-sender"><span class="label label-primary rounded">Certificado Entregado</span> Indica que el certificado ya fue generado por la instancia correspondiente. </li>
+                                    <li class="pull-right notification-time"></li></br>
+
+                                    <li class="pull-left notification-sender">En el listado de participantes puede realizar la selección de uno o todos los participantes para realizar la solicitud. </li>
+                                    <li class="pull-right notification-time"></li> 
+
+                                </ul>
+                            </div>
+                        </div> 
+                    </div>
                 </div>
             </div>            
          </div>
@@ -39,29 +57,11 @@
                             <div class="pull-left">
                                 <h4 class="panel-title">C.E.A.: {{ datosCentro.institucioneducativa}} - {{infoAutorizacionCentro}} </h4>
                             </div>
-                            <div class="pull-right">
-                                {# <input type="submit" name="botonAceptar" id="botonAceptar" class="btn btn-primary" value="Registrar" disabled="true" /> #}
-                                {# <a class="btn btn-lilac" href="{{ path('tramite_certificado_tecnico_registro_lista_pdf', {'info': datosBusqueda}) }}" target="_blank">Imprimir</a> #}
+                            <div class="pull-right">                                
                             </div>
                             <div class="clearfix"></div>
                         </div>
                         <div class="panel-body">
-                            {# {% if infoAutorizacionCentro.tec_basico == 0 and listaParticipante[0].nivel == 1 %}
-                                <div class="alert alert-danger">
-                                    <strong>Alerta!</strong> No cuenta con la autorización correspondiente según R.U.E. para la emisión de certificados a nivel básico.
-                                </div>
-                            {% endif %}
-                            {% if infoAutorizacionCentro.tec_auxiliar == 0 and listaParticipante[0].nivel == 2 %}
-                                <div class="alert alert-danger">
-                                    <strong>Alerta!</strong> No cuenta con la autorización correspondiente según R.U.E. para la emisión de certificados a nivel auxiliar.
-                                </div>
-                            {% endif %}
-                            {% if infoAutorizacionCentro.tec_medio == 0 and listaParticipante[0].nivel == 3 %}
-                                <div class="alert alert-danger">
-                                    <strong>Alerta!</strong> No cuenta con la autorización correspondiente según R.U.E. para la emisión de certificados a nivel medio.
-                                </div>
-                            {% endif %} #}
-
                             <table id="tablaParticipantes" class="table table-striped table-bordered" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
@@ -133,7 +133,7 @@
                                     {% endfor %}
                                 </tbody>
                             </table>                           
-                        </div><!-- /.panel-body -->
+                        </div>
                         <div class="panel-footer">
                             <div class="row">                                
                                 <div class="col-md-2 col-md-offset-5">

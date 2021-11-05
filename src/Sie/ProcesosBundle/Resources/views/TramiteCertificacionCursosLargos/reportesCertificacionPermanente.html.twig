@@ -72,7 +72,28 @@
                             </div>
                             <div class="clearfix"></div>
                         </div>
-                        <div class="panel-body">                            
+                        <div class="panel-body">
+                            {% if (app.session.get('roluser') == 7) %}
+                            <div class= "row">
+                                <div class="col-lg-6 col-md-8 col-sm-8 col-xs-8">
+                                            <span>Lista de Certificados Generados.</span>
+                                </div> 
+                                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                                    <form name="form" role="form" action="{{ path('tramite_lista_certificados_generados') }}" method="POST" target="_blank">
+                                    {#  <input type="hidden" name="gestion" value="{{gestion}}"  /> #}  
+                                        <button name="botonPdf" id="botonPdf" title="Descargar reporte habilitados en formato  PDF" class="btn btn-googleplus"><i class="fa fa-file-pdf-o"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                                    <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_lista_habilitadosXLS') }}" method="POST">
+                                    {#  <input type="hidden" name="gestion" value="{{gestion}}"  /> #}  
+                                        <button name="botonXls" id="botonXls" title="Descargar en formato EXCEL" class="btn btn-success"><i class="fa fa-file-excel-o"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            {% endif %}                           
                             {# <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_entregados_datos') }}" method="POST">
                                 <button type="submit" id="submit"  title="Descargar reporte"><i class="fa fa-file-pdf-o"></i>  Cantidad de certificados entregados </button>
                             </form> #}

@@ -370,23 +370,6 @@
                 return true;
             }
         }
-         // Setup - add a text input to each footer cell
-            $('#tablaParticipantes tfoot th').each( function () {
-                var title = $(this).text();
-                if(title.trim() === "" || title === "#"){
-                    $(this).html('');
-                } else {
-                    $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
-                }
-            } );
-        // DataTable
-        var table = $('#tablaParticipantes').DataTable( {
-                //"order": [[ 3, "asc" ]],
-                "columnDefs": [
-                    { "orderable": false, "targets": 7 }
-                ],
-            }
-        );
 
         $(window).load(function(){
             // ..
@@ -407,7 +390,7 @@
             }
 
             // Setup - add a text input to each footer cell
-            $('#tablaParticipantes tfoot th').each( function () {
+            $('#tablaParticipantesHabilitados tfoot th').each( function () {
                 var title = $(this).text();
                 if(title.trim() === "" || title === "#"){
                     $(this).html('');
@@ -417,7 +400,7 @@
             } );
 
             // DataTable
-            var table = $('#tablaParticipantes').DataTable( {
+            var table = $('#tablaParticipantesHabilitados').DataTable( {
                     //"order": [[ 3, "asc" ]],
                     "columnDefs": [
                         { "orderable": false, "targets": 7 }
