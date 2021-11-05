@@ -52,7 +52,8 @@ class PreinscripcionSorteoController extends Controller {
         return $form;
     }
 
-    public function resultAction(Request $request) {
+    public function resultAction(Request $request)
+    {
 
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
@@ -79,17 +80,13 @@ class PreinscripcionSorteoController extends Controller {
             $aTuicion = $query->fetchAll();
 
             if ($aTuicion[0]['get_ue_tuicion']) {
-                $institucionPreInscripcionSorteo = $em->getRepository('SieAppWebBundle:InstitucioneducativaRueRegularizacion')->findOneBy(array('institucioneducativa' => $institucion));
-                if($institucionPreInscripcionSorteo) {
-                    if($institucionPreInscripcionSorteo->getEsactivo()){
-                        $this->get('session')->getFlashBag()->add('noSearch', 'La unidad educativa ya realizó el "Sorteo de Fecha".');
-                        return $this->redirect($this->generateUrl('preinscripcion_sorteo_index'));
-                    } else {
-                        return $this->render($this->session->get('pathSystem') . ':PreinscripcionSorteovista:result.html.twig', array(
+                $institucionPreInscripcionSorteo = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->findOneBy(array('institucioneducativa' => $institucion));
+                if($institucionPreInscripcionSorteo)
+                {
+                    return $this->render($this->session->get('pathSystem') . ':PreinscripcionSorteovista:result.html.twig', array(
                             'institucion' => $institucion,
                             'form' => $this->formFechaFundacion($institucion->getId())->createView(),
                         ));
-                    }
                 } else {
                     $this->get('session')->getFlashBag()->add('noSearch', 'La unidad educativa no se encuentra habilitada para este operativo.');
                     return $this->redirect($this->generateUrl('preinscripcion_sorteo_index'));
@@ -115,7 +112,8 @@ class PreinscripcionSorteoController extends Controller {
         return $form;
     }
 
-    public function saveAction(Request $request) {
+    public function saveAction(Request $request)
+    {
 
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
@@ -133,7 +131,8 @@ class PreinscripcionSorteoController extends Controller {
         
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($form['sie']);
 
-        if($institucion) {
+        if($institucion)
+        {
             $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
             $query->bindValue(':user_id', $this->session->get('userId'));
             $query->bindValue(':sie', $form['sie']);
@@ -141,16 +140,35 @@ class PreinscripcionSorteoController extends Controller {
             $query->execute();
             $aTuicion = $query->fetchAll();
 
-            if ($aTuicion[0]['get_ue_tuicion']) {
-                $institucionPreInscripcionSorteo = $em->getRepository('SieAppWebBundle:InstitucioneducativaRueRegularizacion')->findOneBy(array('institucioneducativa' => $institucion));
-                
-                if($institucionPreInscripcionSorteo) {
-                    if($institucionPreInscripcionSorteo->getEsactivo()){
+            if ($aTuicion[0]['get_ue_tuicion'])
+            {
+                $institucionPreInscripcionSorteo = $em->getRepository('SieAppWebBundle:PreinsInstitucioneducativaCursoCupo')->findOneBy(array('institucioneducativa' => $institucion));
+                if( $institucionPreInscripcionSorteo )
+                {
+                    $institucionPreInscripcionSorteo->setFechaSorteo(new \DateTime($form['fechaFundacion']));
+                    $em->persist($institucionPreInscripcionSorteo);
+                    $em->flush();
+
+                    return $this->render($this->session->get('pathSystem') . ':PreinscripcionSorteovista:saved.html.twig', array(
+                        'institucion' => $institucion,
+                        'fecha' => $institucionPreInscripcionSorteo->getFechaSorteo()
+                    ));
+                }
+                else
+                {
+                    $this->get('session')->getFlashBag()->add('noSearch', 'La unidad educativa no se encuentra habilitada para este operativo.');
+                    return $this->redirect($this->generateUrl('preinscripcion_sorteo_index'));
+                }
+                /*
+                if($institucionPreInscripcionSorteo)
+                {
+                    if($institucionPreInscripcionSorteo->getEsactivo())
+                    {
                         $this->get('session')->getFlashBag()->add('noSearch', 'La unidad educativa ya realizó el "Sorteo de Fecha".');
                         return $this->redirect($this->generateUrl('preinscripcion_sorteo_index'));
                     } 
-
-                    else {
+                    else
+                    {
                         $documento = $request->files->get('form')['adjunto'];
 
                         if(!empty($documento)){
@@ -187,12 +205,16 @@ class PreinscripcionSorteoController extends Controller {
                             ));
                         }
                     }
-              
-                } else {
+                }
+                else
+                {
                     $this->get('session')->getFlashBag()->add('noSearch', 'La unidad educativa no se encuentra habilitada para este operativo.');
                     return $this->redirect($this->generateUrl('preinscripcion_sorteo_index'));
                 }
-            } else {
+                */
+            }
+            else
+            {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa.');
                 return $this->redirect($this->generateUrl('preinscripcion_sorteo_index'));
             }

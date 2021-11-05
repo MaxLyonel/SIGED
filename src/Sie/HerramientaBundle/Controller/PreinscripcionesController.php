@@ -30,6 +30,7 @@ class PreinscripcionesController extends Controller
 		}
 	}
 
+	/*
 	public function cerrarAction(Request $request)
 	{
 		$esAjax=$request->isXmlHttpRequest();
@@ -118,6 +119,25 @@ class PreinscripcionesController extends Controller
 		$response->headers->set('Content-Type', 'application/json');
 		return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
 	}
+	
+	public function ddjjAction(Request $request, $sie,$gestion)
+	{
+		$pdf=$this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
+		//$pdf='http://127.0.0.1:63170/viewer/preview?__report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
+		
+		$status = 200;	
+		$arch           = 'DECLARACION_PREINSCRIPCIÓN-'.date('Y').'_'.date('YmdHis').'.pdf';
+		$response       = new Response();
+		$response->headers->set('Content-type', 'application/pdf');
+		$response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+		$response->setContent(file_get_contents($pdf));
+		$response->setStatusCode($status);
+		$response->headers->set('Content-Transfer-Encoding', 'binary');
+		$response->headers->set('Pragma', 'no-cache');
+		$response->headers->set('Expires', '0');
+		return $response;
+	}
+	*/
 
 	public function seguimientoAction(Request $request)
 	{
@@ -276,24 +296,6 @@ class PreinscripcionesController extends Controller
         }
         return $ue;
     }
-
-	public function ddjjAction(Request $request, $sie,$gestion)
-	{
-		$pdf=$this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
-		//$pdf='http://127.0.0.1:63170/viewer/preview?__report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
-		
-		$status = 200;	
-		$arch           = 'DECLARACION_PREINSCRIPCIÓN-'.date('Y').'_'.date('YmdHis').'.pdf';
-		$response       = new Response();
-		$response->headers->set('Content-type', 'application/pdf');
-		$response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-		$response->setContent(file_get_contents($pdf));
-		$response->setStatusCode($status);
-		$response->headers->set('Content-Transfer-Encoding', 'binary');
-		$response->headers->set('Pragma', 'no-cache');
-		$response->headers->set('Expires', '0');
-		return $response;
-	}
 
 	public function getPreinscritos($departamento, $distrito, $ue, $gestion)
 	{

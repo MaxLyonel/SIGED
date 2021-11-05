@@ -705,21 +705,37 @@
                             </ul>
                         </li>
                     {% endif %}
+                    {# Preinscripciones #}
                     {% if app.session.get('roluser') in [9,10,8,7] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-users"></i></span>
-                                <span class="text">Preinscripción 2022</span>
+                                <span class="text">Preinscripción {{'now'|date('Y') + 1}}</span>
                                 <span class="arrow"></span>
                             </a>
                             <ul>
                                 <li><a href="{{ path('preinscripciones_seguimiento')}}">Listado Preinscripción</a></li>
                             </ul>
                             <ul>
-                                <li><a href="{{ path('preinscripciones_seguimiento')}}">Fecha de sorteo</a></li>
+                                <li><a href="{{ path('preinscripcion_sorteo_index')}}">Fecha de sorteo</a></li>
                             </ul>
                         </li>
                     {% endif %}
+
+                    {# Cambio de tutor BJP 2021 
+                    {% if app.session.get('roluser') in [9,10,8,7] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Bono JP - {{ 'now'|date('Y') }}</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de tutor</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    #}
 
 
                     {% if false %}

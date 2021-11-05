@@ -49,6 +49,11 @@ Sie\AppWebBundle\Entity\PreinsInstitucioneducativaCursoCupo:
             unsigned: false
             comment: ''
             column: cantidad_cupos
+        fechaSorteo:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_sorteo
     manyToOne:
         gradoTipo:
             targetEntity: GradoTipo

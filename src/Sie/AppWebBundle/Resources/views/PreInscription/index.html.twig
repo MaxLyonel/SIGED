@@ -252,10 +252,6 @@
 												<label for="job">Teléfono/Celular:</label>
 												<input type="text" class="form-control" id="fono" v-model="addrressParent.fono":disabled="swParentAddress ==true">
 											</div>
-											{# <div class="form-group col-md-6">
-												<label for="Municipio">Avenida/Calle/N°:</label>
-												<input type="text" class="form-control" id="municipio" v-model="addrressParent.avenida"> 
-											</div> #}
 										</div>
 										
 										<div class="form-row">
@@ -378,6 +374,14 @@
 											<input type="text" v-model="student.nombre" class="form-control jupper" maxlength="20" v-on:keypress="alfabetico" >
 										</div>		
 									</div>
+
+									<div class="row">
+										<div class="form-group col-md-6">
+											<label>Lugar de nacimiento</label>
+											<input type="text" v-model="student.lugarNacimiento" class="form-control jupper"  >
+										</div>
+									</div>
+
 									<div class="row">
 
 										<div class="form-group col-md-6">
@@ -446,9 +450,6 @@
 		                                    </div>											                                    
 										
 										</div>										
-
-
-
 
 										<div class="form-row">
 											<div class="form-group col-md-12">
@@ -610,6 +611,7 @@
 		    		zona: '',
 		    		avenida: '',
 		    		fono: '',
+		    		lugarNacimiento: ''
 		   //  		nivel: '',
 					// estId: '',
 		   //  		grado: ''

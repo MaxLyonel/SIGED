@@ -56,6 +56,11 @@ class PreinsInstitucioneducativaCursoCupo
 
 
     /**
+     * @var \DateTime
+     */
+    private $fechaSorteo;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -248,4 +253,29 @@ class PreinsInstitucioneducativaCursoCupo
     {
         return $this->institucioneducativa;
     }
+
+
+    /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return PreinsInstitucioneducativaCursoCupo
+     */
+    public function setFechaSorteo($fechaSorteo)
+    {
+        $this->fechaSorteo = $fechaSorteo;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaSorteo()
+    {
+        return $this->fechaSorteo;
+    }
+
 }
