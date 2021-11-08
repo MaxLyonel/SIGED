@@ -418,11 +418,10 @@
                                 <li><a href="{{path('herramienta_permanente_admin_especialidades')}}">Especialidades Cursos Largos </a></li>
                             </ul>
                         </li>
-                        <li class="">
+                        {# <li class="">
                             <a href="{{path('wf_tramite_index')}}">
                                 <span class="icon"><i class="fa fa-home"></i></span>
-                                <span class="text">Trámites</span>
-                                {# <span class="selected"></span> #}
+                                <span class="text">Trámites</span>                               
                             </a>
                         </li>
                         <li class="">
@@ -437,7 +436,7 @@
                                 <span class="text">Reportes Certificación</span>
                                 
                             </a>
-                        </li>  
+                        </li>   #}
                         
                     {% endif %}
 
@@ -454,11 +453,10 @@
                                 <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
                             </ul>
                         </li>
-                        <li class="">
+                        {# <li class="">
                             <a href="{{path('wf_tramite_index')}}">
                                 <span class="icon"><i class="fa fa-home"></i></span>
-                                <span class="text">Trámites</span>
-                                {# <span class="selected"></span> #}
+                                <span class="text">Trámites</span>                               
                             </a>
                         </li>
                         <li class="">
@@ -470,10 +468,9 @@
                         <li class="">
                             <a href="{{path('tramite_impresion_certificacion_per_reportes')}}">
                                 <span class="icon"><i class="fa fa-line-chart"></i></span>
-                                <span class="text">Reportes Certificación</span>
-                                {# <span class="selected"></span> #}
+                                <span class="text">Reportes Certificación</span>                               
                             </a>
-                        </li>                          
+                        </li>  #}                         
                     {% endif %}
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
@@ -488,13 +485,12 @@
                                 <li><a href="{{path('herramienta_per_ceducativa_seleccionar_cea')}}">Seleccionar CEA </a></li>
                             </ul>
                         </li>
-                        <li class="">
+                        {# <li class="">
                             <a href="{{path('wf_tramite_index')}}">
                                 <span class="icon"><i class="fa fa-home"></i></span>
-                                <span class="text">Trámites</span>
-                                {# <span class="selected"></span> #}
+                                <span class="text">Trámites</span>                               
                             </a>
-                        </li>
+                        </li> #}
                     {% endif %}
                     {% if app.session.get('roluser') == 9 %}{#DIRECTOR#}
                         <li class="submenu">
@@ -508,13 +504,12 @@
                                 <li><a href="{{path('sie_per_ges_sub_sem')}}">Operativos </a></li>
                             </ul>
                         </li>
-                        <li class="">
+                        {# <li class="">
                             <a href="{{path('wf_tramite_index')}}">
                                 <span class="icon"><i class="fa fa-home"></i></span>
-                                <span class="text">Trámites</span>
-                                {# <span class="selected"></span> #}
+                                <span class="text">Trámites</span>                                
                             </a>
-                        </li>                     
+                        </li>  #}                    
                     {% endif %}
                 </ul><!-- /.sidebar-menu -->
                
