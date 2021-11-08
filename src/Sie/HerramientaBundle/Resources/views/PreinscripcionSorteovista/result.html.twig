@@ -66,7 +66,7 @@
                     <div class="panel-body">
                         {{ form_start(form, { 'attr': {'data-toggle': 'validator','role': "form",'class':'form-horizontal'} } ) }}
                             <div class="form-group">
-                                <label for="form_codigoRude" class="col-sm-6 control-label"><strong>Fecha de Sorteo:</strong></label>
+                                <label for="form_codigoRude" class="col-sm-6 control-label"><strong>Fecha de Sorteo:</strong><br><i class="fa fa-fw fa-info-circle"></i>(Seleccione en el calendario la fecha para el sorteo de pre inscripción de la Unidad Educativa)</span></label>
                                 <div class="col-sm-6">
                                     {{ form_widget(form.fechaFundacion, { 'attr':{'class': 'form-control calendario', 'autocomplete': 'off'}  }) }}
                                     <div class="help-block with-errors"></div>
