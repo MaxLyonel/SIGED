@@ -1198,16 +1198,51 @@ class InfoConsolidationController extends Controller {
     public function enabledOpeAction(Request $request){
       // get the send values
       $sie = $request->get('sie');
+      $gestion = $this->session->get('currentyear');
       $em = $this->getDoctrine()->getManager();
       $objRegistroConsolidado = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
         'unidadEducativa' => $sie,
         'gestion'         => $this->session->get('currentyear')
       ));
-      $objRegistroConsolidado->setBim1(0);
-      $objRegistroConsolidado->setBim2(0);
-      $objRegistroConsolidado->setBim3(0);
-      $objRegistroConsolidado->setBim4(0);
 
+      $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+      switch ($operativo) {
+          case 2:
+              $objRegistroConsolidado->setBim2(0);
+              break;
+          case 3:
+              $objRegistroConsolidado->setBim3(0);
+              break;
+          
+          default:
+              // code...
+              break;
+      }
+
+ /*     $estado1 = 0;
+      $estado2 = 0;
+      $estado3 = 0;
+      $estado4 = 0;
+      if($operativo == 0 or $operativo == 1 or $operativo == 2)
+      {
+        $estado1 = 2;
+        $estado2 = 0;
+        $estado3 = 0;
+        $estado4 = 0;
+      }
+      if($operativo == 3)
+      {
+        $estado1 = 2;
+        $estado2 = 1;
+        $estado3 = 0;
+        $estado4 = 0;
+      }
+
+      $objRegistroConsolidado->setBim1($estado1);
+      $objRegistroConsolidado->setBim2($estado2);
+      $objRegistroConsolidado->setBim3($estado3);
+      $objRegistroConsolidado->setBim4($estado4);
+*/
       $em->persist($objRegistroConsolidado);
       $em->flush();
 

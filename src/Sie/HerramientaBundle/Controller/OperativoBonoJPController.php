@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityRepository;
+use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\Institucioneducativa;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion;
@@ -59,12 +60,18 @@ class OperativoBonoJPController extends Controller
 				if($esAjax && $request_sie >0 && $request_gestion >0)
 				{
 					list($data,$status,$msj)=$this->get('operativoutils')->cerrarOperativo($request_sie,$request_gestion,$request_estado);
-					$reporte = $this->generateUrl('operativo_bono_jp_ddjj',array("sie"=>$request_sie,"gestion"=>$request_gestion));
+					if($status == 200)
+					{
+						//$this->registrarDatosBonoBJP($request_sie, $request_gestion);
+						$reporte = $this->generateUrl('operativo_bono_jp_ddjj',array("sie"=>$request_sie,"gestion"=>$request_gestion));
+					}
 				}
 			}
 			else
 			{
+				$data=null;
 				$status= 200;
+				$msj='No se puedo cerrar el operativo, todavia tiene inconsistencias.';
 			}
 		}
 		catch(Exception $e)
@@ -115,6 +122,7 @@ class OperativoBonoJPController extends Controller
 
 	public function seguimientoAction(Request $request)
 	{
+
 	  $em = $this->getDoctrine()->getManager();
 	  $departamento=-1;
 	  $distrito=-1;
@@ -132,7 +140,7 @@ class OperativoBonoJPController extends Controller
 
 		$rol= $datosUser['rol_tipo_id'];
 		
-		if(in_array($rol,[8]))//nacional
+		if(in_array($rol,[8,34]))//nacional
 		{
 			$arrayDepartamentos = $this->get('operativoutils')->getDepartamentos();
 			$arrayDistritos = array();
@@ -200,10 +208,10 @@ class OperativoBonoJPController extends Controller
 
 	private function getObservacionesControlCalidad($data)
 	{
-		$data['reglas'] = '12,13,26,24,25,8,15,20,11,37,63,60,61,62';
+		$data['reglas'] = '12,13,26,24,25,8,15,20,37,63,60,61,62';
 		// added to 2021 about qa
-		$years = $data['gestion'].' ,'.$data['gestion'];
-
+		// $years = $data['gestion'].' ,'.$data['gestion'];
+		$years = $this->session->get('currentyear');
 		$em = $this->getDoctrine()->getManager();
 		$query = $em->getConnection()->prepare("
 		select vp.obs as observacion
@@ -238,7 +246,7 @@ class OperativoBonoJPController extends Controller
 		$distrito = is_numeric($distrito)?$distrito:-1;
 		$gestion = is_numeric($gestion)?$gestion:-1;
 
-		$datos=$this->get('operativoutils')->getUnidadesEducativas($departamento,$distrito,$gestion,$this->estado);
+		$datos=$this->get('operativoutils')->getUnidadesEducativas($departamento,$distrito,$gestion,$this->estado,$tipoUENopermitidos=array(3));
 		return $this->render('SieHerramientaBundle:BonoJP:mostrarDatosOperativoBonoJP.html.twig',array(
 			'datos' => $datos,
 			'periodo' => $ieTipo,
@@ -247,10 +255,10 @@ class OperativoBonoJPController extends Controller
 
 	public function ddjjAction(Request $request, $sie,$gestion)
 	{
-		//$pdf=$this->container->getParameter('urlreportweb') . 'reg_lst_textos_educativos_v1.rptdesign&__format=pdf'.'&codue='.$sie.'&gestion='.$gestion;
-		$pdf='http://127.0.0.1:63020/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte-Textos-Educativos\reg_lst_textos_educativos_v1.rptdesign&__format=pdf'.'&codue='.$sie.'&gestion='.$gestion;
+		$pdf=$this->container->getParameter('urlreportweb') . 'reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
+		//$pdf='http://127.0.0.1:63170/viewer/preview?__report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
 		
-		$status = 200;
+		$status = 200;	
 		$arch           = 'DECLARACION_JURADA_BONO_JUANCITO_PINTO-'.date('Y').'_'.date('YmdHis').'.pdf';
 		$response       = new Response();
 		$response->headers->set('Content-type', 'application/pdf');
@@ -263,5 +271,267 @@ class OperativoBonoJPController extends Controller
 		return $response;
 	}
 
+	public function registrarDatosBonoBJP($sie, $gestion)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$db = $em->getConnection();
+
+		$query = '
+		INSERT INTO public.bjp_estudiante_apoderado_beneficiarios(
+			institucioneducativa_id, nivel_tipo_id, grado_tipo_id, paralelo_tipo_id,
+			turno_tipo_id, estudiante_inscripcion_id, estudiante_id, codigo_rude,
+			carnet_est, complemento_est, paterno_est, materno_est, nombre_est,
+			fecha_nacimiento_est, persona_id, carnet_tut, complemento_tut,
+			paterno_tut, materno_tut, nombre_tut, apoderado_tipo_id, segip_id_tut,
+			fecha_registro, fecha_actualizacion, observacion,estadomatricula_tipo_id)
+		 select a.institucioneducativa_id,a.nivel_tipo_id,a.grado_tipo_id,a.paralelo_tipo_id,a.turno_tipo_id,c.estudiante_inscripcion_id,b.estudiante_id,e.codigo_rude,e.carnet_identidad,e.complemento,e.paterno,e.materno,e.nombre,e.fecha_nacimiento,c.persona_id
+		 ,d.carnet,d.complemento,d.paterno,d.materno,d.nombre,c.apoderado_tipo_id,d.segip_id,current_date,null as fecha_actualizacion,null as observacion,b.estadomatricula_tipo_id
+		 from institucioneducativa_curso a
+		 inner join estudiante_inscripcion b on a.id=b.institucioneducativa_curso_id
+		 inner join bjp_apoderado_inscripcion_beneficiarios c on b.id=c.estudiante_inscripcion_id
+		 inner join persona d on c.persona_id=d.id
+		 inner join estudiante e on b.estudiante_id=e.id
+		 where a.gestion_tipo_id= ?
+		 and a.institucioneducativa_id = ?;
+		';
+		$stmt = $db->prepare($query);
+		$params = array($gestion,$sie);
+		$stmt->execute($params);
+		$requisitos=$stmt->fetch();
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	public function formularioCambiarTutorAction()
+	{
+		return $this->render('SieHerramientaBundle:BonoJP:fomularioCambiarTutor.html.twig');
+	}
+
+	public function buscarInscripcionesAction(Request $request)
+	{
+		$codigo_rude = $request->get('codigo_rude');
+		$gestion = date('Y');
+		$estado_matricula = 4;
+		
+		$em = $this->getDoctrine()->getManager();
+		$query = $em->getConnection()->prepare("SELECT  * FROM sp_genera_estudiante_historial(?) where gestion_tipo_id_raep = ? AND estadomatricula_tipo_id_fin_r = ?");
+		$params = array($codigo_rude, $gestion, $estado_matricula);
+		$query->execute($params);
+		$dataInscription = $query->fetchAll();
+
+		$dataInscriptionR = $dataInscriptionE = array();
+		foreach ($dataInscription as $key => $inscription)
+		{
+			switch ($inscription['institucioneducativa_tipo_id_raep'])
+			{
+				case '1':
+					$dataInscriptionR[$key] = $inscription;
+				break;
+				case '4':
+					$dataInscriptionE[$key] = $inscription;
+				break;
+			}
+		}
+
+		return $this->render('SieHerramientaBundle:BonoJP:inscripcionesEstudianteBonoJP.html.twig', array(
+			'inscripcionesRegular' => $dataInscriptionR,
+			'inscripcionesEspecial' => $dataInscriptionE
+		));
+	}
+
+	public function buscarTutoresAction(Request $request,$inscripcion)
+	{
+		$tutoresActuales = $this->listarTutores($inscripcion,1);
+		$tutoresEliminados = $this->listarTutores($inscripcion,2);
+		/*
+		$status = 200;
+		$msj = '';
+
+		$data =  array(
+			'tutoresActuales' => $this->render('SieHerramientaBundle:BonoJP:listarTutores.html.twig',array('tutores' => $tutoresActuales)),
+			'tutoresEliminados' => $this->render('SieHerramientaBundle:BonoJP:listarTutores.html.twig',array('tutores' => $tutoresEliminados))
+		);*/
+		//$response = new JsonResponse($data,$status);
+		//$response->headers->set('Content-Type', 'application/json');
+		//return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+
+		return $this->render('SieHerramientaBundle:BonoJP:listarTutores.html.twig',array('tutoresActuales' => $tutoresActuales,'tutoresEliminados' => $tutoresEliminados));
+	}
+
+	public function listarTutores ($inscripcion, $estado = 1)
+	{
+		$em = $this->getDoctrine()->getManager();
+		/*
+		$parents = $em->createQueryBuilder()
+						->select('
+							ai.id,
+							p.id as personaid,
+							p.carnet,
+							p.complemento,
+							p.paterno, 
+							p.materno, 
+							p.nombre as nombre,
+							p.fechaNacimiento,
+							IDENTITY(ai.apoderadoTipo) AS apoderadoTipo
+						')
+						->from('SieAppWebBundle:BjpApoderadoInscripcionBeneficiarios','ai')
+						->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','ai.estudianteInscripcion = ei.id')
+						->innerJoin('SieAppWebBundle:Persona','p','with','ai.persona = p.id')
+
+						->where('ei.id = :inscriptionId')
+						->andWhere('p.segipId = 1')
+						->setParameter('inscriptionId', $inscripcion)
+						->orderBy('ai.id','DESC');
+		*/
+		$parents = $em->createQueryBuilder()
+						->select('
+							beab.id,
+							beab.personaId as personaid,
+							beab.carnetTut as carnet,
+							beab.complementoTut as complemento,
+							beab.paternoTut as paterno, 
+							beab.maternoTut as materno, 
+							beab.nombreTut  as nombre,
+							p.fechaNacimiento as fechaNacimiento,
+							IDENTITY(beab.apoderadoTipo) AS apoderadoTipo,
+							ap.apoderado as apoderado,
+							beab.estudianteInscripcionId as estudianteInscripcion,
+							beab.fechaActualizacion as fechaActualizacion
+						')
+						->from('SieAppWebBundle:BjpEstudianteApoderadoBeneficiarios','beab')
+						->innerJoin('SieAppWebBundle:Persona','p','with','p.id = beab.personaId')
+						->innerJoin('SieAppWebBundle:ApoderadoTipo','ap','with','ap.id = beab.apoderadoTipo')
+						->where('beab.estudianteInscripcionId = :inscriptionId')
+						->andWhere('beab.segipIdTut = 1')
+						->andWhere('beab.estadoId = :estado')
+						->setParameter('inscriptionId', $inscripcion)
+						->setParameter('estado', $estado)
+						->orderBy('beab.id','DESC');
+		$parents = $parents->getQuery()->getResult();
+		
+		return $parents;
+	}
+
+	public function cambiarEstadoTutoresAction(Request $request,$id,$estado)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$db = $em->getConnection();
+		$esAjax=$request->isXmlHttpRequest();
+
+		$request_id = $id;
+		$request_id = filter_var($request_id,FILTER_SANITIZE_NUMBER_INT);
+		$request_id = is_numeric($request_id)?$request_id:-1;
+
+		$request_estado = $estado;
+		$request_estado = filter_var($request_estado,FILTER_SANITIZE_NUMBER_INT);
+		$request_estado = is_numeric($request_estado)?$request_estado:-1;
+
+
+		$data=null;
+		$status= 404;
+		$msj='Ocurrio un error, por favor vuelva a intentarlo';
+
+		if($esAjax && $request_id >0)
+		{
+			$query ="update bjp_estudiante_apoderado_beneficiarios set estado_id = ? where id = ?";
+			$stmt = $db->prepare($query);
+			$params = array($request_estado, $request_id);
+			$stmt->execute($params);
+			$tmp=$stmt->fetchAll();
+
+			$borrado = $em->getRepository('SieAppWebBundle:BjpEstudianteApoderadoBeneficiarios')->findOneBy(array('id' => $request_id, 'estadoId' => $request_estado));
+
+			if($borrado!=null)
+			{
+				$query ="update bjp_estudiante_apoderado_beneficiarios set fecha_actualizacion = ?";
+				$stmt = $db->prepare($query);
+				//$params = array(new \DateTime(date('Y-m-d')));
+				$params = array(date('Y-m-d'));
+				$stmt->execute($params);
+				$tmp=$stmt->fetchAll();
+
+				$data='ok';
+				$status= 200;
+				$msj='Los datos fueron eliminados correctamente';
+			}
+			else
+			{
+				$data=null;
+				$status= 404;
+				$msj='Ocurrio un error, por favor vuelva a intentarlo';
+			}
+		}
+		else
+		{
+			$data=null;
+			$status= 404;
+			$msj='Ocurrio un error, por favor vuelva a intentarlo';
+		}
+		$response = new JsonResponse($data,$status);
+		$response->headers->set('Content-Type', 'application/json');
+		return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+	}
+	public function buscar_validar_persona_ci_segipAction(Request $request){
+		$ci = $request->get('ci');
+		$complemento = $request->get('complemento');
+		// echo ">".$ci;
+		$em = $this->getDoctrine()->getManager();
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet' => $ci));
+        $estado = false;
+        $mensaje = "";
+        // dump($persona); exit();
+        if($persona){
+            $datos = array(
+                'complemento'=>$persona->getComplemento(),
+                'primer_apellido'=>$persona->getPaterno(),
+                'segundo_apellido'=>$persona->getMaterno(),
+                'nombre'=>$persona->getNombre(),
+                'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y')
+            );       
+	        $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($ci,$datos,'prod','academico');
+	        // dump($resultadoPersona);exit();
+	        if($resultadoPersona){ 
+	        	$data = array(
+	        		0 => $ci,
+				    1 => $persona->getPaterno(),
+				    2 => $persona->getMaterno(),
+				    3 => $persona->getNombre(),
+				    4 => $persona->getFechaNacimiento()->format('d-m-Y'),
+				    5 => $persona->getId()
+				);			 
+	            $mensaje = "Válido SEGIP";
+	            $estado = true;
+	        } else {
+	        	$data = array( 0 => 0);
+	            $mensaje = "No se realizó la validación con SEGIP. Debe actualizar la información a través del módulo: Modificación de Datos.";
+	        } 
+        }else{
+        	$data = array( 0 => 0);
+        	$mensaje = "No se realizó la validación con SEGIP. No existe información de la/el estudiante.";
+        }
+   		return new JsonResponse($data);
+
+        // return new JsonResponse(array('estado' => $estado, 'mensaje' => $mensaje));
+
+		/*$data=null;
+		$status= 404;*/
+		/*$response = new JsonResponse();
+		$response->headers->set('Content-Type', 'application/json');
+		return $response->setData(array('data'=>1,'status'=>1,'msj'=>1));*/
+
+	}
 
 }

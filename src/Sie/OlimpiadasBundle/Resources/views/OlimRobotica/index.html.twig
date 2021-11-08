@@ -179,10 +179,11 @@
                                 <div class="form-group formulario text-center">
                                     {{form_start(formCategoria)}}
                                         <input type="hidden" name="tutorCi" id="tutorCi" value="{{tutor.carnet}}">
+                                        <input type="hidden" name="sie" id="sie" value="{{sie}}">
                                         {{form_label(formCategoria.reglasTipo)}}
                                         {{form_widget(formCategoria.reglasTipo, {'attr':{'class':'seleccionCategoria'} })}}
-                                        <button id="btnGuardar" type="button" class="btn btn-success"> <i id="iconGuardar" class="fa fa-save"></i> <span id="textGuardar">Confirmar participación</span> </button>
                                         {#
+                                        <button id="btnGuardar" type="button" class="btn btn-success"> <i id="iconGuardar" class="fa fa-save"></i> <span id="textGuardar">Confirmar participación</span> </button>
                                         #}
                                     {{form_end(formCategoria)}}
                                 </div>
@@ -275,11 +276,12 @@
             var grupoProyectoId = $('#form_grupoProyectoId').val();
             var categoriaId = document.getElementById("form_reglasTipo").value;
             var tutorCi = $('#tutorCi').val();
+            var sie = $('#sie').val();
 
             var imagen = '{{ asset("img/loading96.gif") }}';
 
             $.ajax({
-                url: Routing.generate('olimrobotica_actualizarCategoria', {grupoProyectoId: grupoProyectoId, categoriaId: categoriaId,tutorCi:tutorCi}),
+                url: Routing.generate('olimrobotica_actualizarCategoria', {grupoProyectoId: grupoProyectoId, categoriaId: categoriaId,tutorCi:tutorCi,sie:sie}),
                 type: 'GET',
                 beforeSend: function(){
                     swal({

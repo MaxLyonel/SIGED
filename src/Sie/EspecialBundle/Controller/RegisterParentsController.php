@@ -243,6 +243,10 @@ class RegisterParentsController extends Controller {
         'fecha_nacimiento'=>$fecNac
       );
       
+      if($extranjero == 1){
+        $arrParametros['extranjero'] = 'e';
+      }
+      
       // do the validation on segip if the person is not in SIE DB
       $answerSegip = true;
       $message = "";
@@ -358,6 +362,7 @@ class RegisterParentsController extends Controller {
                         ->innerJoin('SieAppWebBundle:Persona','p','with','ai.persona = p.id')
 
                         ->where('ei.id = :inscriptionId')
+                        ->andWhere('p.segipId = 1')
                         ->setParameter('inscriptionId', $inscriptionId)
                         ->orderBy('ai.id','DESC');
 		$parents = $parents           ->getQuery()
@@ -460,7 +465,7 @@ class RegisterParentsController extends Controller {
         list($dayPer, $monthPer, $yearPer) = explode('-',$apoderadoInscription['fechaNacimiento']);
         $arrYearsOld = implode('-',array($yearPer,$monthPer,$dayPer));
     	
-        $sql = "select public.sp_obtener_edad(to_date('".$arrYearsOld."','YYYY-MM-DD'),to_date('2021-12-31','YYYY-MM-DD'))";
+        $sql = "select public.sp_obtener_edad(to_date('".$arrYearsOld."','YYYY-MM-DD'),to_date('2021-10-24','YYYY-MM-DD'))";
         $query = $em->getConnection()->prepare($sql);
         $query->execute();
         $datayearPerson = $query->fetch();
@@ -470,7 +475,7 @@ class RegisterParentsController extends Controller {
     	$obParentBjp = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcionBeneficiarios')->findOneBy(array('estudianteInscripcion'=>$idStudentInscription));
         $message = '';
         $itemColor='';
-        if ($datayearPerson['sp_obtener_edad']>18) {
+        if ($datayearPerson['sp_obtener_edad']>=18) {
             // code...
         	if(sizeof($obParentBjp)>0){
         		$message='Ya existe beneficiario BJP';
@@ -538,6 +543,7 @@ class RegisterParentsController extends Controller {
                         ->innerJoin('SieAppWebBundle:Persona','p','with','ai.persona = p.id')
 
                         ->where('ei.id = :inscriptionId')
+                        ->andWhere('p.segipId = 1')
                         ->setParameter('inscriptionId', $inscriptionId)
                         ->orderBy('ai.id','DESC');
 		$parents = $parents           ->getQuery()

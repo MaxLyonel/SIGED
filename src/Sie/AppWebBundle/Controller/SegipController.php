@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use GuzzleHttp\Client;
+use Sie\AppWebBundle\Entity\Persona;
 
 /**
  * SegipController.
@@ -63,11 +64,46 @@ class SegipController extends Controller {
     }
 
     public function searchAction(Request $request){        
+        $em = $this->getDoctrine()->getManager();
         
         $form = $request->get('sie_buscar_persona_segip');
-        
         $resultado = $this->get('sie_app_web.segip')->buscarPersonaPorCarnet($form['carnet'], $form, $form['entorno'], 'academico');
+        $tmpData =  array();
+        if( $resultado )
+        {
+            $tmpData = $resultado['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'];
+            $tmpDataDecode = json_decode($tmpData);
+            
+            $complementoVisible = $tmpDataDecode->ComplementoVisible;
+            $complemento = $tmpDataDecode->Complemento;
+            $fechaNacimiento = $tmpDataDecode->FechaNacimiento;
+            $fechaNacimiento = \DateTime::createFromFormat('m/d/Y', $fechaNacimiento)->format('Y-d-m');
+            $carnet = $tmpDataDecode->NumeroDocumento;
 
+            $personasTmp = $em->getRepository('SieAppWebBundle:Persona')->findBy(array(
+                'carnet' => $carnet,
+                'fechaNacimiento' => new \DateTime($fechaNacimiento),
+                'complemento' => $complemento
+            ));
+
+            $persona = array();
+            foreach ($personasTmp as $p)
+            {
+                $persona[] = (array(
+                    'carnet' => $p->getCarnet(),
+                    'paterno' => $p->getPaterno(),
+                    'materno' => $p->getMaterno(),
+                    'nombre' =>  $p->getNombre(),
+                    'fechaNacimiento' => $p->getFechaNacimiento()->format('d-m-Y'),
+                    'extranjero' => $p->getEsExtranjero())
+                );
+            }
+            $resultado['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'] = json_encode($persona);
+        }
+        else
+        {
+            $resultado['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson'] = json_encode(array());
+        }
         return $this->render('SieAppWebBundle:Segip:resultado1.html.twig',array(
             'resultado'=>$resultado
         ));

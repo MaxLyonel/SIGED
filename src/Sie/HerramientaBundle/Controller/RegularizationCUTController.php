@@ -469,10 +469,19 @@ class RegularizationCUTController extends Controller{
      */
     private function createSearForm(){
         // array($this->session->get('currentyear')=>$this->session->get('currentyear'))
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("SELECT id,gestion from gestion_tipo ORDER BY gestion DESC");
+        $query->execute();
+        $lista_gestion = $query->fetchAll();
+
+        $aGestion = array();
+        for ($i=2019; $i <=date('Y') ; $i++) { 
+            $aGestion[$i] = $i;
+        }
         return $this->createFormBuilder()
                 // ->add('sie', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control')))
                 ->add('codigoRude', 'text', array('mapped' => false, 'label' => 'Rude', 'required' => true, 'invalid_message' => 'campo obligatorio', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9a-zA-Z\sñÑ]{10,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
-                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array(2020=>2020,2019=>2019), 'attr' => array('class' => 'form-control')))
+                ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => array($aGestion), 'attr' => array('class' => 'form-control')))
                 ->add('buscar', 'button', array('label' => 'Buscar', 'attr' => array('class' => 'btn btn-primary', 'onclick'=>'gethistory();')))
                 ->getForm();
     }

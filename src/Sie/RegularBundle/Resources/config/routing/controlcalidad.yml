@@ -94,3 +94,8 @@ ccalidad_resolver_inconsistencias_segip:
     defaults: { _controller: "SieRegularBundle:ControlCalidad:calidad_resolverInconsistenciasSegip"}
     options:
          expose: true
+         
+cInconsistencia_estado_estudiante_segip:
+    path:     /incosistenciaEstadoEstudianteSegip
+    defaults: { _controller: "SieRegularBundle:ControlCalidad:incosistenciaEstadoEstudianteSegip" }
+         

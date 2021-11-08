@@ -29,3 +29,39 @@ operativo_bono_jp_ddjj:
     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:ddjj"}
     options:
          expose: true
+
+operativo_bono_jp_formularioCambioTutor:
+    path:     /cambio-tutor
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:formularioCambiarTutor"}
+    options:
+         expose: true
+
+operativo_bono_jp_buscarInscripciones:
+    path:     /buscar-inscripciones
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscarInscripciones"}
+    options:
+         expose: true
+
+operativo_bono_jp_buscarTutores:
+    path:     /buscar-tutores/{inscripcion}
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscarTutores"}
+    options:
+         expose: true
+
+operativo_bono_jp_cambiarEstadoTutores:
+    path:     /eliminar-tutores/{id}/{estado}
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:cambiarEstadoTutores"}
+    options:
+         expose: true
+
+buscar_tutor_ci_persona:
+    path:     /buscar_tutor_ci_persona
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscar_tutor_ci_persona"}
+    options:
+         expose: true
+# ////fernando
+buscar_validar_persona_ci_segip:
+    path:     /buscar_validar_persona_ci_segip
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscar_validar_persona_ci_segip"}
+    options:
+         expose: true

@@ -192,7 +192,6 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 								$sie=$unidadesEducativas[0]['ue_id'];
 								$gestion=$this->session->get('currentyear');
 								$lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
-
 								$registroTramite = $this->get('wftramite')->guardarTramiteNuevo(
 									$this->session->get('userId'),								//$usuario,
 									$this->session->get('roluser'),								//$rol,
@@ -1853,6 +1852,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		        inner join (select id,codigo as cod_dis,lugar_tipo_id,lugar as des_dis from lugar_tipo where lugar_nivel_id=7) f on e.lugar_tipo_id_distrito=f.id
 		        INNER JOIN departamento_tipo j on j.id=CAST(substring(f.cod_dis,1,1) as INTEGER)
 		where d.dependencia_tipo_id = 1 --unidad educativa fiscal
+		and LENGTH(d.id::VARCHAR) >= 8
 		and d.id in('.$ueTmp.')
 		and j.id '.$operadorDepartamento.' ?
 		and f.cod_dis '.$operadorDistrito.' ?
@@ -3997,7 +3997,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 
 		$inscripcionValida = true;
 
-		$query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial(?) where nivel_tipo_id_r=? and grado_tipo_id_r=? order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
+		$query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial(?) where nivel_tipo_id_r=? and grado_tipo_id_r=? and estadomatricula_tipo_id_fin_r in (5) order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
 		$params = array($rude,$nivel,$grado);
 		$query->execute($params);
 		$dataInscription = $query->fetchAll();

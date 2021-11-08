@@ -5,6 +5,9 @@ Sie\AppWebBundle\Entity\BjpEstudianteApoderadoBeneficiarios:
         IDX_F99912EEC861DD7C:
             columns:
                 - apoderado_tipo_id
+        IDX_F99912EECFFBF3DE:
+            columns:
+                - estadomatricula_tipo_id
     uniqueConstraints:
         uq_apoderado_inscripcion3_bjp:
             columns:
@@ -180,14 +183,41 @@ Sie\AppWebBundle\Entity\BjpEstudianteApoderadoBeneficiarios:
             length: 250
             fixed: false
             comment: ''
+        estadoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estado_id
+        generoTipoEstId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: genero_tipo_est_id
+        generoTipoTutId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: genero_tipo_tut_id
     manyToOne:
         apoderadoTipo:
-            targetEntity: ApoderadoTipo
+            targetEntity: BjpApoderadoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
                 apoderado_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadomatriculaTipo:
+            targetEntity: EstadomatriculaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadomatricula_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

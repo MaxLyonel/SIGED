@@ -21,7 +21,7 @@ class OlimRoboticaController extends Controller{
     public function indexaction(Request $request){
         $form = $this->createFormulario();
         $form->handleRequest($request);
-
+        $sie = -1;
         if($form->isSubmitted()){
 
             $em = $this->getDoctrine()->getManager();
@@ -47,7 +47,8 @@ class OlimRoboticaController extends Controller{
                         'estudiante'=>null,
                         'tutor'=>null,
                         'array'=>null,
-                        'mensaje'=>'La/el estudiante cuenta con más de un código RUDE, intente la búsqueda ingresando el código RUDE correcto en lugar del número de Carnet de Identidad.'
+                        'mensaje'=>'La/el estudiante cuenta con más de un código RUDE, intente la búsqueda ingresando el código RUDE correcto en lugar del número de Carnet de Identidad.',
+                        'sie' => $sie
                     ));
                 } else {
                     $estudiante = $estudiante[0];
@@ -78,6 +79,21 @@ class OlimRoboticaController extends Controller{
                     ->setParameter('gestion', date('Y'))
                     ->getQuery()
                     ->getResult();
+
+                // OBTENEMOS LA E.U de la INSCRIPCION DEL ESTUDIANTE EN EL SIGED
+                $inscripcionActualEU = $em->createQueryBuilder()
+                    ->select('iec')
+                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                    ->where('ei.estudiante = :idEstudiante')
+                    ->andWhere('iec.gestionTipo = :gestion')
+                    ->setParameter('idEstudiante', $estudiante->getId())
+                    ->setParameter('gestion', date('Y'))
+                    ->getQuery()
+                    ->getOneOrNullResult();
+
+                    if($inscripcionActualEU)
+                        $sie = $inscripcionActualEU->getInstitucioneducativa()->getId();
 
                 if($inscripcionActual){
                     // OBTENEMOS EL GRUPO DE INSCRIPCIÓN
@@ -118,7 +134,8 @@ class OlimRoboticaController extends Controller{
                             'estudiante'=>null,
                             'tutor'=>null,
                             'array'=>null,
-                            'mensaje'=>'Los datos ingresados son incorrectos, verifique la información e intente nuevamente.'
+                            'mensaje'=>'Los datos ingresados son incorrectos, verifique la información e intente nuevamente.',
+                            'sie' => $sie
                         ));
                     }
 
@@ -237,7 +254,8 @@ class OlimRoboticaController extends Controller{
                         'estudiante'=>null,
                         'tutor'=>null,
                         'array'=>null,
-                        'mensaje'=>'Los datos ingresados son incorrectos, verifique la información e intente nuevamente.'
+                        'mensaje'=>'Los datos ingresados son incorrectos, verifique la información e intente nuevamente.',
+                        'sie' => $sie
                     ));
                 }
 
@@ -256,7 +274,8 @@ class OlimRoboticaController extends Controller{
                     'tutor'=>$tutor,
                     'array'=>$array,
                     'formCategoria'=>$formCategoria->createView(),
-                    'mensaje'=>'La búsqueda se ha completado con éxito.'
+                    'mensaje'=>'La búsqueda se ha completado con éxito.',
+                    'sie' => $sie
                 ));
             }
 
@@ -265,12 +284,13 @@ class OlimRoboticaController extends Controller{
                 'estudiante'=>$estudiante,
                 'tutor'=>$tutor,
                 'array'=>$array,
-                'mensaje'=>'Los datos ingresados son incorrectos, verifique la información e intente nuevamente.'
+                'mensaje'=>'Los datos ingresados son incorrectos, verifique la información e intente nuevamente.',
+                'sie' => $sie
             ));
             
         }
 
-        return $this->render('SieOlimpiadasBundle:OlimRobotica:index.html.twig', array('form'=>$form->createView()));
+        return $this->render('SieOlimpiadasBundle:OlimRobotica:index.html.twig', array('form'=>$form->createView(),'sie' => $sie));
     }
 
     private function createFormulario(){
@@ -296,7 +316,7 @@ class OlimRoboticaController extends Controller{
         return $form;
     }
 
-    public function actualizarCategoriaAction($grupoProyectoId, $categoriaId,$tutorCi){
+    public function actualizarCategoriaAction($grupoProyectoId, $categoriaId,$tutorCi, $sie){
         $url = '';
         $em = $this->getDoctrine()->getManager();
         $grupoProyecto = $em->getRepository('SieAppWebBundle:OlimGrupoProyecto')->find($grupoProyectoId);
@@ -341,7 +361,7 @@ class OlimRoboticaController extends Controller{
                     $em->flush();
                     $status = 200;
                     $mensaje = "Confirmación realizada exitosamente.";
-                    $url = $this->generateUrl('olimRoboticaReporte_inscripcion_export',array('tutor' => $tutorCi,'gestion'=>$gestion));
+                    $url = $this->generateUrl('olimRoboticaReporte_inscripcion_export',array('tutor' => $tutorCi,'gestion'=>$gestion, 'sie'=>$sie));
                 }
             } else {
                 $status = 500;

@@ -428,3 +428,7 @@ sie_regular_migrateNotasModular:
 sie_regular_plataformaMoodle:
     resource: "@SieRegularBundle/Resources/config/routing/plataformaMoodle.yml"
     prefix:   /sie/plataformaMoodle
+
+# crear_especialidades_bth_index:
+#     resource: "@SieRegularBundle/Resources/config/routing/crearEspecialidadesBTH.yml"
+#     prefix:   /sie/crearEspecialidadesBTH

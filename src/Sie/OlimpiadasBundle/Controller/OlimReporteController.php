@@ -315,21 +315,23 @@ class OlimReporteController extends Controller{
         return $response;
 	}
 
-	public function exportarReporteInscripcionRoboticaAction(Request $request,$tutor,$gestion)
+	public function exportarReporteInscripcionRoboticaAction(Request $request,$tutor,$gestion,$sie)
 	{
 		$tutor 	= filter_var($tutor,FILTER_SANITIZE_NUMBER_INT);
-		$gestion 		= filter_var($gestion,FILTER_SANITIZE_NUMBER_INT);
+		$gestion = filter_var($gestion,FILTER_SANITIZE_NUMBER_INT);
+		$sie = filter_var($sie, FILTER_SANITIZE_NUMBER_INT);
 
 		$tutor 	= empty($tutor)?-1:$tutor;
 		$gestion = empty($gestion)?-1:$gestion;
+		$sie = empty($sie)?-1:$sie;
 
         $arch 			= 'Olimpiada-Robótica-'.date('Y').'_'.date('YmdHis').'.pdf';
         $response 		= new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         
-       	$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'olimRobotica_reporte_estudiante_inscrito.rptdesign&__format=pdf'.'&ci_tutor='.$tutor.'&gestion='.$gestion));
-        //$response->setContent(file_get_contents('http://127.0.0.1:57130/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte_olimpiada\olimRobotica_reporte_estudiante_inscrito.rptdesign&__format=pdf'.'&ci_tutor='.$tutor.'&gestion='.$gestion));
+       	$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'olimRobotica_reporte_estudiante_inscrito.rptdesign&__format=pdf'.'&ci_tutor='.$tutor.'&gestion='.$gestion.'&sie='.$sie));
+        //$response->setContent(file_get_contents('http://127.0.0.1:64862/viewer/preview?__report=D%3A\workspaces\workspace_especial\Reporte_olimpiada\olimRobotica_reporte_estudiante_inscrito.rptdesign&__format=pdf'.'&ci_tutor='.$tutor.'&gestion='.$gestion.'&sie='.$sie));
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');

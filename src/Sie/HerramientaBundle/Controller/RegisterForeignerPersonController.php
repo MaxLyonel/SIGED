@@ -61,6 +61,9 @@ class RegisterForeignerPersonController extends Controller{
 
     }    
     public function indexAction(){
+        //se deshabilito la inscripcion de extranjeros
+        return $this->redirect($this->generateUrl('login'));
+
         $ie_id=$this->session->get('ie_id');
         
             $swregistry = false;

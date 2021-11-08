@@ -2024,5 +2024,122 @@ class Funciones {
         return $userInscriptions;
     }    
 
+    public function getuserAccessToCalifications($userId,$valor){
+        $valor =implode(',', $valor);
+         // dump($valor); exit();
+        /*$queryAccess = "
+          select *
+          from (
+          select f.rol_tipo_id,(select rol from rol_tipo where id=f.rol_tipo_id) as rol,a.persona_id,d.codigo as cod_dis,e.esactivo,e.id as user_id
+          from maestro_inscripcion a
+            inner join institucioneducativa b on a.institucioneducativa_id=b.id
+              inner join jurisdiccion_geografica c on b.le_juridicciongeografica_id=c.id
+                inner join lugar_tipo d on d.lugar_nivel_id=7 and c.lugar_tipo_id_distrito=d.id
+                  inner join usuario e on a.persona_id=e.persona_id
+                    inner join usuario_rol f on e.id=f.usuario_id
+          where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and substring(d.codigo,1,1) in ('7','8','9','1','3','6','0') and e.esactivo='t') a
+            where user_id=".$userId.";
+        ";*/      
+        $queryAccess = "
+          select *
+          from (
+          select f.rol_tipo_id,(select rol from rol_tipo where id=f.rol_tipo_id) as rol,a.persona_id,d.codigo as cod_dis,e.esactivo,e.id as user_id
+          from maestro_inscripcion a
+            inner join institucioneducativa b on a.institucioneducativa_id=b.id
+              inner join jurisdiccion_geografica c on b.le_juridicciongeografica_id=c.id
+                inner join lugar_tipo d on d.lugar_nivel_id=7 and c.lugar_tipo_id_distrito=d.id
+                  inner join usuario e on a.persona_id=e.persona_id
+                    inner join usuario_rol f on e.id=f.usuario_id
+          where a.gestion_tipo_id=2021 and cargo_tipo_id in (1,12) and periodo_tipo_id=1 and f.rol_tipo_id=9 and substring(d.codigo,1,1)::integer in (".$valor.") and e.esactivo='t') a
+            where user_id='".$userId."';
+           
+        ";   
+
+        $query = $this->em->getConnection()->prepare($queryAccess);
+
+        $query->execute();
+        $userInscriptions = $query->fetchAll();
+
+        return $userInscriptions;
+    }  
+
+    public function getUEspreInscription($idDepto){
+        
+        $queryUes = "
+         select distinct(g.id),  g.institucioneducativa
+            from institucioneducativa g
+                inner join jurisdiccion_geografica h on g.le_juridicciongeografica_id=h.id
+                     inner join distrito_tipo i on h.distrito_tipo_id = i.id
+                        inner join departamento_tipo dt on (i.departamento_tipo_id = dt.id)
+                            inner join preins_institucioneducativa_curso_cupo pin on (g.id = pin.institucioneducativa_id )
+                            where dt.id = '".$idDepto."';           
+        ";   
+
+        $query = $this->em->getConnection()->prepare($queryUes);
+
+        $query->execute();
+        $uesPreins = $query->fetchAll();
+
+        return $uesPreins;
+    }         
+    public function chooseUE($idDepto, $sie, $gestion){
+        
+        $queryUes = "
+         select *
+            from institucioneducativa g
+                inner join jurisdiccion_geografica h on g.le_juridicciongeografica_id=h.id
+                     inner join distrito_tipo i on h.distrito_tipo_id = i.id
+                        inner join departamento_tipo dt on (i.departamento_tipo_id = dt.id)
+                            inner join preins_institucioneducativa_curso_cupo pin on (g.id = pin.institucioneducativa_id )
+                                inner join dependencia_tipo dpt on (g.dependencia_tipo_id = dpt.id)
+                                    inner join institucioneducativa_tipo int on (g.institucioneducativa_tipo_id = int.id)
+                                        inner join estadoinstitucion_tipo eitt on (g.estadoinstitucion_tipo_id = eitt.id)
+                            where dt.id = '".$idDepto."' and  g.id = '".$sie."' and pin.gestion_tipo_id = '".$gestion." '           
+        limit 1";   
+
+        $query = $this->em->getConnection()->prepare($queryUes);
+
+        $query->execute();
+        $uesPreins = $query->fetchAll();
+
+        return $uesPreins;
+    }      
+    
+    public function getAllJustify(){
+        $allJustify = $this->em->getRepository('SieAppWebBundle:PreinsJustificativoTipo')->findAll();
+
+        return $allJustify;
+    }
+
+    public function getLevelUE($sie, $gestion){
+
+        // $objLevels = $this->em->createQueryBuilder()
+        //     ->select('IDENTITY(iec.nivelTipo)')
+        //     ->from('SieAppWebBundle:InstitucioneducativaCurso', 'iec')
+        //     ->where('iec.institucioneducativa = :sie')
+        //     ->andwhere('iec.gestionTipo = :gestion')
+        //     ->setParameter('sie', $sie)
+        //     ->setParameter('gestion', $gestion )
+        //     ->orderBy('iec.nivelTipo', 'ASC')
+        //     ->distinct()
+        //     ->getQuery()
+        //     ->getResult();  
+        $queryUes = "
+         select distinct(pin.nivel_tipo_id)
+            from preins_institucioneducativa_curso_cupo pin
+                where  pin.institucioneducativa_id = '".$sie."' and pin.gestion_tipo_id = '".$gestion." ' 
+                order by pin.nivel_tipo_id
+                ";   
+
+        $query = $this->em->getConnection()->prepare($queryUes);
+
+        $query->execute();
+        $uesPreins = $query->fetchAll();        
+        
+        return($uesPreins);
+
+
+
+    }
 
 }

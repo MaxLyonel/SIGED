@@ -308,3 +308,17 @@ sie_academico_UpdatePlaceDataStudent:
     resource: "@SieHerramientaBundle/Resources/config/routing/updateplaceDatastudent.yml"
     prefix:   /sie/updateplacedatastudent
 
+sie_regularizacion_IncoherenciasExterior:
+    resource: "@SieHerramientaBundle/Resources/config/routing/regularizacionincoherenciasexterior.yml"
+    prefix:   /sie/regularizacionGPIncoherenciasEXterior
+
+
+# preinscripciones
+sie_preinscripciones:
+    resource: "@SieHerramientaBundle/Resources/config/routing/preinscripciones.yml"
+    prefix:   /preinscripciones
+
+sie_preinscripcion_sorteo_padre:
+    resource: "@SieHerramientaBundle/Resources/config/routing/preinscripcionsorteohijo.yml"
+    prefix: /sie/sorteopreinscripcion
+

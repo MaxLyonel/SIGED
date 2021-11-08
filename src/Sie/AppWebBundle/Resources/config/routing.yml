@@ -1,3 +1,7 @@
+sie_app_web_uealtademanda:
+    resource: "@SieAppWebBundle/Resources/config/routing/preinsinstitucioneducativacursocupo.yml"
+    prefix:   /uealtademanda
+
 sie_app_web_estudiantehistorialmodificacion:
     resource: "@SieAppWebBundle/Resources/config/routing/estudiantehistorialmodificacion.yml"
     prefix:   /estudiantehistorialmodificacion
@@ -296,3 +300,7 @@ sie_app_web_institucionalizacion:
 sie_app_web_personalhealth:
     resource: "@SieAppWebBundle/Resources/config/routing/personalhealth.yml"
     prefix:   /sie/personalhealth
+
+sie_app_web_preinscription:
+    resource: "@SieAppWebBundle/Resources/config/routing/preinscription.yml"
+    prefix:   /preinscription       

@@ -18,5 +18,5 @@ olimreporte_export:
 #    defaults: { _controller: "SieOlimpiadasBundle:OlimReporte:exportarReporteInscripcion" }
 
 olimRoboticaReporte_inscripcion_export:
-    path:     /export/reporte-inscripcion-robotica/{tutor}/{gestion}
+    path:     /export/reporte-inscripcion-robotica/{tutor}/{gestion}/{sie}
     defaults: { _controller: "SieOlimpiadasBundle:OlimReporte:exportarReporteInscripcionRobotica" }

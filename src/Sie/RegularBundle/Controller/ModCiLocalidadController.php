@@ -34,7 +34,7 @@ class ModCiLocalidadController extends Controller {
      */
     public function indexAction() {
         $em = $this->getDoctrine()->getManager();
-        return $this->redirect($this->generateUrl('login'));
+        //return $this->redirect($this->generateUrl('login'));
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -76,7 +76,7 @@ class ModCiLocalidadController extends Controller {
         if ($student) {
             //*******VERIFICANDO QUE LA/EL ESTUDIANTE TENGA INSCRIPCIÓN EN LA GESTIÓN ACTUAL
             $ie_id=$this->session->get('ie_id');
-            $esGuanawek=$this->session->get('esGuanawek');
+            $esGuanawek=false;//$this->session->get('esGuanawek');
             if($esGuanawek)
             {
                 $_gestion=2020;
@@ -161,8 +161,8 @@ class ModCiLocalidadController extends Controller {
             $form=$this->createFormStudent($infoStudent[0])->createView();
           
             if($esGuanawek)
-          
-                $form=$this->createFormStudentGuanawek($infoStudent[0])->createView();
+                //$form=$this->createFormStudentGuanawek($infoStudent[0])->createView();
+                $form=$this->createFormStudent($infoStudent[0])->createView();
                 
                 $form=$this->createFormTEST($infoStudent[0])->createView();
                 
@@ -173,7 +173,7 @@ class ModCiLocalidadController extends Controller {
                 'form' => $form,
                 'carnetIdentidad' => $infoStudent[0]['carnetIdentidad'],
                 'codigoRude' => $student->getCodigoRude(),
-                'esGuanawek' => $esGuanawek,
+                'esGuanawek' => false,
             ));
         } else {
             $message = "La/El Estudiante con código RUDE: ".$form['codigoRude'].", no existe y/o no cuenta con errores.";
@@ -737,7 +737,8 @@ class ModCiLocalidadController extends Controller {
       if($guanawek)
         $return=true;
 
-      return $return;
+      //return $return;
+      return false;
     }
 
     private function ratificar($vproceso)

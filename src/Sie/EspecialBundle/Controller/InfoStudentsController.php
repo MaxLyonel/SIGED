@@ -592,6 +592,14 @@ class InfoStudentsController extends Controller {
         //   $em->flush();
         // }
 
+        //eliminados los datos de la tabla bjp_apoderado_inscripcion 
+        $bjpApoderadoInscripcion = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $estInsId ));
+        foreach ($bjpApoderadoInscripcion as $element)
+        {
+            $em->remove($element);
+        }
+        $em->flush();
+
         $objInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estInsId);
         if($objInscription){
           $em->remove($objInscription);

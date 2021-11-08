@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 use Sie\AppWebBundle\Entity\ValidacionOmisionHistoricaEstudiante;
+use Sie\AppWebBundle\Entity\EstudianteInscripcionCambioestado;
 use Sie\AppWebBundle\Entity\IdiomaTipo;
 use Sie\AppWebBundle\Entity\Persona;
 
@@ -357,8 +358,15 @@ class ControlCalidadController extends Controller {
         }
 
         $lista_detalle = $query->getResult();
+      
+        // return $this->render('SieRegularBundle:ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla,'idiomas'=>$idiomas));
 
-        return $this->render('SieRegularBundle:ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla,'idiomas'=>$idiomas));
+        //listar estado
+        $query = $em->getConnection()->prepare("SELECT id,estadomatricula from estadomatricula_tipo  WHERE (id='4' OR id='6' OR id='10') ORDER BY estadomatricula asc");
+        $query->execute();
+        $lista_estado = $query->fetchAll();
+        // dump($lista_estado);die;
+        return $this->render('SieRegularBundle:ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla,'idiomas'=>$idiomas,'lista_estado'=>$lista_estado));
     }
 
     public function omitirAction(Request $request) {
@@ -1464,6 +1472,14 @@ class ControlCalidadController extends Controller {
                          ->getQuery()
                          ->getOneOrNullResult();
 
+                    if( $personaOk )
+                    {
+                        $personaOk->setNombre($arrayDatosPersona['nombre']);
+                        $personaOk->setPaterno($arrayDatosPersona['primer_apellido']);
+                        $personaOk->setMaterno($arrayDatosPersona['segundo_apellido']);
+                        $em->persist($personaOk);
+                    }
+
                     $idPersonaObs = -1;
                     $idPersonaOk = -1;
                     if($personaObs)
@@ -1477,6 +1493,10 @@ class ControlCalidadController extends Controller {
                         $personaObs->setCarnet($request_carnet);
                         $personaObs->setComplemento($request_complemento);
                         $personaObs->setFechaNacimiento(new \DateTime($request_fechaNacimiento));
+
+                        $personaObs->setNombre($arrayDatosPersona['nombre']);
+                        $personaObs->setPaterno($arrayDatosPersona['primer_apellido']);
+                        $personaObs->setMaterno($arrayDatosPersona['segundo_apellido']);
                         $em->persist($personaObs);
                     }
                     else
@@ -1499,6 +1519,23 @@ class ControlCalidadController extends Controller {
                                     }
                                 }
                             }
+
+                            //bjp - apoderado - inscripcion
+                            $bjpApoderadoInscripciones = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcion')->findBy(array( 'persona' => $personaObs ) );
+                            foreach ($bjpApoderadoInscripciones as $bai)
+                            {
+                                if($bai)
+                                {
+                                    $existe = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array( 'persona' => $personaOk , 'id' => $bai->getId() ) );
+                                    //dump($ai->getPersona()->getId().' != '.$personaOk->getId());
+                                    //if($ai->getPersona()->getId() != $personaOk->getId())
+                                    if(!$existe)
+                                    {
+                                        $bai->setPersona($personaOk);
+                                        $em->persist($bai);
+                                    }
+                                }
+                            }
                         }
 
                         //BJP 2021-Usuarios APODERADOS Y ADMINISTRATIVOS con SEGIP INCONSISTENTE (regla 61)
@@ -1516,6 +1553,23 @@ class ControlCalidadController extends Controller {
                                     {
                                         $ai->setPersona($personaOk);
                                         $em->persist($ai);
+                                    }
+                                }
+                            }
+
+                            //bjp - apoderado - inscripcion
+                            $bjpApoderadoInscripciones = $em->getRepository('SieAppWebBundle:BjpApoderadoInscripcion')->findBy(array( 'persona' => $personaObs ) );
+                            foreach ($bjpApoderadoInscripciones as $bai)
+                            {
+                                if($bai)
+                                {
+                                    $existe = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array( 'persona' => $personaOk , 'id' => $bai->getId() ) );
+                                    //dump($ai->getPersona()->getId().' != '.$personaOk->getId());
+                                    //if($ai->getPersona()->getId() != $personaOk->getId())
+                                    if(!$existe)
+                                    {
+                                        $bai->setPersona($personaOk);
+                                        $em->persist($bai);
                                     }
                                 }
                             }
@@ -1574,6 +1628,7 @@ class ControlCalidadController extends Controller {
                                 }
                             }
                         }
+                        $em->remove($personaObs);
                     }
                     $em->flush();
                     $em->getConnection()->commit();
@@ -1618,7 +1673,15 @@ class ControlCalidadController extends Controller {
             $request_extranjero = isset($form['extranjero'])?true:false;
             $request_complemento = trim($form['complemento']);
             $request_fechaNacimiento = trim($form['fecha_nacimiento']);
-            
+
+            $request_nombre = trim($form['nombre']);
+            $request_paterno = trim($form['paterno']);
+            $request_materno = trim($form['materno']);
+
+            $request_nombre = isset($request_nombre) ? $request_nombre : '' ;
+            $request_paterno = isset($request_paterno) ? $request_paterno : '' ;
+            $request_materno = isset($request_materno) ? $request_materno : '' ;
+
             $request_tipo = filter_var($form['tipo'],FILTER_SANITIZE_NUMBER_INT);
             $request_llave = filter_var($form['id'],FILTER_SANITIZE_NUMBER_INT);
             $request_inconsistencia = filter_var($form['inconsistencia'],FILTER_SANITIZE_NUMBER_INT);
@@ -1638,7 +1701,7 @@ class ControlCalidadController extends Controller {
             $status = 404;
             $msj    = 'Acaba de ocurrir un error desconocido, por favor vuelva a intentarlo';
 
-            if( $request_carnet >0 && $request_fechaNacimiento>0 && $request_tipo >0)
+            if( $request_carnet >0 && $request_fechaNacimiento>0 && $request_tipo >0 && strlen($request_nombre) >0 && strlen($request_paterno)>0 && strlen($request_materno)>0)
             {
                 if($request_llave>0 && $request_inconsistencia>0 && $request_ue>0)
                 {
@@ -1647,6 +1710,9 @@ class ControlCalidadController extends Controller {
                     $complemento = strlen($request_complemento) == 0 ? '':$request_complemento;
                     $arrayDatosPersona = array(
                         //'carnet'=>$form['carnet'],
+                        'nombre' => $request_nombre,
+                        'primer_apellido' => $request_paterno,
+                        'segundo_apellido' => $request_materno,
                         'complemento'=>$complemento,
                         'fecha_nacimiento' => $fecha
                     );
@@ -1717,5 +1783,80 @@ class ControlCalidadController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
     }
+    
+    /////////////////////////////////////////////////////////////////////////////////modifcar estado
+        public function incosistenciaEstadoEstudianteSegipAction(Request $request) {
+
+            $defaultController = new DefaultCont();
+            $defaultController->setContainer($this->container);
+            $em = $this->getDoctrine()->getManager();
+            $em->getConnection()->beginTransaction();
+            try{
+                $gestion = $this->session->get('idGestionCalidad');
+                $form = $request->get('formFer');
+
+
+                // dump($form); exit();
+                $idestado= $form['estado'];
+                $id= $form['idDetalle'];
+                $rude= $form['llave'];
+                $idgestion= $form['idgestion'];
+
+
+                $datos = $em->createQuery('SELECT ei
+                FROM SieAppWebBundle:Estudiante AS e
+                INNER JOIN SieAppWebBundle:EstudianteInscripcion AS ei WITH e.id = ei.estudiante
+                INNER JOIN SieAppWebBundle:InstitucioneducativaCurso AS ic WITH ei.institucioneducativaCurso = ic.id
+                WHERE e.codigoRude = :codigo_rude1
+                AND ic.gestionTipo = :gestion_tipo_id1 ')
+                ->setParameter('codigo_rude1', $rude)
+                ->setParameter('gestion_tipo_id1', $idgestion);
+
+                $dato = $datos->getResult();
+
+                $valor=$dato['0'];
+                // dump($valor); exit();
+
+                $e= ($em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($valor->getId()));
+                // dump($e);
+                $e->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($idestado));
+
+                // dump($e); exit();
+
+                /*$objEstInsCambioestado = new EstudianteInscripcionCambioestado();
+                $objEstInsCambioestado->setEstadomatriculaTipo($form['idestado']);
+                $objEstInsCambioestado->setUsuarioId($this->session->get('userId'));*/
+                // $objEstInsCambioestado->setEstudianteInscripcion( $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($dato[6]->getId()) );
+                $em->flush();
+                $em->persist($e);
+                // dump($form['idDetalle']); exit();
+
+                // retiramos la observacion regla 63 estado_matricula inconsistente
+                $observacion = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave'=>$form['llave']));
+                // dump($observacion); exit();
+                if($observacion)
+                {
+                // dump($observacion); exit();
+                  $observacion->setEsActivo('t');
+                  $em->flush();
+                  $em->persist($observacion);
+                }
+                $em->getConnection()->commit(); 
+
+            }catch(Exception $ex){
+                $em->getConnection()->rollback();
+            }
+
+        $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($form['idDetalle']);
+        $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
+        $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
+        return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $vreglaentidad->getId(), 'gestion' => $gestion)));
+
+            // dump($this->redirect($this->generateUrl('ccalidad_list', array('id'=>5, 'gestion' => $gestion)))); exit();
+        // return $this->redirect($this->generateUrl('ccalidad_list', array('id' => $e->getId(), 'gestion' => $gestion)));
+        // return $this->redirect($this->generateUrl('ccalidad_list', array('id' => 5, 'gestion' => $gestion)));
+        }
+    /////////////////////////////////////////////////////////////////////////////////modifcar estado fin
+
 
 }

@@ -1,0 +1,108 @@
+Sie\AppWebBundle\Entity\PreinsEstudiante:
+    type: entity
+    table: preins_estudiante
+    indexes:
+        IDX_329DD9661C73F6E:
+            columns:
+                - expedido_id
+        IDX_329DD9662BCFBA7:
+            columns:
+                - genero_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        codigoRude:
+            type: string
+            nullable: true
+            length: 18
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        carnetIdentidad:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: carnet_identidad
+        complemento:
+            type: string
+            nullable: false
+            length: 2
+            fixed: false
+            comment: ''
+            default: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        localidadNac:
+            type: string
+            nullable: true
+            length: 125
+            fixed: false
+            comment: ''
+            column: localidad_nac
+        segipId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: segip_id
+        fechaNacimiento:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_nacimiento
+        esDobleNacionalidad:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_doble_nacionalidad
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    manyToOne:
+        expedido:
+            targetEntity: DepartamentoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                expedido_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        generoTipo:
+            targetEntity: GeneroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                genero_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
