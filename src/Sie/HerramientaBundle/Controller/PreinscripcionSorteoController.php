@@ -148,7 +148,7 @@ class PreinscripcionSorteoController extends Controller {
                     $institucionPreInscripcionSorteo->setFechaSorteo(new \DateTime($form['fechaFundacion']));
                     $em->persist($institucionPreInscripcionSorteo);
                     $em->flush();
-
+                    $this->get('session')->getFlashBag()->add('newOk', 'Registro fecha de sorteo realizado satisfactoriamente.');
                     return $this->render($this->session->get('pathSystem') . ':PreinscripcionSorteovista:saved.html.twig', array(
                         'institucion' => $institucion,
                         'fecha' => $institucionPreInscripcionSorteo->getFechaSorteo()
