@@ -15,7 +15,8 @@ class Persona {
 	public function __construct(EntityManager $entityManager, Router $router) {
 		$this->em = $entityManager;
         $this->router = $router;
-        $this->token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTYwNDM5MDczOCwiZXhwIjoxNjM1OTI2NzM4fQ.lhmPSSfLEXxosLYSNryV_x5WsL2KOOgU-ovqbSiVenc';
+        //token valido hasta el 3/11/2021 $this->token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTYwNDM5MDczOCwiZXhwIjoxNjM1OTI2NzM4fQ.lhmPSSfLEXxosLYSNryV_x5WsL2KOOgU-ovqbSiVenc';
+        $this->token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJzaXN0ZW1hIjoicG5wIiwidXN1YXJpbyI6IldhbGRvIFZlcmEiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE2MzYxMjg0NzAsImV4cCI6MTY3MzI4MDQ3MH0.d2bf3ockcQqfg6lytj2ZknJXh_QARrZ3_BzGvMWDyAM';
 	}
 
     public function buscarPersona($carnet, $complemento, $extranjero) {
