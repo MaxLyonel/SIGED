@@ -76,11 +76,11 @@
                             {% if (app.session.get('roluser') == 7) %}
                             <div class= "row">
                                 <div class="col-lg-6 col-md-8 col-sm-8 col-xs-8">
-                                            <span>Lista de Certificados Generados.</span>
+                                            <span>Lista de Certificados Generados a Nivel Departamental.</span>
                                 </div> 
                                 <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
                                     <form name="form" role="form" action="{{ path('tramite_lista_certificados_generados') }}" method="POST" target="_blank">
-                                    {#  <input type="hidden" name="gestion" value="{{gestion}}"  /> #}  
+                                        <input type="hidden" name="gestion" value="{{gestion}}"  />  
                                         <button name="botonPdf" id="botonPdf" title="Descargar reporte habilitados en formato  PDF" class="btn btn-googleplus"><i class="fa fa-file-pdf-o"></i>
                                         </button>
                                     </form>
@@ -100,22 +100,33 @@
                             {% if (app.session.get('roluser') == 8) %}                            
                             <div class= "row">
                                 <div class="col-lg-6 col-md-8 col-sm-8 col-xs-8">
-                                            <span>Lista de participantes habilitados para la entrega de certificados  a nivel Medio</span>
-                                </div> 
+                                            <span>Lista de Certificados Generados a Nivel Nacional</span>
+                                </div>
                                 <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-                                    <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_lista_habilitados') }}" method="POST" target="_blank">
-                                    {#  <input type="hidden" name="gestion" value="{{gestion}}"  /> #}  
+                                    <form name="form" role="form" action="{{ path('tramite_lista_certificados_generados') }}" method="POST" target="_blank">
+                                        <input type="hidden" name="gestion" value="{{gestion}}"  />                                    
                                         <button name="botonPdf" id="botonPdf" title="Descargar reporte habilitados en formato  PDF" class="btn btn-googleplus"><i class="fa fa-file-pdf-o"></i>
                                         </button>
                                     </form>
                                 </div>
                                 <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
-                                    <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_lista_habilitadosXLS') }}" method="POST">
-                                    {#  <input type="hidden" name="gestion" value="{{gestion}}"  /> #}  
+                                    <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_lista_habilitadosXLS') }}" method="POST">                                   
                                         <button name="botonXls" id="botonXls" title="Descargar en formato EXCEL" class="btn btn-success"><i class="fa fa-file-excel-o"></i>
                                         </button>
                                     </form>
+                                </div> 
+                                {# <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                                    <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_lista_habilitados') }}" method="POST" target="_blank">                                   
+                                        <button name="botonPdf" id="botonPdf" title="Descargar reporte habilitados en formato  PDF" class="btn btn-googleplus"><i class="fa fa-file-pdf-o"></i>
+                                        </button>
+                                    </form>
                                 </div>
+                                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+                                    <form name="form" role="form" action="{{ path('tramite_impresion_certificacion_lista_habilitadosXLS') }}" method="POST">                                   
+                                        <button name="botonXls" id="botonXls" title="Descargar en formato EXCEL" class="btn btn-success"><i class="fa fa-file-excel-o"></i>
+                                        </button>
+                                    </form>
+                                </div> #}
                             </div>
                             {% endif %}
                             <div class="clearfix"></div>

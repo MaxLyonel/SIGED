@@ -2510,11 +2510,12 @@ class TramiteCertificacionesPermanenteController extends Controller {
         }
     }    
     //REPORTES PDF DE CERTIFICADOS EMITIDOS
-    public function rptCertificadosEntregadosAction(Request $request){
+    public function rptCertificadosGeneradosAction(Request $request){
         $sesion = $request->getSession();
         $em = $this->getDoctrine()->getManager();
-        $gestionId = $this->session->get('currentyear');//GESTION ACTUAL //pendiente de obtener la gestion del formulario
-        $rol = $sesion->get('roluser');       
+        $gestion = $request->get('gestion');
+        $gestionId = $gestion ? $gestion : $this->session->get('currentyear');    
+        $rol = $sesion->get('roluser');
         //RECUPERAMOS EL CODIGO DE DEPARTAMENTO     
         if($rol == 7){
             $personaId = $this->session->get('personaId');
@@ -2522,10 +2523,9 @@ class TramiteCertificacionesPermanenteController extends Controller {
             $codigo = $codigoDepartamento['codigo'];
         }else{
             $codigo=0;
-        }        
-        //RECUPERAMOS LOS DATOS DE LOS CERTIFICADOS ENTREGADOS POR DEPARATMENTOS      
-      
-        $queryReportesEntregados =  $this->datosCertificadosEntregados($rol,$gestionId,$codigo);       
+        }       
+        //RECUPERAMOS LOS DATOS DE LOS CERTIFICADOS ENTREGADOS POR DEPARATMENTOS
+        $queryReportesEntregados =  $this->datosCertificadosEntregados($rol,$gestionId,$codigo);//dump($rol,$gestionId,$codigo);die;
         $pdf = $this->container->get("white_october.tcpdf")->create(
             'PORTRATE', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', true
         );
@@ -2548,90 +2548,103 @@ class TramiteCertificacionesPermanenteController extends Controller {
         $pdf->Ln(20);
         $pdf->SetFont('helvetica', 'B', 12);
         $pdf->SetTextColor(55, 55, 55);
-        $pdf->Cell(0, 2, 'LISTADO DE CERTIFICADOS ENTREGADOS', 0, 1, 'C');
+        $pdf->Cell(0, 2, 'LISTADO DE CERTIFICADOS GENERADOS', 0, 1, 'C');
         $pdf->Ln(10);
-        $pdf->SetFont('', '', 7);
-        $pdf->SetTextColor(20, 20, 20);
+       
         $pdf->SetFillColor(221, 221, 221);
         $pdf->SetFont('', '', 9);
-        $pdf->Cell(0, 8, 'LISTA CERTIFICADOS ENTREGADOS POR DEPARTAMENTO', 1, 1, "", 'L', 0, '', 0, true);
+        $pdf->Cell(0, 8, 'LISTA CERTIFICADOS ENTREGADOS: ', 1, 1, "", 'L', 0, '', 0, true);
         $pdf->Ln(10);
-        $pdf->SetFont('', '', 9);
+        $pdf->SetFont('', '', 7);
         $contenido = '<table border="1" cellpadding="1.5">';
         $contenido .= '<tr style="background-color:#ddd;">
             <td alignt="center" height="10" style="line-height: 14px;" width="5%"><b>Nro.</b></td>
             <td alignt="center" height="14" style="line-height: 14px;" width="15%"><b>Departamento</b></td>
-            <td alignt="center" height="14" style="line-height: 14px;" width="30%"><b>Cantidad de certificados Entregados</b></td>
+            <td alignt="center" height="14" style="line-height: 14px;" width="20%"><b>Lugar</b></td>
+            <td alignt="center" height="14" style="line-height: 14px;" width="15%"><b>Código RUE</b></td>
+            <td alignt="center" height="14" style="line-height: 14px;" width="15%"><b>Centro</b></td>
+            <td alignt="center" height="14" style="line-height: 14px;" width="30%"><b>Cantidad de certificados Generados</b></td>
             </tr>';
             foreach($queryReportesEntregados as $index => $item) {
                  //OBETENEMOS LOS DATOS DE ESTUDIANTE
                 $contenido .= '<tr>
                     <td>'.($index + 1).'</td>
-                    <td>'.$queryReportesEntregados[$index]['nombre'].'</td>
-                    <td>'.$queryReportesEntregados[$index]['total_certificado_entregado'].'</td>
+                    <td>'.$queryReportesEntregados[$index]['ciudad'].'</td>
+                    <td>'.$queryReportesEntregados[$index]['lugar'].'</td>
+                    <td>'.$queryReportesEntregados[$index]['institucioneducativa_id'].'</td>
+                    <td>'.$queryReportesEntregados[$index]['institucioneducativa'].'</td>
+                    <td>'.$queryReportesEntregados[$index]['cantidad_certificados_generados'].'</td>                   
                     </tr>';
             }
-        $contenido .= '</table><br><br>';        
+        $contenido .= '</table><br><br>';
         $pdf->writeHTML($contenido, true, false, true, false, 'C');
-        $pdf->Output("ReportesEntregados.pdf", 'I');
+        $pdf->Output("CertificadosGenerados.pdf", 'I');
+        die();
     }
     //REPORTE DE LISTA DE HABILITADOS A NIvEL NACIONAL
     public function rptHabilitadosNacionalAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
         $gestion = $this->session->get('currentyear');//aqui
-        $arch = 'Lista_habilitados_Medio_Nacional_'.$gestion.'_'.date('YmdHis').'.xls';
+        $rol = $sesion->get('roluser');
+        $arch = 'Lista_certificados_generados_'.$gestion.'_'.date('YmdHis').'.xls';
         $response = new Response();
         $response->headers->set('Content-type', 'application/vnd.ms-excel');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
         //http://127.0.0.1:49787/viewer/frameset?__report=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes%5Clista_habilitados_nacional.rptdesign&__format=html&__svg=true&__locale=es_BO&__timezone=America%2FLa_Paz&__masterpage=true&__rtl=false&__cubememsize=10&__resourceFolder=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes&1828857951
         $urlbase= 'http://127.0.0.1:49787/viewer/frameset?__report=D%3A%5CConsultoria%5Cextra%5Cbirt-report-designer-all-in-one-4.8.0-20180522-win32.win32.x86_64%5Ceclipse%5Cworkspace%5CReportesPermanentes%5C';
         $urlproduccion=$this->container->getParameter('urlreportweb');
-        $response->setContent(file_get_contents($urlbase . 'lista_habilitados_nacional.rptdesign&__format=xlsx&Gestion='.$gestion));
-        $response->setStatusCode(200);
+       //RECUPERAMOS EL CODIGO DE DEPARTAMENTO     
+        if($rol == 7){//DEPTARTAMENTAL
+            $personaId = $this->session->get('personaId');
+            $codigoDepartamento = $this->getCodigoDepartamento($rol,$personaId);
+            $codigo = $codigoDepartamento['codigo'];
+            $response->setContent(file_get_contents($urlbase . 'lista_certificados_generados.rptdesign&__format=xlsx&Gestion='.$gestion.'&codigo'.$codigo));
+            $response->setStatusCode(200);
+        }else{ // NACIONAL            
+            $response->setContent(file_get_contents($urlbase . 'lista_certificados_generados_nacional.rptdesign&__format=xlsx&Gestion='.$gestion));
+            $response->setStatusCode(200);
+        }
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
     }
     //REPORTE DE CERTIFICADOS GENERADOS PARA EL DPTO
-     public function rptCertificadosGeneradosDptoAction(Request $request){dump($request);die;
-
-    }
+    
     public function datosCertificadosEntregados($rol, $gestionId,$codigo){ 
         $em = $this->getDoctrine()->getManager();
         if($rol==8 ){
             $queryEntidad = $em->getConnection()->prepare("
-            SELECT 'Departamento' as nombreDepartamento, lt4.codigo as codigo, lt4.lugar  as nombre, lt4.id,lt4.lugar,lt4.codigo
-            , count(*) as total_certificado_entregado
+            SELECT lt4.lugar as ciudad,lt.lugar,cp.institucioneducativa_id,ie.institucioneducativa,count(cp.institucioneducativa_id) as cantidad_certificados_generados
             FROM certificado_permanente cp
-            INNER JOIN institucioneducativa ie ON cp.institucioneducativa_id = ie.id
-            INNER join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
-            left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
-            left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
-            left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
-            left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
-            left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
-            left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito	
-            WHERE cp.estado = 3
-            group by lt4.id, lt4.codigo, lt4.lugar"
+            inner join institucioneducativa ie on cp.institucioneducativa_id = ie.id
+            inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                                    left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+                                    left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+                                    left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+                                    left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+                                    left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+                                    left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
+            WHERE cp.estado = 3 AND cp.gestion_tipo_id = '$gestionId'
+            GROUP BY lt.lugar,cp.institucioneducativa_id,ie.institucioneducativa,lt4.lugar
+            ORDER BY lt4.lugar,ie.institucioneducativa,cp.institucioneducativa_id"
             );
         }else{//DEPARTAMENTO
              $queryEntidad = $em->getConnection()->prepare("
-            SELECT	'Departamento' as nombreDepartamento, lt4.codigo as codigo, lt4.lugar  as nombre, lt4.id,lt4.lugar,lt4.codigo
-            , count(*) as total_certificado_entregado
-            FROM
-                certificado_permanente cp
-            INNER JOIN institucioneducativa ie ON cp.institucioneducativa_id = ie. ID
-            INNER JOIN jurisdiccion_geografica jg ON jg. ID = ie.le_juridicciongeografica_id
-            LEFT JOIN lugar_tipo AS lt ON lt. ID = jg.lugar_tipo_id_localidad
-            LEFT JOIN lugar_tipo AS lt1 ON lt1. ID = lt.lugar_tipo_id
-            LEFT JOIN lugar_tipo AS lt2 ON lt2. ID = lt1.lugar_tipo_id
-            LEFT JOIN lugar_tipo AS lt3 ON lt3. ID = lt2.lugar_tipo_id
-            LEFT JOIN lugar_tipo AS lt4 ON lt4. ID = lt3.lugar_tipo_id
-            LEFT JOIN lugar_tipo AS lt5 ON lt5. ID = jg.lugar_tipo_id_distrito
-            WHERE 	cp.estado = 3  AND lt4.codigo = '".$codigo."'
-            group by lt4.id, lt4.codigo, lt4.lugar"
+             SELECT lt4.lugar as ciudad,lt.lugar,cp.institucioneducativa_id,ie.institucioneducativa,count(cp.institucioneducativa_id) as cantidad_certificados_generados
+                FROM certificado_permanente cp
+                inner join institucioneducativa ie on cp.institucioneducativa_id = ie.id
+                inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+                                        left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+                                        left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+                                        left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+                                        left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+                                        left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+                                        left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
+                WHERE cp.estado = 3 AND cp.gestion_tipo_id = '$gestionId' and lt4.codigo = '".$codigo."'
+                GROUP BY  lt.lugar,cp.institucioneducativa_id,ie.institucioneducativa,lt4.lugar
+                ORDER BY ie.institucioneducativa,cp.institucioneducativa_id"
             ); 
         }     
         $queryEntidad->execute();

@@ -80,15 +80,12 @@ tramite_impresion_certificacion_lista_habilitadosXLS:
     path:     /reporte/permanente/reportes/datos/xls
     defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptHabilitadosNacional }
 #REPORTES DE CANTIDAD DE CERTIFICADOS ENTREGADOS
-tramite_impresion_certificacion_entregados_datos:
-    path:     /reporte/permanente/reportes/entregados
-    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptCertificadosEntregados }
+tramite_lista_certificados_generados:
+    path:     /reporte/permanente/reportes/generados
+    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptCertificadosGenerados }
 tramite_impresion_certificacion_lista_habilitados:
     path:     /reporte/permanente/habilitados/impresion
     defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptParticipantesHabilitadosNacional }
-tramite_lista_certificados_generados:
-    path:     /reporte/permanente/certificados/generados
-    defaults: { _controller: SieProcesosBundle:TramiteCertificacionesPermanente:rptCertificadosGeneradosDpto }
 #GENERA LISTA DE HABILITADOS NACIONAL
 tramite_genera_lista_habilitados:
     path:     /reporte/permanente/genera/lista/habilitados/
