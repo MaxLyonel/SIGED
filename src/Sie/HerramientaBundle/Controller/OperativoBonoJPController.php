@@ -341,17 +341,25 @@ class OperativoBonoJPController extends Controller
 			switch ($inscription['institucioneducativa_tipo_id_raep'])
 			{
 				case '1':
-					$dataInscriptionR[$key] = $inscription;
+					$dataInscriptionR[$key] = $inscription;	
+					$inscriptionId = $dataInscriptionR[$key]['estudiante_inscripcion_id_raep'];
 				break;
 				case '4':
 					$dataInscriptionE[$key] = $inscription;
+					$inscriptionId = $dataInscriptionR[$key]['estudiante_inscripcion_id_raep'];
 				break;
 			}
 		}
 
+
+		$tutoresActuales = $this->listarTutores($inscriptionId,1);
+		$tutoresEliminados = $this->listarTutores($inscriptionId,2);
+
 		return $this->render('SieHerramientaBundle:BonoJP:inscripcionesEstudianteBonoJP.html.twig', array(
 			'inscripcionesRegular' => $dataInscriptionR,
-			'inscripcionesEspecial' => $dataInscriptionE
+			'inscripcionesEspecial' => $dataInscriptionE,
+			'tutoresActuales' => $tutoresActuales,
+			'tutoresEliminados' => $tutoresEliminados
 		));
 	}
 
