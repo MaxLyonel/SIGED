@@ -6,6 +6,7 @@
 				{% if inscripcionesRegular|length > 0 %}
 				<table class="table table-striped table-condensed table-hover table-bordered">
 					<legend class="text-center">Educación Regular</legend>
+					<legend class="text-center">Datos del Estudiante</legend>
 					<thead class="thead-dark">
 						<tr>
 							<th scope="col" width="1%">#</th>
@@ -18,7 +19,7 @@
 							<th scope="col" width="7%">Grado</th>
 							<th scope="col" width="7%">Turno</th>
 							<th scope="col" width="7%">Paralelo</th>
-							<th scope="col" width="7%">Ver tutores</th>
+							{# <th scope="col" width="7%">Ver tutores</th> #}
 						</tr>
 					</thead>
 					<tbody>
@@ -34,10 +35,10 @@
 							<td>{{ d.grado_r }}</td>
 							<td>{{ d.turno_raep }}</td>
 							<td>{{ d.paralelo_raep }}</td>
-							<td class="text-center">
+							{# <td class="text-center">
 								<button type="button" class="btn btn-primary" onclick = "abrirModalTutores({{d.estudiante_inscripcion_id_raep}})">Ver tutores</button>
 							
-							</td>
+							</td> #}
 						</tr>
 						{% endfor %}
 						{% if inscripcionesRegular|length<=0 %}
@@ -169,6 +170,13 @@
 </div>
 
 <script>
+function cambiarEstadoTutores(id,estado,estudianteInscripcion){
+	$("#ver_conte_fer").html("<div style='text-align:center'><img src='/img/loading.gif'>Cargando...</div>");
+	$("#modal_listar_tutores_fer").modal('show')
+	$.post('{{path('operativo_bono_jp_cambiarEstadoTutore')}}', {id,estado,estudianteInscripcion}, function(data) {
+		$("#ver_conte_fer").html(data)
+	});
+}
 /*
 var app = new Vue({
 	delimiters: ['${', '}'],

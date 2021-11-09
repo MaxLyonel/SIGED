@@ -103,69 +103,69 @@
 	                        <div class="panel-body ">
 	                        	<h4><strong>Datos de la persona</strong></h4> 
 	                        	<form id="guardar_datos_tutor" method="post">
-								<input type="text" name="inscripcionid" id="inscripcionid" value="{{inscripcionid}}">
-	                        	<fieldset>
-	                        	<div class="row">
-	                        		<input type="text" name="idpersona" id="idpersona" value="0">
-	                        	
-	                        		<div class="col-lg-4">
-	                        			<label for="First Name">CI: </label> 
-	                        			<input type="text" id="ci1" name="ci1" placeholder="Paterno" required class="form-control">
-	                        		</div>
-	                        		<div class="col-lg-4">
-	                        			<label for="First Name"> Complemento:</label> 
-	                        			<input type="text" id="complemento1" maxlength="10"  name="complemento1" placeholder="Complemento" class="form-control">
-	                        		</div>
-	                        		<div class="col-lg-4">
-	                        			<label for="First Name">Fecha Nacimiento (dd-mm-aaaa): </label> 
-	                        			<input type="text" id="form_idfecnac" name="form_idfecnac" required  value="__-__-____" data-mask="__-__-____" placeholder="dd-mm-aaaa" class="form-control jupper">
-	                        		</div>
-	                        		<div class="col-lg-4">
-	                        			<label for="First Name"> Paterno:</label> 
-	                        			<input type="text" id="paterno" name="paterno" placeholder="Paterno" class="form-control" style="text-transform: uppercase;">
-	                        		</div> 
-	                        		<div class="col-lg-4">
-	                        			<label for="second Name">Materno:</label> 
-	                        			<input type="text" id="materno" name="materno" placeholder="Materno" class="form-control" style="text-transform: uppercase;">
-	                        		</div> 
-	                        		<div class="col-lg-4">
-	                        			<label for="name"> Nombre:</label> 
-	                        			<input type="text" id="nombre" name="nombre" placeholder="Nombre" required class="form-control" style="text-transform: uppercase;">
-	                        		</div> 
-	                        		<div class="col-lg-4">
-		                        		<label for="name">Parentesco: </label> 
-		                        		<select name="parentesco" id="parentesco" class="custom-select form-control" required>
-		                        			<option value="1">MADRE</option>
-		                        			<option value="2">PADRE</option>
-		                        			<option value="3">ABUELA/O</option>
-		                        			<option value="4">HERMANA/O</option>
-		                        			<option value="5">TIO</option>
-		                        			<option value="6">TIA</option>
-		                        			<option value="7">HERMANO/HERMANA</option>
-		                        			<option value="8">TUTORA/TUTOR</option>
-		                        		</select>
-		                        	</div> 
-		                        	<div class="col-lg-4">
-		                        		<label for="name"> Extranjero:</label> 
-		                        		<select name="extranjero" id="extranjero" class="custom-select form-control" required>
-		                        			<option value="0">No</option> 
-		                        			<option value="1">Si</option>
-		                        		</select>
-		                        	</div> 
-		                        	{# <div class="col-lg-4">
-			                        	<label for="name"> Genero: </label> 
-			                        	<select name="genero" id="genero" class="custom-select form-control" required>
-			                        		<option value="1">MASCULINO</option>
-			                        		<option value="2">FEMENINO</option>
-			                        	</select>
-			                        </div>  #}
-			                        <div class="col-lg-4"> <br>
-			                        	<input type="submit" value="Registrar" id="btn" class="btn btn-success btn-lg">
-			                        </div>
-			                    </div>
-			                    </fieldset>
+									<input type="hidden" name="inscripcionid" id="inscripcionid" value="{{inscripcionid}}">
+		                        	<input type="text" name="idpersona" id="idpersona" value="0">
+		                        	<fieldset>
+		                        	<div class="row">
+		                        	
+		                        		<div class="col-lg-4">
+		                        			<label for="First Name">CI: </label> 
+		                        			<input type="text" id="ci1" name="ci1" placeholder="Paterno" required class="form-control">
+		                        		</div>
+		                        		<div class="col-lg-4">
+		                        			<label for="First Name"> Complemento:</label> 
+		                        			<input type="text" id="complemento1" maxlength="10"  name="complemento1" placeholder="Complemento" class="form-control">
+		                        		</div>
+		                        		<div class="col-lg-4">
+		                        			<label for="First Name">Fecha Nacimiento (dd-mm-aaaa): </label> 
+		                        			<input type="text" id="form_idfecnac" name="form_idfecnac" required  value="__-__-____" data-mask="__-__-____" placeholder="dd-mm-aaaa" class="form-control jupper">
+		                        		</div>
+		                        		<div class="col-lg-4">
+		                        			<label for="First Name"> Paterno:</label> 
+		                        			<input type="text" id="paterno" name="paterno" placeholder="Paterno" class="form-control" style="text-transform: uppercase;">
+		                        		</div> 
+		                        		<div class="col-lg-4">
+		                        			<label for="second Name">Materno:</label> 
+		                        			<input type="text" id="materno" name="materno" placeholder="Materno" class="form-control" style="text-transform: uppercase;">
+		                        		</div> 
+		                        		<div class="col-lg-4">
+		                        			<label for="name"> Nombre:</label> 
+		                        			<input type="text" id="nombre" name="nombre" placeholder="Nombre" required class="form-control" style="text-transform: uppercase;">
+		                        		</div> 
+		                        		<div class="col-lg-4">
+			                        		<label for="name">Parentesco: </label> 
+			                        		<select name="parentesco" id="parentesco" class="custom-select form-control" required>
+			                        			<option value="1">MADRE</option>
+			                        			<option value="2">PADRE</option>
+			                        			<option value="3">ABUELA/O</option>
+			                        			<option value="4">HERMANA/O</option>
+			                        			<option value="5">TIO</option>
+			                        			<option value="6">TIA</option>
+			                        			<option value="7">HERMANO/HERMANA</option>
+			                        			<option value="8">TUTORA/TUTOR</option>
+			                        		</select>
+			                        	</div> 
+			                        	<div class="col-lg-4">
+			                        		<label for="name"> Extranjero:</label> 
+			                        		<select name="extranjero" id="extranjero" class="custom-select form-control" required>
+			                        			<option value="0">No</option> 
+			                        			<option value="1">Si</option>
+			                        		</select>
+			                        	</div> 
+			                        	{# <div class="col-lg-4">
+				                        	<label for="name"> Genero: </label> 
+				                        	<select name="genero" id="genero" class="custom-select form-control" required>
+				                        		<option value="1">MASCULINO</option>
+				                        		<option value="2">FEMENINO</option>
+				                        	</select>
+				                        </div>  #}
+				                        <div class="col-lg-4"> <br>
+				                        	<input type="submit" value="Registrar" id="btn" class="btn btn-success btn-lg">
+				                        </div>
+				                    </div>
+				                    </fieldset>
 			                    </form> 
-			                    <br> <br>
+			                    <br>
 	                       	</div>
 
 	                    </div>

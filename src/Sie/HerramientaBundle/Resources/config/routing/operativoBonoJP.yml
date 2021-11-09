@@ -48,17 +48,17 @@ operativo_bono_jp_buscarTutores:
     options:
          expose: true
 
-operativo_bono_jp_cambiarEstadoTutores:
-    path:     /eliminar-tutores/{id}/{estado}
-    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:cambiarEstadoTutores"}
-    options:
-         expose: true
+# operativo_bono_jp_cambiarEstadoTutores:
+#     path:     /eliminar-tutores/{id}/{estado}
+#     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:cambiarEstadoTutores"}
+#     options:
+#          expose: true
 
-buscar_tutor_ci_persona:
-    path:     /buscar_tutor_ci_persona
-    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscar_tutor_ci_persona"}
-    options:
-         expose: true
+# buscar_tutor_ci_persona:
+#     path:     /buscar_tutor_ci_persona
+#     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscar_tutor_ci_persona"}
+#     options:
+#          expose: true
 # ////fernando
 buscar_validar_persona_ci_segip:
     path:     /buscar_validar_persona_ci_segip
@@ -69,5 +69,11 @@ buscar_validar_persona_ci_segip:
 guardar_datos_tutor:
     path:     /guardar_datos_tutor
     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:guardar_datos_tutor"}
+    options:
+         expose: true
+
+operativo_bono_jp_cambiarEstadoTutore:
+    path:     /operativo_bono_jp_cambiarEstadoTutore
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:operativo_bono_jp_cambiarEstadoTutore"}
     options:
          expose: true
