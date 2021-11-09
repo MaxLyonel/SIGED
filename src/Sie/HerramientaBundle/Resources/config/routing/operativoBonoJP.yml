@@ -65,3 +65,9 @@ buscar_validar_persona_ci_segip:
     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:buscar_validar_persona_ci_segip"}
     options:
          expose: true
+
+guardar_datos_tutor:
+    path:     /guardar_datos_tutor
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:guardar_datos_tutor"}
+    options:
+         expose: true

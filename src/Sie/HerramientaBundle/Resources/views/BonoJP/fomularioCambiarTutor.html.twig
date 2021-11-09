@@ -3,24 +3,6 @@
 {% block contentoption %}
 
 	{% set persona = null %}
-	<!-- Modal Tutores -->
-	<div class="modal fade" id="modal_listar_tutores" tabindex="-1" >
-			<div class="modal-dialog modal-lg" role="document">
-					<div class="modal-content">
-							<div class="modal-header bg-primary">
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-									<h4 class="modal-title" id="modal_cambiar_tutor_titulo"> Listado de tutores </h4>
-							</div>
-							<div class="modal-body">
-								<div class="container-fluid tutores">
-								</div>
-							</div>
-							<div class="modal-footer">
-									<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
-							</div>
-					</div>
-			</div>
-	</div>
 
 	<!-- Start page header -->
 	<div class="header-content">
@@ -94,6 +76,28 @@
 			</div>
 		</div>
 	</div>
+
+
+
+	<!-- Modal Tutores -->
+	<div class="modal fade" id="modal_listar_tutores" tabindex="-1" >
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header bg-primary">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="modal_cambiar_tutor_titulo"> Listado de tutores </h4>
+				</div>
+				<div class="modal-body">
+					<div class="container-fluid tutores">
+					</div>
+				</div>
+				<div class="modal-footer">
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 {% endblock %}
 
 {% block javascripts %}
@@ -190,7 +194,7 @@
 	}
 
 	var cambiarEstadoTutores=function(id, estado, inscripcion)
-	{
+	{ alert()
 		var eliminar=confirm('¿Está seguro de proceder?');
 		if(eliminar==true && typeof(id)!='undefined')
 		{
