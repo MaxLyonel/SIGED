@@ -611,6 +611,9 @@
 	            url:'{{path('verificacion_datos')}}',
 	            type:'POST',
 	            data:$("form").serialize(),
+	            beforeSend:function (){
+	            	$("#ver_datos").html('Cargando datos ...')
+	            },
 	            success:function(dat){
 	                $("#ver_datos").html(dat)
 	            }
