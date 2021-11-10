@@ -223,8 +223,10 @@ $("#guardar_datos_tutor").submit(function(event) {
 			if (valores['error']===0) {
 				$("#ver_error").html(valores['message']);
 				$("#modal_listar_tutores_fer").click();
-				alert(valores['message'])
-				mostrarResultadosBusqueda(this)
+				alertify.alert("<br><h1>"+valores['message']+"</h1><br>", function () {
+					mostrarResultadosBusqueda(this)
+				});
+				alertify.success("Tutor se ha restablecido."); 
 			}else{
 				$("#ver_error").html('<div class="alert alert-primary" role="alert">'+valores['message']+'</div>');
 			}

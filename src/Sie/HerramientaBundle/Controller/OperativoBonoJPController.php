@@ -688,6 +688,36 @@ class OperativoBonoJPController extends Controller
 		$stmt->execute($params);
 		return $stmt->fetch();
 	}
+	public function cambiarEstadoTutores_restablecerAction(Request $request){
+		$id_bjp_estudiante_apoderado_beneficiarios = $request->get('id');
+		$estado = $request->get('estado');
+		$inscripcion = $request->get('inscripcion');
+		// echo ">".$id.">".$estado.">".$inscripcion;exit();
+		$valor=$this->validar_tutor_active($inscripcion);
+		if ($valor) {
+			$data = array(0=>1);
+		}else{
+			$em = $this->getDoctrine()->getManager();
+			$db = $em->getConnection();
+			$query ="update bjp_estudiante_apoderado_beneficiarios set estado_id = ? where id = ?";
+			$stmt = $db->prepare($query);
+			$params = array($estado, $id_bjp_estudiante_apoderado_beneficiarios);
+			$stmt->execute($params);
+			$tmp=$stmt->fetchAll();
+			$data = array(0=>0);
+		}
+   		return new JsonResponse($data);
+	}
+	function validar_tutor_active($inscripcion){
+		$em = $this->getDoctrine()->getManager();
+		$db = $em->getConnection();
+		$query = 'SELECT estado_id FROM bjp_estudiante_apoderado_beneficiarios WHERE  estudiante_inscripcion_id=? AND estado_id=1 ';
+		// dump($query); exit();
+		$stmt = $db->prepare($query);
+		$params = array($inscripcion);
+		$stmt->execute($params);
+		return $stmt->fetch();
+	}
 	
 
 }

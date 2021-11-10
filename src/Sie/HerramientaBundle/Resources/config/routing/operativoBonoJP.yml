@@ -48,11 +48,11 @@ operativo_bono_jp_buscarTutores:
     options:
          expose: true
 
-operativo_bono_jp_cambiarEstadoTutores:
-    path:     /eliminar-tutores/{id}/{estado}
-    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:cambiarEstadoTutores"}
-    options:
-         expose: true
+# operativo_bono_jp_cambiarEstadoTutores:
+#     path:     /eliminar-tutores/{id}/{estado}
+#     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:cambiarEstadoTutores"}
+#     options:
+#          expose: true
 
 # buscar_tutor_ci_persona:
 #     path:     /buscar_tutor_ci_persona
@@ -75,5 +75,10 @@ guardar_datos_tutor:
 operativo_bono_jp_cambiarEstadoTutore:
     path:     /operativo_bono_jp_cambiarEstadoTutore
     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:operativo_bono_jp_cambiarEstadoTutore"}
+    options:
+         expose: true
+cambiarEstadoTutores_restablecer:
+    path:     /cambiarEstadoTutores_restablecer
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:cambiarEstadoTutores_restablecer"}
     options:
          expose: true

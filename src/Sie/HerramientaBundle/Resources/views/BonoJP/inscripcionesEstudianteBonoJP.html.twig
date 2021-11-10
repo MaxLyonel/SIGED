@@ -119,7 +119,7 @@
 						<td  style="background:#ff00001d"> {{ t.apoderado }} </td>
 						<td  style="background:#ff00001d"> {{ t.fechaActualizacion|date('d-m-Y') }} </td>
 						<td  style="background:#ff00001d" class="text-center">
-							<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="Restaurar" onclick="cambiarEstadoTutores({{t.id}},1,{{t.estudianteInscripcion}})"> <i class="fa fa-history fa-2x fg-info"></i> </a>
+							<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="Restaurar" onclick="cambiarEstadoTutores_e('{{t.id}}','1','{{t.estudianteInscripcion}}')"> <i class="fa fa-history fa-2x fg-info"></i> </a>
 
 							{# <a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="Restaurar" onclick="cambiarEstadoTutores({{t.id}},1,{{t.estudianteInscripcion}})">
 								<i class="fa fa-history fa-2x fg-info"></i>
@@ -181,10 +181,32 @@ function cambiarEstadoTutores(id,estado,estudianteInscripcion){
 		$("#ver_conte_fer").html(data)
 	});
 }
+function cambiarEstadoTutores_e(id, estado, inscripcion){
+	alertify.confirm("<p><h1 style='color:#008000;'>ESTA SEGURO QUE DESEA RESTABLECER ?</h1><br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
+		if (e) {
+			$.post('{{path('cambiarEstadoTutores_restablecer')}}', {id, estado, inscripcion}, function(data) {
+				var valores = eval(data);
+				if (valores[0]==1) {
+					alertify.alert("<br><h1>Tutor asignado ya existe</h1><br>", function () {
+					});
+				    alertify.error("Tutor asignado ya existe"); 
+				}else{
+					alertify.alert("<br><h1>Tutor se ha restablecido</h1><br>", function () {
+						mostrarResultadosBusqueda(this)
+					});
+					alertify.success("Tutor se ha restablecido."); 
+				    // window.location="<?php echo base_url();?>";
+				}
+			});
+		} else { alertify.error("Has pulsado cancel ");
+		}
+	}); 
+}
 // function cambiarEstadoTutores_e(id, estado, inscripcion) {
-// 	var eliminar=confirm('¿Está seguro de proceder?');
-// 	if(eliminar==true)
-// 	{
+// 	// var eliminar=confirm('¿Está seguro de proceder?');
+// 	/*if(eliminar==true)
+// 	{*/
+// 		alert()
 // 		$.ajax({
 // 			type: 'get',
 // 			// url: '{{path('operativo_bono_jp_cambiarEstadoTutore')}}',{id: id, estado: estado}),
@@ -193,25 +215,24 @@ function cambiarEstadoTutores(id,estado,estudianteInscripcion){
 // 			{
 // 				$('#modal_cambiar_tutor_titulo').html('PROCESANDO ...');
 // 			},
-// 			success: function (data)
-// 			{
-// 				var status= data.status;
-// 				if(status==200)
-// 				{
-// 					listarTutores(inscripcion,
-// 					function (data)
-// 					{
-// 						$('#modal_cambiar_tutor_titulo').html('Listado de tutores');
-// 						$('.tutores').html(data)
-// 					},
-// 					function (xhr,a,b)
-// 					{
-// 					});
-// 				}
-// 				else
-// 				{
-// 					alert('Ocurrio un error. por favor vuelva a intentarlo');
-// 				}
+// 			success: function (data) { alert()
+// 				// var status= data.status;
+// 				// if(status==200)
+// 				// {
+// 				// 	listarTutores(inscripcion,
+// 				// 	function (data)
+// 				// 	{
+// 				// 		$('#modal_cambiar_tutor_titulo').html('Listado de tutores');
+// 				// 		$('.tutores').html(data)
+// 				// 	},
+// 				// 	function (xhr,a,b)
+// 				// 	{
+// 				// 	});
+// 				// }
+// 				// else
+// 				// {
+// 				// 	alert('Ocurrio un error. por favor vuelva a intentarlo');
+// 				// }
 // 			},
 // 			error: function (data)
 // 			{
@@ -219,7 +240,7 @@ function cambiarEstadoTutores(id,estado,estudianteInscripcion){
 // 				alert('Ocurrio un error. por favor vuelva a intentarlo');
 // 			}
 // 		});
-// 	}
+// 	// }
 // }
 /*
 var app = new Vue({
