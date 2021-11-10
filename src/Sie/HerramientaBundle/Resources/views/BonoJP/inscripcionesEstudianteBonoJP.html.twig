@@ -94,6 +94,7 @@
 	<div class="row">
 		<div class="col-md-12 table-responsive">
 			<table class="table table-striped table-condensed">
+			<hr>
 				<legend class="text-center"> Tutores Eliminados </legend>
 				<thead>
 					<tr>
@@ -110,17 +111,19 @@
 				<tbody>
 					{% for t in tutoresEliminados %}
 					<tr>
-						<td> {{ t.carnet }} </td>
-						<td> {{ t.paterno }} </td>
-						<td> {{ t.materno }} </td>
-						<td> {{ t.nombre }} </td>
-						<td> {{ t.fechaNacimiento|date('d-m-Y') }} </td>
-						<td> {{ t.apoderado }} </td>
-						<td> {{ t.fechaActualizacion|date('d-m-Y') }} </td>
-						<td class="text-center">
-							<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="Restaurar" onclick="cambiarEstadoTutores({{t.id}},1,{{t.estudianteInscripcion}})">
+						<td  style="background:#ff00001d"> {{ t.carnet }} </td>
+						<td  style="background:#ff00001d"> {{ t.paterno }} </td>
+						<td  style="background:#ff00001d"> {{ t.materno }} </td>
+						<td  style="background:#ff00001d"> {{ t.nombre }} </td>
+						<td  style="background:#ff00001d"> {{ t.fechaNacimiento|date('d-m-Y') }} </td>
+						<td  style="background:#ff00001d"> {{ t.apoderado }} </td>
+						<td  style="background:#ff00001d"> {{ t.fechaActualizacion|date('d-m-Y') }} </td>
+						<td  style="background:#ff00001d" class="text-center">
+							<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="Restaurar" onclick="cambiarEstadoTutores({{t.id}},1,{{t.estudianteInscripcion}})"> <i class="fa fa-history fa-2x fg-info"></i> </a>
+
+							{# <a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="Restaurar" onclick="cambiarEstadoTutores({{t.id}},1,{{t.estudianteInscripcion}})">
 								<i class="fa fa-history fa-2x fg-info"></i>
-								</a>
+								</a> #}
 						</td>
 					</tr>
 					{% endfor %}
@@ -133,7 +136,8 @@
 	<div class="row">
 		<div class="col-md-12 table-responsive">
 			<table class="table table-striped table-condensed">
-				<legend class="text-center"> Tutor Registrado 
+			<hr>
+				<legend class="text-center"> Tutor Apoderado 
 					{% if tutoresActuales == false %}<button type="button" class="btn btn-success btn-add-adicionar-tutor" onclick="adicionarTutor()">+</button> {% endif %}
 				</legend>
 				<thead>
@@ -150,13 +154,13 @@
 				<tbody>
 					{% for t in tutoresActuales %}
 					<tr>
-						<td> {{ t.carnet }} </td>
-						<td> {{ t.paterno }} </td>
-						<td> {{ t.materno }} </td>
-						<td> {{ t.nombre }} </td>
-						<td> {{ t.fechaNacimiento|date('d-m-Y') }} </td>
-						<td> {{ t.apoderado }} </td>
-						<td class="text-center">
+						<td style="background:#0080001f"> {{ t.carnet }} </td>
+						<td style="background:#0080001f"> {{ t.paterno }} </td>
+						<td style="background:#0080001f"> {{ t.materno }} </td>
+						<td style="background:#0080001f"> {{ t.nombre }} </td>
+						<td style="background:#0080001f"> {{ t.fechaNacimiento|date('d-m-Y') }} </td>
+						<td style="background:#0080001f"> {{ t.apoderado }} </td>
+						<td style="background:#0080001f" class="text-center">
 							<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="CAMBIAR" onclick="cambiarEstadoTutores({{t.id}},2,{{t.estudianteInscripcion}})"><i class="fa fa-edit fa-2x fg-danger"></i></a>
 						</td>
 					</tr>
@@ -177,6 +181,46 @@ function cambiarEstadoTutores(id,estado,estudianteInscripcion){
 		$("#ver_conte_fer").html(data)
 	});
 }
+// function cambiarEstadoTutores_e(id, estado, inscripcion) {
+// 	var eliminar=confirm('¿Está seguro de proceder?');
+// 	if(eliminar==true)
+// 	{
+// 		$.ajax({
+// 			type: 'get',
+// 			// url: '{{path('operativo_bono_jp_cambiarEstadoTutore')}}',{id: id, estado: estado}),
+// 			Routing.generate('operativo_bono_jp_cambiarEstadoTutores',{id: id, estado: estado}),
+// 			beforeSend: function ()
+// 			{
+// 				$('#modal_cambiar_tutor_titulo').html('PROCESANDO ...');
+// 			},
+// 			success: function (data)
+// 			{
+// 				var status= data.status;
+// 				if(status==200)
+// 				{
+// 					listarTutores(inscripcion,
+// 					function (data)
+// 					{
+// 						$('#modal_cambiar_tutor_titulo').html('Listado de tutores');
+// 						$('.tutores').html(data)
+// 					},
+// 					function (xhr,a,b)
+// 					{
+// 					});
+// 				}
+// 				else
+// 				{
+// 					alert('Ocurrio un error. por favor vuelva a intentarlo');
+// 				}
+// 			},
+// 			error: function (data)
+// 			{
+// 				$('#modal_cambiar_tutor_titulo').html('Listado de tutores');
+// 				alert('Ocurrio un error. por favor vuelva a intentarlo');
+// 			}
+// 		});
+// 	}
+// }
 /*
 var app = new Vue({
 	delimiters: ['${', '}'],
