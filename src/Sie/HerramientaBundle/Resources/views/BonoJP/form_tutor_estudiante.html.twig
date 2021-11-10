@@ -28,13 +28,28 @@
                 <br>
            	</div>
         </div>
-
+        <div class="panel-danger">
+        	<div class="panel-heading"></div>
+	        <div class="panel-body row">
+				<div class="col-lg-4">
+					<label>CARNET ID.</label>
+					<input type="text" name="ci" id="ci" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="20" required autocomplete="off" class="form-control" style="text-transform: uppercase;">
+				</div>
+				<div class="col-lg-4">
+					<label>COMPLEMENTO:</label>
+					<input type="text" name="complemento" id="complemento" placeholder="Complemento" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="18"  autocomplete="off" class="form-control" style="text-transform: uppercase;">
+				</div>
+				<div class="col-lg-4"> <br>
+					<button type="button" class="btn btn-success btn-block" onclick="buscar_validar_persona_ci_segip()">  <i class="fa fa-search"> </i> Buscar </button>
+				</div>
+			</div>
+		</div>
 
         <div class="panel-danger">
         	<div class="panel-heading"></div> 
             <div class="panel-body ">
             	<h4><strong>Datos de la persona</strong></h4> 
-            	{# <input type="hidden" name="idpersona" id="idpersona" value="0"> #}
+            	<input type="text" name="idpersona" id="idpersona" value="0">
             	<fieldset>
             	<div class="row">
             	
@@ -62,7 +77,7 @@
             			<label for="name"> Nombre:</label> 
             			<input type="text" id="nombre" name="nombre" placeholder="Nombre" required class="form-control" style="text-transform: uppercase;">
             		</div> 
-            		<div class="col-lg-12">
+            		<div class="col-lg-4">
                 		<label for="name">Parentesco: </label> 
                 		<select name="parentesco" id="parentesco" class="custom-select form-control" required>
                 			<option value="1">MADRE</option>
@@ -75,22 +90,22 @@
                 			<option value="8">TUTORA/TUTOR</option>
                 		</select>
                 	</div> 
-                	{# <div class="col-lg-4">
+                	<div class="col-lg-4">
                 		<label for="name"> Extranjero:</label> 
                 		<select name="extranjero" id="extranjero" class="custom-select form-control" required>
                 			<option value="0">No</option> 
                 			<option value="1">Si</option>
                 		</select>
-                	</div>  #}
-                	{# <div class="col-lg-4">
+                	</div> 
+                	<div class="col-lg-4">
                     	<label for="name"> Genero: </label> 
                     	<select name="genero" id="genero" class="custom-select form-control" required>
                     		<option value="1">MASCULINO</option>
                     		<option value="2">FEMENINO</option>
                     	</select>
-                    </div>  #}
-                    <div class="col-lg-4"> <br>
-                    	<input type="submit" value="Registrar" id="btn" class="btn btn-success btn-lg">
+                    </div> 
+                    <div class="col-lg-6"> <br>
+                    	<button type="submit" class="btn btn-success btn-lg">Registrar</button>
                     </div>
                 </div>
                 </fieldset>
@@ -127,6 +142,75 @@ function applyDataMask(field) {
     field.addEventListener('click', changed)
     field.addEventListener('keyup', changed)
 }
+
+function buscar_validar_persona_ci_segip(){
+	$('#contenido_fer').css('display', 'none');
+	$("#load").html("<div style='text-align:center'><img src='/img/loading.gif'>Cargando...</div>");
+	var inscripcionid=$("#inscripcionid").val();
+	var ci=$("#ci").val();
+	var complemento=$("#complemento").val();
+	$.post('{{path('buscar_validar_persona_ci_segip')}}', {ci,complemento,inscripcionid}, function(dato) {
+        $("#load").html('')
+        var valores = eval(dato);
+		if (valores[0]===0) {
+			$('#contenido_fer').css('display', 'block');
+			$('#ci1').val(ci);
+            $("#ci1").attr('readonly', 'readonly');
+
+            $('#complemento1').val('');
+            $("#complemento1").removeAttr("readonly");
+
+            $('#form_idfecnac').val('');
+            $("#form_idfecnac").removeAttr("readonly");
+
+            $('#paterno').val('');
+            $("#paterno").removeAttr("readonly");
+
+            $('#materno').val('');
+            $("#materno").removeAttr("readonly");
+
+            $('#nombre').val('');
+            $("#nombre").removeAttr("readonly");
+
+            $('#idpersona').val('0');
+		}else{        
+			if (valores[0]===1) {
+        		$('#contenido_fer').css('display', 'none');
+				$('#ci1').val(ci);
+	            $("#load").html('<div class="alert alert-danger" role="alert"> <b>ADVERTENCIA :'+valores[1]+'</b> </div>')
+	        }else{
+	        	if (valores[0]===2) {
+	        		$('#contenido_fer').css('display', 'none');
+					$('#ci1').val(ci);
+		            $("#load").html('<div class="alert alert-danger" role="alert"> <b>ADVERTENCIA :'+valores[1]+'</b> </div>')
+		        }else{
+					$('#contenido_fer').css('display', 'block');
+				    $('#ci1').val(valores[0]);
+		            $("#ci1").attr('readonly', 'readonly');
+
+		            $('#complemento1').val('');
+		            $("#complemento1").attr('readonly', 'readonly');
+
+		            $('#form_idfecnac').val(valores[4]);
+		            $("#form_idfecnac").attr('readonly', 'readonly');
+
+		            $('#paterno').val(valores[1]);
+		            $("#paterno").attr('readonly', 'readonly');
+
+		            $('#materno').val(valores[2]);
+		            $("#materno").attr('readonly', 'readonly');
+
+		            $('#nombre').val(valores[3]);
+		            $("#nombre").attr('readonly', 'readonly');
+
+		            $('#idpersona').val(valores[5]);
+		        }
+				
+	        }
+		}
+	});
+}
+
 $("#guardar_datos_tutor").submit(function(event) {
     event.preventDefault();
     $.ajax({

@@ -124,15 +124,15 @@
 											<div class="row">
 												<div class="form-group col-md-4">
 													<label>Paterno</label>
-													<input type="text" v-model="dataParent.paterno" class="form-control jupper" maxlength="15" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
+													<input type="text" v-model="dataParent.paterno" class="form-control jupper" maxlength="30" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
 												</div>
 												<div class="form-group col-md-4">
 													<label>Materno  </label>
-													<input type="text" v-model="dataParent.materno" class="form-control jupper" maxlength="15" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
+													<input type="text" v-model="dataParent.materno" class="form-control jupper" maxlength="30" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
 												</div>
 												<div class="form-group col-md-4">
 													<label>Nombre(s) </label>
-													<input type="text" v-model="dataParent.nombre" class="form-control jupper" maxlength="20" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
+													<input type="text" v-model="dataParent.nombre" class="form-control jupper" maxlength="30" v-on:keypress="alfabetico" :disabled="swdata ? '':disabled">
 												</div>		
 											</div>
 
@@ -232,27 +232,27 @@
 										<div class="form-row">
 											<div class="form-group col-md-6">
 											<label for="job">Nombre del lugar de trabajo:</label>
-											<input type="text" class="form-control jupper" id="job" v-model="addrressParent.lugarTrabajo" :disabled="swParentAddress ==true">
+											<input type="text" class="form-control jupper" id="job" v-model="addrressParent.lugarTrabajo" :disabled="swParentAddress ==true" v-on:keypress="alfabetico">
 											</div>
 											<div class="form-group col-md-6">
 											<label for="Municipio">Municipio:</label>
-											<input type="text" class="form-control jupper" id="Municipio" v-model="addrressParent.municipio" :disabled="swParentAddress ==true">
+											<input type="text" class="form-control jupper" id="Municipio" v-model="addrressParent.municipio" :disabled="swParentAddress ==true" v-on:keypress="alfabetico">
 											</div>
 										</div>
 										<div class="form-row">
 											<div class="form-group col-md-6">
 											<label for="job">Zona/Villa:</label>
-											<input type="text" class="form-control jupper" id="zona" v-model="addrressParent.zona" :disabled="swParentAddress ==true">
+											<input type="text" class="form-control jupper" id="zona" v-model="addrressParent.zona" :disabled="swParentAddress ==true" v-on:keypress="alfabetico">
 											</div>
 											<div class="form-group col-md-6">
 											<label for="Municipio">Avenida/Calle/N°:</label>
-											<input type="text" class="form-control jupper" id="avenida" v-model="addrressParent.avenida" :disabled="swParentAddress ==true">
+											<input type="text" class="form-control jupper" id="avenida" v-model="addrressParent.avenida" :disabled="swParentAddress ==true" v-on:keypress="alfanumerico">
 											</div>
 										</div>	
 										<div class="form-row">
 											<div class="form-group col-md-6">
 												<label for="job">Teléfono/Celular:</label>
-												<input type="text" class="form-control" id="fono" v-model="addrressParent.fono":disabled="swParentAddress ==true">
+												<input type="text" class="form-control" id="fono" v-model="addrressParent.fono":disabled="swParentAddress ==true" v-on:keypress="numerico">
 											</div>
 										</div>
 										
@@ -367,22 +367,22 @@
 									<div class="row">
 										<div class="form-group col-md-4">
 											<label>Paterno</label>
-											<input type="text" v-model="student.paterno" class="form-control jupper" maxlength="15" v-on:keypress="alfabetico" >
+											<input type="text" v-model="student.paterno" class="form-control jupper" maxlength="30" v-on:keypress="alfabetico" >
 										</div>
 										<div class="form-group col-md-4">
 											<label>Materno </i> </label>
-											<input type="text" v-model="student.materno" class="form-control jupper" maxlength="15" v-on:keypress="alfabetico" >
+											<input type="text" v-model="student.materno" class="form-control jupper" maxlength="30" v-on:keypress="alfabetico" >
 										</div>
 										<div class="form-group col-md-4">
 											<label>Nombre(s) </label>
-											<input type="text" v-model="student.nombre" class="form-control jupper" maxlength="20" v-on:keypress="alfabetico" >
+											<input type="text" v-model="student.nombre" class="form-control jupper" maxlength="30" v-on:keypress="alfabetico" >
 										</div>		
 									</div>
 
 									<div class="row">
 										<div class="form-group col-md-6">
 											<label>Lugar de nacimiento</label>
-											<input type="text" v-model="student.lugarNacimiento" class="form-control jupper"  >
+											<input type="text" v-model="student.lugarNacimiento" class="form-control jupper" v-on:keypress="alfabetico" >
 										</div>
 									</div>
 
@@ -410,24 +410,24 @@
 										<div class="form-row">
 											<div class="form-group col-md-6">
 											<label for="Municipio">Municipio:</label>
-											<input type="text" class="form-control jupper" id="Municipio" v-model="student.municipio" >
+											<input type="text" class="form-control jupper" id="Municipio" v-model="student.municipio" v-on:keypress="alfabetico">
 											</div>
 											<div class="form-group col-md-6">
 											<label for="job">Zona/Villa:</label>
-											<input type="text" class="form-control jupper" id="zona" v-model="student.zona" >
+											<input type="text" class="form-control jupper" id="zona" v-model="student.zona" v-on:keypress="alfabetico">
 											</div>											
 										</div>
 										<div class="form-row">
 
 											<div class="form-group col-md-6">
 											<label for="Municipio">Avenida/Calle/N°:</label>
-											<input type="text" class="form-control jupper" id="avenida" v-model="student.avenida" >
+											<input type="text" class="form-control jupper" id="avenida" v-model="student.avenida" v-on:keypress="alfanumerico">
 											</div>
 										</div>	
 										<div class="form-row">
 											<div class="form-group col-md-6">
 												<label for="job">Teléfono/Celular:</label>
-												<input type="text" class="form-control jupper" id="fono" v-model="student.fono">
+												<input type="text" class="form-control jupper" id="fono" v-model="student.fono" v-on:keypress="numerico">
 											</div>
 										</div>	
 
