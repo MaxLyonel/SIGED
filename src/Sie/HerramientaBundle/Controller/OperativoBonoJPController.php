@@ -593,50 +593,8 @@ class OperativoBonoJPController extends Controller
 
         // $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet' => $ci));
         // dump($persona); die;
-        if($idpersona>1){
-        	$obj=$this->mostra_datos_fer($inscripcionid);
-        	///existe tabla persona los datos
-	        ////////////////////////////////////////
-            // this is to the new  bjp_estudiante_apoderado_beneficiarios////
-            ////////////////////////////////////////
-            $newEstudianteInscTutor = new BjpEstudianteApoderadoBeneficiarios();
-            // dump($newEstudianteInscTutor); exit();
-            $newEstudianteInscTutor->setNivelTipoId($obj['nivel_tipo_id']);
-            $newEstudianteInscTutor->setGradoTipoId($obj['grado_tipo_id']);
-            $newEstudianteInscTutor->setParaleloTipoId($obj['paralelo_tipo_id']);
-            $newEstudianteInscTutor->setTurnoTipoId($obj['turno_tipo_id']);
-            $newEstudianteInscTutor->setEstudianteInscripcionId($inscripcionid);
-            $newEstudianteInscTutor->setEstudianteId($obj['estudiante_id']);
-            $newEstudianteInscTutor->setCodigoRude($obj['codigo_rude']);
-            $newEstudianteInscTutor->setCarnetEst($obj['carnet_identidad']);
-            $newEstudianteInscTutor->setInstitucioneducativaId($obj['institucioneducativa_id']);
-            $newEstudianteInscTutor->setComplementoEst($obj['complemento']);
-            $newEstudianteInscTutor->setPaternoEst($obj['paterno']);
-            $newEstudianteInscTutor->setMaternoEst($obj['materno']);
-            $newEstudianteInscTutor->setNombreEst($obj['nombre']);
-            $newEstudianteInscTutor->setFechaNacimientoEst(new \DateTime($obj['fecha_nacimiento']));
-
-            // $newEstudianteInscTutor->setPersonaId($persona->getId());
-            $newEstudianteInscTutor->setPersonaId($idpersona);
-            $newEstudianteInscTutor->setCarnetTut($ci);
-            $newEstudianteInscTutor->setComplementoTut($complemento1);
-            $newEstudianteInscTutor->setPaternoTut($paterno);
-            $newEstudianteInscTutor->setMaternoTut($materno);
-            $newEstudianteInscTutor->setNombreTut($nombre);
-            // $newEstudianteInscTutor->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($parentesco));
-            $newEstudianteInscTutor->setSegipIdTut(1);
-            $newEstudianteInscTutor->setFechaRegistro(new \DateTime('now'));
-            $newEstudianteInscTutor->setFechaActualizacion(new \DateTime('now'));
-            $newEstudianteInscTutor->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($obj['estadomatricula_tipo_id']));
-            $newEstudianteInscTutor->setEstadoId(1);
-            // dump($newEstudianteInscTutor); exit();
-            $em->persist($newEstudianteInscTutor);
-	        // save all data
-            $em->flush();            	
-            // Try and commit the transaction
-            // $em->getConnection()->commit(); 
-            $data = array(0=>1);
-        }else{
+        $data = array('error'=>0, 'message'=>'Datos registados');
+        if( $idpersona ==0 ){
         	$datos = array(
                 'complemento'=>$complemento1,
                 'primer_apellido'=>$paterno,
@@ -656,9 +614,29 @@ class OperativoBonoJPController extends Controller
 	        	$newPersona->setFechaNacimiento($form_idfecnac);
 	        	$em->persist($newPersona);
 	        	// $newPersona->setMaterno($carnet);
+	        	$idpersona = $newPersona->getId();
+		        // save all data
+	            $em->flush();  
+	        	
+	        }else{
+	        	$data = array('error'=>1, 'message'=>'Error con la verificacion segip');
+	        }
+        }
+        if(!$data['error']){
+        	
+	        $edotarBJP = $em->getRepository('SieAppWebBundle:BjpEstudianteApoderadoBeneficiarios')->find($id_bjp_estudiante_apoderado_beneficiarios);
+	        $edotarBJP->setObservacion($obs);
+	        $edotarBJP->setEstadoId(2);
+	        $em->persist($edotarBJP);
 
-	        	$obj=$this->mostra_datos_fer($inscripcionid);
-	        	$newEstudianteInscTutor = new BjpEstudianteApoderadoBeneficiarios();
+
+			$obj=$this->mostra_datos_fer($inscripcionid);        
+
+	        	///existe tabla persona los datos
+		        ////////////////////////////////////////
+	            // this is to the new  bjp_estudiante_apoderado_beneficiarios////
+	            ////////////////////////////////////////
+	            $newEstudianteInscTutor = new BjpEstudianteApoderadoBeneficiarios();
 	            // dump($newEstudianteInscTutor); exit();
 	            $newEstudianteInscTutor->setNivelTipoId($obj['nivel_tipo_id']);
 	            $newEstudianteInscTutor->setGradoTipoId($obj['grado_tipo_id']);
@@ -676,14 +654,13 @@ class OperativoBonoJPController extends Controller
 	            $newEstudianteInscTutor->setFechaNacimientoEst(new \DateTime($obj['fecha_nacimiento']));
 
 	            // $newEstudianteInscTutor->setPersonaId($persona->getId());
-	            $newEstudianteInscTutor->setPersonaId($em->getRepository('SieAppWebBundle:Persona')->find($newPersona->setPersonaId()));
-	            // $newEstudianteInscTutor->setPersonaId($idpersona);
+	            $newEstudianteInscTutor->setPersonaId($idpersona);
 	            $newEstudianteInscTutor->setCarnetTut($ci);
 	            $newEstudianteInscTutor->setComplementoTut($complemento1);
 	            $newEstudianteInscTutor->setPaternoTut($paterno);
 	            $newEstudianteInscTutor->setMaternoTut($materno);
 	            $newEstudianteInscTutor->setNombreTut($nombre);
-	            // $newEstudianteInscTutor->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($parentesco));
+	            $newEstudianteInscTutor->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($parentesco));
 	            $newEstudianteInscTutor->setSegipIdTut(1);
 	            $newEstudianteInscTutor->setFechaRegistro(new \DateTime('now'));
 	            $newEstudianteInscTutor->setFechaActualizacion(new \DateTime('now'));
@@ -691,21 +668,15 @@ class OperativoBonoJPController extends Controller
 	            $newEstudianteInscTutor->setEstadoId(1);
 	            // dump($newEstudianteInscTutor); exit();
 	            $em->persist($newEstudianteInscTutor);
-		        // save all data
-	            $em->flush();  
-	        	$data = array(0=>11);
-	        }else{
-	        	$data = array(0=>00);
-	        }
+		        // save all data        
+	        /*dump($data);
+			exit();*/
+	  		// $em->getConnection()->beginTransaction();
+
+	    	$em->flush();
+
         }
-        /*dump($data);
-		exit();*/
-  		// $em->getConnection()->beginTransaction();
-        $edotarBJP = $em->getRepository('SieAppWebBundle:BjpEstudianteApoderadoBeneficiarios')->find($id_bjp_estudiante_apoderado_beneficiarios);
-        $edotarBJP->setObservacion($obs);
-        $edotarBJP->setEstadoId(2);
-        $em->persist($edotarBJP);
-    	$em->flush();
+
    		return new JsonResponse($data);
 	}
 	public function mostra_datos_fer($inscripcionid){
