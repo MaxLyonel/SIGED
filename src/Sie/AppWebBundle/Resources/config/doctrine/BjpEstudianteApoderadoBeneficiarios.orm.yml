@@ -203,7 +203,8 @@ Sie\AppWebBundle\Entity\BjpEstudianteApoderadoBeneficiarios:
             column: genero_tipo_tut_id
     manyToOne:
         apoderadoTipo:
-            targetEntity: BjpApoderadoTipo
+            # targetEntity: BjpApoderadoTipo
+            targetEntity: ApoderadoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null

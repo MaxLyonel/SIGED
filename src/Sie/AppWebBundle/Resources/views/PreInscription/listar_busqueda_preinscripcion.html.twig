@@ -20,7 +20,7 @@
 						<td><span class="label label-default" style="border-style:double;font-size:15px;">{{ obj.preinsEstudianteInscripcion.id }}</span></td>
 						<td>{{ obj.fechaRegistro|date('Y-m-d H:i:s') }}</td>
 						<td>
-							<a href="{{path('preinscription_preinspdf',{idTramite:obj.preinsEstudianteInscripcion.id})}}" target="_black" class="btn btn-warning"><span class="fa fa-file-pdf-o"></span> IMPRIMIR</a>
+							<a href="{{path('preinscription_preinspdf',{idTramite:obj.preinsEstudianteInscripcion.id})}}" target="_blank" class="btn btn-warning"><span class="fa fa-file-pdf-o"></span> IMPRIMIR</a>
 						</td>
 					</tr>
 					{% endfor %}

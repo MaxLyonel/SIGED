@@ -1458,40 +1458,40 @@ class TramiteCertificacionesPermanenteController extends Controller {
     public function ObtenerMes($mesNumeral){
         $mesDefault='Enero'; //la paz
         switch ($mesNumeral){
-            case 01://Enero
+            case '01'://Enero
                 $mes='Enero';
                 break;
-            case 02: //potosi
+            case '02': //potosi
                 $mes='Febrero';
                 break;
-            case 03: //TARIJA
+            case '03': //TARIJA
                 $mes='Marzo';
                 break;
-            case 04: //SANTA CRU
+            case '04': //SANTA CRU
                 $mes='Abril';
                 break;
-            case 05: //BENI
+            case '05': //BENI
                 $mes='Mayo';
                 break;
-            case 06: //PANDO
+            case '06': //PANDO
                 $mes='Junio';
                 break;
-            case 07: //CHUQUISACA
+            case '07': //CHUQUISACA
                 $mes='Julio';
                 break;
-            case 08: //COCHABAMBA
+            case '08': //COCHABAMBA
                 $mes='Agosto';
                 break;
-            case 09: //ORURO
+            case '09': //ORURO
                 $mes='Septiembre';
                 break;
-            case 10: //ORURO
+            case '10': //ORURO
                 $mes='Octubre';
                 break;
-            case 11: //ORURO
+            case '11': //ORURO
                 $mes='Noviembre';
                 break;
-            case 12: //ORURO
+            case '12': //ORURO
                 $mes='Diciembre';
                 break;          
             default: $mes =  $mesDefault;
