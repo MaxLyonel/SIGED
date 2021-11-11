@@ -77,3 +77,8 @@ operativo_bono_jp_cambiarEstadoTutore:
     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:operativo_bono_jp_cambiarEstadoTutore"}
     options:
          expose: true
+cambiarEstadoTutores_restablecer:
+    path:     /cambiarEstadoTutores_restablecer
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:cambiarEstadoTutores_restablecer"}
+    options:
+         expose: true

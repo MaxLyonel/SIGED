@@ -1,9 +1,9 @@
 <div class="row">
 	<div class="col-xs-12 col-lg-12">
         <form id="guardar_datos_tutor" method="post">
-        <input type="TEXT" name="id" id="id" value="{{id}}">
-        <input type="TEXT" name="estado" id="estado" value="{{estado}}">
-        <input type="TEXT" name="estudianteInscripcion" id="estudianteInscripcion" value="{{estudianteInscripcion}}">
+        <input type="hidden" name="id" id="id" value="{{id}}">
+        <input type="hidden" name="estado" id="estado" value="{{estado}}">
+        <input type="hidden" name="estudianteInscripcion" id="estudianteInscripcion" value="{{estudianteInscripcion}}">
 
         <div class="panel-danger">
         	<div class="panel-heading"></div> 
@@ -49,7 +49,7 @@
         	<div class="panel-heading"></div> 
             <div class="panel-body ">
             	<h4><strong>Datos de la persona</strong></h4> 
-            	<input type="text" name="idpersona" id="idpersona" value="0">
+            	<input type="hidden" name="idpersona" id="idpersona" value="0">
             	<fieldset>
             	<div class="row">
             	
@@ -104,6 +104,7 @@
                     		<option value="2">FEMENINO</option>
                     	</select>
                     </div> 
+                    <div class="col-lg-12" id="ver_error"></div>
                     <div class="col-lg-6"> <br>
                     	<button type="submit" class="btn btn-success btn-lg">Registrar</button>
                     </div>
@@ -218,9 +219,17 @@ $("#guardar_datos_tutor").submit(function(event) {
         type:'POST',
         data:$("form").serialize(),
         success:function(dat){
-            /*setTimeout(function(){
-                 window.location='';
-            },1000);*/
+            var valores = eval(dat);
+			if (valores['error']===0) {
+				$("#ver_error").html(valores['message']);
+				$("#modal_listar_tutores_fer").click();
+				alertify.alert("<br><h1>"+valores['message']+"</h1><br>", function () {
+					mostrarResultadosBusqueda(this)
+				});
+				alertify.success("Tutor se ha restablecido."); 
+			}else{
+				$("#ver_error").html('<div class="alert alert-primary" role="alert">'+valores['message']+'</div>');
+			}
         }
     });
 });
