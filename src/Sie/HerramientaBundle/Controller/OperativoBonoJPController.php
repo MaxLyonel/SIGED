@@ -325,6 +325,15 @@ class OperativoBonoJPController extends Controller
 
 	public function buscarInscripcionesAction(Request $request)
 	{
+
+		$em = $this->getDoctrine()->getManager();
+		$db = $em->getConnection();
+		
+
+
+
+
+
 		$this->session = new Session();
 		// dump($this->session); exit();
         $sesinst = $request->getSession()->get('ie_id');
@@ -336,41 +345,78 @@ class OperativoBonoJPController extends Controller
 		$codigo_rude = $request->get('codigo_rude');
 		$gestion = date('Y');
 		$estado_matricula = 4;
-		
-		$em = $this->getDoctrine()->getManager();
-		$query = $em->getConnection()->prepare("SELECT  * FROM sp_genera_estudiante_historial(?) where gestion_tipo_id_raep = ? AND estadomatricula_tipo_id_fin_r = ?");
-		$params = array($codigo_rude, $gestion, $estado_matricula);
-		$query->execute($params);
-		$dataInscription = $query->fetchAll();
-		// dump($dataInscription); exit();
-		$dataInscriptionR = $dataInscriptionE = array();
-		foreach ($dataInscription as $key => $inscription)
-		{
-			// if ($inscription['institucioneducativa_id_raep']==$sesinst) {
-			// 	# code...
-			// }
-			switch ($inscription['institucioneducativa_tipo_id_raep'])
+		$swError = false;
+		$messageError = false;
+		$query = "select iec.institucioneducativa_id
+					from estudiante e
+					inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
+					inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
+					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')."	 ";
+		 $query2 = $em->getConnection()->prepare($query);
+		 $query2->execute();
+         $currentInscription = $query2->fetchAll();
+         // dump($currentInscription);die;
+         //check if the student has current inscription
+         if(sizeof($currentInscription)>0){
+         	// if the student is in the same UE
+         	if($currentInscription[0]['institucioneducativa_id']!=$this->session->get('ie_id')){
+         		$messageError = 'El estudiante no esta inscrito en esta UE';
+         		$swError = true;
+         	}
+
+
+         }else{
+         	$messageError = 'El estudiante no cuenta con inscription';
+         	$swError = true;
+         }
+
+		$dataInscriptionR = array();
+		$dataInscriptionE= array();
+		$tutoresActuales= array();
+		$tutoresEliminados= array();         
+
+         if(!$swError){
+
+			$em = $this->getDoctrine()->getManager();
+			$query = $em->getConnection()->prepare("SELECT  * FROM sp_genera_estudiante_historial(?) where gestion_tipo_id_raep = ? AND estadomatricula_tipo_id_fin_r = ?");
+			$params = array($codigo_rude, $gestion, $estado_matricula);
+			$query->execute($params);
+			$dataInscription = $query->fetchAll();
+			// dump($dataInscription); exit();
+			$dataInscriptionR = $dataInscriptionE = array();
+			foreach ($dataInscription as $key => $inscription)
 			{
-				case '1':
-					$dataInscriptionR[$key] = $inscription;	
-					$inscriptionId = $dataInscriptionR[$key]['estudiante_inscripcion_id_raep'];
-				break;
-				case '4':
-					$dataInscriptionE[$key] = $inscription;
-					$inscriptionId = $dataInscriptionR[$key]['estudiante_inscripcion_id_raep'];
-				break;
+				// if ($inscription['institucioneducativa_id_raep']==$sesinst) {
+				// 	# code...
+				// }
+				switch ($inscription['institucioneducativa_tipo_id_raep'])
+				{
+					case '1':
+						$dataInscriptionR[$key] = $inscription;	
+						$inscriptionId = $dataInscriptionR[$key]['estudiante_inscripcion_id_raep'];
+					break;
+					case '4':
+						$dataInscriptionE[$key] = $inscription;
+						$inscriptionId = $dataInscriptionR[$key]['estudiante_inscripcion_id_raep'];
+					break;
+				}
 			}
-		}
 
 
-		$tutoresActuales = $this->listarTutores($inscriptionId,1);
-		$tutoresEliminados = $this->listarTutores($inscriptionId,2);
+			$tutoresActuales = $this->listarTutores($inscriptionId,1);
+			$tutoresEliminados = $this->listarTutores($inscriptionId,2);
+         }
+
+
 
 		return $this->render('SieHerramientaBundle:BonoJP:inscripcionesEstudianteBonoJP.html.twig', array(
 			'inscripcionesRegular' => $dataInscriptionR,
 			'inscripcionesEspecial' => $dataInscriptionE,
 			'tutoresActuales' => $tutoresActuales,
-			'tutoresEliminados' => $tutoresEliminados
+			'tutoresEliminados' => $tutoresEliminados,
+			'swError' => $swError,
+			'messageError' => $messageError,
+
 		));
 	}
 
