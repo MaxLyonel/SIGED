@@ -606,12 +606,12 @@ class OperativoBonoJPController extends Controller
 	        // dump($resultadoPersona);exit();
 	        if ($resultadoPersona) {
 	        	$newPersona = new Persona();
-	        	$newPersona->setCarnet($carnet);
-	        	$newPersona->setComplemento($complemento);
+	        	$newPersona->setCarnet($ci);
+	        	$newPersona->setComplemento($complemento1);
 	        	$newPersona->setPaterno($paterno);
 	        	$newPersona->setMaterno($materno);
 	        	$newPersona->setNombre($nombre);
-	        	$newPersona->setFechaNacimiento($form_idfecnac);
+	        	$newPersona->setFechaNacimiento(new \DateTime($form_idfecnac));
 	        	$em->persist($newPersona);
 	        	// $newPersona->setMaterno($carnet);
 	        	$idpersona = $newPersona->getId();
