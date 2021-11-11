@@ -325,6 +325,14 @@ class OperativoBonoJPController extends Controller
 
 	public function buscarInscripcionesAction(Request $request)
 	{
+		$this->session = new Session();
+		// dump($this->session); exit();
+        $sesinst = $request->getSession()->get('ie_id');
+        // echo ">".$sesinst;exit();
+		/*$sesion = $request->getSession();
+        $id_usuario = $sesion->get('userI');
+
+        echo ">".$id_usuario;exit();*/
 		$codigo_rude = $request->get('codigo_rude');
 		$gestion = date('Y');
 		$estado_matricula = 4;
@@ -334,10 +342,13 @@ class OperativoBonoJPController extends Controller
 		$params = array($codigo_rude, $gestion, $estado_matricula);
 		$query->execute($params);
 		$dataInscription = $query->fetchAll();
-
+		// dump($dataInscription); exit();
 		$dataInscriptionR = $dataInscriptionE = array();
 		foreach ($dataInscription as $key => $inscription)
 		{
+			// if ($inscription['institucioneducativa_id_raep']==$sesinst) {
+			// 	# code...
+			// }
 			switch ($inscription['institucioneducativa_tipo_id_raep'])
 			{
 				case '1':
@@ -605,13 +616,26 @@ class OperativoBonoJPController extends Controller
 	        $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($ci,$datos,'prod','academico');
 	        // dump($resultadoPersona);exit();
 	        if ($resultadoPersona) {
+	        	
+	        	// $updateBjpE2 = $em->getRepository('SieAppWebBundle:BjpEstudianteApoderadoBeneficiarios')->find($id_bjp_estudiante_apoderado_beneficiarios);
+		        // $updateBjpE2->setEstadoId($estado);
+		        // $em->persist($updateBjpE2);
+
+
 	        	$newPersona = new Persona();
-	        	$newPersona->setCarnet($carnet);
-	        	$newPersona->setComplemento($complemento);
+	        	$newPersona->setCarnet($ci);
+	        	$newPersona->setComplemento($complemento1);
+	        	$newPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find('0'));
+	        	$newPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($genero));
+	        	$newPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->find('0'));
+	        	$newPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->find('0'));
+	        	$newPersona->setRda('0');
 	        	$newPersona->setPaterno($paterno);
 	        	$newPersona->setMaterno($materno);
 	        	$newPersona->setNombre($nombre);
-	        	$newPersona->setFechaNacimiento($form_idfecnac);
+	        	$newPersona->setFechaNacimiento(new \DateTime($form_idfecnac));
+	        	$newPersona->setSegipId('0');
+	        	$newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find('0'));
 	        	$em->persist($newPersona);
 	        	// $newPersona->setMaterno($carnet);
 	        	$idpersona = $newPersona->getId();
