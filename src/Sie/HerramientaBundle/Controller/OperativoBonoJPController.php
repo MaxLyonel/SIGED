@@ -628,55 +628,51 @@ class OperativoBonoJPController extends Controller
 	        $edotarBJP->setObservacion($obs);
 	        $edotarBJP->setEstadoId(2);
 	        $em->persist($edotarBJP);
-
+	        $em->flush();
 
 			$obj=$this->mostra_datos_fer($inscripcionid);        
+        	///existe tabla persona los datos
+	        ////////////////////////////////////////
+            // this is to the new  bjp_estudiante_apoderado_beneficiarios////
+            ////////////////////////////////////////
+            $newEstudianteInscTutor = new BjpEstudianteApoderadoBeneficiarios();
+            // dump($newEstudianteInscTutor); exit();
+            $newEstudianteInscTutor->setNivelTipoId($obj['nivel_tipo_id']);
+            $newEstudianteInscTutor->setGradoTipoId($obj['grado_tipo_id']);
+            $newEstudianteInscTutor->setParaleloTipoId($obj['paralelo_tipo_id']);
+            $newEstudianteInscTutor->setTurnoTipoId($obj['turno_tipo_id']);
+            $newEstudianteInscTutor->setEstudianteInscripcionId($inscripcionid);
+            $newEstudianteInscTutor->setEstudianteId($obj['estudiante_id']);
+            $newEstudianteInscTutor->setCodigoRude($obj['codigo_rude']);
+            $newEstudianteInscTutor->setCarnetEst($obj['carnet_identidad']);
+            $newEstudianteInscTutor->setInstitucioneducativaId($obj['institucioneducativa_id']);
+            $newEstudianteInscTutor->setComplementoEst($obj['complemento']);
+            $newEstudianteInscTutor->setPaternoEst($obj['paterno']);
+            $newEstudianteInscTutor->setMaternoEst($obj['materno']);
+            $newEstudianteInscTutor->setNombreEst($obj['nombre']);
+            $newEstudianteInscTutor->setFechaNacimientoEst(new \DateTime($obj['fecha_nacimiento']));
 
-	        	///existe tabla persona los datos
-		        ////////////////////////////////////////
-	            // this is to the new  bjp_estudiante_apoderado_beneficiarios////
-	            ////////////////////////////////////////
-	            $newEstudianteInscTutor = new BjpEstudianteApoderadoBeneficiarios();
-	            // dump($newEstudianteInscTutor); exit();
-	            $newEstudianteInscTutor->setNivelTipoId($obj['nivel_tipo_id']);
-	            $newEstudianteInscTutor->setGradoTipoId($obj['grado_tipo_id']);
-	            $newEstudianteInscTutor->setParaleloTipoId($obj['paralelo_tipo_id']);
-	            $newEstudianteInscTutor->setTurnoTipoId($obj['turno_tipo_id']);
-	            $newEstudianteInscTutor->setEstudianteInscripcionId($inscripcionid);
-	            $newEstudianteInscTutor->setEstudianteId($obj['estudiante_id']);
-	            $newEstudianteInscTutor->setCodigoRude($obj['codigo_rude']);
-	            $newEstudianteInscTutor->setCarnetEst($obj['carnet_identidad']);
-	            $newEstudianteInscTutor->setInstitucioneducativaId($obj['institucioneducativa_id']);
-	            $newEstudianteInscTutor->setComplementoEst($obj['complemento']);
-	            $newEstudianteInscTutor->setPaternoEst($obj['paterno']);
-	            $newEstudianteInscTutor->setMaternoEst($obj['materno']);
-	            $newEstudianteInscTutor->setNombreEst($obj['nombre']);
-	            $newEstudianteInscTutor->setFechaNacimientoEst(new \DateTime($obj['fecha_nacimiento']));
-
-	            // $newEstudianteInscTutor->setPersonaId($persona->getId());
-	            $newEstudianteInscTutor->setPersonaId($idpersona);
-	            $newEstudianteInscTutor->setCarnetTut($ci);
-	            $newEstudianteInscTutor->setComplementoTut($complemento1);
-	            $newEstudianteInscTutor->setPaternoTut($paterno);
-	            $newEstudianteInscTutor->setMaternoTut($materno);
-	            $newEstudianteInscTutor->setNombreTut($nombre);
-	            $newEstudianteInscTutor->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($parentesco));
-	            $newEstudianteInscTutor->setSegipIdTut(1);
-	            $newEstudianteInscTutor->setFechaRegistro(new \DateTime('now'));
-	            $newEstudianteInscTutor->setFechaActualizacion(new \DateTime('now'));
-	            $newEstudianteInscTutor->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($obj['estadomatricula_tipo_id']));
-	            $newEstudianteInscTutor->setEstadoId(1);
-	            // dump($newEstudianteInscTutor); exit();
-	            $em->persist($newEstudianteInscTutor);
-		        // save all data        
+            // $newEstudianteInscTutor->setPersonaId($persona->getId());
+            $newEstudianteInscTutor->setPersonaId($idpersona);
+            $newEstudianteInscTutor->setCarnetTut($ci);
+            $newEstudianteInscTutor->setComplementoTut($complemento1);
+            $newEstudianteInscTutor->setPaternoTut($paterno);
+            $newEstudianteInscTutor->setMaternoTut($materno);
+            $newEstudianteInscTutor->setNombreTut($nombre);
+            $newEstudianteInscTutor->setApoderadoTipo($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($parentesco));
+            $newEstudianteInscTutor->setSegipIdTut(1);
+            $newEstudianteInscTutor->setFechaRegistro(new \DateTime('now'));
+            $newEstudianteInscTutor->setFechaActualizacion(new \DateTime('now'));
+            $newEstudianteInscTutor->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($obj['estadomatricula_tipo_id']));
+            $newEstudianteInscTutor->setEstadoId(1);
+            // dump($newEstudianteInscTutor); exit();
+            $em->persist($newEstudianteInscTutor);
+	        // save all data        
 	        /*dump($data);
 			exit();*/
 	  		// $em->getConnection()->beginTransaction();
-
 	    	$em->flush();
-
         }
-
    		return new JsonResponse($data);
 	}
 	public function mostra_datos_fer($inscripcionid){
@@ -689,6 +685,36 @@ class OperativoBonoJPController extends Controller
 		// dump($query); exit();
 		$stmt = $db->prepare($query);
 		$params = array($inscripcionid);
+		$stmt->execute($params);
+		return $stmt->fetch();
+	}
+	public function cambiarEstadoTutores_restablecerAction(Request $request){
+		$id_bjp_estudiante_apoderado_beneficiarios = $request->get('id');
+		$estado = $request->get('estado');
+		$inscripcion = $request->get('inscripcion');
+		// echo ">".$id.">".$estado.">".$inscripcion;exit();
+		$valor=$this->validar_tutor_active($inscripcion);
+		if ($valor) {
+			$data = array(0=>1);
+		}else{
+			$em = $this->getDoctrine()->getManager();
+			$db = $em->getConnection();
+			$query ="update bjp_estudiante_apoderado_beneficiarios set estado_id = ? where id = ?";
+			$stmt = $db->prepare($query);
+			$params = array($estado, $id_bjp_estudiante_apoderado_beneficiarios);
+			$stmt->execute($params);
+			$tmp=$stmt->fetchAll();
+			$data = array(0=>0);
+		}
+   		return new JsonResponse($data);
+	}
+	function validar_tutor_active($inscripcion){
+		$em = $this->getDoctrine()->getManager();
+		$db = $em->getConnection();
+		$query = 'SELECT estado_id FROM bjp_estudiante_apoderado_beneficiarios WHERE  estudiante_inscripcion_id=? AND estado_id=1 ';
+		// dump($query); exit();
+		$stmt = $db->prepare($query);
+		$params = array($inscripcion);
 		$stmt->execute($params);
 		return $stmt->fetch();
 	}

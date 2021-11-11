@@ -61,7 +61,7 @@
 									</div>
 
 									<div class="form-group col-md-3 col-sm-6 ">
-										<button type="submit" class="btn btn-primary btn-search-request-tutor"><i class="fa fa-search"></i> Buscar </button>
+										<button type="submit" class="btn btn-primary btn-search-request-tutor" ><i class="fa fa-search"></i> Buscar </button>
 									</div>
 								  </div>
 								</form>
@@ -100,7 +100,11 @@
 	<script>
 	var mostrarResultadosBusqueda=function (form)
 	{
-		var formData = $(form).serialize();
+		var codigo_rude = $("#codigo_rude").val();
+		var formData = {
+                "codigo_rude" : codigo_rude
+        };
+		// var formData = $(form).serialize();
 		$.ajax({
 				type: 'post',
 				url: Routing.generate('operativo_bono_jp_buscarInscripciones'),
