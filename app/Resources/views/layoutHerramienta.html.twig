@@ -30,7 +30,11 @@
             <!-- START @GLOBAL MANDATORY STYLES -->
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
             <!--/ END GLOBAL MANDATORY STYLES -->
-
+            {# /// alert #}
+            <script type="text/javascript" src="{{asset('alert/lib/alertify.js')}}"></script>
+            <link rel="stylesheet" href="{{asset('alert/themes/alertify.core.css')}}" />
+            <link rel="stylesheet" href="{{asset('alert/themes/alertify.default.css')}}" />
+            {# /// alert fin #}
             <!-- START @PAGE LEVEL STYLES -->
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/animate.css/animate.min.css')}}" rel="stylesheet">
@@ -65,6 +69,7 @@
             <link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
             <link href="{{ asset('webherramienta/assets/global/plugins/bower_components/jquery.gritter/css/jquery.gritter.css') }}" rel="stylesheet" />
             <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
+
             <style>
                 .loading{
                     background-image: url("{{asset('img/loading.gif')}}}");
@@ -725,7 +730,8 @@
                         </li>
                     {% endif %}
 
-                    {# Cambio de tutor BJP 2021 
+                    {# Cambio de tutor BJP 2021  #}
+                    {#
                     {% if app.session.get('roluser') in [9,10,8,7] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -738,7 +744,7 @@
                             </ul>
                         </li>
                     {% endif %}
-                    #}
+                   #}
 
 
                     {% if false %}
