@@ -1167,6 +1167,10 @@
 	    			if (this.student.genero == '') {
 	    				this.errores.push('Genero del postulante');
 	    			}
+	    			if(me.checkedNames.length > 0) {
+	    			}else{
+	    				this.errores.push('Justificativo');
+	    			}
 		    			    	
 		    		if (this.errores.length > 0) {
 			    		let texto = '<div class="errores">';
