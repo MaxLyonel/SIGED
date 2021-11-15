@@ -136,6 +136,7 @@
 		</div>
 	</div>
 {% endif %}
+{% dump(tutoresActuales) %}
 {% if tutoresActuales %}
 	<div class="row">
 		<div class="col-md-12 table-responsive">
@@ -156,6 +157,7 @@
 					</tr>
 				</thead>
 				<tbody>
+
 					{% for t in tutoresActuales %}
 					<tr>
 						<td style="background:#0080001f"> {{ t.carnet }} </td>

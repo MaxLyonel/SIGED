@@ -473,12 +473,12 @@ class OperativoBonoJPController extends Controller
 							beab.maternoTut as materno, 
 							beab.nombreTut  as nombre,
 							p.fechaNacimiento as fechaNacimiento,
-							(beab.apoderadoTipoId) AS apoderadoTipo,
+							IDENTITY(beab.apoderadoTipoId) AS apoderadoTipo,
 							ap.apoderado as apoderado,
 							beab.estudianteInscripcionId as estudianteInscripcion,
 							beab.fechaActualizacion as fechaActualizacion
 						')
-						->from('SieAppWebBundle:TmpBjpEstudianteApoderadoBeneficiarios','beab')
+						->from('SieAppWebBundle:BjpEstudianteApoderadoBeneficiarios','beab')
 						->innerJoin('SieAppWebBundle:Persona','p','with','p.id = beab.personaId')
 						->innerJoin('SieAppWebBundle:ApoderadoTipo','ap','with','ap.id = beab.apoderadoTipoId')
 						->where('beab.estudianteInscripcionId = :inscriptionId')
