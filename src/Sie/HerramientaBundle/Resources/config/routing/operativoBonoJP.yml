@@ -82,3 +82,18 @@ cambiarEstadoTutores_restablecer:
     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:cambiarEstadoTutores_restablecer"}
     options:
          expose: true
+
+
+
+# generar file menu
+operativo_bono_jp_GenerarFileCambioTutor:
+    path:     /operativo_bono_jp_GenerarFileCambioTutor
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:operativo_bono_jp_GenerarFileCambioTutor"}
+    options:
+         expose: true
+boton_generar_file_bonoJP:
+    path:     /boton_generar_file_bonoJP
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:boton_generar_file_bonoJP"}
+    options:
+         expose: true
+# generar file menu fin

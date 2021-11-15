@@ -754,6 +754,53 @@ class OperativoBonoJPController extends Controller
 		$stmt->execute($params);
 		return $stmt->fetch();
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	// modulo de generar file bono
+	public function operativo_bono_jp_GenerarFileCambioTutorAction(){
+		return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig');
+	}
+	/*public  function boton_generar_file_bonoJPAction(Request $request){
+
+		$em = $this->getDoctrine()->getManager();
+		$db = $em->getConnection();
+
+		$query = 'select sp_genera_archivo_txt_bjp();';
+		$stmt = $db->prepare($query);
+		$stmt->execute();
+		$requisitos=$stmt->fetch();
+
+
+
+				$em = $this->getDoctrine()->getManager();
+     	$query = $em->getConnection()->prepare("select sp_genera_archivo_txt_bjp();");
+        $query->execute();
+        $result2 = $query->fetchAll();
+   		$filePath = '/assets/alert/DECLARACION_PREINSCRIPCIÓN-2021_20211112143654.pdf';
+		dump($filePath);exit();
+        header("Cache-Control: public");
+        header("Content-Description: File Transfer");
+        header("Content-Disposition: attachment; filename=files.txt");
+        header("Content-Type: application/zip");
+        header("Content-Transfer-Encoding: binary");
+        // Read the file
+        readfile($filePath);
+        exit;
+	}*/
+	// modulo de generar file bono
 	
 
 }

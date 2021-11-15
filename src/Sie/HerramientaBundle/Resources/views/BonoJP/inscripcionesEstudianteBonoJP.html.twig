@@ -93,7 +93,7 @@
 		</div>
 	</div>
 
-
+{% set cont = 0 %}
 {% if tutoresEliminados %}
 	<div class="row">
 		<div class="col-md-12 table-responsive">
@@ -113,7 +113,9 @@
 					</tr>
 				</thead>
 				<tbody>
+					
 					{% for t in tutoresEliminados %}
+					{% set cont = cont + 1 %}
 					<tr>
 						<td  style="background:#ff00001d"> {{ t.carnet }} </td>
 						<td  style="background:#ff00001d"> {{ t.paterno }} </td>
@@ -136,7 +138,7 @@
 		</div>
 	</div>
 {% endif %}
-{% dump(tutoresActuales) %}
+
 {% if tutoresActuales %}
 	<div class="row">
 		<div class="col-md-12 table-responsive">
@@ -167,7 +169,9 @@
 						<td style="background:#0080001f"> {{ t.fechaNacimiento|date('d-m-Y') }} </td>
 						<td style="background:#0080001f"> {{ t.apoderado }} </td>
 						<td style="background:#0080001f" class="text-center">
-							<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="CAMBIAR" onclick="cambiarEstadoTutores({{t.id}},2,{{t.estudianteInscripcion}})"><i class="fa fa-edit fa-2x fg-danger"></i></a>
+							{% if cont > 0 %}
+								<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="CAMBIAR" onclick="cambiarEstadoTutores({{t.id}},2,{{t.estudianteInscripcion}})"><i class="fa fa-edit fa-2x fg-danger"></i></a>
+							{% endif %}
 						</td>
 					</tr>
 					{% endfor %}

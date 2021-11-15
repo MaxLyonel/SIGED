@@ -106,7 +106,7 @@
                     </div> 
                     <div class="col-lg-12" id="ver_error"></div>
                     <div class="col-lg-6"> <br>
-                    	<button type="submit" class="btn btn-success btn-lg">Registrar</button>
+                    	<button type="submit" id="boton" class="btn btn-success btn-lg">Registrar</button>
                     </div>
                 </div>
                 </fieldset>
@@ -214,23 +214,30 @@ function buscar_validar_persona_ci_segip(){
 
 $("#guardar_datos_tutor").submit(function(event) {
     event.preventDefault();
-    $.ajax({
-        url:'{{path('guardar_datos_tutor')}}',
-        type:'POST',
-        data:$("form").serialize(),
-        success:function(dat){
-            var valores = eval(dat);
-			if (valores['error']===0) {
-				$("#ver_error").html(valores['message']);
-				$("#modal_listar_tutores_fer").click();
-				alertify.alert("<br><h1>"+valores['message']+"</h1><br>", function () {
-					mostrarResultadosBusqueda(this)
-				});
-				alertify.success("Tutor se ha restablecido."); 
-			}else{
-				$("#ver_error").html('<div class="alert alert-primary" role="alert">'+valores['message']+'</div>');
-			}
-        }
+    document.getElementById('boton').disabled=true;
+    alertify.confirm("<p><h3> ESTA SEGURO DE MODIFICAR EL TUTOR?</h3><br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
+        if (e) {
+            $.ajax({
+                url:'{{path('guardar_datos_tutor')}}',
+                type:'POST',
+                data:$("form").serialize(),
+                success:function(dat){
+                    var valores = eval(dat);
+                    if (valores['error']===0) {
+                        $("#ver_error").html(valores['message']);
+                        $("#modal_listar_tutores_fer").click();
+                        alertify.alert("<br><h1>"+valores['message']+"</h1><br>", function () {
+                            mostrarResultadosBusqueda(this)
+                        });
+                        alertify.success("Tutor se ha restablecido."); 
+                    }else{
+                        $("#ver_error").html('<div class="alert alert-primary" role="alert">'+valores['message']+'</div>');
+                    }
+                }
+            });
+
+        } else { alertify.error("Has pulsado cancel"); }
     });
+    
 });
 </script>
