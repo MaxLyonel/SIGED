@@ -398,8 +398,8 @@ class OperativoBonoJPController extends Controller
 			}
 
 
-			$tutoresActuales = $this->listarTutores($inscriptionId,1);
-			$tutoresEliminados = $this->listarTutores($inscriptionId,2);
+			$tutoresActuales = $this->listarTutores($inscriptionId,array(1,2));
+			$tutoresEliminados = $this->listarTutores($inscriptionId,array(3));
          }
 
 
@@ -418,8 +418,11 @@ class OperativoBonoJPController extends Controller
 	public function buscarTutoresAction(Request $request,$inscripcion)
 	{ 
 	// dump($inscripcion); exit();
-		$tutoresActuales = $this->listarTutores($inscripcion,1);
-		$tutoresEliminados = $this->listarTutores($inscripcion,2);
+		/*$tutoresActuales = $this->listarTutores($inscripcion,1);
+		$tutoresEliminados = $this->listarTutores($inscripcion,2);*/
+
+		$tutoresActuales = $this->listarTutores($inscripcion,array(1,2));
+		$tutoresEliminados = $this->listarTutores($inscripcion,array(3));
 		/*
 		$status = 200;
 		$msj = '';
@@ -435,7 +438,7 @@ class OperativoBonoJPController extends Controller
 		return $this->render('SieHerramientaBundle:BonoJP:listarTutores.html.twig',array('inscripcionid' => $inscripcion,'tutoresActuales' => $tutoresActuales,'tutoresEliminados' => $tutoresEliminados));
 	}
 
-	public function listarTutores ($inscripcion, $estado = 1)
+	public function listarTutores ($inscripcion, $estado)
 	{
 		$em = $this->getDoctrine()->getManager();
 		/*
@@ -480,7 +483,8 @@ class OperativoBonoJPController extends Controller
 						->innerJoin('SieAppWebBundle:ApoderadoTipo','ap','with','ap.id = beab.apoderadoTipoId')
 						->where('beab.estudianteInscripcionId = :inscriptionId')
 						->andWhere('beab.segipIdTut = 1')
-						->andWhere('beab.estadoId = :estado')
+						->andWhere('beab.estadoId IN (:estado)')
+						->andWhere('beab.fechaActualizacion is null')
 						->setParameter('inscriptionId', $inscripcion)
 						->setParameter('estado', $estado)
 						->orderBy('beab.id','DESC');
