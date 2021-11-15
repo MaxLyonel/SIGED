@@ -328,11 +328,6 @@ class OperativoBonoJPController extends Controller
 
 		$em = $this->getDoctrine()->getManager();
 		$db = $em->getConnection();
-		
-
-
-
-
 
 		$this->session = new Session();
 		// dump($this->session); exit();
@@ -475,14 +470,14 @@ class OperativoBonoJPController extends Controller
 							beab.maternoTut as materno, 
 							beab.nombreTut  as nombre,
 							p.fechaNacimiento as fechaNacimiento,
-							IDENTITY(beab.apoderadoTipo) AS apoderadoTipo,
+							(beab.apoderadoTipoId) AS apoderadoTipo,
 							ap.apoderado as apoderado,
 							beab.estudianteInscripcionId as estudianteInscripcion,
 							beab.fechaActualizacion as fechaActualizacion
 						')
-						->from('SieAppWebBundle:BjpEstudianteApoderadoBeneficiarios','beab')
+						->from('SieAppWebBundle:TmpBjpEstudianteApoderadoBeneficiarios','beab')
 						->innerJoin('SieAppWebBundle:Persona','p','with','p.id = beab.personaId')
-						->innerJoin('SieAppWebBundle:ApoderadoTipo','ap','with','ap.id = beab.apoderadoTipo')
+						->innerJoin('SieAppWebBundle:ApoderadoTipo','ap','with','ap.id = beab.apoderadoTipoId')
 						->where('beab.estudianteInscripcionId = :inscriptionId')
 						->andWhere('beab.segipIdTut = 1')
 						->andWhere('beab.estadoId = :estado')
@@ -701,12 +696,15 @@ class OperativoBonoJPController extends Controller
 			 $query2 = $em->getConnection()->prepare($query);
 			 $query2->execute();
 	         $obj = $query2->fetch();
-			// dump($obj);die;
-
-         	$query = $em->getConnection()->prepare("select * from tmp_bjp_estudiante_apoderado_beneficiarios('".$obj['institucioneducativa_id']."','".$obj['codigo_rude']."','".$idpersona."','".$parentesco."')");
+ 			
+	        $queryChange = "select * from sp_genera_transaccion_bono_juancito_pinto('".$obj['institucioneducativa_id']."','".$obj['codigo_rude']."','".$idpersona."','".$parentesco."')";
+	        
+         	$query = $em->getConnection()->prepare($queryChange);
 	        $query->execute();
-	        $result = $query->fetchAll();
+	        $result2 = $query->fetchAll();
+	        
         }
+        
    		return new JsonResponse($data);
 	}
 	public function mostra_datos_fer($inscripcionid){
