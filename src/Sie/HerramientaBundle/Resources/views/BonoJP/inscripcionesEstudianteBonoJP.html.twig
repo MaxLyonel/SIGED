@@ -169,7 +169,7 @@
 						<td style="background:#0080001f"> {{ t.fechaNacimiento|date('d-m-Y') }} </td>
 						<td style="background:#0080001f"> {{ t.apoderado }} </td>
 						<td style="background:#0080001f" class="text-center">
-							{% if cont > 0 %}
+							{% if cont ==0 %}
 								<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="CAMBIAR" onclick="cambiarEstadoTutores({{t.id}},2,{{t.estudianteInscripcion}})"><i class="fa fa-edit fa-2x fg-danger"></i></a>
 							{% endif %}
 						</td>
