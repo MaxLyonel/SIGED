@@ -402,8 +402,6 @@ class OperativoBonoJPController extends Controller
 			$tutoresEliminados = $this->listarTutores($inscriptionId,array(3));
          }
 
-
-
 		return $this->render('SieHerramientaBundle:BonoJP:inscripcionesEstudianteBonoJP.html.twig', array(
 			'inscripcionesRegular' => $dataInscriptionR,
 			'inscripcionesEspecial' => $dataInscriptionE,
@@ -413,6 +411,7 @@ class OperativoBonoJPController extends Controller
 			'messageError' => $messageError,
 
 		));
+
 	}
 
 	public function buscarTutoresAction(Request $request,$inscripcion)
@@ -439,7 +438,7 @@ class OperativoBonoJPController extends Controller
 	}
 
 	public function listarTutores ($inscripcion, $estado)
-	{
+	{ 
 		$em = $this->getDoctrine()->getManager();
 		/*
 		$parents = $em->createQueryBuilder()
@@ -489,7 +488,6 @@ class OperativoBonoJPController extends Controller
 						->setParameter('estado', $estado)
 						->orderBy('beab.id','DESC');
 		$parents = $parents->getQuery()->getResult();
-		
 		return $parents;
 	}
 
@@ -770,9 +768,9 @@ class OperativoBonoJPController extends Controller
 
 
 	// modulo de generar file bono
-	public function operativo_bono_jp_GenerarFileCambioTutorAction(){
-		return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig');
-	}
+	// public function operativo_bono_jp_GenerarFileCambioTutorAction(){
+	// 	return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig');
+	// }
 	/*public  function boton_generar_file_bonoJPAction(Request $request){
 
 		$em = $this->getDoctrine()->getManager();

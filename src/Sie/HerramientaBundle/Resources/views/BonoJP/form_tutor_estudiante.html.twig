@@ -214,9 +214,10 @@ function buscar_validar_persona_ci_segip(){
 
 $("#guardar_datos_tutor").submit(function(event) {
     event.preventDefault();
-    document.getElementById('boton').disabled=true;
+
     alertify.confirm("<p><h3> ESTA SEGURO DE MODIFICAR EL TUTOR?</h3><br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
-        if (e) {
+        if (e) {    
+            document.getElementById('boton').disabled=true;
             $.ajax({
                 url:'{{path('guardar_datos_tutor')}}',
                 type:'POST',
@@ -235,7 +236,6 @@ $("#guardar_datos_tutor").submit(function(event) {
                     }
                 }
             });
-
         } else { alertify.error("Has pulsado cancel"); }
     });
     
