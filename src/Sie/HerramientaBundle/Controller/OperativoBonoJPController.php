@@ -337,6 +337,14 @@ class OperativoBonoJPController extends Controller
         $id_usuario = $sesion->get('userI');
 
         echo ">".$id_usuario;exit();*/
+
+        if($this->session->get('pathSystem')=='SieEspecialBundle'){
+        	$idtipoInstitucion=4;
+        }else{
+        	$idtipoInstitucion=1;
+        }
+
+
 		$codigo_rude = $request->get('codigo_rude');
 		$gestion = date('Y');
 		$estado_matricula = 4;
@@ -346,11 +354,12 @@ class OperativoBonoJPController extends Controller
 					from estudiante e
 					inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
 					inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
-					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')."	 ";
+					inner join institucioneducativa inst on (iec.institucioneducativa_id = inst.id)
+					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	 ";
 		 $query2 = $em->getConnection()->prepare($query);
 		 $query2->execute();
          $currentInscription = $query2->fetchAll();
-         // dump($currentInscription);die;
+         
          //check if the student has current inscription
          if(sizeof($currentInscription)>0){
          	// if the student is in the same UE
@@ -358,7 +367,6 @@ class OperativoBonoJPController extends Controller
          		$messageError = 'El estudiante no esta inscrito en esta UE';
          		$swError = true;
          	}
-
 
          }else{
          	$messageError = 'El estudiante no cuenta con inscription';
@@ -392,7 +400,7 @@ class OperativoBonoJPController extends Controller
 					break;
 					case '4':
 						$dataInscriptionE[$key] = $inscription;
-						$inscriptionId = $dataInscriptionR[$key]['estudiante_inscripcion_id_raep'];
+						$inscriptionId = $dataInscriptionE[$key]['estudiante_inscripcion_id_raep'];
 					break;
 				}
 			}
