@@ -1,0 +1,219 @@
+Sie\AppWebBundle\Entity\TmpBjpEstudianteApoderadoBeneficiarios:
+    type: entity
+    table: tmp_bjp_estudiante_apoderado_beneficiarios
+    uniqueConstraints:
+        uq_apoddo_inscripcion3_bjp:
+            columns:
+                - codigo_rude
+                - estado_id
+                - fecha_corte
+        uq_apoderado_cripcion2_bjp:
+            columns:
+                - persona_id
+                - estudiante_id
+                - estado_id
+                - fecha_corte
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        institucioneducativaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        nivelTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nivel_tipo_id
+        gradoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: grado_tipo_id
+        paraleloTipoId:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+            column: paralelo_tipo_id
+        turnoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: turno_tipo_id
+        estudianteInscripcionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estudiante_inscripcion_id
+        estudianteId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estudiante_id
+        codigoRude:
+            type: string
+            nullable: true
+            length: 18
+            fixed: false
+            comment: ''
+            column: codigo_rude
+        carnetEst:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: ''
+            column: carnet_est
+        complementoEst:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+            column: complemento_est
+        paternoEst:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: paterno_est
+        maternoEst:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: materno_est
+        nombreEst:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: nombre_est
+        fechaNacimientoEst:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_nacimiento_est
+        personaId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: persona_id
+        carnetTut:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+            column: carnet_tut
+        complementoTut:
+            type: string
+            nullable: true
+            length: 2
+            fixed: false
+            comment: ''
+            column: complemento_tut
+        paternoTut:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+            column: paterno_tut
+        maternoTut:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+            column: materno_tut
+        nombreTut:
+            type: string
+            nullable: true
+            length: 75
+            fixed: false
+            comment: ''
+            column: nombre_tut
+        apoderadoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: apoderado_tipo_id
+        segipIdTut:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: segip_id_tut
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaActualizacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_actualizacion
+        observacion:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+        estadomatriculaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estadomatricula_tipo_id
+        estadoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: estado_id
+        generoTipoEstId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: genero_tipo_est_id
+        generoTipoTutId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: genero_tipo_tut_id
+        fechaNacimientoTut:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_nacimiento_tut
+        fechaCorte:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_corte
+    lifecycleCallbacks: {  }
