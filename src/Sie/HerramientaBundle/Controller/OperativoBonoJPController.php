@@ -678,7 +678,7 @@ class OperativoBonoJPController extends Controller
 	        	$newPersona->setMaterno($materno);
 	        	$newPersona->setNombre($nombre);
 	        	$newPersona->setFechaNacimiento(new \DateTime($form_idfecnac));
-	        	$newPersona->setSegipId('0');
+	        	$newPersona->setSegipId('1');
 	        	$newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find('0'));
 	        	$em->persist($newPersona);
 	        	// $newPersona->setMaterno($carnet);
@@ -704,9 +704,43 @@ class OperativoBonoJPController extends Controller
          	$query = $em->getConnection()->prepare($queryChange);
 	        $query->execute();
 	        $result2 = $query->fetchAll();
+	        // the errors on DB
+	        $noTransfer = array(
+				'0' =>' THIS IS OK',
+				'1' =>' Problemas en los datos del estudiante, edad, estado, o no es publica',
+				'1' =>' Problemas en los datos del estudiante, edad, estado, o no es publica',
+				'2' =>' No corresponde ni a especial ni regular',
+				'3' =>' No puede darse de baja, ya se realizó el pago o no esta en la base de beneficiarios.',
+				'4' =>' No puede incorporarse, ya se encuentra registrado para pago.',
+				'5' =>' No realizarce el cambio de tutor, mas de un registro activo',
+	        );
+	        // check if the has an error on change
+	        if($result2[0]['sp_genera_transaccion_bono_juancito_pinto']!=0){
+	        	$data = array('error'=>1, 'message'=>$noTransfer[$result2[0]['sp_genera_transaccion_bono_juancito_pinto']]);
+	        }else{	        	
+	        	$datosInsert = array(
+	                'complemento'=>$complemento1,
+	                'primer_apellido'=>$paterno,
+	                'segundo_apellido'=>$materno,
+	                'nombre'=>$nombre,
+	                'fecha_nacimiento'=>$form_idfecnac
+	            ); 
+
+	             $this->get('funciones')->setLogTransaccion(
+	               $idpersona,
+	               'bjp_estudiante_apoderado_beneficiarios',
+	               'I',
+	               'cambio de tutor',
+	               $datosInsert,
+	               '',
+	               'SIGED',
+	               json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+	              );	        
+	        }
+	        
 	        
         }
-        
+        // dump($data);die;
    		return new JsonResponse($data);
 	}
 	public function mostra_datos_fer($inscripcionid){
