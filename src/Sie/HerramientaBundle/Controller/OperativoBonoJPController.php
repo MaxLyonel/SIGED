@@ -768,10 +768,10 @@ class OperativoBonoJPController extends Controller
 
 
 	// modulo de generar file bono
-	// public function operativo_bono_jp_GenerarFileCambioTutorAction(){
-	// 	return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig');
-	// }
-	/*public  function boton_generar_file_bonoJPAction(Request $request){
+	public function operativo_bono_jp_GenerarFileCambioTutorAction(){
+		return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig');
+	}
+	public  function boton_generar_file_bonoJPAction(Request $request){
 
 		$em = $this->getDoctrine()->getManager();
 		$db = $em->getConnection();
@@ -797,7 +797,7 @@ class OperativoBonoJPController extends Controller
         // Read the file
         readfile($filePath);
         exit;
-	}*/
+	}
 	// modulo de generar file bono
 	
 
