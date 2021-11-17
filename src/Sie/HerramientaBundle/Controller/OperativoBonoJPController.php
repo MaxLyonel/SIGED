@@ -354,7 +354,7 @@ class OperativoBonoJPController extends Controller
 					inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
 					inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
 					inner join institucioneducativa inst on (iec.institucioneducativa_id = inst.id)
-					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	and ei.estadomatricula_tipo_id=4 ";
+					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	and ei.estadomatricula_tipo_id=4 and iec.nivel_tipo_id in (12,13) ";
 		 $query2 = $em->getConnection()->prepare($query);
 		 $query2->execute();
          $currentInscription = $query2->fetchAll();
@@ -768,6 +768,27 @@ class OperativoBonoJPController extends Controller
         }
         // dump($data);die;
    		return new JsonResponse($data);
+	}
+	public function bajaTutoresBjpAction(Request $request){ 
+		$em = $this->getDoctrine()->getManager();
+		$inscripcionid = $request->get('estudianteInscripcionid');
+
+    	$query = "select e.codigo_rude,iec.*
+		from estudiante e
+		inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
+		inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
+		where ei.id= '".$inscripcionid."' and gestion_tipo_id = ".$this->session->get('currentyear')."	 ";
+		 $query2 = $em->getConnection()->prepare($query);
+		 $query2->execute();
+         $obj = $query2->fetch();
+			
+        $queryChange = "select * from sp_genera_transaccion_bono_juancito_pinto('".$obj['institucioneducativa_id']."','".$obj['codigo_rude']."','','')";
+
+     	$query = $em->getConnection()->prepare($queryChange);
+        $query->execute();
+        $result2 = $query->fetchAll();
+
+   		return true;
 	}
 	public function mostra_datos_fer($inscripcionid){
 		$em = $this->getDoctrine()->getManager();
