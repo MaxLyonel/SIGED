@@ -80,14 +80,9 @@
             		<div class="col-lg-4">
                 		<label for="name">Parentesco: </label> 
                 		<select name="parentesco" id="parentesco" class="custom-select form-control" required>
-                			<option value="1">MADRE</option>
-                			<option value="2">PADRE</option>
-                			<option value="3">ABUELA/O</option>
-                			<option value="4">HERMANA/O</option>
-                			<option value="5">TIO</option>
-                			<option value="6">TIA</option>
-                			<option value="7">HERMANO/HERMANA</option>
-                			<option value="8">TUTORA/TUTOR</option>
+                			{% for obj in bjp_Apoderado_Tipo %}
+                            <option value="{{ obj.id }}">{{ obj.apoderado }}</option>
+                            {% endfor %}
                 		</select>
                 	</div> 
                 	<div class="col-lg-4">
