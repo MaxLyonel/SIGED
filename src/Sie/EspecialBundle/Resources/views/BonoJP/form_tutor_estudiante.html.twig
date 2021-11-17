@@ -80,8 +80,8 @@
             		<div class="col-lg-4">
                 		<label for="name">Parentesco: </label> 
                 		<select name="parentesco" id="parentesco" class="custom-select form-control" required>
-                            {% for obj in bjp_Apoderado_Tipo %}
-                			<option value="{{ obj.id }}">{{ obj.apoderado }}</option>
+                			{% for obj in bjp_Apoderado_Tipo %}
+                            <option value="{{ obj.id }}">{{ obj.apoderado }}</option>
                             {% endfor %}
                 		</select>
                 	</div> 
@@ -95,11 +95,11 @@
                 	<div class="col-lg-4">
                     	<label for="name"> Genero: </label> 
                     	<select name="genero" id="genero" class="custom-select form-control" required>
-                            <option value="2">FEMENINO</option>
                     		<option value="1">MASCULINO</option>
+                    		<option value="2">FEMENINO</option>
                     	</select>
                     </div> 
-                    <div class="col-lg-12"> <p id="ver_error"></p></div>
+                    <div class="col-lg-12" id="ver_error"></div>
                     <div class="col-lg-6"> <br>
                     	<button type="submit" id="boton" class="btn btn-success btn-lg">Registrar</button>
                     </div>
@@ -227,7 +227,7 @@ $("#guardar_datos_tutor").submit(function(event) {
                         });
                         alertify.success("Tutor se ha restablecido."); 
                     }else{
-                        $("#ver_error").html('<div class="alert alert-danger" role="alert">'+valores['message']+'</div>');
+                        $("#ver_error").html('<div class="alert alert-primary" role="alert">'+valores['message']+'</div>');
                     }
                 }
             });

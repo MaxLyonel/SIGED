@@ -31,9 +31,7 @@
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
             <!--/ END GLOBAL MANDATORY STYLES -->
             {# /// alert #}
-            <script type="text/javascript" src="{{asset('alert/lib/alertify.js')}}"></script>
-            <link rel="stylesheet" href="{{asset('alert/themes/alertify.core.css')}}" />
-            <link rel="stylesheet" href="{{asset('alert/themes/alertify.default.css')}}" />
+
             {# /// alert fin #}
             <!-- START @PAGE LEVEL STYLES -->
             <link href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
@@ -731,7 +729,7 @@
                     {% endif %}
 
                     {# Cambio de tutor BJP 2021  #}
-                    {#
+                    
                     {% if app.session.get('roluser') in [9,10,8,7] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
@@ -741,10 +739,11 @@
                             </a>
                             <ul>
                                 <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de tutor</a></li>
+                                {# <li><a href="{{ path('operativo_bono_jp_GenerarFileCambioTutor')}}">Generar file</a></li> #}
                             </ul>
                         </li>
                     {% endif %}
-                   #}
+                   
 
 
                     {% if false %}

@@ -77,8 +77,34 @@ operativo_bono_jp_cambiarEstadoTutore:
     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:operativo_bono_jp_cambiarEstadoTutore"}
     options:
          expose: true
+operativo_bono_jp_cambiarEstadoTutore1:
+    path:     /operativo_bono_jp_cambiarEstadoTutore1
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:operativo_bono_jp_cambiarEstadoTutore1"}
+    options:
+         expose: true
+
 cambiarEstadoTutores_restablecer:
     path:     /cambiarEstadoTutores_restablecer
     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:cambiarEstadoTutores_restablecer"}
     options:
          expose: true
+
+
+
+# generar file menu
+operativo_bono_jp_GenerarFileCambioTutor:
+    path:     /operativo_bono_jp_GenerarFileCambioTutor
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:operativo_bono_jp_GenerarFileCambioTutor"}
+    options:
+         expose: true
+boton_generar_file_bonoJP:
+    path:     /boton_generar_file_bonoJP
+    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:boton_generar_file_bonoJP"}
+    options:
+         expose: true
+generar_reporte_pdf_cambio_tutor:
+    path:     /generar_reporte_pdf_cambio_tutor/{idTramite}
+    defaults: { _controller: SieAppWebBundle:PreInscription:generar_reporte_pdf_cambio_tutor }
+    options:
+         expose: true  
+# generar file menu fin

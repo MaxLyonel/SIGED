@@ -1,6 +1,5 @@
 <div class="container-fuild" style="padding: 0.5em">
 	<div class="row">
-
 		<div class="col-md-12">
 			<div class="table-responsive">
 				{# Educacion Regular #}
@@ -41,13 +40,11 @@
 								<button type="button" class="btn btn-primary" onclick = "abrirModalTutores({{d.estudiante_inscripcion_id_raep}})">Ver tutores</button>
 							
 							</td> #}
-							<td>
 							{% if tutoresEliminados|length < 0 %}
 								{% if tutoresActuales|length < 0 %}
 									<button class="btn btn-success btn-md" title="CAMBIAR" onclick="nuevoTutores(2,{{d.estudiante_inscripcion_id_raep}})"><span class="fa fa-plus"></span> NUEVO</button>
 								{% endif %}
 							{% endif %}
-							</td>
 						</tr>
 						{% endfor %}
 						{% if inscripcionesRegular|length<=0 %}
@@ -188,8 +185,7 @@
 				</tbody>
 			</table>
 		</div>
-	</div>	<hr>
-	
+	</div>	
 {% endif %}
 
 </div>
@@ -202,14 +198,6 @@ function cambiarEstadoTutores(id,estado,estudianteInscripcion){
 		$("#ver_conte_fer").html(data)
 	});
 }
-function nuevoTutores(estado,estudianteInscripcion){
-	$("#ver_conte_fer").html("<div style='text-align:center'><img src='/img/loading.gif'>Cargando...</div>");
-	$("#modal_listar_tutores_fer").modal('show')
-	$.post('{{path('operativo_bono_jp_cambiarEstadoTutore1')}}', {estado,estudianteInscripcion}, function(data) {
-		$("#ver_conte_fer").html(data)
-	});
-}
-
 function cambiarEstadoTutores_e(id, estado, inscripcion){
 	alertify.confirm("<p><h1 style='color:#008000;'>ESTA SEGURO QUE DESEA RESTABLECER ?</h1><br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
 		if (e) {
