@@ -626,8 +626,18 @@ class OperativoBonoJPController extends Controller
 		$id = $request->get('id');
 		$estado = $request->get('estado');
 		$estudianteInscripcion = $request->get('estudianteInscripcion');
+
+		$em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("select * from Bjp_Apoderado_Tipo order by 1");
+        $query->execute();
+        $entity = $query->fetchAll();
+
 		// echo ">".$id.">".$estado.">".$estudianteInscripcion;exit();
-		return $this->render('SieHerramientaBundle:BonoJP:form_tutor_estudiante.html.twig',array('id' => $id,'estado' => $estado,'estudianteInscripcion' => $estudianteInscripcion));
+		return $this->render('SieHerramientaBundle:BonoJP:form_tutor_estudiante.html.twig',array(
+			'bjp_Apoderado_Tipo' => $entity,
+			'id' => $id,
+			'estado' => $estado,
+			'estudianteInscripcion' => $estudianteInscripcion));
 	}
 	public function operativo_bono_jp_cambiarEstadoTutore1Action(Request $request){ 
 		$id = 0;
