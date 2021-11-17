@@ -354,7 +354,7 @@ class OperativoBonoJPController extends Controller
 					inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
 					inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
 					inner join institucioneducativa inst on (iec.institucioneducativa_id = inst.id)
-					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	 ";
+					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	and ei.estadomatricula_tipo_id=4 ";
 		 $query2 = $em->getConnection()->prepare($query);
 		 $query2->execute();
          $currentInscription = $query2->fetchAll();
@@ -715,7 +715,7 @@ class OperativoBonoJPController extends Controller
  			
 	        $queryChange = "select * from sp_genera_transaccion_bono_juancito_pinto('".$obj['institucioneducativa_id']."','".$obj['codigo_rude']."','".$idpersona."','".$parentesco."')";
 
-	        
+
          	$query = $em->getConnection()->prepare($queryChange);
 	        $query->execute();
 	        $result2 = $query->fetchAll();
