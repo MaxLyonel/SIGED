@@ -330,7 +330,6 @@ class OperativoBonoJPController extends Controller
 		$db = $em->getConnection();
 
 		$this->session = new Session();
-		// dump($this->session); exit();
         $sesinst = $request->getSession()->get('ie_id');
         // echo ">".$sesinst;exit();
 		/*$sesion = $request->getSession();
@@ -409,7 +408,7 @@ class OperativoBonoJPController extends Controller
 			$tutoresActuales = $this->listarTutores($inscriptionId,array(1,2));
 			$tutoresEliminados = $this->listarTutores($inscriptionId,array(3));
          }
-
+         // dump($dataInscriptionR);die;
 		return $this->render('SieHerramientaBundle:BonoJP:inscripcionesEstudianteBonoJP.html.twig', array(
 			'inscripcionesRegular' => $dataInscriptionR,
 			'inscripcionesEspecial' => $dataInscriptionE,
@@ -627,7 +626,14 @@ class OperativoBonoJPController extends Controller
 		$id = $request->get('id');
 		$estado = $request->get('estado');
 		$estudianteInscripcion = $request->get('estudianteInscripcion');
-		// echo ">".$id.">".$estado.">".$estudianteInscripcion;exit()
+		// echo ">".$id.">".$estado.">".$estudianteInscripcion;exit();
+		return $this->render('SieHerramientaBundle:BonoJP:form_tutor_estudiante.html.twig',array('id' => $id,'estado' => $estado,'estudianteInscripcion' => $estudianteInscripcion));
+	}
+	public function operativo_bono_jp_cambiarEstadoTutore1Action(Request $request){ 
+		$id = 0;
+		$estado = $request->get('estado');
+		$estudianteInscripcion = $request->get('estudianteInscripcion');
+		// echo ">".$id.">".$estado.">".$estudianteInscripcion;exit();
 		return $this->render('SieHerramientaBundle:BonoJP:form_tutor_estudiante.html.twig',array('id' => $id,'estado' => $estado,'estudianteInscripcion' => $estudianteInscripcion));
 	}
 	public function guardar_datos_tutorAction(Request $request){
@@ -708,6 +714,7 @@ class OperativoBonoJPController extends Controller
 	         $obj = $query2->fetch();
  			
 	        $queryChange = "select * from sp_genera_transaccion_bono_juancito_pinto('".$obj['institucioneducativa_id']."','".$obj['codigo_rude']."','".$idpersona."','".$parentesco."')";
+
 	        
          	$query = $em->getConnection()->prepare($queryChange);
 	        $query->execute();
@@ -731,11 +738,12 @@ class OperativoBonoJPController extends Controller
 	                'primer_apellido'=>$paterno,
 	                'segundo_apellido'=>$materno,
 	                'nombre'=>$nombre,
+	                'obs'=>$obs,
 	                'fecha_nacimiento'=>$form_idfecnac
 	            ); 
 
 	             $this->get('funciones')->setLogTransaccion(
-	               $idpersona,
+	               $inscripcionid,
 	               'bjp_estudiante_apoderado_beneficiarios',
 	               'I',
 	               'cambio de tutor',
@@ -810,36 +818,53 @@ class OperativoBonoJPController extends Controller
 
 
 	// modulo de generar file bono
-	public function operativo_bono_jp_GenerarFileCambioTutorAction(){
-		return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig');
-	}
-	public  function boton_generar_file_bonoJPAction(Request $request){
+		public function operativo_bono_jp_GenerarFileCambioTutorAction(){
+			return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig');
+		}
+		public  function boton_generar_file_bonoJPAction(Request $request){
 
-		$em = $this->getDoctrine()->getManager();
-		$db = $em->getConnection();
+			$em = $this->getDoctrine()->getManager();
+			$db = $em->getConnection();
 
-		$query = 'select sp_genera_archivo_txt_bjp();';
-		$stmt = $db->prepare($query);
-		$stmt->execute();
-		$requisitos=$stmt->fetch();
+			$query = 'select sp_genera_archivo_txt_bjp();';
+			$stmt = $db->prepare($query);
+			$stmt->execute();
+			$requisitos=$stmt->fetch();
 
 
 
-				$em = $this->getDoctrine()->getManager();
-     	$query = $em->getConnection()->prepare("select sp_genera_archivo_txt_bjp();");
-        $query->execute();
-        $result2 = $query->fetchAll();
-   		$filePath = '/assets/alert/DECLARACION_PREINSCRIPCIÓN-2021_20211112143654.pdf';
-		dump($filePath);exit();
-        header("Cache-Control: public");
-        header("Content-Description: File Transfer");
-        header("Content-Disposition: attachment; filename=files.txt");
-        header("Content-Type: application/zip");
-        header("Content-Transfer-Encoding: binary");
-        // Read the file
-        readfile($filePath);
-        exit;
-	}
+					$em = $this->getDoctrine()->getManager();
+	     	$query = $em->getConnection()->prepare("select sp_genera_archivo_txt_bjp();");
+	        $query->execute();
+	        $result2 = $query->fetchAll();
+	   		$filePath = '/assets/alert/DECLARACION_PREINSCRIPCIÓN-2021_20211112143654.pdf';
+			dump($filePath);exit();
+	        header("Cache-Control: public");
+	        header("Content-Description: File Transfer");
+	        header("Content-Disposition: attachment; filename=files.txt");
+	        header("Content-Type: application/zip");
+	        header("Content-Transfer-Encoding: binary");
+	        // Read the file
+	        readfile($filePath);
+	        exit;
+		}
+		public function preinspdfAction(Request $request, $idTramite){
+            $pdf=$this->container->getParameter('urlreportweb') . 'reg_preins_formulario.rptdesign&__format=pdf'.'&preinscripcion='.$idTramite;
+            //$pdf='http://127.0.0.1:63170/viewer/preview?_report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&_format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
+            
+            $status = 200;  
+            $arch           = 'DECLARACION_PREINSCRIPCIÓN-'.date('Y').'_'.date('YmdHis').'.pdf';
+            $response       = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            $response->setContent(file_get_contents($pdf));
+            $response->setStatusCode($status);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+            return $response;
+	    }
+
 	// modulo de generar file bono
 	
 

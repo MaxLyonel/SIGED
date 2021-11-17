@@ -104,7 +104,7 @@
                     		<option value="2">FEMENINO</option>
                     	</select>
                     </div> 
-                    <div class="col-lg-12" id="ver_error"></div>
+                    <div class="col-lg-12"> <p id="ver_error"></p></div>
                     <div class="col-lg-6"> <br>
                     	<button type="submit" id="boton" class="btn btn-success btn-lg">Registrar</button>
                     </div>
@@ -232,7 +232,7 @@ $("#guardar_datos_tutor").submit(function(event) {
                         });
                         alertify.success("Tutor se ha restablecido."); 
                     }else{
-                        $("#ver_error").html('<div class="alert alert-primary" role="alert">'+valores['message']+'</div>');
+                        $("#ver_error").html('<div class="alert alert-danger" role="alert">'+valores['message']+'</div>');
                     }
                 }
             });
