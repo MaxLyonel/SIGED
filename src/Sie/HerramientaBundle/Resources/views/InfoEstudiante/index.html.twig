@@ -66,15 +66,15 @@
                                             
                                             <li class="divider"></li>
                                             <div class="dropdown-header">Operativos</div>
-
                                             {% if arrLevelandGrado.operativo in allowOperativo and  arrLevelandGrado.haslevel == 13 and arrLevelandGrado.hasgrado == 6 and arrLevelandGrado.gestion >= 2019 %}
-                                                {% if arrLevelandGrado.operativo == 4 and arrLevelandGrado.closeopesextosecc == false  %}
+                                                {# if arrLevelandGrado.operativo == 4 and arrLevelandGrado.closeopesextosecc == false  #}
+                                                {% if arrLevelandGrado.operativo == -3 and arrLevelandGrado.closeopesextosecc == false  %}
                                                     {# <button type="button" class="btn btn-warning btn-sm" data-toggle="tooltip" data-placemente="top" data-original-title="Cerrar Operativo Sexto de Secundaria" id='btnCerraoperativo' onclick="cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">
                                                     <i class="fa fa-group" ></i>
                                                     </button> #}
                                                     <li><a href="javascript:cerrarOperativoSextodeSecc({{odataUedu.id}},{{gestion}});">Cerrar Operativo Sexto de Secundaria</a></li>
                                                 {% else %}
-                                                    <li><a href="javascript:void();">Cerrar Operativo Sexto de Secundaria</a></li>
+                                                    {# <li><a href="javascript:void();">Cerrar Operativo Sexto de Secundaria</a></li> #}
                                                 {% endif %}
                                             {% endif %}
                                             {% if estado == true and arrLevelandGrado.gestion >= 2019 and arrLevelandGrado.operativo in allowOperativo %}
