@@ -42,7 +42,7 @@
 							</td> #}
 							{% if tutoresEliminados|length <=0 %}
 								{% if tutoresActuales|length <=0 %}
-									<button class="btn btn-success btn-md" title="NIEVO" onclick="cambiarEstadoTutores(0,2,{{d.estudiante_inscripcion_id_raep}})"><span class="fa fa-plus"></span> NUEVO</button>
+									<button class="btn btn-success btn-sm" title="NIEVO" onclick="cambiarEstadoTutores(0,2,{{d.estudiante_inscripcion_id_raep}})"><span class="fa fa-plus"></span> AGREGAR NUEVO TUTOR</button>
 								{% endif %}
 							{% endif %}
 						</tr>
@@ -179,6 +179,7 @@
 							{% if cont ==0 %}
 								<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="CAMBIAR" onclick="cambiarEstadoTutores({{t.id}},2,{{t.estudianteInscripcion}})"><i class="fa fa-edit fa-2x fg-danger"></i></a>
 							{% endif %}
+							<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="BAJA TUTOR" onclick="bajaTutoresBjp({{t.estudianteInscripcion}})"><i class="fa fa-trash-o fa-2x fg-danger"></i></a>
 						</td>
 					</tr>
 					{% endfor %}
@@ -198,27 +199,43 @@ function cambiarEstadoTutores(id,estado,estudianteInscripcion){
 		$("#ver_conte_fer").html(data)
 	});
 }
-function cambiarEstadoTutores_e(id, estado, inscripcion){
-	alertify.confirm("<p><h1 style='color:#008000;'>ESTA SEGURO QUE DESEA RESTABLECER ?</h1><br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
+function bajaTutoresBjp(estudianteInscripcionid){
+	alertify.confirm("<p><h1 style='color:#008000;'>ESTA SEGURO QUE DESEA DAR BAJA AL TUTOR ?</h1><br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
 		if (e) {
-			$.post('{{path('cambiarEstadoTutores_restablecer')}}', {id, estado, inscripcion}, function(data) {
-				var valores = eval(data);
-				if (valores[0]==1) {
-					alertify.alert("<br><h1>Tutor asignado ya existe</h1><br>", function () {
-					});
-				    alertify.error("Tutor asignado ya existe"); 
-				}else{
-					alertify.alert("<br><h1>Tutor se ha restablecido</h1><br>", function () {
-						mostrarResultadosBusqueda(this)
-					});
-					alertify.success("Tutor se ha restablecido."); 
-				    // window.location="<?php echo base_url();?>";
-				}
+			$.post('{{path('bajaTutoresBjp')}}', {estudianteInscripcionid}, function(datas) { 
+				console.log(datas)
+				var valores = eval(datas);
+				alertify.alert("<br><h1>"+valores['message']+"</h1><br>", function () {
+					mostrarResultadosBusqueda(this);
+				});
+				alertify.success("Tutor se ha restablecido."); 
 			});
 		} else { alertify.error("Has pulsado cancel ");
 		}
 	}); 
 }
+
+// function cambiarEstadoTutores_e(id, estado, inscripcion){
+// 	alertify.confirm("<p><h1 style='color:#008000;'>ESTA SEGURO QUE DESEA RESTABLECER ?</h1><br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
+// 		if (e) {
+// 			$.post('{{path('cambiarEstadoTutores_restablecer')}}', {id, estado, inscripcion}, function(data) {
+// 				var valores = eval(data);
+// 				if (valores[0]==1) {
+// 					alertify.alert("<br><h1>Tutor asignado ya existe</h1><br>", function () {
+// 					});
+// 				    alertify.error("Tutor asignado ya existe"); 
+// 				}else{
+// 					alertify.alert("<br><h1>Tutor se ha restablecido</h1><br>", function () {
+// 						mostrarResultadosBusqueda(this)
+// 					});
+// 					alertify.success("Tutor se ha restablecido."); 
+// 				    // window.location="<?php echo base_url();?>";
+// 				}
+// 			});
+// 		} else { alertify.error("Has pulsado cancel ");
+// 		}
+// 	}); 
+// }
 // function cambiarEstadoTutores_e(id, estado, inscripcion) {
 // 	// var eliminar=confirm('¿Está seguro de proceder?');
 // 	/*if(eliminar==true)
