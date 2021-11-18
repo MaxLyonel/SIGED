@@ -155,6 +155,17 @@ class ControlOperativoMenuController extends Controller {
                           $objInfoUE->setBim1(0);
                           $objInfoUE->setBim2(0);
                           $em->flush();
+                          $datosInsert = array('sie'=>$sie,'gestion'=>'2021','trim1'=>2,'trim2'=>2,);
+                         $this->get('funciones')->setLogTransaccion(
+                           $sie,
+                           'registro_consolidacion',
+                           'U',
+                           'habilitacion 1er. trim.',
+                           $datosInsert,
+                           '',
+                           'ACADEMICO',
+                           json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                          );                          
           
                           $nuevoEstadoText = 'No descargado';
                           $msg = 'Estado actualizado, la Unidad Educativa ya puede registrar su información.';                
