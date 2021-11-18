@@ -954,8 +954,23 @@ class InfoEstudianteController extends Controller {
     }else{
         $this->session->set('estado',''); 
     }   
+
+
+        /* Operativo de sexto 2021 */
+        $query = $em->getConnection()->prepare("select * from institucioneducativa_curso where institucioneducativa_id = " . $sie . " and gestion_tipo_id = " . $this->session->get('currentyear') . " and nivel_tipo_id = 13 and grado_tipo_id = 6");
+        $query->execute();
+        $objDataOperativo = $query->fetchAll();
+        $haslevel = false;
+        $hasgrado = false;
+        if(sizeof($objDataOperativo)>0)
+        {
+            $haslevel = 13;
+            $hasgrado = 6;
+        }
+        $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
+        $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
+
     // end add validation to show califications option
-        
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
                     'objStudents' => $objStudents,
                     'iecId'=>$iecId,
@@ -983,7 +998,9 @@ class InfoEstudianteController extends Controller {
                     'mostrarSextoCerrado'=>$mostrarSextoCerrado,
                     'sextoCerrado'=>$this->get('funciones')->verificarSextoSecundariaCerrado($sie, $gestion),
                     'wenakeyBono'=>$wenayekBono,
-                    'dependencia'=>$dependencia
+                    'dependencia'=>$dependencia,
+                    'cerrarOperativoSexto' => $closeopesextosecc,
+                    'nivelGradoSexto' => $arrLevelandGrado
         ));
     }
 
@@ -2012,7 +2029,7 @@ class InfoEstudianteController extends Controller {
         // get the send values
         $sie     = $request->get('sie');
         $gestion = $request->get('gestion');
-        $bimestre = 4;
+        $bimestre = 3;
         $level = 13;
         $grado = 6;
 
