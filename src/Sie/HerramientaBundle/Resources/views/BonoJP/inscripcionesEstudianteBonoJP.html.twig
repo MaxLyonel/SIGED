@@ -181,7 +181,9 @@
 						<td style="background:#0080001f" class="text-center">
 							{% if cont ==0 %}
 								<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="CAMBIAR" onclick="cambiarEstadoTutores({{t.id}},2,{{t.estudianteInscripcion}})"><i class="fa fa-edit fa-2x fg-danger"></i></a>
+
 							{% endif %}
+							<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="BAJA TUTOR" onclick="bajaTutoresBjp({{t.estudianteInscripcion}})"><i class="fa fa-trash-o fa-2x fg-danger"></i></a>
 						</td>
 					</tr>
 					{% endfor %}
@@ -201,6 +203,22 @@ function cambiarEstadoTutores(id,estado,estudianteInscripcion){
 	$.post('{{path('operativo_bono_jp_cambiarEstadoTutore')}}', {id,estado,estudianteInscripcion}, function(data) {
 		$("#ver_conte_fer").html(data)
 	});
+}
+
+function bajaTutoresBjp(estudianteInscripcionid){
+	alertify.confirm("<p><h1 style='color:#008000;'>ESTA SEGURO QUE DESEA DAR BAJA AL TUTOR ?</h1><br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
+		if (e) {
+			$.post('{{path('bajaTutoresBjp')}}', {estudianteInscripcionid}, function(datas) { 
+				console.log(datas)
+				var valores = eval(datas);
+				alertify.alert("<br><h1>"+valores['message']+"</h1><br>", function () {
+					mostrarResultadosBusqueda(this);
+				});
+				alertify.success("Tutor se ha restablecido."); 
+			});
+		} else { alertify.error("Has pulsado cancel ");
+		}
+	}); 
 }
 // function nuevoTutores(estado,estudianteInscripcion){
 // 	$("#ver_conte_fer").html("<div style='text-align:center'><img src='/img/loading.gif'>Cargando...</div>");

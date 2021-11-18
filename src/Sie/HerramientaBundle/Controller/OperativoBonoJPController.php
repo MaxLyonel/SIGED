@@ -772,7 +772,6 @@ class OperativoBonoJPController extends Controller
 	public function bajaTutoresBjpAction(Request $request){ 
 		$em = $this->getDoctrine()->getManager();
 		$inscripcionid = $request->get('estudianteInscripcionid');
-
     	$query = "select e.codigo_rude,iec.*
 		from estudiante e
 		inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
@@ -781,14 +780,29 @@ class OperativoBonoJPController extends Controller
 		 $query2 = $em->getConnection()->prepare($query);
 		 $query2->execute();
          $obj = $query2->fetch();
-			
+		// dump($obj ); die();
         $queryChange = "select * from sp_genera_transaccion_bono_juancito_pinto('".$obj['institucioneducativa_id']."','".$obj['codigo_rude']."','','')";
 
      	$query = $em->getConnection()->prepare($queryChange);
         $query->execute();
         $result2 = $query->fetchAll();
 
-   		return true;
+        $noTransfer = array(
+			'0' =>' THIS IS OK',
+			'1' =>' Problemas en los datos del estudiante, edad, estado, o no es publica',
+			'1' =>' Problemas en los datos del estudiante, edad, estado, o no es publica',
+			'2' =>' No corresponde ni a especial ni regular',
+			'3' =>' No puede darse de baja, ya se realizó el pago o no esta en la base de beneficiarios.',
+			'4' =>' No puede incorporarse, ya se encuentra registrado para pago.',
+			'5' =>' No realizarce el cambio de tutor, mas de un registro activo',
+	    );
+	    // check if the has an error on change
+	    if($result2[0]['sp_genera_transaccion_bono_juancito_pinto']!=0){
+	    	$data = array('error'=>1,'message'=>$noTransfer[$result2[0]['sp_genera_transaccion_bono_juancito_pinto']]);
+	    }else{
+	    	$data = array('error'=>1,'message'=>'EXITOSAMENTE MODIFICADO');
+	    }
+   		return new JsonResponse($data);
 	}
 	public function mostra_datos_fer($inscripcionid){
 		$em = $this->getDoctrine()->getManager();
