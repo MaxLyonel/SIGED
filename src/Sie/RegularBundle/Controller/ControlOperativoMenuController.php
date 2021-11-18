@@ -45,41 +45,52 @@ class ControlOperativoMenuController extends Controller {
 
             if ($tuicion) {
 
-                $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-                    'unidadEducativa'=>$sie,
-                    'gestion'=>$gestion,
-                    'rude'=>1
-                  ));
-                  //dump($objInfoUE);die;
-                  //$registro = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa'=>$sie,'gestionTipoId'=>$gestion,'notaTipo'=>$operativo));
-                  
-                  if($objInfoUE){
-                      $registro['estadoMenu'] = 1;                    
-                      $registro['id'] = $sie;
-                      $mensaje = "Puede realizar la habilitacion";
-                  }else{
-                      /*$registro['estadoMenu'] = 0;
-                      $registro['id'] = null;*/
-                      $registro = null;
-                      $mensaje = "La unidad educativa aún no realizó el Cierre de Operativo";
-                  }
-                // Verificamos si es ue humanistica, nocturan o en transformacion, y GAM
-                /*if(in_array($tipoUE['id'], array(5,6,7,11))){
-                    $registro = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa'=>$sie,'gestionTipoId'=>$gestion,'notaTipo'=>$operativo));
-                    if(!$registro){
+                $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
+
+                if($uePrimTrim){
+
+                    $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                        'unidadEducativa'=>$sie,
+                        'gestion'=>$gestion,
+                        'bim1'=>2,
+                        'bim2'=>2,
+                      ));
+                      // dump($objInfoUE);die;
+                      //$registro = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa'=>$sie,'gestionTipoId'=>$gestion,'notaTipo'=>$operativo));
+                      
+                      if($objInfoUE){
+                          $registro['estadoMenu'] = 1;                    
+                          $registro['id'] = $sie;
+                          $mensaje = "Puede realizar la habilitacion";
+                      }else{
+                          /*$registro['estadoMenu'] = 0;
+                          $registro['id'] = null;*/
+                          $registro = null;
+                          $mensaje = "La unidad educativa aún no realizó el Cierre de Operativo";
+                      }
+                    // Verificamos si es ue humanistica, nocturan o en transformacion, y GAM
+                    /*if(in_array($tipoUE['id'], array(5,6,7,11))){
+                        $registro = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa'=>$sie,'gestionTipoId'=>$gestion,'notaTipo'=>$operativo));
+                        if(!$registro){
+                            $registro = null;
+                            $mensaje = "La unidad educativa aún no realizó la descarga de su archivo";
+                        }
+                    }else{
                         $registro = null;
-                        $mensaje = "La unidad educativa aún no realizó la descarga de su archivo";
-                    }
+                        $mensaje = 'La unidad educativa es '.$tipoUE['tipo'].' por este motivo no descarga su archivo. Debe reportar su información a travéz del Sistema Académico';    
+                    }*/
+
                 }else{
-                    $registro = null;
-                    $mensaje = 'La unidad educativa es '.$tipoUE['tipo'].' por este motivo no descarga su archivo. Debe reportar su información a travéz del Sistema Académico';    
-                }*/
+                          $registro = null;
+                          $mensaje = "Unidad Educativa no autorizada";                    
+
+                }
 
             } else {
                 $registro = null;
                 $mensaje = 'No tiene tuición sobre la unidad educativa';
             }
-            
+            // dump($operativo);die;
             //return $this->render('SieRegularBundle:ControlOperativoMenu:response.html.twig',array(
             return $this->render($this->session->get('pathSystem') . ':ControlOperativoMenu:response.html.twig',array(
                 'registro'=>$registro, 
@@ -100,7 +111,8 @@ class ControlOperativoMenuController extends Controller {
     public function nombreOperativo($operativo){
         switch ($operativo) {
             //case 0: $nombreOperativo = 'Inicio de gestiòn';break;
-            case 1: $nombreOperativo = 'RUDE';break;
+            case 1: $nombreOperativo = 'Operativo 1er. Trim.';break;
+            case 3: $nombreOperativo = '1er. Trim. Habilitar';break;
             /*case 2: $nombreOperativo = '2do Bimestre';break;
             case 3: $nombreOperativo = '3er Bimestre';break;
             case 4: $nombreOperativo = '4to Bimestre';break;
@@ -114,27 +126,63 @@ class ControlOperativoMenuController extends Controller {
 
     public function changeAction(Request $request){
         try {
-            $idControlOperativo = $request->get('id');
+            $sie = $request->get('id');
             $em = $this->getDoctrine()->getManager();
 
-            
+            $nuevoEstado = 0;
+            $nuevoEstado = '';
+            $nuevoEstadoText = '';
+            $msg = '';
             $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-                'unidadEducativa'=>$idControlOperativo,
+                'unidadEducativa'=>$sie,
                 'gestion'=>2021,
                 'rude'=>1
-              ));            
-              $nuevoEstado = '';
-              $nuevoEstadoText = '';
-              $msg = '';
+              )); 
+
+               $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
+
+                if($uePrimTrim){
+
+                    $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                        'unidadEducativa'=>$sie,
+                        'gestion'=>2021,
+                        'bim1'=>2,
+                        'bim2'=>2,
+                      ));                      
   
-              if($objInfoUE){
-                  $nuevoEstado = 0;
-                  $objInfoUE->setRude(0);
-                  $em->flush();
-  
-                  $nuevoEstadoText = 'No descargado';
-                  $msg = 'Estado actualizado, la Unidad Educativa ya puede registrar su información.';                
-              }
+                      if($objInfoUE){
+                         
+                          $objInfoUE->setBim1(0);
+                          $objInfoUE->setBim2(0);
+                          $em->flush();
+                          $datosInsert = array('sie'=>$sie,'gestion'=>'2021','trim1'=>2,'trim2'=>2,);
+                         $this->get('funciones')->setLogTransaccion(
+                           $sie,
+                           'registro_consolidacion',
+                           'U',
+                           'habilitacion 1er. trim.',
+                           $datosInsert,
+                           '',
+                           'ACADEMICO',
+                           json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                          );                          
+          
+                          $nuevoEstadoText = 'No descargado';
+                          $msg = 'Estado actualizado, la Unidad Educativa ya puede registrar su información.';                
+                      }else{
+                          /*$registro['estadoMenu'] = 0;
+                          $registro['id'] = null;*/
+                          $registro = null;
+                          $msg = "La unidad educativa aún no realizó el Cierre de Operativo";
+                      }
+
+                }else{
+                          $registro = null;
+                          $msg = "Unidad Educativa no autorizada";                    
+
+                }            
+
+
 /*
             $registro = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->find($idControlOperativo);
 
