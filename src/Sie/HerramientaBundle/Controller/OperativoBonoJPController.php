@@ -320,7 +320,7 @@ class OperativoBonoJPController extends Controller
 
 	public function formularioCambiarTutorAction()
 	{
-		return $this->render('SieHerramientaBundle:BonoJP:fomularioCambiarTutor.html.twig');
+		return $this->render($this->session->get('pathSystem') .':BonoJP:fomularioCambiarTutor.html.twig');
 	}
 
 	public function buscarInscripcionesAction(Request $request)
@@ -330,13 +330,20 @@ class OperativoBonoJPController extends Controller
 		$db = $em->getConnection();
 
 		$this->session = new Session();
-		// dump($this->session); exit();
         $sesinst = $request->getSession()->get('ie_id');
         // echo ">".$sesinst;exit();
 		/*$sesion = $request->getSession();
         $id_usuario = $sesion->get('userI');
 
         echo ">".$id_usuario;exit();*/
+
+        if($this->session->get('pathSystem')=='SieEspecialBundle'){
+        	$idtipoInstitucion=4;
+        }else{
+        	$idtipoInstitucion=1;
+        }
+
+
 		$codigo_rude = $request->get('codigo_rude');
 		$gestion = date('Y');
 		$estado_matricula = 4;
@@ -346,11 +353,12 @@ class OperativoBonoJPController extends Controller
 					from estudiante e
 					inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
 					inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
-					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')."	 ";
+					inner join institucioneducativa inst on (iec.institucioneducativa_id = inst.id)
+					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	and ei.estadomatricula_tipo_id=4 and iec.nivel_tipo_id in (12,13) ";
 		 $query2 = $em->getConnection()->prepare($query);
 		 $query2->execute();
          $currentInscription = $query2->fetchAll();
-         // dump($currentInscription);die;
+         
          //check if the student has current inscription
          if(sizeof($currentInscription)>0){
          	// if the student is in the same UE
@@ -358,7 +366,6 @@ class OperativoBonoJPController extends Controller
          		$messageError = 'El estudiante no esta inscrito en esta UE';
          		$swError = true;
          	}
-
 
          }else{
          	$messageError = 'El estudiante no cuenta con inscription';
@@ -392,7 +399,7 @@ class OperativoBonoJPController extends Controller
 					break;
 					case '4':
 						$dataInscriptionE[$key] = $inscription;
-						$inscriptionId = $dataInscriptionR[$key]['estudiante_inscripcion_id_raep'];
+						$inscriptionId = $dataInscriptionE[$key]['estudiante_inscripcion_id_raep'];
 					break;
 				}
 			}
@@ -401,7 +408,7 @@ class OperativoBonoJPController extends Controller
 			$tutoresActuales = $this->listarTutores($inscriptionId,array(1,2));
 			$tutoresEliminados = $this->listarTutores($inscriptionId,array(3));
          }
-
+         // dump($dataInscriptionR);die;
 		return $this->render('SieHerramientaBundle:BonoJP:inscripcionesEstudianteBonoJP.html.twig', array(
 			'inscripcionesRegular' => $dataInscriptionR,
 			'inscripcionesEspecial' => $dataInscriptionE,
@@ -619,7 +626,24 @@ class OperativoBonoJPController extends Controller
 		$id = $request->get('id');
 		$estado = $request->get('estado');
 		$estudianteInscripcion = $request->get('estudianteInscripcion');
-		// echo ">".$id.">".$estado.">".$estudianteInscripcion;exit()
+
+		$em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("select * from Bjp_Apoderado_Tipo order by 1");
+        $query->execute();
+        $entity = $query->fetchAll();
+
+		// echo ">".$id.">".$estado.">".$estudianteInscripcion;exit();
+		return $this->render('SieHerramientaBundle:BonoJP:form_tutor_estudiante.html.twig',array(
+			'bjp_Apoderado_Tipo' => $entity,
+			'id' => $id,
+			'estado' => $estado,
+			'estudianteInscripcion' => $estudianteInscripcion));
+	}
+	public function operativo_bono_jp_cambiarEstadoTutore1Action(Request $request){ 
+		$id = 0;
+		$estado = $request->get('estado');
+		$estudianteInscripcion = $request->get('estudianteInscripcion');
+		// echo ">".$id.">".$estado.">".$estudianteInscripcion;exit();
 		return $this->render('SieHerramientaBundle:BonoJP:form_tutor_estudiante.html.twig',array('id' => $id,'estado' => $estado,'estudianteInscripcion' => $estudianteInscripcion));
 	}
 	public function guardar_datos_tutorAction(Request $request){
@@ -700,7 +724,8 @@ class OperativoBonoJPController extends Controller
 	         $obj = $query2->fetch();
  			
 	        $queryChange = "select * from sp_genera_transaccion_bono_juancito_pinto('".$obj['institucioneducativa_id']."','".$obj['codigo_rude']."','".$idpersona."','".$parentesco."')";
-	        
+
+
          	$query = $em->getConnection()->prepare($queryChange);
 	        $query->execute();
 	        $result2 = $query->fetchAll();
@@ -723,11 +748,12 @@ class OperativoBonoJPController extends Controller
 	                'primer_apellido'=>$paterno,
 	                'segundo_apellido'=>$materno,
 	                'nombre'=>$nombre,
+	                'obs'=>$obs,
 	                'fecha_nacimiento'=>$form_idfecnac
 	            ); 
 
 	             $this->get('funciones')->setLogTransaccion(
-	               $idpersona,
+	               $inscripcionid,
 	               'bjp_estudiante_apoderado_beneficiarios',
 	               'I',
 	               'cambio de tutor',
@@ -742,6 +768,27 @@ class OperativoBonoJPController extends Controller
         }
         // dump($data);die;
    		return new JsonResponse($data);
+	}
+	public function bajaTutoresBjpAction(Request $request){ 
+		$em = $this->getDoctrine()->getManager();
+		$inscripcionid = $request->get('estudianteInscripcionid');
+
+    	$query = "select e.codigo_rude,iec.*
+		from estudiante e
+		inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
+		inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
+		where ei.id= '".$inscripcionid."' and gestion_tipo_id = ".$this->session->get('currentyear')."	 ";
+		 $query2 = $em->getConnection()->prepare($query);
+		 $query2->execute();
+         $obj = $query2->fetch();
+			
+        $queryChange = "select * from sp_genera_transaccion_bono_juancito_pinto('".$obj['institucioneducativa_id']."','".$obj['codigo_rude']."','','')";
+
+     	$query = $em->getConnection()->prepare($queryChange);
+        $query->execute();
+        $result2 = $query->fetchAll();
+
+   		return true;
 	}
 	public function mostra_datos_fer($inscripcionid){
 		$em = $this->getDoctrine()->getManager();
@@ -802,36 +849,53 @@ class OperativoBonoJPController extends Controller
 
 
 	// modulo de generar file bono
-	public function operativo_bono_jp_GenerarFileCambioTutorAction(){
-		return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig');
-	}
-	public  function boton_generar_file_bonoJPAction(Request $request){
+		public function operativo_bono_jp_GenerarFileCambioTutorAction(){
+			return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig');
+		}
+		public  function boton_generar_file_bonoJPAction(Request $request){
 
-		$em = $this->getDoctrine()->getManager();
-		$db = $em->getConnection();
+			$em = $this->getDoctrine()->getManager();
+			$db = $em->getConnection();
 
-		$query = 'select sp_genera_archivo_txt_bjp();';
-		$stmt = $db->prepare($query);
-		$stmt->execute();
-		$requisitos=$stmt->fetch();
+			$query = 'select sp_genera_archivo_txt_bjp();';
+			$stmt = $db->prepare($query);
+			$stmt->execute();
+			$requisitos=$stmt->fetch();
 
 
 
-				$em = $this->getDoctrine()->getManager();
-     	$query = $em->getConnection()->prepare("select sp_genera_archivo_txt_bjp();");
-        $query->execute();
-        $result2 = $query->fetchAll();
-   		$filePath = '/assets/alert/DECLARACION_PREINSCRIPCIÓN-2021_20211112143654.pdf';
-		dump($filePath);exit();
-        header("Cache-Control: public");
-        header("Content-Description: File Transfer");
-        header("Content-Disposition: attachment; filename=files.txt");
-        header("Content-Type: application/zip");
-        header("Content-Transfer-Encoding: binary");
-        // Read the file
-        readfile($filePath);
-        exit;
-	}
+					$em = $this->getDoctrine()->getManager();
+	     	$query = $em->getConnection()->prepare("select sp_genera_archivo_txt_bjp();");
+	        $query->execute();
+	        $result2 = $query->fetchAll();
+	   		$filePath = '/assets/alert/DECLARACION_PREINSCRIPCIÓN-2021_20211112143654.pdf';
+			dump($filePath);exit();
+	        header("Cache-Control: public");
+	        header("Content-Description: File Transfer");
+	        header("Content-Disposition: attachment; filename=files.txt");
+	        header("Content-Type: application/zip");
+	        header("Content-Transfer-Encoding: binary");
+	        // Read the file
+	        readfile($filePath);
+	        exit;
+		}
+		public function preinspdfAction(Request $request, $idTramite){
+            $pdf=$this->container->getParameter('urlreportweb') . 'reg_preins_formulario.rptdesign&__format=pdf'.'&preinscripcion='.$idTramite;
+            //$pdf='http://127.0.0.1:63170/viewer/preview?_report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&_format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
+            
+            $status = 200;  
+            $arch           = 'DECLARACION_PREINSCRIPCIÓN-'.date('Y').'_'.date('YmdHis').'.pdf';
+            $response       = new Response();
+            $response->headers->set('Content-type', 'application/pdf');
+            $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+            $response->setContent(file_get_contents($pdf));
+            $response->setStatusCode($status);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+            return $response;
+	    }
+
 	// modulo de generar file bono
 	
 
