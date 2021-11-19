@@ -45,7 +45,7 @@ class ControlOperativoMenuController extends Controller {
 
             if ($tuicion) {
 
-                $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
+                // $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
 
                 if(true){
 
@@ -139,7 +139,7 @@ class ControlOperativoMenuController extends Controller {
                 'rude'=>1
               )); 
 
-               $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
+               // $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
 
                 if(true){
 
