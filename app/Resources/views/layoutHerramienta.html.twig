@@ -740,7 +740,6 @@
                             </a>
                             <ul>
                                 <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de tutor</a></li>
-                                <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte seguimiento</a></li>
                                 {% if app.session.get('roluser') in [8,37] %}
                                 <li><a href="{{ path('operativo_bono_jp_GenerarFileCambioTutor')}}">Generar file</a></li>
                                 {% endif %}
