@@ -47,7 +47,7 @@ class ControlOperativoMenuController extends Controller {
 
                 $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
 
-                if($uePrimTrim){
+                if(true){
 
                     $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
                         'unidadEducativa'=>$sie,
@@ -141,7 +141,7 @@ class ControlOperativoMenuController extends Controller {
 
                $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
 
-                if($uePrimTrim){
+                if(true){
 
                     $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
                         'unidadEducativa'=>$sie,
