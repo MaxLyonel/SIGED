@@ -327,24 +327,28 @@
 
                                     {#by krlos notas 28.05.2021 commented 30.07.21#}
 
-                                    {% if app.session.get('unablePrimerTrim') and (nivel!=13 and grado !=6) and operativo <=2%}
-                                                        
-                                      {% if gestion >= 2021 and nivel == 13 and grado == 5 and app.session.get('acceso_total') %}
-                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones ddd">
-                                                <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                    <i class="fa fa-list"></i>
-                                                </button>
-                                            </div>
-                                        {% else %}
-                                            {% if gestion >= 2021 %}  
+                                    {% if grado == 6 and  gestion == 2021 and data.estadomatriculaId in [4,5] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado and nivelGradoSexto.closeopesextosecc == false %}
+                                    {% else %}
 
-                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                        {% if app.session.get('unablePrimerTrim') and operativo <=2%}
+                                                            
+                                          {% if gestion >= 2021 and nivel == 13 and grado == 5 and app.session.get('acceso_total') %}
+                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones ddd">
+                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                         <i class="fa fa-list"></i>
                                                     </button>
                                                 </div>
                                             {% else %}
-                                            {% endif %}   
+                                                {% if gestion >= 2021 %}  
+
+                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                            <i class="fa fa-list"></i>
+                                                        </button>
+                                                    </div>
+                                                {% else %}
+                                                {% endif %}   
+                                            {% endif %}                                    
                                         {% endif %}                                    
                                     {% endif %}                                    
 
