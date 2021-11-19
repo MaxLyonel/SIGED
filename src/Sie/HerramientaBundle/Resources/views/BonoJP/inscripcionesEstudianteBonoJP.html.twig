@@ -180,10 +180,9 @@
 						<td style="background:#0080001f"> {{ t.apoderado }} </td>
 						<td style="background:#0080001f" class="text-center">
 							{% if cont ==0 %}
-								<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="CAMBIAR" onclick="cambiarEstadoTutores({{t.id}},2,{{t.estudianteInscripcion}})"><i class="fa fa-edit fa-2x fg-danger"></i></a>
-
+								<a class="btn btn-warning" href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="CAMBIO TUTOR" onclick="cambiarEstadoTutores({{t.id}},2,{{t.estudianteInscripcion}})"><i class="fa fa-edit fa-2x "></i> CAMBIO TUTOR</a>
 							{% endif %}
-							<a href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="BAJA TUTOR" onclick="bajaTutoresBjp({{t.estudianteInscripcion}})"><i class="fa fa-trash-o fa-2x fg-danger"></i></a>
+								{# <a class="btn btn-danger" href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="BAJA DEFINITIVA TUTOR" onclick="bajaTutoresBjp({{t.estudianteInscripcion}})"><i class="fa fa-trash-o fa-2x "></i> BAJA DEFINITIVA</a> #}
 						</td>
 					</tr>
 					{% endfor %}
@@ -206,10 +205,9 @@ function cambiarEstadoTutores(id,estado,estudianteInscripcion){
 }
 
 function bajaTutoresBjp(estudianteInscripcionid){
-	alertify.confirm("<p><h1 style='color:#008000;'>ESTA SEGURO QUE DESEA DAR BAJA AL TUTOR ?</h1><br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
+	alertify.confirm("<p><hr><hr><p style='color:#ff0000;font-size:25px;'> <b>NOTA:</b> Solo se efectura este caso cuando el estudiante ya se retiro de la U.E. definitivamente.</p><hr><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
 		if (e) {
 			$.post('{{path('bajaTutoresBjp')}}', {estudianteInscripcionid}, function(datas) { 
-				console.log(datas)
 				var valores = eval(datas);
 				alertify.alert("<br><h1>"+valores['message']+"</h1><br>", function () {
 					mostrarResultadosBusqueda(this);

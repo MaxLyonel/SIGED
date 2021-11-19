@@ -29,8 +29,8 @@ class BachillerExcelenciaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2021-04-23');
-        $this->gestionOperativo = '2020';
+        $this->fechaCorte = new \DateTime('2021-11-23');
+        $this->gestionOperativo =  $this->session->get('currentyear');
     }
 
     /*
@@ -46,9 +46,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // if($this->fechaActual > $this->fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $form = $this->createSearchIeForm();
 
@@ -86,9 +86,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // if($this->fechaActual > $this->fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $form = $this->createSearchIeDirForm();
 
@@ -121,9 +121,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // if($this->fechaActual > $this->fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $form = $this->createSearchIeDirForm();
         $form->handleRequest($request);
@@ -161,8 +161,8 @@ class BachillerExcelenciaController extends Controller {
                     ->getQuery();
 
             $registrado = $query->getResult();
-
-            if(count($registrado) <= 0) {
+//dump($registrado);die;
+            if(count($registrado) > 1) {
                 return $this->redirect($this->generateUrl('principal_web'));
             }
 
@@ -480,9 +480,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // if($this->fechaActual > $this->fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $form = $this->createSearchIeForm();
         $form->handleRequest($request);

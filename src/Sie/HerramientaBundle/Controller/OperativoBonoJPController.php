@@ -486,7 +486,7 @@ class OperativoBonoJPController extends Controller
 						')
 						->from('SieAppWebBundle:BjpEstudianteApoderadoBeneficiarios','beab')
 						->innerJoin('SieAppWebBundle:Persona','p','with','p.id = beab.personaId')
-						->innerJoin('SieAppWebBundle:ApoderadoTipo','ap','with','ap.id = beab.apoderadoTipo')
+						->innerJoin('SieAppWebBundle:BjpApoderadoTipo','ap','with','ap.id = beab.apoderadoTipo')
 						->where('beab.estudianteInscripcionId = :inscriptionId')
 						->andWhere('beab.segipIdTut = 1')
 						->andWhere('beab.estadoId IN (:estado)')
@@ -738,6 +738,7 @@ class OperativoBonoJPController extends Controller
 				'3' =>' No puede darse de baja, ya se realizó el pago o no esta en la base de beneficiarios.',
 				'4' =>' No puede incorporarse, ya se encuentra registrado para pago.',
 				'5' =>' No realizarce el cambio de tutor, mas de un registro activo',
+				'6' =>' Tutor ya se encuentra registrado',
 	        );
 	        // check if the has an error on change
 	        if($result2[0]['sp_genera_transaccion_bono_juancito_pinto']!=0){
@@ -795,6 +796,7 @@ class OperativoBonoJPController extends Controller
 			'3' =>' No puede darse de baja, ya se realizó el pago o no esta en la base de beneficiarios.',
 			'4' =>' No puede incorporarse, ya se encuentra registrado para pago.',
 			'5' =>' No realizarce el cambio de tutor, mas de un registro activo',
+			'6' =>' Tutor ya se encuentra registrado',
 	    );
 	    // check if the has an error on change
 	    if($result2[0]['sp_genera_transaccion_bono_juancito_pinto']!=0){
@@ -804,6 +806,33 @@ class OperativoBonoJPController extends Controller
 	    }
    		return new JsonResponse($data);
 	}
+
+	public function reporte_seguimiento_Bjp_pdfAction(){
+		return $this->render('SieHerramientaBundle:ReporteSeguimientoBjpPdf:reporte_seguimiento_Bjp_pdf_index.html.twig');
+	}
+	public function imprimir_seguimiento_pdfAction(Request $request){
+		$this->session = new Session();
+		$ie_id=$this->session->get('ie_id');
+		$gestion=date('Y');
+		// echo ">".$ie_id.">>".$gestion;exit();
+        // $pdf=$this->container->getParameter('urlreportweb') . 'reg_preins_formulario.rptdesign&__format=pdf'.'&preinscripcion='.$idTramite;
+        $pdf=$this->container->getParameter('urlreportweb') . 'reg_lst_EstudianApod_Benef_Pagados_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$ie_id.'&gestion='.$gestion;
+        //$pdf='http://127.0.0.1:63170/viewer/preview?_report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&_format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
+        
+        $status = 200;  
+        $arch           = 'IMPRIMIR REPORTE DE SEGUIMIENTO-'.date('Y').'_'.date('YmdHis').'.pdf';
+        $response       = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($pdf));
+        $response->setStatusCode($status);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+	}
+
+
 	public function mostra_datos_fer($inscripcionid){
 		$em = $this->getDoctrine()->getManager();
 		$db = $em->getConnection();
