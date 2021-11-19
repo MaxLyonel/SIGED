@@ -44,29 +44,49 @@
 					<div class="panel panel-primary shadow">
 						<div class="panel-heading">
 							<div class="pull-left">
-								<h3 class="panel-title">GENERAR INFORMACION EN ARCHIVO DE EXCEL BONO JP</h3>
-							</div>
-							<div class="pull-right">
-								<button class="btn btn-sm" data-action="collapse" data-toggle="tooltip" data-placement="top" data-title="Collapse" data-original-title="" title=""><i class="fa fa-angle-up"></i></button>
+								<h3 class="panel-title">GENERAR INFORMACIÓN EN ARCHIVO DE EXCEL BONO JP {{ 'now'|date('Y') }}</h3>
 							</div>
 							<div class="clearfix"></div>
 						</div><!-- /.panel-heading -->
 						<div class="panel-body ">
 							<div class="col-md-12 p-3">
-								<form method="POST" id="form-search-request-tutor" onsubmit="mostrarResultadosBusqueda(this); return false;">
-								  
-								  	{# <div class="well">
+								  	<div class="well">
 								  	<span class="fa fa-tags" style="font-size:30px;"></span>
-								  		Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-								  		tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-								  		quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-								  		consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-								  		cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-								  		proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-								  	</div> #}
-								  	<div style="text-align: center"><a href="{{path('boton_generar_file_bonoJP')}}" title="" class="btn btn-link btn-lg" target="_black"><img src="{{asset('alert/descarga_excel.png')}}" alt=""></a></div>
-								  	
-								</form>
+								  	Esta opción le permitira descargar los archivos para enviar a SINTESIS.
+								  	</div>
+								{# <form method="POST" id="form-search-request-tutor" onsubmit="mostrarResultadosBusqueda(this); return false;">
+								  	<div style="text-align: center"><a href="{{path('boton_generar_file_bonoJP',{identificador:-1})}}" title="" class="btn btn-link btn-lg" target="_black"><img src="{{asset('alert/descarga_excel.png')}}" alt=""></a></div>
+								</form> #}
+							</div>
+							<div class="col-md-12 p-3">
+								<div class="table-responsive">
+									<table class="table table-striped table-hover table-archives">
+									  <thead class="thead-dark">
+									    <tr>
+									      <th scope="col" width="5%">#</th>
+									      <th scope="col" width="10%">Identificador</th>
+									      <th scope="col" width="40%">Archivos</th>
+									      <th scope="col" width="7%">Cantidad de Archivos</th>
+									      <th scope="col" width="5%">Descargar estos archivos</th>
+									    </tr>
+									  </thead>
+									  <tbody>
+									  	{% for i in datosArchivos %}
+										    <tr>
+										      <th scope="row">{{ loop.index }}</th>
+										      <td><strong>{{i.identificador}}</strong></td>
+										      <td>[{{i.archivos}}]</td>
+										      <td class="text-right">{{i.nro_archivos}}</td>
+										      <td class="text-center">
+										      	<a href="{{path('boton_generar_file_bonoJP',{identificador: i.identificador})}}" target="_blank" >
+										      		<i class="fa fa-3x fa-download fg-info" data-toggle="tooltip" data-placement="top" title="Descargar estos archivos"></i>
+										      	</a>
+										      </td>
+										    </tr>
+									  	{% endfor %}
+									  </tbody>
+									</table>
+								</div>
 							</div>
 
 						</div><!-- /.panel-body --> 
