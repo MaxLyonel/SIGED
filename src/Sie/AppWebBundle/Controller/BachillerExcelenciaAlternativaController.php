@@ -27,8 +27,8 @@ class BachillerExcelenciaAlternativaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2021-04-23');
-        $this->gestionOperativo = '2020';
+        $this->fechaCorte = new \DateTime('2021-11-23');
+        $this->gestionOperativo = $this->session->get('currentyear');
     }
 
     /*
@@ -165,7 +165,7 @@ class BachillerExcelenciaAlternativaController extends Controller {
 
             $registrado = $query->getResult();
 
-            if(count($registrado) <= 0) {
+            if(count($registrado) >= 1) {
                 return $this->redirect($this->generateUrl('principal_web'));
             }
 

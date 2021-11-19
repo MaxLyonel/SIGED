@@ -1,5 +1,5 @@
 {% extends 'layoutHerramienta.html.twig' %}
-{% set gestionOperativo = 2020 %}
+{% set gestionOperativo = app.session.get('currentyear') %}
 
 {% block contentoption %}
     <!-- Start page header -->
