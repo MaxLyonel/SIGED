@@ -317,7 +317,7 @@
                                 {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8 or app.session.get('roluser') == 10 %}
                                     <li><a href="{{ path('herramienta_infoconsolidation_gestion_index')}}">Seguimiento Consolidación</a></li>
                                     <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li>
-                                    <li><a href="{{ path('controlOperativoMenu')}}">Habilitar Operativo RUDE</a></li>
+                                    <li><a href="{{ path('controlOperativoMenu')}}">Habilitar Operativo 1er. Trimestre</a></li>
                                 {% endif %}
                                 {% if true and app.session.get('roluser') in [0,8]  %}<!--Tecnnico nacional-->
                                     <li><a href="{{ path('herramienta_inforeporte_inicio_actividades')}}">Nacional Reporte de inicio de actividades</a></li>
@@ -740,7 +740,10 @@
                             </a>
                             <ul>
                                 <li><a href="{{ path('operativo_bono_jp_formularioCambioTutor')}}">Cambio de tutor</a></li>
-                                {# <li><a href="{{ path('operativo_bono_jp_GenerarFileCambioTutor')}}">Generar file</a></li> #}
+                                <li><a href="{{ path('reporte_seguimiento_Bjp_pdf')}}">Reporte seguimiento</a></li>
+                                {% if app.session.get('roluser') in [8,37] %}
+                                <li><a href="{{ path('operativo_bono_jp_GenerarFileCambioTutor')}}">Generar file</a></li>
+                                {% endif %}
                             </ul>
                         </li>
                     {% endif %}

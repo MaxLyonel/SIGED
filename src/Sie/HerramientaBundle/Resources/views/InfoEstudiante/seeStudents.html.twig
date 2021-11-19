@@ -361,11 +361,26 @@
                                                                                                            
                                                         {# aqui linreta #}
 
+                                                    {# HABILITACION DE NOTAS PARA SEXTO 2021 #}
+                                                    {#dump(nivelGradoSexto.haslevel)}}
+                                                    {{dump(nivelGradoSexto.hasgrado)}}
+                                                    {{dump(nivelGradoSexto.closeopesextosecc)}}
+                                                    {{dump(nivelGradoSexto.gestion)}}
+                                                    {{dump(nivelGradoSexto.operativo)#}
+                                                    {% if grado == 6 and  gestion == 2021 and data.estadomatriculaId in [4] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado and nivelGradoSexto.closeopesextosecc == false %}
+                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                            <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                                <i class="fa fa-list"></i>
+                                                            </button>
+                                                        </div>
+                                                    {% else %}
                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta">
                                                             <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                                               <i class="fa fa-print" style="color:#FFFFFF"></i>
                                                             </a>
-                                                        </div>  
+                                                        </div>
+                                                    {% endif %}
+
                                                 {% endif %}
                                             {% endif %}
                                         {% endif %}
@@ -426,6 +441,8 @@
                                             </a>
                                         </div>
                                     {% endif %}
+
+
 
                                     {# REGISTRO DE NOTAS #}
                                     {% if app.session.get('roluser') == 8 or app.session.get('acceso_total') or (app.session.get('ue_humanistica') and gestion >= 2019 ) %}

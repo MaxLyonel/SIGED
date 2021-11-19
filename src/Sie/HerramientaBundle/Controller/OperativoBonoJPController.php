@@ -16,7 +16,7 @@ use Sie\AppWebBundle\Entity\Institucioneducativa;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoTextosEducativos;
 use Sie\AppWebBundle\Entity\ApoderadoTipo;
-
+use ZipArchive;
 class OperativoBonoJPController extends Controller
 {
 	public $session;
@@ -354,7 +354,7 @@ class OperativoBonoJPController extends Controller
 					inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
 					inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
 					inner join institucioneducativa inst on (iec.institucioneducativa_id = inst.id)
-					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	and ei.estadomatricula_tipo_id=4 ";
+					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	and ei.estadomatricula_tipo_id=4 and iec.nivel_tipo_id in (12,13) ";
 		 $query2 = $em->getConnection()->prepare($query);
 		 $query2->execute();
          $currentInscription = $query2->fetchAll();
@@ -486,7 +486,7 @@ class OperativoBonoJPController extends Controller
 						')
 						->from('SieAppWebBundle:BjpEstudianteApoderadoBeneficiarios','beab')
 						->innerJoin('SieAppWebBundle:Persona','p','with','p.id = beab.personaId')
-						->innerJoin('SieAppWebBundle:ApoderadoTipo','ap','with','ap.id = beab.apoderadoTipo')
+						->innerJoin('SieAppWebBundle:BjpApoderadoTipo','ap','with','ap.id = beab.apoderadoTipo')
 						->where('beab.estudianteInscripcionId = :inscriptionId')
 						->andWhere('beab.segipIdTut = 1')
 						->andWhere('beab.estadoId IN (:estado)')
@@ -738,6 +738,7 @@ class OperativoBonoJPController extends Controller
 				'3' =>' No puede darse de baja, ya se realizó el pago o no esta en la base de beneficiarios.',
 				'4' =>' No puede incorporarse, ya se encuentra registrado para pago.',
 				'5' =>' No realizarce el cambio de tutor, mas de un registro activo',
+				'6' =>' Tutor ya se encuentra registrado',
 	        );
 	        // check if the has an error on change
 	        if($result2[0]['sp_genera_transaccion_bono_juancito_pinto']!=0){
@@ -769,6 +770,69 @@ class OperativoBonoJPController extends Controller
         // dump($data);die;
    		return new JsonResponse($data);
 	}
+	public function bajaTutoresBjpAction(Request $request){ 
+		$em = $this->getDoctrine()->getManager();
+		$inscripcionid = $request->get('estudianteInscripcionid');
+    	$query = "select e.codigo_rude,iec.*
+		from estudiante e
+		inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
+		inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
+		where ei.id= '".$inscripcionid."' and gestion_tipo_id = ".$this->session->get('currentyear')."	 ";
+		 $query2 = $em->getConnection()->prepare($query);
+		 $query2->execute();
+         $obj = $query2->fetch();
+		// dump($obj ); die();
+        $queryChange = "select * from sp_genera_transaccion_bono_juancito_pinto('".$obj['institucioneducativa_id']."','".$obj['codigo_rude']."','','')";
+
+     	$query = $em->getConnection()->prepare($queryChange);
+        $query->execute();
+        $result2 = $query->fetchAll();
+
+        $noTransfer = array(
+			'0' =>' THIS IS OK',
+			'1' =>' Problemas en los datos del estudiante, edad, estado, o no es publica',
+			'1' =>' Problemas en los datos del estudiante, edad, estado, o no es publica',
+			'2' =>' No corresponde ni a especial ni regular',
+			'3' =>' No puede darse de baja, ya se realizó el pago o no esta en la base de beneficiarios.',
+			'4' =>' No puede incorporarse, ya se encuentra registrado para pago.',
+			'5' =>' No realizarce el cambio de tutor, mas de un registro activo',
+			'6' =>' Tutor ya se encuentra registrado',
+	    );
+	    // check if the has an error on change
+	    if($result2[0]['sp_genera_transaccion_bono_juancito_pinto']!=0){
+	    	$data = array('error'=>1,'message'=>$noTransfer[$result2[0]['sp_genera_transaccion_bono_juancito_pinto']]);
+	    }else{
+	    	$data = array('error'=>1,'message'=>'EXITOSAMENTE MODIFICADO');
+	    }
+   		return new JsonResponse($data);
+	}
+
+	public function reporte_seguimiento_Bjp_pdfAction(){
+		return $this->render('SieHerramientaBundle:ReporteSeguimientoBjpPdf:reporte_seguimiento_Bjp_pdf_index.html.twig');
+	}
+	public function imprimir_seguimiento_pdfAction(Request $request){
+		$this->session = new Session();
+		$ie_id=$this->session->get('ie_id');
+		$gestion=date('Y');
+		// echo ">".$ie_id.">>".$gestion;exit();
+        // $pdf=$this->container->getParameter('urlreportweb') . 'reg_preins_formulario.rptdesign&__format=pdf'.'&preinscripcion='.$idTramite;
+        $pdf=$this->container->getParameter('urlreportweb') . 'reg_lst_EstudianApod_Benef_Pagados_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$ie_id.'&gestion='.$gestion;
+        //$pdf='http://127.0.0.1:63170/viewer/preview?_report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&_format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
+        
+        $status = 200;  
+        $arch           = 'IMPRIMIR REPORTE DE SEGUIMIENTO-'.date('Y').'_'.date('YmdHis').'.pdf';
+        $response       = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($pdf));
+        $response->setStatusCode($status);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+	}
+
+
 	public function mostra_datos_fer($inscripcionid){
 		$em = $this->getDoctrine()->getManager();
 		$db = $em->getConnection();
@@ -813,51 +877,6 @@ class OperativoBonoJPController extends Controller
 		return $stmt->fetch();
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	// modulo de generar file bono
-		public function operativo_bono_jp_GenerarFileCambioTutorAction(){
-			return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig');
-		}
-		public  function boton_generar_file_bonoJPAction(Request $request){
-
-			$em = $this->getDoctrine()->getManager();
-			$db = $em->getConnection();
-
-			$query = 'select sp_genera_archivo_txt_bjp();';
-			$stmt = $db->prepare($query);
-			$stmt->execute();
-			$requisitos=$stmt->fetch();
-
-
-
-					$em = $this->getDoctrine()->getManager();
-	     	$query = $em->getConnection()->prepare("select sp_genera_archivo_txt_bjp();");
-	        $query->execute();
-	        $result2 = $query->fetchAll();
-	   		$filePath = '/assets/alert/DECLARACION_PREINSCRIPCIÓN-2021_20211112143654.pdf';
-			dump($filePath);exit();
-	        header("Cache-Control: public");
-	        header("Content-Description: File Transfer");
-	        header("Content-Disposition: attachment; filename=files.txt");
-	        header("Content-Type: application/zip");
-	        header("Content-Transfer-Encoding: binary");
-	        // Read the file
-	        readfile($filePath);
-	        exit;
-		}
 		public function preinspdfAction(Request $request, $idTramite){
             $pdf=$this->container->getParameter('urlreportweb') . 'reg_preins_formulario.rptdesign&__format=pdf'.'&preinscripcion='.$idTramite;
             //$pdf='http://127.0.0.1:63170/viewer/preview?_report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&_format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
@@ -875,7 +894,178 @@ class OperativoBonoJPController extends Controller
             return $response;
 	    }
 
-	// modulo de generar file bono
-	
+	public function operativo_bono_jp_GenerarFileCambioTutorAction()
+	{
+		if( $this->session->get('roluser') == 37 || $this->session->get('roluser') == 8 )
+		{
+			return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig');
+		}
+		else
+		{
+			return $this->redirect($this->generateUrl('login'));
+		}
+	}
 
+	public function _getFinalNombreDelArchivoGeneradoBonoJP2021()
+	{
+		$em = $this->getDoctrine()->getManager();
+		$nombreArchivo = '';
+		$query = $em->getConnection()->prepare("select max(fecha_envio) from bjp_estudiante_apoderado_enviados_sintesis");
+		$query->execute();
+		$nombreArchivo = $query->fetch();
+		//return '2021-11-17_15_59_26';
+		if(count($nombreArchivo)>0)
+			//return str_replace([' ',':'], ['_','_'], $nombreArchivo['max']);
+			return $nombreArchivo['max'];
+		else
+			return null;
+	}
+
+	public function getListadoArchivosGuardados($nombreArchivo,$directorioRaiz)
+	{
+		$arrayArchivos = array();
+		try
+		{
+			if(is_dir($directorioRaiz))
+			{
+				chdir($directorioRaiz);
+				$ruta = '../web/empfiles/bono_bjp_2021';
+				if(chdir($ruta))
+				{
+					$arrayArchivos = glob("*$nombreArchivo.csv");
+					//$arrayArchivos = glob("*2021-11-17_15_59_26.csv");
+				}
+				else
+				{
+					die('Ocurrio un error no se pudo descargar los archivos.');
+				}
+			}
+			else
+			{
+				die('No existe el archivo.');
+			}
+		}
+		catch (Exception $e)
+		{
+			die('Ocurrio un error no se pudo descargar el archivo.');
+		}
+		return $arrayArchivos;
+	}
+
+	public function _comprimirArchivosEnZip($listadoDeArchivos, $nombreArchivo, $directorioRaiz)
+	{
+		$msj = '';
+		$filename = null;
+		$nombreRutaDescarga = null;
+		try
+		{
+			if(is_dir($directorioRaiz))
+			{
+				chdir($directorioRaiz);
+				$ruta = '../web/empfiles/bono_bjp_2021';
+				if(chdir($ruta))
+				{
+					$zip = new ZipArchive;
+					$filename = "Archivos-BJP-$nombreArchivo-".date('U.s').".zip";
+					if ($zip->open($filename, ZipArchive::CREATE)!==TRUE)
+					{
+						$filename = null;
+						$msj = 'Ocurrio un error no se pudo descargar el archivo.';
+					}
+					foreach($listadoDeArchivos as $file)
+					{
+						$zip->addfile($file);
+					}
+					$zip->close();
+					$msj = 'Archivo listo para descarga.';
+					$nombreRutaDescarga = realpath($filename);
+				}
+				else
+				{
+					$msj = 'Ocurrio un error no se pudo descargar los archivos.';
+				}
+			}
+			else
+			{
+				$msj = 'No existe el archivo.';
+			}
+		}
+		catch (Exception $e)
+		{
+			$filename = null;
+			$msj = 'Ocurrio un error no se pudo descargar el archivo.';
+		}
+		return array($filename, $nombreRutaDescarga);
+	}
+
+	public function _generarArchivoZipBonoJP2021()
+	{
+		// la carpeta donde se descargarel archivo comprimido
+		//$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir() . '/../web/empfiles/bono_bjp_2021/';
+		$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir();
+		$msj = '';
+		$estado = false;
+		$nombreArchivo = '';
+		$nombreFinalArchivo = '';
+		try
+		{
+			// Comprimimos los archivos, obtenemos el nombre del archivo
+			$nombreArchivo = $this->_getFinalNombreDelArchivoGeneradoBonoJP2021();
+			if($nombreArchivo != null)
+			{
+				$listadoDeArchivos = $this->getListadoArchivosGuardados($nombreArchivo,$directorioArchivosBonoJP2021);
+				if(count($listadoDeArchivos)>0)
+				{
+					//$nombreFinalArchivo = "Archivos-BJP-$nombreArchivo-".date('U.s').".tar";
+					list($nombreFinalArchivo, $nombreArchivo) = $this->_comprimirArchivosEnZip($listadoDeArchivos, $nombreArchivo, $directorioArchivosBonoJP2021);
+					if($nombreFinalArchivo && $nombreArchivo)
+					{
+						$estado = true;
+						$msj = 'Archivos descargados.';
+					}
+				}
+				else
+				{
+					$msj = 'No existen archivos para descargar.';
+				}
+			}
+			else
+			{
+				$msj = 'No existe el archivo, por favor vuelva a intentarlo.';
+			}
+		}
+		catch (Exception $exc)
+		{
+			$msj = 'Ocurrio un error desconocido, por favor vuelva a intentarlo.';
+		}
+		return array($msj, $estado, $nombreArchivo,$nombreFinalArchivo);
+	}
+
+	public function boton_generar_file_bonoJPAction(Request $request)
+	{
+		$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir() . '/../web/empfiles/bono_bjp_2021/';
+		list($msj, $estado, $nombreArchivo,$nombreFinalArchivo) = $this->_generarArchivoZipBonoJP2021();
+		if($estado)
+		{
+			try
+			{
+				$zip = $nombreFinalArchivo;
+				header("Content-Description: File Transfer");
+				header('Content-Type', 'application/zip');
+				header('Content-disposition: attachment; filename="' . $nombreFinalArchivo . '"');
+				header('Content-Length: ' . filesize($zip));
+				readfile($zip);
+				exit;
+			}
+			catch ( Exception $e )
+			{
+				die('Ocurrio un error desconocido, por favor vuelva a intentarlo.');
+			}
+		}
+		else
+		{
+			die('Ocurrio un error desconocido, por favor vuelva a intentarlo.');
+		}
+	}
+	//70524638
 }
