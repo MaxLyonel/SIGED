@@ -95,21 +95,6 @@ bajaTutoresBjp:
     options:
          expose: true
 
-reporte_seguimiento_Bjp_pdf:
-    path:     /reporte_seguimiento_Bjp_pdf
-    defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:reporte_seguimiento_Bjp_pdf"}
-    options:
-         expose: true
-         
-imprimir_seguimiento_pdf:
-    path:     /imprimir_seguimiento_pdf
-    defaults: { _controller: SieHerramientaBundle:OperativoBonoJP:imprimir_seguimiento_pdf }
-    options:
-         expose: true  
-
-
-         
-
 # generar file menu
 operativo_bono_jp_GenerarFileCambioTutor:
     path:     /operativo_bono_jp_GenerarFileCambioTutor
@@ -117,7 +102,7 @@ operativo_bono_jp_GenerarFileCambioTutor:
     options:
          expose: true
 boton_generar_file_bonoJP:
-    path:     /boton_generar_file_bonoJP
+    path:     /boton_generar_file_bonoJP/{identificador}
     defaults: { _controller: "SieHerramientaBundle:OperativoBonoJP:boton_generar_file_bonoJP"}
     options:
          expose: true
