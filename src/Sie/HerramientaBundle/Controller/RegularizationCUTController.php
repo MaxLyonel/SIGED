@@ -522,6 +522,7 @@ class RegularizationCUTController extends Controller{
         if($objStudent){
             // check if the student is in 6t
             // $dataStudentSixth      = $this->get('funciones')->getInscriptionBthByRude($objStudent->getCodigoRude());
+            $form['gestion'] = 2021;
             $objStudentInscription = $this->get('funciones')->getInscriptionBthByGestion($form);
 
             if($objStudentInscription){
@@ -553,7 +554,7 @@ class RegularizationCUTController extends Controller{
                     ->getQuery()
                     ->getResult();
 
-                    if(sizeof($sieAutorizado)){
+                    if(sizeof(true)){
                     // if(in_array($sie, $this->arrSie2018)){
 
                         // check if the user has permissions
