@@ -354,11 +354,13 @@ class OperativoBonoJPController extends Controller
 					inner join estudiante_inscripcion ei on (e.id = ei.estudiante_id)
 					inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
 					inner join institucioneducativa inst on (iec.institucioneducativa_id = inst.id)
-					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	and ei.estadomatricula_tipo_id=4 and iec.nivel_tipo_id in (12,13) ";
-		 $query2 = $em->getConnection()->prepare($query);
-		 $query2->execute();
-         $currentInscription = $query2->fetchAll();
-         
+					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	
+					and ei.estadomatricula_tipo_id=4 and iec.nivel_tipo_id in (12,13,403,405,402,410,401,404,999) ";
+		
+		$query2 = $em->getConnection()->prepare($query);
+		$query2->execute();
+        $currentInscription = $query2->fetchAll();
+        
          //check if the student has current inscription
          if(sizeof($currentInscription)>0){
          	// if the student is in the same UE
@@ -375,17 +377,27 @@ class OperativoBonoJPController extends Controller
 		$dataInscriptionR = array();
 		$dataInscriptionE= array();
 		$tutoresActuales= array();
-		$tutoresEliminados= array();         
+		$tutoresEliminados= array();
 
          if(!$swError){
 
 			$em = $this->getDoctrine()->getManager();
-			$query = $em->getConnection()->prepare("SELECT  * FROM sp_genera_estudiante_historial(?) where gestion_tipo_id_raep = ? AND estadomatricula_tipo_id_fin_r = ?");
-			$params = array($codigo_rude, $gestion, $estado_matricula);
+			if($idtipoInstitucion == 1)
+			{
+				$query = $em->getConnection()->prepare("SELECT  * FROM sp_genera_estudiante_historial(?) where gestion_tipo_id_raep = ? AND estadomatricula_tipo_id_fin_r = ?");
+				$params = array($codigo_rude, $gestion, $estado_matricula);
+			}
+			else
+			{
+				$query = $em->getConnection()->prepare("SELECT  * FROM sp_genera_estudiante_historial(?) where gestion_tipo_id_raep = ?");
+				$params = array($codigo_rude, $gestion);
+			}
+
 			$query->execute($params);
 			$dataInscription = $query->fetchAll();
-			// dump($dataInscription); exit();
+			//dump($dataInscription); exit();
 			$dataInscriptionR = $dataInscriptionE = array();
+			$inscriptionId =-1;
 			foreach ($dataInscription as $key => $inscription)
 			{
 				// if ($inscription['institucioneducativa_id_raep']==$sesinst) {
@@ -738,6 +750,7 @@ class OperativoBonoJPController extends Controller
 				'3' =>' No puede darse de baja, ya se realizó el pago o no esta en la base de beneficiarios.',
 				'4' =>' No puede incorporarse, ya se encuentra registrado para pago.',
 				'5' =>' No realizarce el cambio de tutor, mas de un registro activo',
+				'6' =>' El tutor ya se encuentra registrado',
 	        );
 	        // check if the has an error on change
 	        if($result2[0]['sp_genera_transaccion_bono_juancito_pinto']!=0){
@@ -795,6 +808,7 @@ class OperativoBonoJPController extends Controller
 			'3' =>' No puede darse de baja, ya se realizó el pago o no esta en la base de beneficiarios.',
 			'4' =>' No puede incorporarse, ya se encuentra registrado para pago.',
 			'5' =>' No realizarce el cambio de tutor, mas de un registro activo',
+			'6' =>' El tutor ya se encuentra registrado',
 	    );
 	    // check if the has an error on change
 	    if($result2[0]['sp_genera_transaccion_bono_juancito_pinto']!=0){
