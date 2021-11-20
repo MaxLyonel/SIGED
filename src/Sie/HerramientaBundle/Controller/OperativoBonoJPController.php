@@ -908,7 +908,7 @@ class OperativoBonoJPController extends Controller
 
 	public function operativo_bono_jp_GenerarFileCambioTutorAction()
 	{
-		if( $this->session->get('roluser') == 37 || $this->session->get('roluser') == 8 )
+		if( $this->session->get('roluser') == 34 || $this->session->get('roluser') == 8 )
 		{
 			$datosArchivos = $this->_listarDatosDeArchivos();
 			return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig',array('datosArchivos' => $datosArchivos));
