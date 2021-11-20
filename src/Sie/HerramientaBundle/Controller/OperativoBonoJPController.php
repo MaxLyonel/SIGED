@@ -906,6 +906,27 @@ class OperativoBonoJPController extends Controller
 		return $datos;
 	}
 
+
+	public function boton_generar_file_bonoJP_a_demandaAction()
+	{
+		if( $this->session->get('roluser') == 34 || $this->session->get('roluser') == 8 )
+		{
+			
+			$em = $this->getDoctrine()->getManager();
+			$db = $em->getConnection();
+			$query = 'select sp_genera_archivo_txt_bjp();';
+			$stmt = $db->prepare($query);
+			$stmt->execute();
+			$resultado = $stmt->fetch();
+			
+			return $this->redirect($this->generateUrl('operativo_bono_jp_GenerarFileCambioTutor'));
+		}
+		else
+		{
+			return $this->redirect($this->generateUrl('login'));
+		}
+	}
+
 	public function operativo_bono_jp_GenerarFileCambioTutorAction()
 	{
 		if( $this->session->get('roluser') == 34 || $this->session->get('roluser') == 8 )
