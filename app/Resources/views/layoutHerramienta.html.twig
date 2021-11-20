@@ -349,6 +349,10 @@
                                 {% if app.session.get('roluser') in [7,8,10,34]  %}<!--Tecnnico nacional, departamental y distrital-->
                                     <li><a target="_blank" href="{{ path('operativo_bono_jp_seguimiento')}}">Seguimiento al operativo Bono JP</a></li>
                                 {% endif %}
+
+                                {% if app.session.get('roluser') in [8,34] %}
+                                    <li><a href="{{ path('operativo_bono_jp_GenerarFileCambioTutor')}}">Generar file Bono JP 2021</a></li>
+                                {% endif %}
                             </ul>
                         </li>
 
@@ -1730,4 +1734,3 @@
     <!--/ END BODY -->
 
 </html>
-    
