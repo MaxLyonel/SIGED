@@ -101,12 +101,14 @@
 									<!-- Nav tabs -->
 									<ul class="nav nav-tabs" role="tablist">
 										<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
-											<a role="tab" data-toggle="tab">Datos Personales Padre/Madre/Tutor</a>
+											{#<a role="tab" data-toggle="tab">Datos Personales Padre/Madre/Tutor</a>#}
+											<a role="tab" data-toggle="tab"> REIMPRESIÓN DE FORMULARIO</a>
 										</li>
 									</ul>
 									<!-- Tab panes -->
 									<div class="tab-content">
 										<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+										{#
 											<div class="row">
 												<div class="form-group col-md-4">
 													<label>Carnet</label>
@@ -160,6 +162,7 @@
 													</div>	
 												</div>														
 											</div>
+											#}
 {# 
 											<div class="row">
 												<div class="form-group col-md-12">
@@ -185,6 +188,8 @@
 						
 
 						<div class="col-md-12 text-center" v-show="!swdata">
+						
+							{#
 							<div class="card" style="box-shadow: 1px 1px 5px grey">
 								<div class="form-group col-md-12">
 									<div class="form-check">
@@ -199,7 +204,7 @@
 							</div>
 
 							<button type="button" class="btn btn-primary" @click="consultar">Verificar </button>
-							<br>
+							<br>#}
 							<a href="javascript:;" onclick="formReimprision()" class="btn btn-link"><span class="fa fa-file-pdf-o"></span> REIMPRESIÓN DE FORMULARIO </a>
 						</div>
 					</div>
