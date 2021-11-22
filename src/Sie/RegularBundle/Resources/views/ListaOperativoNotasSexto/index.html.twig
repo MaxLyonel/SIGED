@@ -144,5 +144,38 @@
         
             
     };
+
+    var abrirOperativo=function(sie)
+    {
+     var abrir=confirm('¿Está seguro de abrir el operativo?');
+     if(abrir==true)
+     {
+        $.ajax({
+                type: 'get',
+                url: Routing.generate('abrir_operativo_sexto',{sie:sie}),
+                beforeSend: function ()
+                {
+                },
+                success: function (data)
+                {
+                    var status= data.status;
+                    if(status==200)
+                    {
+                        alert('Operativo abierto.')
+                        $('#form_find').trigger('click');
+                    }
+                    else
+                    {
+                        alert('Ocurrio un error. por favor vuelva a intentarlo');
+                    }
+                },
+                error: function (data)
+                {
+                    alert('Ocurrio un error el operativo no pudo ser abierto, por favor vuelva a intentarlo.');
+                }
+            });
+     }
+    }
+
     </script>
 {% endblock %}

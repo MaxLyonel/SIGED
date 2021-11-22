@@ -12,3 +12,9 @@ lista_operativo_sexto_find:
 review_up_sie_file_download_file:
     path:     /downloadFile
     defaults: { _controller: SieRegularBundle:ReviewUpSieFile:downloadFile }
+
+abrir_operativo_sexto:
+    path:     /abrir-operativo/{sie}
+    defaults: { _controller: SieRegularBundle:ListaOperativoNotasSexto:abrirOperativo }
+    options:
+        expose: true

@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Sie\AppWebBundle\Entity\UploadFileControl;
 use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
 use Sie\AppWebBundle\Entity\Institucioneducativa;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ListaOperativoNotasSextoController extends Controller{
     public $session;
@@ -126,11 +127,11 @@ class ListaOperativoNotasSextoController extends Controller{
             ieol.institucioneducativa_operativo_log_tipo_id as estado
             from institucioneducativa ie
             inner join jurisdiccion_geografica jg on ie.le_juridicciongeografica_id = jg.id
-            left join institucioneducativa_operativo_log ieol on ieol.institucioneducativa_id = ie.id
+            left join (select * from institucioneducativa_operativo_log where gestion_tipo_id = :gestion) ieol on ieol.institucioneducativa_id = ie.id
             where jg.distrito_tipo_id = :distrito
             and ie.orgcurricular_tipo_id = 1
             and ie.estadoinstitucion_tipo_id = 10
-            and ieol.gestion_tipo_id = :gestion
+            --and ieol.gestion_tipo_id = :gestion
             order by ie.id asc, ie.institucioneducativa, ieol.institucioneducativa_operativo_log_tipo_id desc");
         $query->bindValue('gestion', $gestion);
         $query->bindValue('distrito', $distrito);
@@ -169,6 +170,55 @@ class ListaOperativoNotasSextoController extends Controller{
         //return $Datos->getQuery()->getResult();
 
     }
+
+    public function abrirOperativoAction(Request $request, $sie)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+
+        $sie = filter_var($sie,FILTER_SANITIZE_NUMBER_INT);
+        $sie = is_numeric($sie)?$sie:-1;
+
+        $data=null;
+        $status= 404;
+        $msj='Ocurrio un error, por favor vuelva a intentarlo.';
+        $gestion = date('Y');
+
+        $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
+        if($sie >0)
+        {
+            $query ="delete from institucioneducativa_operativo_log where gestion_tipo_id = ? and institucioneducativa_id = ? ";
+            $stmt = $db->prepare($query);
+            $params = array($gestion, $sie);
+            $stmt->execute($params);
+            $tmp=$stmt->fetchAll();
+
+            $borrado = $em->getRepository('SieAppWebBundle:InstitucioneducativaOperativoLog')->findOneBy(array('gestionTipoId' => $gestion,'institucioneducativa'=>$institucioneducativa));
+            if($borrado==null)
+            {
+                $data='ok';
+                $status= 200;
+                $msj='El operativo fue abierto.';
+            }
+            else
+            {
+                $data=null;
+                $status= 404;
+                $msj='Ocurrio un error el operativo no pudo ser abierto, por favor vuelva a intentarlo.';
+            }
+        }
+        else
+        {
+            $data=null;
+            $status= 404;
+            $msj='Ocurrio un error, por favor vuelva a intentarlo.';
+        }
+        $response = new JsonResponse($data,$status);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response->setData(array('data'=>$data,'status'=>$status,'msj'=>$msj));
+    }
+
+
     public function downloadFileAction(){
 
         return $this->render('SieRegularBundle:ReviewUpSieFile:downloadFile.html.twig', array(
