@@ -498,7 +498,7 @@ class OperativoBonoJPController extends Controller
 						')
 						->from('SieAppWebBundle:BjpEstudianteApoderadoBeneficiarios','beab')
 						->innerJoin('SieAppWebBundle:Persona','p','with','p.id = beab.personaId')
-						->innerJoin('SieAppWebBundle:ApoderadoTipo','ap','with','ap.id = beab.apoderadoTipo')
+						->innerJoin('SieAppWebBundle:BjpApoderadoTipo','ap','with','ap.id = beab.apoderadoTipo')
 						->where('beab.estudianteInscripcionId = :inscriptionId')
 						->andWhere('beab.segipIdTut = 1')
 						->andWhere('beab.estadoId IN (:estado)')
