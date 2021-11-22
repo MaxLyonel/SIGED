@@ -831,6 +831,36 @@ class OperativoBonoJPController extends Controller
 		$stmt->execute($params);
 		return $stmt->fetch();
 	}
+		public function reporte_seguimiento_Bjp_pdfAction(){
+		return $this->render('SieHerramientaBundle:ReporteSeguimientoBjpPdf:reporte_seguimiento_Bjp_pdf_index.html.twig');
+	}
+	public function imprimir_seguimiento_pdfAction(Request $request){
+		$this->session = new Session();
+		$ie_id=$this->session->get('ie_id');
+		$gestion=date('Y');
+		// echo ">".$ie_id.">>".$gestion;exit();
+        // $pdf=$this->container->getParameter('urlreportweb') . 'reg_preins_formulario.rptdesign&__format=pdf'.'&preinscripcion='.$idTramite;
+        $pdf=$this->container->getParameter('urlreportweb') . 'reg_lst_EstudianApod_Benef_Pagados_UnidadEducativa_v1_EEA.rptdesign&__format=pdf'.'&ue='.$ie_id.'&gestion='.$gestion;
+        //$pdf='http://127.0.0.1:63170/viewer/preview?_report=D%3A\workspaces\workspace_especial\bono-bjp\reg_lst_EstudiantesApoderados_Benef_UnidadEducativa_v1_EEA.rptdesign&_format=pdf'.'&ue='.$sie.'&gestion='.$gestion;
+        
+        $status = 200;  
+        $arch           = 'IMPRIMIR REPORTE DE SEGUIMIENTO-'.date('Y').'_'.date('YmdHis').'.pdf';
+        $response       = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+        $response->setContent(file_get_contents($pdf));
+        $response->setStatusCode($status);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+	}
+
+
+
+
+
+
 	public function cambiarEstadoTutores_restablecerAction(Request $request){
 		$id_bjp_estudiante_apoderado_beneficiarios = $request->get('id');
 		$estado = $request->get('estado');
