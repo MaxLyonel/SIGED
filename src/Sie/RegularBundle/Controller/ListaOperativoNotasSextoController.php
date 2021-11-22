@@ -128,9 +128,12 @@ class ListaOperativoNotasSextoController extends Controller{
             from institucioneducativa ie
             inner join jurisdiccion_geografica jg on ie.le_juridicciongeografica_id = jg.id
             left join (select * from institucioneducativa_operativo_log where gestion_tipo_id = :gestion) ieol on ieol.institucioneducativa_id = ie.id
+            inner join institucioneducativa_curso iec on iec.institucioneducativa_id = ie.id
             where jg.distrito_tipo_id = :distrito
             and ie.orgcurricular_tipo_id = 1
             and ie.estadoinstitucion_tipo_id = 10
+            and iec.nivel_tipo_id = 13
+            and iec.grado_tipo_id = 6
             --and ieol.gestion_tipo_id = :gestion
             order by ie.id asc, ie.institucioneducativa, ieol.institucioneducativa_operativo_log_tipo_id desc");
         $query->bindValue('gestion', $gestion);
