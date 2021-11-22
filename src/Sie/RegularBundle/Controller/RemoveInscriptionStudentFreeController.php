@@ -67,7 +67,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
         //set new gestion to the select year
         $aGestion = array();
         $currentYear = date('Y');
-        if($rolUser == 8){
+        if($this->session->get('roluser') == 8){
             for ($i = 1; $i <= 10; $i++) {
                 $aGestion[$currentYear] = $currentYear;
                 $currentYear--;
