@@ -571,7 +571,7 @@ class OperativoBonoJPController extends Controller
 	}
 	public function buscar_validar_persona_ci_segipAction(Request $request){
 		$inscripcion = $request->get('inscripcionid');
-		$ci = $request->get('ci');
+		$ci = str_replace(' ', '', $request->get('ci'));
 		$complemento = $request->get('complemento');
 		// echo ">".$inscripcion.">".$ci;exit();
 		$em = $this->getDoctrine()->getManager();
@@ -668,7 +668,7 @@ class OperativoBonoJPController extends Controller
 		// $caso = $request->get('caso');
 		$obs = mb_strtoupper($request->get('obs'),'utf-8');
 
-		$ci = $request->get('ci1');
+		$ci = str_replace(' ', '', $request->get('ci1'));
 		$complemento1 = $request->get('complemento1');
 		$form_idfecnac = $request->get('form_idfecnac');
 		$paterno = mb_strtoupper($request->get('paterno'),'utf-8');
