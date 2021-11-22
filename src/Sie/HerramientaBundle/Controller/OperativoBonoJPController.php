@@ -909,7 +909,7 @@ class OperativoBonoJPController extends Controller
 
 	public function boton_generar_file_bonoJP_a_demandaAction()
 	{
-		if( $this->session->get('roluser') == 34 || $this->session->get('roluser') == 8 )
+		if( $this->session->get('roluser') == 34 )
 		{
 			
 			$em = $this->getDoctrine()->getManager();
@@ -929,7 +929,7 @@ class OperativoBonoJPController extends Controller
 
 	public function operativo_bono_jp_GenerarFileCambioTutorAction()
 	{
-		if( $this->session->get('roluser') == 34 || $this->session->get('roluser') == 8 )
+		if( $this->session->get('roluser') == 34 )
 		{
 			$datosArchivos = $this->_listarDatosDeArchivos();
 			return $this->render('SieHerramientaBundle:GenerarFileBonoJP:operativo_bono_jp_GenerarFileCambioTutor.html.twig',array('datosArchivos' => $datosArchivos));
