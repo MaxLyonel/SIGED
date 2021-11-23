@@ -592,7 +592,7 @@
 
                             </ul>
                         </li>
-                        {#
+                        
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -604,7 +604,7 @@
                                 <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
                             </ul>
                         </li>
-                        #}
+                        
                          
                     {% endif %}
                     {% if (app.session.get('roluser') == 20 or app.session.get('roluser') == 32) %} {#NACIONAL INVITADO#}
@@ -677,7 +677,7 @@
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
                             </ul>
                         </li>
-                        {#
+                        
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -689,7 +689,7 @@
                                 <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
                             </ul>
                         </li>
-                        #}
+                        
                     {% endif %}
                     {% if app.session.get('roluser') == 10 %} {#DISTRITAL#}
                         <li class="submenu">
@@ -738,7 +738,7 @@
                                 <li><a href="{{path('sie_alt_reportes_search')}}">Reportes Educación Alternativa </a></li>
                             </ul>
                         </li>
-                        {#
+                        
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -750,7 +750,7 @@
                                 <li><a href="{{ path('bach_exc_alt_rep_dis')}}">Generar Reporte</a></li>
                             </ul>
                         </li>
-                        #}
+                        
                     {% endif %}
                     {% if app.session.get('roluser') == 9 %}{#DIRECTOR#}
                         <li class="submenu">
@@ -770,7 +770,7 @@
                                 <li><a href="{{path('sie_alt_submenu_diversa')}}">Reportes Educación Diversa </a></li>
                             </ul>
                         </li>
-                        {#
+                        
                         <li class="submenu">
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-home"></i></span>
@@ -785,7 +785,7 @@
 
                             </ul>
                         </li>
-                        #}
+                        
                     {% endif %}
                     {% if app.session.get('roluser') == 2 %}{#MAESTRO#}
                         <li class="submenu">
