@@ -179,7 +179,9 @@
 							{% if cont ==0 %}
 								<a class="btn btn-warning" href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="CAMBIO TUTOR" onclick="cambiarEstadoTutores({{t.id}},2,{{t.estudianteInscripcion}})"><i class="fa fa-edit fa-2x "></i> CAMBIO TUTOR</a>
 							{% endif %}
-								{# <a class="btn btn-danger" href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="BAJA DEFINITIVA TUTOR" onclick="bajaTutoresBjp({{t.estudianteInscripcion}})"><i class="fa fa-trash-o fa-2x "></i> BAJA DEFINITIVA</a> #}
+							{% if app.session.get('roluser') in [7,8] %}
+								<a class="btn btn-danger" href="javascript:void(0)"  data-toggle="tooltip" data-placement="top" title="BAJA DEFINITIVA TUTOR" onclick="bajaTutoresBjp({{t.estudianteInscripcion}})"><i class="fa fa-trash-o fa-2x "></i> BAJA DEFINITIVA</a>
+							{% endif %}
 						</td>
 					</tr>
 					{% endfor %}
