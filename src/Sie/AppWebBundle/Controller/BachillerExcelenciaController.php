@@ -160,11 +160,12 @@ class BachillerExcelenciaController extends Controller {
                     ->setParameter('gestion', $formulario['gestion'])
                     ->getQuery();
 
+
             $registrado = $query->getResult();
 
-            if(count($registrado) >= 1) {
-                return $this->redirect($this->generateUrl('principal_web'));
-            }
+            // if(count($registrado) <= 1) {
+            //     return $this->redirect($this->generateUrl('principal_web'));
+            // }
 
             /*
              * Verificar si la UE cuenta con sexto de secundaria
