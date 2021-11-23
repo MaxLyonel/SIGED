@@ -324,6 +324,9 @@ class BachillerExcelenciaController extends Controller {
                 'nombre'=>$form_aux['nombre'],
                 'fecha_nacimiento'=>$form_aux['fechaNacimiento']
             );
+            if($form_aux['nacionalidad']==1){
+                $persona['extranjero']='e';
+            }
             
             $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form_aux['carnet'], $persona, 'prod', 'academico');
 
