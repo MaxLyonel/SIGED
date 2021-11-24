@@ -29,7 +29,7 @@ class BachillerExcelenciaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2021-11-24');
+        $this->fechaCorte = new \DateTime('2021-11-25');
         $this->gestionOperativo =  $this->session->get('currentyear');
     }
 
@@ -310,9 +310,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // if($this->fechaActual > $this->fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $response = new JsonResponse();
         try {
@@ -666,9 +666,9 @@ class BachillerExcelenciaController extends Controller {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        if($this->fechaActual > $this->fechaCorte) {
-            return $this->redirect($this->generateUrl('principal_web'));
-        }
+        // if($this->fechaActual > $this->fechaCorte) {
+        //     return $this->redirect($this->generateUrl('principal_web'));
+        // }
 
         $form = $this->createSearchIeRstForm();
         $form->handleRequest($request);
