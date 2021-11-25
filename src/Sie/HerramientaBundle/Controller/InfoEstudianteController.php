@@ -969,7 +969,7 @@ class InfoEstudianteController extends Controller {
         }
         $closeopesextosecc = $this->get('funciones')->verificarSextoSecundariaCerrado($sie,$gestion);
         $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
-        $this->session->set('unablePrimerTrim',false);
+        
         // to enable 1er Trim 
         $objUe1erTrin = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
         if(sizeof($objUe1erTrin)>0){
