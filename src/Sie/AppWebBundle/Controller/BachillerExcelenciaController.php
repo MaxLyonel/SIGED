@@ -29,7 +29,7 @@ class BachillerExcelenciaController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->fechaActual = new \DateTime('now');
-        $this->fechaCorte = new \DateTime('2021-11-25');
+        $this->fechaCorte = new \DateTime('2021-11-27');
         $this->gestionOperativo =  $this->session->get('currentyear');
     }
 
@@ -510,7 +510,7 @@ class BachillerExcelenciaController extends Controller {
                 $gestion = $formulario['gestion'];
             } else {
                 $this->get('session')->getFlashBag()->add('searchIe', 'No tiene tuición sobre la Institución Educativa');
-            return $this->redirect($this->generateUrl('bach_exc'));
+            // return $this->redirect($this->generateUrl('bach_exc'));
             }
 
             /*
