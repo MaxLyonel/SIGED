@@ -8,6 +8,7 @@ use Sie\AppWebBundle\Form\EstudianteType;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Sie\AppWebBundle\Entity\TmpInstitucioneducativaApertura2021;
 
 /**
  * ControlOperativoMenuController.
@@ -36,6 +37,7 @@ class ControlOperativoMenuController extends Controller {
             if(in_array($this->session->get('roluser'), array(7,8,10))){
                 $operativo++;
             }
+
             $tipoUE = $this->get('funciones')->getTipoUE($sie,$gestion);
 
             $mensaje = "";
@@ -45,16 +47,23 @@ class ControlOperativoMenuController extends Controller {
 
             if ($tuicion) {
 
-                // $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
+                $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
 
-                if(true){
+                $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                    'unidadEducativa'=>$sie,
+                    'gestion'=>$gestion,
+                    'bim1'=>2,
+                    'bim2'=>2,
+                  ));                
 
-                    $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-                        'unidadEducativa'=>$sie,
-                        'gestion'=>$gestion,
-                        'bim1'=>2,
-                        'bim2'=>2,
-                      ));
+                if(!$uePrimTrim or sizeof($objInfoUE)>0){
+
+                    // $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                    //     'unidadEducativa'=>$sie,
+                    //     'gestion'=>$gestion,
+                    //     'bim1'=>2,
+                    //     'bim2'=>2,
+                    //   ));
                       // dump($objInfoUE);die;
                       //$registro = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa'=>$sie,'gestionTipoId'=>$gestion,'notaTipo'=>$operativo));
                       
@@ -82,7 +91,8 @@ class ControlOperativoMenuController extends Controller {
 
                 }else{
                           $registro = null;
-                          $mensaje = "Unidad Educativa no autorizada";                    
+                          // $mensaje = "Unidad Educativa no autorizada";                    
+                          $mensaje = "habilitado ...";                    
 
                 }
 
@@ -112,6 +122,7 @@ class ControlOperativoMenuController extends Controller {
         switch ($operativo) {
             //case 0: $nombreOperativo = 'Inicio de gestiòn';break;
             case 1: $nombreOperativo = 'Operativo 1er. Trim.';break;
+            case 2: $nombreOperativo = 'Operativo 2do. Trim.';break;
             case 3: $nombreOperativo = '1er. Trim. Habilitar';break;
             /*case 2: $nombreOperativo = '2do Bimestre';break;
             case 3: $nombreOperativo = '3er Bimestre';break;
@@ -139,7 +150,7 @@ class ControlOperativoMenuController extends Controller {
                 'rude'=>1
               )); 
 
-               // $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
+ 
 
                 if(true){
 
@@ -154,6 +165,17 @@ class ControlOperativoMenuController extends Controller {
                          
                           $objInfoUE->setBim1(0);
                           $objInfoUE->setBim2(0);
+
+                          $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
+
+                           if(!$uePrimTrim){              
+                            $uePrimTrim = new TmpInstitucioneducativaApertura2021();
+                            $uePrimTrim->setInstitucioneducativaId($sie);
+                            $uePrimTrim->setFechaRegistro(new \DateTime('now'));
+                            $em->persist($uePrimTrim);
+                            
+                           }
+
                           $em->flush();
                           $datosInsert = array('sie'=>$sie,'gestion'=>'2021','trim1'=>2,'trim2'=>2,);
                          $this->get('funciones')->setLogTransaccion(
