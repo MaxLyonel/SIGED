@@ -1,0 +1,25 @@
+Sie\AppWebBundle\Entity\TmpInstitucioneducativaApertura2021:
+    type: entity
+    table: tmp_institucioneducativa_apertura2021
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        institucioneducativaId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: institucioneducativa_id
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+    lifecycleCallbacks: {  }
