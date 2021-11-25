@@ -971,10 +971,10 @@ class InfoEstudianteController extends Controller {
         $arrLevelandGrado = array('haslevel'=> $haslevel, 'hasgrado' => $hasgrado, 'closeopesextosecc' => $closeopesextosecc, 'gestion' => $gestion, 'operativo' => $operativo);
         $this->session->set('unablePrimerTrim',false);
         // to enable 1er Trim 
-        /*$objUe1erTrin = $em->getRepository('SieAppWebBundle:LogTransaccion')->findOneBy(array('key'=>$sie, 'observacion'=>'habilitacion 1er. trim.'));
+        $objUe1erTrin = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
         if(sizeof($objUe1erTrin)>0){
             $this->session->set('unablePrimerTrim',true);
-        }*/
+        }
 
     // end add validation to show califications option
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:seeStudents.html.twig', array(
