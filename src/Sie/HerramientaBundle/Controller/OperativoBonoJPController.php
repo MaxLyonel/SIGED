@@ -356,19 +356,23 @@ class OperativoBonoJPController extends Controller
 					inner join institucioneducativa inst on (iec.institucioneducativa_id = inst.id)
 					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	
 					and ei.estadomatricula_tipo_id=4 and iec.nivel_tipo_id in (12,13,403,405,402,410,401,404,999) ";
-		
+		// dump($query);die();
 		$query2 = $em->getConnection()->prepare($query);
 		$query2->execute();
         $currentInscription = $query2->fetchAll();
-        
+        // dump(sizeof($currentInscription)); die();
          //check if the student has current inscription
-         if(sizeof($currentInscription)>0){
+        if(sizeof($currentInscription)>0){
          	// if the student is in the same UE
-         	if($currentInscription[0]['institucioneducativa_id']!=$this->session->get('ie_id')){
-         		$messageError = 'El estudiante no esta inscrito en esta UE';
-         		$swError = true;
+         	if( $this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 ) {
+         		// $messageError = 'El estudiante no esta inscrito en esta UE';
+         		$swError = false;
+         	}else{
+	         	if($currentInscription[0]['institucioneducativa_id']!=$this->session->get('ie_id')){
+	         		$messageError = 'El estudiante no esta inscrito en esta UE';
+	         		$swError = true;
+	         	}         		
          	}
-
          }else{
          	$messageError = 'El estudiante no cuenta con inscription';
          	$swError = true;
@@ -379,7 +383,7 @@ class OperativoBonoJPController extends Controller
 		$tutoresActuales= array();
 		$tutoresEliminados= array();
 
-         if(!$swError){
+        if(!$swError){
 
 			$em = $this->getDoctrine()->getManager();
 			if($idtipoInstitucion == 1)
@@ -415,11 +419,9 @@ class OperativoBonoJPController extends Controller
 					break;
 				}
 			}
-
-
 			$tutoresActuales = $this->listarTutores($inscriptionId,array(1,2));
 			$tutoresEliminados = $this->listarTutores($inscriptionId,array(3));
-         }
+        }
          // dump($dataInscriptionR);die;
 		return $this->render('SieHerramientaBundle:BonoJP:inscripcionesEstudianteBonoJP.html.twig', array(
 			'inscripcionesRegular' => $dataInscriptionR,
