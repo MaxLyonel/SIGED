@@ -364,8 +364,8 @@ class OperativoBonoJPController extends Controller
          //check if the student has current inscription
         if(sizeof($currentInscription)>0){
          	// if the student is in the same UE
-         	if( $this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 ) {
-         		// $messageError = 'El estudiante no esta inscrito en esta UE';
+         	if( ($this->session->get('roluser') == '7') || ($this->session->get('roluser') == '8')  || ($this->session->get('roluser') == '9')) {
+         		$messageError = 'roles...';
          		$swError = false;
          	}else{
 	         	if($currentInscription[0]['institucioneducativa_id']!=$this->session->get('ie_id')){
@@ -388,18 +388,18 @@ class OperativoBonoJPController extends Controller
 			$em = $this->getDoctrine()->getManager();
 			if($idtipoInstitucion == 1)
 			{
-				$query = $em->getConnection()->prepare("SELECT  * FROM sp_genera_estudiante_historial(?) where gestion_tipo_id_raep = ? AND estadomatricula_tipo_id_fin_r = ?");
-				$params = array($codigo_rude, $gestion, $estado_matricula);
-			}
-			else
-			{
+				$query = $em->getConnection()->prepare("SELECT  * FROM sp_genera_estudiante_historial(?) where gestion_tipo_id_raep = ? AND estadomatricula_tipo_id_fin_r  IN (4,5,55,11) ");
+				// $params = array($codigo_rude, $gestion, $estado_matricula);
+				$params = array($codigo_rude, $gestion);
+
+			} else {
 				$query = $em->getConnection()->prepare("SELECT  * FROM sp_genera_estudiante_historial(?) where gestion_tipo_id_raep = ?");
 				$params = array($codigo_rude, $gestion);
 			}
 
 			$query->execute($params);
 			$dataInscription = $query->fetchAll();
-			//dump($dataInscription); exit();
+			// dump($dataInscription); exit();
 			$dataInscriptionR = $dataInscriptionE = array();
 			$inscriptionId =-1;
 			foreach ($dataInscription as $key => $inscription)
