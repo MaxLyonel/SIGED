@@ -419,7 +419,7 @@ class OperativoBonoJPController extends Controller
 					break;
 				}
 			}
-			$tutoresActuales = $this->listarTutores($inscriptionId,array(1,2));
+			$tutoresActuales = $this->listarTutores($inscriptionId,array(1,2,4));
 			$tutoresEliminados = $this->listarTutores($inscriptionId,array(3));
         }
          // dump($dataInscriptionR);die;
@@ -441,7 +441,7 @@ class OperativoBonoJPController extends Controller
 		/*$tutoresActuales = $this->listarTutores($inscripcion,1);
 		$tutoresEliminados = $this->listarTutores($inscripcion,2);*/
 
-		$tutoresActuales = $this->listarTutores($inscripcion,array(1,2));
+		$tutoresActuales = $this->listarTutores($inscripcion,array(1,2,4));
 		$tutoresEliminados = $this->listarTutores($inscripcion,array(3));
 		/*
 		$status = 200;
