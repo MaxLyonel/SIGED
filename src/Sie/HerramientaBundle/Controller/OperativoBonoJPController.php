@@ -365,7 +365,7 @@ class OperativoBonoJPController extends Controller
         if(sizeof($currentInscription)>0){
          	// if the student is in the same UE
          	if( ($this->session->get('roluser') == '7') || ($this->session->get('roluser') == '8')  || ($this->session->get('roluser') == '9')) {
-         		$messageError = 'roles...';
+         		// $messageError = 'roles...';
          		$swError = false;
          	}else{
 	         	if($currentInscription[0]['institucioneducativa_id']!=$this->session->get('ie_id')){
