@@ -1,0 +1,1070 @@
+<div class="modal-dialog modal-lg" id="modal_requisitos_{{ id }}" style="width: 60%">
+    <style>
+        .ckbox label {
+            display: inline
+        }
+    </style>
+    <div class="modal-content">
+        <div class="panel panel-primary">
+            <div class="panel-heading panel-heading-cea">
+                <div class="pull-left">
+                    <h3 class="panel-title"><span>{{ tramitetipo.tramiteTipo|upper }}</span></h3>
+                </div>
+                <div class="pull-rigth">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- Start basic wizard horizontal -->
+                        <div id="basic-wizard-horizontal">
+                            <div class="panel panel-tab rounded shadow">
+                                <!-- Start tabs heading -->
+                                <div class="panel-heading no-padding">
+                                    <ul class="nav nav-tabs nav-pills">
+                                        {% if requisitos.legal %}
+                                            <li class="active">
+                                                <a href="#tab1-1-{{ id }}" data-toggle="tab" aria-expanded="false">
+                                                    <i class="fa fa-file-text"></i>
+                                                    <div>
+                                                        <span class="text-strong">1. Requisitos Legales</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                        {% if requisitos.infra %}
+                                            <li class="">
+                                                <a href="#tab1-2-{{ id }}" data-toggle="tab" aria-expanded="false">
+                                                    <i class="glyphicon glyphicon-home"></i>
+                                                    <div>
+                                                        <span class="text-strong">2. Infraestructura</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                        {% if requisitos.curri %}
+                                            <li class="">
+                                                <a href="#tab1-3-{{ id }}" data-toggle="tab" aria-expanded="false">
+                                                    <i class="glyphicon glyphicon-th-list"></i>
+                                                    <div>
+                                                        <span class="text-strong">3. Técnico - Pedagógicos</span>
+                                                    </div>
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+                                </div><!-- /.panel-heading -->
+                                <!--/ End tabs heading -->
+                                <!-- Start tabs content -->
+                                <div class="panel-body tab-content">
+                                    {% if id == 62 %} {# ampliacion de nivel #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_ampliar) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_ampliar,{'attr':{'class':'req34'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_compromiso_ampliar,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_compromiso_ampliar) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_certificado_ampliar,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_certificado_ampliar) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_acreditacion_ampliar,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_acreditacion_ampliar) }}
+                                                    </div>
+                                                </div>
+                                                {% if dependencia.id == 2 %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary">
+                                                            {{ form_widget(form.i_testimonio_ampliar,{'attr':{'class':'req34'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.i_testimonio_ampliar) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary">
+                                                            {{ form_widget(form.i_convenio_ampliar,{'attr':{'class':'req34'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.i_convenio_ampliar) }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_folio_ampliar,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_folio_ampliar) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.ii_planos_ampliar,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_planos_ampliar) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.ii_edificio_ampliar,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_edificio_ampliar) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.ii_geografica_ampliar,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_geografica_ampliar) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.ii_equipamiento_ampliar,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_equipamiento_ampliar) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-3-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.iii_curri_proy_ampliar,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.iii_curri_proy_ampliar) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.iii_curri_informe_ampliar,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.iii_curri_informe_ampliar) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id == 63 %}{# apertura subcentro #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.i_informe_director_cea_sc,{'attr':{'class':'req63'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_informe_director_cea_sc) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id == 71 %}{# Reduccion de Nivel #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_reducir) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_reducir,{'attr':{'class':'req34'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_compromiso_reducir,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_compromiso_reducir) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_certificado_reducir,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_certificado_reducir) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_acreditacion_reducir,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_acreditacion_reducir) }}
+                                                    </div>
+                                                </div>
+                                                {% if dependencia.id == 2 %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary">
+                                                            {{ form_widget(form.i_testimonio_reducir,{'attr':{'class':'req34'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.i_testimonio_reducir) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary">
+                                                            {{ form_widget(form.i_convenio_reducir,{'attr':{'class':'req34'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.i_convenio_reducir) }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_folio_reducir,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_folio_reducir) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.ii_planos_reducir,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_planos_reducir) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.ii_edificio_reducir,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_edificio_reducir) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.ii_geografica_reducir,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_geografica_reducir) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.ii_equipamiento_reducir,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_equipamiento_reducir) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-3-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.iii_curri_proy_reducir,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.iii_curri_proy_reducir) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.iii_curri_informe_reducir,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.iii_curri_informe_reducir) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id == 61 %}{# Ampliación o cambio de especialidades técnicas #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_acesp) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_acesp,{'attr':{'class':'req34'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_compromiso_acesp,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_compromiso_acesp) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_certificado_acesp,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_certificado_acesp) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_acreditacion_acesp,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_acreditacion_acesp) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.ii_edificio_acesp,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_edificio_acesp) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.ii_equipamiento_acesp,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_equipamiento_acesp) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-3-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.iii_curri_proy_acesp,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.iii_curri_proy_acesp) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.iii_curri_informe_acesp,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.iii_curri_informe_acesp) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id == 67 %}{# Cierre de Especialidades Técnicas #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_informe_director_cea_cesp,{'attr':{'class':'req34'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_informe_director_cea_cesp) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id == 64 %}{# cambio de dependencia #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_dependencia) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_dependencia,{'attr':{'class':'req36'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_certificadorue_dependencia,{'attr':{'class':'req36'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_certificadorue_dependencia) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_acreditacion_dependencia,{'attr':{'class':'req36'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_acreditacion_dependencia) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_testimonio_dependencia,{'attr':{'class':'req36'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_testimonio_dependencia) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary">
+                                                        {{ form_widget(form.i_convenio_dependencia,{'attr':{'class':'req36'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_convenio_dependencia) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    {% if dependencia.id == 1 %}
+                                                        <div class="col-md-12 ckbox ckbox-primary">
+                                                            {{ form_widget(form.i_folio_dependencia,{'attr':{'class':'req36'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.i_folio_dependencia) }}
+                                                        </div>
+                                                    {% else %}
+                                                        <div class="col-md-12 ckbox ckbox-primary">
+                                                            {{ form_widget(form.i_doc_protocolizado_dependencia,{'attr':{'class':'req36'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.i_doc_protocolizado_dependencia) }}
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.ii_planos_dependencia,{'attr':{'class':'req36'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_planos_dependencia) }}
+                                                    </div>
+                                                </div>
+                                                {% if dependencia.id == 1 %}
+                                                    <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                        <div class="col-md-12">
+                                                            {{ form_widget(form.ii_edificio_dependencia,{'attr':{'class':'req36'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.ii_edificio_dependencia) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                        <div class="col-md-12">
+                                                            {{ form_widget(form.ii_geografica_dependencia,{'attr':{'class':'req36'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.ii_geografica_dependencia) }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-3-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.iii_informe_director_cea_dependencia,{'attr':{'class':'req36'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.iii_informe_director_cea_dependencia) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12 ckbox ckbox-primary">
+                                                    <div class="col-md-12">
+                                                        {{ form_widget(form.iii_informe_distrital_dependencia,{'attr':{'class':'req36'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.iii_informe_distrital_dependencia) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id == 70 %}{# cambio de nombre #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_cn) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_cn,{'attr':{'class':'req37'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_certdefuncion_cn) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_certdefuncion_cn,{'attr':{'class':'req37'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_certificadorue_cn,{'attr':{'class':'req37'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_certificadorue_cn) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_acreditacion_cn,{'attr':{'class':'req37'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_acreditacion_cn) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id == 66 %}{# cambio de jurisdiccion administrativa #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_jur) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_jur,{'attr':{'class':'req38'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_compromiso_jur,{'attr':{'class':'req38'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_compromiso_jur) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_certificadorue_jur,{'attr':{'class':'req38'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_certificadorue_jur) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_acreditacion_jur,{'attr':{'class':'req38'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_acreditacion_jur) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_conformidad_jur,{'attr':{'class':'req38'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_conformidad_jur) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_planos_jur,{'attr':{'class':'req38'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_planos_jur) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_edificio_jur,{'attr':{'class':'req38'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_edificio_jur) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_geografica_jur,{'attr':{'class':'req38'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_geografica_jur) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-3-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.iii_informe_distrital_jur,{'attr':{'class':'req38'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.iii_informe_distrital_jur) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id == 39 %}{# Fusion #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1">
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2">
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-3">
+                                        </div>
+                                    {% elseif id == 40 %} {# desglose #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1">
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2">
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-3">
+                                        </div>
+                                    {% elseif id == 65 %} {# cambio de infraestructura #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_infra) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_infra,{'attr':{'class':'req41'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_compromiso_infra,{'attr':{'class':'req41'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_compromiso_infra) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_certificadorue_infra,{'attr':{'class':'req41'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_certificadorue_infra) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_acreditacion_infra,{'attr':{'class':'req41'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_acreditacion_infra) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_planos_infra,{'attr':{'class':'req41'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_planos_infra) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_edificio_infra,{'attr':{'class':'req41'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_edificio_infra) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_geografica_infra,{'attr':{'class':'req41'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_geografica_infra) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-3-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.iii_informe_distrital_infra,{'attr':{'class':'req41'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.iii_informe_distrital_infra) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id == 69 %} {# cierre temporal #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_informe_director_cea_cierre_tmp,{'attr':{'class':'req42'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_informe_director_cea_cierre_tmp) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_certificadorue_cierre_tmp,{'attr':{'class':'req42'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_certificadorue_cierre_tmp) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id == 68 %} {# cierre definitivo #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_certificadorue_cierre,{'attr':{'class':'req42'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_certificadorue_cierre) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id == 72 %}{# Reapertura #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_reapertura) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_reapertura,{'attr':{'class':'req44'}}) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id == 45 %}{# nuevo certifcado rue #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_nuevorue) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_nuevorue,{'attr':{'class':'req45'}}) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% elseif id in [46,59,55] %}{# regularización y apertura y actualizacion de R.A. #}
+                                        <div class="tab-pane fade inner-all in active" id="tab1-1-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_solicitud_apertura) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_solicitud_apertura,{'attr':{'class':'req54'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_compromiso_apertura,{'attr':{'class':'req54'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_compromiso_apertura) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_actafundacion_apertura) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_actafundacion_apertura,{'attr':{'class':'req54'}}) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-6">
+                                                        {{ form_label(form.i_certdefuncion) }}
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        {{ form_widget(form.i_certdefuncion,{'attr':{'class':'req54'}}) }}
+                                                    </div>
+                                                </div>
+                                                {% if dependencia.id == 2 %}
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_constitucion_apertura,{'attr':{'class':'req54'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.i_constitucion_apertura) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.i_convenio_apertura,{'attr':{'class':'req54'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.i_convenio_apertura) }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.i_folio_apertura,{'attr':{'class':'req54'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.i_folio_apertura) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-2-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_planos_apertura,{'attr':{'class':'req54'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_planos_apertura) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_edificio_escolar,{'attr':{'class':'req54'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_edificio_escolar) }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.ii_act_geografica,{'attr':{'class':'req54'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.ii_act_geografica) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade inner-all" id="tab1-3-{{ id }}">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    Proyecto Educativo en el marco de las políticas educativas emitidas
+                                                    por el Ministerio de Educación, bajo la siguiente estructura:
+                                                </div>
+                                                <div class="group">
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_curri_antecedentes,{'attr':{'class':'req54 curriproy'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.iii_curri_antecedentes) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_curri_objgeneral,{'attr':{'class':'req54 curriproy'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.iii_curri_objgeneral) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_curri_objespecificos,{'attr':{'class':'req54 curriproy'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.iii_curri_objespecificos) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_curri_diagnostico,{'attr':{'class':'req54 curriproy'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.iii_curri_diagnostico) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_curri_jussolicitud,{'attr':{'class':'req54 curriproy'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.iii_curri_jussolicitud) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_curri_jusinfraestructura,{'attr':{'class':'req54 curriproy'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.iii_curri_jusinfraestructura) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_curri_planes,{'attr':{'class':'req54 curriproy'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.iii_curri_planes) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_curri_proyeccion,{'attr':{'class':'req54 curriproy'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.iii_curri_proyeccion) }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                            {{ form_widget(form.iii_curri_conclusiones,{'attr':{'class':'req54 curriproy'}}) }}
+                                                            &nbsp;
+                                                            {{ form_label(form.iii_curri_conclusiones) }}
+                                                            {{ form_widget(form.iii_curri_proy,{'attr':{'class':'req54'}}) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-12 ckbox ckbox-primary checkbox-inline">
+                                                        {{ form_widget(form.iii_curri_informe_distrital,{'attr':{'class':'req54'}}) }}
+                                                        &nbsp;
+                                                        {{ form_label(form.iii_curri_informe_distrital) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div><!-- /.panel-body -->
+                                <!--/ End tabs content -->
+                                <!--/ End pager -->
+                            </div><!-- /.panel -->
+                        </div><!-- /#basic-wizard-horizontal -->
+                        <!--/ End basic wizard horizontal-->
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="pull-left">
+                    <div id="msg{{ id }}"></div>
+                    <input type="hidden" id="validar{{ id }}" value="0">
+                </div>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-success"
+                            onclick="verificarRequisitos({{ id }},{{ dependencia.id }},{{ constitucion }})">Validar
+                        Requisitos
+                    </button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div><!-- /.modal-dialog -->
+
+<script>
+    $(document).on('change', 'input[type="file"]', function () {
+        // this.files[0].size recupera el tamaño del archivo
+        // alert(this.files[0].size);
+        var fileName = this.files[0].name;
+        var fileSize = this.files[0].size;
+        var sizePermitido = 3 * (1024 * 1024)
+        if (fileSize > sizePermitido) {
+            alert('El archivo adjunto no debe superar los 3MB');
+            this.value = '';
+            this.files[0].name = '';
+        }
+    });
+    $(function () {
+        $(".validar").keydown(function (event) {
+            if ((event.keyCode < 48 || event.keyCode > 57) && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !== 190 && event.keyCode !== 110 && event.keyCode !== 8 && event.keyCode !== 9) {
+                return false;
+            }
+        });
+    });
+    $(".alquiler").change(function () {
+        if ($(this).val() == 'SI') {
+            $('#contrato').show();
+            $('#form_i_contrato_ampliar').attr('required', true);
+
+        } else {
+            $('#contrato').hide();
+            $('#form_i_contrato_ampliar').attr('required', false);
+            $('#form_i_contrato_ampliar').val('');
+        }
+    });
+    $(".alquilerDependencia").change(function () {
+        if ($(this).val() == 'SI') {
+            $('#contratoDependencia').show();
+            $('#form_i_contrato_dependencia').attr('required', true);
+
+        } else {
+            $('#contratoDependencia').hide();
+            $('#form_i_contrato_dependencia').attr('required', false);
+            $('#form_i_contrato_dependencia').val('');
+        }
+    });
+    $(".alquilerReducir").change(function () {
+        if ($(this).val() == 'SI') {
+            $('#contratoReducir').show();
+            $('#form_i_contrato_reducir').attr('required', true);
+
+        } else {
+            $('#contratoReducir').hide();
+            $('#form_i_contrato_reducir').attr('required', false);
+            $('#form_i_contrato_reducir').val('');
+        }
+    });
+    $("#form_i_form_fundaempresa").change(function () {
+        if ($(this).is(':checked')) {
+            $('#fundaempresaDependencia').show();
+        } else {
+            $('#fundaempresaDependencia').hide();
+        }
+    });
+    $("#form_i_fotocopia_nit").change(function () {
+        if ($(this).is(':checked')) {
+            $('#nitDependencia').show();
+        } else {
+            $('#nitDependencia').hide();
+        }
+    });
+    $("#form_i_copianit_cn").change(function () {
+        if ($(this).is(':checked')) {
+            $('#nitCn').show();
+        } else {
+            $('#nitCn').hide();
+        }
+    });
+    $("#form_i_form_fundaempresa_apertura").change(function () {
+        $('#form_nro_fundaempresa_apertura').val('');
+        $('#form_fecha_fundaempresa_apertura').val('');
+        if ($(this).is(':checked')) {
+            $('#fundaempresaApertura').show();
+        } else {
+            $('#fundaempresaApertura').hide();
+        }
+    });
+    $("#form_i_fotocopia_nit_apertura").change(function () {
+        $('#form_nit_apertura').val('');
+        $('#form_i_balance_apertura').attr('checked', false);
+        if ($(this).is(':checked')) {
+            $('#nitApertura').show();
+        } else {
+            $('#nitApertura').hide();
+        }
+    });
+    $(".alquilerApertura").change(function () {
+        $('#form_ii_contrato_apertura').val('');
+        $('#form_ii_folio_apertura').attr('checked', false);
+        if ($(this).val() == 'SI') {
+            $('#contratoApertura').show();
+            $('#folioApertura').hide();
+        } else {
+            $('#contratoApertura').hide();
+            $('#folioApertura').show();
+        }
+    });
+    $(".req34").click(function () {
+        $('#validar34').val(0);
+        $('#msg34').empty();
+    });
+    $(".req35").click(function () {
+        $('#validar35').val(0);
+        $('#msg35').empty();
+    });
+    $(".req36").click(function () {
+        $('#validar36').val(0);
+        $('#msg36').empty();
+    });
+    $(".req37").click(function () {
+        $('#validar37').val(0);
+        $('#msg37').empty();
+    });
+    $(".req38").click(function () {
+        $('#validar38').val(0);
+        $('#msg38').empty();
+    });
+    $(".req41").click(function () {
+        $('#validar41').val(0);
+        $('#msg41').empty();
+    });
+    $(".req42").click(function () {
+        if ($('#validar42').length == 1) {
+            $('#validar42').val(0);
+            $('#msg42').empty();
+        } else {
+            $('#validar43').val(0);
+            $('#msg43').empty();
+        }
+    });
+    $(".req44").click(function () {
+        $('#validar44').val(0);
+        $('#msg44').empty();
+    });
+    $(".req45").click(function () {
+        $('#validar45').val(0);
+        $('#msg45').empty();
+    });
+    $(".req54").click(function () {
+        if ('{{ id }}' == 59) {
+            $('#validar54').val(0);
+            $('#msg54').empty();
+        } else {
+            $('#validar46').val(0);
+            $('#msg46').empty();
+        }
+    });
+</script>

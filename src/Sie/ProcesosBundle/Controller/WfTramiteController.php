@@ -483,10 +483,11 @@ class WfTramiteController extends Controller
                 ->select('ft')
                 ->innerJoin('SieAppWebBundle:WfFlujoInstitucioneducativaTipo','wf','with','wf.flujoTipo=ft.id')
                 ->innerJoin('SieAppWebBundle:FlujoProceso','fp','with','fp.flujoTipo=ft.id')
-                ->where('wf.institucioneducativaTipo =' . $iet)
+                ->where('wf.institucioneducativaTipo IN(:ietipo)')
                 ->andWhere("ft.obs like '%ACTIVO%'")
                 ->andWhere("fp.orden = 1")
                 ->andWhere("fp.rolTipo = ".$rol)
+                ->setParameter('ietipo', array(1, 2))
                 ->getQuery()
                 ->getResult();
 
@@ -902,7 +903,8 @@ class WfTramiteController extends Controller
     
                 $datos = json_decode($wfdatos[0]->getDatos(),true);
                 //dump($datos);die;
-                $data['nombre'] = $datos['Apertura de Unidad Educativa']['institucioneducativa'];
+                $index = strpos('Apertura de Unidad Educativa', $wfdatos[0]->getDatos()) === false ? 'Apertura de Centro de Educacion Alternativa' : 'Apertura de Unidad Educativa';
+                $data['nombre'] = $datos[$index]['institucioneducativa'];
             }
 
             $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id, d.flujo_proceso_id,d.fecha_recepcion,d.fecha_envio,d.usuario_remitente,d.usuario_destinatario,d.obs,d.tramite_estado,d.fecha_envio-d.fecha_recepcion as duracion
