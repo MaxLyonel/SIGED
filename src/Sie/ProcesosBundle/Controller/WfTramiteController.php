@@ -480,16 +480,15 @@ class WfTramiteController extends Controller
                 break;
         }
         $flujotipo = $em->getRepository('SieAppWebBundle:FlujoTipo')->createQueryBuilder('ft')
-                ->select('ft')
-                ->innerJoin('SieAppWebBundle:WfFlujoInstitucioneducativaTipo','wf','with','wf.flujoTipo=ft.id')
-                ->innerJoin('SieAppWebBundle:FlujoProceso','fp','with','fp.flujoTipo=ft.id')
-                ->where('wf.institucioneducativaTipo IN(:ietipo)')
-                ->andWhere("ft.obs like '%ACTIVO%'")
-                ->andWhere("fp.orden = 1")
-                ->andWhere("fp.rolTipo = ".$rol)
-                ->setParameter('ietipo', array(1, 2))
-                ->getQuery()
-                ->getResult();
+            ->select('ft')
+            ->innerJoin('SieAppWebBundle:WfFlujoInstitucioneducativaTipo','wf','with','wf.flujoTipo=ft.id')
+            ->innerJoin('SieAppWebBundle:FlujoProceso','fp','with','fp.flujoTipo=ft.id')
+            ->where('wf.institucioneducativaTipo =' . $iet)
+            ->andWhere("ft.obs like '%ACTIVO%'")
+            ->andWhere("fp.orden = 1")
+            ->andWhere("fp.rolTipo = ".$rol)
+            ->getQuery()
+            ->getResult();
 
         $data['entities'] = $flujotipo;
         $data['titulo'] = "Nuevo trámite";

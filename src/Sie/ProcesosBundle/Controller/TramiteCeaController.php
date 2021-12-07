@@ -126,7 +126,7 @@ class TramiteCeaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $this->tramiteTipoArray = array(59, 60, 62); //fRnk: añadir el 59 para que no traiga este trámite
+        $this->tramiteTipoArray = array(59, 60, 72); //fRnk: añadir el 59 para que no traiga este trámite
 
         //dump($this->tramiteTipoArray);die;
         $form = $this->createFormBuilder()
@@ -2159,9 +2159,9 @@ class TramiteCeaController extends Controller
                 'label' => 'Tipo de Trámite:', 'required' => false, 'multiple' => false, 'expanded' => false, 'attr' => array('class' => 'form-control', 'data-placeholder' => "Seleccionar tipo de trámite"), 'class' => 'SieAppWebBundle:TramiteTipo',
                 'query_builder' => function (EntityRepository $tr) {
                     return $tr->createQueryBuilder('tr')
-                        ->where('tr.obs in (:rue)')
+                        ->where('tr.obs =:rue')
                         ->andWhere('tr.id in (:tipo)')
-                        ->setParameter('rue', ['RUE', 'RCEA'])
+                        ->setParameter('rue', 'RCEA')
                         ->setParameter('tipo', $this->trArray)
                         ->orderBy('tr.tramiteTipo', 'ASC');
                 },
