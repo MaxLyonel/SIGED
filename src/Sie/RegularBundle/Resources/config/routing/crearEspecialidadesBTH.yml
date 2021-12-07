@@ -9,6 +9,10 @@ crear_especialidades_bth_buscar:
 guardar_nueva_especialidad_bth:
     path:     /guardar_nueva_especialidad_bth
     defaults: { _controller: SieRegularBundle:CrearEspecialidadesHistBth:guardar_nueva_especialidad_bth }
+
+funcion_eliminar_esp_bth_validar:
+    path:     /funcion_eliminar_esp_bth_validar
+    defaults: { _controller: SieRegularBundle:CrearEspecialidadesHistBth:funcion_eliminar_esp_bth_validar }
 # reactivarbth_index:
 #     path:     /
 #     defaults: { _controller: SieRegularBundle:ReactivarBTH:index }

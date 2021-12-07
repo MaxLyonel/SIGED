@@ -1,0 +1,164 @@
+<style type="text/css" media="screen">
+.close1 {
+font-size: 1.28571em;
+top: -0.85714em;
+position: absolute;
+right: -0.85714em;
+height: 2em;
+width: 2em;
+background-color: #313a46;
+opacity: 1;
+border: 2px solid #ffffff;
+text-shadow: none;
+color: #ffffff;
+border-radius: 50%;
+text-align: center;
+line-height: 1.83333em;}
+</style>
+<div class="col-md-12">
+    <div class="panel rounded panel panel-icon panel-primary">
+        <div class="panel-heading">
+            <div class="pull-left">
+                <h3 class="panel-title">HISTORIAL DE ESPECIALIDAD</h3>
+            </div>
+            <div class="clearfix"></div>
+        </div><!-- /.panel-heading -->
+        <div class="panel-body no-padding">
+        	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal"><span class="fa fa-plus"></span> AGREGAR ESPECIALIDAD</button><hr>
+        	<h3 class="text-primary" align="center"><b>UNIDAD EDUCATIVA : <u>{{nombre_institucion}}</u></b></h3>
+            <div class="table-responsive">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Nº</th>
+							<th>CODIGO SIE</th>
+							<th>GESTION</th>
+							<th>ESPECIALIDADES</th>
+							<th>ACCION</th>
+						</tr>
+					</thead>
+					<tbody>
+					{# {{ dump(historial_especialidad) }} #}
+					{% for obj in historial_especialidad %}
+						<tr>
+							<td>{{ loop.index }}</td>
+							<td>{{codigo_sie}}</td>
+							<td>{{gestion}}</td>
+							<td>{{obj.especialidad}}</td>
+							<td>
+								<button type="button" onclick="funcion_eliminar_esp_bth('{{obj.ieethId}}')" class="btn btn-danger" title="Enviar a papelera "> <span class="fa fa-trash-o"></span> Papelera de reciclaje</button>
+							</td>
+						</tr>
+					{% endfor %}
+						
+					</tbody>
+				</table>
+			</div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $('.select2').select2();
+});
+</script>
+
+<div id="myModal" class="modal fade" role="dialog">
+	<div class="modal-dialog" >
+		<div class="modal-content panel panel-primary">
+	  		<div class="modal-header">
+	    		<button type="button" class="close1" data-dismiss="modal">&times;</button>
+	    		<h4 class="modal-title" align="center">AGREGAR NUEVA ESPECIALIADAD A <b>U.E. {{nombre_institucion}}</b> </h4>
+	  		</div>
+	  		<div class="modal-body">
+	    		<form class="form-horizontal" method="post" id="guardar_nueva_especialidad_bth" role="form">
+	    		<input type="hidden" id="codigo_sie" value="{{codigo_sie}}">
+	    		<input type="hidden" id="gestion_tipo_id" name="gestion_tipo_id" value="{{gestion}}">
+	    		<input type="hidden" name="institucioneducativa_id" value="{{institucioneducativa_id}}">
+					<div class="form-group">
+						<label class="control-label col-sm-3" >SELECCIONAR ESPECIALIDAD :</label>
+						<div class="col-sm-9">
+							<select style="width: 100%;" name="especialidad_tecnico_humanistico_tipo_id" class="form-control select2" required>
+                                {% for espe in lista_especialidad %}
+	                                <option value="{{espe.id}}">{{espe.especialidad}}</option>
+                                {% endfor %}
+                            </select>
+						</div>
+					</div>
+					
+					<div class="form-group" id="error"></div>
+
+					<div class="form-group">
+						<div class="col-sm-offset-6 col-sm-6">
+							<button type="submit" class="btn btn-success btn-lg" id="boton"><span class=" fa fa-save"></span> GUARDAR DATOS</button>
+			    			<button type="button" class="btn btn-default btn-lg" data-dismiss="modal">&times; CANCELAR</button>
+						</div>
+					</div>
+			  		
+				</form>
+	  		</div>
+		</div>
+	</div>
+</div>
+{% block javascripts %}
+
+<script>
+$("#guardar_nueva_especialidad_bth").submit(function(event) {
+    event.preventDefault();
+    document.getElementById('boton').disabled=true;
+    var codigo_sie=$("#codigo_sie").val()
+    var idgestion=$("#gestion_tipo_id").val()
+    $.ajax({
+        url:'{{path('guardar_nueva_especialidad_bth')}}',
+        type:'POST',
+        data:$("form").serialize(),
+        success:function(dat){
+        	var valores = eval(dat);
+			if (valores[0]==1) {
+				document.getElementById('boton').disabled=false;
+			    $("#error").html('<div class="alert alert-danger" role="alert">  <b style="color: #ff0000;">ESPECIALIDAD YA SE ENCUENTRA REGISTRADO EN LA GESTION '+idgestion+'</b></div>');
+			}else{
+				// $('#myModal').click();
+				$('#myModal').modal('hide');
+				setTimeout(function(){ 
+					//cargar nuevamente el historial de bth
+                    crear_especialidades_bth_buscar(codigo_sie,idgestion);
+                },1000);
+			}
+        }
+    });
+});
+function funcion_eliminar_esp_bth(id){
+	var codigo_sie=$("#codigo_sie").val()
+    var idgestion=$("#gestion_tipo_id").val()
+	swal({
+	  title: "ESTA SEGURO QUE DESEA ELIMINAR LA ESPECIALIDAD?",
+	  text: "",
+	  icon: "warning",
+	  buttons: true,
+	  dangerMode: true,
+	})
+	.then((willDelete) => {
+	  if (willDelete) {
+	  	$.post('{{path('funcion_eliminar_esp_bth_validar')}}', {'id': id}, function(data) {
+	  		var valores = eval(data);
+			if (valores[0]==1) {
+				swal("NO SE PUEDE ELIMINAR LA ESPECIALIDAD POR QUE YA EXISTE REGISTRO DE ESTUDIANTES!");
+			}else{
+				swal("EXITOSAMENTE ELIMINADO LA ESPECIALIDAD!", {
+			      icon: "success",
+			    });
+			    setTimeout(function(){ 
+                    crear_especialidades_bth_buscar(codigo_sie,idgestion)
+                },1000);
+			}
+		});
+	  } else {
+	    swal("Proceso cancelado!");
+	  }
+	});
+}
+
+</script>
+{% endblock %}
