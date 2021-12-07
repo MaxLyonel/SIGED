@@ -34,10 +34,20 @@
                 <div id="inlineFormExample" class="panel-collapse collapse in">
                     <div class="portlet-body">
                         <form id="formSearch" class="form-inline" role="form" action="" onsubmit="buscarSie(); return false" method="post"  style="text-align:center">
+
                             <div class="form-group">
                                 <label class="sr-only" for="sie">Codigo Sie</label>
                                 <input type="text" class="form-control" id="sie" placeholder="Código Sie" name="sie" autocomplete="off" maxlength="8" required="required">
                             </div>
+
+                            <div class="form-group">
+                                <select id="trimestre" name="trimestre" class="form-control">
+                                    <option value="1" selected="selected">1 Trimestre</option>
+                                    <option value="2" selected="selected">2 Trimestre</option>
+                                    <option value="3" selected="selected">3 Trimestre</option>
+                                </select>
+                            </div>
+
                             <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                         </form>
                         <hr>
@@ -85,12 +95,12 @@
 			
 		}
 
-		function cambiarEstado(id){
+		function cambiarEstado(id,trimestre){
 			var anterior = $('#estado').html();
 			$.ajax({
                 type: 'post',
                 url: Routing.generate('controlOperativoMenu_change'),
-                data: {id: id},
+                data: {id: id, trimestre:trimestre},
                 beforeSend: function () {
                 	$("#estado").empty();
                     $("#estado").append("<div style='text-align:center' id='img-loading'><img src='{{asset('img/loading-sm.gif')}}'></div>");

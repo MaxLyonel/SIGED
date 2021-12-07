@@ -30,14 +30,16 @@ class ControlOperativoMenuController extends Controller {
     public function searchAction(Request $request){
         try {
             $sie = $request->get('sie');
+            $trimestre = $request->get('trimestre');
+
             $em = $this->getDoctrine()->getManager();
             $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie);
             $gestion = $this->session->get('currentyear');
             $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
-            if(in_array($this->session->get('roluser'), array(7,8,10))){
+            if(in_array($this->session->get('roluser'), array(7,8,10)))
+            {
                 $operativo++;
             }
-
             $tipoUE = $this->get('funciones')->getTipoUE($sie,$gestion);
 
             $mensaje = "";
@@ -45,19 +47,17 @@ class ControlOperativoMenuController extends Controller {
             // Verificamos la tuicion
             $tuicion = $this->get('funciones')->verificaTuicion($sie,$this->session->get('userId'),$this->session->get('roluser'));
 
-            if ($tuicion) {
-
+            if ($tuicion)
+            {
                 $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
 
                 $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
                     'unidadEducativa'=>$sie,
                     'gestion'=>$gestion,
-                    'bim1'=>2,
-                    'bim2'=>2,
-                  ));                
-
-                if(!$uePrimTrim or sizeof($objInfoUE)>0){
-
+                    "bim$trimestre"=>2,
+                  ));
+                if(!$uePrimTrim or sizeof($objInfoUE)>0)
+                {
                     // $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
                     //     'unidadEducativa'=>$sie,
                     //     'gestion'=>$gestion,
@@ -68,7 +68,7 @@ class ControlOperativoMenuController extends Controller {
                       //$registro = $em->getRepository('SieAppWebBundle:InstitucioneducativaControlOperativoMenus')->findOneBy(array('institucioneducativa'=>$sie,'gestionTipoId'=>$gestion,'notaTipo'=>$operativo));
                       
                       if($objInfoUE){
-                          $registro['estadoMenu'] = 1;                    
+                          $registro['estadoMenu'] = 1;
                           $registro['id'] = $sie;
                           $mensaje = "Puede realizar la habilitacion";
                       }else{
@@ -88,15 +88,16 @@ class ControlOperativoMenuController extends Controller {
                         $registro = null;
                         $mensaje = 'La unidad educativa es '.$tipoUE['tipo'].' por este motivo no descarga su archivo. Debe reportar su información a travéz del Sistema Académico';    
                     }*/
-
-                }else{
-                          $registro = null;
-                          // $mensaje = "Unidad Educativa no autorizada";                    
-                          $mensaje = "habilitado ...";                    
-
                 }
-
-            } else {
+                else
+                {
+                          $registro = null;
+                          // $mensaje = "Unidad Educativa no autorizada";
+                          $mensaje = "habilitado ...";
+                }
+            }
+            else
+            {
                 $registro = null;
                 $mensaje = 'No tiene tuición sobre la unidad educativa';
             }
@@ -109,8 +110,9 @@ class ControlOperativoMenuController extends Controller {
                 'institucion'=>$institucion,
                 'gestion'=>$gestion,
                 'operativo'=>$operativo,
-                'nombreOperativo'=>$this->nombreOperativo($operativo),
-                'tuicion'=>$tuicion
+                'nombreOperativo'=>$this->nombreOperativo($trimestre),
+                'tuicion'=>$tuicion,
+                'trimestre' => $trimestre,
             ));
 
         } catch (Exception $e) {
@@ -123,7 +125,7 @@ class ControlOperativoMenuController extends Controller {
             //case 0: $nombreOperativo = 'Inicio de gestiòn';break;
             case 1: $nombreOperativo = 'Operativo 1er. Trim.';break;
             case 2: $nombreOperativo = 'Operativo 2do. Trim.';break;
-            case 3: $nombreOperativo = '1er. Trim. Habilitar';break;
+            case 3: $nombreOperativo = 'Operativo 3er. Trim.';break;
             /*case 2: $nombreOperativo = '2do Bimestre';break;
             case 3: $nombreOperativo = '3er Bimestre';break;
             case 4: $nombreOperativo = '4to Bimestre';break;
@@ -138,6 +140,7 @@ class ControlOperativoMenuController extends Controller {
     public function changeAction(Request $request){
         try {
             $sie = $request->get('id');
+            $trimestre = $request->get('trimestre');
             $em = $this->getDoctrine()->getManager();
 
             $nuevoEstado = 0;
@@ -157,23 +160,38 @@ class ControlOperativoMenuController extends Controller {
                     $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
                         'unidadEducativa'=>$sie,
                         'gestion'=>2021,
-                        'bim1'=>2,
-                        'bim2'=>2,
-                      ));                      
+                        "bim$trimestre"=>2,
+                      ));
   
                       if($objInfoUE){
-                         
-                          $objInfoUE->setBim1(0);
-                          $objInfoUE->setBim2(0);
+                         $tmpTrimestre = 'setBim'.$trimestre;
+                         //$objInfoUE->{$tmpTrimestre}(0);
+                         switch ($trimestre)
+                         {
+                           case 1:
+                            $objInfoUE->setBim1(0);
+                            $objInfoUE->setBim2(0);
+                            $objInfoUE->setBim3(0);
+                           break;
+
+                           case 2:
+                            $objInfoUE->setBim2(0);
+                            $objInfoUE->setBim3(0);
+                           break;
+                           
+                           case 3:
+                            $objInfoUE->setBim3(0);
+                           break;
+                         }
 
                           $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
 
-                           if(!$uePrimTrim){              
+                           if(!$uePrimTrim)
+                           {
                             $uePrimTrim = new TmpInstitucioneducativaApertura2021();
                             $uePrimTrim->setInstitucioneducativaId($sie);
                             $uePrimTrim->setFechaRegistro(new \DateTime('now'));
                             $em->persist($uePrimTrim);
-                            
                            }
 
                           $em->flush();

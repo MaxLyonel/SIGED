@@ -146,7 +146,7 @@ class InfoEstudianteController extends Controller {
         $gestion = $form['gestion'];
 
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
-        if($operativo == 2){
+        if($operativo >=3){
             $this->session->set('donwloadLibreta', true);
         }else{
             $this->session->set('donwloadLibreta', false);
