@@ -766,8 +766,6 @@ class InboxController extends Controller {
           }
         }
       }else{ $bimestre=0; /*codigo sie no existe*/ }
-      
-
         
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
@@ -1034,12 +1032,12 @@ class InboxController extends Controller {
 
       $em = $this->getDoctrine()->getManager();
       $query = $em->getConnection()->prepare("
-          select vp.*
-          from validacion_proceso vp
-          where vp.institucion_educativa_id = '".$data['sie']."' and vp.gestion_tipo_id in (".$years.")
-          and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
-          and vp.es_activo = 'f'
-      ");
+                                                select vp.*
+                                                from validacion_proceso vp
+                                                where vp.institucion_educativa_id = '".$data['sie']."' and vp.gestion_tipo_id in (".$years.")
+                                                and vp.validacion_regla_tipo_id  in (".$data['reglas'].")
+                                                and vp.es_activo = 'f'
+                                            ");
           //
       $query->execute();
       $objobsQA = $query->fetchAll();
@@ -1262,16 +1260,14 @@ class InboxController extends Controller {
       // $form['reglas'] = '1,2,3,8,10,12,13,16';
       $form['reglas'] = $this->reglasQA;
       $objObsQA = $this->getObservationQA($form);
-
       if( $inconsistencia || $objObsQA )
-      { 
-        // $observation = true;
-        $observation = FALSE;
+      {
+        $observation = true;
       }
       $valPersonalAdm = false;
 
-      if($observation){ 
-        // print_r($observation); exit();
+      if($observation)
+      {
         return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
           'inconsistencia' => $inconsistencia,
           'objObsQA' => $objObsQA,
@@ -1280,24 +1276,14 @@ class InboxController extends Controller {
           'institucion' =>  $form['sie'],
           'gestion' => $form['gestion'],
           'periodo' => $periodo));
-      } else  {
+      }
+      else
+      {
         if($form['gestion']>2020){
           $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
-          // dump($registroConsol);
-          /*dump($registroConsol->getBim1()); exit();*/
-          /*if (($registroConsol->getBim1()==2) && ($registroConsol->getBim2()==2) && ($registroConsol->getBim3()==2)) {
-            echo " Gestión: 2021; Trimestre: 3";
-          }else{
-            if (($registroConsol->getBim1()==2) && ($registroConsol->getBim2()==2) ) {
-              echo " Gestión: 2021; Trimestre: 2";
-            }else{
-              if ($registroConsol->getBim1()==2) {
-                echo " Gestión: 2021; Trimestre: 1";
-              }
-            }
-          }*/
-          // dump($registroConsol); die();
+          
             if($registroConsol){
+
                 // se deshabilita las inconsistencias
                 /*
                 $queryCheckCal = 'select * from sp_validacion_regular_web_2021_med(:gestion, :sie, :ope)';
@@ -1319,7 +1305,9 @@ class InboxController extends Controller {
                   'institucion' =>  $form['sie'],
                   'gestion' => $form['gestion'],
                   'periodo' => $periodo)); 
+
                 }else{
+
                   $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
                   $operativo = ($operativo < 1)?1:$operativo;
                   if($operativo == 1 or $operativo == 2  or $operativo == 3)
@@ -1329,8 +1317,10 @@ class InboxController extends Controller {
                       //$registroConsol->setBim1(2);
                       $this->session->set('donwloadLibreta', true);
                   }
+
                 }
-            }else{ //NUEVO REGISTRO
+
+            }else{
               $registroConsol = new RegistroConsolidacion();
               $registroConsol->setTipo(1);
               $registroConsol->setGestion($form['gestion']);
@@ -1351,46 +1341,49 @@ class InboxController extends Controller {
               $registroConsol->setBan(1);
               $registroConsol->setEsonline('t');
               $registroConsol->setInstitucioneducativaTipoId(1);
+
             }
               $em->persist($registroConsol);
               $em->flush();
               $em->getConnection()->commit();            
-              return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+            return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
                           'observation' => false,
                           'institucion' =>  $form['sie'],
                           'gestion' => $form['gestion'],
                           'periodo' => $operativo));              
-        }else{
-                        
-            $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
-            if($operativo<4){
-              if($this->session->get('esGuanawek')){
-                $registroConsol->setBim1('2');
-                $registroConsol->setBim2('2');
-                $registroConsol->setBim3('2');
+          }else{
+                          
+              $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
+              if($operativo<4){
+                if($this->session->get('esGuanawek')){
+                  $registroConsol->setBim1('2');
+                  $registroConsol->setBim2('2');
+                  $registroConsol->setBim3('2');
 
-              }else{
-                $fieldOpe = 'setBim' .$operativo;
-                $registroConsol->$fieldOpe(2);
-                
+                }else{
+                  $fieldOpe = 'setBim' .$operativo;
+                  $registroConsol->$fieldOpe(2);
+                  
+                }
               }
-            }
-            /*switch ($periodo)
-            {
-                case 1: $registroConsol->setBim1('2'); break;//VOLVERLO DINAMICO
-                
-            }*/
-            $registroConsol->setFecha(new \DateTime("now"));
-            $em->persist($registroConsol);
-            $em->flush();
-            $em->getConnection()->commit();
+              /*switch ($periodo)
+              {
+                  case 1: $registroConsol->setBim1('2'); break;//VOLVERLO DINAMICO
+                  
+              }*/
+              $registroConsol->setFecha(new \DateTime("now"));
+              $em->persist($registroConsol);
+              $em->flush();
+              $em->getConnection()->commit();
 
-            return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
-            'observation' => false,
-            'institucion' =>  $form['sie'],
-            'gestion' => $form['gestion'],
-            'periodo' => $periodo));            
-        }
+              return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+              'observation' => false,
+              'institucion' =>  $form['sie'],
+              'gestion' => $form['gestion'],
+              'periodo' => $periodo));            
+
+              
+          }
       }
 
 
