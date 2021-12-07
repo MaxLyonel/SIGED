@@ -212,12 +212,17 @@
                             {% if app.session.get('pathSystem') == 'SieHerramientaBundle' %}
                                 <div class="pull-left" style="margin-bottom: 10px">
                                     <a href="{{path('solicitud_rue_apertura',{'id':54,'desglose':0})}}" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Apertura RUE</a>
-                                    <br>
-                                    <a href="{{path('solicitud_cea_apertura',{'id':59,'desglose':0})}}" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Apertura CEA</a>
                                 </div>
                                 <div class="pull-right">
                                     <a href="{{path('tramite_rue_reapertura')}}" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Reapertura RUE</a>
-                                    <br>
+                                </div></br>
+                                <div style="clear: both"></div>
+                            {% endif %}
+                            {% if app.session.get('pathSystem') == 'SieHerramientaAlternativaBundle' %}
+                                <div class="pull-left" style="margin-bottom: 10px">
+                                    <a href="{{path('solicitud_cea_apertura',{'id':59,'desglose':0})}}" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Apertura CEA</a>
+                                </div>
+                                <div class="pull-right">
                                     <a href="{{path('tramite_cea_reapertura')}}" style="color:#455A64; font-size:0.8em;"><span class="glyphicon glyphicon-list-alt"></span> Reapertura CEA</a>
                                 </div></br>
                                 <div style="clear: both"></div>
