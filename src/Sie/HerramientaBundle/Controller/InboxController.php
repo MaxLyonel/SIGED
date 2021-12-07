@@ -1240,14 +1240,21 @@ class InboxController extends Controller {
       * *
       \************************************/
       // $form['reglas'] = '1,2,3,8,10,12,13,16';
+
+
+      $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
+      $operativo = ($operativo < 1)?1:$operativo;
+
+
+
       $form['reglas'] = $this->reglasQA;
       $objObsQA = $this->getObservationQA($form);
-      if( $inconsistencia || $objObsQA )
-      {
-        $observation = true;
+      if( $inconsistencia || $objObsQA ){
+        if($operativo >= 3){
+          $observation = true;
+        }
       }
       $valPersonalAdm = false;
-
       if($observation)
       {
         return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
@@ -1258,6 +1265,7 @@ class InboxController extends Controller {
           'institucion' =>  $form['sie'],
           'gestion' => $form['gestion'],
           'periodo' => $periodo));
+        
       }
       else
       {
@@ -1268,8 +1276,7 @@ class InboxController extends Controller {
             if($registroConsol)
             {
                 // se deshabilita las inconsistencias
-                $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
-                $operativo = ($operativo < 1)?1:$operativo;
+                
                 
                 if($operativo >= 3)
                 {
@@ -1370,11 +1377,13 @@ class InboxController extends Controller {
             $em->persist($registroConsol);
             $em->flush();
             $em->getConnection()->commit();
-            return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
-            'observation' => false,
-            'institucion' =>  $form['sie'],
-            'gestion' => $form['gestion'],
-            'periodo' => $periodo));
+            
+              return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
+              'observation' => false,
+              'institucion' =>  $form['sie'],
+              'gestion' => $form['gestion'],
+              'periodo' => $periodo));
+
         }
       }
 
