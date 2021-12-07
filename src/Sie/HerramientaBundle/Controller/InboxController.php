@@ -1305,7 +1305,7 @@ class InboxController extends Controller {
                       $registroConsol->$fieldOpe(2);
                       //$registroConsol->setBim1(2);
                       //$this->session->set('donwloadLibreta', true);
-                    if($operativo >= 3)
+                    if($operativo > 3)
                         $this->session->set('donwloadLibreta', true);
                     else
                       $this->session->set('donwloadLibreta', false);
