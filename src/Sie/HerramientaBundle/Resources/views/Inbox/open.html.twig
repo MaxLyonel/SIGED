@@ -24,6 +24,10 @@
     {% if objObsQA %}
         {% include 'SieHerramientaBundle:Principal:list_inconsistencia.html.twig' with {'objObsQA': objObsQA, 'sie': data.ieducativa.id,'institucion': data.ieducativa.institucioneducativa, 'gestion': data.gestion} %}
     {% endif %}
+
+    <h3 style="color:#ff0000;" align="center"> Trimestre {{bimestre}} Cerrarado</h3>
+
+
     {% if tuicion %}
         <div class="row">
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
@@ -178,11 +182,76 @@
         </div>
     {% endif %}
 </div>
+<script type="text/javascript" src="{{asset('alert/lib/alertify.js')}}"></script>
+<link rel="stylesheet" href="{{asset('alert/themes/alertify.core.css')}}" />
+<link rel="stylesheet" href="{{asset('alert/themes/alertify.default.css')}}" />
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
     <script>
         var closeOperativo = function(){
+            var bimestre=$("#bimestre").val();
+            if (typeof bimestre === "undefined") {
+                bimestre=0;
+            }
+            bimestre=Number(Number(bimestre)+(1));
+            alertify.confirm("<p><h3>ESTA SEGURO QUE DESEA CERRAR EL OPERATIVO DE <h3><h1 style='color:#ff0000;'>TRIMESTRE "+bimestre+" ?</h1><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
+                if (e) {
+                    alertify.success("Has pulsado ok ");
+                    formData = $('#formCloseOperativo').serialize();
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('herramienta_inbox_close_operativo'),
+                        data: formData,
+                        beforeSend: function () {
+                            $("#answerClose").empty();
+                            $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                        },
+                        success: function (data) {
+                            alertify.alert("<b>EXITOSAMENTE CERRADO EL OPERATIVO</b>", function () {
+                                $("#answerClose").empty();
+                                $("#answerClose").append(data);    
+                            });
+                        },
+                        statusCode: {
+                            500: function () {
+                            },
+                            404: function () {
+                            }
+                        }
+                    });
+                } else { alertify.error("Has pulsado cancel ");
+                }
+            });
+
+            /*if(confirm('¿Está segura/o de cerrar el operativo?')){
+                formData = $('#formCloseOperativo').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('herramienta_inbox_close_operativo'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerClose").empty();
+                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data) {
+                        $("#answerClose").empty();
+                        $("#answerClose").append(data);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            } else{ 
+                return false;
+            }*/
+        };
+        /*var closeOperativo = function(){
             if(confirm('¿Está segura/o de cerrar el operativo?')){
                 formData = $('#formCloseOperativo').serialize();
                 $.ajax({
@@ -209,7 +278,7 @@
             } else{ 
                 return false;
             }
-        };
+        };*/
 
         var closeOperativoRude = function(){
             if(confirm('¿Está segura/o de cerrar el operativo rude?')){
