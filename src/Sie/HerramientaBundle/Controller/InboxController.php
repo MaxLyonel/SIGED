@@ -1276,9 +1276,18 @@ class InboxController extends Controller {
             if($registroConsol)
             {
                 // se deshabilita las inconsistencias
+                if ($operativo>=3) {
+                  $operativo=3;
+                }
+                $queryCheckCal = 'select * from sp_validacion_regular_web2021_fg(:gestion,:sie,:ope)';
+                $query = $em->getConnection()->prepare($queryCheckCal);
+                $query->bindValue(':gestion', $form['gestion']);
+                $query->bindValue(':sie', $form['sie']);
+                $query->bindValue(':ope', $operativo);
+                $inconsistenciaCal = $query->fetchAll();
                 
                 
-                if($operativo >= 3)
+                /*if($operativo >= 3)
                 {
                   $queryCheckCal = 'select * from sp_validacion_regular_web_2021_med(:gestion, :sie, :ope)';
                   $query = $em->getConnection()->prepare($queryCheckCal);
@@ -1291,7 +1300,7 @@ class InboxController extends Controller {
                 else
                 {
                   $inconsistenciaCal = array ();
-                }
+                }*/
                 
                 if(sizeof($inconsistenciaCal)>0)
                 {
