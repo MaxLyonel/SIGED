@@ -748,6 +748,24 @@ class InboxController extends Controller {
           'gestion' => $form['gestion']
         ));
       } else {*/
+
+        $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $ieducativa, 'gestion' => $data['gestion']));
+
+        if ($ieducativa) {
+          if (($registroConsol->getBim1()==2) && ($registroConsol->getBim2()==2) && (($registroConsol->getBim3()==2) || ($registroConsol->getBim4()==2)) ) {
+            $trimestre=3;
+          }else{
+            if (($registroConsol->getBim1()==2) && ($registroConsol->getBim2()==2) ) {
+              $trimestre=2;
+            }else{
+              if ($registroConsol->getBim1()==2) {
+                $trimestre=1;
+              }else{
+                $trimestre=0;
+              }
+            }
+          }
+        }else{ $trimestre=0; /*codigo sie no existe*/ }
         
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
@@ -758,6 +776,7 @@ class InboxController extends Controller {
           'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
           'data'=>$dataInfo,
           'tuicion'=>$tuicion,
+          'bimestre'=>$trimestre,
           'objObsQA' => $objObsQA,          
           'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
           'closeOperativoRudeform' => $this->CloseOperativoRudeForm('herramienta_inbox_close_operativo_rude', 'Cerrar Operativo RUDE',$data)->createView(),
@@ -1276,9 +1295,18 @@ class InboxController extends Controller {
             if($registroConsol)
             {
                 // se deshabilita las inconsistencias
+                if ($operativo>=3) {
+                  $operativo=3;
+                }
+                $queryCheckCal = 'select * from sp_validacion_regular_web2021_fg(:gestion,:sie,:ope)';
+                $query = $em->getConnection()->prepare($queryCheckCal);
+                $query->bindValue(':gestion', $form['gestion']);
+                $query->bindValue(':sie', $form['sie']);
+                $query->bindValue(':ope', $operativo);
+                $inconsistenciaCal = $query->fetchAll();
                 
                 
-                if($operativo >= 3)
+                /*if($operativo >= 3)
                 {
                   $queryCheckCal = 'select * from sp_validacion_regular_web_2021_med(:gestion, :sie, :ope)';
                   $query = $em->getConnection()->prepare($queryCheckCal);
@@ -1291,7 +1319,7 @@ class InboxController extends Controller {
                 else
                 {
                   $inconsistenciaCal = array ();
-                }
+                }*/
                 
                 if(sizeof($inconsistenciaCal)>0)
                 {
