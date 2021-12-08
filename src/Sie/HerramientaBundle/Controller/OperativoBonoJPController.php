@@ -336,11 +336,12 @@ class OperativoBonoJPController extends Controller
         $id_usuario = $sesion->get('userI');
 
         echo ">".$id_usuario;exit();*/
-
+		$whereregular = ' ';
         if($this->session->get('pathSystem')=='SieEspecialBundle'){
         	$idtipoInstitucion=4;
         }else{
         	$idtipoInstitucion=1;
+        	$whereregular = 'and ei.estadomatricula_tipo_id in (4,5,55,11,10) and iec.nivel_tipo_id in (12,13,403,405,402,410,401,404,999) ';
         }
 
 
@@ -355,7 +356,7 @@ class OperativoBonoJPController extends Controller
 					inner join institucioneducativa_curso iec on ( ei.institucioneducativa_curso_id = iec.id)
 					inner join institucioneducativa inst on (iec.institucioneducativa_id = inst.id)
 					where e.codigo_rude= '".$codigo_rude."' and gestion_tipo_id = ".$this->session->get('currentyear')." and institucioneducativa_tipo_id = ".$idtipoInstitucion."	
-					and ei.estadomatricula_tipo_id in (4,5,55,11,10) and iec.nivel_tipo_id in (12,13,403,405,402,410,401,404,999) ";
+					". $whereregular;
 		// dump($query);die();
 		$query2 = $em->getConnection()->prepare($query);
 		$query2->execute();
