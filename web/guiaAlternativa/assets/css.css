@@ -225,6 +225,17 @@
     width: 100% !important;
 }
 
+.title-topic {
+    font-size: 1.5rem !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid #222;
+    padding-bottom: 10px !important;
+}
+
+.fk-ico {
+    width: 32px;
+}
+
 @media (max-width: 1199px) {
     .u-section-2 .u-sheet-1 {
         min-height: 849px;
