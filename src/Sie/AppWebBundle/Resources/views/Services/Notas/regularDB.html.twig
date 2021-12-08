@@ -218,14 +218,16 @@
                 
                 {# REGISTRO DE PROMEDIO ANUAL   #}
 
-                {% if notas.gestion >= 2019 and notas.cualitativas|length > 0 and notas.nivel != 11 and notas.tipoSubsistema != 4 %}
+                {% if notas.gestion >= 2021 and notas.cualitativas|length > 0 and notas.nivel != 11 and notas.tipoSubsistema != 4 %}
                     <tr>
-                        <td align="center" colspan="5">PROMEDIO ANUAL</td>
+                        <td align="center" colspan="4">PROMEDIO ANUAL</td>
+                        
                         {% for c in notas.cualitativas %}
+                            
                             <td align="center">
                                     <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
                                     <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
-                                    <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" value="{{c.notaCuantitativa}}" class="form-control input-sm p{{c.idNotaTipo}}">
+                                    <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" value="{{c.notaCualitativa}}" class="form-control input-sm p{{c.idNotaTipo}}">
                             </td>
                         {% endfor %}
                     </tr>
@@ -344,7 +346,7 @@
         if(isNaN(promedio)){
             promedio = 0;
         }
-        $('.p5').val(promedio);
+        $('.p9').val(promedio);
     }
 
     var validarNota = function(e){
