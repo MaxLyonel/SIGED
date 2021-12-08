@@ -25,7 +25,7 @@
         {% include 'SieHerramientaBundle:Principal:list_inconsistencia.html.twig' with {'objObsQA': objObsQA, 'sie': data.ieducativa.id,'institucion': data.ieducativa.institucioneducativa, 'gestion': data.gestion} %}
     {% endif %}
 
-    <h3 style="color:#ff0000;" align="center"> Trimestre {{bimestre}} Cerrarado</h3>
+    <h3 style="color:#ff0000;" align="center"> Trimestre {{bimestre}} Cerrado</h3>
     <input type="hidden" id="bimestre" value="{{bimestre}}">
 
 
@@ -209,10 +209,8 @@
                             $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
                         },
                         success: function (data) {
-                            alertify.alert("<b>EXITOSAMENTE CERRADO EL OPERATIVO</b>", function () {
-                                $("#answerClose").empty();
-                                $("#answerClose").append(data);    
-                            });
+                            $("#answerClose").empty();
+                            $("#answerClose").append(data);  
                         },
                         statusCode: {
                             500: function () {
