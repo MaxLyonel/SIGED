@@ -3378,6 +3378,7 @@ die;/*
 
                 // Registro de notas cualitativas de incial primaria yo secundaria                
                 for($j=0;$j<count($idEstudianteNotaCualitativa);$j++){
+                    
                     if($idEstudianteNotaCualitativa[$j] == 'nuevo'){
                         if($notaCualitativa[$j] != ""){
                             $query = $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante_nota_cualitativa');")->execute();
@@ -3392,7 +3393,7 @@ die;/*
                             $newCualitativa->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipoCualitativa[$j]));
                             $newCualitativa->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
 
-                            if ($gestion >= 2019 and ( ($nivel == 12 and $arrinfoUe['ueducativaInfoId']['gradoId']>1 )or $nivel == 13)) {
+                            if ($gestion >= 2019 and ( ($nivel == 12 and $arrinfoUe['ueducativaInfoId']['gradoId']>=1 )/*or $nivel == 13*/)) {
                                 $newCualitativa->setNotaCuantitativa($notaCualitativa[$j]);
                                 $newCualitativa->setNotaCualitativa('');
                             } else {
@@ -3447,7 +3448,8 @@ die;/*
                                 $updateCualitativa->setUsuarioId($this->session->get('userId'));
                                 $updateCualitativa->setFechaModificacion(new \DateTime('now'));
 
-                                if ($gestion >= 2019 and ($nivel == 12 or $nivel == 13)) {
+
+                                if ($gestion >= 2019 and ($nivel == 12 /*or $nivel == 13*/)) {
                                     $updateCualitativa->setNotaCuantitativa($notaCualitativa[$j]);
                                     $updateCualitativa->setNotaCualitativa('');
                                 } else {

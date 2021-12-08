@@ -218,16 +218,18 @@
                 
                 {# REGISTRO DE PROMEDIO ANUAL   #}
 
-                {% if notas.gestion >= 2021 and notas.cualitativas|length > 0 and notas.nivel != 11 and notas.tipoSubsistema != 4 %}
+                {% if notas.gestion >= 2021 and notas.cualitativas|length > 0 and notas.nivel == 12 and notas.tipoSubsistema != 4 %}
                     <tr>
                         <td align="center" colspan="4">PROMEDIO ANUAL</td>
-                        
+                        {{ dump(notas.cualitativas) }}
                         {% for c in notas.cualitativas %}
-                            
+                            {{c.idEstudianteNotaCualitativa}}-
+                        {{c.idNotaTipo}}-
+                        {{c.notaCuantitativa}}
                             <td align="center">
                                     <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
                                     <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
-                                    <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" value="{{c.notaCualitativa}}" class="form-control input-sm p{{c.idNotaTipo}}">
+                                    <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" value="{{c.notaCuantitativa}}" class="form-control input-sm p{{c.idNotaTipo}}">
                             </td>
                         {% endfor %}
                     </tr>
@@ -364,9 +366,9 @@
         var enviar = true;
         var mensaje = "";
         $(".nota").each(function (index) {
-            if($(this).val() <= 19){
+            if($(this).val() == 0){
                 enviar = false;
-                mensaje = 'Las notas registradas no pueden ser menor a 20';
+                mensaje = 'Las notas registradas no pueden ser cero';
             }
         });
         if(enviar == true){
