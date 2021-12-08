@@ -221,11 +221,8 @@
                 {% if notas.gestion >= 2021 and notas.cualitativas|length > 0 and notas.nivel == 12 and notas.tipoSubsistema != 4 %}
                     <tr>
                         <td align="center" colspan="4">PROMEDIO ANUAL</td>
-                        {{ dump(notas.cualitativas) }}
+                        
                         {% for c in notas.cualitativas %}
-                            {{c.idEstudianteNotaCualitativa}}-
-                        {{c.idNotaTipo}}-
-                        {{c.notaCuantitativa}}
                             <td align="center">
                                     <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
                                     <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
