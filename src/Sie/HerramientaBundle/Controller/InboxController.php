@@ -748,6 +748,24 @@ class InboxController extends Controller {
           'gestion' => $form['gestion']
         ));
       } else {*/
+
+        $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $ieducativa, 'gestion' => $data['gestion']));
+
+        if ($ieducativa) {
+          if (($registroConsol->getBim1()==2) && ($registroConsol->getBim2()==2) && (($registroConsol->getBim3()==2) || ($registroConsol->getBim4()==2)) ) {
+            $trimestre=3;
+          }else{
+            if (($registroConsol->getBim1()==2) && ($registroConsol->getBim2()==2) ) {
+              $trimestre=2;
+            }else{
+              if ($registroConsol->getBim1()==2) {
+                $trimestre=1;
+              }else{
+                $trimestre=0;
+              }
+            }
+          }
+        }else{ $trimestre=0; /*codigo sie no existe*/ }
         
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
@@ -758,6 +776,7 @@ class InboxController extends Controller {
           'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
           'data'=>$dataInfo,
           'tuicion'=>$tuicion,
+          'bimestre'=>$trimestre,
           'objObsQA' => $objObsQA,          
           'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
           'closeOperativoRudeform' => $this->CloseOperativoRudeForm('herramienta_inbox_close_operativo_rude', 'Cerrar Operativo RUDE',$data)->createView(),
