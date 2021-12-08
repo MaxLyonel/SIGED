@@ -147,9 +147,10 @@ class ControlOperativoMenuController extends Controller {
             $nuevoEstado = '';
             $nuevoEstadoText = '';
             $msg = '';
+            $gestion = date('Y');
             $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
                 'unidadEducativa'=>$sie,
-                'gestion'=>2021,
+                'gestion'=>$gestion,
                 'rude'=>1
               )); 
 
@@ -159,7 +160,7 @@ class ControlOperativoMenuController extends Controller {
 
                     $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
                         'unidadEducativa'=>$sie,
-                        'gestion'=>2021,
+                        'gestion'=>$gestion,
                         "bim$trimestre"=>2,
                       ));
   

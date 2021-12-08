@@ -362,9 +362,9 @@
         var enviar = true;
         var mensaje = "";
         $(".nota").each(function (index) {
-            if($(this).val() == 0){
+            if($(this).val() <= 19){
                 enviar = false;
-                mensaje = 'Las notas registradas no pueden ser cero';
+                mensaje = 'Las notas registradas no pueden ser menor a 20';
             }
         });
         if(enviar == true){
