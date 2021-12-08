@@ -25,7 +25,8 @@
         {% include 'SieHerramientaBundle:Principal:list_inconsistencia.html.twig' with {'objObsQA': objObsQA, 'sie': data.ieducativa.id,'institucion': data.ieducativa.institucioneducativa, 'gestion': data.gestion} %}
     {% endif %}
 
-    <h3 style="color:#ff0000;" align="center"> Trimestre {{bimestre}} Cerrarado</h3>
+    <h3 style="color:#ff0000;" align="center"> Trimestre {{bimestre}} Cerrado</h3>
+    <input type="hidden" id="bimestre" value="{{bimestre}}">
 
 
     {% if tuicion %}
@@ -195,7 +196,7 @@
                 bimestre=0;
             }
             bimestre=Number(Number(bimestre)+(1));
-            alertify.confirm("<p><h3>ESTA SEGURO QUE DESEA CERRAR EL OPERATIVO DE <h3><h1 style='color:#ff0000;'>TRIMESTRE "+bimestre+" ?</h1><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
+            alertify.confirm("<p><h3>ESTA SEGURO/A DE CERRAR EL OPERATIVO  <h3><h1 style='color:#ff0000;'>TRIMESTRE "+bimestre+" ?</h1><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
                 if (e) {
                     alertify.success("Has pulsado ok ");
                     formData = $('#formCloseOperativo').serialize();
@@ -208,10 +209,8 @@
                             $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
                         },
                         success: function (data) {
-                            alertify.alert("<b>EXITOSAMENTE CERRADO EL OPERATIVO</b>", function () {
-                                $("#answerClose").empty();
-                                $("#answerClose").append(data);    
-                            });
+                            $("#answerClose").empty();
+                            $("#answerClose").append(data);  
                         },
                         statusCode: {
                             500: function () {
