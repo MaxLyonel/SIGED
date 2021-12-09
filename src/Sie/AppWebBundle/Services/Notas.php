@@ -1946,7 +1946,7 @@ class Notas{
 
             //if($nivel == 11 or $nivel == 1 or $nivel == 403){
             if(($nivel == 11 or $nivel == 1 or $nivel == 403) ){
-
+                
                 if ($gestion == 2021) {
                     for ($i=$inicio; $i <=$fin; $i++) { 
                         $swCloseOperative = false;
@@ -3385,10 +3385,10 @@ die;/*
 
                             $newCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion));
 
-                            if(sizeof($newCualitativa)>0){
-                            }else{
+                            // if(sizeof($newCualitativa)>0){
+                            // }else{
                                 $newCualitativa = new EstudianteNotaCualitativa();
-                            }
+                            // }
 
                             $newCualitativa->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipoCualitativa[$j]));
                             $newCualitativa->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
