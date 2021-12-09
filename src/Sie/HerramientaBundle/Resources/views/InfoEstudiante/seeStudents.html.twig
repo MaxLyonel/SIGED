@@ -406,17 +406,21 @@
                                                     {% else %}
 
                                                         {% if app.session.get('donwloadLibreta') == true %}
+                                                            {#
                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                                                   <i class="fa fa-print" style="color:#FFFFFF"></i>
                                                                 </a>
                                                             </div>
+                                                            #}
                                                         {% else %}
-                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                                                <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                                    <i class="fa fa-list"></i>
-                                                                </button>
-                                                            </div>
+                                                             {% if  grado in [12,13]   and  gestion == 2021 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %}
+                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                                        <i class="fa fa-list"></i>
+                                                                    </button>
+                                                                </div>
+                                                            {% endif %}
                                                         {% endif %}
                                                     {% endif %}
 
