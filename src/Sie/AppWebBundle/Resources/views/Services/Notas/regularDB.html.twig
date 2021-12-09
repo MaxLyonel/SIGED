@@ -292,7 +292,7 @@
 <script>
     var promedio = function(control,clase){
         //if(control.value == ""){ control.value = 0; }
-        if(control.value <= 0){ control.value = 20; }
+        if(control.value < 0){ control.value = 0; }
         if(control.value > 100){ control.value = 100; }
         
         if(control.value != "" && control.value != 0){
@@ -305,7 +305,7 @@
         })
         var promedio = Math.round(suma/3);
         if(isNaN(promedio)){
-            promedio = 20;
+            promedio = 0;
         }
         $('.p'+clase).val(promedio);
 
@@ -314,7 +314,7 @@
 
     var notaVacia = function(control,clase){
         if(control.value == ""){ control.value = 0; }
-        if(control.value <= 0){ control.value = 20; }
+        if(control.value < 0){ control.value = 0; }
         if(control.value > 100){ control.value = 100; }
 
         if(control.value != "" && control.value != 0){
@@ -327,7 +327,7 @@
         })
         var promedio = Math.round(suma/3);
         if(isNaN(promedio)){
-            promedio = 20;
+            promedio = 0;
         }
         $('.p'+clase).val(promedio);
 
@@ -343,9 +343,9 @@
         })
         var promedio = Math.round(suma/contador);
         if(isNaN(promedio)){
-            promedio = 20;
+            promedio = 0;
         }
-        $('.p9').val(promedio);
+        $('.p5').val(promedio);
     }
 
     var validarNota = function(e){
@@ -363,9 +363,9 @@
         var enviar = true;
         var mensaje = "";
         $(".nota").each(function (index) {
-            if($(this).val() == 0){
+            if($(this).val() <= 19){
                 enviar = false;
-                mensaje = 'Las notas registradas no pueden ser cero';
+                mensaje = 'Las notas registradas no pueden ser menor a 20';
             }
         });
         if(enviar == true){
