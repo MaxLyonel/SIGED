@@ -146,7 +146,7 @@ class InfoEstudianteController extends Controller {
         $gestion = $form['gestion'];
 
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
-        if($operativo == 2){
+        if($operativo >3){
             $this->session->set('donwloadLibreta', true);
         }else{
             $this->session->set('donwloadLibreta', false);
@@ -714,6 +714,14 @@ class InfoEstudianteController extends Controller {
         }else{
           $this->session->set('allowInscription',false);
         }
+
+        $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
+        if($operativo >3){
+            $this->session->set('donwloadLibreta', true);
+        }else{
+            $this->session->set('donwloadLibreta', false);
+        }
+        
         //get turnos
         //$objStudents = $em->getRepository('SieAppWebBundle:Estudiante')->getStudentsToInscription($iecId, '5');
         //get th position of next level
