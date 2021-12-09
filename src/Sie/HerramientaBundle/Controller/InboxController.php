@@ -750,22 +750,31 @@ class InboxController extends Controller {
       } else {*/
 
         $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $ieducativa, 'gestion' => $data['gestion']));
-
-        if ($ieducativa) {
-          if (($registroConsol->getBim1()==2) && ($registroConsol->getBim2()==2) && (($registroConsol->getBim3()==2) || ($registroConsol->getBim4()==2)) ) {
-            $trimestre=3;
-          }else{
-            if (($registroConsol->getBim1()==2) && ($registroConsol->getBim2()==2) ) {
-              $trimestre=2;
+        // dump($registroConsol); exit();
+        if ($registroConsol) {
+          if ($ieducativa) {
+            if (($registroConsol->getBim1()==2) && ($registroConsol->getBim2()==2) && (($registroConsol->getBim3()==2) || ($registroConsol->getBim4()==2)) ) {
+              $trimestre=3;
             }else{
-              if ($registroConsol->getBim1()==2) {
-                $trimestre=1;
+              if (($registroConsol->getBim1()==2) && ($registroConsol->getBim2()==2) ) {
+                $trimestre=2;
               }else{
-                $trimestre=0;
+                if ($registroConsol->getBim1()==2) {
+                  $trimestre=1;
+                }else{
+                  $trimestre=0;
+                }
               }
             }
+          }else{ 
+             $trimestre=0; 
+            /*codigo sie no existe*/ 
           }
-        }else{ $trimestre=0; /*codigo sie no existe*/ }
+          # code...
+        }else{ 
+           $trimestre=0; 
+          /*codigo sie no existe*/ 
+        }
         
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
