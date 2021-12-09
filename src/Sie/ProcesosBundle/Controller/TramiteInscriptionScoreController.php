@@ -143,11 +143,11 @@ class TramiteInscriptionScoreController extends Controller{
                             ->getResult();
 
         // SI EL ESTUDIANTE NO TIENE INSCRIPCIONES
-        if(!$inscripciones){
+        /*if(!$inscripciones){
             $response->setStatusCode(202);
             $response->setData('El estudiante no tiene inscripciones registradas en esta Unidad Educativa');
             return $response;
-        }
+        }*/
 
 
         // VALIDAMOS SI LA UNIDAD EDUCATIVA TIENE TUICION SOBRE EL ESTUDIANTE
@@ -156,7 +156,7 @@ class TramiteInscriptionScoreController extends Controller{
         //     $response->setData('No tiene tuición sobre el estudiante');
         //     return $response;   
         // }
-/*
+        /*
         $inscripcionesArray = [];
         foreach ($inscripciones as $key => $value) {
             $inscripcionesArray[] = array(
