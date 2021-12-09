@@ -49,14 +49,13 @@ class ControlOperativoMenuController extends Controller {
 
             if ($tuicion)
             {
-                $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
-
+                
                 $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
                     'unidadEducativa'=>$sie,
                     'gestion'=>$gestion,
                     "bim$trimestre"=>2,
                   ));
-                if(!$uePrimTrim or sizeof($objInfoUE)>0)
+                if( sizeof($objInfoUE)>0)
                 {
                     // $objInfoUE = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
                     //     'unidadEducativa'=>$sie,
@@ -184,16 +183,6 @@ class ControlOperativoMenuController extends Controller {
                             $objInfoUE->setBim3(0);
                            break;
                          }
-
-                          $uePrimTrim = $objInfoUE = $em->getRepository('SieAppWebBundle:TmpInstitucioneducativaApertura2021')->findOneBy(array('institucioneducativaId'=>$sie));
-
-                           if(!$uePrimTrim)
-                           {
-                            $uePrimTrim = new TmpInstitucioneducativaApertura2021();
-                            $uePrimTrim->setInstitucioneducativaId($sie);
-                            $uePrimTrim->setFechaRegistro(new \DateTime('now'));
-                            $em->persist($uePrimTrim);
-                           }
 
                           $em->flush();
                           $datosInsert = array('sie'=>$sie,'gestion'=>'2021','trim1'=>2,'trim2'=>2,);
