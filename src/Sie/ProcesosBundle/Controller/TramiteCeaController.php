@@ -4152,7 +4152,7 @@ class TramiteCeaController extends Controller
             $lk = $qr[0]['qr'];
             //dump($idtramite,$id_td);die;
             $file = 'rcea_iniciosolicitudAperturaEpja_v1_far.rptdesign';
-            if (isset($form['niveltipot'])) {
+            if (isset($form['niveltipop'])) {
                 $file = 'rcea_iniciosolicitudAperturaEduper_v1_far.rptdesign';
             }
             $arch = 'FORMULARIO_' . $idsolicitud . '_' . date('YmdHis') . '.pdf';
