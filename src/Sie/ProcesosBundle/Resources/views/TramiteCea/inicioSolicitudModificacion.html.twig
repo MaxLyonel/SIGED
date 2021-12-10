@@ -1082,23 +1082,16 @@
                 //alert(id);
                 var tramitetipo = $('#form_tramites option:selected').text();
                 if ($("#fila_" + idtramite).length && id == 39) {
-                    alert('Elimine la Ampliación de Nivel para poder solictar la ' + tramitetipo);
+                    alert('Elimine la Ampliación de Nivel para poder solicitar la ' + tramitetipo);
                     return false;
                 }
                 if ($("#fila_" + idtramite).length && id == 40) {
-                    alert('Elimine la Reducción de Nivel para poder solictar la ' + tramitetipo);
+                    alert('Elimine la Reducción de Nivel para poder solicitar la ' + tramitetipo);
                     return false;
                 }
                 if ($("#fila_" + idtramite).length) {
                     alert('Ya seleccionó ' + tramitetipo);
                     return false;
-                }
-                if (idtramite == 62) {
-                    //  if()
-                    if (JSON.parse($('#nivel').val()).length == 3) {
-                        alert('La Unidad Educativa ya cuenta con los tres nivel, por lo que no corresponde una Ampliación de Nivel.');
-                        return false;
-                    }
                 }
                 if (idtramite == 71) {
                     if (JSON.parse($('#nivel').val()).length == 1) {
@@ -1114,7 +1107,7 @@
                     alert('El ' + tramitetipo + ', no corresponde si modificará otros datos.');
                     return false;
                 }
-                if ($('#form_tr').val() != "" && (JSON.parse($('#form_tr').val()).includes(42) || JSON.parse($('#form_tr').val()).includes(43)) && JSON.parse($('#form_tr').val()).includes(39) == false) {
+                if ($('#form_tr').val() != "" && (JSON.parse($('#form_tr').val()).includes(69) || JSON.parse($('#form_tr').val()).includes(68)) && JSON.parse($('#form_tr').val()).includes(39) == false) {
                     alert('No puede realizar otras modificaciones si esta solicitando Cierre de la Unidad Educativa.');
                     return false;
                 }

@@ -199,7 +199,7 @@ class TramiteCeaController extends Controller
                         }, 'property' => 'nivel'))
                         ->getForm();
                 } else { //fRnk: para EDUPER falta aun ver los ids
-                    $this->nivelArray = array(222, 223, 225, 226);
+                    $this->nivelArray = array(222, 223, 225, 226, 219, 220, 224);
                     foreach ($ienivel as $n) {
                         if (in_array($n['id'], $this->nivelArray)) {
                             $this->nivelArray = array_diff($this->nivelArray, array($n['id']));
@@ -207,7 +207,7 @@ class TramiteCeaController extends Controller
                     }
                     $form = $form
                         ->add('nivelampliar', 'entity', array('label' => 'Ampliacion', 'required' => false, 'multiple' => true, 'expanded' => true, 'class' => 'SieAppWebBundle:NivelTipo', 'query_builder' => function (EntityRepository $nt) {
-                            return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(222, 223, 225, 226))->orderBy('nt.id', 'ASC');
+                            return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(222, 223, 225, 226, 219, 220, 224))->orderBy('nt.id', 'ASC');
                         }, 'property' => 'nivel'))
                         ->getForm();
                 }
@@ -921,7 +921,10 @@ class TramiteCeaController extends Controller
                 return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(203, 204, 205))->orderBy('nt.id', 'ASC');
             }, 'property' => 'nivel'))
             ->add('niveltipop', 'entity', array('label' => 'Ampliacion', 'required' => false, 'multiple' => true, 'expanded' => true, 'class' => 'SieAppWebBundle:NivelTipo', 'query_builder' => function (EntityRepository $nt) {
-                return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(222, 223, 225, 226))->orderBy('nt.id', 'ASC');
+                return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(222, 223, 225, 226));
+            }, 'property' => 'nivel'))
+            ->add('niveltipopt', 'entity', array('label' => 'Ampliacion', 'required' => false, 'multiple' => true, 'expanded' => true, 'class' => 'SieAppWebBundle:NivelTipo', 'query_builder' => function (EntityRepository $nt) {
+                return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(219, 220, 224));
             }, 'property' => 'nivel'))
             ->add('siecomparte', 'text', array('label' => 'Comparte el edificio con (Señale solo 1):', 'required' => false, 'attr' => array('class' => 'form-control datocea validar', 'maxlength' => 8)))
             ->add('cantidad_11_1_1', 'text', array('label' => 'epa1', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_1')))
@@ -1832,11 +1835,11 @@ class TramiteCeaController extends Controller
         inner join institucioneducativa ie on ie.id=tr.institucioneducativa_id  
         inner join institucioneducativa_nivel_autorizado na on na.institucioneducativa_id=ie.id
         where na.nivel_tipo_id in (201,202,203,204,205)
-        and tr.id=".$idtramite);
+        and tr.id=" . $idtramite);
         $query11->execute();
         $epja = $query11->fetchAll();
 
-        //dump($tramiteTipo);die;
+        //dump($epja);die;
         if ($epja) {
             $file = 'rcea_iniciosolicitudModificacionEpja_v1_far.rptdesign';
         } else {
@@ -4228,7 +4231,11 @@ class TramiteCeaController extends Controller
                 ->getResult();
             $datos[$tramitetipo]['niveltipo'] = $nivel;
         } else if (isset($form['niveltipop'])) {
-            $arr_in = $form['niveltipop'];
+            if (isset($form['niveltipopt'])) {
+                $arr_in = array_merge($form['niveltipop'], $form['niveltipopt']);
+            } else {
+                $arr_in = $form['niveltipop'];
+            }
             $nivel = $em->getRepository('SieAppWebBundle:NivelTipo')->createQueryBuilder('nt')
                 ->select('nt.id,nt.nivel')
                 ->where('nt.id in (:id)')
@@ -4291,26 +4298,34 @@ class TramiteCeaController extends Controller
         if (isset($form['niveltipop'])) {
             if (in_array(222, $form['niveltipop'])) {
                 $datos[$tramitetipo]['cantidad_13_1'] = $form['cantidad_13_1'];
-                $datos[$tramitetipo]['cantidad_13_1_1'] = $form['cantidad_13_1_1'];
-                $datos[$tramitetipo]['cantidad_13_1_2'] = $form['cantidad_13_1_2'];
-                $datos[$tramitetipo]['cantidad_13_1_3'] = $form['cantidad_13_1_3'];
             }
             if (in_array(223, $form['niveltipop'])) {
                 $datos[$tramitetipo]['cantidad_13_2'] = $form['cantidad_13_2'];
-                $datos[$tramitetipo]['cantidad_13_2_1'] = $form['cantidad_13_2_1'];
-                $datos[$tramitetipo]['cantidad_13_2_2'] = $form['cantidad_13_2_2'];
-                $datos[$tramitetipo]['cantidad_13_2_3'] = $form['cantidad_13_2_3'];
             }
             if (in_array(225, $form['niveltipop'])) {
                 $datos[$tramitetipo]['cantidad_13_3'] = $form['cantidad_13_3'];
-                $datos[$tramitetipo]['cantidad_13_3_1'] = $form['cantidad_13_3_1'];
-                $datos[$tramitetipo]['cantidad_13_3_2'] = $form['cantidad_13_3_2'];
-                $datos[$tramitetipo]['cantidad_13_3_3'] = $form['cantidad_13_3_3'];
             }
             if (in_array(226, $form['niveltipop'])) {
                 $datos[$tramitetipo]['cantidad_13_4'] = $form['cantidad_13_4'];
+            }
+        }
+        if (isset($form['niveltipopt'])) {
+            if (in_array(219, $form['niveltipopt'])) {
+                $datos[$tramitetipo]['cantidad_13_1_1'] = $form['cantidad_13_1_1'];
+                $datos[$tramitetipo]['cantidad_13_2_1'] = $form['cantidad_13_2_1'];
+                $datos[$tramitetipo]['cantidad_13_3_1'] = $form['cantidad_13_3_1'];
                 $datos[$tramitetipo]['cantidad_13_4_1'] = $form['cantidad_13_4_1'];
+            }
+            if (in_array(220, $form['niveltipopt'])) {
+                $datos[$tramitetipo]['cantidad_13_1_2'] = $form['cantidad_13_1_2'];
+                $datos[$tramitetipo]['cantidad_13_2_2'] = $form['cantidad_13_2_2'];
+                $datos[$tramitetipo]['cantidad_13_3_2'] = $form['cantidad_13_3_2'];
                 $datos[$tramitetipo]['cantidad_13_4_2'] = $form['cantidad_13_4_2'];
+            }
+            if (in_array(224, $form['niveltipopt'])) {
+                $datos[$tramitetipo]['cantidad_13_1_3'] = $form['cantidad_13_1_3'];
+                $datos[$tramitetipo]['cantidad_13_2_3'] = $form['cantidad_13_2_3'];
+                $datos[$tramitetipo]['cantidad_13_3_3'] = $form['cantidad_13_3_3'];
                 $datos[$tramitetipo]['cantidad_13_4_3'] = $form['cantidad_13_4_3'];
             }
         }
@@ -4338,34 +4353,6 @@ class TramiteCeaController extends Controller
         if ($form['dependencia'] == 2) {
             $datos[$tramitetipo]['i_constitucion_apertura'] = $form['i_constitucion_apertura'];
             $datos[$tramitetipo]['i_convenio_apertura'] = $form['i_convenio_apertura'];
-            /*
-                        $datos[$tramitetipo]['i_representante_apertura'] = $form['i_representante_apertura'];
-
-                        $adjunto = $this->upload($files['i_actafundacion_apertura'], $ruta);
-                        if ($adjunto == '') {
-                            $error_upload = true;
-                        }
-                        $datos[$tramitetipo]['i_actafundacion_apertura'] = $adjunto;
-
-                        $datos[$tramitetipo]['i_folio_apertura'] = $form['i_folio_apertura'];
-
-                        $datos[$tramitetipo]['i_convenioadministracion_apertura'] = isset($form['i_convenioadministracion_apertura']) ? $form['i_convenioadministracion_apertura'] : 0;
-                        $datos[$tramitetipo]['i_certificacion_apertura'] = $form['i_certificacion_apertura'];
-                        $datos[$tramitetipo]['i_area_apertura'] = $form['i_area_apertura'];
-
-                        $datos[$tramitetipo]['i_registro_culto_apertura'] = isset($form['i_registro_culto_apertura']) ? $form['i_registro_culto_apertura'] : 0;
-                        $datos[$tramitetipo]['i_org_nogubernamental_apertura'] = isset($form['i_org_nogubernamental_apertura']) ? $form['i_org_nogubernamental_apertura'] : 0;
-                        $datos[$tramitetipo]['i_form_fundaempresa_apertura'] = isset($form['i_form_fundaempresa_apertura']) ? $form['i_form_fundaempresa_apertura'] : 0;
-                        if (isset($form['i_form_fundaempresa_apertura'])) {
-                            $datos[$tramitetipo]['nro_fundaempresa_apertura'] = $form['nro_fundaempresa_apertura'];
-                            $datos[$tramitetipo]['fecha_fundaempresa_apertura'] = $form['fecha_fundaempresa_apertura'];
-                        }
-                        $datos[$tramitetipo]['i_fotocopia_nit_apertura'] = isset($form['i_fotocopia_nit_apertura']) ? $form['i_fotocopia_nit_apertura'] : 0;
-                        if (isset($form['i_fotocopia_nit_apertura'])) {
-                            $datos[$tramitetipo]['nit_apertura'] = $form['nit_apertura'];
-                            $datos[$tramitetipo]['i_balance_apertura'] = $form['i_balance_apertura'];
-                        }
-                        $datos[$tramitetipo]['i_testimonioconvenio'] = $form['i_testimonioconvenio'];*/
         }
         $datos[$tramitetipo]['ii_planos_apertura'] = $form['ii_planos_apertura'];
         $datos[$tramitetipo]['ii_edificio_escolar'] = $form['ii_edificio_escolar'];
@@ -4544,13 +4531,24 @@ class TramiteCeaController extends Controller
             $query1->execute();
             $qr = $query1->fetchAll();
             //dump($qr);die;
+
+            $query11 = $em->getConnection()->prepare("select * from institucioneducativa ie  
+            inner join institucioneducativa_nivel_autorizado na on na.institucioneducativa_id=ie.id
+            where na.nivel_tipo_id in (201,202,203,204,205)
+            and ie.id=" . $form['sie']);
+            $query11->execute();
+            $epja = $query11->fetchAll();
+            if ($epja) {
+                $file = 'rcea_iniciosolicitudReaperturaEpja_v1_far.rptdesign';
+            } else {
+                $file = 'rcea_iniciosolicitudReaperturaEduper_v1_far.rptdesign';
+            }
+
             $lk = $qr[0]['qr'];
-            $file = 'rue_iniciosolicitudReapertura_v2_pvc.rptdesign';
             $arch = 'FORMULARIO_' . $idsolicitud . '_' . date('YmdHis') . '.pdf';
             $response = new Response();
             $response->headers->set('Content-type', 'application/pdf');
             $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
-            //$response->setContent("HECHO");
             $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . $file . '&idsolicitud=' . $idsolicitud . '&lk=' . $lk . '&&__format=pdf&'));
             //dump($this->container->getParameter('urlreportweb') . $file . '&idsolicitud='.$idsolicitud.'&lk='. $lk .'&&__format=pdf&');die;
             $response->setStatusCode(200);

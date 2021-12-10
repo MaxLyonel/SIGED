@@ -548,9 +548,18 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="row" id="eduper" style="display: none">
-                                                                        <div class="col-md-12">
-                                                                            <h4 class="page-header">SUB-ÁREAS</h4>
+                                                                        <div class="col-md-6">
+                                                                            <h4 class="page-header">CURSOS CORTOS</h4>
                                                                             {% for a in form.niveltipop %}
+                                                                                <div class="ckbox ckbox-primary">
+                                                                                    {{ form_widget(a,{'attr':{'required':false,'class':'eduper'}}) }}
+                                                                                    {{ form_label(a) }}
+                                                                                </div>
+                                                                            {% endfor %}
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <h4 class="page-header">CURSOS LARGOS</h4>
+                                                                            {% for a in form.niveltipopt %}
                                                                                 <div class="ckbox ckbox-primary">
                                                                                     {{ form_widget(a,{'attr':{'required':false,'class':'eduper'}}) }}
                                                                                     {{ form_label(a) }}
@@ -1801,25 +1810,68 @@
         } else if ($('#form_dependencia').val() == 2 && $('#form_conveniotipo').val() == '') {
             alert('En el punto DEPENDENCIA NIVEL, debe seleccionar el tipo de convenio.');
             return false;
-        } else if ($('#form_dependencia').val() == 3 && $('#form_constitucion').val() == '') {
-            alert('En el punto DEPENDENCIA NIVEL, debe seleccionar la Constitución de la Unidad Educativa.');
-            return false;
         } else if ($('.nivel').is(':checked') == false) {
             alert('En el punto DEPENDENCIA NIVEL, debe seleccionar el o los niveles de organización curricular.');
             return false;
-        } else if ($('.nivel').is(':checked') == true) {
-            $('.nivel').each(function () {
+        } else if ($('.eduper').is(':checked') == true) {
+            $('.eduper').each(function () {
                 if ($(this).is(':checked')) {
-                    if ($(this).val() == 11 && ($('#form_cantidad_11_1').val() == '' || $('#form_cantidad_11_2').val() == '')) {
-                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Inicial en Familia Comunitaria.');
+                    if ($(this).val() == 222 && $('#form_cantidad_13_1').val() == '') {
+                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes.');
                         return false;
                     }
-                    if ($(this).val() == 12 && ($('#form_cantidad_12_1').val() == '' || $('#form_cantidad_12_2').val() == '' || $('#form_cantidad_12_3').val() == '')) {
-                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Primaria Comunitaria Vocacional.');
+                    if ($(this).val() == 223 && $('#form_cantidad_13_2').val() == '') {
+                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes.');
                         return false;
                     }
-                    if ($(this).val() == 13 && ($('#form_cantidad_13_1').val() == '' || $('#form_cantidad_13_2').val() == '' || $('#form_cantidad_13_3').val() == '')) {
-                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Secundaria Comunitaria Productiva.');
+                    if ($(this).val() == 225 && $('#form_cantidad_13_3').val() == '') {
+                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes.');
+                        return false;
+                    }
+                    if ($(this).val() == 226 && $('#form_cantidad_13_4').val() == '') {
+                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes.');
+                        return false;
+                    }
+                    if ($(this).val() == 219 && ($('#form_cantidad_13_1_1').val() == '' || $('#form_cantidad_13_2_1').val() == '' || $('#form_cantidad_13_3_1').val() == '' || $('#form_cantidad_13_4_1').val() == '')) {
+                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Técnico Básico.');
+                        return false;
+                    }
+                    if ($(this).val() == 220 && ($('#form_cantidad_13_1_2').val() == '' || $('#form_cantidad_13_2_2').val() == '' || $('#form_cantidad_13_3_2').val() == '' || $('#form_cantidad_13_4_2').val() == '')) {
+                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Técnico Auxiliar.');
+                        return false;
+                    }
+                    if ($(this).val() == 224 && ($('#form_cantidad_13_1_3').val() == '' || $('#form_cantidad_13_2_3').val() == '' || $('#form_cantidad_13_3_3').val() == '' || $('#form_cantidad_13_4_3').val() == '')) {
+                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Técnico Medio.');
+                        return false;
+                    }
+                }
+            });
+        } else if ($('.epjah').is(':checked') == true) {
+            $('.epjah').each(function () {
+                if ($(this).is(':checked')) {
+                    if ($(this).val() == 201 && ($('#form_cantidad_11_1_1').val() == '' || $('#form_cantidad_11_1_2').val() == '' || $('#form_cantidad_11_1_3').val() == '' || $('#form_cantidad_11_1_4').val() == '' || $('#form_cantidad_11_1_5').val() == '' || $('#form_cantidad_11_1_6').val() == '')) {
+                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Primaria de Adultos.');
+                        return false;
+                    }
+                    if ($(this).val() == 202 && ($('#form_cantidad_11_2_1').val() == '' || $('#form_cantidad_11_2_2').val() == '' || $('#form_cantidad_11_2_3').val() == '' || $('#form_cantidad_11_2_4').val() == '' || $('#form_cantidad_11_2_5').val() == '' || $('#form_cantidad_11_2_6').val() == '')) {
+                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Educación Secundaria de Adultos.');
+                        return false;
+                    }
+                }
+            });
+        } else if ($('.epjat').is(':checked') == true) {
+            $('.epjat').each(function () {
+                if ($(this).is(':checked')) {
+                    if ($(this).val() == 203 && $('#form_cantidad_12_1').val() == '') {
+                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Técnico Básico.');
+                        return false;
+                    }
+                    if ($(this).val() == 204 && $('#form_cantidad_12_2').val() == '') {
+                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Técnico Auxiliar.');
+                        return false;
+                    }
+                    if ($(this).val() == 205 && $('#form_cantidad_12_3').val() == '') {
+                        alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes para Técnico Medio.');
                         return false;
                     }
                 }
@@ -1860,7 +1912,7 @@
 
     $(".nivel").change(function () {
         if ($(this).is(':checked') == true) {
-            if ($(this).val() == 600) {//<-- fRnk: change
+            if ($(this).val() == 600) {
                 $('#form_areatipo_602').prop({"disabled": true, 'checked': false});
                 $('#humanistico').show();
                 if ($('#form_areatipo_601').is(':checked') == false)
@@ -1870,7 +1922,7 @@
                 $('#cant-eduper').hide();
                 $('.cant-epja').show();
             }
-            if ($(this).val() == 601) {//<-- fRnk: change
+            if ($(this).val() == 601) {
                 $('#form_areatipo_602').prop({"disabled": true, 'checked': false});
                 $('#tecnico').show();
                 if ($('#form_areatipo_600').is(':checked') == false)
@@ -1880,7 +1932,7 @@
                 $('#cant-eduper').hide();
                 $('.cant-epja').show();
             }
-            if ($(this).val() == 602) {//<-- fRnk: change
+            if ($(this).val() == 602) {
                 $('#form_areatipo_600').prop({"disabled": true, 'checked': false});
                 $('#form_areatipo_601').prop({"disabled": true, 'checked': false});
                 $('#humanistico').hide();
@@ -1954,33 +2006,75 @@
         if ($(this).val() == 222) {
             $('.nivel13').val('');
             if ($(this).is(':checked') == true) {
-                $('input[id^="form_cantidad_13_1"]').prop('disabled', false);
+                $('#form_cantidad_13_1').prop('disabled', false);
             } else {
-                $('input[id^="form_cantidad_13_1"]').prop('disabled', true);
+                $('#form_cantidad_13_1').prop('disabled', true);
             }
         }
         if ($(this).val() == 223) {
             $('.nivel13').val('');
             if ($(this).is(':checked') == true) {
-                $('input[id^="form_cantidad_13_2"]').prop('disabled', false);
+                $('#form_cantidad_13_2').prop('disabled', false);
             } else {
-                $('input[id^="form_cantidad_13_2"]').prop('disabled', true);
+                $('#form_cantidad_13_2').prop('disabled', true);
             }
         }
         if ($(this).val() == 225) {
             $('.nivel13').val('');
             if ($(this).is(':checked') == true) {
-                $('input[id^="form_cantidad_13_3"]').prop('disabled', false);
+                $('#form_cantidad_13_3').prop('disabled', false);
             } else {
-                $('input[id^="form_cantidad_13_3"]').prop('disabled', true);
+                $('#form_cantidad_13_3').prop('disabled', true);
             }
         }
         if ($(this).val() == 226) {
             $('.nivel13').val('');
             if ($(this).is(':checked') == true) {
-                $('input[id^="form_cantidad_13_4"]').prop('disabled', false);
+                $('#form_cantidad_13_4').prop('disabled', false);
             } else {
-                $('input[id^="form_cantidad_13_4"]').prop('disabled', true);
+                $('#form_cantidad_13_4').prop('disabled', true);
+            }
+        }
+        if ($(this).val() == 219) {
+            $('.nivel13').val('');
+            if ($(this).is(':checked') == true) {
+                $('#form_cantidad_13_1_1').prop('disabled', false);
+                $('#form_cantidad_13_2_1').prop('disabled', false);
+                $('#form_cantidad_13_3_1').prop('disabled', false);
+                $('#form_cantidad_13_4_1').prop('disabled', false);
+            } else {
+                $('#form_cantidad_13_1_1').prop('disabled', true);
+                $('#form_cantidad_13_2_1').prop('disabled', true);
+                $('#form_cantidad_13_3_1').prop('disabled', true);
+                $('#form_cantidad_13_4_1').prop('disabled', true);
+            }
+        }
+        if ($(this).val() == 220) {
+            $('.nivel13').val('');
+            if ($(this).is(':checked') == true) {
+                $('#form_cantidad_13_1_2').prop('disabled', false);
+                $('#form_cantidad_13_2_2').prop('disabled', false);
+                $('#form_cantidad_13_3_2').prop('disabled', false);
+                $('#form_cantidad_13_4_2').prop('disabled', false);
+            } else {
+                $('#form_cantidad_13_1_2').prop('disabled', true);
+                $('#form_cantidad_13_2_2').prop('disabled', true);
+                $('#form_cantidad_13_3_2').prop('disabled', true);
+                $('#form_cantidad_13_4_2').prop('disabled', true);
+            }
+        }
+        if ($(this).val() == 224) {
+            $('.nivel13').val('');
+            if ($(this).is(':checked') == true) {
+                $('#form_cantidad_13_1_3').prop('disabled', false);
+                $('#form_cantidad_13_2_3').prop('disabled', false);
+                $('#form_cantidad_13_3_3').prop('disabled', false);
+                $('#form_cantidad_13_4_3').prop('disabled', false);
+            } else {
+                $('#form_cantidad_13_1_3').prop('disabled', true);
+                $('#form_cantidad_13_2_3').prop('disabled', true);
+                $('#form_cantidad_13_3_3').prop('disabled', true);
+                $('#form_cantidad_13_4_3').prop('disabled', true);
             }
         }
     });
