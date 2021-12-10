@@ -798,7 +798,7 @@ class DownloadController extends Controller {
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'libreta_' . $rude . '_' . $gestion . '.pdf'));
         
         if($gestion == 2021){
-                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&trimestre=6&&__format=pdf&'));
+                $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&trimestre=9&&__format=pdf&'));
         }else{
 
             if($gestion == 2019){
