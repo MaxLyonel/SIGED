@@ -4072,35 +4072,36 @@ die;/*
                 }
             }
         }
+        $operativo = $this->funciones->obtenerOperativo($iinstitucioneducativa_id, $igestion);
+        if($operativo==3){
+            switch ($inivel_tipo_id) {
+                case '13':
+                    $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                    $query->execute();        
+                    $resultado = $query->fetchAll();        
+                    break;
+                case '12':
+                    $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotacualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
+                    if($averagePrim->getNotaCuantitativa()>50){
+                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                    }else{
+                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(11));
+                    }
+                     $this->em->persist($inscripcion);
+                     $this->em->flush();
+                    break;
+                case '11':
+                    
+                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                        $this->em->persist($inscripcion);
+                        $this->em->flush();                    
+            
 
-        switch ($inivel_tipo_id) {
-            case '13':
-                $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
-                $query->execute();        
-                $resultado = $query->fetchAll();        
-                break;
-            case '12':
-                $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotacualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
-                if($averagePrim->getNotaCuantitativa()>50){
-                    $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
-                }else{
-                    $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(11));
-                }
-                 $this->em->persist($inscripcion);
-                 $this->em->flush();
-                break;
-            case '11':
-                $operativo = $this->funciones->obtenerOperativo($iinstitucioneducativa_id, $igestion);
-                if($operativo==3){
-                    $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
-                    $this->em->persist($inscripcion);
-                    $this->em->flush();                    
-                }
-
-                break;                
-            default:
-                # code...
-                break;
+                    break;                
+                default:
+                    # code...
+                    break;
+            }
         }
         
       
