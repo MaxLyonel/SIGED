@@ -4083,6 +4083,8 @@ die;/*
                 $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotacualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
                 if($averagePrim->getNotaCuantitativa()>50){
                     $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                }else{
+                    $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(11));
                 }
                  $this->em->persist($inscripcion);
                  $this->em->flush();
