@@ -4140,9 +4140,9 @@ class TramiteCeaController extends Controller
             //dump($idsolicitud);
             $query1 = $em->getConnection()->prepare("select 
             'CODIGO_SOLICITUD:_'||cast(codigo as varchar)||'__'||
-            'UNIDAD_EDUCATIVA:_'||replace(wf.datos::json->'Apertura de Unidad Educativa'->>'institucioneducativa',' ','_')||'__'||
-            'DISTRITO_EDUCATIVO:_'||replace(wf.datos::json->'Apertura de Unidad Educativa'->>'distrito',' ','_')||'__'||
-            'DEPENDENCIA:_'||cast(wf.datos::json->'Apertura de Unidad Educativa'->'dependencia'->>'dependencia' as varchar) as qr
+            'UNIDAD_EDUCATIVA:_'||replace(wf.datos::json->'Apertura de Centro de Educacion Alternativa'->>'institucioneducativa',' ','_')||'__'||
+            'DISTRITO_EDUCATIVO:_'||replace(wf.datos::json->'Apertura de Centro de Educacion Alternativa'->>'distrito',' ','_')||'__'||
+            'DEPENDENCIA:_'||cast(wf.datos::json->'Apertura de Centro de Educacion Alternativa'->'dependencia'->>'dependencia' as varchar) as qr
             from solicitud_tramite wf
             where id=" . $idsolicitud);
 
