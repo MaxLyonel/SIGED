@@ -1307,11 +1307,14 @@ class InboxController extends Controller {
                 if ($operativo>=3) {
                   $operativo=3;
                 }
+
+                $valor_op=array('1'=>6,'2'=>7,'3'=>8);
+
                 $queryCheckCal = 'select * from sp_validacion_regular_web2021_fg(:gestion,:sie,:ope)';
                 $query = $em->getConnection()->prepare($queryCheckCal);
                 $query->bindValue(':gestion', $form['gestion']);
                 $query->bindValue(':sie', $form['sie']);
-                $query->bindValue(':ope', $operativo);
+                $query->bindValue(':ope', $valor_op[$operativo]);
                 $inconsistenciaCal = $query->fetchAll();
                 
                 
