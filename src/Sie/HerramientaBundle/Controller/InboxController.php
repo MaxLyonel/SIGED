@@ -1317,6 +1317,10 @@ class InboxController extends Controller {
                 $query->bindValue(':ope', $valor_op[$operativo]);
                 $inconsistenciaCal = $query->fetchAll();
                 
+                $queryChange = "select * from sp_validacion_regular_web2021_fg('".$form['gestion']."','".$form['sie']."','".$valor_op[$operativo]."')";
+                $query = $em->getConnection()->prepare($queryChange);
+                $query->execute();
+                $inconsistenciaCal = $query->fetchAll();                
                 
                 /*if($operativo >= 3)
                 {
