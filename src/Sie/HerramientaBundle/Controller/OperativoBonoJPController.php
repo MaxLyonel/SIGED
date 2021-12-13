@@ -432,7 +432,7 @@ class OperativoBonoJPController extends Controller
 			$tutoresEliminados = $this->listarTutores($inscriptionId,array(3));
         }
          // dump($dataInscriptionR);die;
-		return $this->render('SieHerramientaBundle:BonoJP:inscripcionesEstudianteBonoJP.html.twig', array(
+		return $this->render($this->session->get('pathSystem') .':BonoJP:inscripcionesEstudianteBonoJP.html.twig', array(
 			'inscripcionesRegular' => $dataInscriptionR,
 			'inscripcionesEspecial' => $dataInscriptionE,
 			'tutoresActuales' => $tutoresActuales,
