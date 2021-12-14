@@ -1,0 +1,70 @@
+<div class="row">
+  <div class="col-md-12 text-center">
+    <h3 class="text-primary">Educación Alternativa</h3>
+  </div>
+</div>
+<div class="table-responsive">
+  <div id="example-table_wrapper" class="dataTables_wrapper form-inline" role="grid">
+    <table id="example-table" class="table table-striped table-bordered table-hover table-green dataTable" aria-describedby="example-table_info">
+      <thead>
+        <tr role="row">
+          <th class="text-center">Gestión</th>
+          <th class="text-center">SIE / Subcentro</th>
+          <th class="text-center">Centro</th>
+          <th class="text-center">Periodo</th>
+          <th class="text-center">Acreditación</th>
+          <th class="text-center">Área</th>
+          <th class="text-center">Especialidad</th>
+          <th class="text-center">Paralelo</th>
+          <th class="text-center">Turno</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody role="alert" aria-live="polite" aria-relevant="all">
+        {% for data in dataInscription %}
+          <tr class = "success">
+            <td>{{data.gestion_tipo_id_raep}}</td>
+            <td>{{data.institucioneducativa_id_raep}} - {{data.sucursal_tipo_id_a}}</td>
+            <td>{{data.institucioneducativa_raep}}</td>
+            <td>{{data.periodo_raep}}</td>
+            <td>{{data.acreditacion_a }} </td>
+            <td>{{data.facultad_area_a}}</td>
+            <td>{{data.especialidad_a}}</td>
+            <td>{{data.paralelo_raep}} </td>
+            <td>{{data.turno_raep}} </td>
+            <td class="text-center">
+              {% if visible is defined and visible == true %}
+                <a href="#" onclick="seeNotaNew('{{data.estudiante_inscripcion_id_raep}}', '{{data.estudiante_id_raep}}', '{{data.gestion_tipo_id_raep}}', '2')" ><span class="glyphicon glyphicon-eye-open"></span> Ver Calificaciones</a>
+              {% endif %}
+              <span class="clearfix"></span>
+              {% if data.gestion_tipo_id_raep == 2020 and app.session.get('roluser') == 8 %}
+                <a href="#" onclick="pagoBf('{{data.estudiante_inscripcion_id_raep}}')" ><span class="fa fa-list"></span> Bono familia</a>
+              {% endif %}
+              {% if app.session.get('roluser') == '8' %}
+                {% set nivel = (data.nivel_tipo_id_r) ? data.nivel_tipo_id_r : -1 %}
+                {% set grado = (data.grado_tipo_id_r) ? data.grado_tipo_id_r : -1 %}
+                <br>
+                  <a href="{{path( 'remove_inscription_alternativa_sie_remove', {
+                        'periodo': data.periodo_tipo_id_raep,
+                        'idstudent': data.estudiante_id_raep,
+                        'nivel': nivel,
+                        'grado': grado,
+                        'paralelo': data.paralelo_tipo_id_raep,
+                        'turno': data.turno_tipo_id_raep,
+                        'sie': data.institucioneducativa_id_raep,
+                        'gestion': data.gestion_tipo_id_raep,
+                        'eiid': data.estudiante_inscripcion_id_raep } )}}" onclick="javascript:if (confirm('¿Está seguro de Eliminar la inscripción ?')) {
+                              return true;
+                          } else {
+                              return false;
+                          }
+                  " class="text-danger"><span class="glyphicon glyphicon-remove"></span> Eliminar inscripción</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

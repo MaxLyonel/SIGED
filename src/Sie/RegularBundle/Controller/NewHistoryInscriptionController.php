@@ -268,11 +268,57 @@ class NewHistoryInscriptionController extends Controller {
                     $complementario = "'(6,7)','(6,7,8)','(9)','51'";
                 }
             }
+        }else if($igestion == 2021) {
+            if($inivel_tipo_id == 11) {
+                $complementario = "";
+            }else if($inivel_tipo_id == 12) {
+                if($igrado_tipo_id >= 1) {
+                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
+                }
+            } else if($inivel_tipo_id == 13) {
+                if($igrado_tipo_id >= 1) {
+                    $complementario = "'(6,7)','(6,7,8)','(9)','51'";
+                }
+            }
         }
 
-        $query = $em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
-        $query->execute();        
-        $resultado = $query->fetchAll();
+        // $query = $em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+        // $query->execute();        
+        // $resultado = $query->fetchAll();
+
+        $operativo = $this->get('funciones')->obtenerOperativo($iinstitucioneducativa_id, $igestion);
+        if($operativo==3){
+            switch ($inivel_tipo_id) {
+                case '13':
+                    $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                    $query->execute();        
+                    $resultado = $query->fetchAll();        
+                    break;
+                case '12':
+                    $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotacualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
+                    if($averagePrim->getNotaCuantitativa()>50){
+                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                    }else{
+                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(11));
+                    }
+                     $this->em->persist($inscripcion);
+                     $this->em->flush();
+                    break;
+                case '11':
+                    
+                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                        $this->em->persist($inscripcion);
+                        $this->em->flush();                    
+            
+
+                    break;                
+                default:
+                    # code...
+                    break;
+            }
+        }        
+
+
 
         $message = "La evaluación del estado de matrícula para el código RUDE: ".$icodigo_rude.", fue satisfactoria.";
         $this->addFlash('goodhistory', $message);
