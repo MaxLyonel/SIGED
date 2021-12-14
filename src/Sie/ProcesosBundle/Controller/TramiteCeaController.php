@@ -81,7 +81,7 @@ class TramiteCeaController extends Controller
             if ($tramite) {
                 $request->getSession()
                     ->getFlashBag()
-                    ->add('error', 'La Unidad Educativa ya cuenta con una SOLICITUD DE MODIFICACIÓN RUE en la gestión actual con el <strong>Nro.: ' . $tramite->getId() . '</strong></br>Para iniciar un nuevo trámite primero debe finalizar el actual.');
+                    ->add('error', 'El Centro de Educación Alternativa ya cuenta con una SOLICITUD DE MODIFICACIÓN RUE en la gestión actual con el <strong>Nro.: ' . $tramite->getId() . '</strong></br>Para iniciar un nuevo trámite primero debe finalizar el actual.');
                 return $this->redirectToRoute('wf_tramite_index');
             } else {
                 $tramite = null;
@@ -290,7 +290,7 @@ class TramiteCeaController extends Controller
                 break;
             case 70: //cambio de nombre
                 $form = $form
-                    ->add('nuevo_nombre', 'text', array('label' => 'Nuevo nombre de la Unidad Educativa:', 'required' => true, 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase', 'oninput' => 'validarnombre(this.value,1)', 'onblur' => 'validarnombredistrito(this.value)')))
+                    ->add('nuevo_nombre', 'text', array('label' => 'Nuevo nombre del Centro de Educación Alternativa:', 'required' => true, 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase', 'oninput' => 'validarnombre(this.value,1)', 'onblur' => 'validarnombredistrito(this.value)')))
                     ->getForm();
                 $data = array(
                     'form' => $form->createView(),
@@ -366,7 +366,7 @@ class TramiteCeaController extends Controller
                         ->add('estadoinstitucion', 'checkbox', array('label' => 'CERRADA', 'required' => true));
                     if ($tipo == 'fusion') {
                         $form = $form
-                            ->add('siefusion', 'text', array('label' => 'Código SIE de la Unidad Educativa a Cerrar definitivamente:', 'required' => true, 'attr' => array('class' => 'form-control validar', 'maxlength' => 8)));
+                            ->add('siefusion', 'text', array('label' => 'Código SIE del Centro de Educación Alternativa a Cerrar definitivamente:', 'required' => true, 'attr' => array('class' => 'form-control validar', 'maxlength' => 8)));
                     }
                     $form = $form
                         ->getForm()
@@ -929,16 +929,9 @@ class TramiteCeaController extends Controller
             ->add('siecomparte', 'text', array('label' => 'Comparte el edificio con (Señale solo 1):', 'required' => false, 'attr' => array('class' => 'form-control datocea validar', 'maxlength' => 8)))
             ->add('cantidad_11_1_1', 'text', array('label' => 'epa1', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_1')))
             ->add('cantidad_11_1_2', 'text', array('label' => 'epa2', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_1')))
-            ->add('cantidad_11_1_3', 'text', array('label' => 'epa3', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_1')))
-            ->add('cantidad_11_1_4', 'text', array('label' => 'epa4', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_1')))
-            ->add('cantidad_11_1_5', 'text', array('label' => 'epa5', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_1')))
-            ->add('cantidad_11_1_6', 'text', array('label' => 'epa6', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_1')))
             ->add('cantidad_11_2_1', 'text', array('label' => 'esa', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_2')))
             ->add('cantidad_11_2_2', 'text', array('label' => 'esa', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_2')))
             ->add('cantidad_11_2_3', 'text', array('label' => 'esa', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_2')))
-            ->add('cantidad_11_2_4', 'text', array('label' => 'esa', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_2')))
-            ->add('cantidad_11_2_5', 'text', array('label' => 'esa', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_2')))
-            ->add('cantidad_11_2_6', 'text', array('label' => 'esa', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel11_2')))
             ->add('cantidad_12_1', 'text', array('label' => 'tb', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel12')))
             ->add('cantidad_12_2', 'text', array('label' => 'ta', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel12')))
             ->add('cantidad_12_3', 'text', array('label' => 'tm', 'required' => false, 'disabled' => 'disabled', 'attr' => array('class' => 'form-control datocea validar nivel12')))
@@ -1919,8 +1912,8 @@ class TramiteCeaController extends Controller
         $requisitos = array();
         foreach ($tramites as $t) {
             switch ($t['id']) {
-                case 62://ok
-                case 71://ok
+                case 62: //ok
+                case 71: //ok
                 case 61:
                 case 65:
                     if (!isset($requisitos['Requisitos Legales'])) {
@@ -2867,7 +2860,7 @@ class TramiteCeaController extends Controller
                                     $vNuevo['nro_resolucion'] = $tareasDatos[2]['datos']['resolucion'];
                                     $vNuevo['fecha_resolucion'] = $tareasDatos[2]['datos']['fecharesolucion'];
                                     $historial = $this->registraHistorialTramite($institucioneducativa, $tramite, $t['id'], $tareasDatos[2]['datos']['resolucion'], $tareasDatos[2]['datos']['fecharesolucion'], json_encode($vAnterior), json_encode($vNuevo), $form['observacion'], $usuario);
-                                } elseif ($t['id'] == 59) { //incluir resolucion, revisar Apertura
+                                } elseif ($t['id'] == 59) {
                                     //$nuevaInstitucioneducativa = $this->registrarInstitucioneducativa($tareasDatos[0][$t['tramite_tipo']]);
                                     $datosSolicitud = $tareasDatos[0]['datos'][$t['tramite_tipo']];
                                     //dump($datosSolicitud);die;
@@ -2882,7 +2875,15 @@ class TramiteCeaController extends Controller
                                     $codigoue = $query->fetchAll();
                                     //dump($codigoue);die;
                                     $datosSolicitud = $tareasDatos[0]['datos'][$t['tramite_tipo']];
-                                    $ieducativatipo = $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(2);
+                                    $epja = array(201, 202, 203, 204, 205);
+                                    $institucioneducativaTipo = 5; //permanente
+                                    foreach ($datosSolicitud['niveltipo'] as $n) {
+                                        if (array_search($n['id'], $epja) !== false) {
+                                            $institucioneducativaTipo = 2; //alternativa
+                                            break;
+                                        }
+                                    }
+                                    $ieducativatipo = $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find($institucioneducativaTipo);
                                     $entity = new Institucioneducativa();
                                     $entity->setId($codigoue[0]["get_genera_codigo_ue"]);
                                     $entity->setInstitucioneducativa(mb_strtoupper($datosSolicitud['institucioneducativa'], 'utf-8'));
@@ -3424,7 +3425,7 @@ class TramiteCeaController extends Controller
                 'id' => $institucioneducativa[0]['id'],
                 'institucioneducativa' => $institucioneducativa[0]['institucioneducativa'],
                 'distrito' => $institucioneducativa[0]['distrito'],
-                'msg' => 'El nuevo nombre de la Unidad Educativa: <strong>' . $institucioneducativa[0]['institucioneducativa'] . '</strong> ya se encuentra registrada con el <strong>Código RUE: ' . $institucioneducativa[0]['id'] . '</strong> en el mismo Distrito Educativo: <strong>' . $institucioneducativa[0]['distrito'] . '</strong>.</br>Por lo que debe elegir otro nombre.'
+                'msg' => 'El nuevo nombre del Centro de Educación Alternativa: <strong>' . $institucioneducativa[0]['institucioneducativa'] . '</strong> ya se encuentra registrada con el <strong>Código RUE: ' . $institucioneducativa[0]['id'] . '</strong> en el mismo Distrito Educativo: <strong>' . $institucioneducativa[0]['distrito'] . '</strong>.</br>Por lo que debe elegir otro nombre.'
             );
             //dump($ie);die;
             $response->setData($ie);
@@ -4187,6 +4188,12 @@ class TramiteCeaController extends Controller
         $datos[$tramitetipo]['director'] = trim(mb_strtoupper($form['director'], 'utf-8'));
         if ($form['siecomparte']) {
             $datos[$tramitetipo]['siecomparte'] = $form['siecomparte'];
+            $scobj = new \stdClass;
+            $scobj->id = $form['siecomparte'];
+            $scobj->nombre = $form['siecompartedatanombre'];
+            $scobj->subsistema = $form['siecompartedatasubsistema'];
+            $scobj->dependencia = $form['siecompartedatadependencia'];
+            $datos[$tramitetipo]['siecompartedata'] = $scobj;
         }
         if ($form['lejurisdiccion']) {
             $datos[$tramitetipo]['lejurisdiccion'] = $form['lejurisdiccion'];
@@ -4270,18 +4277,11 @@ class TramiteCeaController extends Controller
             if (in_array(201, $form['niveltipoh'])) {
                 $datos[$tramitetipo]['cantidad_11_1_1'] = $form['cantidad_11_1_1'];
                 $datos[$tramitetipo]['cantidad_11_1_2'] = $form['cantidad_11_1_2'];
-                $datos[$tramitetipo]['cantidad_11_1_3'] = $form['cantidad_11_1_3'];
-                $datos[$tramitetipo]['cantidad_11_1_4'] = $form['cantidad_11_1_4'];
-                $datos[$tramitetipo]['cantidad_11_1_5'] = $form['cantidad_11_1_5'];
-                $datos[$tramitetipo]['cantidad_11_1_6'] = $form['cantidad_11_1_6'];
             }
             if (in_array(202, $form['niveltipoh'])) {
                 $datos[$tramitetipo]['cantidad_11_2_1'] = $form['cantidad_11_2_1'];
                 $datos[$tramitetipo]['cantidad_11_2_2'] = $form['cantidad_11_2_2'];
                 $datos[$tramitetipo]['cantidad_11_2_3'] = $form['cantidad_11_2_3'];
-                $datos[$tramitetipo]['cantidad_11_2_4'] = $form['cantidad_11_2_4'];
-                $datos[$tramitetipo]['cantidad_11_2_5'] = $form['cantidad_11_2_5'];
-                $datos[$tramitetipo]['cantidad_11_2_6'] = $form['cantidad_11_2_6'];
             }
         }
         if (isset($form['niveltipot'])) {
