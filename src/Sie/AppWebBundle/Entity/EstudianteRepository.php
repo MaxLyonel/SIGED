@@ -770,7 +770,7 @@ class EstudianteRepository extends EntityRepository {
             if($roluser == 8){
                 $arrMat = array(4,9,5);
             }else{
-                $arrMat = array(6);
+                $arrMat = array(6,9);
             }
             $qb = $qb ->setParameter('matricula', $arrMat);
             $qb = $qb ->orderBy('iec.gestionTipo', 'DESC')
