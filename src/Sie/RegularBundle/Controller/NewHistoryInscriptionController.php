@@ -295,20 +295,20 @@ class NewHistoryInscriptionController extends Controller {
                     $resultado = $query->fetchAll();        
                     break;
                 case '12':
-                    $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotacualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
+                    $averagePrim=$em->getRepository('SieAppWebBundle:EstudianteNotacualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
                     if($averagePrim->getNotaCuantitativa()>50){
-                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                        $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
                     }else{
-                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(11));
+                        $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(11));
                     }
-                     $this->em->persist($inscripcion);
-                     $this->em->flush();
+                     $em->persist($inscripcion);
+                     $em->flush();
                     break;
                 case '11':
                     
-                        $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
-                        $this->em->persist($inscripcion);
-                        $this->em->flush();                    
+                        $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                        $em->persist($inscripcion);
+                        $em->flush();                    
             
 
                     break;                
