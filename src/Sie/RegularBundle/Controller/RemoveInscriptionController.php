@@ -34,7 +34,7 @@ class RemoveInscriptionController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        if (!in_array($this->session->get('roluser'), array(8)) ) {
+        if (!in_array($this->session->get('roluser'), array(8,7)) ) {
             return $this->redirect($this->generateUrl('login'));
         }
         //set the student and inscriptions data
@@ -75,7 +75,7 @@ class RemoveInscriptionController extends Controller {
     private function craeteformsearch() {
         $gestionActual=$this->session->get('currentyear');
         $cantidadGestionPasada = 8;
-        $tmp = range($gestionActual,$gestionActual-$cantidadGestionPasada);
+        $tmp = range($gestionActual,$gestionActual);
 
         $gestion= array();
         foreach ($tmp as $g)
@@ -120,7 +120,7 @@ class RemoveInscriptionController extends Controller {
      */
     public function removeAction($gestion, $eiid, Request $request)
     {
-        if (!in_array($this->session->get('roluser'), array(8)) )
+        if (!in_array($this->session->get('roluser'), array(8,7)) )
         {
             return $this->redirect($this->generateUrl('login'));
         }
