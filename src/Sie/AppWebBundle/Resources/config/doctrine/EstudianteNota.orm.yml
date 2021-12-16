@@ -1,21 +1,24 @@
 Sie\AppWebBundle\Entity\EstudianteNota:
     type: entity
     table: estudiante_nota
-    repositoryClass: Sie\AppWebBundle\Entity\EstudianteNotaRepository
     indexes:
+        nota_estudiante_idx_nota_tipo:
+            columns:
+                - nota_tipo_id
         nota_estudiante_idx_estudiante_saignatura:
             columns:
                 - estudiante_asignatura_id
-        IDX_A68FB053756DFBFA:
+    uniqueConstraints:
+        uq_estudiante_nota:
             columns:
+                - estudiante_asignatura_id
                 - nota_tipo_id
     id:
         id:
-            type: integer
+            type: bigint
             nullable: false
             unsigned: false
             comment: ''
-            default: estudiante_inscripcion_id_seq
             id: true
             generator:
                 strategy: SEQUENCE
@@ -64,16 +67,13 @@ Sie\AppWebBundle\Entity\EstudianteNota:
             length: 255
             fixed: false
             comment: ''
+        personaInscripcionId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: persona_inscripcion_id
     manyToOne:
-        notaTipo:
-            targetEntity: NotaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                nota_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         estudianteAsignatura:
             targetEntity: EstudianteAsignatura
             cascade: {  }
@@ -81,6 +81,15 @@ Sie\AppWebBundle\Entity\EstudianteNota:
             inversedBy: null
             joinColumns:
                 estudiante_asignatura_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        notaTipo:
+            targetEntity: NotaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                nota_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

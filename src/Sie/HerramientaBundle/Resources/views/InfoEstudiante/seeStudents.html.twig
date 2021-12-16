@@ -389,15 +389,16 @@
                                                     {{dump(nivelGradoSexto.closeopesextosecc)}}
                                                     {{dump(nivelGradoSexto.gestion)}}
                                                     {{dump(nivelGradoSexto.operativo)#}
+                                                {% if app.session.get('ie_id') in [80730425,80730047] %}
                                                     {% if  nivel == 13 and  grado == 6  and  gestion == 2021 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %}
                                                         {% if nivelGradoSexto.closeopesextosecc == false %}
 
-                                                            {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                                                 <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                     <i class="fa fa-list"></i>
                                                                 </button>
-                                                            </div> #}
-                                                            
+                                                            </div>
+
                                                         {% else %}
                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
@@ -418,22 +419,23 @@
                                                         {% else %}
 
                                                             {% if gestion >= 2021 and nivel == 13 and grado >= 5 and app.session.get('acceso_total') %}
-                                                                {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                         <i class="fa fa-list"></i>
                                                                     </button>
-                                                                </div> #}
+                                                                </div>
                                                             {% else %}                                                            
                                                              
-                                                                {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                                                     <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                         <i class="fa fa-list"></i>
                                                                     </button>
-                                                                </div> #}
+                                                                </div>
                                                             {% endif %}
                                                             
                                                         {% endif %}
                                                     {% endif %}
+                                                {% endif %}
 
                                                 {% endif %}
                                             {% endif %}
