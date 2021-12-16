@@ -316,6 +316,15 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieProcesosBundle");
                 break;
             default :
+
+                $sysname = 'Sistema Académico Educación Regular';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutHerramienta.html.twig';
+                $this->session->set('pathSystem', "SieHerramientaBundle");
+                $this->session->set('color', 'primary');
+                $this->session->set('sistemaid', 6);
+                break;            
                 // $sysname = 'REGULAR';
                 // $sysporlet = 'blue';
                 // $sysbutton = true;
