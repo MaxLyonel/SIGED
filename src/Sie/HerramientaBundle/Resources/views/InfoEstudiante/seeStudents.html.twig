@@ -389,6 +389,7 @@
                                                     {{dump(nivelGradoSexto.closeopesextosecc)}}
                                                     {{dump(nivelGradoSexto.gestion)}}
                                                     {{dump(nivelGradoSexto.operativo)#}
+                                                {% if app.session.get('ie_id') in [80730425] %}
                                                     {% if  nivel == 13 and  grado == 6  and  gestion == 2021 and data.estadomatriculaId in [4,5,11,55,58] and nivelGradoSexto.haslevel and nivelGradoSexto.hasgrado %}
                                                         {% if nivelGradoSexto.closeopesextosecc == false %}
 
@@ -397,7 +398,7 @@
                                                                     <i class="fa fa-list"></i>
                                                                 </button>
                                                             </div>
-                                                            
+
                                                         {% else %}
                                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                                 <a class="btn btn-circle btn-warning " target="_black" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
@@ -434,7 +435,8 @@
                                                             
                                                         {% endif %}
                                                     {% endif %}
-
+                                                {% endif %}
+                                                
                                                 {% endif %}
                                             {% endif %}
                                         {% endif %}
