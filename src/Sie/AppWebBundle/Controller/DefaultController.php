@@ -69,6 +69,7 @@ class DefaultController extends Controller {
                 $this->session->set('color', 'primary');
                 break;
             case 'academico.sie.gob.bo':
+            case 'academico21.sie.gob.bo':
             case 'academico.local':
             case '172.20.196.9:8013':
             case '172.20.0.53:8013':
