@@ -4073,7 +4073,7 @@ die;/*
             }
         }
         $operativo = $this->funciones->obtenerOperativo($iinstitucioneducativa_id, $igestion);
-        if($operativo==3){
+        if($operativo==3 && $igestion == 2021){
             switch ($inivel_tipo_id) {
                 case '13':
                     $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
@@ -4102,6 +4102,10 @@ die;/*
                     # code...
                     break;
             }
+        }else{
+                $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
+                $query->execute();        
+                $resultado = $query->fetchAll();              
         }
         
       
