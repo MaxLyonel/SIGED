@@ -146,6 +146,11 @@ $data = array(
         <p class="u-text u-text-6 text-left">Se desplegará el formulario RCEA-001 para el Registro de nuevo
             Centro de Educación Alternativa.</p><br>
         <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/apertura2.png" alt=""
+            data-image-width="473" data-image-height="464"><br>
+        <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/apertura2.1.png"><br>
+        <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/apertura2.2.png" alt=""
+            data-image-width="473" data-image-height="464"><br>
+        <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/apertura2.3.png" alt=""
             data-image-width="473" data-image-height="464">
         <p class="u-text u-text-6 text-left">Completar todos los datos solicitados de las pestañas "Datos
             generales", "Ubicación Geográfica", "Dependencia Nivel", "Cantidad de estudiantes", "Cantidad de
@@ -172,7 +177,30 @@ $data = array(
         página principal del <a href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
           Académico de Educación Alternativa</a>.</div>
         ',
-    'content' => ''
+    'content' => '
+      <p class="u-text u-text-6 text-left">Haga clic en "Reapertura CEA".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/reapertura.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la siguiente pantalla, ingrese el código SIE del Centro de Educación 
+      Alternativa y posteriormente presione el botón "Buscar", la búsqueda obtendrá un resultado siempre que el CEA, esté con Cierre Temporal.</p><br>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/reapertura1.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si el código SIE corresponde a un Centro de Educación Alternativa cerrada nos desplegará el siguiente formulario:</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/reapertura2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la sección "3. DATOS A MODIFICAR", haga clic en el botón <img src="assets/img/icon-plus.png"> y 
+      suba el documento solicitado. Cuando haya terminado
+          de llenar la información, presione el botón
+          "Validar Requisitos", debe aparecer un mensaje confirmando que fueron validados.</p>
+      <p class="u-text u-text-6 text-left">Si la validación es correcta, presione el botón "Cerrar".</p>
+      <p class="u-text u-text-6 text-left">Finalmente ingrese la justificación para la Reapertura de Centro de Educación 
+          Alternativa y a continuación presione el botón "Enviar Solicitud".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/reapertura3.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Completada la solicitud se generará un formulario RCEA-002.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/rcea002-reapertura.png" alt=""
+          data-image-width="473" data-image-height="464">
+    '
   ),
   array(
     'id' => 5,
@@ -441,11 +469,57 @@ $data = array(
             </li>
           </ol>
     ',
-    'content' => ''
+    'content' => '
+      <p class="u-text u-text-6 text-left">Haga clic en la opción "Nuevo trámite", posteriormente, haga clic
+      en el icono <img src="assets/img/icon-edit.png"> de "Solicitud de Modificación RUE Alternativa".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Desplegará Información del Centro de Educación Alternativa.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/info-cea.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la sección "3. DATOS A MODIFICAR" seleccione el Tipo de Trámite
+          <strong>Ampliación o cambio de especialidades técnicas</strong>.
+      </p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/ampliacion-esptec.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. </p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/ampliacion-esptec1.png" alt=""
+          data-image-width="473" data-image-height="464">
+          <p class="u-text u-text-6 text-left">
+          Haga clic en el 
+      botón <img src="assets/img/icon-plus.png">, e ingrese los datos solicitados en la ventana emergente completando
+          las 3 pestañas "Requisitos
+          Legales", "Requisitos de Infraestructura" y "Requisitos Técnico - Pedagógicos". Cuando haya terminado
+          de llenar la información, presione el botón
+          "Validar Requisitos", debe aparecer un mensaje confirmando que fueron validados.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/ampliacion-esptec2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la validación es correcta, presione el botón "Cerrar".</p>
+      <p class="u-text u-text-6 text-left">A continuación, en la sección "4. JUSTIFICACIÓN DE LA MODIFICACIÓN"
+          escriba la justificación de Ampliación o cambio de especialidades técnicas.</p>
+      <p class="u-text u-text-6 text-left">Finalmente presione el botón "Enviar Solicitud", para guardar y
+          enviar la solicitud de Trámite.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/ampliacion-esptec3.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la operación fue exitosa, aparecerá un mensaje con el número de
+          Trámite, guárdelo para imprimir el formulario RCEA-002 y hacer el seguimiento posterior.</p>
+      <p class="u-text u-text-6 text-left">Para imprimir el formulario RCEA-002, haga clic en "Enviados".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Use el buscador ingresando el Número de Trámite para localizar su
+          solicitud.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la última columna del registro de Trámite, visualizará el icono
+          de impresión de comprobante <img src="assets/img/icon-print.png">, haga clic en él y descargará el
+          comprobante en formato PDF.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/rcea002.png" alt=""
+          data-image-width="473" data-image-height="464">
+    '
   ),
   array(
     'id' => 8,
-    'title' => 'Cambio de dependencia de Fiscal a Convenio (Usuario Director)',
+    'title' => 'Cambio de dependencia (Usuario Director)',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
             href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
@@ -513,70 +587,55 @@ $data = array(
           </li>
         </ol>
     ',
-    'content' => ''
+    'content' => '
+      <p class="u-text u-text-6 text-left">Haga clic en la opción "Nuevo trámite", posteriormente, haga clic
+      en el icono <img src="assets/img/icon-edit.png"> de "Solicitud de Modificación RUE Alternativa".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Desplegará Información del Centro de Educación Alternativa.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/info-cea.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la sección "3. DATOS A MODIFICAR" seleccione el Tipo de Trámite
+          <strong>Cambio de dependencia</strong>.
+      </p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-dependencia.png" alt=""
+          data-image-width="473" data-image-height="464">
+          <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
+          nuevo" seleccione la dependencia a realizar el cambio.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-dependencia1.png" alt="">
+      <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
+          ingrese los datos solicitados en la ventana emergente completando
+          las 3 pestañas "Requisitos
+          Legales", "Requisitos de Infraestructura" y "Requisitos Técnico - Pedagógicos". Cuando haya terminado
+          de llenar la información, presione el botón
+          "Validar Requisitos", debe aparecer un mensaje confirmando que fueron validados.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-dependencia2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la validación es correcta, presione el botón "Cerrar".</p>
+      <p class="u-text u-text-6 text-left">A continuación, en la sección "4. JUSTIFICACIÓN DE LA MODIFICACIÓN"
+          escriba la justificación de Cambio de dependencia.</p>
+      <p class="u-text u-text-6 text-left">Finalmente presione el botón "Enviar Solicitud", para guardar y
+          enviar la solicitud de Trámite.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-dependencia3.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la operación fue exitosa, aparecerá un mensaje con el número de
+          Trámite, guárdelo para imprimir el formulario RCEA-002 y hacer el seguimiento posterior.</p>
+      <p class="u-text u-text-6 text-left">Para imprimir el formulario RCEA-002, haga clic en "Enviados".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Use el buscador ingresando el Número de Trámite para localizar su
+          solicitud.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la última columna del registro de Trámite, visualizará el icono
+          de impresión de comprobante <img src="assets/img/icon-print.png">, haga clic en él y descargará el
+          comprobante en formato PDF.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/rcea002.png" alt=""
+          data-image-width="473" data-image-height="464">
+    '
   ),
   array(
     'id' => 9,
-    'title' => 'Cambio de dependencia de Convenio a Fiscal (Usuario Director)',
-    'description' => '
-        <div>Para este trámite es necesario estar autenticado en el <a
-            href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-            Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
-          Los requisitos son:</div>
-        <ol>
-          <li>Carta de solicitud de cambio de dependencia de Convenio a Fiscal: Dirigida a la Dirección Distrital Educativa
-              correspondiente.</li>
-
-          <li>Requisitos Legales:
-              <ul class="u-custom-list u-text u-text-4">
-                  <li>
-                      <div class="u-list-icon">–</div>Certificado de Registro de Unidades Educativas – RUE (original o copia
-                      legalizada). En caso de extravío del RUE, presentar informe circunstanciado con Visto Bueno de la
-                      Dirección Departamental de Educación.
-                  </li>
-                  <li>
-                      <div class="u-list-icon">–</div>Certificado de Acreditación de Servicio Educativo (original o copia
-                      legalizada). En caso de extravío, presentar informe circunstanciado con Visto Bueno de la Dirección
-                      Departamental de Educación.
-                  </li>
-                  <li>
-                      <div class="u-list-icon">–</div>Testimonio de Constitución de la Institución, solo en caso de convenio.
-                      (fotocopia simple).
-                  </li>
-                  <li>
-                      <div class="u-list-icon">–</div>Convenio Interinstitucional vigente entre el Ministerio de Educación e
-                      Institución y/u Organización, que estipule garantizar la infraestructura, mobiliario, equipamiento y
-                      subvención, solo en caso de convenio (fotocopia simple).
-                  </li>
-                  <li>
-                      <div class="u-list-icon">–</div>Documento protocolizado de sesión o donación de infraestructura, si
-                      corresponde (original).
-                  </li>
-              </ul>
-          </li>
-          <li>Requisitos de Infraestructura: Planos aprobados por el Gobierno Autónomo Municipal correspondiente (fotocopia
-              simple).</li>
-
-          <li>Requisito Administrativo: Formulario de Registro de Centro de Educación Alternativa - RCEA – 002, de
-              modificación del CEA (original).</li>
-
-          <li>Requisitos técnico - pedagógicos:
-              <ul class="u-custom-list u-text u-text-4">
-                  <li>
-                      <div class="u-list-icon">–</div>Informe Técnico del Director/a del Centro de Educación Alternativa
-                      (Original).
-                  </li>
-                  <li>
-                      <div class="u-list-icon">–</div>Informe Técnico del Director Distrital de Educación (Original).
-                  </li>
-              </ul>
-          </li>
-      </ol>
-    ',
-    'content' => ''
-  ),
-  array(
-    'id' => 10,
     'title' => 'Cambio de Infraestructura (Usuario Director)',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
@@ -625,10 +684,59 @@ $data = array(
               viabilidad del cambio de infraestructura (Original).</li>
       </ol>
     ',
-    'content' => ''
+    'content' => '
+      <p class="u-text u-text-6 text-left">Haga clic en la opción "Nuevo trámite", posteriormente, haga clic
+      en el icono <img src="assets/img/icon-edit.png"> de "Solicitud de Modificación RUE Alternativa".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Desplegará Información del Centro de Educación Alternativa.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/info-cea.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la sección "3. DATOS A MODIFICAR" seleccione el Tipo de Trámite
+          <strong>Cambio de infraestructura</strong>.
+      </p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-infraestructura.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
+          nuevo" considere que si la nueva ubicación del Centro de Educación Alternativa ya cuenta con
+          un código de Edificio Educativo registrado, ingresar el código, y los datos de ubicación de ese
+          código se desplegarán automáticamente.</p>
+      <p class="u-text u-text-6 text-left">Si la nueva ubicación del Centro de Educación Alternativa no cuenta con un código de edificio registrado,
+      seleccionar las opciones de la nueva ubicación de la infraestructura de la unidad educativa.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-infraestructura1.png" alt="">
+      <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
+          ingrese los datos solicitados en la ventana emergente completando
+          las 3 pestañas "Requisitos
+          Legales", "Requisitos de Infraestructura" y "Requisitos Técnico - Pedagógicos". Cuando haya terminado
+          de llenar la información, presione el botón
+          "Validar Requisitos", debe aparecer un mensaje confirmando que fueron validados.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-infraestructura2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la validación es correcta, presione el botón "Cerrar".</p>
+      <p class="u-text u-text-6 text-left">A continuación, en la sección "4. JUSTIFICACIÓN DE LA MODIFICACIÓN"
+          escriba la justificación de Cambio de Infraestructura.</p>
+      <p class="u-text u-text-6 text-left">Finalmente presione el botón "Enviar Solicitud", para guardar y
+          enviar la solicitud de Trámite.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-infraestructura3.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la operación fue exitosa, aparecerá un mensaje con el número de
+          Trámite, guárdelo para imprimir el formulario RCEA-002 y hacer el seguimiento posterior.</p>
+      <p class="u-text u-text-6 text-left">Para imprimir el formulario RCEA-002, haga clic en "Enviados".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Use el buscador ingresando el Número de Trámite para localizar su
+          solicitud.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la última columna del registro de Trámite, visualizará el icono
+          de impresión de comprobante <img src="assets/img/icon-print.png">, haga clic en él y descargará el
+          comprobante en formato PDF.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/rcea002.png" alt=""
+          data-image-width="473" data-image-height="464">
+    '
   ),
   array(
-    'id' => 11,
+    'id' => 10,
     'title' => 'Cambio Jurisdicción Administrativa (Usuario Director)',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
@@ -732,7 +840,7 @@ $data = array(
     '
   ),
   array(
-    'id' => 12,
+    'id' => 11,
     'title' => 'Cierre de especialidades técnicas (Usuario Director)',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
@@ -752,10 +860,54 @@ $data = array(
           </li>
         </ul>
     ',
-    'content' => ''
+    'content' => '
+      <p class="u-text u-text-6 text-left">Haga clic en la opción "Nuevo trámite", posteriormente, haga clic
+      en el icono <img src="assets/img/icon-edit.png"> de "Solicitud de Modificación RUE Alternativa".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Desplegará Información del Centro de Educación Alternativa.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/info-cea.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la sección "3. DATOS A MODIFICAR" seleccione el Tipo de Trámite
+          <strong>Ampliación o cambio de especialidades técnicas</strong>.
+      </p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-esptec.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. </p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-esptec1.png" alt=""
+          data-image-width="473" data-image-height="464">
+          <p class="u-text u-text-6 text-left">
+          Haga clic en el 
+      botón <img src="assets/img/icon-plus.png">, e ingrese los datos solicitados en la ventana emergente. Cuando haya terminado
+          de llenar la información, presione el botón
+          "Validar Requisitos", debe aparecer un mensaje confirmando que fueron validados.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-esptec2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la validación es correcta, presione el botón "Cerrar".</p>
+      <p class="u-text u-text-6 text-left">A continuación, en la sección "4. JUSTIFICACIÓN DE LA MODIFICACIÓN"
+          escriba la justificación para el cierre de especialidades técnicas.</p>
+      <p class="u-text u-text-6 text-left">Finalmente presione el botón "Enviar Solicitud", para guardar y
+          enviar la solicitud de Trámite.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-esptec3.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la operación fue exitosa, aparecerá un mensaje con el número de
+          Trámite, guárdelo para imprimir el formulario RCEA-002 y hacer el seguimiento posterior.</p>
+      <p class="u-text u-text-6 text-left">Para imprimir el formulario RCEA-002, haga clic en "Enviados".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Use el buscador ingresando el Número de Trámite para localizar su
+          solicitud.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la última columna del registro de Trámite, visualizará el icono
+          de impresión de comprobante <img src="assets/img/icon-print.png">, haga clic en él y descargará el
+          comprobante en formato PDF.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/rcea002.png" alt=""
+          data-image-width="473" data-image-height="464">
+    '
   ),
   array(
-    'id' => 13,
+    'id' => 12,
     'title' => 'Cierre Definitivo (Usuario Director)',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
@@ -790,10 +942,54 @@ $data = array(
           </li>
         </ul>
     ',
-    'content' => ''
+    'content' => '
+      <p class="u-text u-text-6 text-left">Haga clic en la opción "Nuevo trámite", posteriormente, haga clic
+      en el icono <img src="assets/img/icon-edit.png"> de "Solicitud de Modificación RUE Alternativa".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Desplegará Información del Centro de Educación Alternativa.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/info-cea.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la sección "3. DATOS A MODIFICAR" seleccione el Tipo de Trámite
+          <strong>Cierre Definitivo</strong>.
+      </p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-definitivo.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
+          nuevo" seleccione la opción CERRADA.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-definitivo1.png" alt="">
+      <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
+          ingrese los datos solicitados en la ventana emergente completando
+          los "Requisitos Legales". Cuando haya terminado
+          de llenar la información, presione el botón
+          "Validar Requisitos", debe aparecer un mensaje confirmando que fueron validados.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-definitivo2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la validación es correcta, presione el botón "Cerrar".</p>
+      <p class="u-text u-text-6 text-left">A continuación, en la sección "4. JUSTIFICACIÓN DE LA MODIFICACIÓN"
+          escriba la justificación de Cierre Definitivo.</p>
+      <p class="u-text u-text-6 text-left">Finalmente presione el botón "Enviar Solicitud", para guardar y
+          enviar la solicitud de Trámite.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-definitivo3.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la operación fue exitosa, aparecerá un mensaje con el número de
+          Trámite, guárdelo para imprimir el formulario RCEA-002 y hacer el seguimiento posterior.</p>
+      <p class="u-text u-text-6 text-left">Para imprimir el formulario RCEA-002, haga clic en "Enviados".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Use el buscador ingresando el Número de Trámite para localizar su
+          solicitud.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la última columna del registro de Trámite, visualizará el icono
+          de impresión de comprobante <img src="assets/img/icon-print.png">, haga clic en él y descargará el
+          comprobante en formato PDF.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/rcea002.png" alt=""
+          data-image-width="473" data-image-height="464">
+    '
   ),
   array(
-    'id' => 14,
+    'id' => 13,
     'title' => 'Cierre Temporal (Usuario Director)',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
@@ -815,10 +1011,54 @@ $data = array(
           </li>
         </ul>
     ',
-    'content' => ''
+    'content' => '
+      <p class="u-text u-text-6 text-left">Haga clic en la opción "Nuevo trámite", posteriormente, haga clic
+      en el icono <img src="assets/img/icon-edit.png"> de "Solicitud de Modificación RUE Alternativa".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Desplegará Información del Centro de Educación Alternativa.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/info-cea.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la sección "3. DATOS A MODIFICAR" seleccione el Tipo de Trámite
+          <strong>Cierre Temporal</strong>.
+      </p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-temporal.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
+          nuevo" seleccione la opción CERRADA.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-temporal1.png" alt="">
+      <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
+          ingrese los datos solicitados en la ventana emergente completando
+          los "Requisitos Legales". Cuando haya terminado
+          de llenar la información, presione el botón
+          "Validar Requisitos", debe aparecer un mensaje confirmando que fueron validados.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-temporal2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la validación es correcta, presione el botón "Cerrar".</p>
+      <p class="u-text u-text-6 text-left">A continuación, en la sección "4. JUSTIFICACIÓN DE LA MODIFICACIÓN"
+          escriba la justificación del Cierre Temporal.</p>
+      <p class="u-text u-text-6 text-left">Finalmente presione el botón "Enviar Solicitud", para guardar y
+          enviar la solicitud de Trámite.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-temporal3.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la operación fue exitosa, aparecerá un mensaje con el número de
+          Trámite, guárdelo para imprimir el formulario RCEA-002 y hacer el seguimiento posterior.</p>
+      <p class="u-text u-text-6 text-left">Para imprimir el formulario RCEA-002, haga clic en "Enviados".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Use el buscador ingresando el Número de Trámite para localizar su
+          solicitud.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la última columna del registro de Trámite, visualizará el icono
+          de impresión de comprobante <img src="assets/img/icon-print.png">, haga clic en él y descargará el
+          comprobante en formato PDF.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/rcea002.png" alt=""
+          data-image-width="473" data-image-height="464">
+    '
   ),
   array(
-    'id' => 15,
+    'id' => 14,
     'title' => 'Modificación de Denominación (Usuario Director)',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
@@ -849,10 +1089,54 @@ $data = array(
               modificación del CEA (original).</li>
         </ol>
     ',
-    'content' => ''
+    'content' => '
+      <p class="u-text u-text-6 text-left">Haga clic en la opción "Nuevo trámite", posteriormente, haga clic
+      en el icono <img src="assets/img/icon-edit.png"> de "Solicitud de Modificación RUE Alternativa".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Desplegará Información del Centro de Educación Alternativa.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/info-cea.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la sección "3. DATOS A MODIFICAR" seleccione el Tipo de Trámite
+          <strong>Modificación de Denominación</strong>.
+      </p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion-denominacion.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
+          nuevo" ingrese la nueva Denominación del Centro de Educación Alternativa.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion-denominacion1.png" alt="">
+      <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
+          ingrese los datos solicitados en la ventana emergente completando
+          los "Requisitos Legales". Cuando haya terminado
+          de llenar la información, presione el botón
+          "Validar Requisitos", debe aparecer un mensaje confirmando que fueron validados.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion-denominacion2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la validación es correcta, presione el botón "Cerrar".</p>
+      <p class="u-text u-text-6 text-left">A continuación, en la sección "4. JUSTIFICACIÓN DE LA MODIFICACIÓN"
+          escriba la justificación de la Modificación de Denominación.</p>
+      <p class="u-text u-text-6 text-left">Finalmente presione el botón "Enviar Solicitud", para guardar y
+          enviar la solicitud de Trámite.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion-denominacion3.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la operación fue exitosa, aparecerá un mensaje con el número de
+          Trámite, guárdelo para imprimir el formulario RCEA-002 y hacer el seguimiento posterior.</p>
+      <p class="u-text u-text-6 text-left">Para imprimir el formulario RCEA-002, haga clic en "Enviados".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Use el buscador ingresando el Número de Trámite para localizar su
+          solicitud.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la última columna del registro de Trámite, visualizará el icono
+          de impresión de comprobante <img src="assets/img/icon-print.png">, haga clic en él y descargará el
+          comprobante en formato PDF.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/rcea002.png" alt=""
+          data-image-width="473" data-image-height="464">
+    '
   ),
   array(
-    'id' => 16,
+    'id' => 15,
     'title' => 'Reducción de Nivel (Usuario Director)',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
@@ -930,7 +1214,52 @@ $data = array(
           </li>
         </ol>
     ',
-    'content' => ''
+    'content' => '
+      <p class="u-text u-text-6 text-left">Haga clic en la opción "Nuevo trámite", posteriormente, haga clic
+      en el icono <img src="assets/img/icon-edit.png"> de "Solicitud de Modificación RUE Alternativa".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Desplegará Información del Centro de Educación Alternativa.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/info-cea.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la sección "3. DATOS A MODIFICAR" seleccione el Tipo de Trámite
+          <strong>Reducción de nivel</strong>.
+      </p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/reduccion-nivel.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
+          nuevo" seleccione el o los nuevos niveles a reducir.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/reduccion-nivel1.png" alt="">
+      <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
+          ingrese los datos solicitados en la ventana emergente completando
+          las 3 pestañas "Requisitos
+          Legales", "Requisitos de Infraestructura" y "Requisitos Técnico - Pedagógicos". Cuando haya terminado
+          de llenar la información, presione el botón
+          "Validar Requisitos", debe aparecer un mensaje confirmando que fueron validados.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/reduccion-nivel2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la validación es correcta, presione el botón "Cerrar".</p>
+      <p class="u-text u-text-6 text-left">A continuación, en la sección "4. JUSTIFICACIÓN DE LA MODIFICACIÓN"
+          escriba la justificación de Reducción de Nivel.</p>
+      <p class="u-text u-text-6 text-left">Finalmente presione el botón "Enviar Solicitud", para guardar y
+          enviar la solicitud de Trámite.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/reduccion-nivel3.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Si la operación fue exitosa, aparecerá un mensaje con el número de
+          Trámite, guárdelo para imprimir el formulario RCEA-002 y hacer el seguimiento posterior.</p>
+      <p class="u-text u-text-6 text-left">Para imprimir el formulario RCEA-002, haga clic en "Enviados".</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">Use el buscador ingresando el Número de Trámite para localizar su
+          solicitud.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/enviados2.png" alt=""
+          data-image-width="473" data-image-height="464">
+      <p class="u-text u-text-6 text-left">En la última columna del registro de Trámite, visualizará el icono
+          de impresión de comprobante <img src="assets/img/icon-print.png">, haga clic en él y descargará el
+          comprobante en formato PDF.</p>
+      <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/rcea002.png" alt=""
+          data-image-width="473" data-image-height="464">
+    '
   ),
 );
 ?>
@@ -1019,7 +1348,6 @@ $data = array(
       </div>
     </div>
   </section>
-
 
   <section class="u-backlink u-clearfix u-grey-80">
     <p class="u-text">
