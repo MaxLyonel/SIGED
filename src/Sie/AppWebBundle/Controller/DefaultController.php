@@ -69,7 +69,6 @@ class DefaultController extends Controller {
                 $this->session->set('color', 'primary');
                 break;
             case 'academico.sie.gob.bo':
-            case 'academico21.sie.gob.bo':
             case 'academico.local':
             case '172.20.196.9:8013':
             case '172.20.0.53:8013':
@@ -227,15 +226,7 @@ class DefaultController extends Controller {
                 // break;
             case 'tramite.sie.gob.bo':
             case 'diplomas.sie.gob.bo':
-            case 'diplomas2015.sie.gob.bo':
-                $sysname = 'Sistema Académico Educación Regular';
-                $sysporlet = 'blue';
-                $sysbutton = true;
-                $layout = 'layoutHerramienta.html.twig';
-                $this->session->set('pathSystem', "SieHerramientaBundle");
-                $this->session->set('color', 'primary');
-                $this->session->set('sistemaid', 6);
-                break;            
+            case 'diplomas2015.sie.gob.bo':           
                     $sysname = 'TRAMITE';
                     $sysporlet = 'green';
                     $sysbutton = false;
@@ -324,15 +315,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieProcesosBundle");
                 break;
             default :
-
-                $sysname = 'Sistema Académico Educación Regular';
-                $sysporlet = 'blue';
-                $sysbutton = true;
-                $layout = 'layoutHerramienta.html.twig';
-                $this->session->set('pathSystem', "SieHerramientaBundle");
-                $this->session->set('color', 'primary');
-                $this->session->set('sistemaid', 6);
-                break;            
+            
                 // $sysname = 'REGULAR';
                 // $sysporlet = 'blue';
                 // $sysbutton = true;
