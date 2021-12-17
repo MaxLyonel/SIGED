@@ -228,6 +228,14 @@ class DefaultController extends Controller {
             case 'tramite.sie.gob.bo':
             case 'diplomas.sie.gob.bo':
             case 'diplomas2015.sie.gob.bo':
+                $sysname = 'Sistema Académico Educación Regular';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutHerramienta.html.twig';
+                $this->session->set('pathSystem', "SieHerramientaBundle");
+                $this->session->set('color', 'primary');
+                $this->session->set('sistemaid', 6);
+                break;            
                     $sysname = 'TRAMITE';
                     $sysporlet = 'green';
                     $sysbutton = false;
