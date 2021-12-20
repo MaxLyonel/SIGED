@@ -236,6 +236,7 @@ class InfoNotasController extends Controller {
             $em = $this->getDoctrine()->getManager();
             //dump($request);die;
             // Registramos las notas
+            
             $gestion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion)->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             
             if($discapacidad == 2 and $gestion > 2019 and $request->get('nivel') == 411){
@@ -262,7 +263,7 @@ class InfoNotasController extends Controller {
             // Actualizar estado de matricula de los notas que son cualitativas siempre 
             // y cuando esten en el cuarto bimestre
             
-            if(($request->get('operativo') >= 4 and $request->get('actualizar') == false and ($discapacidad <> 2 or ($discapacidad == 2 and $gestion  < 2020 ))) or (in_array($discapacidad, array(4,6,7)) and $request->get('actualizar') == false) or ($request->get('nivel') == 410 and $request->get('actualizar') == false) or ($request->get('nivel') == 411 and $discapacidad == 1 and $request->get('actualizar') == false)){
+            if(($request->get('operativo') >= 3 and $request->get('actualizar') == false and ($discapacidad <> 2 or ($discapacidad == 2 and $gestion  < 2020 ))) or (in_array($discapacidad, array(4,6,7)) and $request->get('actualizar') == false) or ($request->get('nivel') == 410 and $request->get('actualizar') == false) or ($request->get('nivel') == 411 and $discapacidad == 1 and $request->get('actualizar') == false)){
                 $idEstadoMatriicula = $request->get('nuevoEstadomatricula');
                 if($idEstadoMatriicula){
                     $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);

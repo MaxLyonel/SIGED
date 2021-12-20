@@ -1091,7 +1091,9 @@ class Notas{
                    
                     // EN LA GESTION 2019 INICIAL NO SE REGISTRARAN LAS NOTAS POR MATERIA
                     if (($gestion < 2019) or ($gestion >= 2019 and $nivel != 11) ) {
-                        
+                        if( $nivel == 403){ //solo para especial
+                            $fin = 8;
+                        }
                         for($i=$inicio;$i<=$fin;$i++){
                             
                             $existe = 'no';
@@ -1128,13 +1130,15 @@ class Notas{
 
                             }
                             if($existe == 'no'){
-                                //dump($nivel);die;
+                                //dump($nivel);die; //---nuevo
                                 $cantidadFaltantes++;
                                 if($nivel != 11 and $nivel != 1 and $nivel != 403){
                                     $valorNota = '';
                                 }else{
                                     $valorNota = '';
                                 }
+
+                                
                                 $notasArray[$cont]['notas'][] =   array(
                                                             'id'=>$cont."-".$i,
                                                             'idEstudianteNota'=>'nuevo',
@@ -1177,7 +1181,7 @@ class Notas{
 
                                 $notasArray[$cont]['notas'][] =   array(
                                                             'id'=>$cont."-5",
-                                                            'idEstudianteNota'=>'nuevo',
+                                                            'idEstudianteNota'=>'nuevo++',
                                                             'nota'=>'',
                                                             'idNotaTipo'=>5,
                                                             'idEstudianteAsignatura'=>$a['estAsigId'],
@@ -1232,6 +1236,7 @@ class Notas{
                         $existe = false;
                         
                         foreach ($cualitativas as $c) {
+                            
                             if($c->getNotaTipo()->getId() == $i){
                                 $arrayCualitativas[] = array('idInscripcion'=>$idInscripcion,
                                                              'idEstudianteNotaCualitativa'=>$c->getId(),
