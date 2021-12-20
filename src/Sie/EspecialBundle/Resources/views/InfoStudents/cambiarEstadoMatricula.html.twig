@@ -1,0 +1,78 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Start inline form -->
+                <div class="panel rounded shadow">
+                    <div class="panel-heading">
+                        <div class="pull-left">
+                            <h3 class="panel-title">Cambiar estado de Matricula</h3>
+                        </div>
+                        <div class="pull-right">
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="panel-body no-padding" id="panel">
+                        <div class="alert " style="padding:10px">
+                            <h5 class="text-info">Datos del Estudiante</h5>
+					                  <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+					                      <tr>
+					                          <th>Código Rude</th><td style="color:#0086DD">{{inscripcion.estudiante.codigoRude}}</td>
+					                      </tr>
+					                      <tr>
+					                          <th>Estudiante</th><td style="color:#0086DD"><b>{{inscripcion.estudiante.nombre}} {{inscripcion.estudiante.paterno}} {{inscripcion.estudiante.materno}}</b></td>
+					                      </tr>
+					                      <tr>
+    					                      <th>Estado de matrícula</th><td>{{inscripcion.estadomatriculaTipo.estadomatricula}}</td>
+		    			                  </tr>
+				    	              </table>
+                        </div>
+                        {{form_start(form, { 'attr': {'data-toggle': 'validator','role': "form", 'id':'estadoForm', 'class':'form-inline'} } )}}
+                            <div class="form-body">
+                                <div class="form-group">
+                                    <label class="" for="form_estadomatriculaTipo">{{form_label(form.estadomatriculaTipo)}}</label>
+                                    {{form_widget(form.estadomatriculaTipo)}}
+                                </div><!-- /.form-group -->
+                                {{form_widget(form.guardar)}}
+                                <button type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancel</button>
+                            </div><!-- /.form-body -->
+                        {{form_end(form)}}
+                    </div><!-- /.panel-body -->
+                </div><!-- /.panel -->
+                <!--/ End inline form -->
+            </div>
+        </div>
+    </div>
+</div><!-- /.modal-dialog -->
+<script>
+  
+  var guardarEstado = function (){
+
+    if(confirm('¿Está seguro de realizar el cambio de estado?')){
+
+      var formData = $('#estadoForm').serialize();
+      $.ajax({
+          type: 'post',
+          url: "{{ path('info_students_guardar_estado_matricula') }}",
+          data: formData,
+          beforeSend: function () {
+              $('#panel').empty();
+              $('#panel').append("<div style='text-align:center; padding:10px; color:#6ECBFF; font-size:15px'><img src='{{asset('img/loading-sm.gif')}}'><br>Espere mientras se procesan los cambios...</div>");
+              $("#idstudents").empty();
+              $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+          },
+          success: function (data) {
+              $('#modal').modal('hide');
+              $("#idstudents").empty();
+              $("#idstudents").append(data);
+          },
+          error: function (data) {
+
+          }
+      });
+    }else{
+      return false;
+    }
+  };
+	
+</script>

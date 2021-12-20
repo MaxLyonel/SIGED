@@ -107,6 +107,53 @@ class InscriptionTalentoController extends Controller {
             $y_dif--;
         return $y_dif;
     }
+    /**** Inicio de Inscripción contalento extraordinario integrado *****/
+    public function newAction() {
+        $em = $this->getDoctrine()->getManager();
+        $role = $this->session->get('roluser');
+        if ($role==9) {
+            $estudiantes = $this->buscarEstudiante($this->session->get('ie_id')); //$this->session->get('ie_id')
+        } else {
+            $estudiantes = array();
+        }
+        return $this->render($this->session->get('pathSystem') . ':InscriptionTalento:list.html.twig', array('rol'=>$role, 'estudiantes'=>$estudiantes));
+    }
+
+    public function searchAction(Request $request) {
+        try {
+            $estudiantes = $this->buscarEstudiante($request->get('sie'));
+            $msg = 'exito';
+        } catch (Exception $ex) {
+            $msg = 'nodata';
+            $estudiantes = array();
+        }
+        $response = new JsonResponse();
+        return $response->setData(array('estudiantes' => $estudiantes, 'msg' => $msg));
+    }
+
+    private function buscarEstudiante($codigo_sie) {
+        $em = $this->getDoctrine()->getManager();
+        $estudiantes = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('ei')
+            ->select('est.codigoRude', 'est.paterno', 'est.materno', 'est.nombre', 'nt.nivel', 'gt.grado', 'pt.paralelo', 'tt.turno', 'emt.estadomatricula as estadoMatricula')
+            ->innerJoin('SieAppWebBundle:Estudiante', 'est', 'with', 'ei.estudiante = est.id')
+            ->innerJoin('SieAppWebBundle:EstudianteTalento', 'et', 'with', 'ei.estudiante = et.estudiante')
+            ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'with', 'ei.institucioneducativaCurso = iec.id')
+            ->innerJoin('SieAppWebBundle:NivelTipo', 'nt', 'with', 'iec.nivelTipo = nt.id')
+            ->innerJoin('SieAppWebBundle:GradoTipo', 'gt', 'with', 'iec.gradoTipo = gt.id')
+            ->innerJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'with', 'iec.paraleloTipo = pt.id')
+            ->innerJoin('SieAppWebBundle:TurnoTipo', 'tt', 'with', 'iec.turnoTipo = tt.id')
+            ->innerJoin('SieAppWebBundle:EstadoMatriculaTipo', 'emt', 'with', 'ei.estadomatriculaTipo = emt.id')
+            ->where('iec.gestionTipo = :gestion')
+            ->andWhere('ei.estadomatriculaTipo=4')
+            ->andWhere('iec.institucioneducativa=:ie_id')
+            ->setParameter('gestion', $this->session->get('currentyear'))
+            ->setParameter('ie_id', $codigo_sie)
+            ->orderBy("est.paterno")
+            ->getQuery()
+            ->getResult();
+        return ($estudiantes);
+    }
+    /**** Fin de Inscripción contalento extraordinario integrado *****/
 
     /**
      * obtiene el formulario para realizar la modificacion
@@ -116,8 +163,9 @@ class InscriptionTalentoController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+        $codigoRude = $form['codigoRude']==null? $request->get('codigoRude') : $form['codigoRude'];
 
-        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
+        $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $codigoRude));
         //verificamos si existe el estudiante y si es menor a 15
         if ($student) {
 
@@ -171,12 +219,12 @@ class InscriptionTalentoController extends Controller {
 
             //validate inscription to inicial
             if ($studentInscription[0]['nivel'] == 11) {
-                $message = 'No se puede realizar la inscripción, Estudiante ' . $form['codigoRude'] . ' en nivel Inicial.';
+                $message = 'No se puede realizar la inscripción, Estudiante ' . $codigoRude . ' en nivel Inicial.';
                 $this->addFlash('notitalento', $message);
                 return $this->redirectToRoute('inscription_talento_index');
             }
             // if ($studentInscription[0]['nivel'] == 12 && ($studentInscription[0]['grado']==1 || $studentInscription[0]['grado']==2)) {
-            //     $message = 'No se puede realizar la inscripción, Estudiante ' . $form['codigoRude'] . ' en nivel Primario con Grado '.$studentInscription[0]['grado'];
+            //     $message = 'No se puede realizar la inscripción, Estudiante ' . $codigoRude . ' en nivel Primario con Grado '.$studentInscription[0]['grado'];
             //     $this->addFlash('notitalento', $message);
             //     return $this->redirectToRoute('inscription_talento_index');
             // }
@@ -184,7 +232,7 @@ class InscriptionTalentoController extends Controller {
             $boolStudentCalification = $this->getStudentNotasValidation($studentInscription, $student->getId());
             //check if the student has calification
             // if(!$boolStudentCalification){
-            //   $message = 'Estudiante con rude: ' . $form['codigoRude'] . ' cuenta con calificaciones, no es posible realizar la operación ';
+            //   $message = 'Estudiante con rude: ' . $codigoRude . ' cuenta con calificaciones, no es posible realizar la operación ';
             //   $this->addFlash('notitalento', $message);
             //   return $this->redirectToRoute('inscription_talento_index');
             // }
@@ -214,7 +262,7 @@ class InscriptionTalentoController extends Controller {
             }
         } else {
             $this->session->getFlashBag()->add('notitalento', 'Estudiante no registrado');
-            return $this->redirectToRoute('inscription_talento_index');
+            return $this->redirectToRoute('inscription_talento_index');// Redireccionar al nuevo formulario de busqueda inscription_talento_list
         }
         //add students areas
         $studentAddAreasCurrent = $this->addAreasToStudent($studentInscription[0]['inscriptionId'], $studentInscription[0]['iecId']);

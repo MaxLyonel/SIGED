@@ -105,7 +105,7 @@
                                 <div class="col-md-6">
                                     {% if loop.index == 1 %}
                                     <table class="table table-bordered">
-                                        <tbody>
+                                        <tbody class="text-muted">
                                             <tr>
                                                 <td style="padding: 10px 8px; border: none" width="40%"><b>SIE&nbsp;&nbsp;&nbsp;</b> {{ acta.curso.codigo_sie }}</td>
                                                 <td style="padding: 10px 8px; border: none" width="60%">{{ acta.curso.nombre_sie }}</td>
@@ -128,7 +128,7 @@
                                             </tr>
                                             <tr>
                                                 <td style="padding: 5px 8px 5px 8px; border: none" colspan="2">
-                                                    <span id="estado"><b class="text-primary">&nbsp;</b></span>
+                                                    <span id="estado"><b class="text-primary">Disponible</b></span>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -232,7 +232,7 @@
                                         </tbody>
                                     </table> -->
                                     <table class="table table-bordered">
-                                        <tbody>
+                                        <tbody class="text-muted">
                                             <tr>
                                                 <td style="padding: 10px 8px; border: none" width="40%"><b>SIE&nbsp;&nbsp;&nbsp;</b> {{ acta.curso.codigo_sie }}</td>
                                                 <td style="padding: 10px 8px; border: none" width="60%">{{ acta.curso.nombre_sie }}</td>
@@ -326,6 +326,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <h5 class="float-left"><b class="text-danger">Nota:</b> LLenar las notas de manera coherente.</h5>
                             <div class="row">
                                 <div class="col-sm-12">
                                     <div class="table-responsive">

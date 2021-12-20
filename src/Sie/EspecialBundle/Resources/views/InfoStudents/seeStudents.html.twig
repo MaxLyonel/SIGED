@@ -1,25 +1,65 @@
 {% set onlyview = app.session.get('onlyview') %}
 {% if exist == true %}
     <small>
-        <div class="row">
-            <div class="col-md-12">
-                {% for flashMessage in app.session.flashbag.get('noinscription') %}
-                    <div class="alert alert-warning alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
-                    </div>
-                {% endfor %}
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('noinscription') %}
+                  <div class="alert alert-warning alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage| raw }}
+                  </div>
+              {% endfor %}
 
-            </div>
-        </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              {% for flashMessage in app.session.flashbag.get('goodinscription') %}
+                  <div class="alert alert-success alert-dismissible" role="alert">
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                  </div>
+              {% endfor %}
+
+          </div>
+      </div>    
         <div class="row">
-            <div class="col-md-12">
-                {% for flashMessage in app.session.flashbag.get('goodinscription') %}
-                    <div class="alert alert-success alert-dismissible" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+          {#<div class="col-md-4">
+                <a class="btn btn-block btn-facebook" href="{{path('donwload_listStudentPerCourse', {'ue': sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno } )}}">
+                  <i class="fa fa-download"></i> Listado de Estudiantes del Curso
+                </a>
+          </div>
+          <div class="col-md-4">
+                <a class="btn btn-block btn-linkedin" href="{{path('donwload_boletinPromoPerUe', {'ue': sie, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'gestion': gestion, 'ciclo':ciclo, 'itemsUe':itemsUe } )}}">
+                  <i class="fa fa-download"></i> Boletin Centralizador
+                </a>
+          </div>#}
+          <div class="col-md-12 text-center">
+            {% set cupos = funciones.getCantidadEstudiantes(infoUe,objStudents) %}
+
+            {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 %}
+              <button type="button" class="btn btn-md btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsRude('{{infoUe}}','{{cupos.cupo}}','{{cupos.msg}}');" >
+                  <i class="fa fa-user"></i> Inscripción
+              </button>
+            {% endif %}
+          </div>
+          <!--div class="col-md-3" >
+            {% if app.session.get('ue_modular') and nivel >= 13 %}
+            {% else %}
+            <button type="button" class="btn btn-danger btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" onclick="doInscriptionsWithOutRude('{{infoUe}}');" >
+              <i class="fa fa-user-plus"></i> Inscrip. sin Rude
+            </button>
+            {% endif %}
+          </div-->
+      </div>
+    <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="no-more-tables">
+                    <div class="row">
+
                     </div>
-                {% endfor %}
+
             </div>
         </div>
         <div class="header-content">
@@ -210,11 +250,58 @@
             }
         });
     };
-    var getNotas = function (idInscripcionEspecial) {
+    var getNotas = function (idInscripcionEspecial,infoUe) {
         $.ajax({
             type: 'post',
-            data: ({idInscripcionEspecial: idInscripcionEspecial}),
+            data: ({idInscripcionEspecial: idInscripcionEspecial, infoUe: infoUe}),
             url: "{{ path('especialInfoNotas') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var getLibretasVisual = function (infoUe,infoStudent) {
+        //alert(infoUe);
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, infoStudent: infoStudent}),
+            url: "{{ path('especial_etapas_visual') }}",
+            beforeSend: function () {
+                $('#modal').empty();
+            },
+            success: function (data) {
+                $('#modal').empty();
+                $('#modal').append(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var getEstadosMatricula = function (infoUe,estInsId,eslibreta) {
+        $.ajax({
+            type: 'post',
+            data: ({infoUe: infoUe, estInsId: estInsId, eslibreta: eslibreta}),
+            url: "{{ path('info_students_cambiar_estado_matricula') }}",
             beforeSend: function () {
                 $('#modal').empty();
             },
@@ -247,10 +334,10 @@
                 $('#modal').empty();
                 $('#modal').append(data);
                 $('#sandbox-container input').datepicker({
-                    autoclose: true,
-                    todayHighlight: true,
-                    format: 'dd-mm-yyyy',
-                    language: "es"
+                  autoclose: true,
+                  todayHighlight: true,
+                  format: 'dd-mm-yyyy',
+                  language: "es"
                 });
                 //$('#modal').modal({backdrop: 'static', keyboard: false})
             },
@@ -293,29 +380,29 @@
         var horas = $('#form_horas').val();
         var eInsId = $('#form_eInsId').val();
 
-        $('#modal').modal('hide');
-            $.ajax({
-                type: 'post',
-                url: Routing.generate('herramienta_info_register_speciality_save'),
-                data: ({specialityId: specialityId, horas: horas, eInsId: eInsId}),
-                beforeSend: function () {
-                $('#modal').empty();
-                },
-                success: function (data) {
-                $('#modal').empty();
-                //$('#modal').append(data);
-                //location.reload(true);
-                },
-                statusCode: {
-                    500: function () {
+           $('#modal').modal('hide');
+             $.ajax({
+                 type: 'post',
+                 url: Routing.generate('herramienta_info_register_speciality_save'),
+                 data: ({specialityId: specialityId, horas: horas, eInsId: eInsId}),
+                 beforeSend: function () {
+                   $('#modal').empty();
+                 },
+                 success: function (data) {
+                   $('#modal').empty();
+                   //$('#modal').append(data);
+                   //location.reload(true);
+                 },
+                 statusCode: {
+                     500: function () {
 
-                    },
-                    404: function () {
+                     },
+                     404: function () {
 
-                    }
-                }
-            });
-        }
+                     }
+                 }
+             });
+         }
 
 
     var onlyNumber = function (event) {
