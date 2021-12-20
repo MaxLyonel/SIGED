@@ -67,7 +67,7 @@
                             {{ueducativaInfo.turno}} - {{ueducativaInfo.areaEspecial}} - {{ueducativaInfo.nivel}} - {% if nivel not in [410,411] %} {{ueducativaInfo.grado}} {% endif %} {% if nivel == 410 %} {{ueducativaInfo.servicio}} {% endif %} {% if nivel == 411 %} {{ueducativaInfo.programa}} {% endif %} - {{ueducativaInfo.paralelo}}
                             {% if ueducativaInfo.iecLugar %} </br> {{ueducativaInfo.iecLugar}} {% endif %}
                         </td>
-                        <td>Opciones</td>
+                        <td>Opciones---</td>
 
                         </tr>
                         {#init the array info student #}
@@ -116,15 +116,15 @@
                                     {% endif %}
                                     {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and operativo > 0 and arrDataLibreta.libreta == true %}
                                         {% if arrDataLibreta.areaEspecialId == 2 %}
-                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Imprimir Libreta">
+                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Imprimir Libreta---">
                                                 <button type="button" class="btn btn-circle btn-lilac " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getLibretasVisual('{{infoUe}}', '{{data|json_encode()}}');" >
-                                                    <i class="fa fa-archive" style="color:#FFFFFF"></i>
+                                                   1 <i class="fa fa-archive" style="color:#FFFFFF"></i>
                                                 </button>
                                             </div>
                                         {% else %}
                                             <form action="{{path('especialDownload_libreta', {'infoUe': infoUe, 'infoStudent':data|json_encode() } )}}" method="post" style="display:inline-block">
                                                 <button type="submit" class="btn btn-circle btn-lilac tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Imprimir Libreta">
-                                                    <i class="fa fa-archive" style="color:#FFFFFF"></i>
+                                                  2  <i class="fa fa-archive" style="color:#FFFFFF"></i>
                                                 </button>
                                             </form>
                                         {% endif %}        

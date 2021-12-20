@@ -15,8 +15,8 @@
 			</tr>
 			{% endif %}
 			{% for mco in maestrosCursoOferta %}
-				<tr>
-					{% if operativo == mco.idNotaTipo or (operativo == 5 and mco.idNotaTipo == 4) %}
+				<tr>{{mco.idNotaTipo}} {{operativo}}
+				{% if operativo+5 == mco.idNotaTipo or (operativo+5 == 5 and mco.idNotaTipo == 8) %}
 						<td>{{mco.periodo}}</td>
 						<td>
 							<input type="hidden" name="ieco[]" value="{{mco.idco}}">

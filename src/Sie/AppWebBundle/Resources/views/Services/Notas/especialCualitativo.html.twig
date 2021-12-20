@@ -21,8 +21,8 @@
             </th>
             {% if notas.operativo > 0 %}
                 {% for i in 1..notas.operativo %}
-                    {% if i < 5  %}
-                        <th>{{ i }} Bimestre</th>
+                    {% if i < 4  %}
+                        <th>{{ i }} Trimestre</th>
                     {% else %}
                         {% if notas.nivel != 11 %}
                             <th>Promedio</th>

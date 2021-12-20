@@ -939,7 +939,7 @@ class DownloadController extends Controller {
      * by krlos
      */
     public function especialLibretaAction(Request $request, $infoUe, $gestion, $estInsEspId, $estInsId, $codigoRude) {
-
+ 
 
       $arrInfoUe = unserialize($infoUe);
 

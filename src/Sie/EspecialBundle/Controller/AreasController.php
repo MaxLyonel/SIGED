@@ -1290,13 +1290,13 @@ class AreasController extends Controller {
         $gestion = $curso[0]['gestion'];
 
         $arrayMaestros = array();
-        if($gestion <= 2012 or ($gestion == 2013 and $grado > 1 and $nivel != 11) or ($gestion == 2013 and $grado == (1 or 2 ) and $nivel == 11) ){
+        if( $gestion >= 2021 or $gestion <= 2012 or ($gestion == 2013 and $grado > 1 and $nivel != 11) or ($gestion == 2013 and $grado == (1 or 2 ) and $nivel == 11) ){
             // trimestrales
             $inicio = 6;
             $fin = 8;
         }else{
             // Bimestrales
-            $inicio = 0;
+            $inicio = 0; //0
             $operativo = $this->operativo($sie,$gestion);
             if($operativo == 5){
                 $fin = 4; //4;
