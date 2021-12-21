@@ -3183,6 +3183,7 @@ die;/*
             $idNotaTipo = $request->get('idNotaTipo');
             $idEstudianteAsignatura = $request->get('idEstudianteAsignatura');
             $gestion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($request->get('idInscripcion'))->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+            
             if($gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5)){
                 //$estadoPromovido = $request->get('contenidos');
                 $promovido = $request->get('promovido');

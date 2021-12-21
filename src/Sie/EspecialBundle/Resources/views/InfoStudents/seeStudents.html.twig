@@ -118,13 +118,13 @@
                                         {% if arrDataLibreta.areaEspecialId == 2 %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Imprimir Libreta---">
                                                 <button type="button" class="btn btn-circle btn-lilac " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getLibretasVisual('{{infoUe}}', '{{data|json_encode()}}');" >
-                                                   1 <i class="fa fa-archive" style="color:#FFFFFF"></i>
+                                                    <i class="fa fa-archive" style="color:#FFFFFF"></i>
                                                 </button>
                                             </div>
                                         {% else %}
                                             <form action="{{path('especialDownload_libreta', {'infoUe': infoUe, 'infoStudent':data|json_encode() } )}}" method="post" style="display:inline-block">
                                                 <button type="submit" class="btn btn-circle btn-lilac tooltips" data-toggle="tooltip" data-placement="top" data-original-title="Imprimir Libreta">
-                                                  2  <i class="fa fa-archive" style="color:#FFFFFF"></i>
+                                                    <i class="fa fa-archive" style="color:#FFFFFF"></i>
                                                 </button>
                                             </form>
                                         {% endif %}        
