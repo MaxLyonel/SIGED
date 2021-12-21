@@ -196,6 +196,9 @@
                 bimestre=0;
             }
             bimestre=Number(Number(bimestre)+(1));
+            if (bimestre>3) {
+                bimestre=3;
+            }
             alertify.confirm("<p><h3>ESTA SEGURO/A DE CERRAR EL OPERATIVO  <h3><h1 style='color:#ff0000;'>TRIMESTRE "+bimestre+" ?</h1><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
                 if (e) {
                     alertify.success("Has pulsado ok ");
