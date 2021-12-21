@@ -756,12 +756,12 @@
                                     <div class="row">
                                         <div class="form-group col-md-12">
                                             <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
-                                                    data-target="#modal_59" data-placement="top"
-                                                    title="Requisitos de apertura" onclick="requisitos(59)"><i
+                                                    data-target="#modal_73" data-placement="top"
+                                                    title="Requisitos de apertura" onclick="requisitos(73)"><i
                                                         class="glyphicon glyphicon-plus"></i>Adicionar Requisitos
                                             </button>
                                         </div>
-                                        <div class="modal fade" role="dialog" aria-hidden="true" id="modal_59"
+                                        <div class="modal fade" role="dialog" aria-hidden="true" id="modal_73"
                                              data-backdrop="false"
                                              style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);"></div>
                                     </div>
@@ -1385,7 +1385,7 @@
     }
 
     $('#form_dependencia').change(function () {
-        $('#modal_59').empty();
+        $('#modal_73').empty();
     });
 
     function requisitos(id) {
@@ -1703,7 +1703,7 @@
                     $('#msg' + id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="glyphicon glyphicon-ok"></i>Requisitos validados con éxito.</div>');
                 }
                 break;
-            case 59: //apertura
+            case 73: //apertura
                 if ($('#form_i_solicitud_apertura').val() == '') {
                     alert('Debe adjuntar la solicitud de apertura.');
                     return false;
@@ -1713,9 +1713,6 @@
                     return false;
                 } else if ($('#form_i_actafundacion_apertura').val() == '') {
                     alert('Debe adjuntar el Acta de Fundación del Centro.');
-                    return false;
-                } else if ($('#form_i_certdefuncion').val() == '') {
-                    alert('Debe adjuntar el Certificado de defunción.');
                     return false;
                 } else if ($('#form_i_folio_apertura').is(':checked') == false) {
                     alert('Seleccione la presentación de la Copia legalizada del Folio Real actualizado emitido por Derechos Reales o Testimonio de Propiedad de la Matricula Computarizada, en caso de capitales de departamento, CEA’s del área, requieren la certificación de los predios especificando el área educativa total.');
@@ -1730,7 +1727,6 @@
                         return false;
                     }
                 }
-
                 if ($('#form_ii_edificio_escolar').is(':checked') == false) {
                     alert('En el punto 2.Requisitos de Infraestructura, seleccione la presentación del Formulario de Edificio Escolar (original).');
                     return false;
@@ -1740,7 +1736,37 @@
                 } else if ($('#form_ii_act_geografica').is(':checked') == false) {
                     alert('En el punto 2.Requisitos de Infraestructura, seleccione la presentación del Formulario de Actualización Geográfica (original).');
                     return false;
-                } else { //fRnk: completar con los puntos del punto 3
+                } else if ($('#form_iii_curri_antecedentes').is(':checked') == false) {
+                    alert('En el punto 3.Requisitos Técnico - Pedagógicos, seleccione la presentación del Proyecto Educativo (Antecedentes).');
+                    return false;
+                } else if ($('#form_iii_curri_objgeneral').is(':checked') == false) {
+                    alert('En el punto 3.Requisitos Técnico - Pedagógicos, seleccione la presentación del Proyecto Educativo (Objetivo General).');
+                    return false;
+                } else if ($('#form_iii_curri_objespecificos').is(':checked') == false) {
+                    alert('En el punto 3.Requisitos Técnico - Pedagógicos, seleccione la presentación del Proyecto Educativo (Objetivos Específicos).');
+                    return false;
+                } else if ($('#form_iii_curri_diagnostico').is(':checked') == false) {
+                    alert('En el punto 3.Requisitos Técnico - Pedagógicos, seleccione la presentación del Proyecto Educativo (Diagnóstico de las necesidades).');
+                    return false;
+                } else if ($('#form_iii_curri_jussolicitud').is(':checked') == false) {
+                    alert('En el punto 3.Requisitos Técnico - Pedagógicos, seleccione la presentación del Proyecto Educativo (Justificación de la solicitud).');
+                    return false;
+                } else if ($('#form_iii_curri_jusinfraestructura').is(':checked') == false) {
+                    alert('En el punto 3.Requisitos Técnico - Pedagógicos, seleccione la presentación del Proyecto Educativo (Justificación de la infraestructura).');
+                    return false;
+                } else if ($('#form_iii_curri_planes').is(':checked') == false) {
+                    alert('En el punto 3.Requisitos Técnico - Pedagógicos, seleccione la presentación del Proyecto Educativo (Planes, programas).');
+                    return false;
+                } else if ($('#form_iii_curri_proyeccion').is(':checked') == false) {
+                    alert('En el punto 3.Requisitos Técnico - Pedagógicos, seleccione la presentación del Proyecto Educativo (Proyección).');
+                    return false;
+                } else if ($('#form_iii_curri_conclusiones').is(':checked') == false) {
+                    alert('En el punto 3.Requisitos Técnico - Pedagógicos, seleccione la presentación del Proyecto Educativo (Conclusiones).');
+                    return false;
+                } else if ($('#form_iii_curri_informe_distrital').is(':checked') == false) {
+                    alert('En el punto 3.Requisitos Técnico - Pedagógicos, seleccione la presentación del Informe Técnico del Director Distrital de Educación. (Original).');
+                    return false;
+                } else {
                     $('#validar' + id).val(1);
                     $('#msg' + id).empty();
                     $('#msg' + id).append('<div class="alert alert-success"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button><i class="glyphicon glyphicon-ok"></i>Requisitos validados con éxito.</div>');
@@ -1812,19 +1838,19 @@
         } else if ($('.eduper').is(':checked') == true) {
             $('.eduper').each(function () {
                 if ($(this).is(':checked')) {
-                    if ($(this).val() == 222 && $('#form_cantidad_13_1').val() == '') {
+                    if ($(this).val() == 225 && $('#form_cantidad_13_1').val() == '') {
                         alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes.');
                         return false;
                     }
-                    if ($(this).val() == 223 && $('#form_cantidad_13_2').val() == '') {
+                    if ($(this).val() == 226 && $('#form_cantidad_13_2').val() == '') {
                         alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes.');
                         return false;
                     }
-                    if ($(this).val() == 225 && $('#form_cantidad_13_3').val() == '') {
+                    if ($(this).val() == 227 && $('#form_cantidad_13_3').val() == '') {
                         alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes.');
                         return false;
                     }
-                    if ($(this).val() == 226 && $('#form_cantidad_13_4').val() == '') {
+                    if ($(this).val() == 228 && $('#form_cantidad_13_4').val() == '') {
                         alert('En el punto CANTIDAD DE ESTUDIANTES POR GRADO, debe ingresar las cantidades de estudiantes.');
                         return false;
                     }
@@ -1882,10 +1908,10 @@
         } else if ($('#form_latitud').val() == -16.50626 || $('#form_longitud').val() == -68.12794) {
             alert('Debe seleccionar la informacion georeferencial.');
             return false;
-        } else if ($('#modal_requisitos_59').length == 0) {
+        } else if ($('#modal_requisitos_73').length == 0) {
             alert('Ingrese los requisitos de la solicitud de Apertura de Unidad Educativa');
             return false;
-        } else if ($('#validar59').val() == 0) {
+        } else if ($('#validar73').val() == 0) {
             alert('Debe validar los requisitos de la nueva Unidad Educativa');
             return false;
         } else {
@@ -1999,7 +2025,7 @@
         }
     });
     $(".eduper").change(function () {
-        if ($(this).val() == 222) {
+        if ($(this).val() == 225) {
             $('.nivel13').val('');
             if ($(this).is(':checked') == true) {
                 $('#form_cantidad_13_1').prop('disabled', false);
@@ -2007,7 +2033,7 @@
                 $('#form_cantidad_13_1').prop('disabled', true);
             }
         }
-        if ($(this).val() == 223) {
+        if ($(this).val() == 226) {
             $('.nivel13').val('');
             if ($(this).is(':checked') == true) {
                 $('#form_cantidad_13_2').prop('disabled', false);
@@ -2015,7 +2041,7 @@
                 $('#form_cantidad_13_2').prop('disabled', true);
             }
         }
-        if ($(this).val() == 225) {
+        if ($(this).val() == 227) {
             $('.nivel13').val('');
             if ($(this).is(':checked') == true) {
                 $('#form_cantidad_13_3').prop('disabled', false);
@@ -2023,7 +2049,7 @@
                 $('#form_cantidad_13_3').prop('disabled', true);
             }
         }
-        if ($(this).val() == 226) {
+        if ($(this).val() == 228) {
             $('.nivel13').val('');
             if ($(this).is(':checked') == true) {
                 $('#form_cantidad_13_4').prop('disabled', false);

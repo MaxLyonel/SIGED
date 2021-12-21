@@ -1303,15 +1303,10 @@ $data = array(
                         <div class="u-accordion-item u-accordion-item-' . $item['id'] . '">
                           <a class="u-accordion-link u-button-style u-text-body-color u-accordion-link-1 ' . $active . '" id="link-accordion-7c0e"
                               aria-controls="accordion-7c0e" aria-selected="true" data-id="' . $item['id'] . '">
-                              <span class="u-accordion-link-text">' . $item['title'] . '</span><span
-                                  class="u-accordion-link-icon u-icon u-icon-circle u-text-palette-1-base u-icon-1"><svg class="u-svg-link"
-                                      preserveAspectRatio="xMidYMin slice" viewBox="0 0 426.66667 426.66667">
-                                      <use xlink:href="#svg-347e"></use>
-                                  </svg><svg class="u-svg-content" viewBox="0 0 426.66667 426.66667" id="svg-347e">
-                                      <path
-                                          d="m405.332031 192h-170.664062v-170.667969c0-11.773437-9.558594-21.332031-21.335938-21.332031-11.773437 0-21.332031 9.558594-21.332031 21.332031v170.667969h-170.667969c-11.773437 0-21.332031 9.558594-21.332031 21.332031 0 11.777344 9.558594 21.335938 21.332031 21.335938h170.667969v170.664062c0 11.777344 9.558594 21.335938 21.332031 21.335938 11.777344 0 21.335938-9.558594 21.335938-21.335938v-170.664062h170.664062c11.777344 0 21.335938-9.558594 21.335938-21.335938 0-11.773437-9.558594-21.332031-21.335938-21.332031zm0 0">
-                                      </path>
-                                  </svg></span>
+                              <span class="u-accordion-link-text">' . $item['title'] . '</span>
+                              <span class="u-accordion-link-icon u-icon u-icon-circle u-text-palette-1-base u-icon-4">
+                                <img src="assets/img/icon-plus.svg" alt="+">
+                              </span>
                           </a>
                           <div class="u-accordion-pane u-align-left u-container-style u-palette-1-base u-accordion-pane-' . $item['id'] . ' ' . $ui_active . '"
                               id="accordion-7c0e" aria-labelledby="link-accordion-7c0e">

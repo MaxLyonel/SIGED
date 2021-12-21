@@ -126,7 +126,7 @@ class TramiteCeaController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $this->tramiteTipoArray = array(59, 60, 72); //fRnk: añadir el 59 para que no traiga este trámite
+        $this->tramiteTipoArray = array(73, 60, 72);
 
         //dump($this->tramiteTipoArray);die;
         $form = $this->createFormBuilder()
@@ -198,8 +198,8 @@ class TramiteCeaController extends Controller
                             return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(201, 202, 203, 204, 205))->orderBy('nt.id', 'ASC');
                         }, 'property' => 'nivel'))
                         ->getForm();
-                } else { //fRnk: para EDUPER falta aun ver los ids
-                    $this->nivelArray = array(222, 223, 225, 226, 219, 220, 224);
+                } else {
+                    $this->nivelArray = array(225, 226, 227, 228, 219, 220, 224);
                     foreach ($ienivel as $n) {
                         if (in_array($n['id'], $this->nivelArray)) {
                             $this->nivelArray = array_diff($this->nivelArray, array($n['id']));
@@ -207,7 +207,7 @@ class TramiteCeaController extends Controller
                     }
                     $form = $form
                         ->add('nivelampliar', 'entity', array('label' => 'Ampliacion', 'required' => false, 'multiple' => true, 'expanded' => true, 'class' => 'SieAppWebBundle:NivelTipo', 'query_builder' => function (EntityRepository $nt) {
-                            return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(222, 223, 225, 226, 219, 220, 224))->orderBy('nt.id', 'ASC');
+                            return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(225, 226, 227, 228, 219, 220, 224))->orderBy('nt.id', 'ASC');
                         }, 'property' => 'nivel'))
                         ->getForm();
                 }
@@ -436,7 +436,7 @@ class TramiteCeaController extends Controller
         $id = $request->get('id');
         //dump($id);die;
         $em = $this->getDoctrine()->getManager();
-        if ($id != 59 and $id != 46 and $id != 55) {
+        if ($id != 73 and $id != 46 and $id != 55) {
             $ie = $request->get('ie');
             $ie = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($ie);
         } else {
@@ -712,13 +712,13 @@ class TramiteCeaController extends Controller
                 break;
             case 55: //Actualizacion de resolucion administrativa
             case 46: //Regularización
-            case 59: //apertura
+            case 73: //apertura
                 $requisitos = array('legal' => true, 'infra' => true, 'curri' => true);
                 $labelSolicitud = '';
                 if ($id == 46) {
                     $labelSolicitud = 'regularización';
                 }
-                if ($id == 59) {
+                if ($id == 73) {
                     $labelSolicitud = 'apertura';
                     $form = $form
                         ->add('iii_curri_antecedentes', 'checkbox', array('label' => 'Antecedentes.', 'required' => false))
@@ -830,12 +830,6 @@ class TramiteCeaController extends Controller
     public function createInicioNuevoForm($desglose, $ie)
     {
         $em = $this->getDoctrine()->getManager();
-        /* $constitucion = array(1=>'Asociaciones o Fundaciones sin fines de lucro - ONG',
-          45  2=>'Instituciones Religiosas',
-          46  3=>'Sociedad Anónima (S.A.) / Sociedad de Responsabilidad Limitada(S.r.l.)',
-          47  4=>'Unipersonal',
-          48  5=>'Cooperativa',
-          49  6=>'De Convenio (suscrito entre estados)'); */
 
         $form = $this->createFormBuilder();
         $ieName = "";
@@ -921,7 +915,7 @@ class TramiteCeaController extends Controller
                 return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(203, 204, 205))->orderBy('nt.id', 'ASC');
             }, 'property' => 'nivel'))
             ->add('niveltipop', 'entity', array('label' => 'Ampliacion', 'required' => false, 'multiple' => true, 'expanded' => true, 'class' => 'SieAppWebBundle:NivelTipo', 'query_builder' => function (EntityRepository $nt) {
-                return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(222, 223, 225, 226));
+                return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(225, 226, 227, 228))->orderBy('nt.id', 'ASC');
             }, 'property' => 'nivel'))
             ->add('niveltipopt', 'entity', array('label' => 'Ampliacion', 'required' => false, 'multiple' => true, 'expanded' => true, 'class' => 'SieAppWebBundle:NivelTipo', 'query_builder' => function (EntityRepository $nt) {
                 return $nt->createQueryBuilder('nt')->where('nt.id in (:id)')->setParameter('id', array(219, 220, 224));
@@ -1112,7 +1106,8 @@ class TramiteCeaController extends Controller
 
         $query = $em->getConnection()->prepare('SELECT le.id,le.zona,le.direccion,le.distrito_tipo_id,dt.distrito,
                 lt.id as localidad2001_id,lt.lugar as localidad2001,lt1.id as canton2001_id,lt1.lugar as canton2001,lt2.id as municipio2001_id,lt2.lugar as municipio2001,lt3.id as provincia2001_id,lt3.lugar as provincia2001,lt4.id as departamento2001_id,lt4.lugar as departamento2001,lt.area2001,
-                lt5.id as comunidad2012_id,lt5.lugar as comunidad2012,lt6.id as municipio2012_id,lt6.lugar as municipio2012,lt7.id as provincia2012_id,lt7.lugar as provincia2012,lt8.id as departamento2012_id,lt8.lugar as departamento2012
+                lt5.id as comunidad2012_id,lt5.lugar as comunidad2012,lt6.id as municipio2012_id,lt6.lugar as municipio2012,lt7.id as provincia2012_id,lt7.lugar as provincia2012,lt8.id as departamento2012_id,lt8.lugar as departamento2012 
+                le.cordx as latitud, le.cordy as longitud
                 FROM jurisdiccion_geografica le
                 join distrito_tipo dt on dt.id=le.distrito_tipo_id
                 join lugar_tipo lt on lt.id=le.lugar_tipo_id_localidad
@@ -1819,7 +1814,7 @@ class TramiteCeaController extends Controller
             and fp.orden=1
             and wf.es_valido = true)::json)
             as x(id int, tramite_tipo text)
-            where id=40");
+            where id=61"); //Ampliación o cambio de Especialidad, RCEA-003
 
         $query->execute();
         $tramiteTipo = $query->fetchAll();
@@ -1834,9 +1829,15 @@ class TramiteCeaController extends Controller
 
         //dump($epja);die;
         if ($epja) {
-            $file = 'rcea_iniciosolicitudModificacionEpja_v1_far.rptdesign';
+            if ($tramiteTipo)
+                $file = 'rcea_iniciosolicitudModificacionEpjaRcea3_v1_far.rptdesign'; //RCEA-003
+            else
+                $file = 'rcea_iniciosolicitudModificacionEpja_v1_far.rptdesign';
         } else {
-            $file = 'rcea_iniciosolicitudModificacionEduper_v1_far.rptdesign';
+            if ($tramiteTipo)
+                $file = 'rcea_iniciosolicitudModificacionEduperRcea3_v1_far.rptdesign'; //RCEA-003
+            else
+                $file = 'rcea_iniciosolicitudModificacionEduper_v1_far.rptdesign';
         }
         //dump($file);die;
         $query1 = $em->getConnection()->prepare("select 
@@ -1912,8 +1913,8 @@ class TramiteCeaController extends Controller
         $requisitos = array();
         foreach ($tramites as $t) {
             switch ($t['id']) {
-                case 62: //ok
-                case 71: //ok
+                case 62:
+                case 71:
                 case 61:
                 case 65:
                     if (!isset($requisitos['Requisitos Legales'])) {
@@ -1926,7 +1927,7 @@ class TramiteCeaController extends Controller
                         $requisitos['Requisitos de Técnico - Pedagógicos'] = 'Requisitos de Técnico - Pedagógicos';
                     }
                     break;
-                case 64: //ok
+                case 64:
                     if (!isset($requisitos['Requisitos Legales'])) {
                         $requisitos['Requisitos Legales'] = 'Requisitos Legales';
                     }
@@ -2103,7 +2104,7 @@ class TramiteCeaController extends Controller
             $tarea = $tramiteDetalle->getFlujoProceso();
             $idrue = $tramite->getInstitucioneducativa() ? $tramite->getInstitucioneducativa()->getId() : null;
             foreach ($tareasDatos[0]['datos']['tramites'] as $t) {
-                if ($t['id'] == 59) {
+                if ($t['id'] == 73) {
                     $mapa = true;
                 } else {
                     $mapa = false;
@@ -2142,7 +2143,7 @@ class TramiteCeaController extends Controller
         if ($tramite) {
             $this->trArray = array($tramite->getTramiteTipo()->getId());
         } else {
-            $this->trArray = array(59, 72);
+            $this->trArray = array(73, 72);
         }
         $form = $this->createFormBuilder()
             ->setAction($this->generateUrl('tramite_cea_recepcion_distrito_apertura_guardar'))
@@ -2195,7 +2196,7 @@ class TramiteCeaController extends Controller
         if ($form['varevaluacion1'] == 'SI') {
             $datos['informedistrito'] = $form['informedistrito'];
             $datos['fechainformedistrito'] = $form['fechainformedistrito'];
-            if ($form['tramite_tipo'] == 59) {
+            if ($form['tramite_tipo'] == 73) {
                 if ($form['tramite'] != '') {
                     $ruta = '/../web/uploads/archivos/flujos/rue/apertura/' . $gestion . '/' . $form['tramite'] . '/';
 
@@ -2217,7 +2218,7 @@ class TramiteCeaController extends Controller
 
         $datos = array_merge($datosSolicitud, $datos);
         //dump($datos, $form['tramite_tipo']);die;
-        if ($form['tramite_tipo'] == 59) {
+        if ($form['tramite_tipo'] == 73) {
             $lugar = array('idlugarlocalidad' => $datos['Apertura de Centro de Educacion Alternativa']['idlocalidad2001'], 'idlugardistrito' => $this->session->get('roluserlugarid'));
         } else {
             $lugar = array('idlugarlocalidad' => $datos['jurisdiccion_geografica']['localidad2001_id'], 'idlugardistrito' => $this->session->get('roluserlugarid'));
@@ -2247,7 +2248,7 @@ class TramiteCeaController extends Controller
             $mensaje = $this->get('wftramite')->guardarTramiteNuevo($usuario, $rol, $flujotipo, $tarea, $tabla, $id_tabla, $observacion, $tipotramite, $varevaluacion1, '', $datos, $lugar['idlugarlocalidad'], $lugar['idlugardistrito']);
             //dump($mensaje);exit;
             $tipo = 1;
-            if ($form['tramite_tipo'] == 59) {
+            if ($form['tramite_tipo'] == 73) {
                 $ruta = '/../web/uploads/archivos/flujos/rue/apertura/' . $gestion . '/' . $mensaje['idtramite'] . '/';
                 $wfdatos = $em->getRepository('SieAppWebBundle:WfSolicitudTramite')->find($mensaje['iddatos']);
                 $datos = json_decode($wfdatos->getDatos(), true);
@@ -2317,7 +2318,7 @@ class TramiteCeaController extends Controller
         $tareasDatos = $this->obtieneDatos($tramite);
         //dump($tramite, $tareasDatos);die;
         foreach ($tareasDatos[0]['datos']['tramites'] as $t) {
-            if ($t['id'] == 59) {
+            if ($t['id'] == 73) {
                 $mapa = true;
             } else {
                 $mapa = false;
@@ -2564,7 +2565,7 @@ class TramiteCeaController extends Controller
                                     $em = $this->getDoctrine()->getManager();
                                     $form = $request->get('form');
 
-                                    $idInstitucion = $id_tabla; //fRnk: traer el id de la institución
+                                    $idInstitucion = $id_tabla;
                                     $gestion = $fechaActual->format('Y');
                                     $periodo = $tareasDatos[0]['datos'][$t['tramite_tipo']]['idperiodo'];
                                     $nombre = strtoupper($tareasDatos[0]['datos'][$t['tramite_tipo']]['subcea']);
@@ -2607,11 +2608,10 @@ class TramiteCeaController extends Controller
                                         throw new \Exception('El nombre del SUB CEA ya se encuentra registrado con el numero ' . $subcea . '.');
                                     }
                                     /*
-                                                                        $entityInstitucionEducativaSucursalCentral = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $idInstitucion, 'gestionTipo' => $gestion, 'sucursalTipo' => 0, 'periodoTipoId' => $periodo));
-                                                                        if (!$entityInstitucionEducativaSucursalCentral) {
-                                                                            throw new \Exception('El CEA ' . $idInstitucion . ' no cuenta con el SUB CEA 0 habilitado, debe aperturar el CEA CENTRAL en la gestion y periodo seleccionado antes de abrir otro SUB CEA.');
-                                                                        }*/
-                                    //NOS QUEDAMOS AQUI
+                                    $entityInstitucionEducativaSucursalCentral = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $idInstitucion, 'gestionTipo' => $gestion, 'sucursalTipo' => 0, 'periodoTipoId' => $periodo));
+                                    if (!$entityInstitucionEducativaSucursalCentral) {
+                                        throw new \Exception('El CEA ' . $idInstitucion . ' no cuenta con el SUB CEA 0 habilitado, debe aperturar el CEA CENTRAL en la gestion y periodo seleccionado antes de abrir otro SUB CEA.');
+                                    }*/
                                     $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
                                     $query = $repository->createQueryBuilder('ie')
                                         ->select('ies')
@@ -2632,7 +2632,6 @@ class TramiteCeaController extends Controller
                                     if ($inscripciones) {
                                         throw new \Exception('El CEA ya cuenta con el SUB CEA ' . $subcea . ' habilitada.');
                                     } else {
-                                        //$em->getConnection()->beginTransaction();
                                         try {
                                             // $entityInstitucionEducativaSucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('id' => $idiesuc));
                                             $entityLocalidadLugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $localidadId));
@@ -2662,12 +2661,16 @@ class TramiteCeaController extends Controller
                                             $entityJurisdiccionGeografica->setValidacionGeograficaTipo($entityValidacionGeograficaTipo);
                                             $entityJurisdiccionGeografica->setFechaRegistro($fechaActual);
                                             $entityJurisdiccionGeografica->setUsuarioId($usuario_id);
+                                            if (isset($tareasDatos[0]['datos'][$t['tramite_tipo']]['latitud'])) {
+                                                $entityJurisdiccionGeografica->setCordx($tareasDatos[0]['datos'][$t['tramite_tipo']]['latitud']);
+                                                $entityJurisdiccionGeografica->setCordy($tareasDatos[0]['datos'][$t['tramite_tipo']]['longitud']);
+                                            }
                                             $em->persist($entityJurisdiccionGeografica);
 
                                             $entityGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestion));
                                             $entityInstitucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $idInstitucion));
                                             $entitySucursalTipo = $em->getRepository('SieAppWebBundle:SucursalTipo')->findOneBy(array('id' => $subcea));
-                                            if (!$entitySucursalTipo) { //fRnk esto corregir para que haga un insert nuevo, tambien agregar para que inserte las coordenadas
+                                            if (!$entitySucursalTipo) { //corregir para que haga un insert nuevo
                                                 // $stn = new SucursalTipo();
                                                 //  $em->persist($stn);
                                                 $entitySucursalTipo = $em->getRepository('SieAppWebBundle:SucursalTipo')->findOneBy(array('id' => 255));
@@ -2699,7 +2702,7 @@ class TramiteCeaController extends Controller
                                     }
 
                                     $historial = $this->registraHistorialTramite($institucioneducativa, $tramite, $t['id'], $tareasDatos[2]['datos']['resolucion'], $tareasDatos[2]['datos']['fecharesolucion'], json_encode($vAnterior), json_encode($vNuevo), $form['observacion'], $usuario);
-                                } elseif ($t['id'] == 71) { #reduccion de nivel incluir resolucion
+                                } elseif ($t['id'] == 71) { #reduccion de nivel
                                     $nuevoNivel = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelreducir'];
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
@@ -2725,29 +2728,6 @@ class TramiteCeaController extends Controller
                                     $em->flush();
                                     $historial = $this->registraHistorialTramite($institucioneducativa, $tramite, $t['id'], $tareasDatos[2]['datos']['resolucion'], $tareasDatos[2]['datos']['fecharesolucion'], json_encode($tareasDatos[0]['datos']['institucioneducativaNivel']), json_encode($tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelreducir']), $form['observacion'], $usuario);
                                 } elseif ($t['id'] == 61) { #Ampliación o cambio de Especialidad
-                                    /*$nuevoNivel = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nivelreducir'];
-                                    $institucioneducativa->setFechaModificacion(new \DateTime('now'));
-                                    $institucioneducativa->setObsRue($observacion);
-                                    $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
-                                    $em->flush();
-                                    //elimina los niveles
-                                    $nivelesElim = $em->getRepository('SieAppWebBundle:InstitucioneducativaNivelAutorizado')->findBy(array('institucioneducativa' => $institucioneducativa->getId()));
-                                    if ($nivelesElim) {
-                                        foreach ($nivelesElim as $nivel) {
-                                            $em->remove($nivel);
-                                        }
-                                        $em->flush();
-                                    }
-                                    //reduce niveles
-                                    foreach ($nuevoNivel as $n) {
-                                        //dump($n);die;
-                                        $nivel = new InstitucioneducativaNivelAutorizado();
-                                        $nivel->setFechaRegistro(new \DateTime('now'));
-                                        $nivel->setNivelTipo($em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($n['id']));
-                                        $nivel->setInstitucioneducativa($institucioneducativa);
-                                        $em->persist($nivel);
-                                    }
-                                    $em->flush();*/
                                     $historial = $this->registraHistorialTramite($institucioneducativa, $tramite, $t['id'], $tareasDatos[2]['datos']['resolucion'], $tareasDatos[2]['datos']['fecharesolucion'], json_encode(array()), json_encode(array()), $form['observacion'], $usuario);
                                 } elseif ($t['id'] == 67) { #Cierre de Especialidades Técnicas
                                     $historial = $this->registraHistorialTramite($institucioneducativa, $tramite, $t['id'], $tareasDatos[2]['datos']['resolucion'], $tareasDatos[2]['datos']['fecharesolucion'], json_encode(array()), json_encode(array()), $form['observacion'], $usuario);
@@ -2772,7 +2752,7 @@ class TramiteCeaController extends Controller
                                     $em->flush();
 
                                     $historial = $this->registraHistorialTramite($institucioneducativa, $tramite, $t['id'], $tareasDatos[2]['datos']['resolucion'], $tareasDatos[2]['datos']['fecharesolucion'], json_encode($vAnterior), json_encode($vNuevo), $form['observacion'], $usuario);
-                                } elseif ($t['id'] == 70) { #cambio de nombre incluir resolucion
+                                } elseif ($t['id'] == 70) { #cambio de nombre
                                     $institucioneducativa->setInstitucioneducativa(mb_strtoupper($tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_nombre'], 'utf-8'));
                                     $institucioneducativa->setDesUeAntes(mb_strtoupper($tareasDatos[0]['datos']['institucioneducativa']['institucioneducativa'], 'utf-8'));
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
@@ -2781,7 +2761,7 @@ class TramiteCeaController extends Controller
                                     $em->flush();
 
                                     $historial = $this->registraHistorialTramite($institucioneducativa, $tramite, $t['id'], $tareasDatos[2]['datos']['resolucion'], $tareasDatos[2]['datos']['fecharesolucion'], mb_strtoupper($tareasDatos[0]['datos']['institucioneducativa']['institucioneducativa'], 'utf-8'), mb_strtoupper($tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_nombre'], 'utf-8'), $form['observacion'], $usuario);
-                                } elseif ($t['id'] == 66) { #cambio de jurisdiccion administrativa incluir resolucion
+                                } elseif ($t['id'] == 66) { #cambio de jurisdiccion administrativa
                                     $iddistrito = $tareasDatos[0]['datos'][$t['tramite_tipo']]['nuevo_distrito']['id'];
                                     $lugarIdDistrito = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('lugarNivel' => 7, 'codigo' => $iddistrito))->getId();
                                     $distritoTipo = $em->getRepository('SieAppWebBundle:DistritoTipo')->findOneById($iddistrito);
@@ -2860,7 +2840,7 @@ class TramiteCeaController extends Controller
                                     $vNuevo['nro_resolucion'] = $tareasDatos[2]['datos']['resolucion'];
                                     $vNuevo['fecha_resolucion'] = $tareasDatos[2]['datos']['fecharesolucion'];
                                     $historial = $this->registraHistorialTramite($institucioneducativa, $tramite, $t['id'], $tareasDatos[2]['datos']['resolucion'], $tareasDatos[2]['datos']['fecharesolucion'], json_encode($vAnterior), json_encode($vNuevo), $form['observacion'], $usuario);
-                                } elseif ($t['id'] == 59) {
+                                } elseif ($t['id'] == 73) {
                                     //$nuevaInstitucioneducativa = $this->registrarInstitucioneducativa($tareasDatos[0][$t['tramite_tipo']]);
                                     $datosSolicitud = $tareasDatos[0]['datos'][$t['tramite_tipo']];
                                     //dump($datosSolicitud);die;
@@ -4107,7 +4087,7 @@ class TramiteCeaController extends Controller
         $files = $request->files->get('form');
 
         //dump($form,$files);die;
-        $tramites = array(59);
+        $tramites = array(73);
         //dump($tramites,$form);die;
         $em = $this->getDoctrine()->getManager();
 
@@ -4172,7 +4152,7 @@ class TramiteCeaController extends Controller
             $request->getSession()
                 ->getFlashBag()
                 ->add('error', 'error');
-            return $this->redirectToRoute('tramite_cea_apertura', array('id' => 59, 'desglose' => 0));
+            return $this->redirectToRoute('tramite_cea_apertura', array('id' => 73, 'desglose' => 0));
         }
     }
 
@@ -4296,16 +4276,16 @@ class TramiteCeaController extends Controller
             }
         }
         if (isset($form['niveltipop'])) {
-            if (in_array(222, $form['niveltipop'])) {
+            if (in_array(225, $form['niveltipop'])) {
                 $datos[$tramitetipo]['cantidad_13_1'] = $form['cantidad_13_1'];
             }
-            if (in_array(223, $form['niveltipop'])) {
+            if (in_array(226, $form['niveltipop'])) {
                 $datos[$tramitetipo]['cantidad_13_2'] = $form['cantidad_13_2'];
             }
-            if (in_array(225, $form['niveltipop'])) {
+            if (in_array(227, $form['niveltipop'])) {
                 $datos[$tramitetipo]['cantidad_13_3'] = $form['cantidad_13_3'];
             }
-            if (in_array(226, $form['niveltipop'])) {
+            if (in_array(228, $form['niveltipop'])) {
                 $datos[$tramitetipo]['cantidad_13_4'] = $form['cantidad_13_4'];
             }
         }

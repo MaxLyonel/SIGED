@@ -213,6 +213,9 @@
 
 .home-title {
     font-size: 2rem !important;
+    color: #1b3f61;
+    font-weight: bold !important;
+    letter-spacing: -1px;
 }
 
 .text-left {
