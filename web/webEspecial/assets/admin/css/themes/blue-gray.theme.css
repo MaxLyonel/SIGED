@@ -59,11 +59,7 @@ body.page-sidebar-minimize #header .navbar-minimize:hover>a {
 }
 
 #header .navbar-header {
-<<<<<<< HEAD
     background-color: #577baf;
-=======
-  background-color: #F44336;
->>>>>>> devespecial
 }
 
 
@@ -76,18 +72,11 @@ body.page-sidebar-minimize #header .navbar-minimize:hover>a {
 #sidebar-left.sidebar-circle .sidebar-content img {
     border: 2px solid #5577b4;
 }
-<<<<<<< HEAD
 
 #sidebar-left.sidebar-box .sidebar-menu>li.active>a>.icon i,
 #sidebar-left.sidebar-rounded .sidebar-menu>li.active>a>.icon i,
 #sidebar-left.sidebar-circle .sidebar-menu>li.active>a>.icon i {
     background-color: #5577b4;
-=======
-#sidebar-left.sidebar-box .sidebar-menu > li.active > a > .icon i,
-#sidebar-left.sidebar-rounded .sidebar-menu > li.active > a > .icon i,
-#sidebar-left.sidebar-circle .sidebar-menu > li.active > a > .icon i {
-  background-color: #e53935;
->>>>>>> devespecial
 }
 
 #sidebar-left.sidebar-box .sidebar-menu>li>ul>li:hover:after,

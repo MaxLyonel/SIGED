@@ -916,10 +916,6 @@ body.page-footer-fixed #page-content .footer-content {
         margin-bottom: 0px;
     }
 }
-@media (max-width: 600px) {
-  #header .navbar-toolbar .navbar-form input {
-    min-width: 263px;
-  }
 
 @media (max-width: 600px) {
     #header .navbar-toolbar .navbar-form input {

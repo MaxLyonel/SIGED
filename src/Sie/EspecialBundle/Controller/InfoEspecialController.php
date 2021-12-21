@@ -18,6 +18,12 @@ class InfoEspecialController extends Controller{
   public function indexAction(Request $request){
     // get the data conexion
     $em = $this->getDoctrine()->getManager();
+    
+    if ($this->session->get('roluser') == 7 or $this->session->get('roluser') == 8 or $this->session->get('roluser') == 9 or $this->session->get('roluser') == 10) {
+      $request->getSession()->set('onlyview', false);
+    } else {
+      $request->getSession()->set('onlyview', true);
+    }    
 
     if ($request->getMethod() == 'POST') {
         $form = $request->get('form');
@@ -130,46 +136,29 @@ class InfoEspecialController extends Controller{
         }
     }
 
-    /*if(!$objInfoCentro){
-      try {
-        $objNewRegistroConsolidation = new RegistroConsolidacion();
+   $periodo = $this->operativo($data['idInstitucion'], $data['gestion']);
+    
+    if ($periodo != 0) {
+      $request->getSession()->set('onlyview', true);
+    } else {
+      $request->getSession()->set('onlyview', false);
+    }
 
-        $objNewRegistroConsolidation->setTipo(1);
-        $objNewRegistroConsolidation->setGestion($data['gestion']);
-        $objNewRegistroConsolidation->setUnidadEducativa($data['idInstitucion']);
-        $objNewRegistroConsolidation->setPeriodoId(1);
-        $objNewRegistroConsolidation->setBim1(0);
-        $objNewRegistroConsolidation->setBim2(0);
-        $objNewRegistroConsolidation->setBim3(0);
-        $objNewRegistroConsolidation->setBim4(0);
-        $objNewRegistroConsolidation->setDescripcionError('Consolidado exitosamente (web)!!');
-        $objNewRegistroConsolidation->setFecha(new \DateTime('now'));
-        $objNewRegistroConsolidation->setUsuario(0);
-        $objNewRegistroConsolidation->setSubCea(0);
-        $objNewRegistroConsolidation->setBan(1);
-        $objNewRegistroConsolidation->setEsonline(1);
-        $objNewRegistroConsolidation->setInstitucioneducativaTipoId($data['institucioneducativaTipoId']);
-        $em->persist($objNewRegistroConsolidation);
-        $em->flush();
-        $em->getConnection()->commit();
-
-      } catch (Exception $e) {
-        $em->getConnection()->rollback();
-        echo 'Excepción capturada: ', $ex->getMessage(), "\n";
-      }
-    }*/
-
-    //dump($data);die;
     $dataInfo = array('id' => $data['idInstitucion'], 'gestion' => $data['gestion'], 'institucioneducativa' => $data['institucioneducativa']);
     return $this->render($this->session->get('pathSystem') . ':InfoEspecial:open.html.twig', array(
                 'centroform' => $this->InfoStudentForm('herramienta_especial_info_centro_index', 'Centro Educativo', $data)->createView(),
                 'personalAdmform' => $this->InfoStudentForm('herramienta_especial_info_personal_adm_index', 'Personal Administrativo',$data)->createView(),
                 'infoMaestroform' => $this->InfoStudentForm('herramienta_especial_info_maestro_index', 'Maestros',$data)->createView(),
                 'infotStudentform' => $this->InfoStudentForm('info_students_index', 'Estudiantes',$data)->createView(),
-                'cursosform' => $this->InfoStudentForm('creacioncursos_especial', 'Oferta Educativa',$data)->createView(),
+                'cursosform' => $this->InfoStudentForm('creacioncursos_especial', 'Cursos',$data)->createView(),
                 'areasform' => $this->InfoStudentForm('area_especial_search', 'Areas/Maestros',$data)->createView(),
                 'closeOperativoform' => $this->CloseOperativoForm('info_especial_close_operativo', 'Cerrar Operativo',$data)->createView(),
-                'data'=>$dataInfo
+               
+                'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
+                 
+                'data'=>$dataInfo,
+                'operativoBonoJPform' => $this->cerrarOperativoForm('operativo_bono_jp_cerrar', 'Cerrar Operativo Bono JP',$data)->createView(),
+                'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($data['idInstitucion'],$data['gestion'],14),                
     ));
 
   }
@@ -205,6 +194,29 @@ class InfoEspecialController extends Controller{
                       ->getForm()
       ;
   }
+
+  private function cerrarOperativoForm($goToPath, $nextButton, $data)
+  {
+      //$this->unidadEducativa = $this->getAllUserInfo($this->session->get('userName'));
+      $onClick = '';
+      $this->unidadEducativa = $data['idInstitucion'];
+      switch ($nextButton)
+      {
+        case 'Cerrar Operativo Bono JP':
+            $onClick='';
+         break;
+        default:
+          $onClick = '';
+        break;
+      }
+      return $this->createFormBuilder()
+                      ->setAction($this->generateUrl($goToPath))
+                      ->add('gestion', 'hidden', array('data' => $data['gestion']))
+                      ->add('sie', 'hidden', array('data' => $data['idInstitucion']))
+                      ->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-facebook btn-md btn-block', 'onclick'=>$onClick )))
+                      ->getForm()
+      ;
+  }  
 
   public function closeOperativoAction (Request $request){
       //crete conexion DB
@@ -255,6 +267,14 @@ class InfoEspecialController extends Controller{
           $em->flush();
           $em->getConnection()->commit();
       }
+      $inconsistencia = null;
+      $periodo = 3;
+      $registroConsol->setBim1('2');
+      $registroConsol->setBim2('2');
+      $registroConsol->setBim3('2');
+
+      $em->persist($registroConsol);
+      $em->flush();
 
       $query = $em->getConnection()->prepare('select * from sp_validacion_especial_web(:igestion_id, :icod_ue, :ibimestre)');
       $query->bindValue(':igestion_id', $form['gestion']);
