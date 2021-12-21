@@ -63,7 +63,6 @@ class InfoNotasController extends Controller {
             //dump($discapacidad);die;
             $estadosMatricula = null;
 
-            
             switch ($discapacidad) {    
                 case 1: // Auditiva
                         //if($nivel != 405){
@@ -85,8 +84,8 @@ class InfoNotasController extends Controller {
                                 
                             } else{
                                
-                                $notas = $this->get('notas')->regular($idInscripcion,$operativo);
-                              // dump($notas);die;
+                                $notas = $this->get('notas')->regularEspecial($idInscripcion,$operativo);
+                              
                                 if($notas['tipoNota'] == 'Trimestre'){
                                     $template = 'trimestral';
                                 }else{
@@ -151,7 +150,7 @@ class InfoNotasController extends Controller {
                             case 401:
                             case 402:
                                 if($grado <= 6){
-                                    $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
+                                    $notas = $this->get('notas')->especial_cualitativoEsp($idInscripcion,$operativo);
                                     if($gestion < 2020){
                                         if($notas['tipoNota'] == 'Trimestre'){
                                             $template = 'especialCualitativoTrimestral';
@@ -159,13 +158,13 @@ class InfoNotasController extends Controller {
                                             $template = 'especialCualitativo';
                                         }
                                         $actualizarMatricula = false;
-                                        if($operativo >= 4 or $gestion < $gestionActual){
+                                        if($operativo >= 3 or $gestion < $gestionActual){
                                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(70,71,72,73)));
                                         }
                                     }else{
                                         $actualizarMatricula = false;
                                         $template = 'especialCualitativo1';
-                                        if($operativo >= 4 or $gestion < $gestionActual){
+                                        if($operativo >= 3 or $gestion < $gestionActual){
                                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,28)));
                                         }
                                     }
