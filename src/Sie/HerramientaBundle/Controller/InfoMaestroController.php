@@ -977,15 +977,16 @@ class InfoMaestroController extends Controller {
         $em->getConnection()->beginTransaction();
         try {
             $maestroInscripcion = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->findOneById($request->get('idMaestroInscripcion'));
-
+            /*dump($request->get('idMaestroInscripcion'));
+            dump($maestroInscripcion);die();*/
             if ($maestroInscripcion) { // Sie existe el maestro inscrito
                 // Verificamos si el maestro tine asignados algunas areas o asignaturas
                 $institucionCursoOfertaMaestro = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('maestroInscripcion' => $maestroInscripcion->getId()));
                 if ($institucionCursoOfertaMaestro) {
-
                     $this->get('session')->getFlashBag()->add('eliminarError', 'El registro no se pudo eliminar, el maestro tiene areas asignadas.');
                     return $this->redirect($this->generateUrl('herramienta_info_maestro_index', array('op' => 'result')));
                 }
+                // dump($institucionCursoOfertaMaestro);die();
                 //eliminar idiomas del maestro
                 $idiomas = $em->getRepository('SieAppWebBundle:MaestroInscripcionIdioma')->findBy(array('maestroInscripcion' => $maestroInscripcion->getId()));
 
@@ -998,8 +999,10 @@ class InfoMaestroController extends Controller {
 
                 // Eliminados la inscripcion de salud
                 $maestroInscripcionEstadosalud = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneBy(array('maestroInscripcion'=>$maestroInscripcion->getId()));
-                if($maestroInscripcionEstadosalud) 
+                if($maestroInscripcionEstadosalud){
                     $em->remove($maestroInscripcionEstadosalud);
+                    $em->flush();
+                }
 
                 //eliminamos el registro de inscripcion del maestro
                 $em->remove($maestroInscripcion);
@@ -1009,9 +1012,7 @@ class InfoMaestroController extends Controller {
 
                 return $this->redirect($this->generateUrl('herramienta_info_maestro_index'));
             }
-
             $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($maestroInscripcion->getPersona()->getId());
-
             $llave = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave' => $persona->getCarnet(), 'validacionReglaTipo' => 9, 'solucionTipoId' => 0));
 
             if($llave) {
