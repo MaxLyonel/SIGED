@@ -998,10 +998,15 @@ class InfoMaestroController extends Controller {
                 }
 
                 // Eliminados la inscripcion de salud
-                $maestroInscripcionEstadosalud = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneBy(array('maestroInscripcion'=>$maestroInscripcion->getId()));
+                // $maestroInscripcionEstadosalud = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneBy(array('maestroInscripcion'=>$maestroInscripcion->getId()));
+                /*$em->remove($maestroInscripcionEstadosalud);
+                $em->flush();*/
+                $maestroInscripcionEstadosalud = $em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findBy(array('maestroInscripcion'=>$maestroInscripcion->getId()));
                 if($maestroInscripcionEstadosalud){
-                    $em->remove($maestroInscripcionEstadosalud);
-                    $em->flush();
+                    foreach ($maestroInscripcionEstadosalud as $id1) {
+                        $em->remove($em->getRepository('SieAppWebBundle:MaestroInscripcionEstadosalud')->findOneById($id1->getId()));
+                        $em->flush();
+                    }
                 }
 
                 //eliminamos el registro de inscripcion del maestro
