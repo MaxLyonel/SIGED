@@ -109,7 +109,7 @@ class InfoStudentsController extends Controller {
       $paraleloname = $aInfoUeducativa['ueducativaInfo']['paralelo'];
       $nivelname = $aInfoUeducativa['ueducativaInfo']['nivel'];
       $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
-
+dump($aInfoUeducativa);die;
       //get db connexion
       $em = $this->getDoctrine()->getManager();
       $objArea = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($aInfoUeducativa['ueducativaInfoId']['areaEspecialId']);
