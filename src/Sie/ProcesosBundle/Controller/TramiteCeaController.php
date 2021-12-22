@@ -4057,7 +4057,7 @@ class TramiteCeaController extends Controller
                 'codigo' => $codigo,
             );
 
-            if (isset($tramite)) {
+            if (!empty($tramite)) {
                 $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->findBy(array('tramite' => $tramite), array('id' => 'DESC'));
                 $solicitudTramite = $em->getRepository('SieAppWebBundle:SolicitudTramite')->findOneBy(array('codigo' => $codigo, 'estado' => true));
                 if (count($tramiteDetalle) > 0 && count($solicitudTramite)) {

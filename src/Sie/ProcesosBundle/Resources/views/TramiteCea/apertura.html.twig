@@ -663,7 +663,7 @@
                                                                                     </th>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td>Fortalecimiento de
+                                                                                    <td>Educación para el Fortalecimiento de
                                                                                         Organizaciones Sociales
                                                                                     </td>
                                                                                     <td>{{ form_widget(form.cantidad_13_1) }}</td>
@@ -672,7 +672,7 @@
                                                                                     <td>{{ form_widget(form.cantidad_13_1_3) }}</td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td>Educación Permanente Productiva
+                                                                                    <td>Educación Productiva
                                                                                         Comunitaria
                                                                                     </td>
                                                                                     <td>{{ form_widget(form.cantidad_13_2) }}</td>
@@ -681,8 +681,8 @@
                                                                                     <td>{{ form_widget(form.cantidad_13_2_3) }}</td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td>Educación para el arte y la
-                                                                                        cultura
+                                                                                    <td>Educación para el Arte y la
+                                                                                        Cultura
                                                                                     </td>
                                                                                     <td>{{ form_widget(form.cantidad_13_3) }}</td>
                                                                                     <td>{{ form_widget(form.cantidad_13_3_1) }}</td>
@@ -690,7 +690,7 @@
                                                                                     <td>{{ form_widget(form.cantidad_13_3_3) }}</td>
                                                                                 </tr>
                                                                                 <tr>
-                                                                                    <td>Educación abierta y plural</td>
+                                                                                    <td>Educación Abierta y Plural</td>
                                                                                     <td>{{ form_widget(form.cantidad_13_4) }}</td>
                                                                                     <td>{{ form_widget(form.cantidad_13_4_1) }}</td>
                                                                                     <td>{{ form_widget(form.cantidad_13_4_2) }}</td>
@@ -1329,7 +1329,7 @@
                 } else {
                     $('#form_nuevo_nombre').val('');
                 }
-                alert('El nombre de la Unidad Educativa no puede llevar el denominativo genérico: ' + value);
+                alert('El nombre del Centro de Educación Alternativa no puede llevar el denominativo genérico: ' + value);
             }
         });
     }
@@ -1391,7 +1391,7 @@
     function requisitos(id) {
         //alert(id);
         if ($('#form_dependencia').length == 0 || $('#form_dependencia').val() == '') {
-            alert('Primero debe ingresar los datos de la nueva Unidad Educativa.');
+            alert('Primero debe ingresar los datos del nuevo Centro de Educación Alternativa.');
             $('#modal_' + id).modal('toggle');
             return false;
         }
@@ -1554,7 +1554,7 @@
                 }
                 if (dependenciaId == 2 || dependenciaId == 3) {
                     if ($('#form_i_actaconstitucion_cn').is(':checked') == false) {
-                        alert('Seleccione la presentación de la Copia Notariada del Acta de Constitución y estatutos de la Unidad Educativa.');
+                        alert('Seleccione la presentación de la Copia Notariada del Acta de Constitución y estatutos del Centro de Educación Alternativa.');
                         return false;
                     } else if ($('#form_i_copianit_cn').is(':checked') == true && $('#form_i_nit_cn').val() == '') {
                         alert('Ingrese el Nro. de N.I.T..');
@@ -1779,7 +1779,7 @@
         if (!confirm("Verifique los datos del formulario antes de enviar.")) {
             return false;
         } else if ($('#form_institucioneducativa').val() == '') {
-            alert('En el punto DATOS GENERALES, debe ingresar el nombre de la nueva Unidad Educativa.');
+            alert('En el punto DATOS GENERALES, debe ingresar el nombre del nuevo Centro de Educación Alternativa.');
             return false;
         } else if ($('#form_fechafundacion').val() == '') {
             alert('En el punto DATOS GENERALES, debe ingresar la fecha de fundación.');
@@ -1909,10 +1909,10 @@
             alert('Debe seleccionar la informacion georeferencial.');
             return false;
         } else if ($('#modal_requisitos_73').length == 0) {
-            alert('Ingrese los requisitos de la solicitud de Apertura de Unidad Educativa');
+            alert('Ingrese los requisitos de la solicitud de Apertura de Centro de Educación Alternativa');
             return false;
         } else if ($('#validar73').val() == 0) {
-            alert('Debe validar los requisitos de la nueva Unidad Educativa');
+            alert('Debe validar los requisitos del nuevo Centro de Educación Alternativa');
             return false;
         } else {
             $('#form_guardar').prop('disabled', true);
