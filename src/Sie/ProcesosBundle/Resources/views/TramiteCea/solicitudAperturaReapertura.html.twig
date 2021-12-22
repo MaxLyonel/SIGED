@@ -347,49 +347,35 @@
                                                            id="tabla">
                                                         {% if 201 in nivel %}
                                                             <tr>
-                                                                <th colspan="6">Educación Primaria
-                                                                    de Adultos
+                                                                <th colspan="6">Educación Primaria de Adultos
                                                                 </th>
                                                             </tr>
                                                             <tr>
-                                                                <th>1ro</th>
-                                                                <th>2do</th>
-                                                                <th>3ro</th>
-                                                                <th>4to</th>
-                                                                <th>5to</th>
-                                                                <th>6to</th>
+                                                                <th>Aprendizajes Elementales</th>
+                                                                <th>Aprendizajes Avanzados</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_1_1 }}</td>
                                                                 <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_1_2 }}</td>
-                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_1_3 }}</td>
-                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_1_4 }}</td>
-                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_1_5 }}</td>
-                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_1_6 }}</td>
                                                             </tr>
                                                         {% endif %}
                                                         {% if 202 in nivel %}
                                                             <tr>
-                                                                <th colspan="6">Educación Secundaria
+                                                                <th colspan="6">Educación
+                                                                    Secundaria
                                                                     de
                                                                     Adultos
                                                                 </th>
                                                             </tr>
                                                             <tr>
-                                                                <th>1ro</th>
-                                                                <th>2do</th>
-                                                                <th>3ro</th>
-                                                                <th>4to</th>
-                                                                <th>5to</th>
-                                                                <th>6to</th>
+                                                                <th>Aprendizajes Aplicados</th>
+                                                                <th>Aprendizajes Complementarios</th>
+                                                                <th>Aprendizajes Especializados</th>
                                                             </tr>
                                                             <tr>
                                                                 <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_2_1 }}</td>
                                                                 <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_2_2 }}</td>
                                                                 <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_2_3 }}</td>
-                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_2_4 }}</td>
-                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_2_5 }}</td>
-                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_2_6 }}</td>
                                                             </tr>
                                                         {% endif %}
                                                     </table>
@@ -425,25 +411,69 @@
                                                     </table>
                                                 </div>
                                             {% endif %}
-                                            {% if 13 in nivel %}
+                                            {% if 225 in nivel or 226 in nivel or 227 in nivel or 228 in nivel or 219 in nivel or 220 in nivel or 224 in nivel %}
                                                 <div class="col-md-12">
-                                                    <strong>Educación Secundaria Comunitaria Productiva</strong>
-                                                    <table class="table table-bordered table-striped" id="tabla">
+                                                    <table class="table table-bordered table-striped"
+                                                           id="tabla">
                                                         <tr>
-                                                            <th>1ro</th>
-                                                            <th>2do</th>
-                                                            <th>3ro</th>
-                                                            <th>4to</th>
-                                                            <th>5to</th>
-                                                            <th>6to</th>
+                                                            <th rowspan="2" class="text-center"
+                                                                style="vertical-align: middle">
+                                                                Sub-Áreas
+                                                            </th>
+                                                            <th rowspan="2" class="text-center"
+                                                                style="vertical-align: middle">
+                                                                Capacitación (Cursos
+                                                                Cortos, 6 a
+                                                                100 horas)
+                                                            </th>
+                                                            <th colspan="3" class="text-center">
+                                                                Cursos Largos
+                                                            </th>
                                                         </tr>
                                                         <tr>
-                                                            <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_13_1 }}</td>
-                                                            <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_13_2 }}</td>
-                                                            <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_13_3 }}</td>
-                                                            <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_13_4 }}</td>
-                                                            <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_13_5 }}</td>
-                                                            <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_13_6 }}</td>
+                                                            <th class="text-center">Técnico
+                                                                Básico
+                                                            </th>
+                                                            <th class="text-center">Técnico
+                                                                Auxiliar
+                                                            </th>
+                                                            <th class="text-center">Técnico
+                                                                Medio
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Educación para el Fortalecimiento de
+                                                                Organizaciones Sociales
+                                                            </td>
+                                                            <td>{% if 225 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_1 }}{% endif %}</td>
+                                                            <td>{% if 219 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_1_1 }}{% endif %}</td>
+                                                            <td>{% if 220 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_1_2 }}{% endif %}</td>
+                                                            <td>{% if 224 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_1_3 }}{% endif %}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Educación Productiva
+                                                                Comunitaria
+                                                            </td>
+                                                            <td>{% if 226 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_2 }}{% endif %}</td>
+                                                            <td>{% if 219 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_2_1 }}{% endif %}</td>
+                                                            <td>{% if 220 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_2_2 }}{% endif %}</td>
+                                                            <td>{% if 224 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_2_3 }}{% endif %}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Educación para el Arte y la
+                                                                Cultura
+                                                            </td>
+                                                            <td>{% if 227 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_3 }}{% endif %}</td>
+                                                            <td>{% if 219 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_3_1 }}{% endif %}</td>
+                                                            <td>{% if 220 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_3_2 }}{% endif %}</td>
+                                                            <td>{% if 224 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_3_3 }}{% endif %}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Educación Abierta y Plural</td>
+                                                            <td>{% if 228 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_4 }}{% endif %}</td>
+                                                            <td>{% if 219 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_4_1 }}{% endif %}</td>
+                                                            <td>{% if 220 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_4_2 }}{% endif %}</td>
+                                                            <td>{% if 224 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_4_3 }}{% endif %}</td>
                                                         </tr>
                                                     </table>
                                                 </div>
