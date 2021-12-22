@@ -60,7 +60,7 @@ class InfoNotasController extends Controller {
             $discapacidad = $cursoEspecial->getEspecialAreaTipo()->getId();
             $progserv = '';
             $seguimiento = false;
-            //dump($discapacidad);die;
+            
             $estadosMatricula = null;
 
             switch ($discapacidad) {    
@@ -89,7 +89,7 @@ class InfoNotasController extends Controller {
                                 if($notas['tipoNota'] == 'Trimestre'){
                                     $template = 'trimestral';
                                 }else{
-                                    $template = 'regular';
+                                    $template = 'regularEspecial';
                                 }
                                 $actualizarMatricula = true;
                                 if(in_array($nivel, array(1,11,403))){
@@ -189,7 +189,7 @@ class InfoNotasController extends Controller {
                         $template = 'especialSeguimiento';
                         $actualizarMatricula = false;
                         $seguimiento = true;
-                        if($operativo >= 4 or $gestion < $gestionActual){
+                        if($operativo >= 3 or $gestion < $gestionActual){
                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
                         }
                     }
