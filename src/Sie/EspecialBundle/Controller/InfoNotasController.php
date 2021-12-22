@@ -89,7 +89,10 @@ class InfoNotasController extends Controller {
                                 if($notas['tipoNota'] == 'Trimestre'){
                                     $template = 'trimestral';
                                 }else{
-                                    $template = 'regularEspecial';
+                                    if($gestion==2021)
+                                        $template = 'regularEspecial';
+                                    else
+                                        $template = 'regular';
                                 }
                                 $actualizarMatricula = true;
                                 if(in_array($nivel, array(1,11,403))){
