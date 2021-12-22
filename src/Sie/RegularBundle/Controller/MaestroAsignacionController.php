@@ -1711,6 +1711,7 @@ class MaestroAsignacionController extends Controller {
                 ->add('info', 'hidden', array('label' => 'Info', 'attr' => array('value' => $info)))
                 ->add('carnetIdentidad', 'text', array('label' => 'Carnet de Identidad', 'required' => true, 'data' => $personaEntidad->getCarnet(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jnumbers', 'placeholder' => '', 'pattern' => '[0-9]{5,10}', 'maxlength' => '11', 'onkeyup' => 'verificarExistePersona(this.value)')))
                 ->add('complemento', 'text', array('label' => 'Complemento', 'required' => false, 'data' => $personaEntidad->getComplemento(), 'attr' => array('class' => 'form-control jonlynumbersletters jupper', 'style' => 'text-transform:uppercase', 'maxlength' => '2', 'autocomplete' => 'off')))
+                ->add('extranjero','choice',array('label'=>'EXTRANJERO', 'choices'=>array(0=>'NO', 1=>'SI'),'attr'=>array('class' => 'form-control') ))
                 ->add('paterno', 'text', array('label' => 'Apellido Paterno', 'required' => false, 'data' => $personaEntidad->getPaterno(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jname jupper', 'style' => 'text-transform:uppercase')))
                 ->add('materno', 'text', array('label' => 'Apellido Materno', 'required' => false, 'data' => $personaEntidad->getMaterno(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jname jupper', 'style' => 'text-transform:uppercase')))
                 ->add('nombre', 'text', array('label' => 'Nombre(s)', 'required' => true, 'data' => $personaEntidad->getNombre(), 'attr' => array('autocomplete' => 'off', 'class' => 'form-control jname jupper', 'style' => 'text-transform:uppercase')))
@@ -1846,6 +1847,10 @@ class MaestroAsignacionController extends Controller {
             } else {
                 $arrParametros = array('complemento'=>$complemento, 'primer_apellido'=>$paterno, 'segundo_apellido'=>$materno, 'nombre'=>$nombre, 'fecha_nacimiento'=>str_replace('/','-',$form['fechaNacimiento']));
                 $answerSegip = false;
+
+                if($form['extranjero']==1){
+                    $arrParametros['extranjero']='e';
+                }
                 $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnetIdentidad ,$arrParametros, 'prod', 'academico');
                 if($answerSegip){
                     // $objPersonaValidado = $personaEntidad;
