@@ -137,13 +137,13 @@ class InfoEspecialController extends Controller{
     }
 
    $periodo = $this->operativo($data['idInstitucion'], $data['gestion']);
-    
+/*    
     if ($periodo != 0) {
       $request->getSession()->set('onlyview', true);
     } else {
       $request->getSession()->set('onlyview', false);
     }
-
+*/
     $dataInfo = array('id' => $data['idInstitucion'], 'gestion' => $data['gestion'], 'institucioneducativa' => $data['institucioneducativa']);
     return $this->render($this->session->get('pathSystem') . ':InfoEspecial:open.html.twig', array(
                 'centroform' => $this->InfoStudentForm('herramienta_especial_info_centro_index', 'Centro Educativo', $data)->createView(),
