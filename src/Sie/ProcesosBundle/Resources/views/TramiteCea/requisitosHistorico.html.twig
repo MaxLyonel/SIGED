@@ -2502,17 +2502,17 @@
                                                                 </h4>
                                                                 <div id="map"></div>
                                                                 <div class="form-group col-md-3 form-inline">
-                                                                    {% if t.id == 54 %}
-                                                                        <strong>Latitud:</strong> {{ datos['Apertura de Unidad Educativa'].latitud }}
+                                                                    {% if t.id == 73 %}
+                                                                        <strong>Latitud:</strong> {{ datos[t.tramite_tipo].latitud }}
                                                                         <input type="hidden" id="latitud"
-                                                                               value="{{ datos['Apertura de Unidad Educativa'].latitud }}">
+                                                                               value="{{ datos[t.tramite_tipo].latitud }}">
                                                                     {% endif %}
                                                                 </div>
                                                                 <div class="form-group col-md-3 form-inline">
-                                                                    {% if t.id == 54 %}
-                                                                        <strong>Longitud:</strong> {{ datos['Apertura de Unidad Educativa'].longitud }}
+                                                                    {% if t.id == 73 %}
+                                                                        <strong>Longitud:</strong> {{ datos[t.tramite_tipo].longitud }}
                                                                         <input type="hidden" id="longitud"
-                                                                               value="{{ datos['Apertura de Unidad Educativa'].longitud }}">
+                                                                               value="{{ datos[t.tramite_tipo].longitud }}">
                                                                     {% endif %}
                                                                 </div>
                                                             </div>

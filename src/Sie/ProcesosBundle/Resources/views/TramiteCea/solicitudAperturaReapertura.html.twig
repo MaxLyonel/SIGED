@@ -640,6 +640,7 @@
                                                                 </a>
                                                             </div>
                                                         </div>
+                                                        {% if datos[tramite_tipo.tramiteTipo].i_certdefuncion is defined %}
                                                         <div class="form-group col-md-12">
                                                             <div class="col-md-8">
                                                                 Certificado de defunción (en caso de llevar nombre de
@@ -655,6 +656,7 @@
                                                                 </a>
                                                             </div>
                                                         </div>
+                                                        {% endif %}
                                                         {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 2 %}
                                                             <div class="form-group col-md-12 ">
                                                                 <div class="ckbox ckbox-primary">
