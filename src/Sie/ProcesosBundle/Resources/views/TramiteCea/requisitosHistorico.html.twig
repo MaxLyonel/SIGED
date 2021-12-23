@@ -2126,8 +2126,8 @@
                                                                             <table class="table table-bordered table-striped"
                                                                                    id="tabla">
                                                                                 <tr>
-                                                                                    <th>Coódigo SIE</th>
-                                                                                    <th>Nombre de la Institucion
+                                                                                    <th>Código SIE</th>
+                                                                                    <th>Nombre de la Institución
                                                                                         Educativa
                                                                                     </th>
                                                                                     <th>Subsistema</th>
@@ -2135,9 +2135,9 @@
                                                                                 </tr>
                                                                                 <tr>
                                                                                     <td>{{ datos[t.tramite_tipo].siecomparte }}</td>
-                                                                                    <td></td>
-                                                                                    <td></td>
-                                                                                    <td></td>
+                                                                                    <td>{{ datos[t.tramite_tipo].siecompartedata.nombre }}</td>
+                                                                                    <td>{{ datos[t.tramite_tipo].siecompartedata.subsistema }}</td>
+                                                                                    <td>{{ datos[t.tramite_tipo].siecompartedata.dependencia }}</td>
                                                                                 </tr>
                                                                             </table>
                                                                         </div></br>

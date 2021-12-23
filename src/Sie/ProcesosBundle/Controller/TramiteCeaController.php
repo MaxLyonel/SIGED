@@ -1106,7 +1106,7 @@ class TramiteCeaController extends Controller
 
         $query = $em->getConnection()->prepare('SELECT le.id,le.zona,le.direccion,le.distrito_tipo_id,dt.distrito,
                 lt.id as localidad2001_id,lt.lugar as localidad2001,lt1.id as canton2001_id,lt1.lugar as canton2001,lt2.id as municipio2001_id,lt2.lugar as municipio2001,lt3.id as provincia2001_id,lt3.lugar as provincia2001,lt4.id as departamento2001_id,lt4.lugar as departamento2001,lt.area2001,
-                lt5.id as comunidad2012_id,lt5.lugar as comunidad2012,lt6.id as municipio2012_id,lt6.lugar as municipio2012,lt7.id as provincia2012_id,lt7.lugar as provincia2012,lt8.id as departamento2012_id,lt8.lugar as departamento2012 
+                lt5.id as comunidad2012_id,lt5.lugar as comunidad2012,lt6.id as municipio2012_id,lt6.lugar as municipio2012,lt7.id as provincia2012_id,lt7.lugar as provincia2012,lt8.id as departamento2012_id,lt8.lugar as departamento2012, 
                 le.cordx as latitud, le.cordy as longitud
                 FROM jurisdiccion_geografica le
                 join distrito_tipo dt on dt.id=le.distrito_tipo_id
