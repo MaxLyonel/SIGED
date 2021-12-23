@@ -374,24 +374,27 @@
             return false;
         }
 
-        function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, divResultado) {
-            $('#nivelModal').empty();
-            $('#nivelModal').append((nivel));
-            $('#gradoModal').empty();
-            $('#gradoModal').append(grado);
-            $('#paraleloModal').empty();
-            $('#paraleloModal').append(paralelo);
+        function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, lugar, divResultado) {
+            var modalidad_texto = '';
+            var modalidad_tipo = 0;
 
-            $('#divResultado').empty();
+            if (lugar!=null && lugar!='') {
+                modalidad_texto = ' (' + lugar + ')';
+                if (lugar.indexOf("EDUCACION SOCIOCOMUNITARIA EN CASA") != -1 || lugar.indexOf("EDUCACIÓN SOCIOCOMUNITARIA EN CASA") != -1){
+                    modalidad_tipo = 15;
+                }
+            }
+            $('#divResultado').empty();$('#modalidadCasa').css('display', 'none');
             $('#divResultado').val(divResultado);
             $('#idInstitucionCurso').empty();
             $('#idInstitucionCurso').val(idInstitucionCurso);
             $('#idNivel').empty();
             $('#idNivel').val(idNivel);
-
+            $('#idNivel').empty();
+            $('#modal-subtitle').html(nivel+' - '+grado+' - '+paralelo+modalidad_texto);
             $.ajax({
                 type: 'get',
-                url: Routing.generate('area_especial_listar_areas_nivel', {'idNivel': idNivel, 'idCurso': idInstitucionCurso}),
+                url: Routing.generate('area_especial_listar_areas_nivel', {'idNivel': idNivel, 'idCurso': idInstitucionCurso, 'mTipo': modalidad_tipo}),
                 beforeSend: function () {
                     $("#areasModal").empty();
                     $("#areasModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
@@ -406,7 +409,7 @@
                     } else if(lugar.indexOf("EDUCACION SOCIOCOMUNITARIA EN CASA") != -1 || lugar.indexOf("EDUCACIÓN SOCIOCOMUNITARIA EN CASA") != -1){
                         $('#lugar').val(lugar);
                         $('#modalidadCasa').css('display', 'block');
-                    }                    
+                    }
                 }
             });
             $('#newModal').modal('show');
