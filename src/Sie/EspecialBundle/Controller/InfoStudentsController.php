@@ -17,6 +17,7 @@ use Sie\AppWebBundle\Entity\Estudiante;
 class InfoStudentsController extends Controller {
 
   public $session;
+  public $idEstadoMatricula;
   // public $idInstitucion;
 
   /**
@@ -57,13 +58,37 @@ class InfoStudentsController extends Controller {
 
               //get the literal data of unidad educativa
               $sinfoUeducativa = serialize(array(
-                  'ueducativaInfo' => array('nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno']),
-                  'ueducativaInfoId' => array('paraleloId' => $uEducativa['paraleloId'], 'turnoId' => $uEducativa['turnoId'], 'nivelId' => $uEducativa['nivelId'], 'gradoId' => $uEducativa['gradoId'], 'cicloId' => $uEducativa['cicloTipoId'], 'iecId' => $uEducativa['iecId'], 'ieceId' => $uEducativa['ieceId'],'areaEspecialId' => $uEducativa['areaEspecialId']),
+                  'ueducativaInfo' => array('nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno'], 'programa' => $uEducativa['programa'], 'servicio' => $uEducativa['servicio'], 'areaEspecial' => $uEducativa['areaEspecial'], 'iecLugar'=>$uEducativa['iecLugar']),
+                  'ueducativaInfoId' => array('paraleloId' => $uEducativa['paraleloId'], 'turnoId' => $uEducativa['turnoId'],'programaId'=>$uEducativa['especialProgramaTipo'],'servicioId'=>$uEducativa['especialServicioTipo'], 'nivelId' => $uEducativa['nivelId'], 'gradoId' => $uEducativa['gradoId'], 'cicloId' => $uEducativa['cicloTipoId'], 'iecId' => $uEducativa['iecId'], 'ieceId' => $uEducativa['ieceId'],'areaEspecialId' => $uEducativa['areaEspecialId']),
                   'requestUser' => array('sie' => $form['sie'], 'gestion' => $form['gestion'])
               ));
 
               //send the values to the next steps
-              $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['grado'].'/'.$uEducativa['programa']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+              // $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['grado'].'/'.$uEducativa['programa']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+              /* if($uEducativa['iecLugar']){
+                $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['grado'].'/'.$uEducativa['programa'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+              }else{
+                $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['grado'].'/'.$uEducativa['programa']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+              } */
+
+              if($uEducativa['iecLugar']){
+                if ($uEducativa['nivelId'] == 411){
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['programa'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                }elseif($uEducativa['nivelId'] == 410){
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['servicio'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                }else{
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['grado'].' ('. $uEducativa['iecLugar'] .')'][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                }
+                
+              }else{
+                if ($uEducativa['nivelId'] == 411){
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['programa']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                }elseif($uEducativa['nivelId'] == 410){
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['servicio']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                }else{
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['grado']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                }
+              }              
 
           }
 
@@ -109,7 +134,7 @@ class InfoStudentsController extends Controller {
       $paraleloname = $aInfoUeducativa['ueducativaInfo']['paralelo'];
       $nivelname = $aInfoUeducativa['ueducativaInfo']['nivel'];
       $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
-dump($aInfoUeducativa);die;
+//dump($aInfoUeducativa);die;
       //get db connexion
       $em = $this->getDoctrine()->getManager();
       $objArea = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($aInfoUeducativa['ueducativaInfoId']['areaEspecialId']);
@@ -144,10 +169,26 @@ dump($aInfoUeducativa);die;
       $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];
 
       $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($sie,$gestion);
-
+      $arrDataLibreta = array();
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
+      $nivelesLibreta = array(401,402,403,404);
+      $programasLibreta = array(7,8,9,12,14,15);
+      if($gestion >2019 and $nivel <> 405){
+        $arrDataLibreta['calificaciones'] = true;
+      }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
+        $arrDataLibreta['calificaciones'] = true;
+      }else{
+        $arrDataLibreta['calificaciones'] = false;
+      }
 
+
+      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2019){
+        $arrDataLibreta['libreta'] = true;
+      }else{
+        $arrDataLibreta['libreta'] = false;
+      }      
+     
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
 
       $objRegistroConsolidacion = $em->createQueryBuilder()
@@ -196,6 +237,8 @@ dump($aInfoUeducativa);die;
         'ciclo'=>$ciclo,
         'operativo'=>$operativo,
         'arrDataLibreta'=> $arrDataLibreta,
+        'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo'],
+        'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId'],        
         'areaEspecial' => $objArea->getAreaEspecial()
       ));
   }
