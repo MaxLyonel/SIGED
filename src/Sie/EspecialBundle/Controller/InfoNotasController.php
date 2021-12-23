@@ -57,35 +57,46 @@ class InfoNotasController extends Controller {
             $notas = null;
             $vista = 1;
             $discapacidad = $cursoEspecial->getEspecialAreaTipo()->getId();
-            $estadosMatricula = null;
             $progserv = '';
             $seguimiento = false;
+
+            $estadosMatricula = null;
+
 
             switch ($discapacidad) {
                 case 1: // Auditiva
                         //if($nivel != 405){
                         $progserv = $cursoEspecial->getEspecialProgramaTipo()->getId();
                         if($nivel == 403 or $nivel == 404 or ($nivel == 411 and $progserv == 19)){//Verificar el seguimiento para 19
+
                             if($progserv == 19) {
+
                                 $notas = $this->get('notas')->especial_auditiva($idInscripcion,$operativo);
+
                                 $template = 'especialAuditiva';
                                 $actualizarMatricula = false;
                                 $seguimiento = true;
-                                if($operativo >= 4 or $gestion < $gestionActual){
+                                if($operativo >= 3 or $gestion < $gestionActual){
                                     $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
                                 }
+
                             } else{
-                                $notas = $this->get('notas')->regular($idInscripcion,$operativo);
+
+                                $notas = $this->get('notas')->regularEspecial($idInscripcion,$operativo);
+
                                 if($notas['tipoNota'] == 'Trimestre'){
                                     $template = 'trimestral';
                                 }else{
-                                    $template = 'regular';
+                                    if($gestion==2021)
+                                        $template = 'regularEspecial';
+                                    else
+                                        $template = 'regular';
                                 }
                                 $actualizarMatricula = true;
                                 if(in_array($nivel, array(1,11,403))){
                                     $actualizarMatricula = false;
                                 }
-                                if($operativo >= 4 or $gestion < $gestionActual){
+                                if($operativo >= 3 or $gestion < $gestionActual){
                                     $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,11)));
                                 }
                             }
@@ -98,6 +109,7 @@ class InfoNotasController extends Controller {
                                 $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
                             }
                         }
+
                         break;
                 case 2: // Visual
                         $programa = $cursoEspecial->getEspecialProgramaTipo()->getId();
@@ -132,12 +144,12 @@ class InfoNotasController extends Controller {
                         }
                         break;
                 case 3: //Intelectual
-                case 5: //Intelectual
+                case 5: //Multiple
                         switch ($nivel) {
                             case 401:
                             case 402:
                                 if($grado <= 6){
-                                    $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
+                                    $notas = $this->get('notas')->especial_cualitativoEsp($idInscripcion,$operativo);
                                     if($gestion < 2020){
                                         if($notas['tipoNota'] == 'Trimestre'){
                                             $template = 'especialCualitativoTrimestral';
@@ -145,13 +157,13 @@ class InfoNotasController extends Controller {
                                             $template = 'especialCualitativo';
                                         }
                                         $actualizarMatricula = false;
-                                        if($operativo >= 4 or $gestion < $gestionActual){
+                                        if($operativo >= 3 or $gestion < $gestionActual){
                                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(70,71,72,73)));
                                         }
                                     }else{
                                         $actualizarMatricula = false;
                                         $template = 'especialCualitativo1';
-                                        if($operativo >= 4 or $gestion < $gestionActual){
+                                        if($operativo >= 3 or $gestion < $gestionActual){
                                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,28)));
                                         }
                                     }
@@ -177,7 +189,7 @@ class InfoNotasController extends Controller {
                         $template = 'especialSeguimiento';
                         $actualizarMatricula = false;
                         $seguimiento = true;
-                        if($operativo >= 4 or $gestion < $gestionActual){
+                        if($operativo >= 3 or $gestion < $gestionActual){
                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
                         }
                     }
@@ -248,7 +260,7 @@ class InfoNotasController extends Controller {
             // Actualizar estado de matricula de los notas que son cualitativas siempre 
             // y cuando esten en el cuarto bimestre
             
-            if(($request->get('operativo') >= 4 and $request->get('actualizar') == false and ($discapacidad <> 2 or ($discapacidad == 2 and $gestion  < 2020 ))) or (in_array($discapacidad, array(4,6,7)) and $request->get('actualizar') == false) or ($request->get('nivel') == 410 and $request->get('actualizar') == false) or ($request->get('nivel') == 411 and $discapacidad == 1 and $request->get('actualizar') == false)){
+            if(($request->get('operativo') >= 3 and $request->get('actualizar') == false and ($discapacidad <> 2 or ($discapacidad == 2 and $gestion  < 2020 ))) or (in_array($discapacidad, array(4,6,7)) and $request->get('actualizar') == false) or ($request->get('nivel') == 410 and $request->get('actualizar') == false) or ($request->get('nivel') == 411 and $discapacidad == 1 and $request->get('actualizar') == false)){
                 $idEstadoMatriicula = $request->get('nuevoEstadomatricula');
                 if($idEstadoMatriicula){
                     $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
@@ -277,6 +289,40 @@ class InfoNotasController extends Controller {
         $em = $this->getDoctrine()->getManager();
         // Obtenemos el operativo para bloquear los controles
         $registroOperativo = $em->createQueryBuilder()
+                        ->select('rc.bim1,rc.bim2,rc.bim3')
+                        ->from('SieAppWebBundle:RegistroConsolidacion','rc')
+                        ->where('rc.unidadEducativa = :ue')
+                        ->andWhere('rc.gestion = :gestion')
+                        ->setParameter('ue',$sie)
+                        ->setParameter('gestion',$gestion)
+                        ->getQuery()
+                        ->getResult();
+        //dump($registroOperativo);die;
+        if(!$registroOperativo){
+            // Si no existe es operativo inicio de gestion
+            $operativo = 0;
+        }else{
+            if($registroOperativo[0]['bim1'] == 0 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 ){
+                $operativo = 1; // Primer Trimestre
+            }
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 ){
+                $operativo = 2; // Segundo Trimestre
+            }
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] == 0 ){
+                $operativo = 3; // Tercer Trimestre
+            }
+            
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 ){
+                $operativo = 4; // Fin de gestion o cerrado
+            }
+        }
+        return $operativo;
+    }
+
+    public function operativoAntes171222021($sie,$gestion){
+        $em = $this->getDoctrine()->getManager();
+        // Obtenemos el operativo para bloquear los controles
+        $registroOperativo = $em->createQueryBuilder()
                         ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
                         ->from('SieAppWebBundle:RegistroConsolidacion','rc')
                         ->where('rc.unidadEducativa = :ue')
@@ -285,18 +331,19 @@ class InfoNotasController extends Controller {
                         ->setParameter('gestion',$gestion)
                         ->getQuery()
                         ->getResult();
+        //dump($registroOperativo);die;
         if(!$registroOperativo){
             // Si no existe es operativo inicio de gestion
             $operativo = 0;
         }else{
             if($registroOperativo[0]['bim1'] == 0 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 1; // Primer Bimestre
+                $operativo = 1; // Primer Trimestre Bimestre
             }
             if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 2; // Primer Bimestre
+                $operativo = 2; // Segundo trimestre Bimestre
             }
             if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 3; // Primer Bimestre
+                $operativo = 3; // Tercer Trimestre
             }
             if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] == 0){
                 $operativo = 4; // Primer Bimestre
@@ -307,6 +354,7 @@ class InfoNotasController extends Controller {
         }
         return $operativo;
     }
+
 
     public function especialEtapasVisualAction(Request $request){
         

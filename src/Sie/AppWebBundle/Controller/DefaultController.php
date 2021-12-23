@@ -315,6 +315,12 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieProcesosBundle");
                 break;
             default :
+            $sysname = 'ESPECIAL';
+            $sysporlet = '#F44336';//red
+            $sysbutton = true;
+            $layout = 'layoutEspecialSie.html.twig';
+            $this->session->set('pathSystem', "SieEspecialBundle");
+            break;            
             
                 // $sysname = 'REGULAR';
                 // $sysporlet = 'blue';

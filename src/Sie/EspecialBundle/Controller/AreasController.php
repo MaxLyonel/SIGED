@@ -169,19 +169,19 @@ class AreasController extends Controller {
             $request->getSession()->set('idArea', $area);
             // Lista de turnos validos para la unidad educativa
             $query = $em->createQuery(
-            		'SELECT DISTINCT tt.id,tt.turno FROM SieAppWebBundle:InstitucioneducativaCursoEspecial iec
-            		JOIN iec.institucioneducativaCurso ie
-            		JOIN ie.turnoTipo tt
+                    'SELECT DISTINCT tt.id,tt.turno FROM SieAppWebBundle:InstitucioneducativaCursoEspecial iec
+                    JOIN iec.institucioneducativaCurso ie
+                    JOIN ie.turnoTipo tt
                     WHERE ie.institucioneducativa = :idInstitucion
                     AND ie.gestionTipo = :gestion
-            		AND iec.especialAreaTipo = :area')
+                    AND iec.especialAreaTipo = :area')
                                 ->setParameter('idInstitucion', $institucion)
                                 ->setParameter('gestion', $gestion)
                                 ->setParameter('area', $area);
                                 $turnos = $query->getResult();
                                 $turnosArray = array();
                                 for ($i = 0; $i < count($turnos); $i++) {
-                                	$turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+                                    $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
                                 }
             /**
              * Creamos el formulario de busqueda de turno nivel grado y paralelo
@@ -223,8 +223,8 @@ class AreasController extends Controller {
      */
 
     private function formSearch($gestionactual, $sie, $gestion) {
-    	$em = $this->getDoctrine()->getManager();
-    	$areas = array();
+        $em = $this->getDoctrine()->getManager();
+        $areas = array();
         $readonly = false;
         if($gestion){
             $gestiones = array($gestion => $gestion);
@@ -253,7 +253,7 @@ class AreasController extends Controller {
             ->distinct()
             ->getQuery();
 
-    		$areas_result = $query->getResult();
+            $areas_result = $query->getResult();
             $areas = array();
             foreach ($areas_result as $a){
                 $areas[$a->getId()] = $a->getAreaEspecial();
@@ -267,7 +267,7 @@ class AreasController extends Controller {
 
             $query = $em->createQuery('SELECT a FROM SieAppWebBundle:EspecialAreaTipo a
                                     WHERE a.id IN (:id) ORDER BY a.id')->setParameter('id',array(1,2,3,4,5,6));
-    		$areas_result = $query->getResult();
+            $areas_result = $query->getResult();
             $areas = array();
             foreach ($areas_result as $a){
                 $areas[$a->getId()] = $a->getAreaEspecial();
@@ -278,7 +278,7 @@ class AreasController extends Controller {
                 ->setAction($this->generateUrl('area_especial'))
                 ->add('institucioneducativa', 'text', array('data' => $sie, 'required' => true, 'attr' => array('autocomplete' => 'off', 'maxlength' => 9, 'readonly' => $readonly)))
                 ->add('gestion', 'choice', array('required' => true, 'choices' => $gestiones, 'attr' => array('readonly' => $readonly)))
-    			->add('area','choice',array('label'=>'Area de Especial','required' => true, 'choices' => $areas,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
+                ->add('area','choice',array('label'=>'Area de Especial','required' => true, 'choices' => $areas,'empty_value'=>'Seleccionar...','attr'=>array('class'=>'form-control')))
                 ->add('buscar', 'submit', array('label' => 'Buscar'))
                 ->getForm();
         return $form;
@@ -288,7 +288,7 @@ class AreasController extends Controller {
      * Funcion para cargar los grados segun el nivel, para el nuevo curso
      */
     public function listargradosAction($nivel) {
-      	try {
+        try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             //$dep = $em->getRepository('SieAppWebBundle:GradoTipo')->findAll();
@@ -366,13 +366,13 @@ class AreasController extends Controller {
             $query = $em->createQuery(
                             'SELECT DISTINCT nt.id,nt.nivel
                     FROM SieAppWebBundle:InstitucioneducativaCursoEspecial iece
-            		JOIN iece.institucioneducativaCurso iec
+                    JOIN iece.institucioneducativaCurso iec
                     JOIN iec.institucioneducativa ie
                     JOIN iec.nivelTipo nt
                     WHERE ie.id = :id
                     AND iec.gestionTipo = :gestion
                     AND iec.turnoTipo = :turno
-            		AND iece.especialAreaTipo = :area
+                    AND iece.especialAreaTipo = :area
                     AND iec.nivelTipo <> 405
                     ORDER BY nt.id')
                     ->setParameter('id', $idInstitucion)
@@ -399,14 +399,14 @@ class AreasController extends Controller {
             $query = $em->createQuery(
                             'SELECT DISTINCT gt.id,gt.grado
                     FROM SieAppWebBundle:InstitucioneducativaCursoEspecial iece
-            		JOIN iece.institucioneducativaCurso iec
-            		JOIN iec.institucioneducativa ie
+                    JOIN iece.institucioneducativaCurso iec
+                    JOIN iec.institucioneducativa ie
                     JOIN iec.gradoTipo gt
                     WHERE ie.id = :id
                     AND iec.gestionTipo = :gestion
                     AND iec.turnoTipo = :turno
                     AND iec.nivelTipo = :nivel
-            		AND iece.especialAreaTipo = :area
+                    AND iece.especialAreaTipo = :area
                     ORDER BY gt.id')
                     ->setParameter('id', $idInstitucion)
                     ->setParameter('gestion', $gestion)
@@ -434,19 +434,19 @@ class AreasController extends Controller {
             $query = $em->createQuery(
                             'SELECT DISTINCT iec.id,pt.paralelo,ser.servicio,pro.programa
                     FROM SieAppWebBundle:InstitucioneducativaCursoEspecial iece
-            		JOIN iece.institucioneducativaCurso iec
-            		JOIN iec.institucioneducativa ie
+                    JOIN iece.institucioneducativaCurso iec
+                    JOIN iec.institucioneducativa ie
                     JOIN iec.paraleloTipo pt
-            		JOIN iece.especialServicioTipo ser
-            		JOIN iece.especialProgramaTipo pro
+                    JOIN iece.especialServicioTipo ser
+                    JOIN iece.especialProgramaTipo pro
                     WHERE ie.id = :id
                     AND iec.gestionTipo = :gestion
                     AND iec.turnoTipo = :turno
                     AND iec.nivelTipo = :nivel
                     AND iec.gradoTipo = :grado
-            		AND iece.especialAreaTipo = :area
+                    AND iece.especialAreaTipo = :area
                     AND pro.id NOT IN(:programa)
-            		ORDER BY pt.paralelo')
+                    ORDER BY pt.paralelo')
                     ->setParameter('id', $idInstitucion)
                     ->setParameter('gestion', $gestion)
                     ->setParameter('area', $area)
@@ -454,7 +454,7 @@ class AreasController extends Controller {
                     ->setParameter('nivel', $nivel)
                     ->setParameter('grado', $grado)
                     ->setParameter('programa', array(17));
-                    
+
             $paralelos = $query->getResult();
 
             $paralelosArray = array();
@@ -499,9 +499,9 @@ class AreasController extends Controller {
             $asignaturas = null;
             $programaServicio = null;
             $progSer = null;
-            
+           // dump($idNivel);
             switch($idNivel){
-                case 401:   switch ($grado) {
+                case 401: switch ($grado) {
                                 case 1:
                                 case 2:
                                     $asignaturas = $em->createQuery(
@@ -512,7 +512,7 @@ class AreasController extends Controller {
                                     )->setParameter('ids',array(464,465,466,467))
                                     ->getResult();
                                     break;
-                             /*    case 3:
+                             /*  case 3:
                                 case 4:
                                 case 5:
                                     $asignaturas = $em->createQuery(
@@ -522,7 +522,7 @@ class AreasController extends Controller {
                                     ORDER BY at.id ASC'
                                     )->setParameter('ids',array(468,469,470,471,472,473,474))
                                     ->getResult();
-                                    break; */
+                                    break;*/
                             }
                             break;
                 case 402: $asignaturas = $em->createQuery(
@@ -533,7 +533,8 @@ class AreasController extends Controller {
                             )->setParameter('ids',array(468,469,470,471,472,473,474))
                             ->getResult();
                             break;
-            	case 411:   $programa = $institucionCursoEspecial->getEspecialProgramaTipo()->getId();
+                case 411:   $programa = $institucionCursoEspecial->getEspecialProgramaTipo()->getId();
+                            
                             switch($programa){
                                 case 7:
                                     $asignaturas = $em->createQuery(
@@ -617,12 +618,13 @@ class AreasController extends Controller {
                                     ->getResult();
                                     break;
                                 case 19:
+                                    //se quito area 32832  lenguaje de señas en todos los casos
                                     $asignaturas = $em->createQuery(
                                             'SELECT at
                                             FROM SieAppWebBundle:AsignaturaTipo at
                                             WHERE at.id IN (:ids)
                                             ORDER BY at.id ASC'
-                                    )->setParameter('ids',array(32833, 32832, 32834, 1018, 1016))
+                                    )->setParameter('ids',array(32833, 32834, 1018, 1016)) //32832
                                     ->getResult();
                                     break;
                                 default:
@@ -649,8 +651,8 @@ class AreasController extends Controller {
                             $programaServicio = $institucionCursoEspecial->getEspecialServicioTipo()->getServicio();
                             $esvisual = true;
                             $progSer = "Servicio";
-                            break;
-            	case 11:    $asignaturas = $em->createQuery(
+                            break;                            
+                case 11:    $asignaturas = $em->createQuery(
                                     'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
                                     WHERE at.asignaturaNivel = :idNivel
@@ -660,16 +662,18 @@ class AreasController extends Controller {
                             ->setParameter('ids',array(1000,1001,1002,1003))
                             ->getResult();
                             break;
-                case 403:   $asignaturas = $em->createQuery(
+                case 403:
+                       $asignaturas = $em->createQuery(
                             'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
                                     WHERE at.asignaturaNivel IN (:idNivel)
                                     AND at.id IN (:ids)
                                     ORDER BY at.id ASC'
-                            		)->setParameter('idNivel', array(11, 12))
-                            		->setParameter('ids',array(1000,1001,1002,1003,32832))
-                            		->getResult();
-                            		break;
+                                        )->setParameter('idNivel', array(11, 12))
+                                    ->setParameter('ids',array(1000,1001,1002,1003))
+                                    ->getResult();
+                                    break;
+
 
                 case 12:    $asignaturas = $em->createQuery(
                                     'SELECT at
@@ -687,8 +691,8 @@ class AreasController extends Controller {
                                     WHERE at.asignaturaNivel = :idNivel
                                     AND at.id IN (:ids)
                                     ORDER BY at.id ASC'
-                            		)->setParameter('idNivel', 12)
-                            		->setParameter('ids',array(1011,1012,1013,1014,1015,1016,1017,1018,1019,32832))
+                                    )->setParameter('idNivel', 12)
+                                    ->setParameter('ids',array(1011,1012,1013,1014,1015,1016,1017,1018,1019))
                                     ->getResult();
                             $asignaturas = array();
                             foreach ($rasignaturas as $item) {
@@ -697,7 +701,9 @@ class AreasController extends Controller {
                                 }
                                 $asignaturas[] = $item;
                             }
-                        	break;
+                                break;
+
+
                 case 13:    switch ($grado) {
                                 case 1:
                                 case 2:
@@ -762,12 +768,12 @@ class AreasController extends Controller {
                 $check = '';
                 $bloqueado = '';
                 if ($areasCurso) {
-	                for ($j = 0; $j < count($areasCurso); $j++) {
-	                    if ($areasNivel[$i]->getId() == $areasCurso[$j]->getAsignaturaTipo()->getId()) {
-	                        $check = 'checked';
-	                        $bloqueado = 'disabled';
-	                    }
-	                }
+                    for ($j = 0; $j < count($areasCurso); $j++) {
+                        if ($areasNivel[$i]->getId() == $areasCurso[$j]->getAsignaturaTipo()->getId()) {
+                            $check = 'checked';
+                            $bloqueado = 'disabled';
+                        }
+                    }
                 }
 
                 // Armamos el array solo con las areas que se pueden adicionar
@@ -780,6 +786,7 @@ class AreasController extends Controller {
             } else {
                 $cargoMaestro = array(0);
             }
+
             $maestros = $em->createQueryBuilder()
                            ->select('mi.id, p.paterno, p.materno, p.nombre, p.carnet')
                            ->from('SieAppWebBundle:MaestroInscripcion','mi')
@@ -791,11 +798,11 @@ class AreasController extends Controller {
                            ->where('ie.id = :idInstitucion')
                            ->andWhere('gt.id = :gestion')
                            ->andWhere('rt.id = :rol')
-                           ->andWhere('ct.id in (:cargoTipo)')
+                           ->andWhere('ct.id in (:cargoTipo)')                           
                            ->setParameter('idInstitucion',$this->session->get('idInstitucion'))
                            ->setParameter('gestion',$this->session->get('idGestion'))
                            ->setParameter('rol',2)
-                           ->setParameter('cargoTipo',$cargoMaestro)
+                           ->setParameter('cargoTipo',$cargoMaestro)                           
                            ->orderBy('p.paterno','asc')
                            ->addOrderBy('p.materno','asc')
                            ->addOrderBy('p.nombre','asc')
@@ -814,7 +821,6 @@ class AreasController extends Controller {
      */
 
     public function lista_areas_cursoAction(Request $request) {
-        //dump($request);die;
         try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -826,7 +832,7 @@ class AreasController extends Controller {
             }else{
                 $esvisual = false;
             }
-            
+
             if ($form['nivel'] != 405) {
                 $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($form['paralelo']);
                 if ($curso) {
@@ -865,7 +871,7 @@ class AreasController extends Controller {
                         ->orderBy('at.id','ASC')
                         ->getQuery()
                         ->getResult();
-                //dump($totalAreasCurso);die;
+
                 $array = array();
                 foreach ($totalAreasCurso as $tac) {
                     if($tac['idAsignatura']==4){
@@ -918,14 +924,13 @@ class AreasController extends Controller {
      * Fcunrion para eadicionar y elimiar areas
      */
     public function lista_areas_curso_adicionar_eliminarAction(Request $request) {
-        
+
         try {
-            
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $this->session = new Session;
             $idCurso = $request->get('idInstitucionCurso');
-            $idMaestroResponsable = $request->get('maestro_responsable');
+            $idMaestroResponsable = $request->get('maestro_responsable');            
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
             if ($idMaestroResponsable!=null) {
                 $curso->setMaestroInscripcionAsesor($em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($idMaestroResponsable));
@@ -945,12 +950,11 @@ class AreasController extends Controller {
             }else{
                 $esvisual = false;
             }
-            
+
             /*
              * Areas a registrar nuevos
              */
-            $areas = $request->get('areas');//
-            //dump($areas);die;
+            $areas = $request->get('areas');
             /*
              * Areas registradas anteriormente
              */
@@ -1134,7 +1138,7 @@ class AreasController extends Controller {
                 $esvisual = true;
             }else{
                 $esvisual = false;
-            }
+            }            
             /**
              * Si existe el curso y el curso oferta entonces eliminamos el curso oferta
              */
@@ -1269,7 +1273,6 @@ class AreasController extends Controller {
      * Asignar maestro al area
      */
     public function maestrosAction(Request $request){
-        
         $ieco = $request->get('idco');
 
         $em = $this->getDoctrine()->getManager();
@@ -1292,7 +1295,7 @@ class AreasController extends Controller {
 
         $arrayMaestros = array();
 
-        if($gestion <= 2012 or ($gestion == 2013 and $grado > 1 and $nivel != 11) or ($gestion == 2013 and $grado == (1 or 2 ) and $nivel == 11) or $gestion == 2020 ){
+        if( $gestion >= 2021 or $gestion <= 2012 or ($gestion == 2013 and $grado > 1 and $nivel != 11) or ($gestion == 2013 and $grado == (1 or 2 ) and $nivel == 11) ){
             // trimestrales
             $inicio = 6;
             $fin = 8;
@@ -1350,13 +1353,13 @@ class AreasController extends Controller {
                         ->where('ie.id = :sie')
                         ->andWhere('gt.id = :gestion')
                         ->andWhere('rt.id = 2')
-                        ->andWhere('ct.id in (:idcargo)')
+                        ->andWhere('ct.id in (:idcargo)')                        
                         ->orderBy('p.paterno','ASC')
                         ->addOrderBy('p.materno','ASC')
                         ->addOrderBy('p.nombre','ASC')
                         ->setParameter('sie',$sie)
                         ->setParameter('gestion',$gestion)
-                        ->setParameter('idcargo',$idcargo)
+                        ->setParameter('idcargo',$idcargo)                        
                         ->getQuery()
                         ->getResult();
         $responsable = '';
@@ -1502,4 +1505,5 @@ class AreasController extends Controller {
         $response = new JsonResponse();
         return $response->setData(array('msg' => $msg , 'maestros' => $maestrosArray));
     }
+
 }
