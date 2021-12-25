@@ -68,7 +68,7 @@
                                 <input type="hidden" name="idNotaTipo[]" value="{{n.idNotaTipo}}">
                                 <input type="hidden" name="idEstudianteAsignatura[]" value="{{n.idEstudianteAsignatura}}">
                                 
-                                <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event)" onkeyup="repetirNota(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')" onblur="notaVacia(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')" class="form-control input-sm p{{notas.idInscripcion}}_{{a.idAsignatura}} promedio" style="width:50px" maxlength="3" autocomplete="off" >
+                                <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event)" onkeyup="repetirNota(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')" onblur="notaVacia(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')" class="form-control input-sm p{{notas.idInscripcion}}_{{a.idAsignatura}} promedio" style="width:50px" maxlength="3" autocomplete="off"  {% if n.nota != 0 and vista != 2 %} readonly="readonly" {% endif %} >
 
                                 {# <input type="text" id="{{n.id}}" name="nota[]" value="{{n.nota}}" size="2" onkeypress="return validarNota(event)" onkeyup="repetirNota(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')" onblur="notaVacia(this,'{{notas.idInscripcion}}_{{a.idAsignatura}}')" class="form-control input-sm p{{notas.idInscripcion}}_{{a.idAsignatura}} promedio" style="width:50px" maxlength="3" autocomplete="off" {% if n.nota != 0 and vista != 2 %} readonly="readonly" {% endif %}> #}
                             </td>
