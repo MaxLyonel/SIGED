@@ -42,11 +42,11 @@
 
                 <small>
                     <div class="tree well">
-                        <form action="{{path('reporte_especial_cuatro')}}" method="post">
+                        {# <form action="{{path('reporte_especial_cuatro')}}" method="post">
                             <input type="hidden" name="idInstitucion" value="{{odataUedu.id}}">
                             <input type="hidden" name="gestion" value="{{gestion}}">
                             <button type="submit" class="btn btn-block btn-facebook"><i class="fa fa-download"></i> Descargar Lista de Estudiantes</button>
-                        </form>
+                        </form> #}
                         {%for turnoKey, dataTurno in aInfoUnidadEductiva%}
                             <ul>
                                 <li>

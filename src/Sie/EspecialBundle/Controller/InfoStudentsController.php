@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Sie\AppWebBundle\Entity\EstudianteInscripcion;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionEspecial;
+use Sie\AppWebBundle\Entity\EstadomatriculaTipo;
+use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\EstudianteDiscapacidadCertificado;
 use Sie\AppWebBundle\Entity\Estudiante;
 
@@ -497,7 +499,25 @@ class InfoStudentsController extends Controller {
 
       $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($sie,$gestion);
 
-
+      
+      $arrDataLibreta = array();
+      $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
+      $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
+      $nivelesLibreta = array(401,402,403,404);
+      $programasLibreta = array(7,8,9,12,14,15);
+      if($gestion >2019 and $nivel <> 405){
+        $arrDataLibreta['calificaciones'] = true;
+      }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
+        $arrDataLibreta['calificaciones'] = true;
+      }else{
+        $arrDataLibreta['calificaciones'] = false;
+      }
+      
+      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2019){
+        $arrDataLibreta['libreta'] = true;
+      }else{
+        $arrDataLibreta['libreta'] = false;
+      }
       //reload the students list
       $exist = true;
       $objStudents = array();
@@ -551,7 +571,10 @@ class InfoStudentsController extends Controller {
         'itemsUe'=>$itemsUe,
         'ciclo'=>$ciclo,
         'operativo'=>$operativo,
-        'areaEspecial' => $objArea->getAreaEspecial()
+        'areaEspecial' => $objArea->getAreaEspecial(),
+        'arrDataLibreta'=> $arrDataLibreta,
+        'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo'],
+        'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId']        
         // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
 
@@ -739,6 +762,26 @@ class InfoStudentsController extends Controller {
           $exist = false;
       }
 
+      $arrDataLibreta = array();
+      $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
+      $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
+      $nivelesLibreta = array(401,402,403,404);
+      $programasLibreta = array(7,8,9,12,14,15);
+      
+      if($gestion >2019 and $nivel <> 405){
+        $arrDataLibreta['calificaciones'] = true;
+      }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
+        $arrDataLibreta['calificaciones'] = true;
+      }else{
+        $arrDataLibreta['calificaciones'] = false;
+      }
+      
+      if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2019){
+        $arrDataLibreta['libreta'] = true;
+      }else{
+        $arrDataLibreta['libreta'] = false;
+      }      
+
       // Para el centralizador
       $itemsUe = $aInfoUeducativa['ueducativaInfo']['nivel'].",".$aInfoUeducativa['ueducativaInfo']['grado'].",".$aInfoUeducativa['ueducativaInfo']['paralelo'];
       $operativo = $em->getRepository('SieAppWebBundle:Estudiante')->getOperativoToCollege($sie,$gestion);
@@ -790,7 +833,10 @@ class InfoStudentsController extends Controller {
         'itemsUe'=>$itemsUe,
         'ciclo'=>$ciclo,
         'operativo'=>$operativo,
-        'areaEspecial' => $objArea->getAreaEspecial()
+        'areaEspecial' => $objArea->getAreaEspecial(),
+        'arrDataLibreta'=> $arrDataLibreta,
+        'ueducativaInfo'=> $aInfoUeducativa['ueducativaInfo'],
+        'ueducativaInfoId'=> $aInfoUeducativa['ueducativaInfoId'],   
         // 'UePlenasAddSpeciality' => $UePlenasAddSpeciality
       ));
   }
