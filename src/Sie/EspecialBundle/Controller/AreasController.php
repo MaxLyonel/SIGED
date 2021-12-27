@@ -499,7 +499,7 @@ class AreasController extends Controller {
             $asignaturas = null;
             $programaServicio = null;
             $progSer = null;
-           // dump($idNivel);
+          // dump($idNivel);
             switch($idNivel){
                 case 401: switch ($grado) {
                                 case 1:
@@ -826,7 +826,7 @@ class AreasController extends Controller {
             $em->getConnection()->beginTransaction();
             $form = $request->get('form');
             $progSer = null;
-            //dump($form);die;
+           //dump($form);die;
             if($form['idArea'] == 2 or $form['idArea'] == 4 or $form['idArea'] == 6 or $form['idArea'] == 7 or $form['nivel'] == 410 or $form['nivel'] == 411){
                 $esvisual = true;
             }else{

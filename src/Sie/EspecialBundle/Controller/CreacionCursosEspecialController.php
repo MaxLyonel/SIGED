@@ -621,12 +621,25 @@ class CreacionCursosEspecialController extends Controller {
     }
 
     public function listarGradosAction($nivel) {
+
+        $this->session = new Session();
+
         $em = $this->getDoctrine()->getManager();
         if ($nivel == "401" ) {
-            $grados = array(1,2);
+            if ($this->session->get('idGestion') < 2021) {
+                $grados = array(1,2);
+            }else{
+                $grados = array(1,2,3);
+            }
+
         }
         elseif ($nivel == "402") {
-            $grados = array(1,2,3,4,5,6);
+            if ($this->session->get('idGestion') < 2021) {
+                $grados = array(1,2,3,4,5,6);
+            }else{
+                $grados = array(4,5,6);
+            }
+            
         }elseif ($nivel == "406" ) {
             $grados = array(1,2,3);
         }
@@ -671,9 +684,9 @@ class CreacionCursosEspecialController extends Controller {
                 $servicios = array(8,9,10,11,12,13,14,15,16,17,18,19);
             } else {
                 if($modalidad == 1){
-                    $servicios = array(10,11,12,14,15);
+                    $servicios = array(10,11,12,18,22); //--14,15
                 } else {
-                    $servicios = array(8,9);
+                    $servicios = array(8,9,14,15,17,23,24);//8,9
                 }
             }//array(8,9,10,11,12,14,15)
         }
