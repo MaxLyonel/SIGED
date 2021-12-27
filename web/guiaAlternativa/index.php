@@ -24,8 +24,10 @@ $data = array(
                 <p class="u-text u-text-6 text-left">Seguidamente el sistema le mostrará un listado de opciones que
                   tiene asignado
                   su Usuario.</p>
-                <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/login2.png" alt=""
-                  data-image-width="473" data-image-height="464">
+                <a class="image-link" href="assets/img/login2.png">
+                  <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/login2.png" alt=""
+                    data-image-width="473" data-image-height="464">
+                </a>
                 <p class="u-text u-text-6 text-left">Haga clic en el botón "Registrar mi ingreso".</p>
         '
   ),
@@ -38,24 +40,24 @@ $data = array(
                         <div class="u-list-icon">
                          –
                         </div>En la parte lateral izquierda, se encuentra el menú principal, desde el cual se pueden
-                        realizar distintos procesos o tareas para los cuales tiene acceso. Haga clic en "Tramites".
+                        realizar distintos procesos o tareas para los cuales tiene acceso. Haga clic en "Trámites".
                     </li>
                 </ul>
         ',
     'content' => '
                 <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/tramites.png" alt=""
                   data-image-width="473" data-image-height="464">
-                <p class="u-text u-text-6 text-left">Al hacer clic en "Trámites", se desplegará la pantalla de tramites
+                <p class="u-text u-text-6 text-left">Al hacer clic en "Trámites", se desplegará la pantalla de trámites
                   con una lista de opciones.</p>
                 <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/tramites2.png" alt=""
                   data-image-width="473" data-image-height="464">
                 <p class="u-text u-text-6 text-left"><strong>Nuevo Trámite:</strong> Muestra una lista de los diferentes
-                  tramites disponibles según la tuición
+                  trámites disponibles según la tuición
                   de cada usuario.</p>
                 <p class="u-text u-text-6 text-left"><strong>Recibidos:</strong> Muestra una lista de los diferentes
-                  tramites recibidos según la tuición de
+                  trámites recibidos según la tuición de
                   cada usuario.</p>
-                <p class="u-text u-text-6 text-left"><strong>Enviados:</strong> Muestra una lista de los tramites
+                <p class="u-text u-text-6 text-left"><strong>Enviados:</strong> Muestra una lista de los trámites
                   enviados con opción de imprimir formulario
                   de envío si corresponde.</p>
                 <p class="u-text u-text-6 text-left"><strong>Concluidos:</strong> Muestra una lista de los trámites
@@ -186,8 +188,10 @@ $data = array(
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/reapertura1.png" alt=""
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">Si el código SIE corresponde a un Centro de Educación Alternativa cerrada nos desplegará el siguiente formulario:</p>
+      <a class="image-link" href="assets/img/reapertura2.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/reapertura2.png" alt=""
           data-image-width="473" data-image-height="464">
+      </a>
       <p class="u-text u-text-6 text-left">En la sección "3. DATOS A MODIFICAR", haga clic en el botón <img src="assets/img/icon-plus.png"> y 
       suba el documento solicitado. Cuando haya terminado
           de llenar la información, presione el botón
@@ -204,7 +208,7 @@ $data = array(
   ),
   array(
     'id' => 5,
-    'title' => 'Apertura de Sub centro (Usuario Director)',
+    'title' => 'Apertura de Sub centro',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
@@ -246,7 +250,9 @@ $data = array(
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
           nuevo" haga clic en el botón "Registrar nuevo Sub centro".</p>
+      <a class="image-link" href="assets/img/apertura-subcentro1.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/apertura-subcentro1.png" alt="">
+      </a>
       <p class="u-text u-text-6 text-left">En la ventana emergente, complete los datos solicitados de las pestañas 
       "Datos Generales", "Ubicación geográfica" e "Información georeferencial". Haga clic en el botón "Validar datos", 
       deberá aparecer un mensaje indicando que los datos fueron validados con éxito y a continuación presione el botón cerrar.</p>
@@ -283,7 +289,7 @@ $data = array(
   ),
   array(
     'id' => 6,
-    'title' => 'Ampliación de nivel (Usuario Director)',
+    'title' => 'Ampliación de nivel',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
         Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
@@ -371,7 +377,9 @@ $data = array(
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
           nuevo" seleccione el o los nuevos niveles a ampliar.</p>
+      <a class="image-link" href="assets/img/ampliacion-nivel1.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/ampliacion-nivel1.png" alt="">
+      </a>
       <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
           ingrese los datos solicitados en la ventana emergente completando
           las 3 pestañas "Requisitos
@@ -385,8 +393,10 @@ $data = array(
           escriba la justificación de Ampliación de Nivel.</p>
       <p class="u-text u-text-6 text-left">Finalmente presione el botón "Enviar Solicitud", para guardar y
           enviar la solicitud de Trámite.</p>
+      <a class="image-link" href="assets/img/ampliacion-nivel3.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/ampliacion-nivel3.png" alt=""
           data-image-width="473" data-image-height="464">
+      </a>
       <p class="u-text u-text-6 text-left">Si la operación fue exitosa, aparecerá un mensaje con el número de
           Trámite, guárdelo para imprimir el formulario RCEA-002 y hacer el seguimiento posterior.</p>
       <p class="u-text u-text-6 text-left">Para imprimir el formulario RCEA-002, haga clic en "Enviados".</p>
@@ -405,7 +415,7 @@ $data = array(
   ),
   array(
     'id' => 7,
-    'title' => 'Ampliación o cambio de especialidades técnicas (Usuario Director)',
+    'title' => 'Ampliación o cambio de especialidades técnicas',
     'description' => '
           <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
@@ -483,8 +493,10 @@ $data = array(
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/ampliacion-esptec.png" alt=""
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. </p>
+      <a class="image-link" href="assets/img/ampliacion-esptec1.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/ampliacion-esptec1.png" alt=""
           data-image-width="473" data-image-height="464">
+      </a>
           <p class="u-text u-text-6 text-left">
           Haga clic en el 
       botón <img src="assets/img/icon-plus.png">, e ingrese los datos solicitados en la ventana emergente completando
@@ -519,7 +531,7 @@ $data = array(
   ),
   array(
     'id' => 8,
-    'title' => 'Cambio de dependencia (Usuario Director)',
+    'title' => 'Cambio de dependencia',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
             href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
@@ -602,7 +614,9 @@ $data = array(
           data-image-width="473" data-image-height="464">
           <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
           nuevo" seleccione la dependencia a realizar el cambio.</p>
+      <a class="image-link" href="assets/img/cambio-dependencia1.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-dependencia1.png" alt="">
+      </a>
       <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
           ingrese los datos solicitados en la ventana emergente completando
           las 3 pestañas "Requisitos
@@ -636,7 +650,7 @@ $data = array(
   ),
   array(
     'id' => 9,
-    'title' => 'Cambio de Infraestructura (Usuario Director)',
+    'title' => 'Cambio de Infraestructura',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
             href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
@@ -699,17 +713,19 @@ $data = array(
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
           nuevo" considere que si la nueva ubicación del Centro de Educación Alternativa ya cuenta con
-          un código de Edificio Educativo registrado, ingresar el código, y los datos de ubicación de ese
+          un código de Edificio Educativo registrado, ingresar el código y los datos de ubicación de ese
           código se desplegarán automáticamente.</p>
       <p class="u-text u-text-6 text-left">Si la nueva ubicación del Centro de Educación Alternativa no cuenta con un código de edificio registrado,
       seleccionar las opciones de la nueva ubicación de la infraestructura de la unidad educativa.</p>
+      <a class="image-link" href="assets/img/cambio-infraestructura1.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-infraestructura1.png" alt="">
+      </a>
       <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
           ingrese los datos solicitados en la ventana emergente completando
           las 3 pestañas "Requisitos
           Legales", "Requisitos de Infraestructura" y "Requisitos Técnico - Pedagógicos". Cuando haya terminado
           de llenar la información, presione el botón
-          "Validar Requisitos", debe aparecer un mensaje confirmando que fueron validados.</p>
+          "Validar Requisitos", debe aparecer un mensaje confirmando que los datos fueron validados.</p>
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-infraestructura2.png" alt=""
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">Si la validación es correcta, presione el botón "Cerrar".</p>
@@ -737,7 +753,7 @@ $data = array(
   ),
   array(
     'id' => 10,
-    'title' => 'Cambio Jurisdicción Administrativa (Usuario Director)',
+    'title' => 'Cambio Jurisdicción Administrativa',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
@@ -807,7 +823,9 @@ $data = array(
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
           nuevo" seleccione el nuevo Distrito Educativo al cual pertenecerá el CEA.</p>
+      <a class="image-link" href="assets/img/cambio-jurisdiccion1.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-jurisdiccion1.png" alt="">
+      </a>
       <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
           ingrese los datos solicitados en la ventana emergente completando
           las 3 pestañas "Requisitos
@@ -821,8 +839,10 @@ $data = array(
           escriba la justificación de cambio Jurisdicción Administrativa.</p>
       <p class="u-text u-text-6 text-left">Finalmente presione el botón "Enviar Solicitud", para guardar y
           enviar la solicitud de Trámite.</p>
+      <a class="image-link" href="assets/img/cambio-jurisdiccion3.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cambio-jurisdiccion3.png" alt=""
           data-image-width="473" data-image-height="464">
+      </a>
       <p class="u-text u-text-6 text-left">Si la operación fue exitosa, aparecerá un mensaje con el número de
           Trámite, guárdelo para imprimir el formulario RCEA-002 y hacer el seguimiento posterior.</p>
       <p class="u-text u-text-6 text-left">Para imprimir el formulario RCEA-002, haga clic en "Enviados".</p>
@@ -841,7 +861,7 @@ $data = array(
   ),
   array(
     'id' => 11,
-    'title' => 'Cierre de especialidades técnicas (Usuario Director)',
+    'title' => 'Cierre de especialidades técnicas',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
@@ -869,17 +889,18 @@ $data = array(
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/info-cea.png" alt=""
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">En la sección "3. DATOS A MODIFICAR" seleccione el Tipo de Trámite
-          <strong>Ampliación o cambio de especialidades técnicas</strong>.
+          <strong>Cierre de Especialidades Técnicas</strong>.
       </p>
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-esptec.png" alt=""
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. </p>
+      <a class="image-link" href="assets/img/cierre-esptec1.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-esptec1.png" alt=""
           data-image-width="473" data-image-height="464">
+      </a>
           <p class="u-text u-text-6 text-left">
-          Haga clic en el 
-      botón <img src="assets/img/icon-plus.png">, e ingrese los datos solicitados en la ventana emergente. Cuando haya terminado
-          de llenar la información, presione el botón
+          Haga clic en el botón <img src="assets/img/icon-plus.png">, e ingrese los datos solicitados en la 
+          ventana emergente. Cuando haya terminado de llenar la información, presione el botón
           "Validar Requisitos", debe aparecer un mensaje confirmando que fueron validados.</p>
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-esptec2.png" alt=""
           data-image-width="473" data-image-height="464">
@@ -908,7 +929,7 @@ $data = array(
   ),
   array(
     'id' => 12,
-    'title' => 'Cierre Definitivo (Usuario Director)',
+    'title' => 'Cierre Definitivo',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
@@ -957,7 +978,9 @@ $data = array(
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
           nuevo" seleccione la opción CERRADA.</p>
+      <a class="image-link" href="assets/img/cierre-definitivo1.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-definitivo1.png" alt="">
+      </a>
       <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
           ingrese los datos solicitados en la ventana emergente completando
           los "Requisitos Legales". Cuando haya terminado
@@ -990,7 +1013,7 @@ $data = array(
   ),
   array(
     'id' => 13,
-    'title' => 'Cierre Temporal (Usuario Director)',
+    'title' => 'Cierre Temporal',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
@@ -1026,7 +1049,9 @@ $data = array(
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
           nuevo" seleccione la opción CERRADA.</p>
+      <a class="image-link" href="assets/img/cierre-temporal1.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/cierre-temporal1.png" alt="">
+      </a>
       <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
           ingrese los datos solicitados en la ventana emergente completando
           los "Requisitos Legales". Cuando haya terminado
@@ -1059,7 +1084,7 @@ $data = array(
   ),
   array(
     'id' => 14,
-    'title' => 'Modificación de Denominación (Usuario Director)',
+    'title' => 'Modificación de Denominación',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
@@ -1104,7 +1129,9 @@ $data = array(
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
           nuevo" ingrese la nueva Denominación del Centro de Educación Alternativa.</p>
+      <a class="image-link" href="assets/img/modificacion-denominacion1.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/modificacion-denominacion1.png" alt="">
+      </a>
       <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
           ingrese los datos solicitados en la ventana emergente completando
           los "Requisitos Legales". Cuando haya terminado
@@ -1137,7 +1164,7 @@ $data = array(
   ),
   array(
     'id' => 15,
-    'title' => 'Reducción de Nivel (Usuario Director)',
+    'title' => 'Reducción de Nivel',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
@@ -1229,7 +1256,9 @@ $data = array(
           data-image-width="473" data-image-height="464">
       <p class="u-text u-text-6 text-left">Se desplegará las opciones para realizar este Trámite. En "Dato
           nuevo" seleccione el o los nuevos niveles a reducir.</p>
+      <a class="image-link" href="assets/img/reduccion-nivel1.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/reduccion-nivel1.png" alt="">
+      </a>
       <p class="u-text u-text-6 text-left">Posteriormente, haga clic en el botón <img src="assets/img/icon-plus.png">, e
           ingrese los datos solicitados en la ventana emergente completando
           las 3 pestañas "Requisitos
@@ -1243,8 +1272,10 @@ $data = array(
           escriba la justificación de Reducción de Nivel.</p>
       <p class="u-text u-text-6 text-left">Finalmente presione el botón "Enviar Solicitud", para guardar y
           enviar la solicitud de Trámite.</p>
+      <a class="image-link" href="assets/img/reduccion-nivel3.png">
       <img class="u-image u-image-contain u-image-default u-image-1" src="assets/img/reduccion-nivel3.png" alt=""
           data-image-width="473" data-image-height="464">
+      </a>
       <p class="u-text u-text-6 text-left">Si la operación fue exitosa, aparecerá un mensaje con el número de
           Trámite, guárdelo para imprimir el formulario RCEA-002 y hacer el seguimiento posterior.</p>
       <p class="u-text u-text-6 text-left">Para imprimir el formulario RCEA-002, haga clic en "Enviados".</p>
@@ -1272,9 +1303,9 @@ $data = array(
   <meta charset="utf-8">
   <meta name="keywords" content="">
   <meta name="description" content="">
-  <title>Guía interactiva Sistema Académico Educación Alternativa</title>
+  <title>Guía interactiva Registro y Modificación Centros de Educación Alternativa</title>
   <link rel="stylesheet" href="assets/nicepage.css" media="screen">
-
+  <link rel="stylesheet" href="assets/magnific-popup.css">
   <link id="u-theme-google-font" rel="stylesheet" href="assets/fonts.css">
   <link rel="stylesheet" href="assets/css.css">
   <meta name="theme-color" content="#a5abf0">
@@ -1346,16 +1377,22 @@ $data = array(
 
   <section class="u-backlink u-clearfix u-grey-80">
     <p class="u-text">
-      <span> 2021 © Ministerio de Educación Estado Plurinacional de Bolivia.</span>
+      <span> 2022 © Ministerio de Educación Estado Plurinacional de Bolivia.</span>
     </p>
   </section>
   <script type="text/javascript" src="assets/jquery-1.js"></script>
   <script type="text/javascript" src="assets/nicepage.js"></script>
+  <script type="text/javascript" src="assets/jquery.magnific-popup.min.js"></script>
   <script>
     $(function() {
       $('.u-accordion-link').click(function() {
         $('.fdesc').hide();
         $('#faq-description' + $(this).data('id')).show();
+      });
+    });
+    $(document).ready(function() {
+      $('.image-link').magnificPopup({
+        type: 'image'
       });
     });
   </script>
