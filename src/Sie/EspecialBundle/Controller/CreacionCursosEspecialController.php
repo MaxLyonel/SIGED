@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial;
+use Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion;
 
 /**
  * EstudianteInscripcion controller.
@@ -422,6 +423,16 @@ class CreacionCursosEspecialController extends Controller {
             $em->getConnection()->beginTransaction();
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->find($request->get('idCurso'));
             $cursosie = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($curso->getInstitucioneducativaCurso()->getId());
+
+            // remove modalidad on course
+            $objModalidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoModalidadAtencion')->findBy(array('institucioneducativaCurso'=>$cursosie->getId()));
+            if($objModalidad); {
+                foreach ($objModalidad as $keyMod => $valueMod) {
+                    $em->remove($valueMod);
+                    $em->flush();
+                }
+            }            
+            // end remove modalidad on course
             /*
              * Verificamos si tiene estudiantes inscritos
              */
