@@ -320,8 +320,8 @@
                     if($('#form_tramite_tipo').val()==73 && $('#latitud2').length >0){
                         //console.log(datos);
                         //alert();
-
-                        initMap2($('#latitud2').val(),$('#longitud2').val(),'map2');
+                        var image2 = L.icon({ iconUrl: "{{ asset('images/marker23.png') }}", iconSize: [40, 40] });
+                        initMap3($('#latitud2').val(),$('#longitud2').val(),'map2', image2);
                     }
                 },
             });
