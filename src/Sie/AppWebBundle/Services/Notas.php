@@ -146,7 +146,7 @@ class Notas{
             $cantidadFaltantes = 0;
             $cantidadRegistrados = 0;
 
-            $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado);
+            $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado,'');
 
             if($tipoNota == 'Trimestre'){
                 
@@ -724,7 +724,7 @@ class Notas{
             $cantidadFaltantes = 0;
             $cantidadRegistrados = 0;
 
-            $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado);
+            $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado,'');
             
             if($tipoNota == 'Trimestre'){
                 
@@ -1697,7 +1697,7 @@ class Notas{
             $cantidadFaltantes = 0;
             $cantidadRegistrados = 0;
 
-            $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado);        
+            $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado,'');        
 
                 // BIMESTRALES
                 if($gestion == 2013 and $nivel != 11 and $grado == 1){
@@ -2739,7 +2739,7 @@ class Notas{
             $cantidadFaltantes = 0;
             $cantidadRegistrados = 0;
 
-            $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado);
+            $tipoNota = $this->getTipoNota($sie,$gestion,$nivel,$grado,'');
             
             if($tipoNota == 'Trimestre'){
                 
@@ -4087,7 +4087,7 @@ die;/*
                 $tipo = 'b';
             }*/
 
-            $tipo = $this->getTipoNota($sie,$gestion,$nivel,$grado);
+            $tipo = $this->getTipoNota($sie,$gestion,$nivel,$grado,'');
 
             // ACTUALIZAMOS EL ESTADO DE MATRICULA DE EDUCACION INICIAL A PROMOVIDO
             if($nivel == 11 or $nivel == 1 or $nivel == 403 or ($nivel.$grado == 121)){
@@ -4349,7 +4349,7 @@ die;/*
                 $tipo = 'b';
             }*/
 
-            $tipo = $this->getTipoNota($sie,$gestion,$nivel,$grado);
+            $tipo = $this->getTipoNota($sie,$gestion,$nivel,$grado,'');
 
             // ACTUALIZAMOS EL ESTADO DE MATRICULA DE EDUCACION INICIAL A PROMOVIDO
             if($nivel == 11 or $nivel == 1 or $nivel == 403 ){

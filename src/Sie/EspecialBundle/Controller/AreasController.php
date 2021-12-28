@@ -546,14 +546,25 @@ class AreasController extends Controller {
                                     ->getResult();
                                     break;
                                 case 8:
-                                    $asignaturas = $em->createQuery(
+                                    if ($this->session->get('idGestion') < 2021) {
+                                        $asignaturas = $em->createQuery(
+                                                'SELECT at
+                                                FROM SieAppWebBundle:AsignaturaTipo at
+                                                WHERE at.id IN (:ids)
+                                                ORDER BY at.id ASC'
+                                        )->setParameter('ids',array(482,483,490,491))
+                                        ->getResult();
+                                        }else{
+                                        $asignaturas = $em->createQuery(
                                             'SELECT at
                                             FROM SieAppWebBundle:AsignaturaTipo at
                                             WHERE at.id IN (:ids)
                                             ORDER BY at.id ASC'
-                                    )->setParameter('ids',array(482,483,490,491))
-                                    ->getResult();
-                                    break;
+                                            )->setParameter('ids',array(482,483,496))  //---
+                                            ->getResult();
+    
+                                        }
+                                        break;
                                 case 9:
                                     $asignaturas = $em->createQuery(
                                             'SELECT at
@@ -582,14 +593,24 @@ class AreasController extends Controller {
                                     ->getResult();
                                     break;
                                  case 12:
-                                    $asignaturas = $em->createQuery(
-                                            'SELECT at
-                                            FROM SieAppWebBundle:AsignaturaTipo at
-                                            WHERE at.id IN (:ids)
-                                            ORDER BY at.id ASC'
-                                    )->setParameter('ids',array(493,485,486))
-                                    ->getResult();
-                                    break;
+                                    if ($this->session->get('idGestion') < 2021) {
+                                        $asignaturas = $em->createQuery(
+                                                'SELECT at
+                                                FROM SieAppWebBundle:AsignaturaTipo at
+                                                WHERE at.id IN (:ids)
+                                                ORDER BY at.id ASC'
+                                        )->setParameter('ids',array(493,485,486))
+                                        ->getResult();
+                                        }else{
+                                            $asignaturas = $em->createQuery(
+                                                'SELECT at
+                                                FROM SieAppWebBundle:AsignaturaTipo at
+                                                WHERE at.id IN (:ids)
+                                                ORDER BY at.id ASC'
+                                        )->setParameter('ids',array(457,485,486))
+                                        ->getResult();
+                                        }
+                                        break;
                                 case 14:
                                     $asignaturas = $em->createQuery(
                                             'SELECT at
@@ -627,6 +648,15 @@ class AreasController extends Controller {
                                     )->setParameter('ids',array(32833, 32834, 1018, 1016)) //32832
                                     ->getResult();
                                     break;
+                                case 25: //---
+                                        $asignaturas = $em->createQuery(
+                                            'SELECT at
+                                            FROM SieAppWebBundle:AsignaturaTipo at
+                                            WHERE at.id IN (:ids)
+                                            ORDER BY at.id ASC'
+                                    )->setParameter('ids',array(458,459,482,483))
+                                    ->getResult();
+                                     break;
                                 default:
                                     $asignaturas = $em->createQuery(
                                             'SELECT at

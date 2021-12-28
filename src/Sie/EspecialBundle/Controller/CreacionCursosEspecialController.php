@@ -744,9 +744,13 @@ class CreacionCursosEspecialController extends Controller {
             if ($this->session->get('idGestion') < 2020) {
                 $programas = array(7,8,9,10,11,12,14,15,16);
             }else{
-                if($modalidad == 1){
-                    $programas = array(7,8,9,11,12,14,15,16);
-                }else{
+                if($modalidad == 1){ //DIRECTA
+                    if ($this->session->get('idGestion') < 2021) {
+                        $programas = array(7,8,9,11,12,14,15,16);
+                    }else{
+                        $programas = array(7,8,9,12,15,25,26,27);   //--- se agrego nuevos programas cambio denom en BD 24=25
+                    }
+                }else{ //INDIRECTA
                     $programas = array(10);
                 }
             }//array(7,8,9,10,11,12,14,15,16)
