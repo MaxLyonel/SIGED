@@ -505,24 +505,25 @@
                                         {% if data.estadomatriculaId == 4 or (data.estadomatriculaId in [5,11,55] and gestion == app.session.get('currentyear')) or (data.estadomatriculaId in [5,11,55] and operativo <= 4) or (data.estadomatriculaId == 55 and gestion < app.session.get('currentyear') and operativo < 5) %}
                                             {# SE VALIDA LA ESPECIALIDAD PARA ESTUDIANTES DE 5 Y 6 DE SECUNDARIA #}
                                             {# PARA TODAS LAS DEMAS GESTIONES #}
-                                            {#
-                                            {% if gestion > 2019 and nivel == 13 and grado >= 5 %}
+                                            {#add to ue 80730370 #}
+                                            {% if app.session.get('ie_id') == '80730370' %}
+                                                {% if gestion > 2019 and nivel == 13 and grado >= 5 %}
 
-                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                        <i class="fa fa-list"></i>
-                                                    </button>
-                                                </div>
-                                            {% else %}                                                
-                                                {% if gestion > 2019 %}
-                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
-                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
-                                                        <i class="fa fa-list"></i>
-                                                    </button>
-                                                </div>
+                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                            <i class="fa fa-list"></i>
+                                                        </button>
+                                                    </div>
+                                                {% else %}                                                
+                                                    {% if gestion > 2019 %}
+                                                    <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
+                                                        <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                            <i class="fa fa-list"></i>
+                                                        </button>
+                                                    </div>
+                                                    {% endif %}
                                                 {% endif %}
                                             {% endif %}
-                                            #}
 
                                         {% endif %}
                                     {% endif %}
@@ -531,7 +532,7 @@
                                     {# IMPRESION DE LIBRETA #}
                                     {% if  imprimirLibreta == true and data.estadomatriculaId in estadosPermitidosImprimir or app.session.get('roluser') in [7,8,9,10] %}
                                         {% if (gestion < app.session.get('currentyear') and data.estadomatriculaId != 4) %}
-                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta krlosss">
+                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Descargar Libreta ">
                                                 <a class="btn btn-circle btn-warning" href="{{path('download_libreta', {'idInscripcion': data.eInsId, 'rude': data.codigoRude, 'sie':sie, 'gestion': gestion, 'nivel':nivel,'grado':grado, 'paralelo':paralelo,'turno':turno, 'ciclo':ciclo} )}}">
                                                   <i class="fa fa-print" style="color:#FFFFFF"></i>
                                                 </a>
