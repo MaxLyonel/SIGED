@@ -542,7 +542,7 @@ class AreasController extends Controller {
                                             FROM SieAppWebBundle:AsignaturaTipo at
                                             WHERE at.id IN (:ids)
                                             ORDER BY at.id ASC'
-                                    )->setParameter('ids',array(475,476,477,483))
+                                    )->setParameter('ids',array(475,476,477))
                                     ->getResult();
                                     break;
                                 case 8:
