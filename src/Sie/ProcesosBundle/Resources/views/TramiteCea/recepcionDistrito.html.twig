@@ -218,15 +218,12 @@
              crossorigin=""></script>
      <script src="{{ asset('webprocesos/js/mapa.js') }}"></script>
      <script>
-        /*$(document).ready(function () {
-             $('#form_tr').empty();
-             var image = L.icon({
-                 iconUrl: "{{ asset('images/marker23.png') }}",
-                 iconSize: [40, 40]
-             });
-             initMap(image);
-            // initMap2($('#latitud').val(), $('#longitud').val(), 'map');
-         });*/
+        $( document ).ready(function() {
+            if('{{mapa}}'==true){
+               var image = L.icon({ iconUrl: "{{ asset('images/marker23.png') }}", iconSize: [40, 40] });
+               initMap3($('#latitud').val(),$('#longitud').val(), 'map', image);
+            }
+        });
      </script>
 
      <script>

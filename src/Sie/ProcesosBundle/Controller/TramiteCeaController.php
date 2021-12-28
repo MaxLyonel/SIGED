@@ -2104,7 +2104,7 @@ class TramiteCeaController extends Controller
             $tarea = $tramiteDetalle->getFlujoProceso();
             $idrue = $tramite->getInstitucioneducativa() ? $tramite->getInstitucioneducativa()->getId() : null;
             foreach ($tareasDatos[0]['datos']['tramites'] as $t) {
-                if ($t['id'] == 73) {
+                if ($t['id'] == 73 || $t['id'] == 63) {
                     $mapa = true;
                 } else {
                     $mapa = false;
@@ -2318,7 +2318,7 @@ class TramiteCeaController extends Controller
         $tareasDatos = $this->obtieneDatos($tramite);
         //dump($tramite, $tareasDatos);die;
         foreach ($tareasDatos[0]['datos']['tramites'] as $t) {
-            if ($t['id'] == 73) {
+            if ($t['id'] == 73 || $t['id'] == 63 ) {
                 $mapa = true;
             } else {
                 $mapa = false;
@@ -2451,7 +2451,7 @@ class TramiteCeaController extends Controller
         $tareasDatos = $this->obtieneDatos($tramite);
         //dump($tareasDatos);die;
         foreach ($tareasDatos[0]['datos']['tramites'] as $t) {
-            if ($t['id'] == 54) {
+            if ($t['id'] == 73 || $t['id'] == 63) {
                 $mapa = true;
             } else {
                 $mapa = false;
@@ -2590,7 +2590,7 @@ class TramiteCeaController extends Controller
                                         throw new \Exception('El código SIE ingresado no es válido.');
                                     }
 
-                                    $queryEntidad = $em->getConnection()->prepare("select max(sucursal_tipo_id) as sucursal_tipo_id from institucioneducativa_sucursal where institucioneducativa_id = " . $idInstitucion);
+                                    $queryEntidad = $em->getConnection()->prepare("select max(sucursal_tipo_id) as sucursal_tipo_id from institucioneducativa_sucursal where institucioneducativa_id = " . $idInstitucion."  and gestion_tipo_id=". $gestion);
                                     $queryEntidad->execute();
                                     $objEntidad = $queryEntidad->fetchAll();
                                     //dump($objEntidad);exit();
@@ -2607,11 +2607,11 @@ class TramiteCeaController extends Controller
                                     if (count($objEntidadValidaNombre) > 0) {
                                         throw new \Exception('El nombre del SUB CEA ya se encuentra registrado con el numero ' . $subcea . '.');
                                     }
-                                    /*
+                                    
                                     $entityInstitucionEducativaSucursalCentral = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $idInstitucion, 'gestionTipo' => $gestion, 'sucursalTipo' => 0, 'periodoTipoId' => $periodo));
                                     if (!$entityInstitucionEducativaSucursalCentral) {
                                         throw new \Exception('El CEA ' . $idInstitucion . ' no cuenta con el SUB CEA 0 habilitado, debe aperturar el CEA CENTRAL en la gestion y periodo seleccionado antes de abrir otro SUB CEA.');
-                                    }*/
+                                    }
                                     $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');
                                     $query = $repository->createQueryBuilder('ie')
                                         ->select('ies')
@@ -2635,7 +2635,7 @@ class TramiteCeaController extends Controller
                                         try {
                                             // $entityInstitucionEducativaSucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('id' => $idiesuc));
                                             $entityLocalidadLugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $localidadId));
-                                            $entityDistritoLugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('id' => $distritoId));
+                                            $entityDistritoLugarTipo = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneBy(array('codigo' => $distritoId));
                                             $entityDistritoTipo = $em->getRepository('SieAppWebBundle:DistritoTipo')->findOneBy(array('id' => $entityDistritoLugarTipo->getCodigo()));
                                             $distritoCodigo = $entityDistritoLugarTipo->getCodigo();
                                             $entityValidacionGeograficaTipo = $em->getRepository('SieAppWebBundle:ValidacionGeograficaTipo')->findOneBy(array('id' => 0));
@@ -2648,11 +2648,11 @@ class TramiteCeaController extends Controller
                                             $query->execute();
                                             $entityId = $query->fetchAll();
                                             $nuevoId = $distritoCodigo . str_pad($entityId[0]['id'], 3, "0", STR_PAD_LEFT);
-
+                                            //dump($nuevoId, $distritoId, $entityDistritoLugarTipo, $entityDistritoTipo);exit;
                                             $entityJurisdiccionGeografica = new JurisdiccionGeografica();
                                             $entityJurisdiccionGeografica->setId($nuevoId);
                                             $entityJurisdiccionGeografica->setLugarTipoLocalidad($entityLocalidadLugarTipo);
-                                            $entityJurisdiccionGeografica->setLugarTipoIdDistrito($distritoId);
+                                            $entityJurisdiccionGeografica->setLugarTipoIdDistrito($entityDistritoLugarTipo->getId());
                                             $entityJurisdiccionGeografica->setObs('NUEVO SUCURSAL SUB C.E.A.');
                                             $entityJurisdiccionGeografica->setDistritoTipo($entityDistritoTipo);
                                             $entityJurisdiccionGeografica->setDireccion(mb_strtoupper($direccion, 'UTF-8'));
@@ -2670,9 +2670,9 @@ class TramiteCeaController extends Controller
                                             $entityGestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id' => $gestion));
                                             $entityInstitucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array('id' => $idInstitucion));
                                             $entitySucursalTipo = $em->getRepository('SieAppWebBundle:SucursalTipo')->findOneBy(array('id' => $subcea));
-                                            if (!$entitySucursalTipo) { //corregir para que haga un insert nuevo
+                                            if (!$entitySucursalTipo) {
                                                 // $stn = new SucursalTipo();
-                                                //  $em->persist($stn);
+                                                // $em->persist($stn);
                                                 $entitySucursalTipo = $em->getRepository('SieAppWebBundle:SucursalTipo')->findOneBy(array('id' => 255));
                                             }
 
@@ -2689,7 +2689,6 @@ class TramiteCeaController extends Controller
                                             $entityInstitucionEducativaSucursal->setZona($zona);
                                             $entityInstitucionEducativaSucursal->setEsabierta(true);
 
-                                            $entityInstitucionEducativaSucursal->setLeJuridicciongeografica($entityJurisdiccionGeografica);
                                             $em->persist($entityInstitucionEducativaSucursal);
                                             $em->flush();
                                             //$em->getConnection()->commit();
@@ -2792,10 +2791,15 @@ class TramiteCeaController extends Controller
                                     $institucioneducativa->setFechaModificacion(new \DateTime('now'));
                                     $institucioneducativa->setObsRue($observacion);
                                     $institucioneducativa->setNroResolucion(mb_strtoupper($tareasDatos[2]['datos']['resolucion'], 'utf-8'));
+                                    $institucioneducativaSucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $institucioneducativa->getId(), 'sucursalTipo' => 0, 'gestionTipo' => (new \DateTime())->format('Y')));
                                     if (isset($tareasDatos[0]['datos'][$t['tramite_tipo']]['lejurisdiccion'])) {
                                         $institucioneducativa->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($tareasDatos[0]['datos'][$t['tramite_tipo']]['lejurisdiccion']));
+                                        if($institucioneducativaSucursal)
+                                            $institucioneducativaSucursal->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($tareasDatos[0]['datos'][$t['tramite_tipo']]['lejurisdiccion']));
                                     } else {
                                         $institucioneducativa->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($this->obtieneCodigoLe($tareasDatos[0]['datos'][$t['tramite_tipo']], $tareasDatos[0]['datos']['jurisdiccion_geografica']['distrito_tipo_id'], $usuario)));
+                                        if($institucioneducativaSucursal)
+                                            $institucioneducativaSucursal->setLeJuridicciongeografica($em->getRepository('SieAppWebBundle:JurisdiccionGeografica')->findOneById($this->obtieneCodigoLe($tareasDatos[0]['datos'][$t['tramite_tipo']], $tareasDatos[0]['datos']['jurisdiccion_geografica']['distrito_tipo_id'], $usuario)));
                                     }
                                     $em->flush();
                                     $vAnterior = array('jurisdiccion_geografica_id' => $tareasDatos[0]['datos']['jurisdiccion_geografica']['id']);
