@@ -352,7 +352,7 @@ class Funciones {
             LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
             INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
             WHERE ".$where." AND rc.gestion = ".$gestionid." AND
-            rc.institucioneducativa_tipo_id = ".$instipoid."
+            rc.institucioneducativa_tipo_id = ".$instipoid." AND inst.estadoinstitucion_tipo_id = 10
             ORDER BY
             codigo_departamento,
             codigo_distrito,
