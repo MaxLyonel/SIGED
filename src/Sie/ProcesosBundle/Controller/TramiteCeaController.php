@@ -2514,7 +2514,7 @@ class TramiteCeaController extends Controller
             if ($varevaluacion == "SI") {
                 $wfTareaCompuerta = $em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findBy(array('flujoProceso' => $tarea, 'condicion' => 'SI'));
                 $varevaluacion2 = "";
-                $observacion2 = mb_strtoupper($form['observacion'], 'utf-8');;
+                $observacion2 = mb_strtoupper($form['observacion'], 'utf-8');
                 $tarea = $wfTareaCompuerta[0]->getCondicionTareaSiguiente();
                 $mensaje = $this->get('wftramite')->guardarTramiteRecibido($usuario, $tarea, $idtramite);
 

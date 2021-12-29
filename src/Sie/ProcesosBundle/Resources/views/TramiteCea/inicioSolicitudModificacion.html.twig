@@ -1100,7 +1100,7 @@
                     }
                 }
                 if ((id == 69 || id == 68) && ($('#tabla tr').length - 1) > 0 && JSON.parse($('#form_tr').val()).includes(39) == false) {
-                    alert('El ' + tramitetipo + ', no corresponde si modificará otros datos.Entra' + id);
+                    alert('El ' + tramitetipo + ', no corresponde si modificará otros datos.');
                     return false;
                 }
                 if ($('#form_tr').val() != "" && JSON.parse($('#form_tr').val()).includes(39) == true && id == 69) {

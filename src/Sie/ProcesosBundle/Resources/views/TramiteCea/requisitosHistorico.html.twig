@@ -2659,6 +2659,7 @@
                                                                 {% endif %}
                                                             </div>
                                                         </div>
+                                                        {% if (datos[t.tramite_tipo].i_certdefuncion is defined) and (datos[t.tramite_tipo].i_certdefuncion!="") %}
                                                         <div class="form-group col-md-12">
                                                             <div class="col-md-8">
                                                                 Certificado de defunción (en caso de llevar nombre de
@@ -2683,6 +2684,7 @@
                                                                 {% endif %}
                                                             </div>
                                                         </div>
+                                                        {% endif %}
                                                         {% if dependencia == 2 %}
                                                             <div class="form-group col-md-12 ">
                                                                 <div class="ckbox ckbox-primary">
