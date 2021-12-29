@@ -129,7 +129,7 @@ class InfoNotasController extends Controller {
                                 }
                             }else{
                                 $actualizarMatricula = false;
-                                $notas = $this->get('notas')->especial_cualitativo_visual($idInscripcion,$operativo);
+                                $notas = $this->get('notas')->especial_cualitativo_visual($idInscripcion,$operativo);   
                                 $template = 'especialCualitativoVisual';
                                 $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(78,79)));
                             }
@@ -203,7 +203,7 @@ class InfoNotasController extends Controller {
                 case 100: // Modalidad Indirecta
                         break;
             }
-
+            //dump($notas);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
                     'notas'=>$notas,

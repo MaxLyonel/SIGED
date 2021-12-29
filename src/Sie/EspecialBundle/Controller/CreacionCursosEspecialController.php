@@ -535,6 +535,7 @@ class CreacionCursosEspecialController extends Controller {
 
 
     public function listarNivelesAction($area,$modalidad) {
+        
         $this->session = new Session();
         $em = $this->getDoctrine()->getManager();
 
@@ -552,9 +553,10 @@ class CreacionCursosEspecialController extends Controller {
                 $nivelesArray = array(410,411);
             }
         }
-        elseif ($area == "3" or $area == "5" ) {
+        elseif ($area == "3" or $area == "5" ) { //intelectual - multiple
+            
             if($modalidad == 1){
-                $nivelesArray = array(401,402,405,410);
+                $nivelesArray = array(401,402,405,410,408);
             }else{
                 $nivelesArray = array(410);
             }
@@ -626,12 +628,10 @@ class CreacionCursosEspecialController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         if ($nivel == "401" ) {
-            if ($this->session->get('idGestion') < 2021) {
-                $grados = array(1,2);
-            }else{
-                $grados = array(1,2,3);
-            }
-
+            $grados = array(1,2);
+        }
+        elseif ($nivel == "408") {
+            $grados = array(1,2,3);
         }
         elseif ($nivel == "402") {
             if ($this->session->get('idGestion') < 2021) {
@@ -639,7 +639,6 @@ class CreacionCursosEspecialController extends Controller {
             }else{
                 $grados = array(4,5,6);
             }
-            
         }elseif ($nivel == "406" ) {
             $grados = array(1,2,3);
         }

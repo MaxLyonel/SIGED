@@ -499,7 +499,7 @@ class AreasController extends Controller {
             $asignaturas = null;
             $programaServicio = null;
             $progSer = null;
-          // dump($idNivel);
+            // dump($idNivel);
             switch($idNivel){
                 case 401: switch ($grado) {
                                 case 1:
@@ -525,6 +525,14 @@ class AreasController extends Controller {
                                     break;*/
                             }
                             break;
+                 case 408: $asignaturas = $em->createQuery(
+                                'SELECT at
+                                FROM SieAppWebBundle:AsignaturaTipo at
+                                WHERE at.id IN (:ids)
+                                ORDER BY at.id ASC'
+                                )->setParameter('ids',array(468,469,470,471,472,473,474))
+                                ->getResult();
+                  break;
                 case 402: $asignaturas = $em->createQuery(
                             'SELECT at
                             FROM SieAppWebBundle:AsignaturaTipo at
@@ -532,7 +540,7 @@ class AreasController extends Controller {
                             ORDER BY at.id ASC'
                             )->setParameter('ids',array(468,469,470,471,472,473,474))
                             ->getResult();
-                            break;
+                  break;
                 case 411:   $programa = $institucionCursoEspecial->getEspecialProgramaTipo()->getId();
                             
                             switch($programa){
@@ -839,7 +847,7 @@ class AreasController extends Controller {
                            ->getQuery()
                            ->getResult();
             $em->getConnection()->commit();
-            //dump($maestros);die;
+           //dump($maestros);die;
             return $this->render('SieEspecialBundle:Areas:listaAreas.html.twig', array('areasNivel' => $areasArray, 'maestros' => $maestros,'esvisual'=>$esvisual,'progSer'=>$progSer));
         } catch (Exception $ex) {
             //$em->getConnection()->rollback();
