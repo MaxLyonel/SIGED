@@ -671,6 +671,7 @@ class CreacionCursosEspecialController extends Controller {
     public function listarServiciosAction($area,$nivel,$grado,$modalidad) {
         $em = $this->getDoctrine()->getManager();
         $this->session = new Session();
+        
         if ($area == "6" and $nivel == "410" and  $grado == "99" ) {
             if($modalidad == 1){
                 $servicios = array(1,2,3,4,5);
@@ -685,7 +686,7 @@ class CreacionCursosEspecialController extends Controller {
                 if($modalidad == 1){
                     $servicios = array(10,11,12,18,22); //--14,15
                 } else {
-                    $servicios = array(8,9,14,15,17,23,24);//8,9
+                    $servicios = array(8,9,17,23);//8,9
                 }
             }//array(8,9,10,11,12,14,15)
         }
