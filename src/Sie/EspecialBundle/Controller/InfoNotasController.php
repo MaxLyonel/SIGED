@@ -147,6 +147,7 @@ class InfoNotasController extends Controller {
                 case 5: //Multiple
                         switch ($nivel) {
                             case 401:
+                            case 408:
                             case 402:
                                 if($grado <= 6){
                                     $notas = $this->get('notas')->especial_cualitativoEsp($idInscripcion,$operativo);
