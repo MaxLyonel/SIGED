@@ -114,7 +114,7 @@ class InfoNotasController extends Controller {
                 case 2: // Visual
                         $programa = $cursoEspecial->getEspecialProgramaTipo()->getId();
                         $progserv = $cursoEspecial->getEspecialServicioTipo()->getId();
-                        if($nivel == 411 and in_array($programa, array(7,8,9,10,11,12,14,15,16))){
+                        if($nivel == 411 and in_array($programa, array(7,8,9,10,11,12,14,15,16,25))){
                             if($gestion < 2020){
                                 if($notas['tipoNota'] == 'Trimestre'){
                                     $notas = $this->get('notas')->especial_cualitativo($idInscripcion,$operativo);
@@ -204,7 +204,7 @@ class InfoNotasController extends Controller {
                 case 100: // Modalidad Indirecta
                         break;
             }
-            //dump($notas);die;
+           // dump($notas);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
                     'notas'=>$notas,
@@ -233,7 +233,7 @@ class InfoNotasController extends Controller {
             $idInscripcion = $request->get('idInscripcion');
             $discapacidad = $request->get('discapacidad');
             $em = $this->getDoctrine()->getManager();
-            //dump ($request->get('actualizar')); die;
+            //dump ($request); die;
             // Registramos las notas
             $gestion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion)->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             

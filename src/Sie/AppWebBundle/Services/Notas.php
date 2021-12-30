@@ -5968,12 +5968,13 @@ die;/*
             }else{
                 $notas = $request->get('nota');
             }
-            // dump($notas);die;
+           // dump($notas);die;
 
             // Datos de las notas cualitativas
             $idEstudianteNotaCualitativa = $request->get('idEstudianteNotaCualitativa');
             $idNotaTipoCualitativa = $request->get('idNotaTipoCualitativa');
             $notaCualitativa = $request->get('notaCualitativa');
+            
             if($request->get('nuevoEstadomatricula') == 5 and $gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5)){
                 $notaCualitativa[0] = array('notaCualitativa'=>mb_strtoupper($notaCualitativa[0],'utf-8'),'promovido'=>mb_strtoupper($promovido,'utf-8'));
             }
@@ -5992,9 +5993,10 @@ die;/*
 
             if( in_array($tipo, array('newTemplateDB','Bimestre' )) ){
                 // Registro y/o modificacion de notas
-                $total = 0;$cantidad=0;
+                $total = 0; $cantidad=0;
                 for($i=0;$i<count($idEstudianteNota);$i++) {
                     if($idEstudianteNota[$i] == 'nuevo'){
+                        
                         //if((!in_array($nivel, $nivelesCualitativos) and $notas[$i] != 0 ) or (in_array($nivel, $nivelesCualitativos) and $notas[$i] != "")){
                             $newNota = new EstudianteNota();
                             $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
@@ -6017,7 +6019,7 @@ die;/*
                             $newNota->setObs('');
                             $this->em->persist($newNota);
                             $this->em->flush();
-                            
+                            //dump($newNota);die;
                             // Registro de notas estudiante en el log
                             $arrayNota = [];
                             $arrayNota['id'] = $newNota->getId();
@@ -6091,14 +6093,18 @@ die;/*
                     }
                 }
                 $newNotaTipo = 5;
-                if($gestion == 2021){
+                if($gestion >= 2021){
                     $newNotaTipo = 9;
                 }
-
+                
                 if($discapacidad == 1 and $request->get('operativo') == 3 and $nivel == 404) {
+                    
                     $promedio = $cantidad>0?round($total/$cantidad):$total;//round(($total/$cantidad), 3)
+                    
                     $notaCualitativa = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion' => $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion), 'notaTipo' => $this->em->getRepository('SieAppWebBundle:NotaTipo')->find($newNotaTipo)));
+                    
                     if ($notaCualitativa) {
+
                         $notaCualitativa->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($newNotaTipo));
                         $notaCualitativa->setEstudianteInscripcion($this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion));
                         $notaCualitativa->setNotaCuantitativa($promedio);
