@@ -3111,7 +3111,7 @@ die;/*
                                 $nuevo['fechaModificacion'] = ($updateNota->getFechaModificacion())?$updateNota->getFechaModificacion()->format('d-m-Y'):'';
                                 
                                 $this->funciones->setLogTransaccion(
-                                    $newNota->getId(),
+                                    $updateNota->getId(),
                                     'estudiante_nota',
                                     'U',
                                     '',
