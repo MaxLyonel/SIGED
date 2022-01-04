@@ -499,7 +499,7 @@ class AreasController extends Controller {
             $asignaturas = null;
             $programaServicio = null;
             $progSer = null;
-            // dump($idNivel);
+            //dump($idNivel); die;
             switch($idNivel){
                 case 401: switch ($grado) {
                                 case 1:
@@ -542,7 +542,7 @@ class AreasController extends Controller {
                             ->getResult();
                   break;
                 case 411:   $programa = $institucionCursoEspecial->getEspecialProgramaTipo()->getId();
-                            
+                            //dump($programa);die;
                             switch($programa){
                                 case 7:
                                     $asignaturas = $em->createQuery(
@@ -582,7 +582,7 @@ class AreasController extends Controller {
                                     )->setParameter('ids',array(479))
                                     ->getResult();
                                     break;
-                                 case 10:
+                                case 10:
                                     $asignaturas = $em->createQuery(
                                             'SELECT at
                                             FROM SieAppWebBundle:AsignaturaTipo at
@@ -665,6 +665,15 @@ class AreasController extends Controller {
                                     )->setParameter('ids',array(458,459,482,483))
                                     ->getResult();
                                      break;
+                                case 28: //---
+                                        $asignaturas = $em->createQuery(
+                                            'SELECT at
+                                            FROM SieAppWebBundle:AsignaturaTipo at
+                                            WHERE at.id IN (:ids)
+                                            ORDER BY at.id ASC'
+                                    )->setParameter('ids',array(993,994,995))
+                                    ->getResult();
+                                 break;
                                 default:
                                     $asignaturas = $em->createQuery(
                                             'SELECT at
