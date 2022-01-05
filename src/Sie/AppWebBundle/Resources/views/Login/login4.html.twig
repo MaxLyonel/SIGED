@@ -169,10 +169,21 @@
                         <h3 class="text-center">El sistema se encuentra en actualización.</h3>
                     </div>
                 {% else %} #}
+
                     <div class="sign-body">
                         {% if error %}
                             <div class="alert" style="text-align:center; color:#F90000;"> <i class="fa fa-info-circle"></i> {{ error.message|trans }}</div>
                         {% endif %}
+                        {% if app.session.get('sysname')|upper=='ESPECIAL' %}
+                            <div class="form-group">
+                                <h3><B>AVISO:</B> </h3>
+                                <h4> El sistema esta temporalmente fuera de servicio, por actualización.
+                                    <br/> 
+                                    <br/> 
+                                    Disculpe las molestias.
+                            <h4>
+                        </div><!-- /.sign-body -->
+                        {% else %}
                         <div class="form-group">
                             <div class="input-group input-group-lg rounded no-overflow">
                                 <input type="text" class="form-control" id="username" name="_username" autocomplete="off" value="{{ last_username }}" required placeholder="Usuario">
@@ -185,9 +196,11 @@
                                 <span class="input-group-addon"><i class="fa fa-lock icono"></i></span>
                             </div>
                         </div><!-- /.form-group -->
+                        {% endif %}
+
                        
                     </div><!-- /.sign-body -->
-
+                    {% if app.session.get('sysname')|upper!='ESPECIAL' %}
                     <div class="sign-footer">
 
                         <div >
@@ -227,6 +240,8 @@
                             {# <a href="{{path('consulta_bono_familia_index')}}" style="color:#455A64; font-size:1em; margin-top:20px;">Consulta si eres beficiario del bono familia</a> #}
                         </div><!-- /.form-group -->
                     </div><!-- /.sign-footer -->
+                    {% endif %}
+
                 {# {% endif %} #}
             </form>
 

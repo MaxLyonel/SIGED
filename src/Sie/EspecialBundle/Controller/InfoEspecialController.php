@@ -126,10 +126,11 @@ class InfoEspecialController extends Controller{
 
     if(!$objInfoSucursal){
         try {
+          
             // Registramos la sucursal
-            $query = $em->getConnection()->prepare("select * from sp_genera_institucioneducativa_sucursal('".$data['idInstitucion']."','0','".$data['gestion']."','1')");
-            $query->execute();
-            $em->getConnection()->commit();
+           // $query = $em->getConnection()->prepare("select * from sp_genera_institucioneducativa_sucursal('".$data['idInstitucion']."','0','".$data['gestion']."','1')");
+           // $query->execute();
+          //  $em->getConnection()->commit();
         } catch (Exception $e) {
             $em->getConnection()->rollback();
             echo 'Excepción capturada: ', $ex->getMessage(), "\n";
