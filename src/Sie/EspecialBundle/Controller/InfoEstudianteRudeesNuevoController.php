@@ -28,10 +28,19 @@ use Sie\AppWebBundle\Entity\ApoderadoInscripcionDatos;
 use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\EstadoCivilTipo;
 
+use Sie\AppWebBundle\Entity\RudeDiscapcidadOrigen;
 use Sie\AppWebBundle\Entity\EstudiantePersonaDiplomatico;
 
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
+
+
+use Sie\AppWebBundle\Entity\RudeVive;
+use Sie\AppWebBundle\Entity\RudeDificultadAprendizaje;
+use Sie\AppWebBundle\Entity\RudeTalentoExtraordinario;
+use Sie\AppWebBundle\Entity\RudeEstrategiaAtencionIntegral;
+use Sie\AppWebBundle\Entity\RudeMediosComunicacion;
+
 
 /**
  * SocioeconomicoAlternativa controller.
@@ -53,8 +62,8 @@ class InfoEstudianteRudeesNuevoController extends Controller
 	}
 
 	public function indexAction(Request $request)
-	{ 
-
+	{
+ 		
 		$em = $this->getDoctrine()->getManager();
 
 		$infoUe = $request->get('infoUe');
@@ -63,11 +72,11 @@ class InfoEstudianteRudeesNuevoController extends Controller
 
 		$aInfoUeducativa = unserialize($infoUe);
 		$aInfoStudent = json_decode($infoStudent, TRUE);
-		
+
 		$iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($aInfoUeducativa['ueducativaInfoId']['iecId']);
 		$sie = $iec->getInstitucioneducativa()->getId();
 		$gestion = $iec->getGestionTipo()->getId();
-		
+
 		$idInscripcion = $aInfoStudent['eInsId'];
 		$inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
 
@@ -159,6 +168,8 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			'formEstudiante'=>$this->createFormEstudiante($rude, $estudiante)->createView(),
 			'formDireccion'=>$this->createFormDireccion($rude)->createView(),
 			'formSocioeconomico'=>$this->createFormSocioeconomico($rude)->createView(),
+			'formCaracteristicaParticular'=>$this->createFormCaracteristicaParticular($rude)->createView(),
+			'formInscripcionActual'=>$this->createFormInscripcionActual($rude)->createView(),
 			'formConQuienVive'=>$this->createFormConQuienVive($rude)->createView(),
 			'formPadre'=>$formPadre->createView(),
 			'formMadre'=>$formMadre->createView(),
@@ -215,7 +226,8 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		// DISCAPACIDAD DEL ESTUDIANTE
 		$discapacidadEstudiante = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findOneBy(array('rude'=>$rude->getId()));
 		$gradosArray = array();
-		if($discapacidadEstudiante){
+		if($discapacidadEstudiante)
+		{
 			// SI LA DISCAPACDIDAD ES VISUAL ENTONCES SOLO MOSTRAMOS CIEETOS GRADOS DE DISCAPACIDAD
 			if($discapacidadEstudiante->getDiscapacidadTipo()->getId() == 10){
 				$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(6,5)));
@@ -766,6 +778,35 @@ class InfoEstudianteRudeesNuevoController extends Controller
 							'property'=>'nacionOriginaria',
 							'required'=>true
 						))
+					// 3.2.1 VIVE CON
+					->add('viveCon', 'entity', array(
+							'class' => 'SieAppWebBundle:ApoderadoTipo',
+							'query_builder' => function (EntityRepository $e) use ($rude)
+							{
+								return $e->createQueryBuilder('cst')
+										->where('cst.id in (:ids)')
+										->setParameter('ids', $this->obtenerCatalogo($rude, 'apoderado_tipo'))
+										->orderBy('cst.id', 'ASC')
+								;
+							},
+							'empty_value' => 'Seleccionar...',
+							'multiple'=>true,
+							'property'=>'apoderado',
+							'required'=>true,
+							//'data'=>$em->getRepository('SieAppWebBundle:ApoderadoTipo')->findAll(),
+							'mapped'=>false
+						))
+					// 3.2.2 PARIENTES CON DISCAPACIDAD
+					->add('tieneParientesDiscapacidad', 'choice', array(
+					        'choice_attr' => function($val, $key, $index) {
+					            return ['class' => 'option_tieneParientesDiscapacidad'];
+					        },
+							'choices'=>array(true=>'Si', false=>'No'),
+							'required'=>true,
+							'multiple'=>false,
+							'empty_value'=>false,
+							'expanded'=>true
+						))
 					// 4.2 SALUD DEL ESTUDIANTE
 					->add('centroSalud', 'choice', array(
 							'choices'=>array(true=>'Si', false=>'No'),
@@ -803,6 +844,13 @@ class InfoEstudianteRudeesNuevoController extends Controller
 							'required'=>true
 						))
 					->add('seguroSalud', 'choice', array(
+							'choices'=>array(true=>'Si', false=>'No'),
+							'required'=>true,
+							'multiple'=>false,
+							'empty_value'=>false,
+							'expanded'=>true
+						))
+					->add('tieneMedicacionEnCee', 'choice', array(
 							'choices'=>array(true=>'Si', false=>'No'),
 							'required'=>true,
 							'multiple'=>false,
@@ -870,36 +918,37 @@ class InfoEstudianteRudeesNuevoController extends Controller
 							'required'=>true
 						))
 					// 4.4 ACCESO A INTERNET
-					->add('accesoInternet', 'entity', array(
-							'class' => 'SieAppWebBundle:AccesoInternetTipo',
-							'query_builder' => function (EntityRepository $e) use ($rude){
-								return $e->createQueryBuilder('ai')
-										->where('ai.id in (:ids)')
-										->setParameter('ids', $this->obtenerCatalogo($rude, 'acceso_internet_tipo'))
-										->orderBy('ai.id', 'ASC')
-								;
-							},
-							'empty_value' => 'Seleccionar...',
-							'multiple'=>true,
-							'property'=>'descripcionAccesoInternet',
-							'required'=>true,
-							'data'=>$em->getRepository('SieAppWebBundle:AccesoInternetTipo')->findBy(array('id'=>$arrayAccesoInternet)),
-							'mapped'=>false
-						))
-					->add('frecuenciaUsoInternetTipo', 'entity', array(
-							'class' => 'SieAppWebBundle:FrecuenciaUsoInternetTipo',
-							'query_builder' => function (EntityRepository $e) use ($rude){
-								return $e->createQueryBuilder('fi')
-										->where('fi.id in (:ids)')
-										->setParameter('ids', $this->obtenerCatalogo($rude, 'frecuencia_uso_internet_tipo'))
-										->orderBy('fi.id', 'ASC')
-								;
-							},
-							'empty_value' => 'Seleccionar...',
-							'multiple'=>false,
-							'property'=>'descripcionFrecuenciaInternet',
-							'required'=>false
-						))
+					//->add('accesoInternet', 'entity', array(
+					//		'class' => 'SieAppWebBundle:AccesoInternetTipo',
+					//		'query_builder' => function (EntityRepository $e) use ($rude){
+					//			return $e->createQueryBuilder('ai')
+					//					->where('ai.id in (:ids)')
+					//					->setParameter('ids', $this->obtenerCatalogo($rude, 'acceso_internet_tipo'))
+					//					->orderBy('ai.id', 'ASC')
+					//			;
+					//		},
+					//		'empty_value' => 'Seleccionar...',
+					//		'multiple'=>true,
+					//		'property'=>'descripcionAccesoInternet',
+					//		'required'=>true,
+					//		'data'=>$em->getRepository('SieAppWebBundle:AccesoInternetTipo')->findBy(array('id'=>$arrayAccesoInternet)),
+					//		'mapped'=>false
+					//	))
+					//->add('frecuenciaUsoInternetTipo', 'entity', array(
+					//		'class' => 'SieAppWebBundle:FrecuenciaUsoInternetTipo',
+					//		'query_builder' => function (EntityRepository $e) use ($rude){
+					//			return $e->createQueryBuilder('fi')
+					//					->where('fi.id in (:ids)')
+					//					->setParameter('ids', $this->obtenerCatalogo($rude, 'frecuencia_uso_internet_tipo'))
+					//					->orderBy('fi.id', 'ASC')
+					//			;
+					//		},
+					//		'empty_value' => 'Seleccionar...',
+					//		'multiple'=>false,
+					//		'property'=>'descripcionFrecuenciaInternet',
+					//		'required'=>false
+					//	))
+					
 					// 4.5 ACTIVIDAD LABORAL
 					->add('trabajoGestionPasada', 'choice', array(
 							'choices'=>array(true=>'Si', false=>'No', null=>'Ns/Nr'),
@@ -1124,18 +1173,45 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		$idDiscapacidad = $request->get('discapacidad');
 		$em = $this->getDoctrine()->getManager();
 		// SI LA DISCAPACIDAD ES VISUAL = 10
-		if($idDiscapacidad == 10){
-			$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(6,5)));
-		}else{
-			if($idDiscapacidad != ""){
-				$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(1,2,7,8)));
-			}else{
-				$gradoDiscapacidad = null;
-			}
+		
+		if($idDiscapacidad == '3') //auditiva
+		{
+			$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')
+			->findBy(array('id'=>array(1,2,3,4)));
+		}
+		else if($idDiscapacidad == 10) //visual
+		{
+			$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')
+			->findBy(array('id'=>array(5,6)));
+		}
+		else if($idDiscapacidad == 2) //intelectual
+		{
+			$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')
+			->findBy(array('id'=>array(17,18,19,29)));
+		}
+		else if($idDiscapacidad == 5) //fisico motora
+		{
+			$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')
+			->findBy(array('id'=>array(20,21,22,29)));
+		}
+		else if($idDiscapacidad == 4) //multiple
+		{
+			$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')
+			->findBy(array('id'=>array(23,24,25,26,27,28,29)));
+		}
+		else if($idDiscapacidad == 6) //psica mental
+		{
+			$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')
+			->findBy(array('id'=>array(1,2,7,8)));
+		}
+		else
+		{
+			$gradoDiscapacidad = null;
 		}
 
 		$gradosArray = array();
-		foreach ($gradoDiscapacidad as $gd) {
+		foreach ($gradoDiscapacidad as $gd)
+		{
 			$gradosArray[$gd->getId()] = $gd->getGradoDiscapacidad();
 		}
 
@@ -1208,9 +1284,48 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$em->flush();
 		}
 
+		//dump($form);die();
 		$rude->setNacionOriginariaTipo($em->getRepository('SieAppWebBundle:NacionOriginariaTipo')->find($form['nacionOriginariaTipo']));
-		$rude->setCentroSalud($form['centroSalud']);
+		//$rude->setCentroSalud($form['centroSalud']);
 		
+		
+		$eliminarViveCon = $em->createQueryBuilder()
+						->delete('')
+						->from('SieAppWebBundle:RudeVive','rv')
+						->where('rv.rude = :rude')
+						->setParameter('rude', $rude)
+						->getQuery()
+						->getResult();
+		// REGISTRAMOS CON QUIEN VIVE
+		if(isset($form['viveCon']))
+		{
+			$viveConOpcion = $form['viveCon'];
+			for ($i=0; $i < count($viveConOpcion); $i++)
+			{ 
+				$viveCon = new RudeVive();
+				$viveCon->setRude($rude);
+				$viveCon->setViveCon($em->getRepository('SieAppWebBundle:ApoderadoTipo')->find($viveConOpcion[$i]));
+				$viveCon->setFechaRegistro(new \DateTime('now'));
+				$em->persist($viveCon);
+				$em->flush();
+			}
+		}
+
+		$rude->setTieneParientesDiscapacidad($form['tieneParientesDiscapacidad']);
+			//$eliminarParientesDiscapacidad = $em->createQueryBuilder()
+			//									->delete('')
+			//									->from('SieAppWebBundle:RudeParientesDiscapacidad','rpd')
+			//									->where('rpd.rude = :rude')
+			//									->setParameter('rude', $rude)
+			//									->getQuery()
+			//									->getResult();
+		if(isset($form['tieneParientesDiscapacidad']))
+		{
+			//creamos los registros
+			//completar
+		}
+
+		$rude->setSeguroSalud($form['seguroSalud']);
 		/**
 		 * ACUDIO CENTRO
 		 */
@@ -1223,9 +1338,11 @@ class InfoEstudianteRudeesNuevoController extends Controller
 						->getQuery()
 						->getResult();
 		// REGISTRAMOS LOS CENTROS
-		if(isset($form['acudioCentro'])){
+		if(isset($form['acudioCentro']))
+		{
 			$acudioCentro = $form['acudioCentro'];
-			for ($i=0; $i < count($acudioCentro); $i++) { 
+			for ($i=0; $i < count($acudioCentro); $i++)
+			{ 
 				$centroEstudiante = new RudeCentroSalud();
 				$centroEstudiante->setRude($rude);
 				$centroEstudiante->setCentroSaludTipo($em->getRepository('SieAppWebBundle:CentroSaludTipo')->find($acudioCentro[$i]));
@@ -1234,284 +1351,211 @@ class InfoEstudianteRudeesNuevoController extends Controller
 				$em->flush();
 			}
 		}
-		if(isset($form['acudioCentro'])){
+		$rude->setTieneMedicacionEnCee($form['tieneMedicacionEnCee']);
+		/*
+		if(isset($form['acudioCentro']))
+		{
 			$rude->setCantidadCentroSaludTipo($em->getRepository('SieAppWebBundle:CantidadCentroSaludTipo')->find($form['cantidadCentroSaludTipo']));
 		}else{
 			 $rude->setCantidadCentroSaludTipo(null);
-		}
+		}*/
 
-		$rude->setSeguroSalud($form['seguroSalud']);
-
-		/**
-		 * SERVICIOS
-		 */
-		// ELIMINAMOS LOS SERVICIOS
-		$eliminarServicios = $em->createQueryBuilder()
-						->delete('')
-						->from('SieAppWebBundle:RudeServicioBasico','rsb')
-						->where('rsb.rude = :rude')
-						->setParameter('rude', $rude)
-						->getQuery()
-						->getResult();
-		// REGISTRAMOS LOS SERVICIOS
-		if($form['agua']){
-			$servicio = new RudeServicioBasico();
-			$servicio->setRude($rude);
-			$servicio->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->find(($form['agua'])?1:null));
-			$servicio->setFechaRegistro(new \DateTime('now'));
-			$em->persist($servicio);
-			$em->flush();
-		}
-		if($form['banio']){
-			$servicio = new RudeServicioBasico();
-			$servicio->setRude($rude);
-			$servicio->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->find(($form['banio'])?2:null));
-			$servicio->setFechaRegistro(new \DateTime('now'));
-			$em->persist($servicio);
-			$em->flush();
-		}
-		if($form['alcantarillado']){
-			$servicio = new RudeServicioBasico();
-			$servicio->setRude($rude);
-			$servicio->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->find(($form['alcantarillado'])?3:null));
-			$servicio->setFechaRegistro(new \DateTime('now'));
-			$em->persist($servicio);
-			$em->flush();
-		}
-		if($form['energiaElectrica']){
-			$servicio = new RudeServicioBasico();
-			$servicio->setRude($rude);
-			$servicio->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->find(($form['energiaElectrica'])?4:null));
-			$servicio->setFechaRegistro(new \DateTime('now'));
-			$em->persist($servicio);
-			$em->flush();
-		}
-		if($form['recojoBasura']){
-			$servicio = new RudeServicioBasico();
-			$servicio->setRude($rude);
-			$servicio->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->find(($form['recojoBasura'])?5:null));
-			$servicio->setFechaRegistro(new \DateTime('now'));
-			$em->persist($servicio);
-			$em->flush();
-		}
-
-		////////////////
-
-		$rude->setViviendaOcupaTipo($em->getRepository('SieAppWebBundle:ViviendaOcupaTipo')->find($form['viviendaOcupaTipo']));
-
-		/**
-		 * ACCESO INTERNET
-		 */
-		// ELIMINAMOS LOS ACCESOS A INTERNET
-		$eliminarInternet = $em->createQueryBuilder()
-						->delete('')
-						->from('SieAppWebBundle:RudeAccesoInternet','rai')
-						->where('rai.rude = :rude')
-						->setParameter('rude', $rude)
-						->getQuery()
-						->getResult();
-		// REGISTRAMOS LOS CENTROS
-		if(isset($form['accesoInternet'])){
-			$accesoInternet = $form['accesoInternet'];
-			for ($i=0; $i < count($accesoInternet); $i++) { 
-				$internetEstudiante = new RudeAccesoInternet();
-				$internetEstudiante->setRude($rude);
-				$internetEstudiante->setAccesoInternetTipo($em->getRepository('SieAppWebBundle:AccesoInternetTipo')->find($accesoInternet[$i]));
-				$internetEstudiante->setFechaRegistro(new \DateTime('now'));
-				$em->persist($internetEstudiante);
-				$em->flush();
-			}
-
-			///////////////
-			/// VERIFICAMOS SI TIENE ACCESO A INTERNET
-			if(in_array(4, $accesoInternet)){
-				$rude->setFrecuenciaUsoInternetTipo(null);
-			}else{
-				$rude->setFrecuenciaUsoInternetTipo($em->getRepository('SieAppWebBundle:FrecuenciaUsoInternetTipo')->find($form['frecuenciaUsoInternetTipo']));
-			}
-		}
 		
 
 
-		$rude->setTrabajoGestionPasada(($form['trabajoGestionPasada'] != "")?$form['trabajoGestionPasada']:null);
+		/// 
+		/// ////////////////
+		/// 
+		/// $rude->setViviendaOcupaTipo($em->getRepository('SieAppWebBundle:ViviendaOcupaTipo')->find($form['viviendaOcupaTipo']));
+		/// 
+		/// 
+		/// 
+		/// 
+		/// $rude->setTrabajoGestionPasada(($form['trabajoGestionPasada'] != "")?$form['trabajoGestionPasada']:null);
+		/// 
+		/// /**
+		///  * MESES DE TRABAJO
+		///  */
+		/// // ELIMINAMOS LOS MESES DE TRABAJO
+		/// $eliminarMesesTrabajo = $em->createQueryBuilder()
+		///				->delete('')
+		///				->from('SieAppWebBundle:RudeMesesTrabajados','rmt')
+		///				->where('rmt.rude = :rude')
+		///				->setParameter('rude', $rude)
+		///				->getQuery()
+		///				->getResult();
+		/// // SI TRABAJO LA GESTION PASADA Y TIENE MESES TRABAJADOS
+		/// // REGISTRAMOS LOS MESES DE TRABAJO
+		/// if($form['trabajoGestionPasada'] == true and isset($form['mesesTrabajados']))
+		/// {
+		///	$mesesTrabajados = $form['mesesTrabajados'];
+		///	for ($i=0; $i < count($mesesTrabajados); $i++) { 
+		///		$mesesTrabajoEstudiante = new RudeMesesTrabajados();
+		///		$mesesTrabajoEstudiante->setRude($rude);
+		///		$mesesTrabajoEstudiante->setMesTipo($em->getRepository('SieAppWebBundle:MesTipo')->find($mesesTrabajados[$i]));
+		///		$mesesTrabajoEstudiante->setFechaRegistro(new \DateTime('now'));
+		///		$em->persist($mesesTrabajoEstudiante);
+		///		$em->flush();
+		///	}
+		/// }
+		/// 
+		/// /**
+		///  * ACTIVIDADES TRABAJO
+		///  */
+		/// // ELIMINAMOS LAS ACTIVIDADES
+		/// $eliminarActividades = $em->createQueryBuilder()
+		/// 				->delete('')
+		/// 				->from('SieAppWebBundle:RudeActividad','ra')
+		/// 				->where('ra.rude = :rude')
+		/// 				->setParameter('rude', $rude)
+		/// 				->getQuery()
+		/// 				->getResult();
+		/// // SI TRABAJO LA GESTION PASADA Y TIENE ACTIVIDADES
+		/// // REGISTRAMOS LAS ACTIVIDADES
+		/// if($form['trabajoGestionPasada'] == true and isset($form['actividades'])){
+		/// 	$actividades = $form['actividades'];
+		/// 	for ($i=0; $i < count($actividades); $i++) { 
+		/// 		$actividadEstudiante = new RudeActividad();
+		/// 		$actividadEstudiante->setRude($rude);
+		/// 		$actividadEstudiante->setActividadTipo($em->getRepository('SieAppWebBundle:ActividadTipo')->find($actividades[$i]));
+		/// 		$actividadEstudiante->setFechaRegistro(new \DateTime('now'));
+		/// 		$em->persist($actividadEstudiante);
+		/// 		$em->flush();
+		/// 
+		/// 		// REGISTRAMOS OTRA ACTIVIDAD
+		/// 		if($actividades[$i] == 13){
+		/// 			$actividadEstudiante->setObs($form['actividadOtro']);
+		/// 		}
+		/// 	}
+		/// }
+		/// 
+		/// /**
+		///  * TURNOS DE TRABAJO
+		///  */
+		/// // ELIMINAMOS LOS TURNOS DE TRABAJO
+		/// $eliminarTurnos = $em->createQueryBuilder()
+		/// 				->delete('')
+		/// 				->from('SieAppWebBundle:RudeTurnoTrabajo','rtt')
+		/// 				->where('rtt.rude = :rude')
+		/// 				->setParameter('rude', $rude)
+		/// 				->getQuery()
+		/// 				->getResult();
+		/// // SI TRABAJO LA GESTION PASADA Y TIENE TURNOS DE TRABAJO
+		/// // REGISTRAMOS TURNOS DE TRABAJO
+		/// if($form['trabajoGestionPasada'] == true and isset($form['turnosTrabajo'])){
+		/// 	$turnosTrabajo = $form['turnosTrabajo'];
+		/// 	for ($i=0; $i < count($turnosTrabajo); $i++) { 
+		/// 		$turnoTrabajoEstudiante = new RudeTurnoTrabajo();
+		/// 		$turnoTrabajoEstudiante->setRude($rude);
+		/// 		$turnoTrabajoEstudiante->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->find($turnosTrabajo[$i]));
+		/// 		$turnoTrabajoEstudiante->setFechaRegistro(new \DateTime('now'));
+		/// 		$em->persist($turnoTrabajoEstudiante);
+		/// 		$em->flush();
+		/// 	}
+		/// }
+		/// 
+		/// /////////
+		/// // SI TRABAJO LA GESTION PASADA
+		/// if($form['trabajoGestionPasada'] == true)
+		/// {
+		/// 	$rude->setFrecuenciaTrabajoTipo($em->getRepository('SieAppWebBundle:FrecuenciaTrabajoTipo')->find($form['frecuenciaTrabajoTipo']));
+		/// 	$rude->setRespuestaPago(($form['respuestaPago'] != "")?$form['respuestaPago']:null);
+		/// }else{
+		/// 	$rude->setFrecuenciaTrabajoTipo(null);
+		/// 	$rude->setRespuestaPago(false);
+		/// }
+		/// 
+		/// /**
+		///  * TIPOS DE PAGO
+		///  */
+		/// // ELIMINAMOS LOS TIPOS DE PAGO
+		/// $eliminarPagos = $em->createQueryBuilder()
+		/// 				->delete('')
+		/// 				->from('SieAppWebBundle:RudeRecibioPago','rrp')
+		/// 				->where('rrp.rude = :rude')
+		/// 				->setParameter('rude', $rude)
+		/// 				->getQuery()
+		/// 				->getResult();
+		/// // SI TRABAJO LA GESTION PASADA Y RECIBIO PAGO
+		/// // REGISTRAMOS LSO TIPOS DE PAGO 
+		/// if(isset($form['recibioTipoPago']) and isset($form['respuestaPago']) and $form['respuestaPago'] == true)
+		/// {
+		///	$recibioTipoPago = $form['recibioTipoPago'];
+		///	for ($i=0; $i < count($recibioTipoPago); $i++) { 
+		///		$pagoEstudiante = new RudeRecibioPago();
+		///		$pagoEstudiante->setRude($rude);
+		///		$pagoEstudiante->setPagoTipo($em->getRepository('SieAppWebBundle:PagoTipo')->find($recibioTipoPago[$i]));
+		///		$pagoEstudiante->setFechaRegistro(new \DateTime('now'));
+		///		$em->persist($pagoEstudiante);
+		///		$em->flush();
+		///	}
+		/// }
+		/// 
+		/// /**
+		///  * MEDIOS DE TRANSPORTE
+		///  */
+		/// // ELIMINAMOS LOS MEDIOS DE TRANSPORTE
+		/// $eliminarMediosTransporte = $em->createQueryBuilder()
+		/// 				->delete('')
+		/// 				->from('SieAppWebBundle:RudeMedioTransporte','rmt')
+		/// 				->where('rmt.rude = :rude')
+		/// 				->setParameter('rude', $rude)
+		/// 				->getQuery()
+		/// 				->getResult();
+		/// // REGISTRAMOS LOS MEDIOS DE TRANSPORTE
+		/// $medioTransporte = $form['medioTransporte'];
+		/// for ($i=0; $i < count($medioTransporte); $i++)
+		/// { 
+		///	$medioTransporteEstudiante = new RudeMedioTransporte();
+		///	$medioTransporteEstudiante->setRude($rude);
+		///	$medioTransporteEstudiante->setMedioTransporteTipo($em->getRepository('SieAppWebBundle:MedioTransporteTipo')->find($medioTransporte[$i]));
+		///	$medioTransporteEstudiante->setFechaRegistro(new \DateTime('now'));
+		///
+		///	// VERIFICAMOS SI SE TRATA DE OTRO MEDIO DE TRASNPORTE
+		///	if($medioTransporte[$i] == 4){
+		///		$medioTransporteEstudiante->setLlegaOtro($form['medioTransporteOtro']);
+		///	}
+		///
+		///	// REGISTRAMOS EL TIEMPO DE TRANSPORTE
+		///	$medioTransporteEstudiante->setTiempoMaximoTrayectoTipo($em->getRepository('SieAppWebBundle:TiempoMaximoTrayectoTipo')->find($form['tiempoTransporte']));
+		///	$em->persist($medioTransporteEstudiante);
+		///	$em->flush();
+		/// }
+		/// 
+		/// ///////////////////////
+		/// 
+		/// $rude->setTieneAbandono($form['tieneAbandono']);
+		/// 
+		/// /**
+		///  * ABANDONO
+		///  */
+		/// // ELIMINAMOS LOS REGISTROS DE ABANDONO
+		/// $eliminarAbandono = $em->createQueryBuilder()
+		///				->delete('')
+		///				->from('SieAppWebBundle:RudeAbandono','ra')
+		///				->where('ra.rude = :rude')
+		///				->setParameter('rude', $rude)
+		///				->getQuery()
+		///				->getResult();
+		/// // REGISTRAMOS LAS CAUSAS DE ABANDONO
+		/// if(isset($form['abandono']) and $form['abandono'] == true)
+		/// {
+		///	$abandono = $form['abandono'];
+		///	for ($i=0; $i < count($abandono); $i++) { 
+		///		$abandonoEstudiante = new RudeAbandono();
+		///		$abandonoEstudiante->setRude($rude);
+		///		$abandonoEstudiante->setAbandonoTipo($em->getRepository('SieAppWebBundle:AbandonoTipo')->find($abandono[$i]));
+		///		$abandonoEstudiante->setFechaRegistro(new \DateTime('now'));
+		///
+		///		// VERIFICAMOS SI SE TRATA DE OTRO MEDIO DE TRASNPORTE
+		///		if($abandono[$i] == 12){
+		///			$abandonoEstudiante->setAbandonoOtro($form['abandonoOtro']);
+		///		}
+		///		$em->persist($abandonoEstudiante);
+		///		$em->flush();
+		///	}
+		/// }
 
-		/**
-		 * MESES DE TRABAJO
-		 */
-		// ELIMINAMOS LOS MESES DE TRABAJO
-		$eliminarMesesTrabajo = $em->createQueryBuilder()
-						->delete('')
-						->from('SieAppWebBundle:RudeMesesTrabajados','rmt')
-						->where('rmt.rude = :rude')
-						->setParameter('rude', $rude)
-						->getQuery()
-						->getResult();
-		// SI TRABAJO LA GESTION PASADA Y TIENE MESES TRABAJADOS
-		// REGISTRAMOS LOS MESES DE TRABAJO
-		if($form['trabajoGestionPasada'] == true and isset($form['mesesTrabajados'])){
-			$mesesTrabajados = $form['mesesTrabajados'];
-			for ($i=0; $i < count($mesesTrabajados); $i++) { 
-				$mesesTrabajoEstudiante = new RudeMesesTrabajados();
-				$mesesTrabajoEstudiante->setRude($rude);
-				$mesesTrabajoEstudiante->setMesTipo($em->getRepository('SieAppWebBundle:MesTipo')->find($mesesTrabajados[$i]));
-				$mesesTrabajoEstudiante->setFechaRegistro(new \DateTime('now'));
-				$em->persist($mesesTrabajoEstudiante);
-				$em->flush();
-			}
-		}
-
-		/**
-		 * ACTIVIDADES TRABAJO
-		 */
-		// ELIMINAMOS LAS ACTIVIDADES
-		$eliminarActividades = $em->createQueryBuilder()
-						->delete('')
-						->from('SieAppWebBundle:RudeActividad','ra')
-						->where('ra.rude = :rude')
-						->setParameter('rude', $rude)
-						->getQuery()
-						->getResult();
-		// SI TRABAJO LA GESTION PASADA Y TIENE ACTIVIDADES
-		// REGISTRAMOS LAS ACTIVIDADES
-		if($form['trabajoGestionPasada'] == true and isset($form['actividades'])){
-			$actividades = $form['actividades'];
-			for ($i=0; $i < count($actividades); $i++) { 
-				$actividadEstudiante = new RudeActividad();
-				$actividadEstudiante->setRude($rude);
-				$actividadEstudiante->setActividadTipo($em->getRepository('SieAppWebBundle:ActividadTipo')->find($actividades[$i]));
-				$actividadEstudiante->setFechaRegistro(new \DateTime('now'));
-				$em->persist($actividadEstudiante);
-				$em->flush();
-
-				// REGISTRAMOS OTRA ACTIVIDAD
-				if($actividades[$i] == 13){
-					$actividadEstudiante->setObs($form['actividadOtro']);
-				}
-			}
-		}
-
-		/**
-		 * TURNOS DE TRABAJO
-		 */
-		// ELIMINAMOS LOS TURNOS DE TRABAJO
-		$eliminarTurnos = $em->createQueryBuilder()
-						->delete('')
-						->from('SieAppWebBundle:RudeTurnoTrabajo','rtt')
-						->where('rtt.rude = :rude')
-						->setParameter('rude', $rude)
-						->getQuery()
-						->getResult();
-		// SI TRABAJO LA GESTION PASADA Y TIENE TURNOS DE TRABAJO
-		// REGISTRAMOS TURNOS DE TRABAJO
-		if($form['trabajoGestionPasada'] == true and isset($form['turnosTrabajo'])){
-			$turnosTrabajo = $form['turnosTrabajo'];
-			for ($i=0; $i < count($turnosTrabajo); $i++) { 
-				$turnoTrabajoEstudiante = new RudeTurnoTrabajo();
-				$turnoTrabajoEstudiante->setRude($rude);
-				$turnoTrabajoEstudiante->setTurnoTipo($em->getRepository('SieAppWebBundle:TurnoTipo')->find($turnosTrabajo[$i]));
-				$turnoTrabajoEstudiante->setFechaRegistro(new \DateTime('now'));
-				$em->persist($turnoTrabajoEstudiante);
-				$em->flush();
-			}
-		}
-
-		/////////
-		// SI TRABAJO LA GESTION PASADA
-		if($form['trabajoGestionPasada'] == true){
-			$rude->setFrecuenciaTrabajoTipo($em->getRepository('SieAppWebBundle:FrecuenciaTrabajoTipo')->find($form['frecuenciaTrabajoTipo']));
-			$rude->setRespuestaPago(($form['respuestaPago'] != "")?$form['respuestaPago']:null);
-		}else{
-			$rude->setFrecuenciaTrabajoTipo(null);
-			$rude->setRespuestaPago(false);
-		}
-
-		/**
-		 * TIPOS DE PAGO
-		 */
-		// ELIMINAMOS LOS TIPOS DE PAGO
-		$eliminarPagos = $em->createQueryBuilder()
-						->delete('')
-						->from('SieAppWebBundle:RudeRecibioPago','rrp')
-						->where('rrp.rude = :rude')
-						->setParameter('rude', $rude)
-						->getQuery()
-						->getResult();
-		// SI TRABAJO LA GESTION PASADA Y RECIBIO PAGO
-		// REGISTRAMOS LSO TIPOS DE PAGO 
-		if(isset($form['recibioTipoPago']) and isset($form['respuestaPago']) and $form['respuestaPago'] == true){
-			$recibioTipoPago = $form['recibioTipoPago'];
-			for ($i=0; $i < count($recibioTipoPago); $i++) { 
-				$pagoEstudiante = new RudeRecibioPago();
-				$pagoEstudiante->setRude($rude);
-				$pagoEstudiante->setPagoTipo($em->getRepository('SieAppWebBundle:PagoTipo')->find($recibioTipoPago[$i]));
-				$pagoEstudiante->setFechaRegistro(new \DateTime('now'));
-				$em->persist($pagoEstudiante);
-				$em->flush();
-			}
-		}
-
-		/**
-		 * MEDIOS DE TRANSPORTE
-		 */
-		// ELIMINAMOS LOS MEDIOS DE TRANSPORTE
-		$eliminarMediosTransporte = $em->createQueryBuilder()
-						->delete('')
-						->from('SieAppWebBundle:RudeMedioTransporte','rmt')
-						->where('rmt.rude = :rude')
-						->setParameter('rude', $rude)
-						->getQuery()
-						->getResult();
-		// REGISTRAMOS LOS MEDIOS DE TRANSPORTE
-		$medioTransporte = $form['medioTransporte'];
-		for ($i=0; $i < count($medioTransporte); $i++) { 
-			$medioTransporteEstudiante = new RudeMedioTransporte();
-			$medioTransporteEstudiante->setRude($rude);
-			$medioTransporteEstudiante->setMedioTransporteTipo($em->getRepository('SieAppWebBundle:MedioTransporteTipo')->find($medioTransporte[$i]));
-			$medioTransporteEstudiante->setFechaRegistro(new \DateTime('now'));
-
-			// VERIFICAMOS SI SE TRATA DE OTRO MEDIO DE TRASNPORTE
-			if($medioTransporte[$i] == 4){
-				$medioTransporteEstudiante->setLlegaOtro($form['medioTransporteOtro']);
-			}
-
-			// REGISTRAMOS EL TIEMPO DE TRANSPORTE
-			$medioTransporteEstudiante->setTiempoMaximoTrayectoTipo($em->getRepository('SieAppWebBundle:TiempoMaximoTrayectoTipo')->find($form['tiempoTransporte']));
-			$em->persist($medioTransporteEstudiante);
-			$em->flush();
-		}
-
-		///////////////////////
-		
-		$rude->setTieneAbandono($form['tieneAbandono']);
-		
-		/**
-		 * ABANDONO
-		 */
-		// ELIMINAMOS LOS REGISTROS DE ABANDONO
-		$eliminarAbandono = $em->createQueryBuilder()
-						->delete('')
-						->from('SieAppWebBundle:RudeAbandono','ra')
-						->where('ra.rude = :rude')
-						->setParameter('rude', $rude)
-						->getQuery()
-						->getResult();
-		// REGISTRAMOS LAS CAUSAS DE ABANDONO
-		if(isset($form['abandono']) and $form['abandono'] == true){
-			$abandono = $form['abandono'];
-			for ($i=0; $i < count($abandono); $i++) { 
-				$abandonoEstudiante = new RudeAbandono();
-				$abandonoEstudiante->setRude($rude);
-				$abandonoEstudiante->setAbandonoTipo($em->getRepository('SieAppWebBundle:AbandonoTipo')->find($abandono[$i]));
-				$abandonoEstudiante->setFechaRegistro(new \DateTime('now'));
-
-				// VERIFICAMOS SI SE TRATA DE OTRO MEDIO DE TRASNPORTE
-				if($abandono[$i] == 12){
-					$abandonoEstudiante->setAbandonoOtro($form['abandonoOtro']);
-				}
-				$em->persist($abandonoEstudiante);
-				$em->flush();
-			}
-		}
 
 		// Registro paso 3
 		if($rude->getRegistroFinalizado() < 3){
@@ -1524,6 +1568,691 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		return $response->setData(['msg'=>true]);
 	}
 
+	// tab4 CARACTERISTICAS PARTICULARES
+	public function createFormCaracteristicaParticular($rude)
+	{
+		$em = $this->getDoctrine()->getManager();
+
+		// DISCAPACIDAD DEL ESTUDIANTE
+		$discapacidadEstudiante = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findOneBy(array('rude'=>$rude->getId()));
+		$gradosArray = array();
+		if($discapacidadEstudiante)
+		{
+			// SI LA DISCAPACDIDAD ES VISUAL ENTONCES SOLO MOSTRAMOS CIEETOS GRADOS DE DISCAPACIDAD
+			if($discapacidadEstudiante->getDiscapacidadTipo()->getId() == 10)
+			{
+				$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(6,5)));
+			}
+			else
+			{
+				$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(1,2,7,8)));
+			}
+
+			foreach ($gradoDiscapacidad as $gd)
+			{
+				$gradosArray[] = $gd->getId();
+			}
+		}
+
+
+		// SERVICIOS BASICOS
+		$servicios = $em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->findAll();
+		foreach ($servicios as $s)
+		{
+			$servicioEstudiante = $em->getRepository('SieAppWebBundle:RudeServicioBasico')->findOneBy(array('rude'=>$rude, 'servicioBasicoTipo'=>$s->getId()));
+			if($servicioEstudiante){
+				$tiene = true;
+			}else{
+				$tiene = false;
+			}
+			switch ($s->getId()) {
+				case 1: $agua = $tiene; break;
+				case 2: $banio = $tiene; break;
+				case 3: $alcantarillado = $tiene; break;
+				case 4: $energiaElectrica = $tiene; break;
+				case 5: $recojoBasura = $tiene; break;
+				case 6: $banioAdaptado = $tiene; break;
+			}
+		}
+
+
+		// TECNOLOGIAS DE COMUNICACION
+		$mediosComunicacion = $em->getRepository('SieAppWebBundle:MediosComunicacionTipo')->findAll();
+		foreach ($mediosComunicacion as $s)
+		{
+			$medioComunicacionEstudiante = $em->getRepository('SieAppWebBundle:RudeMediosComunicacion')->findOneBy(array('rude'=>$rude, 'mediosComunicacionTipo'=>$s->getId()));
+			if($medioComunicacionEstudiante)
+			{
+				$tiene2 = true;
+			}
+			else
+			{
+				$tiene2 = false;
+			}
+			switch ($s->getId())
+			{
+				case 1: $radio = $tiene2; break;
+				case 2: $televisor = $tiene2; break;
+				case 3: $computadora = $tiene2; break;
+				case 4: $internet = $tiene2; break;
+				case 5: $celular = $tiene2; break;
+				case 6: $telefono = $tiene2; break;
+			}
+		}
+
+		// DISCAPACIDAD ORIGIN
+		$discapacidadOrigen_rude = $em->getRepository('SieAppWebBundle:RudeDiscapcidadOrigen')->findOneBy(array('rude'=>$rude->getId()));
+		// DISCAPACIDAD TIPO Y GRADO Y PORCENTAJE
+		$discapacidadTipoGradoPorcentaje_rude = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findOneBy(array('rude'=>$rude->getId()));
+
+		// DIFICULTAD APRENDIZAJE
+		$dificultadAprendizaje_rude = $em->getRepository('SieAppWebBundle:RudeDificultadAprendizaje')->findBy(array('rude'=>$rude));
+		$dificultadAprendizaje_array = [];
+		foreach ($dificultadAprendizaje_rude as $i)
+		{
+			$dificultadAprendizaje_array[] = $i->getDificultadAprendizajeTipo()->getId();
+		}
+
+		//TALENTO EXTRAORDINARIO
+		$talentoextraordinario_rude = $em->getRepository('SieAppWebBundle:RudeTalentoExtraordinario')->findOneBy(array('rude'=>$rude->getId()));
+
+
+		// ESTRATEGIA DE ATENCION INTEGRAL
+		$estrategiaAtencionIntegral_rude = $em->getRepository('SieAppWebBundle:RudeEstrategiaAtencionIntegral')->findBy(array('rude'=>$rude));
+		$estrategiaAtencionIntegral_array = [];
+		foreach ($estrategiaAtencionIntegral_rude as $i)
+		{
+			$estrategiaAtencionIntegral_array[] = $i->getEstrategiaAtencionIntegralTipo()->getId();
+		}
+
+		// ACCESO A INTERNET
+		$accesoInternet = $em->getRepository('SieAppWebBundle:AccesoInternetTipo')->findAll();
+		$accesoInternetEstudiante = $em->getRepository('SieAppWebBundle:RudeAccesoInternet')->findBy(array('rude'=>$rude));
+		$arrayAccesoInternet = [];
+		foreach ($accesoInternetEstudiante as $aie)
+		{
+			$arrayAccesoInternet[] = $aie->getAccesoInternetTipo()->getId();
+		}
+
+		$form = $this->createFormBuilder($rude)
+			->add('id', 'hidden')
+			->add('esEducacionEnCasa', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>null,
+					'expanded'=>true,
+					'data' => $rude->getEsEducacionEnCasa(),
+				))
+			->add('discapacidadOrigen', 'entity', array(
+					'class' => 'SieAppWebBundle:DiscapacidadOrigenTipo',
+					'query_builder' => function (EntityRepository $e) use ($rude) {
+						return $e->createQueryBuilder('dt')
+								->where('dt.id in (:ids)')
+								//->setParameter('ids', $this->obtenerCatalogo($rude, 'discapacidad_tipo'));
+								->setParameter('ids', $this->obtenerCatalogoDiscapacidadOrigen() );
+					},
+					'empty_value' => 'Seleccionar...',
+					'required' => true,
+					'data'=>($discapacidadOrigen_rude)?$discapacidadOrigen_rude->getDiscapacidadOrigenTipo():'',
+					'mapped'=>false
+				))
+			
+			->add('discapacidad', 'entity', array(
+					'class' => 'SieAppWebBundle:DiscapacidadTipo',
+					'query_builder' => function (EntityRepository $e) use ($rude) {
+						return $e->createQueryBuilder('dt')
+								->where('dt.id in (:ids)')
+								//->setParameter('ids', $this->obtenerCatalogo($rude, 'discapacidad_tipo'));
+								->setParameter('ids', $this->obtenerCatalogoTipoDiscapacidad() );
+					},
+					'empty_value' => 'Seleccionar...',
+					//'property'=>'origendiscapacidad',
+					'required' => true,
+					//'data'=>($discapacidadTipoGradoPorcentaje_rude)?$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId():'',
+					'data'=>($discapacidadTipoGradoPorcentaje_rude)?$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo():'',
+					'mapped'=>false
+				))
+			->add('gradoDiscapacidad', 'entity', array(
+					'class' => 'SieAppWebBundle:GradoDiscapacidadTipo',
+					'query_builder' => function (EntityRepository $e) use ($gradosArray) {
+						return $e->createQueryBuilder('gdt')
+								->where('gdt.id in (:ids)')
+								->setParameter('ids', $gradosArray);
+					},
+					'empty_value' => 'Seleccionar...',
+					//'property'=>'grado_discapacidad',
+					'required' => true,
+					'data'=>($discapacidadTipoGradoPorcentaje_rude)?$discapacidadTipoGradoPorcentaje_rude->getGradoDiscapacidadTipo():'',
+					'mapped'=>false,
+					'choice_attr' => function($val, $key, $index) use ($discapacidadTipoGradoPorcentaje_rude)
+					{
+					    $seleccionado = -1;
+					    $attr = [];
+					    if($discapacidadTipoGradoPorcentaje_rude)
+					    {
+					    	$seleccionado = $discapacidadTipoGradoPorcentaje_rude->getGradoDiscapacidadTipo()->getId();
+					    }
+					    //dump($val,$key,$index,$seleccionado);die();
+					    if($index == $seleccionado)
+					    	$attr['selected'] = 'selected';
+					    return $attr;
+					},
+				))
+			->add('porcentaje', 'text', array(
+				'required' => true, 
+				'data'=>($discapacidadTipoGradoPorcentaje_rude)?$discapacidadTipoGradoPorcentaje_rude->getPorcentaje():'',
+				'mapped'=>false, 
+			))
+			
+			->add('dificultadAprendizaje', 'entity', array(
+					'class' => 'SieAppWebBundle:DificultadAprendizajeTipo',
+					'query_builder' => function (EntityRepository $e) use ($rude){
+						return $e->createQueryBuilder('cst')
+								//->where('cst.id in (:ids)')
+								//->setParameter('ids', $this->obtenerCatalogo($rude, 'centro_salud_tipo'))
+								->orderBy('cst.id', 'ASC');
+					},
+					'empty_value' => 'Seleccionar...',
+					'multiple'=>true,
+					'property'=>'dificultadaprendizaje',
+					'required'=>true,
+					'data'=>$em->getRepository('SieAppWebBundle:DificultadAprendizajeTipo')->findBy(array('id'=>$dificultadAprendizaje_array)),
+					'mapped'=>false
+				))
+
+			->add('coeficienteIntelectual', 'text', array(
+				'required' => false, 
+				'mapped'=>false,
+				'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getCoeficienteintelectual():'',
+			))
+			->add('promedioCalificaciones', 'text', array(
+				'required' => false, 
+				'mapped'=>false,
+				'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getPromediocalificaciones():'',
+			))
+			->add('talentoExtraordinario', 'entity', array(
+					'class' => 'SieAppWebBundle:TalentoExtraordinarioTipo',
+					'query_builder' => function (EntityRepository $e) use ($rude) {
+						return $e->createQueryBuilder('dt')
+								->orderBy('dt.id', 'ASC');
+					},
+					'empty_value' => 'Seleccionar...',
+					'property'=>'talentoextraordinario',
+					'required' => false,
+					'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getTalentoExtraordinarioTipo():'',
+					'mapped'=>false
+				))
+			
+			->add('estrategiaAtencionIntegral', 'entity', array(
+					'class' => 'SieAppWebBundle:EstrategiaAtencionIntegralTipo',
+					'query_builder' => function (EntityRepository $e) use ($rude){
+						return $e->createQueryBuilder('cst')
+								//->where('cst.id in (:ids)')
+								//->setParameter('ids', $this->obtenerCatalogo($rude, 'centro_salud_tipo'))
+								->orderBy('cst.id', 'ASC');
+					},
+					'empty_value' => 'Seleccionar...',
+					'multiple'=>true,
+					'property'=>'estrategiaatencion',
+					'required'=>false,
+					'data'=>$em->getRepository('SieAppWebBundle:EstrategiaAtencionIntegralTipo')->findBy(array('id'=>$estrategiaAtencionIntegral_array)),
+					'mapped'=>false
+			))
+
+			->add('agua', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>false,
+					'expanded'=>true,
+					'mapped'=>false,
+					'data'=>$agua
+				))
+			->add('banio', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>false,
+					'expanded'=>true,
+					'mapped'=>false,
+					'data'=>$banio
+				))
+			->add('alcantarillado', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>false,
+					'expanded'=>true,
+					'mapped'=>false,
+					'data'=>$alcantarillado
+				))
+			->add('energiaElectrica', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>false,
+					'expanded'=>true,
+					'mapped'=>false,
+					'data'=>$energiaElectrica
+				))
+			->add('recojoBasura', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>false,
+					'expanded'=>true,
+					'mapped'=>false,
+					'data'=>$recojoBasura
+				))
+			->add('banioAdaptado', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>false,
+					'expanded'=>true,
+					'mapped'=>false,
+					'data'=>$banioAdaptado
+				))
+
+			->add('radio', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>false,
+					'expanded'=>true,
+					'mapped'=>false,
+					'data'=>$radio
+				))
+			->add('televisor', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>false,
+					'expanded'=>true,
+					'mapped'=>false,
+					'data'=>$televisor
+				))
+			->add('computadora', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>false,
+					'expanded'=>true,
+					'mapped'=>false,
+					'data'=>$computadora
+				))
+			->add('internet', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>false,
+					'expanded'=>true,
+					'mapped'=>false,
+					'data'=>$internet
+				))
+			->add('celular', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>false,
+					'expanded'=>true,
+					'mapped'=>false,
+					'data'=>$celular
+				))
+			->add('telefono', 'choice', array(
+					'choices'=>array(true=>'Si', false=>'No'),
+					'required'=>true,
+					'multiple'=>false,
+					'empty_value'=>false,
+					'expanded'=>true,
+					'mapped'=>false,
+					'data'=>$telefono,
+				))
+
+			->add('accesoInternet', 'entity', array(
+					'class' => 'SieAppWebBundle:AccesoInternetTipo',
+					'query_builder' => function (EntityRepository $e) use ($rude){
+						return $e->createQueryBuilder('ai')
+								->where('ai.id in (:ids)')
+								->setParameter('ids', $this->obtenerCatalogo($rude, 'acceso_internet_tipo'))
+								->orderBy('ai.id', 'ASC');
+					},
+					'empty_value' => 'Seleccionar...',
+					'multiple'=>true,
+					'property'=>'descripcionAccesoInternet',
+					'required'=>true,
+					'data'=>$em->getRepository('SieAppWebBundle:AccesoInternetTipo')->findBy(array('id'=>$arrayAccesoInternet)),
+					'mapped'=>false
+				))
+			->add('frecuenciaUsoInternetTipo', 'entity', array(
+					'class' => 'SieAppWebBundle:FrecuenciaUsoInternetTipo',
+					'query_builder' => function (EntityRepository $e) use ($rude){
+						return $e->createQueryBuilder('fi')
+								->where('fi.id in (:ids)')
+								->setParameter('ids', $this->obtenerCatalogo($rude, 'frecuencia_uso_internet_tipo'))
+								->orderBy('fi.id', 'ASC');
+					},
+					'empty_value' => 'Seleccionar...',
+					'multiple'=>false,
+					'property'=>'descripcionFrecuenciaInternet',
+					'required'=>false
+				))
+			
+			->getForm();
+		return $form;
+	}
+
+	public function saveFormCaracteristicaParticularAction(Request $request)
+	{
+		$form = $request->get('form');
+		$em = $this->getDoctrine()->getManager();
+		$rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['id']);
+
+		//4.1.1
+		// ELIMINAMOS LOS DATOS DEL ORIGEN DE LA DISCAPACIDAD
+		$discapacidadOrigen_rude = $em->getRepository('SieAppWebBundle:RudeDiscapcidadOrigen')->findOneBy(array('rude'=>$rude->getId()));
+		if($discapacidadOrigen_rude)
+		{
+			$em->remove($discapacidadOrigen_rude);
+			$em->flush();
+		}
+		// CREAMOS LOS DATOS DEL ORIGEN DE LA DISCAPACIDAD
+		$discapacidadOrigen_new = new RudeDiscapcidadOrigen();
+		$discapacidadOrigen_new->setRude($rude);
+		$discapacidadOrigen_new->setFechaRegistro(new \DateTime('now'));
+		$discapacidadOrigen_new->setFechaModificacion(new \DateTime('now'));
+		$discapacidadOrigen_new->setDiscapacidadOrigenTipo($em->getRepository('SieAppWebBundle:DiscapacidadOrigenTipo')->find($form['discapacidadOrigen']));
+		$em->persist($discapacidadOrigen_new);
+		$em->flush();
+
+		//4.1.2
+		$rude->setEsEducacionEnCasa($form['esEducacionEnCasa']);
+
+		//4.1.3
+		// ELIMINAMOS LOS DATOS DEL GRADO DE LA DISCAPACIDAD
+		$discapacidadGrado_rude = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findOneBy(array('rude'=>$rude->getId()));
+		if($discapacidadGrado_rude)
+		{
+			$em->remove($discapacidadGrado_rude);
+			$em->flush();
+		}
+		//dump($form);die();
+		// CREAMOS LOS DATOS DEL GRADO DE LA DISCAPACIDAD
+		$discapacidadGrado_new = new RudeDiscapacidadGrado();
+		$discapacidadGrado_new->setRude($rude);
+		$discapacidadGrado_new->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
+		$discapacidadGrado_new->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find($form['gradoDiscapacidad']));
+		$discapacidadGrado_new->setPorcentaje($form['porcentaje']);
+
+		$discapacidadGrado_new->setFechaRegistro(new \DateTime('now'));
+		$discapacidadGrado_new->setFechaModificacion(new \DateTime('now'));
+		$em->persist($discapacidadGrado_new);
+		$em->flush();
+
+		//4.2 
+		// ELIMINAMOS LOS DATOS DE LA DIFICULTAD DE APRENDIZAJE
+		$dificultadAprendizaje_rude = $em->getRepository('SieAppWebBundle:RudeDificultadAprendizaje')->findBy(array('rude'=>$rude->getId()));
+		foreach($dificultadAprendizaje_rude as $i)
+		{
+			$em->remove($i);
+			$em->flush();
+		}
+		// CREAMOS LOS DATOS DE LA DIFICULTAD DE APRENDIZAJE
+		foreach($form['dificultadAprendizaje'] as $i)
+		{
+			$dificultadAprendizaje_new = new RudeDificultadAprendizaje();
+			$dificultadAprendizaje_new->setRude($rude);
+			$dificultadAprendizaje_new->setDificultadAprendizajeTipo($em->getRepository('SieAppWebBundle:DificultadAprendizajeTipo')->find($i));
+			$dificultadAprendizaje_new->setFechaRegistro(new \DateTime('now'));
+			$dificultadAprendizaje_new->setFechaModificacion(new \DateTime('now'));
+			$em->persist($dificultadAprendizaje_new);
+			$em->flush();
+		}
+
+		//4.3
+		// ELIMINAMOS LOS DATOS DE TALENTO EXTRAORDINARIO
+		$talentoextraordinario_rude = $em->getRepository('SieAppWebBundle:RudeTalentoExtraordinario')->findOneBy(array('rude'=>$rude->getId()));
+		if($talentoextraordinario_rude)
+		{
+			$em->remove($talentoextraordinario_rude);
+			$em->flush();
+		}
+		$estrategiaAtencionIntegral_rude = $em->getRepository('SieAppWebBundle:RudeEstrategiaAtencionIntegral')->findBy(array('rude'=>$rude->getId()));
+		foreach($estrategiaAtencionIntegral_rude as $i)
+		{
+			$em->remove($i);
+			$em->flush();
+		}
+		// CREAMOS LOS DATOS DE TALENTO EXTRAORDINARIO
+		$talentoextraordinario_new = new RudeTalentoExtraordinario();
+		$talentoextraordinario_new->setRude($rude);
+		$talentoextraordinario_new->setCoeficienteintelectual($form['coeficienteIntelectual']);
+		$talentoextraordinario_new->setPromediocalificaciones($form['promedioCalificaciones']);
+		$talentoextraordinario_new->setTalentoExtraordinarioTipo($em->getRepository('SieAppWebBundle:TalentoExtraordinarioTipo')->find($form['talentoExtraordinario']));
+		$talentoextraordinario_new->setFechaRegistro(new \DateTime('now'));
+		$talentoextraordinario_new->setFechaModificacion(new \DateTime('now'));
+		$em->persist($talentoextraordinario_new);
+		$em->flush();
+		foreach($form['estrategiaAtencionIntegral'] as $i)
+		{
+			$estrategiaAtencionIntegral_new = new RudeEstrategiaAtencionIntegral();
+			$estrategiaAtencionIntegral_new->setRude($rude);
+			$estrategiaAtencionIntegral_new->setEstrategiaAtencionIntegralTipo($em->getRepository('SieAppWebBundle:EstrategiaAtencionIntegralTipo')->find($i));
+			$estrategiaAtencionIntegral_new->setFechaRegistro(new \DateTime('now'));
+			$estrategiaAtencionIntegral_new->setFechaModificacion(new \DateTime('now'));
+			$em->persist($estrategiaAtencionIntegral_new);
+			$em->flush();
+		}
+
+		//4.4
+		// ELIMINAMOS LOS SERVICIOS
+		$eliminarServicios = $em->createQueryBuilder()
+						->delete('')
+						->from('SieAppWebBundle:RudeServicioBasico','rsb')
+						->where('rsb.rude = :rude')
+						->setParameter('rude', $rude)
+						->getQuery()
+						->getResult();
+		 // CREAMOS LOS SERVICIOS
+		 if($form['agua'])
+		 {
+			$servicio = new RudeServicioBasico();
+			$servicio->setRude($rude);
+			$servicio->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->find(($form['agua'])?1:null));
+			$servicio->setFechaRegistro(new \DateTime('now'));
+			$em->persist($servicio);
+			$em->flush();
+		 }
+		 if($form['banio'])
+		 {
+			$servicio = new RudeServicioBasico();
+			$servicio->setRude($rude);
+			$servicio->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->find(($form['banio'])?2:null));
+			$servicio->setFechaRegistro(new \DateTime('now'));
+			$em->persist($servicio);
+			$em->flush();
+		 }
+		 if($form['alcantarillado'])
+		 {
+			$servicio = new RudeServicioBasico();
+			$servicio->setRude($rude);
+			$servicio->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->find(($form['alcantarillado'])?3:null));
+			$servicio->setFechaRegistro(new \DateTime('now'));
+			$em->persist($servicio);
+			$em->flush();
+		 }
+		 if($form['energiaElectrica'])
+		 {
+			$servicio = new RudeServicioBasico();
+			$servicio->setRude($rude);
+			$servicio->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->find(($form['energiaElectrica'])?4:null));
+			$servicio->setFechaRegistro(new \DateTime('now'));
+			$em->persist($servicio);
+			$em->flush();
+		 }
+		 if($form['recojoBasura'])
+		 {
+			$servicio = new RudeServicioBasico();
+			$servicio->setRude($rude);
+			$servicio->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->find(($form['recojoBasura'])?5:null));
+			$servicio->setFechaRegistro(new \DateTime('now'));
+			$em->persist($servicio);
+			$em->flush();
+		 }
+		 if($form['banioAdaptado'])
+		 {
+			$servicio = new RudeServicioBasico();
+			$servicio->setRude($rude);
+			$servicio->setServicioBasicoTipo($em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->find(($form['banioAdaptado'])?6:null));
+			$servicio->setFechaRegistro(new \DateTime('now'));
+			$em->persist($servicio);
+			$em->flush();
+		 }
+
+		//4.5
+		// ELIMINAMOS LOS MEDIOS DE COMUNICACION
+		$eliminarMediosComunicacion = $em->createQueryBuilder()
+						->delete('')
+						->from('SieAppWebBundle:RudeMediosComunicacion','rsb')
+						->where('rsb.rude = :rude')
+						->setParameter('rude', $rude)
+						->getQuery()
+						->getResult();
+		 // CREAMOS LOS MEDIOS DE COMUNCACION
+		 if($form['radio'])
+		 {
+			$servicio = new RudeMediosComunicacion();
+			$servicio->setRude($rude);
+			$servicio->setMediosComunicacionTipo($em->getRepository('SieAppWebBundle:MediosComunicacionTipo')->find(($form['radio'])?1:null));
+			$servicio->setFechaRegistro(new \DateTime('now'));
+			$servicio->setFechaModificacion(new \DateTime('now'));
+			$em->persist($servicio);
+			$em->flush();
+		 }
+		 if($form['televisor'])
+		 {
+			$servicio = new RudeMediosComunicacion();
+			$servicio->setRude($rude);
+			$servicio->setMediosComunicacionTipo($em->getRepository('SieAppWebBundle:MediosComunicacionTipo')->find(($form['televisor'])?2:null));
+			$servicio->setFechaRegistro(new \DateTime('now'));
+			$servicio->setFechaModificacion(new \DateTime('now'));
+			$em->persist($servicio);
+			$em->flush();
+		 }
+		 if($form['telefono'])
+		 {
+			$servicio = new RudeMediosComunicacion();
+			$servicio->setRude($rude);
+			$servicio->setMediosComunicacionTipo($em->getRepository('SieAppWebBundle:MediosComunicacionTipo')->find(($form['telefono'])?3:null));
+			$servicio->setFechaRegistro(new \DateTime('now'));
+			$servicio->setFechaModificacion(new \DateTime('now'));
+			$em->persist($servicio);
+			$em->flush();
+		 }
+		 if($form['celular'])
+		 {
+			$servicio = new RudeMediosComunicacion();
+			$servicio->setRude($rude);
+			$servicio->setMediosComunicacionTipo($em->getRepository('SieAppWebBundle:MediosComunicacionTipo')->find(($form['celular'])?4:null));
+			$servicio->setFechaRegistro(new \DateTime('now'));
+			$servicio->setFechaModificacion(new \DateTime('now'));
+			$em->persist($servicio);
+			$em->flush();
+		 }
+		 if($form['computadora'])
+		 {
+			$servicio = new RudeMediosComunicacion();
+			$servicio->setRude($rude);
+			$servicio->setMediosComunicacionTipo($em->getRepository('SieAppWebBundle:MediosComunicacionTipo')->find(($form['computadora'])?5:null));
+			$servicio->setFechaRegistro(new \DateTime('now'));
+			$servicio->setFechaModificacion(new \DateTime('now'));
+			$em->persist($servicio);
+			$em->flush();
+		 }
+		 if($form['internet'])
+		 {
+			$servicio = new RudeMediosComunicacion();
+			$servicio->setRude($rude);
+			$servicio->setMediosComunicacionTipo($em->getRepository('SieAppWebBundle:MediosComunicacionTipo')->find(($form['internet'])?6:null));
+			$servicio->setFechaRegistro(new \DateTime('now'));
+			$servicio->setFechaModificacion(new \DateTime('now'));
+			$em->persist($servicio);
+			$em->flush();
+		 }
+
+		// ELIMINAMOS ACCESO A INTERNET
+		$eliminarInternet = $em->createQueryBuilder()
+						->delete('')
+						->from('SieAppWebBundle:RudeAccesoInternet','rai')
+						->where('rai.rude = :rude')
+						->setParameter('rude', $rude)
+						->getQuery()
+						->getResult();
+		// CREAMOS ACCESO A INTERNET
+		if(isset($form['accesoInternet']))
+		{
+			$accesoInternet = $form['accesoInternet'];
+			for ($i=0; $i < count($accesoInternet); $i++)
+			{
+				$internetEstudiante = new RudeAccesoInternet();
+				$internetEstudiante->setRude($rude);
+				$internetEstudiante->setAccesoInternetTipo($em->getRepository('SieAppWebBundle:AccesoInternetTipo')->find($accesoInternet[$i]));
+				$internetEstudiante->setFechaRegistro(new \DateTime('now'));
+				$em->persist($internetEstudiante);
+				$em->flush();
+			}
+			// VERIFICAMOS SI TIENE ACCESO A INTERNET
+			if(in_array(4, $accesoInternet))
+				$rude->setFrecuenciaUsoInternetTipo(null);
+			else
+				$rude->setFrecuenciaUsoInternetTipo($em->getRepository('SieAppWebBundle:FrecuenciaUsoInternetTipo')->find($form['frecuenciaUsoInternetTipo']));
+		}
+
+		$em->persist($rude);
+		//$em->flush();
+
+		// Registro paso 4
+		if($rude->getRegistroFinalizado() < 4){
+			$rude->setRegistroFinalizado(4);
+		}
+
+		$em->flush();
+
+		$response = new JsonResponse();
+		return $response->setData(['msg'=>true]);
+	}
+
+
+	public function createFormInscripcionActual($rude)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$form = $this->createFormBuilder($rude)
+			->add('id', 'hidden')
+			
+			->getForm();
+		return $form;
+	}
+
+	public function saveFormInscripcionActualAction(Request $request)
+	{
+		$form = $request->get('form');
+		$em = $this->getDoctrine()->getManager();
+		$rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['id']);
+
+		$em->persist($rude);
+		//$em->flush();
+
+		// Registro paso 5
+		if($rude->getRegistroFinalizado() < 5){
+			$rude->setRegistroFinalizado(5);
+		}
+
+		$em->flush();
+
+		$response = new JsonResponse();
+		return $response->setData(['msg'=>true]);
+	}
 	/**
 	 * FORMULARIO CON QUIEN VIVE EL ESTUDAINTE
 	 */
@@ -2609,6 +3338,48 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$ids[] = $c->getLlaveTabla();
 		}
 
+		return $ids;
+	}
+
+	public function obtenerCatalogoTipoDiscapacidad()
+	{
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = "
+		select * from discapacidad_tipo where es_vigente='t' and origendiscapacidad in ('Auditiva','Visual','Intelectual','Física/Motora','Múltiple','Psíquica') limit 100;
+        ";
+        $stmt = $db->prepare($query);
+        //$params = array();
+        //$stmt->execute($params);
+        $stmt->execute();
+        $catalogo=$stmt->fetchAll();
+
+		$ids = [];
+		foreach ($catalogo as $c)
+		{
+			$ids[] = $c['id'];
+		}
+		return $ids;
+	}
+
+	public function obtenerCatalogoDiscapacidadOrigen()
+	{
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = "
+			select * from discapacidad_origen_tipo where id between 1 and 2 ORDER BY id asc
+		";
+        $stmt = $db->prepare($query);
+        //$params = array();
+        //$stmt->execute($params);
+        $stmt->execute();
+        $catalogo=$stmt->fetchAll();
+
+		$ids = [];
+		foreach ($catalogo as $c)
+		{
+			$ids[] = $c['id'];
+		}
 		return $ids;
 	}
 }

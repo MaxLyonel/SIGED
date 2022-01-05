@@ -222,7 +222,7 @@
                                 </li>
 
                                 <li {% if rude.registroFinalizado == 5 %} class="active" {% endif %} {% if rude.registroFinalizado < 5 %} class="disabled" {% endif %}>
-                                    <a id="paso5" href="#tab5" {% if rude.registroFinalizado >= 5 %} data-toggle="tab" {% endif %} aria-expanded="false">
+                                    <a id="paso6" href="#tab6" {% if rude.registroFinalizado >= 5 %} data-toggle="tab" {% endif %} aria-expanded="false">
                                         <i class="fa fa-check-circle"></i>
                                         <div>
                                             <span class="text-strong">VI</span>
@@ -232,7 +232,7 @@
                                 </li>
 
                                 <li {% if rude.registroFinalizado == 6 %} class="active" {% endif %} {% if rude.registroFinalizado < 6 %} class="disabled" {% endif %}>
-                                    <a id="paso6" href="#tab6" {% if rude.registroFinalizado >= 6 %} data-toggle="tab" {% endif %} aria-expanded="false">
+                                    <a id="paso7" href="#tab7" {% if rude.registroFinalizado >= 6 %} data-toggle="tab" {% endif %} aria-expanded="false">
                                         <i class="fa fa-print"></i>
                                         <div>
                                             <span class="text-strong">VI</span>
@@ -632,6 +632,7 @@
                                 <fieldset class="fieldset">
                                     <legend class="legend">III. ASPECTOS SOCIAL</legend>
                                     <form id="formSocioeconomicos" onsubmit="saveFormSocioeconomicos(); return false;">
+                                        {{ form_widget(formSocioeconomico.id) }}
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12"><strong>3.1 IDIOMAS Y CULTURAL</strong></div>
                                         </div>
@@ -674,13 +675,29 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">3.2.1. ¿Con quién vive el o la estudiante? (Puede marcar mas de una opción)</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.acudioCentro, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
+                                                {{ form_widget(formSocioeconomico.viveCon, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <label class="col-md-6">3.2.2. ¿El estudiante tiene parientes que presente algún tipo de discapacidad?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                checkbox si no, dependiente de la respuesta muestra u oculta mas Opciones
+                                                {{ form_widget(formSocioeconomico.tieneParientesDiscapacidad, {'attr':{'class':'jupper'} }) }}
+                                            </div>
+                                        </div>
+                                        <div id="div_tieneParientesDiscapacidad" style="display: none;">
+                                            <div class="datosParientesDiscapacidad" style="display: block">
+                                                <div class="row" style="margin-top:1em">
+                                                    <div class="col-sm-3"><input type="text" class="form-control" name="parienteDiscapacidad_parentesco[]" placeholder="Parentesco"></div>
+                                                    <div class="col-sm-3"><input type="text" class="form-control" name="parienteDiscapacidad_discapacidad[]" placeholder="Discapacidad"></div>
+                                                    <div class="col-sm-3"><input type="text" class="form-control" name="parienteDiscapacidad_carnet[]" placeholder="Carnet de Discapacidad"></div>
+                                                    <div class="col-sm-3 text-center"><button type="button" class="btn btn-danger btn-small">Borrar</button></div>
+                                                </div>
+                                                <div class="row" style="margin-top:1em">
+                                                    <div class="col-sm-3"><input type="text" class="form-control" name="parienteDiscapacidad_parentesco[]" placeholder="Parentesco"></div>
+                                                    <div class="col-sm-3"><input type="text" class="form-control" name="parienteDiscapacidad_discapacidad[]" placeholder="Discapacidad"></div>
+                                                    <div class="col-sm-3"><input type="text" class="form-control" name="parienteDiscapacidad_carnet[]" placeholder="Carnet de Discapacidad"></div>
+                                                    <div class="col-sm-3 text-center"><button type="button" class="btn btn-primary btn-small">Guadar</button></div>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -700,40 +717,109 @@
                                         <div class="row form-group">
                                             <label class="col-md-6 text-justify">3.3.2. El año pasado, por problemas de salud, ¿la o el estudiante acudió o se atendió en...? (puede marcar más de una opción)</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.acudioCentro, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
+                                                {{ form_widget(formSocioeconomico.acudioCentro, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
                                             </div>
                                         </div>
 
                                         <div class="row form-group">
                                             <label class="col-md-6 text-justify">3.3.3. ¿La o el estudiante usa algún tipo de medicación que debe ser administrado en el CEE?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                CHECKBOX CON OPCION SI NO
+                                                {{ form_widget(formSocioeconomico.tieneMedicacionEnCee, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
-                                        </fieldset>
-
                                         <div class="panel-footer no-bg">
                                             <ul class="pager wizard no-margin">
                                                 <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
                                                 <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
                                             </ul>
                                         </div>
+                                        </fieldset>
+
                                     </form>
                                 </fieldset>
                             </div>
                             <div {% if rude.registroFinalizado == 3 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab4">
                                 <fieldset class="fieldset">
                                     <legend class="legend">IV. CARACTERISTICAS PARTICULARES DE LA O EL ESTUDIANTE</legend>
-                                    <form id="formSocioeconomicos" onsubmit="saveFormSocioeconomicos(); return false;">
+                                    <form id="formCaracteristicasParticulares" onsubmit="saveFormCaracteristicasParticulares(); return false;">
+                                        {{ form_widget(formCaracteristicaParticular.id) }}
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12">
                                                 <strong>4.1 TIPOS GRADOS DE CAPACIDAD </strong>(Elegir el tipo de capacidad, marcando en el grado o porcentaje, registrado en el carnet de discapacidad)
                                             </div>
                                         </div>
+                                        <div class="row form-group">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>4.1.1 LA DISCAPACIDAD DEL ESTUDIANTE ES DE</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formCaracteristicaParticular.discapacidadOrigen, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>4.1.2 FORMA PARTE DEL PROGRAMA EDUCACIÓN SOCIOCOMUNITARIA EN CASA</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formCaracteristicaParticular.esEducacionEnCasa, {'attr':{'class':'jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>4.1.3 TIPO DE DISCAPACIDAD</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formCaracteristicaParticular.discapacidad, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>4.1.4 GRADO DE DISCAPACIDAD</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formCaracteristicaParticular.gradoDiscapacidad, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row form-group">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>4.1.5 PORCENTAJE DEL GRADO DE DISCAPACIDAD</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formCaracteristicaParticular.porcentaje, {'attr':{'class':'form-control jupper', 'autocomplete':'off'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="row">
-                                            <div class="col-md-12 col-sm-12">
-                                                <hr class="separador">
-                                                <strong>4.2 ESTUDIANTES CON DIFICULATADES EN EL APRENDIZAJE </strong>(Marcar unicamente si la o el estudiante no presenta discapacidad y provieve del Subsistema de Educación Regular)
+                                            <div class="col-md-6 col-sm-6">
+                                                <strong>4.2 ESTUDIANTES CON DIFICULTADES EN EL APRENDIZAJE </strong>(Marcar unicamente si la o el estudiante no presenta discapacidad y provieve del Subsistema de Educación Regular)
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formCaracteristicaParticular.dificultadAprendizaje, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -742,6 +828,55 @@
                                                 <strong>4.3 ESTUDIANTES CON TALENTO EXTRAORDNARIO EN EL SEP </strong>(Registrar, si el informe psicopedagógico establece que es estudiante con talento extraordinario)
                                             </div>
                                         </div>
+                                        <div class="row form-group">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>4.3.1 COEFICIENTE INTELECTUAL</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formCaracteristicaParticular.coeficienteIntelectual, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>4.3.2 PROMEDIO DE CALIFICACIONES</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formCaracteristicaParticular.promedioCalificaciones, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>4.3.3 TIPO DE TALENTO EXTRAORDINARIO</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formCaracteristicaParticular.talentoExtraordinario, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>4.3.4 ESTRATEGIAS DE ATENCIÓN INTEGRAL</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formCaracteristicaParticular.estrategiaAtencionIntegral, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12">
                                                 <hr class="separador">
@@ -751,37 +886,37 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.4.1. ¿Tiene acceso a agua por cañeria de red?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.agua, {'attr':{'class':'jupper'} }) }}
+                                                {{ form_widget(formCaracteristicaParticular.agua, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <label class="col-md-6">4.4.2. ¿Tiene baño en su vivienda?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.banio, {'attr':{'class':'jupper'} }) }}
+                                                {{ form_widget(formCaracteristicaParticular.banio, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <label class="col-md-6">4.4.3. ¿Tiene red de alcantarillado?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.alcantarillado, {'attr':{'class':'jupper'} }) }}
+                                                {{ form_widget(formCaracteristicaParticular.alcantarillado, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <label class="col-md-6">4.4.4. ¿Tiene energia electrica para alumbrar su vivienda?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.energiaElectrica, {'attr':{'class':'jupper'} }) }}
+                                                {{ form_widget(formCaracteristicaParticular.energiaElectrica, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <label class="col-md-6">4.4.5. ¿Cuenta con servicio de recojo de basura?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.recojoBasura, {'attr':{'class':'jupper'} }) }}
+                                                {{ form_widget(formCaracteristicaParticular.recojoBasura, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <label class="col-md-6">4.4.6. ¿El baño de su vivienda está adaptado para personas con discapacidad?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                CHECKBOX CON OPCION SI NO POCO
+                                                {# {{ form_widget(formCaracteristicaParticular.banioAdaptado, {'attr':{'class':'jupper'} }) }} #}
                                             </div>
                                         </div>
 
@@ -794,31 +929,37 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.5.1. ¿Usa la radio?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                CHECKBOX CON OPCION SI NO
+                                                {{ form_widget(formCaracteristicaParticular.radio, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <label class="col-md-6">4.5.2. ¿Usa el televisor?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                CHECKBOX CON OPCION SI NO
+                                                {{ form_widget(formCaracteristicaParticular.televisor, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <label class="col-md-6">4.5.3. ¿Usa el teléfono?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                CHECKBOX CON OPCION SI NO
+                                                {{ form_widget(formCaracteristicaParticular.telefono, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <label class="col-md-6">4.5.4. ¿Usa el celular?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                CHECKBOX CON OPCION SI NO
+                                                {{ form_widget(formCaracteristicaParticular.celular, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
                                             <label class="col-md-6">4.5.5. ¿Usa la computadora?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                CHECKBOX CON OPCION SI NO
+                                                {{ form_widget(formCaracteristicaParticular.computadora, {'attr':{'class':'jupper'} }) }}
+                                            </div>
+                                        </div>
+                                        <div class="row form-group">
+                                            <label class="col-md-6">4.5.5. ¿Usa la internet?</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                {{ form_widget(formCaracteristicaParticular.internet, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
 
@@ -831,14 +972,14 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.6.1. La o el estudiante accede a internet en: (puede marcar más de una)</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.accesoInternet, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
+                                                {{ form_widget(formCaracteristicaParticular.accesoInternet, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
                                             </div>
                                         </div>
                                         <fieldset id="fieldsetInternet">
                                             <div class="row form-group">
-                                                <label class="col-md-6">4.6.2. ¿Con que frecuencia usa internet? (puede marcar más de una)</label>
+                                                <label class="col-md-6">4.6.2. ¿Con que frecuencia usa internet? (marque solo una opción)</label>
                                                 <div class="col-md-6 col-sm-6">
-                                                    {{ form_widget(formSocioeconomico.frecuenciaUsoInternetTipo, {'attr':{'class':'form-control jupper validar'} }) }}
+                                                    {{ form_widget(formCaracteristicaParticular.frecuenciaUsoInternetTipo, {'attr':{'class':'form-control jupper validar'} }) }}
                                                 </div>
                                             </div>
                                         </fieldset>
@@ -852,747 +993,75 @@
                                     </form>
                                 </fieldset>
                             </div>
+
                             <div {% if rude.registroFinalizado == 4 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab5">
                                 <fieldset class="fieldset">
-                                    <legend class="legend">V. DATOS DEL PADRE, MADRE O TUTOR(A) DE LA O EL ESTUDIANTE tab 5</legend>
-                                    <form id="formConQuienVive">
-                                        <div class="row form-group">
-                                            <label class="col-md-6">5.1 LA O EL ESTUDIANTE VIVE HABITUALMENTE CON:</label>
+                                    <legend class="legend">V. DATOS DE INSCRIPCIÓN DE LA GESTIÓN ACTUAL</legend>
+                                    <form id="formInscripcionActual" onsubmit="saveFormInscripcionActual(); return false;">
+                                        {{ form_widget(formInscripcionActual.id) }}
+                                        <div class="row form-group mt-5">
+                                            <label class="col-md-6"><strong>5.1 PARALELO</strong></label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formConQuienVive.viveHabitualmenteTipo, {'attr':{'class':'form-control jupper'} }) }}
+                                                <input type="text" name="" class="form-control jupper">
                                             </div>
                                         </div>
-                                        {{ form_widget(formConQuienVive) }}
+                                        <div class="row form-group mt-5">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p><strong>5.2 DISCAPACIDAD AUDITIVA</strong> (Marque el año de escolaridad con una "X")</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input type="text" name="" class="form-control jupper">
+                                            </div>
+                                        </div>
+                                        <div class="row form-group mt-5">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p><strong>5.3 DISCAPACIDAD INTELECTUAL / MÚLTIPLE</strong> (Marque el año de escolaridad con una "X")</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input type="text" name="" class="form-control jupper">
+                                            </div>
+                                        </div>
+                                        <div class="row form-group mt-5">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p><strong>5.4 DISCAPACIDAD VISUAL - PROGRAMAS</strong> (Marque el programa con una "X")</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input type="text" name="" class="form-control jupper">
+                                            </div>
+                                        </div>
+                                        <div class="row form-group mt-5">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p><strong>5.5 ATENCIÓN EDUCATIVA EN MODALIDAD INDIRECTA</strong> (Complete la información en los cuadros siguientes)</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input type="text" name="" class="form-control jupper">
+                                            </div>
+                                        </div>
+                                        <div class="row form-group mt-5">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p><strong>5.6 FORMACIÓN TÉCNICA PRODUCTIVA</strong></p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input type="text" name="" class="form-control jupper">
+                                            </div>
+                                        </div>
+                                        <div class="row form-group mt-5">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p><strong>5.7 SERVICIOS MULTIDISCIPLINARIOS QUE RECIBE LA O EL ESTUDIANTE</strong> (Puede marcar más de una opción)</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input type="text" name="" class="form-control jupper">
+                                            </div>
+                                        </div>
+
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
                                     </form>
                                 </fieldset>
-                                
-                                
-                                {# <div class="ml-10"> #}
-                                    <div class="panel panel-tab rounded shadow">
-                                        
-                                        <!-- Start tabs heading -->
-                                        <div class="panel-heading no-padding">
-                                            <ul class="row nav nav-tabs nav-pills">
-                                                <li class="active col-md-4 col-sm-4 col-lg-4" style="float:left">
-                                                    <a id="tabPadre" href="#tab1-11" data-toggle="tab" aria-expanded="false">
-                                                        <i class="fa fa-user"></i>
-                                                        <span>6.1. DATOS DEL PADRE</span>
-                                                    </a>
-                                                </li>
-                                                <li class="col-md-4  col-sm-4 col-lg-4" style="float:right">
-                                                    <a id="tabTutor" href="#tab1-13" data-toggle="tab" aria-expanded="false">
-                                                        <i class="fa fa-user"></i>
-                                                        <span>6.3. DATOS DEL TUTOR(A)</span>
-                                                    </a>
-                                                </li>
-                                                <li class="col-md-4  col-sm-4 col-lg-4" style="float:right">
-                                                    <a id="tabMadre" href="#tab1-12" data-toggle="tab" aria-expanded="false">
-                                                        <i class="fa fa-user"></i>
-                                                        <span>6.2. DATOS DE LA MADRE</span>
-                                                    </a>
-                                                </li>
-                                                
-                                            </ul>
-                                        </div><!-- /.panel-heading -->
-                                        <!--/ End tabs heading -->
-                                        <!-- Start tabs content -->
-                                        <div class="panel-body">
-                                            <div class="tab-content">
-                                                <div class="tab-pane fade active in" id="tab1-11">
-                                                    <form id="formPadre" onsubmit="saveFormPadre(); return false;" method="post" {{ form_enctype(formPadre) }}>
-                                                        <div id="p_divTienePadre" style="text-align:center">
-                                                            <div class="radio">
-                                                                ¿Registrar datos del padre?&nbsp;&nbsp;
-                                                                <label>
-                                                                    <input type="radio" name="p_tienePadre" id="tienePadre1" value="1" onclick="p_validarTienePadre();" {% if padre.id != 'nuevo' %} checked {% endif %}>
-                                                                    Si
-                                                                </label>
-                                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                                                <label>
-                                                                    <input type="radio" name="p_tienePadre" id="tienePadre0" value="0" onclick="p_validarTienePadre();" {% if padre.id == 'nuevo' %} checked {% endif %}>
-                                                                    No
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div id="p_divPadre">
-                                                            <div class="col-md-8">
-                                                                <fieldset class="fieldset">
-                                                                    <br>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Cédula de identidad </label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.carnet, {'id':'p_carnet','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Complemento</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.complemento, {'id':'p_complemento','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Expedido</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.expedido, {'id':'p_expedido','attr':{'class':'form-control jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Apellido paterno</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.paterno, {'id':'p_paterno','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Apellido materno</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.materno, {'id':'p_materno','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Nombre(s)</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.nombre, {'id':'p_nombre','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Fecha de Nacimiento</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.fechaNacimiento, {'id':'p_fechaNacimiento','attr':{'class':'form-control readonly'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Género</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.genero, {'id':'p_genero','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Correo electrónico</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.correo, {'id':'p_correo','attr':{'class':'form-control', 'autocomplete':'off'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Celular</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.celular, {'id':'p_celular','attr':{'class':'form-control', 'autocomplete':'off'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Teléfono</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.telefono, {'id':'p_telefono','attr':{'class':'form-control', 'autocomplete':'off'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Idioma que habla frecuentemente</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.idiomaMaterno, {'id':'p_idioma','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Ocupación laboral actual</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.ocupacion, {'id':'p_ocupacion','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row" id="p_filaOtroOcupacion">
-                                                                        <label class="col-md-6">Especificar otra ocupación</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.empleo, {'id':'p_ocupacionOtro','attr':{'class':'form-control jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Mayor grado de instrucción alcanzado</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.instruccionTipo, {'id':'p_instruccion','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">¿Cuál es el parentesco?</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formPadre.apoderadoTipo, {'id':'p_parentesco','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    {{ form_widget(formPadre.idInscripcion, {'id':'p_idInscripcion'}) }}
-                                                                    {{ form_widget(formPadre.id, {'id':'p_id'}) }}
-                                                                    {{ form_widget(formPadre.idPersona, {'id':'p_idPersona'}) }}
-                                                                    {{ form_widget(formPadre.idDatos, {'id':'p_idDatos'}) }}
-                                                                    {{ form_widget(formPadre) }}
-                                                                    <input type="hidden" name="tipo" value="padre">
-                                                                </fieldset>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div id="p_mensaje">Opciones</div>
-                                                                <div id="p_opciones">
-                                                                    {% if padre.segipId is not null %}
-                                                                        <div id="p_top1" style="padding:10px; border:1px solid #cccccc">
-                                                                            <p>El estudiante ya tiene un padre asignado, puede actualizar los datos que son permitidos.</p>
-                                                                            <!--button type="button" class="btn btn-success btn-block" onclick="p_correcto();">Si, son correctos</button-->
-                                                                            <hr>
-                                                                            <p>Si los datos del padre son incorrectos debe cambiarlo.</p>
-                                                                            <button type="button" class="btn btn-warning btn-block" onclick="p_cambiar();">Cambiar datos padre</button>
-                                                                        </div>
-                                                                        <div id="p_top2" style="padding:10px; border:1px solid #cccccc; display:none">
-                                                                            <p>Para buscar datos del padre, debe introducir los siguientes campos.</p>
-                                                                            {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
-                                                                                <p class="sinCarnet">
-                                                                                    <label><input type="checkbox" id="pb_sinCarnet" autocomplete="off"> El padre no cuenta con carnet</label>
-                                                                                </p>
-                                                                            {% endif %}
-                                                                            <div class="form-check form-check-inline">
-                                                                              <input class="form-check-input" type="checkbox" name="pb_es_extranjero" id="pb_es_extranjero" value="1">
-                                                                              <label class="form-check-label" for="pb_es_extranjero">Diplomático/Extranjero <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si inscribe a una persona extranjera o diplomática."></i></label>
-                                                                            </div>
-                                                                            <div class="div-identificacion-extranjeros" style="display:none">
-                                                                                <input type="text" name="pb_nro_identidad" autocomplete="off" id="pb_nro_identidad" autocomplete="off" class="form-control jupper" placeholder="Nro de identidad">
-                                                                            </div>
-                                                                            <div class="div-identificacion-nacionales">
-                                                                                <input type="text" name="pb_carnet" autocomplete="off" id="pb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
-                                                                                <input type="text" name="pb_complemento" autocomplete="off" id="pb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            </div>
-                                                                            <input type="text" name="pb_paterno" autocomplete="off" id="pb_paterno" autocomplete="off" class="form-control jupper" placeholder="Paterno" value="">
-                                                                            <input type="text" name="pb_materno" autocomplete="off" id="pb_materno" autocomplete="off" class="form-control jupper" placeholder="Materno" value="">
-                                                                            <input type="text" name="pb_nombre" autocomplete="off" id="pb_nombre" autocomplete="off" class="form-control jupper" placeholder="Nombre" value="">
-                                                                            <input type="text" name="pb_fechaNacimiento" autocomplete="off" id="pb_fechaNacimiento" autocomplete="off" class="form-control jupper" placeholder="Fecha de nacimiento" value="">
-
-                                                                            <div class="form-check form-check-inline">
-                                                                              <input class="form-check-input" type="checkbox" name="pb_es_extranjero_p_segip" id="pb_es_extranjero_p_segip" value="">
-                                                                              <label class="form-check-label" for="pb_es_extranjero_p_segip">Extranjero con Segip<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si la persona extranjera cuenta con registro segip"></i></label>
-                                                                            </div>
-
-                                                                            <button type="button" class="btn btn-block btn-info" onclick="p_buscarPadre();"> <i class="fa fa-search"></i> Buscar</button>
-                                                                        </div>
-                                                                    {% else %}
-                                                                        <div id="p_top2" style="padding:10px; border:1px solid #cccccc">
-                                                                            <p>Para buscar datos del padre, debe introducir los siguientes campos.</p>
-                                                                            {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
-                                                                                <p class="sinCarnet">
-                                                                                    <label><input type="checkbox" id="pb_sinCarnet" autocomplete="off"> El padre no cuenta con carnet</label>
-                                                                                </p>
-                                                                            {% endif %}
-                                                                            <div class="form-check form-check-inline">
-                                                                              <input class="form-check-input" type="checkbox" name="pb_es_extranjero" id="pb_es_extranjero" value="1">
-                                                                              <label class="form-check-label" for="pb_es_extranjero">Diplomático/Extranjero <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si inscribe a una persona extranjera o diplomática."></i></label>
-                                                                            </div>
-                                                                            <div class="div-identificacion-extranjeros" style="display:none">
-                                                                                <input type="text" name="pb_nro_identidad" autocomplete="off" id="pb_nro_identidad" autocomplete="off" class="form-control jupper" placeholder="Nro de identidad">
-                                                                            </div>
-                                                                            <div class="div-identificacion-nacionales">
-                                                                                <input type="text" name="pb_carnet" autocomplete="off" id="pb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
-                                                                                <input type="text" name="pb_complemento" autocomplete="off" id="pb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            </div>
-                                                                            <input type="text" name="pb_paterno" autocomplete="off" id="pb_paterno" autocomplete="off" class="form-control jupper" placeholder="Paterno" value="">
-                                                                            <input type="text" name="pb_materno" autocomplete="off" id="pb_materno" autocomplete="off" class="form-control jupper" placeholder="Materno" value="">
-                                                                            <input type="text" name="pb_nombre" autocomplete="off" id="pb_nombre" autocomplete="off" class="form-control jupper" placeholder="Nombre" value="">
-                                                                            <input type="text" name="pb_fechaNacimiento" autocomplete="off" id="pb_fechaNacimiento" autocomplete="off" class="form-control jupper" placeholder="Fecha de nacimiento" value="">
-
-                                                                            <div class="form-check form-check-inline">
-                                                                              <input class="form-check-input" type="checkbox" name="pb_es_extranjero_p_segip" id="pb_es_extranjero_p_segip" value="">
-                                                                              <label class="form-check-label" for="pb_es_extranjero_p_segip">Extranjero con Segip<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si la persona extranjera cuenta con registro segip"></i></label>
-                                                                            </div>
-
-                                                                            <button type="button" class="btn btn-block btn-info" onclick="p_buscarPadre();"> <i class="fa fa-search"></i> Buscar</button>
-                                                                        </div>
-                                                                    {% endif %}
-                                                                </div>
-                                                            </div>
-                                                            <div class="clearfix"></div>
-                                                        </div>
-
-                                                        <div class="panel-footer no-bg">
-                                                            <ul class="pager wizard no-margin">
-                                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
-                                                            </ul>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                                <div class="tab-pane fade" id="tab1-12">
-                                                    <form id="formMadre" onsubmit="saveFormMadre(); return false;" method="post">
-                                                        <div id="m_divTieneMadre" style="text-align:center">
-                                                            <div class="radio">
-                                                                ¿Registrar datos de la madre?&nbsp;&nbsp;
-                                                                <label>
-                                                                    <input type="radio" name="m_tieneMadre" id="tieneMadre1" value="1" onclick="m_validarTieneMadre();" {% if madre.id != 'nuevo' %} checked {% endif %}>
-                                                                    Si
-                                                                </label>
-                                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                                                <label>
-                                                                    <input type="radio" name="m_tieneMadre" id="tieneMadre0" value="0" onclick="m_validarTieneMadre();" {% if madre.id == 'nuevo' %} checked {% endif %}>
-                                                                    No
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div id="m_divMadre">
-                                                            <div class="col-md-8">
-                                                                <fieldset class="fieldset">
-                                                                    <br>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Cédula de identidad </label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.carnet, {'id':'m_carnet','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Complemento</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.complemento, {'id':'m_complemento','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Expedido</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.expedido, {'id':'m_expedido','attr':{'class':'form-control jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-
-                                                                   <div class="form-group row">
-                                                                        <label class="col-md-6">Estado civil</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <select id="m_estado_civil" name="form[estado_civil]" class="form-control jupper" >
-                                                                                <option value="">Seleccionar...</option>
-                                                                                {% for e in estadoCivilData %}
-                                                                                    {% set selected = (e.id==madre.estado_civil)?'selected':'' %}
-                                                                                    <option value="{{e.id}}" {{selected}}>{{e.estadoCivil}}</option>
-                                                                                {% endfor %}
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row div-m_apellido_esposo" style="display:none7">
-                                                                        <label class="col-md-6">Apellido esposo</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <input type="text" id="m_apellido_esposo" name="form[apellido_esposo]" class="form-control  jupper" value="{{madre.apellidoEsposo}}">
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Apellido paterno</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.paterno, {'id':'m_paterno','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Apellido materno</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.materno, {'id':'m_materno','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Nombre(s)</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.nombre, {'id':'m_nombre','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Fecha de Nacimiento</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.fechaNacimiento, {'id':'m_fechaNacimiento','attr':{'class':'form-control readonly'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Género</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.genero, {'id':'m_genero','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Correo electrónico</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.correo, {'id':'m_correo','attr':{'class':'form-control', 'autocomplete':'off'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Celular</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.celular, {'id':'m_celular','attr':{'class':'form-control', 'autocomplete':'off'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Teléfono</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.telefono, {'id':'m_telefono','attr':{'class':'form-control', 'autocomplete':'off'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Idioma que habla frecuentemente</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.idiomaMaterno, {'id':'m_idioma','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Ocupación laboral actual</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.ocupacion, {'id':'m_ocupacion','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row" id="m_filaOtroOcupacion">
-                                                                        <label class="col-md-6">Especificar otra ocupación</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.empleo, {'id':'m_ocupacionOtro','attr':{'class':'form-control jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Mayor grado de instrucción alcanzado</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.instruccionTipo, {'id':'m_instruccion','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">¿Cuál es el parentesco?</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formMadre.apoderadoTipo, {'id':'m_parentesco','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    {{ form_widget(formMadre.idInscripcion, {'id':'m_idInscripcion'}) }}
-                                                                    {{ form_widget(formMadre.id, {'id':'m_id'}) }}
-                                                                    {{ form_widget(formMadre.idPersona, {'id':'m_idPersona'}) }}
-                                                                    {{ form_widget(formMadre.idDatos, {'id':'m_idDatos'}) }}
-                                                                    {{ form_widget(formMadre) }}
-                                                                    <input type="hidden" name="tipo" value="madre">
-                                                                </fieldset>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div id="m_mensaje">Opciones</div>
-                                                                <div id="m_opciones">
-                                                                    {% if madre.segipId is not null %}
-                                                                        <div id="m_top1" style="padding:10px; border:1px solid #cccccc">
-                                                                            <p>El estudiante ya tiene una madre asignada, puede actualizar los datos que son permitidos.</p>
-                                                                            <!--button type="button" class="btn btn-success btn-block" onclick="m_correcto();">Si, son correctos</button-->
-                                                                            <hr>
-                                                                            <p>Si los datos de la madre son incorrectos debe cambiarlo.</p>
-                                                                            <button type="button" class="btn btn-warning btn-block" onclick="m_cambiar();">Cambiar datos madre</button>
-                                                                        </div>
-                                                                        <div id="m_top2" style="padding:10px; border:1px solid #cccccc; display:none">
-                                                                            <p>Para buscar datos de la madre, debe introducir los siguientes campos.</p>
-                                                                            {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
-                                                                                <p class="sinCarnet">
-                                                                                    <label><input type="checkbox" id="mb_sinCarnet" autocomplete="off"> La madre no cuenta con carnet</label>
-                                                                                </p>
-                                                                            {% endif %}
-                                                                            <div class="form-check form-check-inline">
-                                                                              <input class="form-check-input" type="checkbox" name="mb_es_extranjero" id="mb_es_extranjero" value="1">
-                                                                              <label class="form-check-label" for="mb_es_extranjero">Diplomático/Extranjero <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si inscribe a una persona extranjera o diplomática."></i></label>
-                                                                            </div>
-                                                                            <div class="mdiv-identificacion-extranjeros" style="display:none">
-                                                                                <input type="text" name="mb_nro_identidad" autocomplete="off" id="mb_nro_identidad" autocomplete="off" class="form-control jupper" placeholder="Nro de identidad">
-                                                                            </div>
-                                                                            <div class="mdiv-identificacion-nacionales">
-                                                                                <input type="text" name="mb_carnet" autocomplete="off" id="mb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
-                                                                                <input type="text" name="mb_complemento" autocomplete="off" id="mb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            </div>
-                                                                            <!--
-                                                                            <input type="text" name="mb_carnet" autocomplete="off" id="mb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
-                                                                            <input type="text" name="mb_complemento" autocomplete="off" id="mb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            -->
-                                                                            <input type="text" name="mb_paterno" autocomplete="off" id="mb_paterno" autocomplete="off" class="form-control jupper" placeholder="Paterno" value="">
-                                                                            <input type="text" name="mb_materno" autocomplete="off" id="mb_materno" autocomplete="off" class="form-control jupper" placeholder="Materno" value="">
-                                                                            <input type="text" name="mb_nombre" autocomplete="off" id="mb_nombre" autocomplete="off" class="form-control jupper" placeholder="Nombre" value="">
-                                                                            <input type="text" name="mb_fechaNacimiento" autocomplete="off" id="mb_fechaNacimiento" autocomplete="off" class="form-control jupper" placeholder="Fecha de nacimiento" value="">
-
-                                                                            <div class="form-check form-check-inline">
-                                                                              <input class="form-check-input" type="checkbox" name="pb_es_extranjero_m_segip" id="pb_es_extranjero_m_segip" value="">
-                                                                              <label class="form-check-label" for="pb_es_extranjero_m_segip">Extranjero con Segip<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si la persona extranjera cuenta con registro segip"></i></label>
-                                                                            </div>
-
-                                                                            <button type="button" class="btn btn-block btn-info" onclick="m_buscarMadre();"> <i class="fa fa-search"></i> Buscar</button>
-                                                                        </div>
-                                                                    {% else %}
-                                                                        <div id="m_top2" style="padding:10px; border:1px solid #cccccc">
-                                                                            <p>Para buscar datos de la madre, debe introducir los siguientes campos.</p>
-                                                                            {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
-                                                                                <p class="sinCarnet">
-                                                                                    <label><input type="checkbox" id="mb_sinCarnet" autocomplete="off"> La madre no cuenta con carnet</label>
-                                                                                </p>
-                                                                            {% endif %}
-                                                                            <div class="form-check form-check-inline">
-                                                                              <input class="form-check-input" type="checkbox" name="mb_es_extranjero" id="mb_es_extranjero" value="1">
-                                                                              <label class="form-check-label" for="mb_es_extranjero">Diplomático/Extranjero <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si inscribe a una persona extranjera o diplomática."></i></label>
-                                                                            </div>
-                                                                            <div class="mdiv-identificacion-extranjeros" style="display:none">
-                                                                                <input type="text" name="mb_nro_identidad" autocomplete="off" id="mb_nro_identidad" autocomplete="off" class="form-control jupper" placeholder="Nro de identidad">
-                                                                            </div>
-                                                                            <div class="mdiv-identificacion-nacionales">
-                                                                                <input type="text" name="mb_carnet" autocomplete="off" id="mb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
-                                                                                <input type="text" name="mb_complemento" autocomplete="off" id="mb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            </div>
-                                                                            <!--
-                                                                            <input type="text" name="mb_carnet" autocomplete="off" id="mb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
-                                                                            <input type="text" name="mb_complemento" autocomplete="off" id="mb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            -->
-                                                                            <input type="text" name="mb_paterno" autocomplete="off" id="mb_paterno" autocomplete="off" class="form-control jupper" placeholder="Paterno" value="">
-                                                                            <input type="text" name="mb_materno" autocomplete="off" id="mb_materno" autocomplete="off" class="form-control jupper" placeholder="Materno" value="">
-                                                                            <input type="text" name="mb_nombre" autocomplete="off" id="mb_nombre" autocomplete="off" class="form-control jupper" placeholder="Nombre" value="">
-                                                                            <input type="text" name="mb_fechaNacimiento" autocomplete="off" id="mb_fechaNacimiento" autocomplete="off" class="form-control jupper" placeholder="Fecha de nacimiento" value="">
-
-                                                                            <div class="form-check form-check-inline">
-                                                                              <input class="form-check-input" type="checkbox" name="pb_es_extranjero_m_segip" id="pb_es_extranjero_m_segip" value="">
-                                                                              <label class="form-check-label" for="pb_es_extranjero_m_segip">Extranjero con Segip<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si la persona extranjera cuenta con registro segip"></i></label>
-                                                                            </div>
-
-                                                                            <button type="button" class="btn btn-block btn-info" onclick="m_buscarMadre();"> <i class="fa fa-search"></i> Buscar</button>
-                                                                        </div>
-                                                                    {% endif %}
-                                                                </div>
-                                                            </div>
-                                                            <div class="clearfix"></div>
-                                                        </div>
-
-                                                        <div class="panel-footer no-bg">
-                                                            <ul class="pager wizard no-margin">
-                                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
-                                                            </ul>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                                <div class="tab-pane fade" id="tab1-13">
-                                                    <form id="formTutor" onsubmit="saveFormTutor(); return false;" method="post">
-                                                        <div id="t_divTieneTutor" style="text-align:center">
-                                                            <div class="radio">
-                                                                ¿Registrar datos del tutor?&nbsp;&nbsp;
-                                                                <label>
-                                                                    <input type="radio" name="t_tieneTutor" id="tieneTutor1" value="1" onclick="t_validarTieneTutor();" {% if tutor.id != 'nuevo' %} checked {% endif %}>
-                                                                    Si
-                                                                </label>
-                                                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                                                <label>
-                                                                    <input type="radio" name="t_tieneTutor" id="tieneTutor0" value="0" onclick="t_validarTieneTutor();" {% if tutor.id == 'nuevo' %} checked {% endif %}>
-                                                                    No
-                                                                </label>
-                                                            </div>
-                                                        </div>
-                                                        <hr>
-                                                        <div id="t_divTutor">
-                                                            <div class="col-md-8">
-                                                                <fieldset class="fieldset">
-                                                                    <br>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Cédula de identidad no </label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.carnet, {'id':'t_carnet','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Complemento</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.complemento, {'id':'t_complemento','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Expedido</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.expedido, {'id':'t_expedido','attr':{'class':'form-control jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Estado civil</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <select id="t_estado_civil" name="form[estado_civil]" class="form-control jupper" >
-                                                                                <option value="">Seleccionar...</option>
-                                                                                {% for e in estadoCivilData %}
-                                                                                    {% set selected = (e.id==tutor.estado_civil)?'selected':'' %}
-                                                                                    <option value="{{e.id}}" {{selected}}>{{e.estadoCivil}}</option>
-                                                                                {% endfor %}
-                                                                            </select>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row div-m_apellido_esposo" style="display:none7">
-                                                                        <label class="col-md-6">Apellido esposo</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            <input type="text" id="t_apellido_esposo" name="form[apellido_esposo]" class="form-control  jupper" value="{{tutor.apellidoEsposo}}">
-                                                                        </div>
-                                                                    </div>
-
-                                                                    {# {% endif %} #}
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Apellido paterno</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.paterno, {'id':'t_paterno','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Apellido materno</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.materno, {'id':'t_materno','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Nombre(s)</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.nombre, {'id':'t_nombre','attr':{'class':'form-control readonly jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Fecha de Nacimiento</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.fechaNacimiento, {'id':'t_fechaNacimiento','attr':{'class':'form-control readonly'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Género</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.genero, {'id':'t_genero','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Correo electrónico</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.correo, {'id':'t_correo','attr':{'class':'form-control', 'autocomplete':'off'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Celular</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.celular, {'id':'t_celular','attr':{'class':'form-control', 'autocomplete':'off'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Teléfono</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.telefono, {'id':'t_telefono','attr':{'class':'form-control', 'autocomplete':'off'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Idioma que habla frecuentemente</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.idiomaMaterno, {'id':'t_idioma','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Ocupación laboral actual</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.ocupacion, {'id':'t_ocupacion','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row" id="t_filaOtroOcupacion">
-                                                                        <label class="col-md-6">Especificar otra ocupación</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.empleo, {'id':'t_ocupacionOtro','attr':{'class':'form-control jupper'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">Mayor grado de instrucción alcanzado</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.instruccionTipo, {'id':'t_instruccion','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group row">
-                                                                        <label class="col-md-6">¿Cuál es el parentesco?</label>
-                                                                        <div class="col-md-6 col-sm-6">
-                                                                            {{ form_widget(formTutor.apoderadoTipo, {'id':'t_parentesco','attr':{'class':'form-control'} }) }}
-                                                                        </div>
-                                                                    </div>
-                                                                    {{ form_widget(formTutor.idInscripcion, {'id':'t_idInscripcion'}) }}
-                                                                    {{ form_widget(formTutor.id, {'id':'t_id'}) }}
-                                                                    {{ form_widget(formTutor.idPersona, {'id':'t_idPersona'}) }}
-                                                                    {{ form_widget(formTutor.idDatos, {'id':'t_idDatos'}) }}
-                                                                    {{ form_widget(formTutor) }}
-                                                                    <input type="hidden" name="tipo" value="tutor">
-                                                                </fieldset>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div id="t_mensaje">Opciones</div>
-                                                                <div id="t_opciones">
-                                                                    {% if tutor.segipId is not null %}
-                                                                        <div id="t_top1" style="padding:10px; border:1px solid #cccccc">
-                                                                            <p>El estudiante ya tiene un tutor asignado, puede actualizar los datos que son permitidos.</p>
-                                                                            <!--button type="button" class="btn btn-success btn-block" onclick="t_correcto();">Si, son correctos</button-->
-                                                                            <hr>
-                                                                            <p>Si los datos ddel tutor son incorrectos debe cambiarlo.</p>
-                                                                            <button type="button" class="btn btn-warning btn-block" onclick="t_cambiar();">Cambiar datos tutor</button>
-                                                                        </div>
-                                                                        <div id="t_top2" style="padding:10px; border:1px solid #cccccc; display:none">
-                                                                            <p>Para buscar datos del tutor, debe introducir los siguientes campos.</p>
-                                                                            {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
-                                                                                <p class="sinCarnet">
-                                                                                    <label><input type="checkbox" id="tb_sinCarnet" autocomplete="off"> El tutor no cuenta con carnet</label>
-                                                                                </p>
-                                                                            {% endif %}
-                                                                            <div class="form-check form-check-inline">
-                                                                              <input class="form-check-input" type="checkbox" name="tb_es_extranjero" id="tb_es_extranjero" value="1">
-                                                                              <label class="form-check-label" for="tb_es_extranjero">Diplomático/Extranjero <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si inscribe a una persona extranjera o diplomática."></i></label>
-                                                                            </div>
-                                                                            <div class="tdiv-identificacion-extranjeros" style="display:none">
-                                                                                <input type="text" name="tb_nro_identidad" autocomplete="off" id="tb_nro_identidad" autocomplete="off" class="form-control jupper" placeholder="Nro de identidad">
-                                                                            </div>
-                                                                            <div class="tdiv-identificacion-nacionales">
-                                                                                <input type="text" name="tb_carnet" autocomplete="off" id="tb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
-                                                                                <input type="text" name="tb_complemento" autocomplete="off" id="tb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            </div>
-                                                                            <!--
-                                                                            <input type="text" name="tb_carnet" autocomplete="off" id="tb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
-                                                                            <input type="text" name="tb_complemento" autocomplete="off" id="tb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            -->
-                                                                            <input type="text" name="tb_paterno" autocomplete="off" id="tb_paterno" autocomplete="off" class="form-control jupper" placeholder="Paterno" value="">
-                                                                            <input type="text" name="tb_materno" autocomplete="off" id="tb_materno" autocomplete="off" class="form-control jupper" placeholder="Materno" value="">
-                                                                            <input type="text" name="tb_nombre" autocomplete="off" id="tb_nombre" autocomplete="off" class="form-control jupper" placeholder="Nombre" value="">
-                                                                            <input type="text" name="tb_fechaNacimiento" autocomplete="off" id="tb_fechaNacimiento" autocomplete="off" class="form-control jupper" placeholder="Fecha de nacimiento" value="">
-
-                                                                            <div class="form-check form-check-inline">
-                                                                              <input class="form-check-input" type="checkbox" name="pb_es_extranjero_t_segip" id="pb_es_extranjero_t_segip" value="">
-                                                                              <label class="form-check-label" for="pb_es_extranjero_t_segip">Extranjero con Segip<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si la persona extranjera cuenta con registro segip"></i></label>
-                                                                            </div>
-
-                                                                            <button type="button" class="btn btn-block btn-info" onclick="t_buscarTutor();"> <i class="fa fa-search"></i> Buscar</button>
-                                                                        </div>
-                                                                    {% else %}
-                                                                        <div id="t_top2" style="padding:10px; border:1px solid #cccccc">
-                                                                            <p>Para buscar datos del tutor, debe introducir los siguientes campos.</p>
-                                                                            {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
-                                                                                <p class="sinCarnet">
-                                                                                    <label><input type="checkbox" id="tb_sinCarnet" autocomplete="off"> El tutor no cuenta con carnet</label>
-                                                                                </p>
-                                                                            {% endif %}
-                                                                            <div class="form-check form-check-inline">
-                                                                              <input class="form-check-input" type="checkbox" name="tb_es_extranjero" id="tb_es_extranjero" value="1">
-                                                                              <label class="form-check-label" for="tb_es_extranjero">Diplomático/Extranjero <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si inscribe a una persona extranjera o diplomática."></i></label>
-                                                                            </div>
-                                                                            <div class="tdiv-identificacion-extranjeros" style="display:none">
-                                                                                <input type="text" name="tb_nro_identidad" autocomplete="off" id="tb_nro_identidad" autocomplete="off" class="form-control jupper" placeholder="Nro de identidad">
-                                                                            </div>
-                                                                            <div class="tdiv-identificacion-nacionales">
-                                                                                <input type="text" name="tb_carnet" autocomplete="off" id="tb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
-                                                                                <input type="text" name="tb_complemento" autocomplete="off" id="tb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            </div>
-                                                                            <!--
-                                                                            <input type="text" name="tb_carnet" autocomplete="off" id="tb_carnet" autocomplete="off" class="form-control jupper" placeholder="Nro de Carnet" value="">
-                                                                            <input type="text" name="tb_complemento" autocomplete="off" id="tb_complemento" autocomplete="off" class="form-control jupper" placeholder="Complemento" maxlength="2" data-toggle="popover" data-placement="top" data-title="{{ayudaComplemento[0]}}" data-content="{{ayudaComplemento[1]}}" data-trigger="focus">
-                                                                            -->
-                                                                            <input type="text" name="tb_paterno" autocomplete="off" id="tb_paterno" autocomplete="off" class="form-control jupper" placeholder="Paterno" value="">
-                                                                            <input type="text" name="tb_materno" autocomplete="off" id="tb_materno" autocomplete="off" class="form-control jupper" placeholder="Materno" value="">
-                                                                            <input type="text" name="tb_nombre" autocomplete="off" id="tb_nombre" autocomplete="off" class="form-control jupper" placeholder="Nombre" value="">
-                                                                            <input type="text" name="tb_fechaNacimiento" autocomplete="off" id="tb_fechaNacimiento" autocomplete="off" class="form-control jupper" placeholder="Fecha de nacimiento" value="">
-
-                                                                            <div class="form-check form-check-inline">
-                                                                              <input class="form-check-input" type="checkbox" name="pb_es_extranjero_t_segip" id="pb_es_extranjero_t_segip" value="">
-                                                                              <label class="form-check-label" for="pb_es_extranjero_t_segip">Extranjero con Segip<i class="fa fa-question-circle" data-toggle="tooltip" data-placement="top" title="Seleccione esta opción si la persona extranjera cuenta con registro segip"></i></label>
-                                                                            </div>
-                                                                            
-                                                                            <button type="button" class="btn btn-block btn-info" onclick="t_buscarTutor();"> <i class="fa fa-search"></i> Buscar</button>
-                                                                        </div>
-                                                                    {% endif %}
-                                                                </div>
-                                                            </div>
-                                                            <div class="clearfix"></div>
-                                                        </div>
-
-                                                        <div class="panel-footer no-bg">
-                                                            <ul class="pager wizard no-margin">
-                                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
-                                                            </ul>
-                                                        </div>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div><!-- /.panel-body -->
-                                        <!--/ End tabs content -->
-                                    </div>
-                                {# </div> #}
                             </div>
                             <div {% if rude.registroFinalizado == 5 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab6">
                                 <fieldset class="fieldset">
@@ -2390,7 +1859,7 @@
                                             </ul>
                                         </div>
                                     </div>
-                                </fieldset>                                
+                                </fieldset>
                             </div>
                             <!--/ End pager -->
                         </div><!-- /.panel-body -->
@@ -2405,6 +1874,10 @@
 <script type="text/javascript" src="{{asset('js/rudePadre.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/rudeMadre.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/rudeTutor.js')}}"></script>
+
+<script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery-validation/dist/jquery.validate.min.js')}}"></script>
+<script src="{{asset('webherramienta/assets/admin/js/pages/blankon.form.validation.js')}}"></script>
+
 <script type="text/javascript">
 
     // var paso = 1;
@@ -2455,7 +1928,7 @@
         if(discapacidad != ""){
             $.ajax({
                 type: 'get',
-                url: Routing.generate('info_estudiante_rude_nuevo_cargar_grado_discapacidad', {'discapacidad': discapacidad}),
+                url: Routing.generate('info_estudiante_rudees_nuevo_cargar_grado_discapacidad', {'discapacidad': discapacidad}),
                 beforeSend: function () {
                     $("#form_gradoDiscapacidad").empty();
                     $("#form_gradoDiscapacidad").append('<option value="">Seleccionar...</option>');
@@ -2487,6 +1960,7 @@
 
     $('#form_nacionOriginariaTipo').chosen({width: "100%"});
     $('#form_acudioCentro').chosen({width: "100%"});
+    $('#form_viveCon').chosen({width: "100%"});
     $('#form_viviendaOcupaTipo').chosen({width: "100%"});
     $('#form_accesoInternet').chosen({width: "100%"});
     $('#form_frecuenciaUsoInternetTipo').chosen({width: "100%"});
@@ -2514,12 +1988,12 @@
         if($('#form_tieneDiscapacidad_1').is(':checked')){
             $('#form_carnetIbc').val('');
             $('#form_carnetIbc').removeAttr('required');
-            $('#form_discapacidad').val('');
+            //$('#form_discapacidad').val('');
             $('#form_discapacidad').removeAttr('required');
-            $('#form_gradoDiscapacidad').val('');
+            //$('#form_gradoDiscapacidad').val('');
             $('#form_gradoDiscapacidad').removeAttr('required');
 
-            $('#fieldsetDiscapacidad').attr('disabled','disabled');            
+            $('#fieldsetDiscapacidad').attr('disabled','disabled');
         }else{
             $('#form_carnetIbc').attr('required','required');
             $('#form_discapacidad').attr('required','required');
@@ -2919,7 +2393,7 @@
         var vive = $('#form_viveHabitualmenteTipo').val();
         if(vive != ''){
             $.ajax({
-                url: Routing.generate('info_estudiante_rude_nuevo_save_formConQuienVive'),
+                url: Routing.generate('info_estudiante_rudees_nuevo_save_formConQuienVive'),
                 type: 'post',
                 data: data,
                 beforeSend: function(){
@@ -3043,10 +2517,23 @@
         }
     });
 
-    function saveFormSocioeconomicos(){
+    $('.option_tieneParientesDiscapacidad').on('change',function(e)
+    {
+        if (this.value == 1)
+        {
+            $('#div_tieneParientesDiscapacidad').show();
+        }
+        else
+        {
+            $('#div_tieneParientesDiscapacidad').hide();
+        }
+    });
+
+    function saveFormSocioeconomicos()
+    {
         var data = $('#formSocioeconomicos').serialize();
         $.ajax({
-            url: Routing.generate('info_estudiante_rude_nuevo_save_formSocioeconomicos'),
+            url: Routing.generate('info_estudiante_rudees_nuevo_save_formSocioeconomicos'),
             type: 'post',
             data: data,
             beforeSend: function(){
@@ -3057,6 +2544,52 @@
                 $('#paso4').parent('li').removeClass('disabled');
                 $('#paso4').attr('data-toggle','tab');
                 $('#paso4').click();
+                $('#tabPadre').click();
+            },
+            error: function(){
+                $('#cortina').css('display','none');
+            }
+        });
+    }
+
+    function saveFormCaracteristicasParticulares()
+    {
+        var data = $('#formCaracteristicasParticulares').serialize();
+        $.ajax({
+            url: Routing.generate('info_estudiante_rudees_nuevo_save_formCaracteristicasParticulares'),
+            type: 'post',
+            data: data,
+            beforeSend: function(){
+                $('#cortina').css('display','block');
+            },
+            success: function(data){
+                $('#cortina').css('display','none');
+                $('#paso5').parent('li').removeClass('disabled');
+                $('#paso5').attr('data-toggle','tab');
+                $('#paso5').click();
+                //$('#tabPadre').click();
+            },
+            error: function(){
+                $('#cortina').css('display','none');
+            }
+        });
+    }
+
+    function saveFormInscripcionActual()
+    {
+        var data = $('#formInscripcionActual').serialize();
+        $.ajax({
+            url: Routing.generate('info_estudiante_rudees_nuevo_save_formInscripcionActual'),
+            type: 'post',
+            data: data,
+            beforeSend: function(){
+                $('#cortina').css('display','block');
+            },
+            success: function(data){
+                $('#cortina').css('display','none');
+                $('#paso6').parent('li').removeClass('disabled');
+                $('#paso6').attr('data-toggle','tab');
+                $('#paso6').click();
                 $('#tabPadre').click();
             },
             error: function(){
