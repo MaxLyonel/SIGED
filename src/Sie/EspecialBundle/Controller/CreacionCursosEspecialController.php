@@ -309,7 +309,7 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('nivelTecnico','choice',array('label'=>'Nivel de Formación Técnica','choices'=>$nivelesTecnicoArray,'data'=> $nivelTecnico,'attr'=>array('class'=>'form-control')))
                     ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'attr'=>array('class'=>'form-control')))
                     ->add('fisicoMotor','choice',array('label'=>'Fisico-Motora','choices'=>array('Físico-Motora/Auditiva'=>'Físico-Motora/Auditiva','Físico-Motora/Visual'=>'Físico-Motora/Visual','Otro'=>'Otro'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
-                    ->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Auditiva/Multiple'=>'Auditiva/Multiple','Físico-Motora/Multiple'=>'Físico-Motora/Multiple','Intelectual/Múltiple'=>'Intelectual/Múltiple'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
+                    ->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Auditiva/Multiple'=>'Auditiva/Multiple','Físico-Motora/Multiple'=>'Físico-Motora/Multiple','Intelectual/Múltiple'=>'Intelectual/Múltiple', 'Visual/Auditiva'=>'Visual/Auditiva','Visual/Intelectual'=>'Visual/Intelectual' ),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
                     ->add('educacionCasa', CheckboxType::class, array('label'=>'Educación Sociocomunitaria en Casa','required' => false))
                     ->add('guardar','submit',array('label'=>'Crear Oferta','attr'=>array('class'=>'btn btn-primary')))
                     ->getForm();
@@ -548,7 +548,7 @@ class CreacionCursosEspecialController extends Controller {
         }
         elseif ($area == "2" ) {
             if($modalidad == 1){
-                $nivelesArray = array(405,410,411);
+                $nivelesArray = array(405,410,411); 
             }else{
                 $nivelesArray = array(410,411);
             }
@@ -556,7 +556,7 @@ class CreacionCursosEspecialController extends Controller {
         elseif ($area == "3" or $area == "5" ) { //intelectual - multiple
             
             if($modalidad == 1){
-                $nivelesArray = array(401,402,405,410,408);
+                $nivelesArray = array(401,402,405,410,408,411);
             }else{
                 $nivelesArray = array(410);
             }
@@ -669,8 +669,10 @@ class CreacionCursosEspecialController extends Controller {
     }
 
     public function listarServiciosAction($area,$nivel,$grado,$modalidad) {
+       // dump($area);dump($nivel);dump($grado);dump($modalidad);die;
         $em = $this->getDoctrine()->getManager();
         $this->session = new Session();
+        
         if ($area == "6" and $nivel == "410" and  $grado == "99" ) {
             if($modalidad == 1){
                 $servicios = array(1,2,3,4,5);
@@ -685,7 +687,7 @@ class CreacionCursosEspecialController extends Controller {
                 if($modalidad == 1){
                     $servicios = array(10,11,12,18,22); //--14,15
                 } else {
-                    $servicios = array(8,9,14,15,17,23,24);//8,9
+                    $servicios = array(8,9,17,23);//8,9
                 }
             }//array(8,9,10,11,12,14,15)
         }
@@ -694,7 +696,7 @@ class CreacionCursosEspecialController extends Controller {
                 $servicios = array(1,2,3,4,5);
             }else{
                 if($modalidad == 1 and ($area == "1" or $area == "3" or $area == "5" or $area == "4")){
-                    $servicios = array(1,2,3,4,5);
+                    $servicios = array(1,2,3,4,5,25);
                 }else{
                     $servicios = array(20);
                 }
@@ -756,6 +758,9 @@ class CreacionCursosEspecialController extends Controller {
         }
         elseif (($area == "3" or $area == "5") and $nivel == "411" and  $grado == "99" ) {
             $programas = array(99);
+            if ($this->session->get('idGestion') > 2020) {
+                $programas = array(28);
+            }
         }elseif ($area == "6" and $nivel == "411" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2020) {
                 $programas = array(1,2,3,4,5,6);
