@@ -471,32 +471,34 @@
                                                     <input type="radio" id="form_tieneDiscapacidad_1" name="form[tieneDiscapacidad]" required="required" value="0" checked="checked">
                                                     <label for="form_tieneDiscapacidad_1" class="required">No</label>
                                                 </div>
-                                                <div class="row form-group">
-                                                    <label class="col-md-4 col-sm-4">Oficialia Nº:</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                         {{ form_widget(formEstudiante.oficialia, {'attr':{'class':'form-control '} , 'value': formEstudiante.oficialia.vars.value  }) }} 
-                                                        {#<b>{{ formEstudiante.oficialia.vars.value }}</b>#}
+                                                <div id="secNacimiento">
+                                                    <div class="row form-group">
+                                                        <label class="col-md-4 col-sm-4">Oficialia Nº:</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            {{ form_widget(formEstudiante.oficialia, {'attr':{'class':'form-control '} , 'value': formEstudiante.oficialia.vars.value  }) }} 
+                                                            {#<b>{{ formEstudiante.oficialia.vars.value }}</b>#}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="row form-group">
-                                                    <label class="col-md-4 col-sm-4">Libro Nº:</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                         {{ form_widget(formEstudiante.libro, {'attr':{'class':'form-control '} , 'value': formEstudiante.libro.vars.value  }) }} 
-                                                        {#<b>{{ formEstudiante.libro.vars.value }}</b>#}
+                                                    <div class="row form-group">
+                                                        <label class="col-md-4 col-sm-4">Libro Nº:</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            {{ form_widget(formEstudiante.libro, {'attr':{'class':'form-control '} , 'value': formEstudiante.libro.vars.value  }) }} 
+                                                            {#<b>{{ formEstudiante.libro.vars.value }}</b>#}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="row form-group">
-                                                    <label class="col-md-4 col-sm-4">Partida Nº:</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                         {{ form_widget(formEstudiante.partida, {'attr':{'class':'form-control '} , 'value': formEstudiante.partida.vars.value  }) }} 
-                                                        {#<b>{{ formEstudiante.partida.vars.value }}</b>#}
+                                                    <div class="row form-group">
+                                                        <label class="col-md-4 col-sm-4">Partida Nº:</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            {{ form_widget(formEstudiante.partida, {'attr':{'class':'form-control '} , 'value': formEstudiante.partida.vars.value  }) }} 
+                                                            {#<b>{{ formEstudiante.partida.vars.value }}</b>#}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="row form-group">
-                                                    <label class="col-md-4 col-sm-4">Folio Nº:</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                         {{ form_widget(formEstudiante.folio, {'attr':{'class':'form-control '} , 'value': formEstudiante.folio.vars.value  }) }} 
-                                                        {#<b>{{ formEstudiante.folio.vars.value }}</b>#}
+                                                    <div class="row form-group">
+                                                        <label class="col-md-4 col-sm-4">Folio Nº:</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            {{ form_widget(formEstudiante.folio, {'attr':{'class':'form-control '} , 'value': formEstudiante.folio.vars.value  }) }} 
+                                                            {#<b>{{ formEstudiante.folio.vars.value }}</b>#}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -916,7 +918,7 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">4.4.6. ¿El baño de su vivienda está adaptado para personas con discapacidad?</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {# {{ form_widget(formCaracteristicaParticular.banioAdaptado, {'attr':{'class':'jupper'} }) }} #}
+                                                {{ form_widget(formCaracteristicaParticular.banioAdaptado, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
 
