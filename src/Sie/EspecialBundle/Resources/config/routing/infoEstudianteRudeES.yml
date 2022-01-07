@@ -44,11 +44,11 @@ info_estudiante_rudees_nuevo_save_formEstudiante:
 #         expose: true
 #
 ##DISCAPACDIDAD
-#info_estudiante_rudees_nuevo_cargar_grado_discapacidad:
-#    path:     /cargarGradoDiscapacidad
-#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeESNuevo:cargarGradoDiscapacidad" }
-#    options:
-#         expose: true
+info_estudiante_rudees_nuevo_cargar_grado_discapacidad:
+    path:     /cargarGradoDiscapacidad
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:cargarGradoDiscapacidad" }
+    options:
+         expose: true
 #
 info_estudiante_rudees_nuevo_save_formDireccion:
     path:     /saveFormDireccion
@@ -57,11 +57,28 @@ info_estudiante_rudees_nuevo_save_formDireccion:
          expose: true
 #
 ## SOCIOECONOMICO
-#info_estudiante_rudees_nuevo_save_formSocioeconomicos:
-#    path:     /saveFormSocioeconomicos
-#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeESNuevo:saveFormSocioeconomicos" }
-#    options:
-#         expose: true
+info_estudiante_rudees_nuevo_save_formSocioeconomicos:
+    path:     /saveFormSocioeconomicos
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormSocioeconomicos" }
+    options:
+         expose: true
+
+
+#CARACTERISTICAS PARTICULARES
+info_estudiante_rudees_nuevo_save_formCaracteristicasParticulares:
+    path:     /saveFormCaracteristicasParticulares
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormCaracteristicaParticular" }
+    options:
+         expose: true
+
+
+#INSCRIPCION ACTUAL
+info_estudiante_rudees_nuevo_save_formInscripcionActual:
+    path:     /saveFormInscripcionActual
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormInscripcionActual" }
+    options:
+         expose: true
+
 #
 ## BUSCAR PERSONA SERVICIO SEGIP
 #info_estudiante_rudees_nuevo_buscar_persona:
@@ -70,11 +87,12 @@ info_estudiante_rudees_nuevo_save_formDireccion:
 #    options:
 #         expose: true
 #
-#info_estudiante_rudees_nuevo_save_formConQuienVive:
-#    path:     /saveFormConQuienVive
-#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeESNuevo:saveFormConQuienVive" }
-#    options:
-#         expose: true
+
+info_estudiante_rudees_nuevo_save_formConQuienVive:
+    path:     /saveFormConQuienVive
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormConQuienVive" }
+    options:
+         expose: true
 #
 #info_estudiante_rudees_nuevo_save_formApoderado:
 #    path:     /saveFormApoderado
