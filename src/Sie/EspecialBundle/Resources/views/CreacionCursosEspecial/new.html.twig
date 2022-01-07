@@ -185,10 +185,12 @@
                         $("#form_grado").empty();
                         $("#form_programa").empty();
                         $("#form_servicio").empty();
+                        $("#form_nivelTecnico").empty();
                         $("#form_nivel").append('<option value="">Buscando...</option>');
                         $("#form_grado").append('<option value="">Buscando...</option>');
                         $("#form_programa").append('<option value="">Buscando...</option>');
                         $("#form_servicio").append('<option value="">Buscando...</option>');
+                        
                     },
                     success: function (data) {
                         $("#form_nivel").empty();
@@ -199,6 +201,7 @@
                         $("#form_grado").append('<option value="">Seleccionar...</option>');
                         $("#form_programa").append('<option value="">Seleccionar...</option>');
                         $("#form_servicio").append('<option value="">Seleccionar...</option>');
+                        
                         $.each(data.niveles, function (i, value) {
                             $("#form_nivel").append('<option value="' + i + '">' + value + '</option>');
                         });
@@ -211,6 +214,7 @@
         function listarGrados() {
             var area = $('#form_area').val();
             var nivel = $('#form_nivel').val();
+            
              if(nivel== 410){
                 $("#divservicio").show();
                 $("#divprograma").hide();
@@ -238,7 +242,7 @@
            
             $.ajax({
                 type: 'get',
-                url: Routing.generate('listar_grados_especial', {'nivel':nivel}),
+                url: Routing.generate('listar_grados_especial', {'nivel':nivel, 'area':area}),
                 beforeSend: function () {
                     $("#form_grado").empty();
                     $("#form_programa").empty();
@@ -251,6 +255,7 @@
                     $("#form_grado").empty();
                     $("#form_programa").empty();
                     $("#form_servicio").empty();
+                    $("#form_nivelTecnico").empty();
                     if(nivel != 410 && nivel != 411){
                         $("#form_grado").append('<option value="">Seleccionar...</option>');
                     }
@@ -261,7 +266,9 @@
                     });
                     //dropdown("#form_grado");
                     listarServicios();
-                    listarProgramas();
+                    listarProgramas();                    
+                    listarNivelesTecnicos();
+                   
                 }
             });
         }
@@ -325,6 +332,24 @@
                     }
                 });
             }
+        }
+
+         function listarNivelesTecnicos() {
+            var area = $('#form_area').val();
+            var nivel = $('#form_nivel').val();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('listar_nivelestecnicos_especial', {'area':area,'nivel':nivel}),
+                
+                success: function (data) {
+                    $("#form_nivelTecnico").append('<option value="">Seleccionar...</option>');    
+                    $.each(data.nivelestecnicos, function (i, value) {
+                        $("#form_nivelTecnico").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    
+                    dropdown("#form_nivelTecnico");
+                }
+            });
         }
 
         function validacion(){

@@ -25,11 +25,17 @@ listar_niveles_especial:
          expose: true
 
 listar_grados_especial:
-    path:     /listarGrados/{nivel}/
+    path:     /listarGrados/{nivel}/{area}
     defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:listarGrados"}
     options:
          expose: true
-         
+
+listar_nivelestecnicos_especial:
+    path:     /listarNivelesTecnicos/{nivel}/{area}
+    defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:listarNivelesTecnicos"}
+    options:
+         expose: true
+
 listar_servicios_especial:
     path:     /listarServicios/{area}/{nivel}/{grado}/{modalidad}
     defaults: { _controller: "SieEspecialBundle:CreacionCursosEspecial:listarServicios"}

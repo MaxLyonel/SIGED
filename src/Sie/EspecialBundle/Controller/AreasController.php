@@ -499,8 +499,10 @@ class AreasController extends Controller {
             $asignaturas = null;
             $programaServicio = null;
             $progSer = null;
-            //dump($idNivel); die;
+            //dump($idNivel); dump($idCurso); dump($idarea); die;
+
             switch($idNivel){
+                case 400: 
                 case 401: switch ($grado) {
                                 case 1:
                                 case 2:
@@ -524,7 +526,7 @@ class AreasController extends Controller {
                                     ->getResult();
                                     break;*/
                             }
-                            break;
+                 break;
                  case 408: $asignaturas = $em->createQuery(
                                 'SELECT at
                                 FROM SieAppWebBundle:AsignaturaTipo at
@@ -656,6 +658,15 @@ class AreasController extends Controller {
                                     )->setParameter('ids',array(32833, 32834, 1018, 1016)) //32832
                                     ->getResult();
                                     break;
+                                case 23: //---
+                                        $asignaturas = $em->createQuery(
+                                            'SELECT at
+                                            FROM SieAppWebBundle:AsignaturaTipo at
+                                            WHERE at.id IN (:ids)
+                                            ORDER BY at.id ASC'
+                                    )->setParameter('ids',array(850,851,852,853,854,855))
+                                    ->getResult();
+                                     break;
                                 case 25: //---
                                         $asignaturas = $em->createQuery(
                                             'SELECT at
@@ -688,7 +699,17 @@ class AreasController extends Controller {
                                     break;
                             }
                             break;
-                case 410:   $asignaturas = $em->createQuery(
+                case 410:   
+                            if($idarea==7){
+                                $asignaturas = $em->createQuery(
+                                    'SELECT at
+                                    FROM SieAppWebBundle:AsignaturaTipo at
+                                    WHERE at.id IN (:ids)
+                                    ORDER BY at.id ASC'
+                            )->setParameter('ids',array(856,857,858,859))
+                            ->getResult();                               
+                            } else{
+                                $asignaturas = $em->createQuery(
                                     'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
                                     WHERE at.id IN (:ids)
@@ -698,6 +719,8 @@ class AreasController extends Controller {
                             $programaServicio = $institucionCursoEspecial->getEspecialServicioTipo()->getServicio();
                             $esvisual = true;
                             $progSer = "Servicio";
+
+                            }
                             break;                            
                 case 11:    $asignaturas = $em->createQuery(
                                     'SELECT at
