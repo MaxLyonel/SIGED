@@ -1,0 +1,43 @@
+Sie\AppWebBundle\Entity\RudeVive:
+    type: entity
+    table: rude_vive
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        rudeId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: rude_id
+        viveCon:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: vive_con
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        viveOtro:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: vive_otro
+    lifecycleCallbacks: {  }
