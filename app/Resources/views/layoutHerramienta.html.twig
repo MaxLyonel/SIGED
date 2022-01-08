@@ -314,7 +314,8 @@
                                     <li><a href="{{ path('herramienta_infoconsolidation_index')}}">Consolidación Info</a></li>
                                     <li><a href="{{ path('registerforeignerperson_index')}}">Registro Diplomático/Extranjero</a></li>
                                 {% endif %}
-                                {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8  %}
+                                {# {% if app.session.get('roluser') == 7 or app.session.get('roluser') == 8   %} #}
+                                {% if app.session.get('roluser') in [7,8,10]  %}
                                     <li><a href="{{ path('herramienta_infoconsolidation_gestion_index')}}">Seguimiento Consolidación</a></li>
                                     <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li>
                                     <li><a href="{{ path('controlOperativoMenu')}}">Habilitar Operativo 1er. Trimestre</a></li>
