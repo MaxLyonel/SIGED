@@ -62,6 +62,7 @@
                                             <!-- <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Ver Detalle"><i class="fa fa-eye"></i></a>
                                             <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Acceder"><i class="fa fa-pencil"></i></a> -->
                                             <!-- <a href="#" class="btn btn-default btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></a> -->
+                                            {% if arrInfoCentroGestion.gestion < 2022%}
                                             <form action="{{path('info_especial_open')}}" method="post" style="display: inline-block">
 
                                                 <input type="hidden" id="form_idInstitucion" name="form[idInstitucion]" value="{{arrInfoCentroGestion.sie}}">
@@ -73,6 +74,9 @@
                                                 <!-- this is the new end-->
                                                 <button type="submit" class="btn btn-xs btn-default" data-toggle="tooltip" data-placement="top" data-original-title="Acceder"><i class="fa fa-cogs"></i></button>
                                             </form>
+                                            {% else %}
+                                            No disponible
+                                            {% endif %}
                                         </td>
                                     </tr>
                                   {% endfor %}
