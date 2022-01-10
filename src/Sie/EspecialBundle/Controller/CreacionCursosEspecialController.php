@@ -307,6 +307,7 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('servicio','choice',array('label'=>'Servicio','empty_value'=>'Seleccionar','attr'=>array('class'=>'form-control')))
                     ->add('tecnica','choice',array('label'=>'Técnica','choices'=>$tecnicas,'data'=> $tecnica,'attr'=>array('class'=>'form-control')))
                     ->add('nivelTecnico','choice',array('label'=>'Nivel de Formación Técnica','choices'=>$nivelesTecnicoArray,'data'=> $nivelTecnico,'attr'=>array('class'=>'form-control')))
+                    ->add('nivelTecnicoId','hidden',array('data'=> $nivelTecnico))
                     ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'attr'=>array('class'=>'form-control')))
                     ->add('fisicoMotor','choice',array('label'=>'Fisico-Motora','choices'=>array('Físico-Motora/Auditiva'=>'Físico-Motora/Auditiva','Físico-Motora/Visual'=>'Físico-Motora/Visual','Otro'=>'Otro'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
                     ->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Auditiva/Multiple'=>'Auditiva/Multiple','Físico-Motora/Multiple'=>'Físico-Motora/Multiple','Intelectual/Múltiple'=>'Intelectual/Múltiple', 'Visual/Auditiva'=>'Visual/Auditiva','Visual/Intelectual'=>'Visual/Intelectual' ),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
@@ -333,8 +334,16 @@ class CreacionCursosEspecialController extends Controller {
 
     public function createAction(Request $request){
         try{
-            //dump($request->get('form'));die;
+            
+           
             $form = $request->get('form');
+
+            if(isset($form['nivelTecnico'])){
+                $nivelTecnico = $form['nivelTecnico'];
+            }else{
+                $nivelTecnico = 99;
+            }
+            
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_especial');")->execute();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
@@ -369,7 +378,7 @@ class CreacionCursosEspecialController extends Controller {
                                 ->setParameter('area', $form['area'])
                                 ->setParameter('programa', $form['programa'])
                                 ->setParameter('servicio', $form['servicio'])
-                                ->setParameter('niveltecnico', $form['nivelTecnico'])
+                                ->setParameter('niveltecnico', $nivelTecnico)
                                 ->setParameter('tecnica', $form['tecnica']);
                                 $curso = $query->getResult();
 
@@ -432,7 +441,7 @@ class CreacionCursosEspecialController extends Controller {
                 $nuevo_curso->setEspecialProgramaTipo($em->getRepository('SieAppWebBundle:EspecialProgramaTipo')->find($form['programa']));
                 $nuevo_curso->setEspecialServicioTipo($em->getRepository('SieAppWebBundle:EspecialServicioTipo')->find($form['servicio']));
                 $nuevo_curso->setEspecialTecnicaEspecialidadTipo($em->getRepository('SieAppWebBundle:EspecialTecnicaEspecialidadTipo')->find($form['tecnica']));
-                $nuevo_curso->setEspecialNivelTecnicoTipo($em->getRepository('SieAppWebBundle:EspecialNivelTecnicoTipo')->find($form['nivelTecnico']));
+                $nuevo_curso->setEspecialNivelTecnicoTipo($em->getRepository('SieAppWebBundle:EspecialNivelTecnicoTipo')->find($nivelTecnico));
                 $nuevo_curso->setEspecialModalidadTipo($em->getRepository('SieAppWebBundle:EspecialModalidadTipo')->find($form['modalidad']));
                 $em->persist($nuevo_curso);
                 $em->flush();
