@@ -239,6 +239,28 @@
     width: 32px;
 }
 
+.fk-pdf {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 12px;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.fk-pdf-item {
+    text-align: center;
+    float: left;
+    width: 25%;
+}
+
+.fk-pdf-item a {
+    color: #111;
+}
+
+.fk-pdf-item a:hover {
+    color: #0676a4;
+}
+
 @media (max-width: 1199px) {
     .u-section-2 .u-sheet-1 {
         min-height: 849px;

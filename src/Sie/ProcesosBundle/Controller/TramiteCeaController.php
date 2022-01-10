@@ -398,7 +398,7 @@ class TramiteCeaController extends Controller
                     'estadoinstitucion' => $ie->getEstadoinstitucionTipo()
                 );
                 break;
-            case 45: //nuevo certifcado rue
+            case 74: //nuevo certifcado rue
                 $data = array(
                     'id' => $id,
                     'tramiteTipo' => $tramiteTipo,
@@ -696,10 +696,10 @@ class TramiteCeaController extends Controller
                     'constitucion' => 0
                 );
                 break;
-            case 45: //nuevo certifcado rue
-                $requisitos = array('legal' => true, 'infra' => false, 'admi' => false);
+            case 74: //nuevo certifcado rue
+                $requisitos = array('legal' => true, 'infra' => false, 'curri' => false);
                 $form = $form
-                    ->add('i_solicitud_nuevorue', 'file', array('label' => 'Adjuntar Informe Técnico circunstanciado de extravío del Original del Certificado RUE (Máximo permitido 3M):', 'required' => false, 'attr' => array('title' => "Adjuntar solicitud", 'accept' => "application/pdf,.img,.jpg")))
+                    ->add('i_solicitud_nuevorue', 'file', array('label' => 'Adjuntar Informe Técnico circunstanciado de extravío y/o deterioro del Original, dirigido a la Dirección Departamental de Educación, debiendo especificar el nombre, código del RUE del CEA, dependencia, niveles y áreas de atención para su reposición (Máximo permitido 3M):', 'required' => false, 'attr' => array('title' => "Adjuntar solicitud", 'accept' => "application/pdf,.img,.jpg")))
                     ->getForm();
                 $data = array(
                     'form' => $form->createView(),
@@ -738,17 +738,17 @@ class TramiteCeaController extends Controller
                 }
                 $form = $form
                     ->add('i_solicitud_apertura', 'file', array('label' => 'Adjuntar Solicitud de ' . $labelSolicitud . ' dirigida a la Dirección Distrital Educativa correspondiente (Máximo permitido 3M):', 'required' => false, 'attr' => array('title' => "Adjuntar solicitud", 'accept' => "application/pdf,.img,.jpg")))
-                    ->add('i_compromiso_apertura', 'checkbox', array('label' => 'Compromiso del Gobierno Autónomo Municipal que autorice la dotación y mantenimiento de la infraestructura, mobiliario, equipamiento y atención de servicios básicos (original).', 'required' => false))
+                    ->add('i_compromiso_apertura', 'checkbox', array('label' => 'Compromiso del Gobierno Autónomo Municipal que autorice la dotación y mantenimiento de la infraestructura, mobiliario, equipamiento y atención de servicios básicos (original), según corresponda.', 'required' => false))
                     ->add('i_actafundacion_apertura', 'file', array('label' => 'Adjuntar Acta de Fundación del Centro (Máximo permitido 3M):', 'required' => false, 'attr' => array('title' => "Adjuntar acta", 'accept' => "application/pdf,.img,.jpg")))
                     ->add('i_certdefuncion', 'file', array('label' => 'Certificado de defunción (en caso de llevar nombre de una persona fallecida meritoria), o reseña histórica (aprobada y/o emitida por la Comunidad) (Máximo permitido 3M):', 'required' => false, 'attr' => array('title' => "Adjuntar certificado", 'accept' => "application/pdf,.img,.jpg")))
-                    ->add('i_folio_apertura', 'checkbox', array('label' => 'Copia legalizada del Folio Real actualizado emitido por Derechos Reales o Testimonio de Propiedad de la Matricula Computarizada, en caso de capitales de departamento, CEA’s del área, requieren la certificación de los predios especificando el área educativa total.', 'required' => false));
+                    ->add('i_folio_apertura', 'checkbox', array('label' => 'Copia legalizada del Folio Real actualizado emitido por Derechos Reales o Testimonio de Propiedad de la Matricula Computarizada, en caso de capitales de departamento, CEA’s del área, requieren la certificación de los predios especificando el área educativa total, si corresponde.', 'required' => false));
                 if ($dependencia == 2) {
                     $form = $form
                         ->add('i_constitucion_apertura', 'checkbox', array('label' => 'Copia legalizada de Testimonio de Constitución de la Institución.', 'required' => false))
                         ->add('i_convenio_apertura', 'checkbox', array('label' => 'Convenio Interinstitucional vigente entre el Ministerio de Educación e Institución y/u Organización, que estipule garantizar la infraestructura, mobiliario, equipamiento y subvención.', 'required' => false));
                 }
                 $form = $form
-                    ->add('ii_planos_apertura', 'checkbox', array('label' => 'Planos aprobados por el Gobierno Autónomo Municipal correspondiente.', 'required' => false))
+                    ->add('ii_planos_apertura', 'checkbox', array('label' => 'Planos aprobados por el Gobierno Autónomo Municipal correspondiente, si corresponde.', 'required' => false))
                     ->add('ii_edificio_escolar', 'checkbox', array('label' => 'Formulario de Edificio Escolar (original).', 'required' => false))
                     ->add('ii_act_geografica', 'checkbox', array('label' => 'Formulario de Actualización Geográfica (original).', 'required' => false))
                     ->getForm();
@@ -1384,7 +1384,7 @@ class TramiteCeaController extends Controller
                     break;
                 case 72: //Reapertura
                     break;
-                case 45: //Nuevo Certificado RUE
+                case 74: //Nuevo Certificado RUE
                     $adjunto = $this->upload($files['i_solicitud_nuevorue'], $ruta);
                     if ($adjunto == '') {
                         $error_upload = true;
@@ -1944,7 +1944,7 @@ class TramiteCeaController extends Controller
                 case 69:
                 case 68:
                 case 72:
-                case 45:
+                case 74:
                     if (!isset($requisitos['Requisitos Legales'])) {
                         $requisitos['Requisitos Legales'] = 'Requisitos Legales';
                     }

@@ -71,10 +71,9 @@ $data = array(
     'id' => 3,
     'title' => 'Apertura de Centro de Educación Alternativa',
     'description' => '
-                <div>Para este proceso no es necesario contar un Usuario y contraseña, basta con ingresar a la
+                <div>Para este proceso no es necesario contar con Usuario y contraseña, basta con ingresar a la
                     página principal del <a href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-                    Académico de
-                    Educación Alternativa</a>.<br>Los requisitos son:</div>
+                    Académico de Educación Alternativa</a>.<br><br>Los requisitos son (Sección I del Reglamento):</div>
                 <ol>
                   <li>Carta de solicitud de apertura: Dirigida a la Dirección Distrital Educativa
                     correspondiente.</li>
@@ -135,7 +134,7 @@ $data = array(
                       </li>
                       <li>
                         <div class="u-list-icon">–</div>Informe Técnico del Director Distrital de Educación.
-                        (Original)
+                        (Original).
                       </li>
                     </ul>
                   </li>
@@ -177,7 +176,7 @@ $data = array(
     'description' => '
         <div>Para este proceso no es necesario contar un Usuario y contraseña, basta con ingresar a la
         página principal del <a href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-          Académico de Educación Alternativa</a>.</div>
+          Académico de Educación Alternativa</a> e ingresar a la opción "Reapertura CEA".</div>
         ',
     'content' => '
       <p class="u-text u-text-6 text-left">Haga clic en "Reapertura CEA".</p>
@@ -212,8 +211,8 @@ $data = array(
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
-        Los requisitos son:</div>
+          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br><br>
+        Los requisitos son (Sección I Art. 14 del Reglamento):</div>
         <ol>
           <li>Informe técnico de apertura: Emitido por la o el Director del Centro de Educación
             Alternativa, a la Dirección Distrital Educativa correspondiente del área geográfica de
@@ -292,8 +291,8 @@ $data = array(
     'title' => 'Ampliación de nivel',
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-        Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
-        Los requisitos son:</div>
+        Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br><br>
+        Los requisitos son (Sección II del Reglamento):</div>
         <ol>
           <li>Carta de solicitud de ampliación de niveles o tramos de formación: Dirigida a
             la Dirección Distrital Educativa correspondiente.</li>
@@ -419,8 +418,8 @@ $data = array(
     'description' => '
           <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
-          Los requisitos son:</div>
+          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br><br>
+          Los requisitos son (Sección III del Reglamento):</div>
           <ol>
             <li>Carta de solicitud de ampliación o cambio de especialidades técnicas: Dirigida a la
               Dirección Distrital Educativa correspondiente.</li>
@@ -535,8 +534,8 @@ $data = array(
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
             href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-            Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
-          Los requisitos son:</div>
+            Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br><br>
+          Los requisitos son (Sección V del Reglamento):</div>
         <ol>
           <li>Carta de solicitud de cambio de dependencia Fiscal a Convenio: Dirigida a la Dirección
             Distrital Educativa correspondiente.</li>
@@ -654,8 +653,8 @@ $data = array(
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
             href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-            Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
-          Los requisitos son:</div>
+            Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br><br>
+          Los requisitos son (Sección VI del Reglamento):</div>
         <ol>
           <li>Carta de solicitud de cambio de infraestructura: Dirigida a la Dirección Distrital Educativa correspondiente.
           </li>
@@ -757,8 +756,8 @@ $data = array(
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
-        Los requisitos son:</div>
+          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br><br>
+        Los requisitos son (Sección VI del Reglamento):</div>
         <ol>
           <li>Carta de solicitud de cambio de jurisdicción administrativa: Dirigida a la Dirección
             Distrital Educativa correspondiente.</li>
@@ -865,8 +864,8 @@ $data = array(
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
-        Los requisitos son:</div>
+          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br><br>
+        Los requisitos son (Sección VII Art. 34 del Reglamento):<br><br></div>
         <ul class="u-custom-list u-text u-text-4">
           <li>
               <div class="u-list-icon">–</div>La Dirección del Centro de Educación Alternativa o Dirección Distrital Educativa
@@ -933,8 +932,8 @@ $data = array(
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
-        Los requisitos son:</div>
+          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br><br>
+        Los requisitos son (Sección VII del Reglamento):<br><br></div>
         <ul class="u-custom-list u-text u-text-4">
           <li>
               <div class="u-list-icon">–</div>La Dirección Distrital Educativa presentará un informe técnico justificando el
@@ -1017,8 +1016,8 @@ $data = array(
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
-        Los requisitos son:</div>
+          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br><br>
+        Los requisitos son (Sección VII del Reglamento):<br><br></div>
         <ul class="u-custom-list u-text u-text-4">
           <li>
               <div class="u-list-icon">–</div>Informe técnico, emitido por la o el Director del CEA que justifique el cierre
@@ -1088,8 +1087,8 @@ $data = array(
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
-        Los requisitos son:</div>
+          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br><br>
+        Los requisitos son (Sección IV del Reglamento):</div>
         <ol>
           <li>Carta de solicitud de modificación de denominación: Dirigida a la Dirección Distrital Educativa correspondiente.
           </li>
@@ -1168,8 +1167,8 @@ $data = array(
     'description' => '
         <div>Para este trámite es necesario estar autenticado en el <a
           href="https://alternativa.sie.gob.bo/" target="_blank">Sistema
-          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br>
-        Los requisitos son:</div>
+          Académico de Educación Alternativa</a> y seleccionar "Trámites" en el menú principal.<br><br>
+        Los requisitos son (Sección II del Reglamento):</div>
         <ol>
           <li>Carta de solicitud de reducción de niveles o tramos de formación: Dirigida a
               la Dirección Distrital Educativa correspondiente.</li>
@@ -1317,6 +1316,26 @@ $data = array(
     <div class="u-clearfix u-sheet u-sheet-1">
       <div class="u-clearfix u-expanded-width u-layout-wrap u-layout-wrap-1">
         <h1 class="home-title">Guía interactiva Sistema Académico Educación Alternativa</h1>
+        <div class="fk-pdf">
+          <div class="fk-pdf-item">
+            <a href="assets/docs/RM 660 - APERTURA - MODIF  DE CEAs - 2021.pdf" target="_blank">
+              <img src="../img/pdf.png" style="width: 32px;display:block;margin:auto">
+              Resolución Ministerial N° 0660/2021
+            </a>
+          </div>
+          <div class="fk-pdf-item">
+            <a href="assets/docs/REGLAMENTO - APERTURA  MODIF CEAs - 2021.pdf" target="_blank">
+              <img src="../img/pdf.png" style="width: 32px;display:block;margin:auto">
+              Reglamento de apertura, modificación, ampliación, reducción de niveles, cambio de especialidades, registro y/o cierre de Centros de Educación Alternativa
+            </a>
+          </div>
+          <div class="fk-pdf-item">
+            <a href="assets/docs/MANUAL DE USUARIO.pdf" target="_blank">
+              <img src="../img/pdf.png" style="width: 32px;display:block;margin:auto">
+              Manual de Usuario
+            </a>
+          </div>
+        </div>
         <div class="u-layout">
           <div class="u-layout-row">
             <div class="u-container-style u-layout-cell u-size-30 u-white u-layout-cell-1">
