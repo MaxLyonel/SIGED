@@ -31,6 +31,7 @@ twig:
     strict_variables: "%kernel.debug%"
     globals:
         urlreport: http://100.0.100.9:8080/b2/frameset?__report=diplomas/
+        funciones: '@sie_app_web.funciones'
 
 # Assetic Configuration
 assetic:

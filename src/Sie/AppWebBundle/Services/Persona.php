@@ -8,22 +8,20 @@ use GuzzleHttp\Client;
 
 class Persona {
 
-	protected $em;
+    protected $em;
     protected $router;
-    private $token;
     
-	public function __construct(EntityManager $entityManager, Router $router) {
-		$this->em = $entityManager;
+    public function __construct(EntityManager $entityManager, Router $router) {
+        $this->em = $entityManager;
         $this->router = $router;
-        //token valido hasta el 3/11/2021 $this->token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTYwNDM5MDczOCwiZXhwIjoxNjM1OTI2NzM4fQ.lhmPSSfLEXxosLYSNryV_x5WsL2KOOgU-ovqbSiVenc';
-        $this->token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJzaXN0ZW1hIjoicG5wIiwidXN1YXJpbyI6IldhbGRvIFZlcmEiLCJyb2xlIjoiQWRtaW4iLCJpYXQiOjE2MzYxMjg0NzAsImV4cCI6MTY3MzI4MDQ3MH0.d2bf3ockcQqfg6lytj2ZknJXh_QARrZ3_BzGvMWDyAM';
-	}
+    }
 
     public function buscarPersona($carnet, $complemento, $extranjero) {
 
-        /***NUEVO TOKEN A LA FECHA 28/10/2019*/
-        $token = $this->token;
-        /***NUEVO TOKEN A LA FECHA 28/10/2019*/
+        /***NUEVO TOKEN A LA FECHA 25/09/2017*/
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU3MjI3MzAzMiwiZXhwIjoxNjAzODA5MDMyfQ.F4Vu2jxfQzuZDWWR5wD93aRNTKKTfMYTVE2m4Wu8GIQ';
+
+        /***NUEVO TOKEN A LA FECHA 16/6/2017*/
         
 
         $client = new Client([
@@ -39,12 +37,12 @@ class Persona {
 
         $DatosPersonaDecode = $responseDecode;
         $response = $DatosPersonaDecode;
-		return $response;
-	}
+        return $response;
+    }
 
     public function BuscarPersonaPorCarnetComplementoFechaNacimiento($carnet, $complemento, $fechaNacimiento) {
-        /***NUEVO TOKEN A LA FECHA 28/10/2019*/
-        $token = $this->token;
+        /***NUEVO TOKEN A LA FECHA 25/09/2017*/
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU3MjI3MzAzMiwiZXhwIjoxNjAzODA5MDMyfQ.F4Vu2jxfQzuZDWWR5wD93aRNTKKTfMYTVE2m4Wu8GIQ';
 
         $client = new Client([
         // Base URI is used with relative requests
@@ -59,12 +57,12 @@ class Persona {
 
         $DatosPersonaDecode = $responseDecode;
         $response = $DatosPersonaDecode;
-		return $response;
-	}
+        return $response;
+    }
 
     public function registrarPersona($carnet, $complemento, $fechanacimiento, $paterno, $materno, $nombre, $genero) {
-        /***NUEVO TOKEN A LA FECHA 28/10/2019*/
-        $token = $this->token;
+        /***NUEVO TOKEN A LA FECHA 25/09/2017*/
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU3MjI3MzAzMiwiZXhwIjoxNjAzODA5MDMyfQ.F4Vu2jxfQzuZDWWR5wD93aRNTKKTfMYTVE2m4Wu8GIQ';
 
         $client = new Client([
         // Base URI is used with relative requests
@@ -83,8 +81,8 @@ class Persona {
     }
 
     public function actualizarPersona($id, $carnet, $complemento, $fechanacimiento, $paterno, $materno, $nombre, $genero) {
-        /***NUEVO TOKEN A LA FECHA 28/10/2019*/
-        $token = $this->token;
+        /***NUEVO TOKEN A LA FECHA 25/09/2017*/
+        $token = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI1MDYxNjQsImlhdCI6MTU3MjI3MzAzMiwiZXhwIjoxNjAzODA5MDMyfQ.F4Vu2jxfQzuZDWWR5wD93aRNTKKTfMYTVE2m4Wu8GIQ';
 
         $client = new Client([
         // Base URI is used with relative requests
@@ -104,14 +102,14 @@ class Persona {
 
     public function BuscarPersonaPorCarnetComplemento($form) {
         $carnet = $form['carnet'];
-        $complemento = ($form['complemento'] != "") ? mb_strtoupper($form['complemento'], 'utf-8') : '';
+        $complemento = ($form['complemento'] != "") ? mb_strtoupper($form['complemento'], 'utf-8') : 0;
         
         $repository = $this->em->getRepository('SieAppWebBundle:Persona');
 
-        if($complemento == ''){
+        if($complemento == '0'){
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
-                ->where('p.carnet = :carnet AND p.segipId > :valor')
+                ->where('p.carnet = :carnet AND p.segipId >= :valor')
                 ->setParameter('carnet', $carnet)
                 ->setParameter('valor', 0)
                 ->getQuery();
@@ -119,7 +117,7 @@ class Persona {
         else{
             $query = $repository->createQueryBuilder('p')
                 ->select('p')
-                ->where('p.carnet = :carnet AND p.complemento = :complemento AND p.segipId > :valor')
+                ->where('p.carnet = :carnet AND p.complemento = :complemento AND p.segipId >= :valor')
                 ->setParameter('carnet', $carnet)
                 ->setParameter('complemento', $complemento)
                 ->setParameter('valor', 0)

@@ -102,7 +102,7 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <div class="panel rounded shadow panel-primary">
+                <div class="panel rounded shadow panel-teal">
                     <div class="panel-heading">
                         <div class="pull-left">
                             <h3 class="panel-title">Administrativos</h3>
@@ -112,15 +112,14 @@
                     <div class="panel-body">
                         <div class="panel-body panel-primary">
                             <div class="pull-right">
-                                {% if (personal is empty or (activar_acciones and (app.session.get('lastOperativo') != 5))) %}
-                                {# {% if (personal is empty or (activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false))) %} #}
-                                    <a href="{{path('herramienta_especial_info_personal_adm_find')}}" id="nuevoA" name="nuevoA" class="btn btn-facebook btn-md" style="display:inline-block"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
+                                {% if activar_acciones and (app.session.get('lastOperativo') != 5) and onlyview == false %}
+                                    <a href="{{path('herramienta_especial_info_personal_adm_find')}}" id="nuevoA" name="nuevoA" class="btn btn-teal btn-md" style="display:inline-block"><i class="fa fa-user"></i> Nueva/o Administrativa/o</a>
                                 {% endif %}
                                 {% if personal_no_idioma is empty and personal_no_genero is empty and contador == 1 and personal is not empty %}
                                     <form action="{{path('reporte_especial_uno')}}" method="post" style="display:inline-block">
                                         <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                         <input type="hidden" name="gestion" value="{{gestion}}">
-                                        <button type="submit" class="btn btn-md btn-facebook"><i class="fa fa-save"></i> Generar Reporte</button>
+                                        <button type="submit" class="btn btn-md btn-primary"><i class="fa fa-save"></i> Generar Reporte</button>
                                     </form>
                                 {% endif %}
                             </div>
@@ -156,21 +155,21 @@
                                 <div id="no-more-tables">
                                     <div class="clearfix"></div>
                                     <!--table class="table table-bordered table-hover cf dataTable" id="myTable"-->
-                                    <table class="table table-default">
+                                    <table class="table table-bordered">
                                         <thead>
                                             <tr>
-                                                <th>No.</th>
-                                                <th>Carnet de Identidad</th>
-                                                <th>Paterno</th>
-                                                <th>Materno</th>
-                                                <th>Nombre(s)</th>
-                                                <th>Función</th>
-                                                <th>Formación</th>
-                                                <th>Fecha Registro</th>
-                                                <th>Fecha Modificación</th>
-                                                <th>Observación</th>
-                                                <th>Acciones</th>
-                                                <th>Es vigente</th>
+                                                <th><b>Nro.</b></th>
+                                                <th><b>Carnet de Identidad</b></th>
+                                                <th><b>Paterno</b></th>
+                                                <th><b>Materno</b></th>
+                                                <th><b>Nombre(s)</b></th>
+                                                <th><b>Función</b></th>
+                                                <th><b>Formación</b></th>
+                                                <th><b>Fecha Registro</b></th>
+                                                <th><b>Fecha Modificación</b></th>
+                                                <th><b>Observación</b></th>
+                                                <th><b>Acciones</b></th>
+                                                <th><b>Es vigente</b></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -192,8 +191,7 @@
                                                         {% if persona.id in personal_no_genero|keys %}<i class="fa fa-fw fa-warning" aria-hidden="true"></i>Corrija el género{% else %}<i class="fa fa-fw fa-check" aria-hidden="true"></i>(Género) Correcto{% endif %}
                                                     </td>
                                                     <td data-title="Acciones">
-                                                        {% if activar_acciones and (app.session.get('lastOperativo') != 5 and gestion >= 2020) %}
-                                                        {# {% if activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false and gestion >= app.session.get('currentyear')) %} #}
+                                                        {% if activar_acciones and (app.session.get('lastOperativo') != 5 and onlyview == false) %}
                                                             <form action="{{path('herramienta_especial_info_personal_adm_edit')}}" method="post" style="display:inline-block">
                                                                 <input type="hidden" name="idPersona" value="{{persona.id}}">
                                                                 <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
@@ -213,8 +211,7 @@
                                                         {% endif %}
                                                     </td>
                                                     <td>
-                                                        {% if (app.session.get('lastOperativo') != 5 and gestion >= 2020) %}
-                                                        {# {% if (app.session.get('lastOperativo') != 5 and onlyview == false and gestion >= app.session.get('currentyear')) %} #}
+                                                      {% if (app.session.get('lastOperativo') != 5 and onlyview == false) %}
                                                         <form action="{{path('herramienta_especial_info_personal_adm_es_vigente_administrativo')}}" method="post" style="display: inline-block">
                                                             <input type="hidden" name="idInstitucion" value="{{institucion.id}}">
                                                             <input type="hidden" name="gestion" value="{{gestion}}">
@@ -226,7 +223,7 @@
                                                                 <button type="submit" class="btn btn-danger" onclick="return confirm('¿Está segura/o de continuar?');">Definir como Vigente</button>
                                                             {% endif %}
                                                         </form>
-                                                        {% else %}
+                                                      {% else %}
                                                         {% if personal.esVigenteAdministrativo %}
                                                             <span class="text-success">
                                                                 Vigente
@@ -253,6 +250,7 @@
         </div>
     </div>
 {% endblock %}
+
 {% block javascripts %}
     {{parent()}}
     <script>

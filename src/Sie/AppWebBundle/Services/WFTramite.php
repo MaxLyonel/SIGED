@@ -110,8 +110,10 @@ class WFTramite {
             if ($flujoproceso->getEsEvaluacion() == true) 
             {
                 $tramiteDetalle->setValorEvaluacion($varevaluacion);
+
                 $wfcondiciontarea = $this->em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findOneBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
                 $tarea_sig_id = $wfcondiciontarea->getCondicionTareaSiguiente();
+
             }else{
                 $tarea_sig_id = $flujoproceso->getTareaSigId();
             }
