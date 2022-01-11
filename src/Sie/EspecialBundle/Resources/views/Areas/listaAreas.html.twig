@@ -1,4 +1,5 @@
 {% if areasNivel is not empty %}
+
 <div id="wizard">
     <ol>
         <li>Seleccionar Áreas</li>
@@ -16,9 +17,15 @@
             <thead class="cf"> 
                 <tr>
                     <th></th>
-                    <th>Campo</th>
-                    <th>Código</th>
-                    <th>Área</th>            
+                    {% if esvisual == false %}
+                        <th>Campo</th>
+                        <th>Código</th>
+                    {% endif %}
+                    {% if progSer %}
+                        <th>{{progSer}}</th>
+                    {% else %}
+                        <th>Área</th>
+                    {% endif %}    
                 </tr>
             </thead>
             <tbody>
@@ -31,9 +38,15 @@
                                 </label>
                             </div>
                         </td>
-                        <td data-title="Campo">{{areas.campo}}</td>
-                        <td data-title="Código">{{areas.codigo}}</td>
-                        <td data-title='Área'>{{areas.asignatura}}</td>
+                        {% if esvisual == false %}
+                            <td data-title="Campo">{{areas.campo}}</td>
+                            <td data-title="Código">{{areas.codigo}}</td>
+                        {% endif %}
+                        {% if areas.programaServicio %}
+                            <td data-title='Área'>{{areas.programaServicio}}</td>
+                        {% else %}
+                            <td data-title='Área'>{{areas.asignatura}}</td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
@@ -42,23 +55,48 @@
     </div>
     <div id="step2">
         <div class="row">
-                
+            <div class="col-md-12s">
                 <div id="divAdicionMaestros" style="display:none">
-                    <div class="alert-info"><i class="fa fa-info-circle"></i>
-                        NOTA: Debe asignar el(los) maestro(s) a las áreas adicionadas.
+                    <div id="maestro_msg"></div>
+                    <div class="row" id="modalidadCasa" style="display: none">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="centro_educativo">Código SIE</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="centro_educativo" autocomplete="off">
+                                    <span class="input-group-addon" onclick="getMaestros()" style="cursor: pointer;"><i class="fa fa-search"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="form-group">
+                                <label for="maestro_responsable">Maestro responsable</label>
+                                <select class="chosen-select form-control" id="maestro_responsable" name="maestro_responsable">
+                                    <option value="" disabled selected>Seleccione...</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div id="no-more-tables">
                         <table class="table table-bordered cf" id="tablaAdicionMaestros">
                             <thead class="cf"> 
                                 <tr>
-                                    <th class="col-lg-4">Área</th>
+                                     {% if progSer %}
+                                        <th class="col-lg-4">{{progSer}}</th>
+                                    {% else %}
+                                        <th class="col-lg-4">Área</th>
+                                    {% endif %} 
                                     <th class="col-lg-8">Maestro</th>            
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for areas in areasNivel %}
                                     <tr id="fila{{areas.codigo}}" style="display:none">
-                                        <td data-title='Área'>{{areas.asignatura}}</td>
+                                        {% if areas.programaServicio %}
+                                            <td data-title='Área'>{{areas.programaServicio}}</td>
+                                        {% else %}
+                                            <td data-title='Área'>{{areas.asignatura}}</td>
+                                        {% endif %}
                                         <td data-title="Maestro">
                                             <select name="{{areas.codigo}}" id="{{areas.codigo}}" class="chosen-select form-control">
                                                 <option value="">Seleccionar...</option>
@@ -74,18 +112,26 @@
                     </div>
                 </div>
                 <div style="text-align: right">
-                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Está completamente segura/o de agregar el curso?, Nota: Una vez agregado no se puede eliminar.')"><i class="fa fa-save fa-fw"></i>Guardar cambios</button>
+                    <button type="submit" class="btn btn-success" id="btnsave" onclick="return confirm('¿Está completamente segura/o de agregar el curso?, Nota: Una vez agregado no se puede eliminar.')"><i class="fa fa-save fa-fw"></i>Guardar cambios</button>
                 </div>
-            
+            </div>
         </div>
     </div>
 </div>
 <script>
 
     $(function () {
-        $('.chosen-select').chosen({allow_single_deselect:false}); 
-        $('.chosen-container').css('width','100%');
+        setMessageMaestro('info', 'NOTA: Debe asignar el(los) maestro(s) a las áreas adicionadas.', false);
+        $('.chosen-select').chosen({allow_single_deselect:false});
+        $("#maestro_responsable").chosen({allow_single_deselect:false});
     });
+
+    function setMessageMaestro(tipo, mensaje, estado) {
+        $('#maestro_msg').html('<div class="alert-'+tipo+'"><i class="fa fa-info-circle"></i> '+mensaje+'</div>');
+        if (estado == true) {
+            setTimeout(function(){ $('#maestro_msg').html('<div class="alert-info"><i class="fa fa-info-circle"></i> NOTA: Debe asignar el(los) maestro(s) a las áreas adicionadas.</div>'); }, 2500);
+        }
+    }
 
     $('#wizard').bwizard();
     function cargarMaestro(control,curso){
@@ -101,7 +147,48 @@
         }else{
             $('#divAdicionMaestros').css('display','block');
         }
-
+    }
+    $('#centro_educativo').on('keypress',function(e) {
+        if(e.which == 13) {
+            e.preventDefault();
+            getMaestros();
+        }
+    });
+    function getMaestros() {
+        var centro = $('#centro_educativo').val();
+        if (centro == '') {
+            $('#centro_educativo').focus();
+        } else {
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('area_especial_listar_maestros_resp'),
+                data: {'centro_educativo': centro},
+                dataType: "json",
+                beforeSend: function () {
+                    $("#maestro_responsable").empty();
+                    $("#maestro_responsable").append('<option value="">Buscando...</option>');
+                    $("#maestro_responsable").trigger("chosen:updated");
+                },
+                success: function (data) {
+                    $("#maestro_responsable").empty();
+                    $("#maestro_responsable").append('<option value="" disabled selected>Seleccione...</option>');
+                    if (data.msg == 'exito') {
+                        if (data.maestros.length > 0 || Object.keys(data.maestros).length > 0) {
+                            $.each(data.maestros, function (i, value) {
+                                $("#maestro_responsable").append('<option value="' + i + '">' + value + '</option>');
+                            });
+                            $("#maestro_responsable").trigger("chosen:updated");
+                        } else {
+                            setMessageMaestro('warning', 'NOTA: El Centro de Educación Especial no cuenta con maestros responsables.', true);
+                        }
+                    } else if (data.msg == 'noinst') {
+                        setMessageMaestro('warning', 'NOTA: Código SIE incorrecto.', true);
+                    } else if (data.msg == 'nodist') {
+                        setMessageMaestro('warning', 'NOTA: Código SIE no corresponde al mismo distrito.', true);
+                    }
+                }
+            });
+        }
     }
 </script>
 {% else %}

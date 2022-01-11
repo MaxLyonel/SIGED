@@ -1,0 +1,108 @@
+info_estudiante_rudees_nuevo_index:
+    path:     /
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:index" }
+    options:
+         expose: true
+#
+#info_estudiante_rudees_nuevo_departamentos_nac:
+#    path:     /departamentosNac/{pais}
+#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeESNuevo:departamentosNac" }
+#    options:
+#         expose: true
+#
+#info_estudiante_rudees_nuevo_provincias_nac:
+#    path:     /provinciasNac/{departamento}
+#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeESNuevo:provinciasNac" }
+#    options:
+#         expose: true
+#
+## TAB 1 -  datos
+#info_estudiante_rudees_nuevo_save_form1:
+#    path:     /saveForm1
+#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeESNuevo:saveForm1" }
+#    options:
+#         expose: true
+#
+# TAB 2 -  DATOS ESTUDIANTE
+info_estudiante_rudees_nuevo_save_formEstudiante:
+    path:     /saveFormEstudiante
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormEstudiante" }
+    options:
+         expose: true
+#
+## TAB 4 -  DIRECCION
+#info_estudiante_rudees_nuevo_listarprovincias:
+#    path:     /listarprovincias/{dpto}
+#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeESNuevo:listarprovincias" }
+#    options:
+#         expose: true
+#
+#info_estudiante_rudees_nuevo_listarmunicipios:
+#    path:     /listarmunicipios/{prov}
+#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeESNuevo:listarmunicipios" }
+#    options:
+#         expose: true
+#
+##DISCAPACDIDAD
+info_estudiante_rudees_nuevo_cargar_grado_discapacidad:
+    path:     /cargarGradoDiscapacidad
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:cargarGradoDiscapacidad" }
+    options:
+         expose: true
+#
+info_estudiante_rudees_nuevo_save_formDireccion:
+    path:     /saveFormDireccion
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormDireccion" }
+    options:
+         expose: true
+#
+## SOCIOECONOMICO
+info_estudiante_rudees_nuevo_save_formSocioeconomicos:
+    path:     /saveFormSocioeconomicos
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormSocioeconomicos" }
+    options:
+         expose: true
+
+
+#CARACTERISTICAS PARTICULARES
+info_estudiante_rudees_nuevo_save_formCaracteristicasParticulares:
+    path:     /saveFormCaracteristicasParticulares
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormCaracteristicaParticular" }
+    options:
+         expose: true
+
+
+#INSCRIPCION ACTUAL
+info_estudiante_rudees_nuevo_save_formInscripcionActual:
+    path:     /saveFormInscripcionActual
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormInscripcionActual" }
+    options:
+         expose: true
+
+#
+## BUSCAR PERSONA SERVICIO SEGIP
+#info_estudiante_rudees_nuevo_buscar_persona:
+#    path:     /buscarPersona
+#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeESNuevo:buscarPersona" }
+#    options:
+#         expose: true
+#
+
+info_estudiante_rudees_nuevo_save_formConQuienVive:
+    path:     /saveFormConQuienVive
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormConQuienVive" }
+    options:
+         expose: true
+#
+#info_estudiante_rudees_nuevo_save_formApoderado:
+#    path:     /saveFormApoderado
+#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeESNuevo:saveFormApoderado" }
+#    options:
+#         expose: true
+#
+## TAB 7
+#info_estudiante_rudees_nuevo_save_formLugar:
+#    path:     /saveFormLugar
+#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeESNuevo:saveFormLugar" }
+#    options:
+#         expose: true

@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\RudeEstrategiaAtencionIntegral:
+    type: entity
+    table: rude_estrategia_atencion_integral
+    indexes:
+        IDX_8EF17C81443E4890:
+            columns:
+                - rude_id
+        IDX_8EF17C8179B01EEC:
+            columns:
+                - estrategia_atencion_integral_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estrategiaAtencionIntegralTipo:
+            targetEntity: EstrategiaAtencionIntegralTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estrategia_atencion_integral_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

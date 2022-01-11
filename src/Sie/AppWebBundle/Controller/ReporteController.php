@@ -134,7 +134,7 @@ class ReporteController extends Controller {
                   title: '',
                   titleFontSize: 20,
                   labelAutoFit: true,    
-		  suffix: '%',
+          suffix: '%',
                   interval: 10,
                 },
                 data: [
@@ -516,10 +516,10 @@ class ReporteController extends Controller {
                           type: 'pie',  
                           showInLegend: true, 
                           indexLabelFontSize: 12,
-			  indexLabelFontFamily: 'Monospace',       
-			  indexLabelFontColor: 'darkgrey', 
-			  indexLabelLineColor: 'darkgrey',        
-			  indexLabelPlacement: 'outside',
+              indexLabelFontFamily: 'Monospace',       
+              indexLabelFontColor: 'darkgrey', 
+              indexLabelLineColor: 'darkgrey',        
+              indexLabelPlacement: 'outside',
                           toolTipContent: '<strong>#percent%</strong>',
                           indexLabel: '{label} {y}',
                           dataPoints: [ 
@@ -548,7 +548,7 @@ class ReporteController extends Controller {
               },
               exportFileName: 'Genero',
               exportEnabled: true,
-              animationEnabled: true,	
+              animationEnabled: true,   
                 
               axisX:{
                 interval: 1,
@@ -564,7 +564,7 @@ class ReporteController extends Controller {
                 labelFontSize: 15,
               },
               toolTip: {
-			shared: true
+            shared: true
                 },
                 legend:{
                         verticalAlign: 'top',
@@ -622,7 +622,7 @@ class ReporteController extends Controller {
               },
               exportFileName: 'Genero',
               exportEnabled: true,
-              animationEnabled: true,	
+              animationEnabled: true,   
                 
               axisX:{
                 interval: 1,
@@ -638,7 +638,7 @@ class ReporteController extends Controller {
                 labelFontSize: 15,
               },
               toolTip: {
-			shared: true
+            shared: true
                 },
                 legend:{
                         verticalAlign: 'top',
@@ -762,7 +762,7 @@ class ReporteController extends Controller {
               },
               exportFileName: 'Genero',
               exportEnabled: true,
-              animationEnabled: true,	
+              animationEnabled: true,   
                 
               axisX:{
                 interval: 1,
@@ -778,7 +778,7 @@ class ReporteController extends Controller {
                 labelFontSize: 15,
               },
               toolTip: {
-			shared: true
+            shared: true
                 },
                 legend:{
                         verticalAlign: 'top',
@@ -854,7 +854,7 @@ class ReporteController extends Controller {
               },
               exportFileName: 'Genero',
               exportEnabled: true,
-              animationEnabled: true,	
+              animationEnabled: true,   
                 
               axisX:{
                 interval: 1,
@@ -870,7 +870,7 @@ class ReporteController extends Controller {
                 labelFontSize: 15,
               },
               toolTip: {
-			shared: true
+            shared: true
                 },
                 legend:{
                         verticalAlign: 'top',
@@ -926,7 +926,7 @@ class ReporteController extends Controller {
               },
               exportFileName: 'Genero',
               exportEnabled: true,
-              animationEnabled: true,	
+              animationEnabled: true,   
                 
               axisX:{
                 interval: 1,
@@ -942,7 +942,7 @@ class ReporteController extends Controller {
                 labelFontSize: 15,
               },
               toolTip: {
-			shared: true
+            shared: true
                 },
                 legend:{
                         verticalAlign: 'top',
@@ -1033,10 +1033,10 @@ class ReporteController extends Controller {
                           type: 'pie',  
                           showInLegend: true, 
                           indexLabelFontSize: 12,
-			  indexLabelFontFamily: 'Monospace',       
-			  indexLabelFontColor: 'darkgrey', 
-			  indexLabelLineColor: 'darkgrey',        
-			  indexLabelPlacement: 'outside',
+              indexLabelFontFamily: 'Monospace',       
+              indexLabelFontColor: 'darkgrey', 
+              indexLabelLineColor: 'darkgrey',        
+              indexLabelPlacement: 'outside',
                           toolTipContent: '<strong>#percent%</strong>',
                           indexLabel: '{label} {y}',
                           dataPoints: [ 
@@ -1065,7 +1065,7 @@ class ReporteController extends Controller {
               },
               exportFileName: 'Genero',
               exportEnabled: true,
-              animationEnabled: true,	
+              animationEnabled: true,   
                 
               axisX:{
                 interval: 1,
@@ -1081,7 +1081,7 @@ class ReporteController extends Controller {
                 labelFontSize: 15,
               },
               toolTip: {
-			shared: true
+            shared: true
                 },
                 legend:{
                         verticalAlign: 'top',
@@ -1139,7 +1139,7 @@ class ReporteController extends Controller {
               },
               exportFileName: 'Genero',
               exportEnabled: true,
-              animationEnabled: true,	
+              animationEnabled: true,   
                 
               axisX:{
                 interval: 1,
@@ -1155,7 +1155,7 @@ class ReporteController extends Controller {
                 labelFontSize: 15,
               },
               toolTip: {
-			shared: true
+            shared: true
                 },
                 legend:{
                         verticalAlign: 'top',
@@ -1279,7 +1279,7 @@ class ReporteController extends Controller {
               },
               exportFileName: 'Genero',
               exportEnabled: true,
-              animationEnabled: true,	
+              animationEnabled: true,   
                 
               axisX:{
                 interval: 1,
@@ -1295,7 +1295,7 @@ class ReporteController extends Controller {
                 labelFontSize: 15,
               },
               toolTip: {
-			shared: true
+            shared: true
                 },
                 legend:{
                         verticalAlign: 'top',
@@ -1371,7 +1371,7 @@ class ReporteController extends Controller {
               },
               exportFileName: 'Genero',
               exportEnabled: true,
-              animationEnabled: true,	
+              animationEnabled: true,   
                 
               axisX:{
                 interval: 1,
@@ -1387,7 +1387,7 @@ class ReporteController extends Controller {
                 labelFontSize: 15,
               },
               toolTip: {
-			shared: true
+            shared: true
                 },
                 legend:{
                         verticalAlign: 'top',
@@ -1443,7 +1443,7 @@ class ReporteController extends Controller {
               },
               exportFileName: 'Genero',
               exportEnabled: true,
-              animationEnabled: true,	
+              animationEnabled: true,   
                 
               axisX:{
                 interval: 1,
@@ -1459,7 +1459,7 @@ class ReporteController extends Controller {
                 labelFontSize: 15,
               },
               toolTip: {
-			shared: true
+            shared: true
                 },
                 legend:{
                         verticalAlign: 'top',
@@ -4819,9 +4819,9 @@ class ReporteController extends Controller {
                 left join (
                     select string_agg(distinct et.especialidad,', ') as especialidad, ieht.institucioneducativa_id,gt.grado as grado_autorizado
                     from institucioneducativa_humanistico_tecnico ieht 
-					inner join grado_tipo gt on gt.id=ieht.grado_tipo_id
+                    inner join grado_tipo gt on gt.id=ieht.grado_tipo_id
                     inner join institucioneducativa_especialidad_tecnico_humanistico ieeth on ieeth.institucioneducativa_id=ieht.institucioneducativa_id
-					inner join especialidad_tecnico_humanistico_tipo et on et.id=ieeth.especialidad_tecnico_humanistico_tipo_id
+                    inner join especialidad_tecnico_humanistico_tipo et on et.id=ieeth.especialidad_tecnico_humanistico_tipo_id
                     where ieht.institucioneducativa_id = ".$sie."   and ieht.institucioneducativa_humanistico_tecnico_tipo_id in (1,7) and ieht.gestion_tipo_id = ". $gestionActual ."
                     group by ieht.institucioneducativa_id,gt.grado
                 ) as esp on esp.institucioneducativa_id = ie.id
@@ -4929,15 +4929,15 @@ class ReporteController extends Controller {
         $gestionProcesada = $gestionActual;
 
         $codigo = 0;
-		$nivel = 0;	
+        $nivel = 0; 
 
-		if ($request->isMethod('POST')) {
+        if ($request->isMethod('POST')) {
             $codigo = base64_decode($request->get('codigo'));
-			$rol = $request->get('rol');
+            $rol = $request->get('rol');
         } else {
             $codigo = 0;
-			$rol = 0;	
-		}
+            $rol = 0;   
+        }
 
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);
@@ -5031,15 +5031,15 @@ class ReporteController extends Controller {
         $gestionProcesada = $gestionActual;
 
         $codigo = 0;
-		$nivel = 0;	
+        $nivel = 0; 
 
-		if ($request->isMethod('POST')) {
+        if ($request->isMethod('POST')) {
             $codigo = base64_decode($request->get('codigo'));
-			$rol = $request->get('rol');
+            $rol = $request->get('rol');
         } else {
             $codigo = 0;
-			$rol = 0;	
-		}
+            $rol = 0;   
+        }
         //dump($codigo);die;
         $defaultController = new DefaultCont();
         $defaultController->setContainer($this->container);

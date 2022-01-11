@@ -16,15 +16,15 @@ use Sie\AppWebBundle\Entity\SuperiorModuloTipo;
 
 class Funciones {
 
-	protected $em;
-	protected $router;
+    protected $em;
+    protected $router;
     protected $session;
 
-	public function __construct(EntityManager $entityManager, Router $router) {
-		$this->em = $entityManager;
-		$this->router = $router;
+    public function __construct(EntityManager $entityManager, Router $router) {
+        $this->em = $entityManager;
+        $this->router = $router;
         $this->session = new Session();
-	}
+    }
 
     /**
      * SERVICIO DE VALIDACION DE RUTA POR ROL DE USUARIO
@@ -63,10 +63,10 @@ class Funciones {
         return $permitido;
     }
 
-	/*
+    /*
      * verificamos si tiene tuicion
      */
-	public function verificaTuicion($sie, $idUsuario, $rolUsuario) {
+    public function verificaTuicion($sie, $idUsuario, $rolUsuario) {
 
         $query = $this->em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
         $query->bindValue(':user_id', $idUsuario);
@@ -77,11 +77,11 @@ class Funciones {
 
         $response = ['tuicion' => $aTuicion[0]['get_ue_tuicion']];
 
-		return $response;
+        return $response;
 
-	}
+    }
 
-	public function obtenerOperativo($sie,$gestion){
+    public function obtenerOperativo($sie,$gestion){
         $objRegistroConsolidado = $this->em->createQueryBuilder()
                 ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
                 ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
@@ -194,7 +194,7 @@ class Funciones {
 
 
 
-	public function obtenerOperativoDown($sie,$gestion){
+    public function obtenerOperativoDown($sie,$gestion){
         $objRegistroConsolidado = $this->em->createQueryBuilder()
                 ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
                 ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
@@ -1659,6 +1659,57 @@ class Funciones {
 
         return $documentos;
     }
+    /**
+     * Servicio para cupos en cursos de educacion especial
+     * Accesos: Vistas y controladores
+     * Autor: Patricia
+     */
+    public function getCantidadEstudiantes($infoUe,$estudiantes){
+        
+        $infoUe = unserialize($infoUe);
+        $cantidad = 0;
+        $area = $infoUe['ueducativaInfoId']['areaEspecialId'];
+        $programa = $infoUe['ueducativaInfoId']['programaId'];
+        $iecLugar = $infoUe['ueducativaInfo']['iecLugar'];
+        switch($infoUe['ueducativaInfoId']['areaEspecialId']){
+            case 2:
+                foreach($estudiantes as $est ){
+                    if($est['estadomatriculaId'] != 6 and $est['estadomatriculaId'] != 78){
+                        $cantidad = $cantidad + 1;
+                    }
+                }
+                if(($programa == 14 and $cantidad >= 4) or ($programa == 8 and $cantidad >= 6) or (in_array($programa, array(9,15,10,16)) and $cantidad >= 7) or ($programa == 11  and $cantidad >= 3) or ($programa == 12  and $cantidad >= 8)){
+                    $data['cupo'] = "NO";
+                    $data['msg'] = "El curso para este programa no puede tener más de <strong>". $cantidad. " estudiantes activos.</strong>";
+                }else{
+                    $data['cupo'] = "SI";
+                    $data['msg'] = "El curso cuenta con cupos";
+                }
+                break;
+            case 3:
+            case 4:
+            case 5:
+                foreach($estudiantes as $est ){
+                    if($est['estadomatriculaId'] != 6 and $est['estadomatriculaId'] != 10 and $est['estadomatriculaId'] != 78){
+                        $cantidad = $cantidad + 1;
+                    }
+                }
+                if($cantidad >= 2 and (preg_match("/EDUCACION SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or preg_match("/EDUCACIÓN SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or $infoUe['ueducativaInfoId']['areaEspecialId']==4)){
+                    $data['cupo'] = "NO";
+                    $data['msg'] = "El curso o grupo no puede tener más de <strong>". $cantidad. " estudiantes activos.</strong>";
+                }else{
+                    $data['cupo'] = "SI";
+                    $data['msg'] = "El curso cuenta con cupos";
+                }
+                break;
+            default:
+                $data['cupo'] = "SI";
+                $data['msg'] = "El curso cuenta con cupos";
+        }
+        return $data;
+    }    
+
+
     /**
      * Servicio para eliminar especialidades bth
      * @param  [integer] $codsie     [Id de inscripcion del estudiante]

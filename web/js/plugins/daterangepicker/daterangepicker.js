@@ -39,10 +39,14 @@
         this.separator = ' - ';
 
         this.locale = {
-            applyLabel: 'Apply',
+            /* applyLabel: 'Apply',
             cancelLabel: 'Cancel',
             fromLabel: 'From',
-            toLabel: 'To',
+            toLabel: 'To',*/
+            applyLabel: 'Aplicar',
+            cancelLabel: 'Cancelar',
+            fromLabel: 'De:',
+            toLabel: 'A:',
             weekLabel: 'W',
             customRangeLabel: 'Custom Range',
             daysOfWeek: moment()._lang._weekdaysMin.slice(),
@@ -104,7 +108,7 @@
                   '</div>' +
                 '</div>' +
               '</div>';
-
+              
         this.container = $(DRPTemplate).appendTo('body');
 
         if (hasOptions) {

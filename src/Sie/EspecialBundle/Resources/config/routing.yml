@@ -82,3 +82,7 @@ index:
 sie_especial_chagestatusstudent:
     resource: "@SieEspecialBundle/Resources/config/routing/chagestatusstudent.yml"
     prefix:   /sie/changestatus
+
+sie_especial_info_estudianteRudeESNuevo:
+    resource: "@SieEspecialBundle/Resources/config/routing/infoEstudianteRudeES.yml"
+    prefix:   /sie/infoEstudianteRudeESNuevo    

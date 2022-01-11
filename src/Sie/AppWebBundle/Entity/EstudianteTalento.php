@@ -35,11 +35,6 @@ class EstudianteTalento
     private $fechaModificacion;
 
     /**
-     * @var string
-     */
-    private $informe;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\Usuario
      */
     private $usuarioRegistro;
@@ -162,28 +157,6 @@ class EstudianteTalento
         return $this->fechaModificacion;
     }
 
-    /**
-     * Set informe
-     *
-     * @param string $informe
-     * @return EstudianteTalento
-     */
-    public function setInforme($informe)
-    {
-        $this->informe = $informe;
-    
-        return $this;
-    }
-
-    /**
-     * Get informe
-     *
-     * @return string 
-     */
-    public function getInforme()
-    {
-        return $this->informe;
-    }
 
     /**
      * Set usuarioRegistro
@@ -276,4 +249,32 @@ class EstudianteTalento
     {
         return $this->estudiante;
     }
+    /**
+     * @var string
+     */
+    private $informe;
+
+
+    /**
+     * Set informe
+     *
+     * @param string $informe
+     * @return EstudianteTalento
+     */
+    public function setInforme($informe)
+    {
+        $this->informe = $informe;
+    
+        return $this;
+    }
+
+    /**
+     * Get informe
+     *
+     * @return string 
+     */
+    public function getInforme()
+    {
+        return $this->informe;
+    }    
 }
