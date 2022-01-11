@@ -47,7 +47,7 @@ area_especial_listar_areas_curso:
          expose: true
 
 area_especial_listar_areas_nivel:
-    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}/{mTipo}
     defaults: { _controller: "SieEspecialBundle:Areas:lista_areas_nivel" }
     options:
          expose: true
@@ -85,5 +85,11 @@ area_especial_maestros:
 area_especial_maestros_asignar:
     path:     /maestros_asignar/
     defaults: { _controller: "SieEspecialBundle:Areas:maestrosAsignar"}
+    options:
+         expose: true
+
+area_especial_listar_maestros_resp:
+    path:     /maestros_responsables/
+    defaults: { _controller: "SieEspecialBundle:Areas:maestrosResponsable"}
     options:
          expose: true

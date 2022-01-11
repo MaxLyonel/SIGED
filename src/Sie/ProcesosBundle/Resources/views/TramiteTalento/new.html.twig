@@ -326,6 +326,7 @@
                     $("#envio").html('<div class="text-center">Guardando... <img src="{{asset('img/loading.gif')}}" /></div>');
                 },
                 success: function (data) {
+                    $("#guardar").attr('disabled', true);
                     $("#envio").empty();
                     if (data.estado == 200) {                        
                         clearInput();

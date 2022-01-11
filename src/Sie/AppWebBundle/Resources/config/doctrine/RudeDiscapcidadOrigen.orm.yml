@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\RudeDiscapcidadOrigen:
+    type: entity
+    table: rude_discapcidad_origen
+    indexes:
+        IDX_44F3B993CDAA34B:
+            columns:
+                - discapacidad_origen_tipo_id
+        IDX_44F3B99443E4890:
+            columns:
+                - rude_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        discapacidadOrigenTipo:
+            targetEntity: DiscapacidadOrigenTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                discapacidad_origen_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

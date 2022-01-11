@@ -52,13 +52,13 @@ Sie\AppWebBundle\Entity\EstudianteTalento:
             fixed: false
             comment: ''
     manyToOne:
-        usuarioRegistro:
-            targetEntity: Usuario
+        institucioneducativa:
+            targetEntity: Institucioneducativa
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                usuario_registro_id:
+                institucioneducativa_id:
                     referencedColumnName: id
             orphanRemoval: false
         usuarioModificacion:
@@ -70,13 +70,13 @@ Sie\AppWebBundle\Entity\EstudianteTalento:
                 usuario_modificacion_id:
                     referencedColumnName: id
             orphanRemoval: false
-        institucioneducativa:
-            targetEntity: Institucioneducativa
+        usuarioRegistro:
+            targetEntity: Usuario
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                institucioneducativa_id:
+                usuario_registro_id:
                     referencedColumnName: id
             orphanRemoval: false
         estudiante:
