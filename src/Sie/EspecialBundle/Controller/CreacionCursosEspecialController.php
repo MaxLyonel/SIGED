@@ -334,16 +334,13 @@ class CreacionCursosEspecialController extends Controller {
 
     public function createAction(Request $request){
         try{
-            
            
-            $form = $request->get('form');
-
-            if(isset($form['nivelTecnico'])){
+            $form = $request->get('form');           
+            $nivelTecnico = 99;
+            if(isset($form['nivelTecnico'])){                
                 $nivelTecnico = $form['nivelTecnico'];
-            }else{
-                $nivelTecnico = 99;
             }
-            
+
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_especial');")->execute();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
