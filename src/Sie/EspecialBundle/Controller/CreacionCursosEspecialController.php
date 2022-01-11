@@ -339,11 +339,10 @@ class CreacionCursosEspecialController extends Controller {
             
            
             $form = $request->get('form');
-
+            
+            $nivelTecnico = 99;
             if(isset($form['nivelTecnico'])){
                 $nivelTecnico = $form['nivelTecnico'];
-            }else{
-                $nivelTecnico = 99;
             }
             
             $em = $this->getDoctrine()->getManager();
