@@ -406,30 +406,20 @@
                                                 <div class="row form-group">
                                                     <label class="col-md-4 col-sm-4">Carnet:</label>
                                                     <div class="col-md-8 col-sm-8">
-                                                        {% if formEstudiante.carnet.vars.value|length > 0 %}
+                                                        {% if formEstudiante.carnetIbc.vars.value|length > 0 %}
                                                             <input type="hidden" id="verificarCarnet" value="0">
                                                             {# {{ form_widget(formEstudiante.carnet, {'attr':{'class':'form-control readonly'} }) }} #}
-                                                            <b>{{ formEstudiante.carnet.vars.value }}</b>
+                                                            <b>IBC - {{ formEstudiante.carnetIbc.vars.value }}</b>
                                                         {% else %}
                                                             <input type="hidden" id="verificarCarnet" value="1">
                                                             {# {{ form_widget(formEstudiante.carnet, {'attr':{'class':'form-control'} }) }} #}
-                                                            <b>{{ formEstudiante.carnet.vars.value }}</b>
+                                                            <b>CODEPEDIS - {{ formEstudiante.carnetCodepedis.vars.value }}</b>
                                                         {% endif %}
                                                     </div>
-                                                </div>
-                                                <div class="row form-group">
-                                                    <label class="col-md-4 col-sm-4">Complemento:</label>
-                                                    <div class="col-md-8 col-sm-8">
-                                                        {% if formEstudiante.carnet.vars.value|length > 0 %}
-                                                            {# {{ form_widget(formEstudiante.complemento, {'attr':{'class':'form-control readonly'} }) }} #}
-                                                            <b>{{ formEstudiante.complemento.vars.value }}</b>
-                                                        {% else %}
-                                                            {# {{ form_widget(formEstudiante.complemento, {'attr':{'class':'form-control'} }) }} #}
-                                                            <b>{{ formEstudiante.complemento.vars.value }}</b>
-                                                        {% endif %}
-                                                    </div>
-                                                </div>
+                                                </div>                                                
                                             </div>
+
+                                            
                                         </div>
 
                                         <div class="row"><!-- 1.5 FECHA DE NACIMIENTO -->
@@ -465,13 +455,14 @@
                                                 <p><strong>(**) 1.7 CERTIFICADO DE NACIMIENTO</strong></p>
                                             </div>
                                             <div class="col-md-6 col-sm-6">
-                                                <div id="form_tieneCertificadoNacimiento" class="radioDiscapacidad">
-                                                    <input type="radio" id="form_tieneDiscapacidad_0" name="form[tieneDiscapacidad]" required="required" value="1">
+                                                <div id="form_tieneCertificadoNacimiento" class="radioNacimiento">
+                                                    <input type="radio" id="form_tieneDiscapacidad_0" name="form[tieneDiscapacidad]" required="required" value="1" checked="checked"  >
                                                     <label for="form_tieneDiscapacidad_0" class="required">Si</label>
-                                                    <input type="radio" id="form_tieneDiscapacidad_1" name="form[tieneDiscapacidad]" required="required" value="0" checked="checked">
+                                                    <input type="radio" id="form_TieneNacimiento_no" name="form[tieneDiscapacidad]" required="required" value="0" >
                                                     <label for="form_tieneDiscapacidad_1" class="required">No</label>
                                                 </div>
-                                                <div id="secNacimiento">
+                                                <div id="secNacimiento" >
+                                                
                                                     <div class="row form-group">
                                                         <label class="col-md-4 col-sm-4">Oficialia Nº:</label>
                                                         <div class="col-md-8 col-sm-8">
@@ -677,7 +668,8 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">3.2.1. ¿Con quién vive el o la estudiante? (Puede marcar mas de una opción)</label>
                                             <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formSocioeconomico.viveCon, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                             {{ form_widget(formSocioeconomico.viveCon, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
+                                             {{ form_widget(formSocioeconomico.viveConOtro, {'attr':{'class':'form-control jupper','placeholder':'ESPECIFIQUE LA INSTITUCION DONDE VIVE', 'autocomplete':'off'} }) }}
                                             </div>
                                         </div>
                                         <div class="row form-group">
@@ -686,19 +678,31 @@
                                                 {{ form_widget(formSocioeconomico.tieneParientesDiscapacidad, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
-                                        <div id="div_tieneParientesDiscapacidad" style="display: none;">
+                                        <div id="div_tieneParientesDiscapacidad" >
                                             <div class="datosParientesDiscapacidad" style="display: block">
                                                 <div class="row" style="margin-top:1em">
-                                                    <div class="col-sm-3"><input type="text" class="form-control" name="parienteDiscapacidad_parentesco[]" placeholder="Parentesco"></div>
-                                                    <div class="col-sm-3"><input type="text" class="form-control" name="parienteDiscapacidad_discapacidad[]" placeholder="Discapacidad"></div>
-                                                    <div class="col-sm-3"><input type="text" class="form-control" name="parienteDiscapacidad_carnet[]" placeholder="Carnet de Discapacidad"></div>
-                                                    <div class="col-sm-3 text-center"><button type="button" class="btn btn-danger btn-small">Borrar</button></div>
+                                                    <div class="col-sm-3">Parentesco </div>
+                                                    <div class="col-sm-3">Tipo de discapacidad</div>                                                    
+                                                    <div class="col-sm-3">Nro. Carnet de Discapacidad</div>
+                                                   {#  <div class="col-sm-3 text-center"><button type="button" class="btn btn-danger btn-small">Borrar</button></div> #}
                                                 </div>
                                                 <div class="row" style="margin-top:1em">
-                                                    <div class="col-sm-3"><input type="text" class="form-control" name="parienteDiscapacidad_parentesco[]" placeholder="Parentesco"></div>
-                                                    <div class="col-sm-3"><input type="text" class="form-control" name="parienteDiscapacidad_discapacidad[]" placeholder="Discapacidad"></div>
-                                                    <div class="col-sm-3"><input type="text" class="form-control" name="parienteDiscapacidad_carnet[]" placeholder="Carnet de Discapacidad"></div>
-                                                    <div class="col-sm-3 text-center"><button type="button" class="btn btn-primary btn-small">Guadar</button></div>
+                                                    <div class="col-sm-3">{{ form_widget(formSocioeconomico.parienteDiscapacidad0, {'attr':{'class':'form-control'} }) }}  </div>
+                                                    <div class="col-sm-3">{{ form_widget(formSocioeconomico.discapacidad0, {'attr':{'class':'form-control'} }) }}</div>                                                    
+                                                    <div class="col-sm-3">{{ form_widget(formSocioeconomico.carnet0, {'attr':{'class':'form-control jupper','placeholder':'Nro. Carnet', 'autocomplete':'off'} }) }}</div>
+                                                   {#  <div class="col-sm-3 text-center"><button type="button" class="btn btn-danger btn-small">Borrar</button></div> #}
+                                                </div>
+                                                <div class="row" style="margin-top:1em">
+                                                    <div class="col-sm-3">{{ form_widget(formSocioeconomico.parienteDiscapacidad1, {'attr':{'class':'form-control'} }) }}</div>
+                                                    <div class="col-sm-3">{{ form_widget(formSocioeconomico.discapacidad1, {'attr':{'class':'form-control'} }) }}</div>
+                                                    <div class="col-sm-3"> {{ form_widget(formSocioeconomico.carnet1, {'attr':{'class':'form-control jupper','placeholder':'Nro. Carnet', 'autocomplete':'off'} }) }}</div>
+                                                    
+                                                </div>
+                                                <div class="row" style="margin-top:1em">
+                                                    <div class="col-sm-3">{{ form_widget(formSocioeconomico.parienteDiscapacidad2, {'attr':{'class':'form-control'} }) }}</div>
+                                                    <div class="col-sm-3">{{ form_widget(formSocioeconomico.discapacidad2, {'attr':{'class':'form-control'} }) }}</div>
+                                                    <div class="col-sm-3"> {{ form_widget(formSocioeconomico.carnet2, {'attr':{'class':'form-control jupper','placeholder':'Nro. Carnet', 'autocomplete':'off'} }) }}</div>
+                                                    {# <div class="col-sm-3 text-center"><button type="button" class="btn btn-primary btn-small">Guadar</button></div> #}
                                                 </div>
                                             </div>
                                         </div>
@@ -781,11 +785,11 @@
                                             <div class="col-md-6 col-sm-6">
                                                 <div class="row form-group">
                                                     <div class="col-md-12 col-sm-12">
-                                                        {{ form_widget(formCaracteristicaParticular.discapacidad, {'attr':{'class':'form-control jupper'} }) }}
+                                                        {{ form_widget(formCaracteristicaParticular.discapacidad, {'attr':{'class':'form-control jupper'} }) }}                                                        
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            </div> 
+                                        </div>                                        
                                         <div class="row form-group">
                                             <div class="col-md-6 col-sm-6">
                                                 <p>4.1.4 GRADO DE DISCAPACIDAD</p>
@@ -797,6 +801,18 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                        <div id='otroGradodiscapacidad' class="row form-group"  style="display: none">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>     Especifique otro Grado de discapacidad</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formCaracteristicaParticular.otroGrado, {'attr':{'class':'form-control jupper','placeholder':'Grado', 'autocomplete':'off'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div> 
                                         </div>
 
                                         <div class="row form-group">
@@ -811,7 +827,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <div class="col-md-6 col-sm-6">
                                                 <strong>4.2 ESTUDIANTES CON DIFICULTADES EN EL APRENDIZAJE </strong>(Marcar unicamente si la o el estudiante no presenta discapacidad y provieve del Subsistema de Educación Regular)
@@ -819,7 +834,8 @@
                                             <div class="col-md-6 col-sm-6">
                                                 <div class="row form-group">
                                                     <div class="col-md-12 col-sm-12">
-                                                        {{ form_widget(formCaracteristicaParticular.dificultadAprendizaje, {'attr':{'class':'form-control jupper','data-placeholder':'Seleccionar...'} }) }}
+                                                        {{ form_widget(formCaracteristicaParticular.dificultadAprendizaje, {'attr':{'class':'form-control jupper ','data-placeholder':'Seleccionar...'} }) }}
+                                                        
                                                     </div>
                                                 </div>
                                             </div>
@@ -827,9 +843,49 @@
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12">
                                                 <hr class="separador">
-                                                <strong>4.3 ESTUDIANTES CON TALENTO EXTRAORDNARIO EN EL SEP </strong>(Registrar, si el informe psicopedagógico establece que es estudiante con talento extraordinario)
+                                                <strong>4.3 ESTUDIANTES CON TALENTO EXTRAORDNARIO EN EL SEP </strong>(Registrar, imprescindiblemente, con el informe psicopedagógico integral)
                                             </div>
                                         </div>
+                                        <div class="row form-group">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p>4.3.1 TIPO DE TALENTO EXTRAORDINARIO</p>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                <div class="row form-group">
+                                                    <div class="col-md-12 col-sm-12">
+                                                        {{ form_widget(formCaracteristicaParticular.talentoExtraordinario, {'attr':{'class':'form-control jupper'} }) }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id= "secEspecifico" style="display:none">
+                                            <div id="especifico" class="row form-group">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <p>Especifico En:</p>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <div class="row form-group">
+                                                        <div class="col-md-12 col-sm-12">
+                                                            {{ form_widget(formCaracteristicaParticular.especificoEn, {'attr':{'class':'form-control jupper'} }) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                         <div id= "secTalentoOtro" style="display:none"> 
+                                            <div class="row form-group">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <p>Otro Talento:</p>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <div class="row form-group">
+                                                        <div class="col-md-12 col-sm-12">
+                                                            {{ form_widget(formCaracteristicaParticular.talentoOtro, {'attr':{'class':'form-control jupper'} }) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                          </div>  
                                         <div class="row form-group">
                                             <div class="col-md-6 col-sm-6">
                                                 <p>4.3.1 COEFICIENTE INTELECTUAL</p>
@@ -854,18 +910,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row form-group">
-                                            <div class="col-md-6 col-sm-6">
-                                                <p>4.3.3 TIPO DE TALENTO EXTRAORDINARIO</p>
-                                            </div>
-                                            <div class="col-md-6 col-sm-6">
-                                                <div class="row form-group">
-                                                    <div class="col-md-12 col-sm-12">
-                                                        {{ form_widget(formCaracteristicaParticular.talentoExtraordinario, {'attr':{'class':'form-control jupper'} }) }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="row form-group">
                                             <div class="col-md-6 col-sm-6">
                                                 <p>4.3.4 ESTRATEGIAS DE ATENCIÓN INTEGRAL</p>
@@ -873,12 +918,25 @@
                                             <div class="col-md-6 col-sm-6">
                                                 <div class="row form-group">
                                                     <div class="col-md-12 col-sm-12">
-                                                        {{ form_widget(formCaracteristicaParticular.estrategiaAtencionIntegral, {'attr':{'class':'form-control jupper'} }) }}
+                                                        {{ form_widget(formCaracteristicaParticular.estrategiaAtencionIntegral, {'attr':{'class':'form-control jupper' ,'data-placeholder':'Seleccionar...'} }) }}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <div id = "estrategiaOtroTipo" style="display:none">
+                                            <div class="row form-group">
+                                                <div class="col-md-6 col-sm-6">
+                                                    <p>Escriba otra Estrategia de Atencion integral</p>
+                                                </div>
+                                                <div class="col-md-6 col-sm-6">
+                                                    <div class="row form-group">
+                                                        <div class="col-md-12 col-sm-12">
+                                                            {{ form_widget(formCaracteristicaParticular.estrategiaOtro, {'attr':{'class':'form-control jupper'} }) }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12">
                                                 <hr class="separador">
@@ -958,12 +1016,7 @@
                                                 {{ form_widget(formCaracteristicaParticular.computadora, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
-                                        <div class="row form-group">
-                                            <label class="col-md-6">4.5.5. ¿Usa la internet?</label>
-                                            <div class="col-md-6 col-sm-6">
-                                                {{ form_widget(formCaracteristicaParticular.internet, {'attr':{'class':'jupper'} }) }}
-                                            </div>
-                                        </div>
+                                        
 
                                         <div class="row">
                                             <div class="col-md-12 col-sm-12">
@@ -1908,6 +1961,7 @@
         validarOtroTransporte();
         validarAbandono();
         validarOtroAbandono();
+        validarViveOtro();
         $("#form_fecha").inputmask({ "alias": "dd-mm-yyyy" });
         $("#form_fechaRegistroRude").inputmask({ "alias": "dd-mm-yyyy", "placeholder": "dd-mm-aaaa" });
 
@@ -1975,6 +2029,9 @@
     $('#form_medioTransporte').chosen({width: "100%"});
     $('#form_tiempoTransporte').chosen({width: "100%"});
     $('#form_abandono').chosen({width: "100%"});
+    $('#form_parienteDiscapacidad').chosen({width: "100%"});
+    $('#form_dificultadAprendizaje').chosen({width: "100%"});    
+    $('#form_estrategiaAtencionIntegral').chosen({width: "100%"});
 
     $.validator.setDefaults({ ignore: ":hidden:not(select)" });
 
@@ -2010,6 +2067,101 @@
     });
     validarTieneDiscapacidad();
     //////////////
+    //VALIDACION DE VIVECONOTRO
+    
+    function validarViveOtro(){
+        var accesos = $('#form_viveCon').val();
+        if($.inArray('14', accesos) !== -1){
+            $('#form_viveConOtro').css('display','block');
+            $('#form_viveConOtro').attr('required','required');
+        }else{
+            $('#form_viveConOtro').val('');
+            $('#form_viveConOtro').css('display','none');
+            $('#form_viveConOtro').removeAttr('required');
+        }
+    }
+    $('#form_viveCon').on('change', function(){
+        validarViveOtro();
+    });
+    //////////////
+
+    //VALIDACION EspecificoEn:
+    
+    function validarEspecifico(){
+        var accesos = $('#form_talentoExtraordinario').val();
+        if( accesos == '2'){//Especifico en           
+            $('#secEspecifico').show(1000);           
+            $('#form_especificoEn').attr('required','required');
+             $('#secTalentoOtro').hide(1000);
+        }else{
+            $('#secEspecifico').hide(1000);
+            $('#form_especificoEn').val('');
+            $('#form_especificoEn').removeAttr('required');
+        }
+    }
+    $('#form_talentoExtraordinario').on('change', function(){
+        validarEspecifico();
+    });
+    ////////////// 
+    function validarTalento(){
+        var accesos = $('#form_talentoExtraordinario').val();
+        if( accesos == '99'){//Especifico en           
+            $('#secTalentoOtro').show(1000);           
+            $('#form_especificoEn').attr('required','required');
+            $('#secEspecifico').hide(1000);
+        }else{
+            $('#secTalentoOtro').hide(1000);
+            $('#form_especificoEn').val('');
+            $('#form_especificoEn').removeAttr('required');
+        }
+    }
+    $('#form_talentoExtraordinario').on('change', function(){
+        validarTalento();
+    });
+    //////estrategiaOtroTipo
+    function validarEstrategia(){
+        var accesos = $('#form_estrategiaAtencionIntegral').val();
+        if($.inArray('99', accesos) !== -1){
+            $('#estrategiaOtroTipo').show(1000);           
+            $('#form_estrategiaOtro').attr('required','required');           
+        }else{
+            $('#estrategiaOtroTipo').hide(1000);
+            $('#form_estrategiaOtro').val('');
+            $('#form_estrategiaOtro').removeAttr('required');
+        }
+    }
+    $('#form_estrategiaAtencionIntegral').on('change', function(){
+        validarEstrategia();
+    });
+
+    $('.radioNacimiento').on('change', function(){
+      if($('#form_TieneNacimiento_no').is(':checked')){ 
+           $('#secNacimiento').hide(1000);
+           $('#form_oficialia').val('');
+            $('#form_libro').val('');
+            $('#form_partida').val('');
+            $('#form_folio').val('');
+        }else{
+            $('#secNacimiento').show(1000);
+            
+        }  
+    });
+    // VALIDAR SI TIENE OTRO GRADO DISCAPACIDAD EN CASO(MULTIPLE,INTELECTUAL,FISICO/MOTORA)
+    function validarOtroGradoDiscapacidad(){ //Pendiente validar solo numero 
+        var accesos = $('#form_gradoDiscapacidad').val();
+        if(accesos==='99'){
+            $('#otroGradodiscapacidad').css('display','block');            
+            $('#otroGradodiscapacidad').attr('required','required');
+        }else{
+            $('#otroGradodiscapacidad').val('');
+            $('#otroGradodiscapacidad').css('display','none');
+            $('#otroGradodiscapacidad').removeAttr('required');
+        }
+    }
+    $('#form_gradoDiscapacidad').on('change', function(){
+        validarOtroGradoDiscapacidad();
+    })
+    //validarOtraActividad();
     
 
     // ACCESO A INTERNET
@@ -2524,10 +2676,30 @@
         if (this.value == 1)
         {
             $('#div_tieneParientesDiscapacidad').show();
+            $('#form_parienteDiscapacidad0').attr('required','required');
+            //$('#form_parienteDiscapacidad1').attr('required','required');
+            //$('#form_parienteDiscapacidad2').attr('required','required');
+            //discapacidad
+            $('#form_discapacidad0').attr('required','required');
+            //$('#form_discapacidad1').attr('required','required');
+            //$('#form_discapacidad2').attr('required','required');
         }
         else
         {
             $('#div_tieneParientesDiscapacidad').hide();
+            $('#form_parienteDiscapacidad0').val('');
+            $('#form_parienteDiscapacidad1').val('');  
+            $('#form_parienteDiscapacidad2').val('');             
+            $('#form_parienteDiscapacidad0').removeAttr('required');
+            $('#form_parienteDiscapacidad1').removeAttr('required');
+            $('#form_parienteDiscapacidad2').removeAttr('required');
+            //discapacidad
+            $('#form_discapacidad0').val('');
+            $('#form_discapacidad1').val('');  
+            $('#form_discapacidad2').val('');             
+            $('#form_discapacidad0').removeAttr('required');
+            $('#form_discapacidad1').removeAttr('required');
+            $('#form_discapacidad2').removeAttr('required');
         }
     });
 
