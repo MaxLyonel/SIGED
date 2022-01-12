@@ -676,7 +676,10 @@ class CreacionCursosEspecialController extends Controller {
         elseif ($nivel == "403" ) {
             $grados = array(1,2);
         }
-        elseif ($nivel == "404" or $nivel == "405" ) { //TECNICA
+        elseif ($nivel == "404" ) { //EDUC PRIMARIA
+            $grados = array(1,2,3,4,5,6);
+        }
+        elseif ($nivel == "405" ) { //TECNICA
             $grados = array(1,2,3,4,5,6);
             if($area==1 or $area==2 or $area==4){
                 $grados = array(1,2);
