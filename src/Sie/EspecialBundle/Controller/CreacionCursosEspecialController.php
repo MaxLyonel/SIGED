@@ -676,7 +676,10 @@ class CreacionCursosEspecialController extends Controller {
         elseif ($nivel == "403" ) {
             $grados = array(1,2);
         }
-        elseif ($nivel == "404" or $nivel == "405" ) { //TECNICA
+        elseif ($nivel == "404" ) { //EDUC PRIMARIA
+            $grados = array(1,2,3,4,5,6);
+        }
+        elseif ($nivel == "405" ) { //TECNICA
             $grados = array(1,2,3,4,5,6);
             if($area==1 or $area==2 or $area==4){
                 $grados = array(1,2);
@@ -712,16 +715,18 @@ class CreacionCursosEspecialController extends Controller {
                 $niveltecnico = array(1,2,3);
             }
         }
-        
-        $query = $em->createQuery(
-            'SELECT g.id, g.nivelTecnico FROM SieAppWebBundle:EspecialNivelTecnicoTipo g
-                            WHERE g.id IN (:id)'
-            )->setParameter('id',$niveltecnico);
-
-        $nivelestecnicos = $query->getResult();
         $nivelestecnicosArray = array();
-        for($i=0;$i<count($nivelestecnicos);$i++){
-            $nivelestecnicosArray[$nivelestecnicos[$i]['id']] = $nivelestecnicos[$i]['nivelTecnico'];
+        if($niveltecnico){
+            $query = $em->createQuery(
+                'SELECT g.id, g.nivelTecnico FROM SieAppWebBundle:EspecialNivelTecnicoTipo g
+                                WHERE g.id IN (:id)'
+                )->setParameter('id',$niveltecnico);
+
+            $nivelestecnicos = $query->getResult();
+            
+            for($i=0;$i<count($nivelestecnicos);$i++){
+                $nivelestecnicosArray[$nivelestecnicos[$i]['id']] = $nivelestecnicos[$i]['nivelTecnico'];
+            }
         }
             //dump($nivelestecnicosArray);die;
         $response = new JsonResponse();
@@ -802,6 +807,7 @@ class CreacionCursosEspecialController extends Controller {
             if ($this->session->get('idGestion') < 2020) {
                 $programas = array(13);
             } else {
+                
                 $programas = array(19, 20, 21, 22);
             }
         }
