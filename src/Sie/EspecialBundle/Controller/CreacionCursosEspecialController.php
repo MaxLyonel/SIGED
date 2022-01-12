@@ -342,9 +342,9 @@ class CreacionCursosEspecialController extends Controller {
             
             $nivelTecnico = 99;
             if(isset($form['nivelTecnico'])){
-                $nivelTecnico = $form['nivelTecnico'];
+                $nivelTecnico = $form['nivelTecnico']?$form['nivelTecnico']:99;
             }
-            
+            //dump($nivelTecnico);die;
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_especial');")->execute();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
