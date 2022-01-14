@@ -12,6 +12,12 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\Institucioneducativa;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoTextosEducativos;
+use Sie\AppWebBundle\Entity\NivelTipo;
+use Sie\AppWebBundle\Entity\TurnoTipo;
+use Sie\AppWebBundle\Entity\GradoTipo;
+use Sie\AppWebBundle\Entity\ParaleloTipo;
+use Sie\AppWebBundle\Entity\EstudianteInscripcion;
+use Sie\AppWebBundle\Entity\Estudiante;
 
 /**
  * ModalidadCurso controller.
@@ -703,5 +709,113 @@ class TextoEducativoController extends Controller
 		$response->headers->set('Expires', '0');
 		return $response;
     }
+
+
+
+
+
+	public function asignacionParaleloAction(Request $request) {
+        //get db connexion
+        $em = $this->getDoctrine()->getManager();
+        //get the info ue
+        $infoUe = $request->get('infoUe');
+        $aInfoUeducativa = unserialize($infoUe);
+        // dump($aInfoUeducativa); die();
+        $sie = $aInfoUeducativa['requestUser']['sie'];
+        $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+        $nivel = $aInfoUeducativa['ueducativaInfoId']['nivelId'];
+        $grado = $aInfoUeducativa['ueducativaInfoId']['gradoId'];
+        $turno = $aInfoUeducativa['ueducativaInfoId']['turnoId'];
+        $gestion = $aInfoUeducativa['requestUser']['gestion'];
+        $paralelo = $aInfoUeducativa['ueducativaInfoId']['paraleloId'];
+
+        $turno1 = $em->getRepository('SieAppWebBundle:TurnoTipo')->find($turno)->getTurno();
+        $grado1 = $em->getRepository('SieAppWebBundle:GradoTipo')->find($grado)->getGrado();
+        $nivel1 = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel)->getNivel();
+        $paralelo1 = $em->getRepository('SieAppWebBundle:ParaleloTipo')->find($paralelo)->getParalelo();
+        $gestion_a=$gestion-1;
+
+
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('gestionTipo'=>$gestion, 'institucioneducativa'=>$sie, 'nivelTipo'=>$nivel, 'gradoTipo'=>$grado, 'paraleloTipo'=>$paralelo ));
+        $id_inst_curso=$entity->getId();
+
+        $query = $em->getConnection()->prepare("create temporary table estudiantes_regular_seleccionables_".$sie."_".$nivel."_".$grado." as select * from sp_regular_listado_inscripcion_ig('".$gestion_a."','".$gestion."','".$sie."','".$nivel."','".$grado."','".$id_inst_curso."') order by paterno,materno,nombre");
+		$query->execute();
+
+
+        $query1 = $em->getConnection()->prepare("select * from estudiantes_regular_seleccionables_".$sie."_".$nivel."_".$grado." ");
+		$query1->execute();
+		$dataInscription = $query1->fetchAll();
+		if (!$dataInscription) {
+			$query3 = $em->getConnection()->prepare("drop table if exists estudiantes_regular_seleccionables_".$sie."_".$nivel."_".$grado." ");
+			$query3->execute();
+		}
+		// dump($dataInscription); die();
+
+
+        /*$query = $em->getConnection()->prepare("select * from sp_regular_listado_inscripcion_ig('".$gestion_a."','".$gestion."','".$sie."','".$nivel."','".$grado."','".$id_inst_curso."')");
+		$query->execute();
+		$dataInscription = $query->fetchAll();*/
+        // $institucioneducativaCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId); 
+
+        return $this->render($this->session->get('pathSystem') . ':AsignarParalelo:asignarparalelo_index.html.twig', array(
+            'dataInscription' => $dataInscription,
+            'nivel' => $nivel1,
+            'grado' => $grado1,
+            'gestion' => $gestion,
+            'paralelo' => $paralelo1,
+            'turno' => $turno1,
+            'id_inst_curso' => $id_inst_curso,
+            'sie' => $sie,
+            'nivelid' => $nivel,
+            'gradoid' => $grado
+        ));
+    }
+    public function guardar_datos_asignacion_paraleloAction(Request $request){
+    	$em = $this->getDoctrine()->getManager();
+    	$response = new JsonResponse();
+        $gradoid = $request->get('gradoid');
+        $nivelid = $request->get('nivelid');
+        $sie = $request->get('sie');
+        $id_inst_curso = $request->get('id_inst_curso');
+        $gestion = $request->get('gestion');
+        $estudiante_id = $request->get('estudiante_id');
+
+        if(is_array($estudiante_id)){
+        	// $em->getConnection()->beginTransaction();
+			try {
+				// $datos = array();
+				for($i=0;$i<count($estudiante_id);$i++){	
+					// $datos[]=$estudiante_id[$i];
+					$estInscripcion = new EstudianteInscripcion();
+					$estInscripcion->setNumMatricula(0);
+	                $estInscripcion->setObservacionId(0);
+	                $estInscripcion->setObservacion(0);
+	                $estInscripcion->setFechaInscripcion(new \DateTime('now'));
+	                $estInscripcion->setApreciacionFinal('');
+	                $estInscripcion->setOperativoId(1);
+	                $estInscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
+	                $estInscripcion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudiante_id[$i]));
+	                $estInscripcion->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($id_inst_curso));
+	                $estInscripcion->setFechaRegistro(new \DateTime('now'));
+	                $em->persist($estInscripcion);
+                     $em->flush();
+				}	
+				// $dato_string=implode(",",$datos);
+				/*$query = $em->getConnection()->prepare("update estudiantes_regular_seleccionables_".$sie."_".$nivelid."_".$gradoid." set  es_seleccionado='t' where estudiante_id IN (".$dato_string.") ");
+				$query->execute();*/
+				// $em->getConnection()->commit();
+				/*$query3 = $em->getConnection()->prepare("drop table if exists estudiantes_regular_seleccionables_".$sie."_".$nivelid."_".$gradoid." ");
+				$query3->execute();*/
+				$dat=array('0'=>1);
+			} catch (Exception $e) {
+	            // $em->getConnection()->rollback();
+	            $dat=array('0'=>0);
+	        }  
+		}else{
+			$dat=array('0'=>0);
+		}
+		return $response->setData($dat);
+    } 
 
 }
