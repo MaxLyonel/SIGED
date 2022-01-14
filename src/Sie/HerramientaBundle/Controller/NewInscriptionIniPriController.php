@@ -65,7 +65,7 @@ class NewInscriptionIniPriController extends Controller
     public function indexAction(Request $request){
      //disabled option by krlos
      //return $this->redirect($this->generateUrl('login'));
-     if (in_array($this->session->get('roluser'), array(8,10,7))){
+     if (in_array($this->session->get('roluser'), array(8,10,7,9))){
      }else{
      	//to do the ue cal diff
      	if(!($this->esGuanawek($this->session->get('ie_id'),$gestion=2020))){
@@ -229,7 +229,7 @@ class NewInscriptionIniPriController extends Controller
 		      	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
 		        $yearStudent = $arrYearStudent['age'];
 			// check if the student is on 5 - 8 years old
-			 $arrValidationYearOld = in_array($this->session->get('roluser'), array(7,8,10))?array(4,5,6,7,8,9,10,11,12,13,14,15,16,17,18):array(4,5,6);
+			 $arrValidationYearOld = in_array($this->session->get('roluser'), array(7,8,10,9))?array(4,5,6,7,8,9,10,11,12,13,14,15,16,17,18):array(4,5,6);
 			 
 			 //if($yearStudent<=8 && $yearStudent>=4){
 			 if(in_array( $yearStudent, $arrValidationYearOld )){
@@ -893,7 +893,7 @@ class NewInscriptionIniPriController extends Controller
         // validation if the ue is over 4 operativo
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
             
-	$swinscription=true;
+		$swinscription=true;
             if($operativo >= 3){
                 $status = 'error';
 				$code = 400;
