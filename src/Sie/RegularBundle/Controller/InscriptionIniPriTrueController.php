@@ -157,8 +157,8 @@ class InscriptionIniPriTrueController extends Controller {
          $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => strtoupper($form['codigoRude'])));
 
         //check if the student exists
-
         if ($student) {
+           
           //get current inscription
           $inscriptionsGestionSelected = $em->createQueryBuilder()
                       ->select('ei.id as idInscripcion', 'IDENTITY(iec.nivelTipo) as nivelId', 'IDENTITY(iec.cicloTipo) as cicloId', 'IDENTITY(iec.gestionTipo) as gestion', 'IDENTITY(iec.gradoTipo) as gradoId', 'IDENTITY(iec.turnoTipo) as turnoId', 'IDENTITY(ei.estadomatriculaTipo) as estadoMatriculaId', 'IDENTITY(iec.paraleloTipo) as paraleloId', 'IDENTITY(iec.institucioneducativa) as sie, e.segipId, e.carnetIdentidad')
@@ -269,8 +269,7 @@ class InscriptionIniPriTrueController extends Controller {
                 return $formOmitido;
     }
 
-    private function createFormInsc1($idStudent, $sw, $data, $gestionIns, $codigoRude, $idOtraInscripcion) { 
-      // dump($data); die();
+    private function createFormInsc1($idStudent, $sw, $data, $gestionIns, $codigoRude, $idOtraInscripcion) {
       
         $em = $this->getDoctrine()->getManager();
         $arrQuestion = array(
@@ -315,10 +314,7 @@ class InscriptionIniPriTrueController extends Controller {
                 ->add('gestionIns', 'hidden', array('data' => $gestionIns))
                 ->add('codigoRude', 'hidden', array('data'=>$codigoRude))
                 ->add('idOtraInscripcion', 'hidden', array('data'=>$idOtraInscripcion))
-                ->add('observacionOmitido', 'textarea', array('label' => 'Registre una breve justificación de la inscripción del estudiante', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )))
-                ->add('archos_file', 'file', array('label' => 'CARGAR ARCHIVO RESPALDO', 'attr' => array('class' => 'form-control nuevaFoto', 'accept'=>'image/png, .jpeg, .jpg, application/pdf','required' => true )));
-
-
+                ->add('observacionOmitido', 'textarea', array('label' => 'Registre una breve justificación de la inscripción del estudiante', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )));
         if($this->session->get('ie_id') > 0 ){
            $formOmitido = $formOmitido 
                 ->add('institucionEducativa', 'text', array('data'=>$this->session->get('ie_id'), 'label' => 'SIE', 'attr' => array('readonly' => true,'maxlength' => 8, 'class' => 'form-control')))
@@ -337,7 +333,7 @@ class InscriptionIniPriTrueController extends Controller {
 
 
 
-              $formOmitido = $formOmitido   ->add('save', 'submit', array('label' => 'Verificar y Registrar', 'attr'=> array('class' => 'btn btn-success' , 'onclick'=>'checkInscription()')))
+              $formOmitido = $formOmitido   ->add('save', 'button', array('label' => 'Verificar y Registrar', 'attr'=> array('class' => 'btn btn-success' , 'onclick'=>'checkInscription()')))
                 ->getForm();
 
                 return $formOmitido;
@@ -440,20 +436,11 @@ class InscriptionIniPriTrueController extends Controller {
       }
 
     public function verificaInscriptionAction(Request $request){
-
-      // dump($request);die;
       //create DB conexion
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
-
-
-      // $oFile = $request->files->get('archos_file');
-      // dump($oFile);die;
-      /*dump($request);
-      dump($_FILES);die;*/
-
       $form = $request->get('form');
-      // dump($form['files']); die;
+
       //get values all data
       $setNotasInscription=false;
 
@@ -695,8 +682,7 @@ class InscriptionIniPriTrueController extends Controller {
 
         if (isset($form['dateRequest']) and $form['dateRequest'] != '') {
            
-            //$nuevoEstado =9; // RETIRADO TRASLADO
-            $nuevoEstado =6; // NO INCORPORADO
+            $nuevoEstado = 9; // RETIRADO TRASLADO
             
             //find to update
             $currentInscrip = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['idOtraInscripcion']);         
@@ -724,57 +710,27 @@ class InscriptionIniPriTrueController extends Controller {
 
                 )
             );
+            $objEstudianteInscripcionCambioestado = new EstudianteInscripcionCambioestado();
+            $objEstudianteInscripcionCambioestado->setJustificacion($form['observacionOmitido']);
+            $objEstudianteInscripcionCambioestado->setJson(json_encode($datos));
+            $objEstudianteInscripcionCambioestado->setFechaRegistro(new \DateTime('now'));
+            $objEstudianteInscripcionCambioestado->setUsuarioId($this->session->get('userId'));
+            $objEstudianteInscripcionCambioestado->setEstudianteInscripcion( $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['idOtraInscripcion']) );
+            $objEstudianteInscripcionCambioestado->setInstitucioneducativaAnt( $em->getRepository('SieAppWebBundle:Institucioneducativa')->find( $oldInscriptionStudent->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() ) );
+             $em->persist($objEstudianteInscripcionCambioestado);
 
-            ///cargar archivo
-            // dump($_FILES); die;
-            if (isset($_FILES)) {  
-              $file = $_FILES['archos_file'];
-              /*$type = $file['type'];
-              $size = $file['size'];*/
-              $tmp_name = $file['tmp_name'];
-              $name = $file['name'];
-              // dump($name);die;
-              $tmp_name = $_FILES['archos_file']['tmp_name'];
 
-              $extension=explode(".", $_FILES['archos_file']['name']);
-              $new_name = round(microtime(true)).'.'.$extension;
-              // GUARDAMOS EL ARCHIVO
-              $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/insTraslado/' .date('Y');
-
-              if (!file_exists($directorio)) {  mkdir($directorio, 0775, true);  }
-
-              $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/insTraslado/' .date('Y').'/'.$studentInscription->getId();
-              
-              if (!file_exists($directoriomove)) {    mkdir($directoriomove, 0775, true);    }
-
-              $archivador = $directoriomove.'/'.$new_name;
-              move_uploaded_file($tmp_name, $archivador);
-            }else{ 
-              $archivador='';  
-              // dump(TRUE);die; 
-            }
-              ///cargar archivo
-              // dump($archivador);die;
-              $objEstudianteInscripcionCambioestado = new EstudianteInscripcionCambioestado();
-              $objEstudianteInscripcionCambioestado->setJustificacion($form['observacionOmitido']);
-              $objEstudianteInscripcionCambioestado->setArchivo($archivador);
-              $objEstudianteInscripcionCambioestado->setJson(json_encode($datos));
-              $objEstudianteInscripcionCambioestado->setFechaRegistro(new \DateTime('now'));
-              $objEstudianteInscripcionCambioestado->setUsuarioId($this->session->get('userId'));
-              $objEstudianteInscripcionCambioestado->setEstudianteInscripcion( $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($form['idOtraInscripcion']) );
-              $objEstudianteInscripcionCambioestado->setInstitucioneducativaAnt( $em->getRepository('SieAppWebBundle:Institucioneducativa')->find( $oldInscriptionStudent->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() ) );
-               $em->persist($objEstudianteInscripcionCambioestado);
-              // added set log info data
-              $this->get('funciones')->setLogTransaccion(
-                $form['idOtraInscripcion'],
-                'estudian $oldInscriptionStudent->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() te_inscripcion',
-                'U',
-                '',
-                $currentInscrip,
-                $oldInscriptionStudent,
-                'SIGED',
-                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-              ); 
+            // added set log info data
+            $this->get('funciones')->setLogTransaccion(
+                                  $form['idOtraInscripcion'],
+                                  'estudian $oldInscriptionStudent->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() te_inscripcion',
+                                  'U',
+                                  '',
+                                  $currentInscrip,
+                                  $oldInscriptionStudent,
+                                  'SIGED',
+                                  json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+            );   
         }
           
         /*=====  End of ACTUALIZACION DEL ESTADO DE MATRICULA  ======*/
@@ -1283,7 +1239,7 @@ class InscriptionIniPriTrueController extends Controller {
      *
      */
     public function saveAction(Request $request) {
-      // dump($request); die();
+
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         //get the variblees
