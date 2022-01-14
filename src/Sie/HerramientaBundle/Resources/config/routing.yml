@@ -58,6 +58,10 @@ sie_herramienta_info_estudiante:
     resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudiante.yml"
     prefix:   /sie/infoEstudiante
 
+sie_herramienta_info_estudiante_asignar_paralelo:
+    resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianteAsignarParalelo.yml"
+    prefix:   /sie/infoEstudiante
+
 sie_herramienta_info_estudianterequest:
     resource: "@SieHerramientaBundle/Resources/config/routing/infoEstudianterequest.yml"
     prefix:   /sie/infoEstudianteRequest
