@@ -146,6 +146,7 @@ class InfoNotasController extends Controller {
                 case 3: //Intelectual
                 case 5: //Multiple
                         switch ($nivel) {
+                            case 400:
                             case 401:
                             case 408:
                             case 402:
