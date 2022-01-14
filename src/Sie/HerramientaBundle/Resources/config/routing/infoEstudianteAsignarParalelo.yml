@@ -1,0 +1,12 @@
+
+herramienta_asignarPararlelo_index:
+    path:     /asigParalelo
+    defaults: { _controller: "SieHerramientaBundle:TextoEducativo:asignacionParalelo"}
+    options:
+         expose: true
+
+guardar_datos_asignacion_paralelo:
+    path:     /guardar_datos_asignacion_paralelo
+    defaults: { _controller: "SieHerramientaBundle:TextoEducativo:guardar_datos_asignacion_paralelo"}
+    options:
+         expose: true
