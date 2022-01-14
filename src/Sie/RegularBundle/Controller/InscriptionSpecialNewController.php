@@ -54,7 +54,7 @@ class InscriptionSpecialNewController extends Controller
         return $form;
      }
     public function findAction(Request $request ){
-       if (in_array($this->session->get('roluser'), array(8))){
+       if (in_array($this->session->get('roluser'), array(7,8,9,10))){
 
        }else{
         return $this->redirect($this->generateUrl('login'));  
@@ -358,6 +358,7 @@ class InscriptionSpecialNewController extends Controller
      * @return type
      */
     public function findIEAction($id, $gestion) {
+      
       $em = $this->getDoctrine()->getManager();
       //get the tuicion
       //select * from get_ue_tuicion(137746,82480002)
@@ -389,6 +390,7 @@ class InscriptionSpecialNewController extends Controller
               ->distinct()
               ->getQuery();
       $aNiveles = $query->getResult();
+      
       foreach ($aNiveles as $nivel) {
           $aniveles[$nivel[1]] = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel();
       }
@@ -409,8 +411,9 @@ class InscriptionSpecialNewController extends Controller
    * return list of grados
    */
   public function findgradoAction($idnivel, $sie, $gestion) {
+      
       $em = $this->getDoctrine()->getManager();
-
+    
        //get grado
       $agrados = array();
       $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');

@@ -387,20 +387,20 @@
 	                            <p class="encabezado bg-primary">INFORMACIÓN UNIDAD EDUCATIVA</p>
                                      <div class="row"  v-if="allowwithoutci" >
                                       <div class="col-md-4" >
-				      <label for="inscription">Tipo de Inscripcion</label>
-					<select name="arrTypeInscription" id="idarrIns_inscrip" v-model="dataNewStudent.typeInscription" class="custom-select form-control" >
+				                                <label for="inscription">Tipo de Inscripcion</label>
+					                              <select name="arrTypeInscription" id="idarrIns_inscrip" v-model="dataNewStudent.typeInscription" class="custom-select form-control" >
 I                                           <option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
-                                            <option value="1">ARTÍCULO 14 R.M. 001/2021</option>
+                                            <option value="1">ARTÍCULO 12 d) R.M. 001/2022</option>
                                             <option value="2">EST. MAYOR A 6 AÑOS PARA APLICAR REZAGO ESCOLAR</option>
                                         </select>
 
                                       </div>
-					<div class="col-sm-8" v-if="allowwithoutci">
+					                            <div class="col-sm-8" v-if="allowwithoutci">
                                                      <label for="certificado">Adjuntar Documento, formatos permitidos jpg,pdf no mayor a 2MB 
-							<div v-if="dataNewStudent.typeInscription ==0">CERTIFICADO DE NACIMIENTO</div> 
+							                                  <div v-if="dataNewStudent.typeInscription ==0">CERTIFICADO DE NACIMIENTO</div> 
                                                  	<div v-if="dataNewStudent.typeInscription ==1">INFORME DE EVALUACIÓN PSICOPEDAGÓGICA INTEGRAL</div>
                                                  	<div v-if="dataNewStudent.typeInscription ==2">CERTIFICADO DE NACIMIENTO</div>
-							</label>
+							                                  </label>
                                                         <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
                                         </div>
 
