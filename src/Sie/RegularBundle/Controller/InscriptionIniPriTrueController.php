@@ -316,7 +316,7 @@ class InscriptionIniPriTrueController extends Controller {
                 ->add('codigoRude', 'hidden', array('data'=>$codigoRude))
                 ->add('idOtraInscripcion', 'hidden', array('data'=>$idOtraInscripcion))
                 ->add('observacionOmitido', 'textarea', array('label' => 'Registre una breve justificación de la inscripción del estudiante', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )))
-                ->add('archos_file', 'file', array('label' => 'CARGAR ARCHIVO RESPALDO', 'attr' => array('class' => 'form-control nuevaFoto', 'accept'=>'file/*','required' => true )));
+                ->add('archos_file', 'file', array('label' => 'CARGAR ARCHIVO RESPALDO', 'attr' => array('class' => 'form-control nuevaFoto', 'accept'=>'image/png, .jpeg, .jpg, application/pdf','required' => true )));
 
 
         if($this->session->get('ie_id') > 0 ){
@@ -749,9 +749,12 @@ class InscriptionIniPriTrueController extends Controller {
 
               $archivador = $directoriomove.'/'.$new_name;
               move_uploaded_file($tmp_name, $archivador);
+            }else{ 
+              $archivador='';  
+              // dump(TRUE);die; 
+            }
               ///cargar archivo
               // dump($archivador);die;
-
               $objEstudianteInscripcionCambioestado = new EstudianteInscripcionCambioestado();
               $objEstudianteInscripcionCambioestado->setJustificacion($form['observacionOmitido']);
               $objEstudianteInscripcionCambioestado->setArchivo($archivador);
@@ -763,19 +766,15 @@ class InscriptionIniPriTrueController extends Controller {
                $em->persist($objEstudianteInscripcionCambioestado);
               // added set log info data
               $this->get('funciones')->setLogTransaccion(
-                      $form['idOtraInscripcion'],
-                      'estudian $oldInscriptionStudent->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() te_inscripcion',
-                      'U',
-                      '',
-                      $currentInscrip,
-                      $oldInscriptionStudent,
-                      'SIGED',
-                      json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
+                $form['idOtraInscripcion'],
+                'estudian $oldInscriptionStudent->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId() te_inscripcion',
+                'U',
+                '',
+                $currentInscrip,
+                $oldInscriptionStudent,
+                'SIGED',
+                json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
               ); 
-            }else{ 
-              $archivador='';  
-              // dump(TRUE);die; 
-            }
         }
           
         /*=====  End of ACTUALIZACION DEL ESTADO DE MATRICULA  ======*/
