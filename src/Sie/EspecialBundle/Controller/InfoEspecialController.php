@@ -289,7 +289,7 @@ class InfoEspecialController extends Controller{
               case 1: $registroConsol->setBim1('2'); break;
               case 2: $registroConsol->setBim2('2'); break;
               case 3: $registroConsol->setBim3('2'); break;
-             // case 4: $registroConsol->setBim4('2'); break;
+            //  case 4: $registroConsol->setBim4('2'); break;
           }
           
           //$em->persist($registroConsol);
@@ -316,21 +316,19 @@ class InfoEspecialController extends Controller{
             // Si no existe es operativo inicio de gestion
             $operativo = 0;
         }else{
-            if($registroOperativo[0]['bim1'] == 0 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 1; // Primer Bimestre
+            if($registroOperativo[0]['bim1'] == 0 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0){
+                $operativo = 1; // Primer Trimestre
             }
-            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 2; // Segundo Bimestre
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 ){
+                $operativo = 2; // Segundo Trimestre
             }
-            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 3; // Tercer Bimestre
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] == 0 ){
+                $operativo = 3; // Tercer Trimestre
             }
-            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] == 0){
-                $operativo = 4; // Cuarto Bimestre
+            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 ){
+                $operativo = 9; // fin de trimestre
             }
-            if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 and $registroOperativo[0]['bim4'] >= 1){
-                $operativo = 5; // Fin de gestion o cerrado
-            }
+            
         }
         return $operativo;
     }
