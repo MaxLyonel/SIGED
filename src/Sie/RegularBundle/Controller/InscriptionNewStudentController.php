@@ -43,7 +43,7 @@ class InscriptionNewStudentController extends Controller {
       //deshabilitado
       //return $this->redirect($this->generateUrl('login'));
 
-     if (in_array($this->session->get('roluser'), array(8,10,7))){
+     if (in_array($this->session->get('roluser'), array(8,10,7,9))){
      }else{
       return $this->redirect($this->generateUrl('login'));  
      }
@@ -81,7 +81,7 @@ class InscriptionNewStudentController extends Controller {
         61710098
       );
 
-      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or in_array($this->session->get('roluser'), array(7,8,10))   ){
+      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or in_array($this->session->get('roluser'), array(7,8,9,10))   ){
         //nothing todo
       }else{
         return $this->redirect($this->generateUrl('principal_web'));
@@ -95,6 +95,7 @@ class InscriptionNewStudentController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        
         return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:index.html.twig', array(
                     'form' => $this->createSearchForm()->createView(),
         ));
@@ -243,7 +244,7 @@ class InscriptionNewStudentController extends Controller {
                 ->add('newdata', 'hidden', array('data' => serialize($data)))
                 ->add('gestionIns', 'hidden', array('data' => $gestionIns))
                 ->add('codigoRude', 'hidden', array('data'=>$codigoRude))
-                ->add('observacionOmitido', 'textarea', array('label' => 'Justificativo de la Inscripción para Omitidos/Extemporáneos', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )))
+                ->add('observacionOmitido', 'hidden', array('label' => '', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )))
                 ->add('save', 'button', array('label' => 'Verificar y Registrar', 'attr'=> array('class' => 'btn btn-success' , 'onclick'=>'checkInscription()')))
                 ->getForm();
     }
@@ -510,12 +511,12 @@ class InscriptionNewStudentController extends Controller {
          $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
          $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
          $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']));
-         $studentInscription->setObservacion($form['observacionOmitido']);
+         $studentInscription->setObservacion('NUEVA INSCRIPCION');
          $studentInscription->setObservacionId(6);
          $studentInscription->setFechaInscripcion(new \DateTime('now'));
          $studentInscription->setFechaRegistro(new \DateTime('now'));
          $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
-         $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(7));
+         $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(1));
          $studentInscription->setCodUeProcedenciaId($ue_procedencia['cod_ue_procedencia_id']);
          $studentInscription->setNumMatricula(0);
          $em->persist($studentInscription);
@@ -540,7 +541,7 @@ class InscriptionNewStudentController extends Controller {
              json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
          );
          $em->getConnection()->commit();
-         $message = 'Datos Registrados Correctamente, a continuacion registre las NOTAS';
+         $message = 'Datos Registrados Correctamente';
          $this->addFlash('saveGoodInscription', $message);
          $setNotasInscription=true;
          return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:menssageInscription.html.twig', array(
