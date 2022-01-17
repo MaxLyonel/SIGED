@@ -162,7 +162,36 @@ class InfoEstudianteRudeesNuevoController extends Controller
 				$vista = 'SieHerramientaBundle:InfoEstudianteRudeNuevo:index.html.twig';
 			break;
 		}
-
+		///dump($estudiante->getCodigoRude());die;
+		$paralelo = $aInfoUeducativa['ueducativaInfo']['paralelo'];
+		$areaEspecial = $aInfoUeducativa['ueducativaInfo']['areaEspecial'];
+		$nivel= $aInfoUeducativa['ueducativaInfo']['nivel'];
+		$grado= $aInfoUeducativa['ueducativaInfo']['grado'];
+		$programa=$aInfoUeducativa['ueducativaInfo']['programa'];
+		$servicio=$aInfoUeducativa['ueducativaInfo']['servicio'];
+		$iecId=$aInfoUeducativa['ueducativaInfoId']['iecId'];
+		
+		//buscamos la especialidad en caso de formacion tecnica
+		$especialidad='';
+		
+			$tecnica = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso'=>$iecId));// dump($tecnica);die;
+			$especialidadTipo = $em->getRepository('SieAppWebBundle:EspecialTecnicaEspecialidadTipo')->find($tecnica->getEspecialTecnicaEspecialidadTipo()); 
+			$especialidad = $especialidadTipo->getEspecialidad(); 
+		//Buscamos los servicios a los que se encuentre inscrito el estudiante
+		//dump($estudiante);die;
+		$query2 = $em->getConnection()->prepare('select * FROM especial_servicio_tipo WHERE id in(
+							SELECT especial_servicio_tipo_id from institucioneducativa_curso_especial WHERE institucioneducativa_curso_id in (
+								SELECT id FROM institucioneducativa_curso WHERE id  in( SELECT institucioneducativa_curso_id from estudiante_inscripcion WHERE estudiante_id = '.$estudiante->getId().' and estadomatricula_tipo_id = 4 ) and nivel_tipo_id = 410  )) 
+								');
+        $query2->execute();
+        $queryEspecialidades = $query2->fetchAll();
+		//dump($queryEspecialidades);die;
+		$serviciosArray = array();
+		foreach ($queryEspecialidades as $gd) {
+			$serviciosArray[] = $gd['servicio'];
+		}
+		//dump($serviciosArray);die;
+		
 		return $this->render( $vista , [
 			'sie'=>$sie,
 			'estudiante'=>$estudiante,
@@ -182,9 +211,19 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			'formLugar'=>$this->createFormLugar($rude)->createView(),
 			'inscripcion'=>$inscripcion,
 			'rude'=>$rude,
-
-
 			'estadoCivilData'=>$estadoCivilData,
+			'aInfoUeducativa'=>$aInfoUeducativa,
+			
+			'areaEspecial'=>$areaEspecial,
+			'paralelo'=>$paralelo,
+			'nivel'=>$nivel,
+			'grado'=>$grado,
+			'programa'=>$programa,
+			'servicio'=>$servicio,
+			'especialidad'=>$especialidad,
+
+			'serviciosArray'=>$serviciosArray
+
 		]);
 	}
 
@@ -1822,8 +1861,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 				$gradosArray[] = $gd->getId();
 			}
 		}
-
-
+		
 		// SERVICIOS BASICOS
 		$servicios = $em->getRepository('SieAppWebBundle:ServicioBasicoTipo')->findAll();
 		foreach ($servicios as $s)
@@ -1935,7 +1973,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 					},
 					'empty_value' => 'Seleccionar...',					
 					'required' => true,					
-					//'data'=>($discapacidadTipoGradoPorcentaje_rude)?$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo():'',
+					'data'=>($discapacidadTipoGradoPorcentaje_rude)?$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo():'',
 					'mapped'=>false
 				))
 			->add('gradoDiscapacidad', 'entity', array(
@@ -1962,12 +2000,11 @@ class InfoEstudianteRudeesNuevoController extends Controller
 					    	$attr['selected'] = 'selected';
 					    return $attr;
 					},
-				))
-				//, 'data'=> $carnet0 pendiente			
+				))					
 			->add('otroGrado', 'number', array('mapped'=>false, 'required'=>false))		
 			->add('porcentaje', 'text', array(
 				'required' => true, 
-				'data'=>($discapacidadTipoGradoPorcentaje_rude)?$discapacidadTipoGradoPorcentaje_rude->getPorcentaje():'',
+				//'data'=>($discapacidadTipoGradoPorcentaje_rude)?$discapacidadTipoGradoPorcentaje_rude->getPorcentaje():'',
 				'mapped'=>false, 
 			))
 			->add('dificultadAprendizaje', 'entity', array(
@@ -1982,10 +2019,24 @@ class InfoEstudianteRudeesNuevoController extends Controller
 					'multiple'=>true,
 					'property'=>'dificultadaprendizaje',
 					'required'=>true,
-					//'data'=>$em->getRepository('SieAppWebBundle:DificultadAprendizajeTipo')->findBy(array('id'=>$dificultadAprendizaje_array)),
+					'data'=>$em->getRepository('SieAppWebBundle:DificultadAprendizajeTipo')->findBy(array('id'=>$dificultadAprendizaje_array)),
 					'mapped'=>false
 				))
-
+			->add('talentoExtraordinario', 'entity', array(
+				'class' => 'SieAppWebBundle:TalentoExtraordinarioTipo',
+				'query_builder' => function (EntityRepository $e) use ($rude) {
+					return $e->createQueryBuilder('cst')
+							->where('cst.id in (:ids)')
+							->setParameter('ids', $this->obtenerCatalogo($rude, 'talento_extraordinario_tipo'))
+							->orderBy('cst.id', 'ASC');
+							
+				},
+				'empty_value' => 'Seleccionar...',
+				'property'=>'talentoextraordinario',
+				'required' => false,
+				'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getTalentoExtraordinarioTipo():'',
+				'mapped'=>false
+			))
 			->add('coeficienteIntelectual', 'text', array(
 				'required' => false, 
 				'mapped'=>false,
@@ -1996,21 +2047,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 				'mapped'=>false,
 				'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getPromediocalificaciones():'',
 			))
-			->add('talentoExtraordinario', 'entity', array(
-					'class' => 'SieAppWebBundle:TalentoExtraordinarioTipo',
-					'query_builder' => function (EntityRepository $e) use ($rude) {
-						return $e->createQueryBuilder('cst')
-								->where('cst.id in (:ids)')
-								->setParameter('ids', $this->obtenerCatalogo($rude, 'talento_extraordinario_tipo'))
-								->orderBy('cst.id', 'ASC');
-								
-					},
-					'empty_value' => 'Seleccionar...',
-					'property'=>'talentoextraordinario',
-					'required' => false,
-					//'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getTalentoExtraordinarioTipo():'',
-					'mapped'=>false
-				))
+			
 			->add('especificoEn', 'text', array(
 				'required' => false, 
 				'mapped'=>false,
@@ -2034,7 +2071,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 					'multiple'=>true,
 					'property'=>'estrategiaatencion',
 					'required'=>false,
-					//'data'=>$em->getRepository('SieAppWebBundle:EstrategiaAtencionIntegralTipo')->findBy(array('id'=>$estrategiaAtencionIntegral_array)),
+					'data'=>$em->getRepository('SieAppWebBundle:EstrategiaAtencionIntegralTipo')->findBy(array('id'=>$estrategiaAtencionIntegral_array)),
 					'mapped'=>false
 			))
 			->add('estrategiaOtro', 'text', array(
@@ -2221,18 +2258,18 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$em->remove($discapacidadGrado_rude);
 			$em->flush();
 		}
-		//dump($form);die();
+		
 		// CREAMOS LOS DATOS DEL GRADO DE LA DISCAPACIDAD 
 	
 		$discapacidadGrado_new = new RudeDiscapacidadGrado();
 		$discapacidadGrado_new->setRude($rude);
 		$discapacidadGrado_new->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
 		if($form['discapacidad']==2||$form['discapacidad']==5||$form['discapacidad']==4){
-			$discapacidadGrado_new->setGradoDiscapacidadTipo1($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['gradoDiscapacidad']));	
+			//$discapacidadGrado_new->setGradoDiscapacidadTipo1($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['gradoDiscapacidad']));PENDIENTE A MAPEO DE TABLA	
 		}else{
 			$discapacidadGrado_new->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find($form['gradoDiscapacidad']));
 		}		
-		$discapacidadGrado_new->setPorcentaje($form['porcentaje']);
+		//$discapacidadGrado_new->setPorcentaje($form['porcentaje']);
 		$discapacidadGrado_new->setFechaRegistro(new \DateTime('now'));
 		$discapacidadGrado_new->setFechaModificacion(new \DateTime('now'));
 		$em->persist($discapacidadGrado_new);
@@ -2257,7 +2294,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$em->persist($dificultadAprendizaje_new);
 			$em->flush();
 		}
-
+		
 		//4.3
 		// ELIMINAMOS LOS DATOS DE TALENTO EXTRAORDINARIO
 		$talentoextraordinario_rude = $em->getRepository('SieAppWebBundle:RudeTalentoExtraordinario')->findOneBy(array('rude'=>$rude->getId()));
@@ -2278,10 +2315,13 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		$talentoextraordinario_new->setCoeficienteintelectual($form['coeficienteIntelectual']);
 		$talentoextraordinario_new->setPromediocalificaciones($form['promedioCalificaciones']);
 		$talentoextraordinario_new->setTalentoExtraordinarioTipo($em->getRepository('SieAppWebBundle:TalentoExtraordinarioTipo')->find($form['talentoExtraordinario']));
+		//$talentoextraordinario_new->setEspecificoEn($form['especificoEn']?$form['especificoEn']:'');
+		//$talentoextraordinario_new->setTalentoOtro($form['talentoOtro']?$form['talentoOtro']:'');
 		$talentoextraordinario_new->setFechaRegistro(new \DateTime('now'));
 		$talentoextraordinario_new->setFechaModificacion(new \DateTime('now'));
 		$em->persist($talentoextraordinario_new);
 		$em->flush();
+		
 		foreach($form['estrategiaAtencionIntegral'] as $i)
 		{
 			$estrategiaAtencionIntegral_new = new RudeEstrategiaAtencionIntegral();
@@ -2292,7 +2332,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$em->persist($estrategiaAtencionIntegral_new);
 			$em->flush();
 		}
-
+	
 		//4.4
 		// ELIMINAMOS LOS SERVICIOS
 		$eliminarServicios = $em->createQueryBuilder()
@@ -2357,7 +2397,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$em->persist($servicio);
 			$em->flush();
 		 }
-
+		 
 		//4.5
 		// ELIMINAMOS LOS MEDIOS DE COMUNICACION
 		$eliminarMediosComunicacion = $em->createQueryBuilder()
@@ -2418,16 +2458,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$em->persist($servicio);
 			$em->flush();
 		 }
-		 if($form['internet'])
-		 {
-			$servicio = new RudeMediosComunicacion();
-			$servicio->setRude($rude);
-			$servicio->setMediosComunicacionTipo($em->getRepository('SieAppWebBundle:MediosComunicacionTipo')->find(($form['internet'])?6:null));
-			$servicio->setFechaRegistro(new \DateTime('now'));
-			$servicio->setFechaModificacion(new \DateTime('now'));
-			$em->persist($servicio);
-			$em->flush();
-		 }
+		
 
 		// ELIMINAMOS ACCESO A INTERNET
 		$eliminarInternet = $em->createQueryBuilder()
@@ -2466,7 +2497,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		}
 
 		$em->flush();
-
+		dump($form);die;
 		$response = new JsonResponse();
 		return $response->setData(['msg'=>true]);
 	}
@@ -2705,11 +2736,11 @@ class InfoEstudianteRudeesNuevoController extends Controller
 							'required'=>true,
 							'data'=> ($datos['apoderadoTipo'] != null)? $em->getReference('SieAppWebBundle:ApoderadoTipo', $datos['apoderadoTipo']): ''
 						))
-					->add('idPersona', 'hidden', array('required' => true))
-					->add('nombre', 'text', array('required' => true))
+					->add('idPersona', 'hidden')
+					->add('nombre', 'text')
 					->add('paterno', 'text', array('required' => false))
 					->add('materno', 'text', array('required' => false))
-					->add('carnet', 'text', array('required' => true))
+					->add('carnet', 'text')
 					->add('complemento', 'text', array('required' => false))
 					->add('expedido', 'entity', array(
 							'class' => 'SieAppWebBundle:DepartamentoTipo',

@@ -270,7 +270,7 @@
                                 </fieldset>
                                 
                                 <fieldset class="fieldset">
-                                    <legend class="legend">I. DATOS DE LA O EL ESTUDIANTE</legend>
+                                    <legend class="legend">I. DATOS DE LA O EL ESTUDIANTE </legend>
                                     {# <div class="row">
                                         <div class="col-md-6 col-sm-6">
                                             <p>2.1 APELLIDO(S) Y NOMBRE(S)</p>
@@ -1057,55 +1057,161 @@
                                         <div class="row form-group mt-5">
                                             <label class="col-md-6"><strong>5.1 PARALELO</strong></label>
                                             <div class="col-md-6 col-sm-6">
-                                                <input type="text" name="" class="form-control jupper">
+                                                <label for="fname">{{paralelo}}</label>                                                
                                             </div>
                                         </div>
+                                        {% if areaEspecial== 'Auditiva' %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
-                                                <p><strong>5.2 DISCAPACIDAD AUDITIVA</strong> (Marque el año de escolaridad con una "X")</p>
+                                                <p><strong>5.2 DISCAPACIDAD AUDITIVA</strong></p>
                                             </div>
                                             <div class="col-md-6 col-sm-6">
-                                                <input type="text" name="" class="form-control jupper">
+                                               {{nivel}} {% if grado != 'Sin dato' %} - {{grado}} {% endif %}
                                             </div>
+                                            {% if nivel == 'Servicios'%}
+                                            <div class="col-md-6 col-sm-6">
+                                               Servicio: {{servicio}}
+                                            </div>
+                                            {% endif %}
+                                            {% if nivel == 'Formación Técnica'%}
+                                            <div class="col-md-6 col-sm-6">
+                                               Especialidad: {{especialidad}}
+                                            </div>
+                                            {% endif %}
+                                            {% if nivel == 'Programas'%}
+                                            <div class="col-md-6 col-sm-6">
+                                               Programa: {{programa}}
+                                            </div>
+                                            {% endif %}
+                                           
                                         </div>
+                                        {% endif %}
+                                         {% if areaEspecial== 'Intelectual' or areaEspecial== 'Multiple'  %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
                                                 <p><strong>5.3 DISCAPACIDAD INTELECTUAL / MÚLTIPLE</strong> (Marque el año de escolaridad con una "X")</p>
                                             </div>
+                                            {% if (nivel == 'Independencia Personal - 1' or nivel == 'Independencia Personal - 2' or nivel == 'Independencia Social' or nivel== 'Independencia Personal') %}
                                             <div class="col-md-6 col-sm-6">
-                                                <input type="text" name="" class="form-control jupper">
+                                                {{nivel}} - Grado: {{grado}}
                                             </div>
+                                            {% endif %}
+                                            {% if nivel == 'Programas'%}
+                                            <div class="col-md-6 col-sm-6">
+                                                {{nivel}} - {{grado}}
+                                            </div>
+                                            {% endif %}
+                                            {% if nivel == 'Servicios'%}
+                                            <div class="col-md-6 col-sm-6">
+                                                 {{servicio}}
+                                            </div>
+                                            {% endif %}
+                                            {% if nivel == 'Formación Técnica'%}
+                                            <div class="col-md-6 col-sm-6">
+                                               Nivel: {{nivel}} Grado: {{grado}}
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                Especialidad: {{especialidad}}
+                                            </div>
+                                            {% endif %}
                                         </div>
+                                        {% endif %}
+                                        {% if areaEspecial== 'Visual' %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
                                                 <p><strong>5.4 DISCAPACIDAD VISUAL - PROGRAMAS</strong> (Marque el programa con una "X")</p>
                                             </div>
+                                             {% if nivel == 'Programas'%}
                                             <div class="col-md-6 col-sm-6">
-                                                <input type="text" name="" class="form-control jupper">
+                                              {{Programa}}
                                             </div>
+                                            {% endif %}
+                                             {% if nivel == 'Servicios'%}
+                                            <div class="col-md-6 col-sm-6">
+                                              {{servicio}}
+                                            </div>
+                                            {% endif %}
+                                            {% if nivel == 'Formación Técnica'%}
+                                            <div class="col-md-6 col-sm-6">
+                                               Nivel: {{nivel}} Grado: {{grado}}
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                Especialidad: {{especialidad}}
+                                            </div>
+                                            {% endif %}
+                                            
                                         </div>
+                                        {% endif %}
+                                        {% if areaEspecial== 'Dificultades en el Aprendizaje' %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
-                                                <p><strong>5.5 ATENCIÓN EDUCATIVA EN MODALIDAD INDIRECTA</strong> (Complete la información en los cuadros siguientes)</p>
+                                                <p><strong>5.5 ATENCION EDUCATIVA EN MODALIDAD INDIRECTA - AREA DIFICULTADES EN EL APRENDIZAJE</strong></p>
                                             </div>
+                                             {% if nivel == 'Programas'%}
                                             <div class="col-md-6 col-sm-6">
-                                                <input type="text" name="" class="form-control jupper">
+                                              Programa: {{programa}}
                                             </div>
+                                            {% endif %}
+                                             {% if nivel == 'Servicios'%}
+                                            <div class="col-md-6 col-sm-6">
+                                              Servicio:  {{servicio}}
+                                            </div>
+                                            {% endif %}
                                         </div>
+                                        {% endif %}
+                                        {% if areaEspecial== 'Fisico-Motora' %}
+                                        <div class="row form-group mt-5">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p><strong>5.5 ATENCION EDUCATIVA EN MODALIDAD INDIRECTA - AREA FISICO - MOTORA</strong></p>
+                                            </div>
+                                             {% if nivel == 'Programas'%}
+                                            <div class="col-md-6 col-sm-6">
+                                              Programa: {{programa}}
+                                            </div>
+                                            {% endif %}
+                                             {% if nivel == 'Servicios'%}
+                                            <div class="col-md-6 col-sm-6">
+                                              Servicio:  {{servicio}}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        {% endif %}
+                                        {% if areaEspecial== 'Talento Extraordinario' %}
+                                        <div class="row form-group mt-5">
+                                            <div class="col-md-6 col-sm-6">
+                                                <p><strong>5.5 ATENCION EDUCATIVA EN MODALIDAD INDIRECTA - AREA TALENTO EXTRAORDINARIO</strong></p>
+                                            </div>
+                                             {% if nivel == 'Programas'%}
+                                            <div class="col-md-6 col-sm-6">
+                                              Programa: {{programa}}
+                                            </div>
+                                            {% endif %}
+                                             {% if nivel == 'Servicios'%}
+                                            <div class="col-md-6 col-sm-6">
+                                              Servicio:  {{servicio}}
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                        {% endif %}                                        
+                                         {% if areaEspecial== 'Formación Técnica' %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
                                                 <p><strong>5.6 FORMACIÓN TÉCNICA PRODUCTIVA</strong></p>
                                             </div>
                                             <div class="col-md-6 col-sm-6">
-                                                <input type="text" name="" class="form-control jupper">
+                                                {{grado}}
+                                            </div>
+                                            <div class="col-md-6 col-sm-6">
+                                                Especialidad de formación Tecnica: {{especialidad}}
                                             </div>
                                         </div>
+                                        {% endif %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
                                                 <p><strong>5.7 SERVICIOS MULTIDISCIPLINARIOS QUE RECIBE LA O EL ESTUDIANTE</strong> (Puede marcar más de una opción)</p>
                                             </div>
                                             <div class="col-md-6 col-sm-6">
-                                                <input type="text" name="" class="form-control jupper">
+                                                Servicioss
                                             </div>
                                         </div>
 
@@ -1120,10 +1226,10 @@
                             </div>
                             <div {% if rude.registroFinalizado == 5 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab6">
                                 <fieldset class="fieldset">
-                                    <legend class="legend">V. DATOS DEL PADRE, MADRE O TUTOR(A) DE LA O EL ESTUDIANTE</legend>
+                                    <legend class="legend">VI. DATOS DEL PADRE, MADRE O TUTOR(A) DE LA O EL ESTUDIANTE</legend>
                                     <form id="formConQuienVive">
                                         <div class="row form-group">
-                                            <label class="col-md-6">5.1 LA O EL ESTUDIANTE VIVE HABITUALMENTE CON:</label>
+                                            <label class="col-md-6">6.1 LA O EL ESTUDIANTE VIVE HABITUALMENTE CON:</label>
                                             <div class="col-md-6 col-sm-6">
                                                 {{ form_widget(formConQuienVive.viveHabitualmenteTipo, {'attr':{'class':'form-control jupper'} }) }}
                                             </div>
