@@ -19,7 +19,7 @@ use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
  * InscriptionIniPriTrue controller.
  *
  */
-class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
+class InscriptionNewStudentController extends Controller {
 
     private $session;
     public $lugarNac;
@@ -43,7 +43,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
       //deshabilitado
       //return $this->redirect($this->generateUrl('login'));
 
-     if (in_array($this->session->get('roluser'), array(8,9,10,7))){
+     if (in_array($this->session->get('roluser'), array(8,10,7))){
      }else{
       return $this->redirect($this->generateUrl('login'));  
      }
@@ -81,7 +81,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         61710098
       );
 
-      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or in_array($this->session->get('roluser'), array(7,8,9,10))   ){
+      if( in_array($this->session->get('ie_id'), $arrWeenhayec) or in_array($this->session->get('roluser'), array(7,8,10))   ){
         //nothing todo
       }else{
         return $this->redirect($this->generateUrl('principal_web'));
@@ -95,7 +95,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        return $this->render($this->session->get('pathSystem') . ':InscriptionRezagoOmitidoExtenporaneo:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:index.html.twig', array(
                     'form' => $this->createSearchForm()->createView(),
         ));
     }
@@ -112,7 +112,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         
         $arrYears = ($this->session->get('roluser')==8)?array($this->session->get('currentyear')-1=>$this->session->get('currentyear')-1,$this->session->get('currentyear')=>$this->session->get('currentyear')):array($this->session->get('currentyear')=>$this->session->get('currentyear'));
         $form = $this->createFormBuilder()
-                ->setAction($this->generateUrl('inscription_reza_omi_exten_result'))
+                ->setAction($this->generateUrl('inscription_new_student_result'))
                 ->add('codigoRude', 'text', array('mapped' => false, 'label' => 'Rude', 'required' => true, 'invalid_message' => 'campo obligatorio', 'attr' => array('class' => 'form-control', 'pattern' => '[0-9a-zA-Z\sñÑ]{10,18}', 'maxlength' => '18', 'autocomplete' => 'off', 'style' => 'text-transform:uppercase')))
                 ->add('gestion', 'choice', array('mapped' => false, 'label' => 'Gestion', 'choices' => $arrYears, 'attr' => array('class' => 'form-control')))
                 ->add('buscar', 'submit', array('label' => 'Buscar'))
@@ -148,7 +148,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
             // }
             $observaionMessage = 'Estudiante presenta inconsistencia, se sugiere corregirlos por las opciones de calidad...';
             $this->addFlash('studentObservation', $observaionMessage);
-            return $this->redirectToRoute('inscription_reza_omi_exten_index');
+            return $this->redirectToRoute('inscription_new_student_index');
         }
 
 
@@ -205,12 +205,12 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
             if ($inscriptionsGestionSelected) {
                 $message = "El estudiante cuenta con inscripción en la gestion seleccionada";
                 $this->addFlash('notiext', $message);
-                return $this->redirectToRoute('inscription_reza_omi_exten_index');
+                return $this->redirectToRoute('inscription_new_student_index');
             }
 
             $formInsc = $this->createFormInsc($student->getId(), $sw, $infoInscription, $form['gestion'], $form['codigoRude']);
             //everything is ok build the info
-            return $this->render($this->session->get('pathSystem') . ':InscriptionRezagoOmitidoExtenporaneo:result.html.twig', array(
+            return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:result.html.twig', array(
                         'datastudent' => $student,
                         'currentInscription' => $inscriptions,
                         'formInscription' => $formInsc->createView()
@@ -218,7 +218,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         } else {
             $message = "Estudiante con rude " . $form['codigoRude'] . " no se encuentra registrado";
             $this->addFlash('notiext', $message);
-            return $this->redirectToRoute('inscription_reza_omi_exten_index');
+            return $this->redirectToRoute('inscription_new_student_index');
         }
     }
     /**
@@ -231,7 +231,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         $em = $this->getDoctrine()->getManager();
 
         return $formOmitido = $this->createFormBuilder()
-                ->setAction($this->generateUrl('inscription_reza_omi_exten_save'))
+                ->setAction($this->generateUrl('inscription_new_student_save'))
                 ->add('institucionEducativa', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control')))
                 ->add('institucionEducativaName', 'text', array('label' => 'Institución Educativa', 'disabled' => true, 'attr' => array('class' => 'form-control')))
                 ->add('nivel', 'choice', array('attr' => array('class' => 'form-control')))
@@ -243,7 +243,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
                 ->add('newdata', 'hidden', array('data' => serialize($data)))
                 ->add('gestionIns', 'hidden', array('data' => $gestionIns))
                 ->add('codigoRude', 'hidden', array('data'=>$codigoRude))
-                ->add('observacionOmitido', 'hidden', array('label' => 'Justificativo de la Inscripción para Omitidos/Extemporáneos', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )))
+                ->add('observacionOmitido', 'textarea', array('label' => 'Justificativo de la Inscripción para Omitidos/Extemporáneos', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )))
                 ->add('save', 'button', array('label' => 'Verificar y Registrar', 'attr'=> array('class' => 'btn btn-success' , 'onclick'=>'checkInscription()')))
                 ->getForm();
     }
@@ -294,7 +294,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
       if($form['nivel'] == 13 && $form['grado']==6 && $this->get('funciones')->verificarSextoSecundariaCerrado($form['institucionEducativa'],$form['gestionIns'])){
           $message = 'No se puede realizar la inscripción debido a que la Unidad Educativa seleccionada ya se cerro el operativo Sexto de Secundaria';
           $this->addFlash('idNoInscription', $message);
-          return $this->render($this->session->get('pathSystem') . ':InscriptionRezagoOmitidoExtenporaneo:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
+          return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
       }
 
       // validation if the ue is over 4 operativo
@@ -302,7 +302,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
       if($operativo >= 4){
         $message = 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos';
         $this->addFlash('idNoInscription', $message);
-        return $this->render($this->session->get('pathSystem') . ':InscriptionRezagoOmitidoExtenporaneo:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
+        return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
       }
 
       //validation inscription in the same U.E
@@ -312,7 +312,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
           if ($objCurrentInscriptionStudent[0]['sie']==$form['institucionEducativa']){
             $message = 'Estudiante ya cuenta con inscripción en la misma Unidad Educativa, realize el cambio de estado';
             $this->addFlash('idNoInscription', $message);
-            return $this->render($this->session->get('pathSystem') . ':InscriptionRezagoOmitidoExtenporaneo:menssageInscription.html.twig', array(
+            return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:menssageInscription.html.twig', array(
                'setNotasInscription'=> $setNotasInscription,
             ));
           }
@@ -332,7 +332,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         if($swAccess){
           $message = 'No se puede realizar la inscripción debido a que ya descargo el archivo SIE, favor realizar este proceso con su Tec. de Departamento';
           $this->addFlash('idNoInscription', $message);
-          return $this->render($this->session->get('pathSystem') . ':InscriptionRezagoOmitidoExtenporaneo:menssageInscription.html.twig', array());
+          return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:menssageInscription.html.twig', array());
         }
 
       }
@@ -510,13 +510,12 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
          $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($this->session->get('currentyear')));
          $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
          $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']));
-         //$studentInscription->setObservacion($form['observacionOmitido']);
-         $studentInscription->setObservacion('NUEVA INSCRIPCION');
+         $studentInscription->setObservacion($form['observacionOmitido']);
          $studentInscription->setObservacionId(6);
          $studentInscription->setFechaInscripcion(new \DateTime('now'));
          $studentInscription->setFechaRegistro(new \DateTime('now'));
          $studentInscription->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($objCurso->getId()));
-         $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(1)); // 7
+         $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(7));
          $studentInscription->setCodUeProcedenciaId($ue_procedencia['cod_ue_procedencia_id']);
          $studentInscription->setNumMatricula(0);
          $em->persist($studentInscription);
@@ -541,23 +540,23 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
              json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
          );
          $em->getConnection()->commit();
-         $message = 'Datos Registrados Correctamente'; //a continuacion registre las NOTAS 
+         $message = 'Datos Registrados Correctamente, a continuacion registre las NOTAS';
          $this->addFlash('saveGoodInscription', $message);
          $setNotasInscription=true;
-         return $this->render($this->session->get('pathSystem') . ':InscriptionRezagoOmitidoExtenporaneo:menssageInscription.html.twig', array(
+         return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:menssageInscription.html.twig', array(
            'setNotasInscription'=> $setNotasInscription,
            'setNotasForm'   => $this->setNotasForm($studentInscription->getId())->createView(),
            'idInscripcion'  => $studentInscription->getId()
          ));
 
-         /*return $this->render($this->session->get('pathSystem') . ':InscriptionRezagoOmitidoExtenporaneo:notasIncriptions.html.twig', array(
+         /*return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:notasIncriptions.html.twig', array(
              'asignaturas'=>$arrayNotas['notas'],'cualitativas'=>$arrayNotas['cualitativas'],'operativo'=>$arrayNotas['operativo'],
              'nivel'=>$form['nivel'],'idInscripcion'=>$studentInscription->getId()
          ));*/
          //notas
        }else{
          //no notas
-         return $this->render($this->session->get('pathSystem') . ':InscriptionRezagoOmitidoExtenporaneo:menssageInscription.html.twig', array(
+         return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:menssageInscription.html.twig', array(
            'setNotasInscription'=> $setNotasInscription,
          ));
 
@@ -655,7 +654,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         }
         $message = 'Datos Registrados Correctamente';
         $this->addFlash('saveGoodInscription', $message);
-        return $this->render($this->session->get('pathSystem') . ':InscriptionRezagoOmitidoExtenporaneo:menssageInscription.html.twig', array());
+        return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:menssageInscription.html.twig', array());
 
     }
 
@@ -853,7 +852,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         //encontramos las coincidencias
         $sameStudents = $this->getCoincidenciasStudent($form);
 
-        return $this->render($this->session->get('pathSystem') . ':InscriptionRezagoOmitidoExtenporaneo:resultnorude.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:resultnorude.html.twig', array(
                     'newstudent' => $form,
                     'samestudents' => $sameStudents,
                     'formninguno' => $this->nobodyform($form)->createView()
@@ -866,7 +865,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
         $sw = 0;
         $data = array();
         $formExtranjeros = $this->createFormNewExtranjeros(0, $sw, $form);
-        return $this->render($this->session->get('pathSystem') . ':InscriptionRezagoOmitidoExtenporaneo:newextranjero.html.twig', array(
+        return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:newextranjero.html.twig', array(
                     'datastudent' => $form,
                     'formExtranjeros' => $formExtranjeros->createView()
         ));
@@ -942,7 +941,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
             // Try and commit the transaction
             $em->getConnection()->commit();
             $this->session->getFlashBag()->add('goodext', 'Inscripción Realizada...');
-            return $this->redirect($this->generateUrl('inscription_reza_omi_exten_index'));
+            return $this->redirect($this->generateUrl('inscription_new_student_index'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
             echo 'Excepción capturada: ', $ex->getMessage(), "\n";
@@ -1059,7 +1058,7 @@ class InscriptionRezagoOmitidoExtenporaneoController extends Controller {
             $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
             $em->getConnection()->commit();
             $this->session->getFlashBag()->add('goodext', 'Inscripción realizada sin problemas');
-            return $this->redirect($this->generateUrl('inscription_reza_omi_exten_index'));
+            return $this->redirect($this->generateUrl('inscription_new_student_index'));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
             echo 'Excepción capturada: ', $ex->getMessage(), "\n";

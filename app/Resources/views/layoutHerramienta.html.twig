@@ -620,25 +620,27 @@
                                 <li><a href="{{ path('history_new_inscription_index')}}">Historial</a></li>
                             </ul>                            
                         </li>
-                        <li class="submenu">
+                        <li class="submenu">    
                             <a href="javascript:void(0);">
                                 <span class="icon"><i class="fa fa-diamond"></i></span>
                                 <span class="text">Inscripciones</span>
                                 <span class="arrow"></span>
                             </a>
-                            <ul> {#
+                            <ul>
                                 <li><a href="{{ path('newinscriptionInipri_index')}}">Inicial/Primaria</a></li>
                                 <li><a href="{{ path('newForeign_index')}}">Extranjeros</a></li>
-                                <!-- <li><a href="{{ path('inscription_ini_pri_rue_index')}}">Traslado</a></li> -->
+                                <li><a href="{{ path('inscription_reza_omi_exten_index')}}">Nuevo Estudiante en la UE</a></li>
+                                <!-- inscription_new_student_index
+                                li><a href="{{ path('inscription_ini_pri_rue_index')}}">Traslado</a></li> -->
                                 {% if app.session.get('roluser') in [7,8,10] %}
                                 <li><a href="{{ path('remove_inscription_sie_index')}}">Eliminar Inscripción</a></li>
                                 <li><a href="{{ path('inscriptionSpecialNew_find')}}">Centros de Educación Especial</a></li>
-                                <li><a href="{{ path('inscription_reza_omi_exten_index')}}">Omitidos/Extemporáneos</a></li>
+                                <!-- li><a href="{{ path('inscription_reza_omi_exten_index')}}">Omitidos/Extemporáneos</a></li -->
                                 {% endif %}
                                 
                                 
                                 <li><a href="{{ path('change_paralelo_sie_index')}}">Cambio de Paralelo</a></li>
-                                
+                                {#
                                 <li><a href="{{ path('students_inscriptions_seguimiento_index')}}">Reporte Extemporáneos</a></li>
                                 
                                 #}
