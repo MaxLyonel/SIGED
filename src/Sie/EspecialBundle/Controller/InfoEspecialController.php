@@ -169,6 +169,7 @@ class InfoEspecialController extends Controller{
    * @return type obj form
    */
   private function CloseOperativoForm($goToPath, $nextButton, $data) {
+    //dump($goToPath); die;
       //$this->unidadEducativa = $this->getAllUserInfo($this->session->get('userName'));
       $this->unidadEducativa = ((int)$this->session->get('ie_id'));
       return $this->createFormBuilder()
@@ -231,11 +232,7 @@ class InfoEspecialController extends Controller{
       $objOperativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
 
       //update the close operativo to registro consolido table
-      $objRegistroConsolidado = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-        'unidadEducativa' => $form['sie'],
-        'gestion'         => $form['gestion']
-      ));
-
+     
       $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
           'unidadEducativa' => $form['sie'], 
           'gestion' => $form['gestion']
@@ -269,13 +266,13 @@ class InfoEspecialController extends Controller{
           $em->getConnection()->commit();
       }
       $inconsistencia = null;
-      $periodo = 3;
-      $registroConsol->setBim1('2');
-      $registroConsol->setBim2('2');
-      $registroConsol->setBim3('2');
+      //$periodo = 3;
+     // $registroConsol->setBim1('2');
+     // $registroConsol->setBim2('2');
+     // $registroConsol->setBim3('2');
 
-      $em->persist($registroConsol);
-      $em->flush();
+     // $em->persist($registroConsol);
+     // $em->flush();
 
       $query = $em->getConnection()->prepare('select * from sp_validacion_especial_web(:igestion_id, :icod_ue, :ibimestre)');
       $query->bindValue(':igestion_id', $form['gestion']);
@@ -292,7 +289,7 @@ class InfoEspecialController extends Controller{
               case 1: $registroConsol->setBim1('2'); break;
               case 2: $registroConsol->setBim2('2'); break;
               case 3: $registroConsol->setBim3('2'); break;
-              case 4: $registroConsol->setBim4('2'); break;
+             // case 4: $registroConsol->setBim4('2'); break;
           }
           
           //$em->persist($registroConsol);
@@ -307,7 +304,7 @@ class InfoEspecialController extends Controller{
         $em = $this->getDoctrine()->getManager();
         // Obtenemos el operativo para bloquear los controles
         $registroOperativo = $em->createQueryBuilder()
-                        ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
+                        ->select('rc.bim1,rc.bim2,rc.bim3')
                         ->from('SieAppWebBundle:RegistroConsolidacion','rc')
                         ->where('rc.unidadEducativa = :ue')
                         ->andWhere('rc.gestion = :gestion')
