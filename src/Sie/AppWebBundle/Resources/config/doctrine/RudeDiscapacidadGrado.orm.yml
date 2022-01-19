@@ -11,6 +11,12 @@ Sie\AppWebBundle\Entity\RudeDiscapacidadGrado:
         IDX_16C57E15FA6D71F9:
             columns:
                 - grado_discapacidad_tipo_id
+            columns:
+                - porcentaje
+            columns:
+                - discapacidad_otro_grado_id
+                            
+       
     id:
         id:
             type: integer
@@ -31,6 +37,13 @@ Sie\AppWebBundle\Entity\RudeDiscapacidadGrado:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        porcentaje:            
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            
     manyToOne:
         discapacidadTipo:
             targetEntity: DiscapacidadTipo
@@ -59,4 +72,14 @@ Sie\AppWebBundle\Entity\RudeDiscapacidadGrado:
                 grado_discapacidad_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
+        discapacidadOtroGrado:
+            targetEntity: DiscapacidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                discapacidad_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false  
+        
     lifecycleCallbacks: {  }

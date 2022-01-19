@@ -33,11 +33,23 @@ class RudeDiscapacidadGrado
      * @var \Sie\AppWebBundle\Entity\Rude
      */
     private $rude;
-
     /**
      * @var \Sie\AppWebBundle\Entity\GradoDiscapacidadTipo
      */
     private $gradoDiscapacidadTipo;
+     /**
+     * @var string
+     */
+    private $porcentaje;
+    /**
+     * @var \Sie\AppWebBundle\Entity\DiscapacidadTipo
+     */
+    private $discapacidadOtroGrado;
+    
+
+
+    
+   
 
 
     /**
@@ -141,7 +153,6 @@ class RudeDiscapacidadGrado
     {
         return $this->rude;
     }
-
     /**
      * Set gradoDiscapacidadTipo
      *
@@ -164,4 +175,51 @@ class RudeDiscapacidadGrado
     {
         return $this->gradoDiscapacidadTipo;
     }
+    /**
+     * Set porcentaje
+     *
+     * @param string $porcentaje
+     * @return RudeDiscapacidadGrado
+     */
+    public function setPorcentaje($porcentaje)
+    {
+        $this->porcentaje = $porcentaje;
+    
+        return $this;
+    }
+
+    /**
+     * Get porcentaje
+     *
+     * @return string 
+     */
+    public function getPorcentaje()
+    {
+        return $this->porcentaje;
+    }
+    /**
+     * Set discapacidadOtroGrado
+     *
+     * @param \Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadOtroGrado
+     * @return RudeDiscapacidadGrado
+     */
+    public function setDiscapacidadOtroGrado(\Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadOtroGrado = null)
+    {
+        $this->discapacidadOtroGrado = $discapacidadOtroGrado;
+    
+        return $this;
+    }
+
+    /**
+     * Get discapacidadOtroGrado
+     *
+     * @return \Sie\AppWebBundle\Entity\DiscapacidadTipo 
+     */
+    public function getDiscapacidadOtroGrado()
+    {
+        return $this->discapacidadOtroGrado;
+    }
+    
+
+    
 }
