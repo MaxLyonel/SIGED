@@ -347,7 +347,26 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieRegularBundle");
                 $this->session->set('sistemaid', 1);
                 $this->session->set('color', 'blue');
-                break;                
+                break;   
+            case '172.20.196.5:9008':
+                $sysname = 'Sistema Académico Educación Regular';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutHerramienta.html.twig';
+                $this->session->set('pathSystem', "SieHerramientaBundle");
+                $this->session->set('color', 'primary');
+                $this->session->set('sistemaid', 6);
+                break;
+            case '172.20.196.5:9009':
+                $sysname = 'Sistema Siged';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutRegular.html.twig';
+                $this->session->set('pathSystem', "SieRegularBundle");
+                $this->session->set('sistemaid', 1);
+                $this->session->set('color', 'blue');
+                break;
+
             case 'pnp.sie.gob.bo':
                 $sysname = 'PNP';
                 $sysporlet = 'blue';
@@ -455,6 +474,10 @@ class DefaultController extends Controller {
             case 'ue-alta-demanda.minedu.gob.bo':
                 $this->session->set('pathSystem', "AppWebBundle");
                 return $this->render('SieAppWebBundle:PreInscription:index.html.twig');
+                break;  
+            case '172.20.196.5:9006':
+                $this->session->set('pathSystem', "AppWebBundle");
+                return $this->render('SieAppWebBundle:ControlDatosCelular:index.html.twig');
                 break;              
 
         }
