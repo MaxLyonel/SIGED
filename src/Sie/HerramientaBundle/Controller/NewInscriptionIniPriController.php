@@ -281,7 +281,7 @@ class NewInscriptionIniPriController extends Controller
 
 			$status = 'error';
 			$code = 400;
-			$message = "Estudiante ya tiene registro, favor realizar la inscripción por el modulo de Omitidos/Transferencia";
+			$message = "Estudiante ya tiene registro, favor realizar la inscripción por el módulo de -> Nuevo Estudiante en la UE";
 			$swcreatestudent = false; 
 
 		}

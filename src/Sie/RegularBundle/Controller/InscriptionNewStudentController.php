@@ -170,7 +170,7 @@ class InscriptionNewStudentController extends Controller {
            //get Current Inscriptions By Gestoin
 
             $inscriptions = $this->getCurrentInscriptionsStudent($student->getCodigoRude());
-            //dump($inscriptions);
+            //dump($inscriptions); die;
             reset($inscriptions);
             $sw = true;
             $infoInscription=array();
@@ -182,6 +182,7 @@ class InscriptionNewStudentController extends Controller {
                 }
               next($inscriptions);
             }
+            //dump($infoInscription); die;
             //get the last inscription
             if(!sizeof($infoInscription)>0){
               $cc=0;
@@ -283,6 +284,7 @@ class InscriptionNewStudentController extends Controller {
       }
 
     public function verificaInscriptionAction(Request $request){
+      
       //create DB conexion
       $em = $this->getDoctrine()->getManager();
       $em->getConnection()->beginTransaction();
@@ -321,7 +323,7 @@ class InscriptionNewStudentController extends Controller {
 
       //dato actual de inscription
       $dataCurrentInscription = unserialize($form['newdata']);
-      // dump($request);
+       
       //validate allow access
       $arrAllowAccessOption = array(7,8);
       if(!in_array($this->session->get('roluser'),$arrAllowAccessOption)){
@@ -342,21 +344,20 @@ class InscriptionNewStudentController extends Controller {
       $swCorrectInscription = true;
 
       $currentLevelStudent = $dataCurrentInscription['nivelId'].'-'.$dataCurrentInscription['cicloId'].'-'. $dataCurrentInscription['gradoId'];
-
+    
 
       if (!($dataCurrentInscription['nivelId']>10)) {
         // getCourseOld
         $newInfInscription = $this->getCourseOld($dataCurrentInscription['nivelId'],$dataCurrentInscription['cicloId'],$dataCurrentInscription['gradoId'],$dataCurrentInscription['estadoMatriculaId']);
         $currentLevelStudent = $this->aCursos[$newInfInscription-1];
         // dump($this->aCursos[$newInfInscription-1]);
-        // dump($newInfInscription);
       }
       // dump($currentLevelStudent);die;
       $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];// dump($newLevelStudent);die;
 //dump(((str_replace('-','',$newLevelStudent)) ));
 //dump(str_replace('-','',$currentLevelStudent) );die;
     //if doesnt have next curso info is new or extranjero do the inscription
-      
+     
     if( (str_replace('-','',$currentLevelStudent) )!=''){
       $arrIniPriLevel = array('11-1-0','11-1-1','11-1-2','12-1-1');
       if(in_array($currentLevelStudent, $arrIniPriLevel)){
@@ -365,8 +366,8 @@ class InscriptionNewStudentController extends Controller {
           $dataStudent = unserialize($form['newdata']);
           $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataStudent['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
           $yearStudent = $arrYearStudent['age'];  
-      
       // //new student validation
+      
         if ($yearStudent<=6){
           switch ($yearStudent) {
             case 4:
@@ -389,6 +390,14 @@ class InscriptionNewStudentController extends Controller {
         }else{
           //do inscription
           $swCorrectInscription =(str_replace('-','',$newLevelStudent)>='1212')?true:false;
+            $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
+            
+            if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
+              $swCorrectInscription = true;
+              //do the inscriptin
+            }else{//dump($newInfInscription);die;
+              $swCorrectInscription = false;
+            }
         }//end new student validation
         $message='';
         if(!$swCorrectInscription){
@@ -666,12 +675,11 @@ class InscriptionNewStudentController extends Controller {
      * @param type $grado
      */
     public function getInfoInscriptionStudent($currentLevelStudent, $matricula) {
-
+      
         $sw = 1;
         $cursos = $this->aCursos;
         $keyLevel = ($matricula)?'':2;
         while (($acourses = current($cursos)) !== FALSE && $sw) {
-
             //$anivel = explode("-", current($cursos));
             if ($acourses == $currentLevelStudent) {
                 $keyLevel = key($cursos);
@@ -1028,7 +1036,7 @@ class InscriptionNewStudentController extends Controller {
         $em->getConnection()->beginTransaction();
         //get the variblees
         $form = $request->get('form');
-
+      dump($form);die;  
         try {
             //insert a new record with the new selected variables and put matriculaFinID like 5
             $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(

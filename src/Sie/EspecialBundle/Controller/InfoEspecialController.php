@@ -80,6 +80,8 @@ class InfoEspecialController extends Controller{
      $key = 0;
      $swNewRegistroConsolidation = true;
      foreach ($objAllInfoCentro as $key => $value) {
+
+      
        # code...
        $arrInfoCentro[$key]['gestion'] = $value->getGestion();
        $arrInfoCentro[$key]['sie']  = $value->getUnidadEducativa();
@@ -326,9 +328,8 @@ class InfoEspecialController extends Controller{
                 $operativo = 3; // Tercer Trimestre
             }
             if($registroOperativo[0]['bim1'] >= 1 and $registroOperativo[0]['bim2'] >= 1 and $registroOperativo[0]['bim3'] >= 1 ){
-                $operativo = 9; // fin de trimestre
-            }
-            
+              $operativo = 3; // Tercer Trimestre
+          }
         }
         return $operativo;
     }
