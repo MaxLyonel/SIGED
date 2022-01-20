@@ -25,8 +25,7 @@ class InscriptionCelularController extends Controller
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
         $nroCelular = $request->get('n');
-        $token = $request->get('token');
-        $nro=substr($nroCelular, 0, 2);        
+        $nro=substr($nroCelular, 0, 2);   
         switch ($nro) {
             case '70':
             case '71':
@@ -43,13 +42,16 @@ class InscriptionCelularController extends Controller
             case '77':
             case '78':
             case '69':
-                return $response->setData(array( '0'=>1)); 
+                if (strlen($nroCelular)=='8') {
+                    return $response->setData(array( '0'=>1));   
+                }else{
+                    return $response->setData(array( '0'=>0));   
+                } 
             break;
             default:
                 return $response->setData(array( '0'=>0  )); 
             break;
         }
-
     }
     public function verificarInfoAction(Request $request){
         $response = new JsonResponse();

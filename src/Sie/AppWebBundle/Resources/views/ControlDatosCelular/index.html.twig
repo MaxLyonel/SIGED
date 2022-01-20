@@ -1,28 +1,27 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-	<meta name="author" content="ceosdesigns.sk">
-    <title>CELULAR</title>
-	<link href="images/favicon.png" rel="icon">
-	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&amp;display=swap" rel="stylesheet">
-	<link href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
-	<link href="{{asset('loginCel/css/bootstrap.min.css')}}" rel="stylesheet">
-	<link href="{{asset('loginCel/css/styles.css')}}" rel="stylesheet">
-	<script type="text/javascript" src="{{asset('alert/lib/alertify.js')}}"></script>
-	<link rel="stylesheet" href="{{asset('alert/themes/alertify.core.css')}}" />
-	<link rel="stylesheet" href="{{asset('alert/themes/alertify.default.css')}}" />
-	<style type="text/css">
-		.fondo{
-			/*background:#f5f5f5;*/
-			 display: none;
-			padding: 5px;
-			margin: 5px 0px;
-			border: #35a0ab  4px double;
-		}
-	</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="ceosdesigns.sk">
+<title>CELULAR</title>
+<link href="{{asset('img/logo-minedu.png')}}" rel="icon">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&amp;display=swap" rel="stylesheet">
+<link href="{{asset('webherramienta/assets/global/plugins/bower_components/fontawesome/css/font-awesome.min.css')}}" rel="stylesheet">
+<link href="{{asset('loginCel/css/bootstrap.min.css')}}" rel="stylesheet">
+<link href="{{asset('loginCel/css/styles.css')}}" rel="stylesheet">
+<script type="text/javascript" src="{{asset('alert/lib/alertify.js')}}"></script>
+<link rel="stylesheet" href="{{asset('alert/themes/alertify.core.css')}}" />
+<link rel="stylesheet" href="{{asset('alert/themes/alertify.default.css')}}" />
+<style type="text/css">
+.fondo{
+display: none;
+padding: 5px;
+margin: 5px 0px;
+border: #35a0ab  4px double;
+}
+</style>
 </head>
 <body>
 	<div id="nm-preloader" class="nm-aic nm-vh-md-100">
@@ -41,10 +40,9 @@
 							<h2 class="nm-tc nm-mb-1">CONSULTA TU DATO</h2>
 							<form method="post" id="verificarInfo">
 								<div class="form-group">
-									<label >CODIGO RUDE</label>
+									<label >CÓDIGO RUDE</label>
 									<input class="form-control" type="text" name="codigo" maxlength="20" tabindex="1" placeholder="Ingresar codigo..." required>
 								</div>	
-
 								<div class="form-group">
 									<label >FECHA NACIMIENTO</label>
 									<input class="form-control" type="date" name="fecha" tabindex="2" placeholder="..." required>
@@ -58,8 +56,6 @@
 								<div class="divider nm-tc nm-mb-1 nm-mt-1 nm-mlr-1">
 									<span class="divider-content">OR</span>
 								</div>
-
-								
 								<!-- <p class="text-center mb-0">
 									<a class="nm-ft-b" href="signup.html">BUSCAR DATOS</a>
 								</p> -->
@@ -71,11 +67,9 @@
 					<h2 class="large">Ministerio de Educación</h2>
 					<p class="subtitle">Contáctanos:</p>
 					<ul class="list-unstyled mb-11">
-						
 						<li>
 							<div class="list nm-aic">
 								<div class="icon">=></div>
-
 								<div class="content">
 									<p>Avenida Arce Nro. 2147 - La Paz, Bolivia</p>
 								</div>
@@ -84,7 +78,6 @@
 						<li>
 							<div class="list nm-aic">
 								<div class="icon">=></div>
-
 								<div class="content">
 									<p>informacion@minedu.gob.bo</p>
 								</div>
@@ -93,14 +86,11 @@
 						<li>
 							<div class="list nm-aic">
 								<div class="icon">=></div>
-
 								<div class="content">
 									<p>Whatsapp (+591)71550970 - (+591)71530671</p>
 								</div>
 							</div>
 						</li>
-
-						
 					</ul>
 					<p class="text-left mb-0 ">
 						<a href="https://www.minedu.gob.bo/" target="_black" class="btn btn-link text-center">Ministerio de Educación</a>
@@ -113,28 +103,27 @@
 <script src="{{asset('loginCel/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{asset('loginCel/js/script.js')}}"></script>
 <script type="text/javascript">
+document.oncontextmenu = function(){return false}
 function valideKey(evt){
 	var code = (evt.which) ? evt.which : evt.keyCode;
-	if(code==8) { // backspace.
-	  return true;
+	if(code==8) {   return true;
 	} else if(code>=48 && code<=57) { // is a number.
 	  validar_nro()
 	  return true;
-	} else{ // other keys.
-	  return false;
+	} else{  return false;
 	}
 }
 function validar_nro(){
 	var n=$("#number").val();
-	var token=$("#token").val();
-	$("#error_validar_nro").html('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+	$("#error_validar_nro").html('');
 	if(n.length==8){
-		$.post('{{path('validar_nro')}}', {n:n,token:token}, function(d) {
+		$("#error_validar_nro").html('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+		$.post('{{path('validar_nro')}}', {n:n}, function(d) {
 			var valores = eval(d);
 		  	if (valores['0']==0) {
 		    	$("#error_validar_nro").html("<b style='color: #ff0000;'>Numero no valido</b>");
 		  	}else{
-		  	  	$("#error_validar_nro").html("<b style='color: #008000;'>Numero valido</b>");
+		  	  	$("#error_validar_nro").html('<b style="color: #008000;">Numero valido</b><button type="button" id="ver" onclick="guadarDatos()" class="btn btn-block btn-success btn-lg">GUARDAR DATOS</button>');
 		  	}
 		});
 	}
@@ -151,15 +140,12 @@ $("#verificarInfo").submit(function(event) {
 	    	var valores = eval(d);
 		  	if (valores['nombre']==0) {
 		  		document.getElementById('boton').disabled=false;
-		    	$("#ver_conte").html("<b style='color: #ff0000;'>INFORMACION NO EXISTENTE</b>");
+		    	$("#ver_conte").html("<b style='color: #ff0000;'>INFORMACIÓN NO EXISTENTE</b>");
 		  	}else{
 		  		document.getElementById('boton').disabled=true;
 		  		document.getElementById("boton").style.display = "none";
-		  	  	$("#ver_conte").html('<div class="form-group"><b >Hola ('+valores['nombre']+')</b><br><label >NUMERO DE CELULAR</label><input class="form-control" name="number"  onkeyup="validar_nro()" id="number" type="text" maxlength="8" placeholder="..." onkeypress="return valideKey(event);" ><input type="hidden" id="token" value="'+valores['token']+'"></div><div style="text-align:center" id="error_validar_nro">  </div>	<button type="button" onclick="guadarDatos()" class="btn btn-block btn-success">GUARDAR DATOS</button>');
+		  	  	$("#ver_conte").html('<div class="form-group"><b >Hola ('+valores['nombre']+')</b><br><label >NUMERO DE CELULAR</label><input class="form-control" name="number"  onkeyup="validar_nro()" id="number" type="text" maxlength="8" placeholder="..." onkeypress="return valideKey(event);" ><input type="hidden" id="token" value="'+valores['token']+'"></div><div style="text-align:center" id="error_validar_nro">  </div>	');
 		  	}
-	        /*setTimeout(function(){
-	             window.location='';
-	        },1000);*/
 	    }
 	});
 });
@@ -168,10 +154,10 @@ function guadarDatos(){
 	var token=$("#token").val();
 	alertify.confirm("<p>ESTA SEGURO QUE DESEA GUARDAR?<br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
 		if (e) {
-			alertify.success("Has pulsado ok");
 			$.post('{{path('guadarDatos')}}', {n:n,token:token}, function(e) {
 				var valores = eval(e);
 			  	if (valores['0']==0) {
+					alertify.success("Datos guardados...");
 					window.location='';
 			  	}else{
 			  		alertify.error("YA EXISTE EL NRO.");
@@ -180,8 +166,7 @@ function guadarDatos(){
 					});
 			  	}
 			});
-		} else { alertify.error("Has pulsado cancel ");
-		}
+		} else { alertify.error("Has pulsado cancel "); }
 	});
 }
 </script>
