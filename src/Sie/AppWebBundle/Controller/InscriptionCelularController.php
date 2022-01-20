@@ -25,7 +25,6 @@ class InscriptionCelularController extends Controller
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
         $nroCelular = $request->get('n');
-        $token = $request->get('token');
         $nro=substr($nroCelular, 0, 2);   
         switch ($nro) {
             case '70':
