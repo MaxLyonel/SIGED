@@ -5430,7 +5430,7 @@ die;/*
 
             // if($tipoNota == 'Bimestre'){
             if( in_array($tipoNota,array('newTemplateDB','Bimestre', 'Etapa') )  ){
-
+//dump($operativo);
                 $inicio = 6;
                 $fin = $inicio + ($operativo-1);
                 // switch ($operativo) {
@@ -5457,6 +5457,8 @@ die;/*
             }
 
             foreach ($asignaturas as $a) {
+
+                
                 $notasArray[$cont] = array('areaId'=>$a['id'],'area'=>$a['area'],'idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
 
                 $asignaturasNotas = $this->em->createQueryBuilder()
@@ -5472,6 +5474,7 @@ die;/*
                                     ->getQuery()
                                     ->getResult();
                 //dump($asignaturasNotas);die;
+               // dump($inicio); dump($fin);die;
                 for($i=$inicio;$i<=$fin;$i++){
                     $existe = 'no';
                     foreach ($asignaturasNotas as $an) {
@@ -5492,6 +5495,7 @@ die;/*
                         }else{
                             $valorNota = $an['notaCualitativa'];
                         }
+                        
                         if($i == $an['idNotaTipo']){
                             if($gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5)){
                                 $notasArray[$cont]['notas'][] =   array(
@@ -5531,7 +5535,8 @@ die;/*
                                                 );
                     }
                 }
-                if($nivel != 400  and $nivel != 401 and $nivel != 408 and $nivel != 402 and $nivel != 403 and $nivel != 411 and $operativo >= 4){
+                if($nivel != 400  and $nivel != 401 and $nivel != 408 and $nivel != 402 and $nivel != 403 and $nivel != 411 and $operativo >= 3){
+                    
                     // Para el promedio
                     foreach ($asignaturasNotas as $an) {
                         $existe = 'no';
@@ -5562,13 +5567,12 @@ die;/*
             }
             $areas = array();
             $areas = $notasArray;
-            //dump($areas);die;
 
             //notas cualitativas
             $arrayCualitativas = array();
 
             $cualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$idInscripcion),array('notaTipo'=>'ASC'));
-
+//dump($cualitativas);die;
             if($nivel == 400 or $nivel == 401 or $nivel == 408 or $nivel == 402 or $nivel == 403 or $nivel != 411){
                 // Para inicial
                 $existe = false;
@@ -5936,6 +5940,7 @@ die;/*
     }
 
     public function especialRegistro(Request $request, $discapacidad){
+        
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         // Validar si existe la session del usuario
@@ -5978,7 +5983,7 @@ die;/*
             if($request->get('nuevoEstadomatricula') == 5 and $gestion > 2019 and ($discapacidad == 3 or $discapacidad == 5)){
                 $notaCualitativa[0] = array('notaCualitativa'=>mb_strtoupper($notaCualitativa[0],'utf-8'),'promovido'=>mb_strtoupper($promovido,'utf-8'));
             }
-            //dump($notaCualitativa);die;
+            // dump($notaCualitativa);die;
 
             /* Datos de las notas cualitativas de primaria gestion 2013 */
             $idEstudianteNotaC = $request->get('idEstudianteNotaC');
