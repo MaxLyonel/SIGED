@@ -668,7 +668,7 @@
                                         <div class="row form-group">
                                             <label class="col-md-6">3.2.1. ¿Con quién vive el o la estudiante? (Puede marcar mas de una opción)</label>
                                             <div class="col-md-6 col-sm-6">
-                                             {{ form_widget(formSocioeconomico.viveCon, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}
+                                             {{ form_widget(formSocioeconomico.viveCon, {'attr':{'class':'form-control jupper validar','data-placeholder':'Seleccionar...'} }) }}                                             
                                              {{ form_widget(formSocioeconomico.viveConOtro, {'attr':{'class':'form-control jupper','placeholder':'ESPECIFIQUE LA INSTITUCION DONDE VIVE', 'autocomplete':'off'} }) }}
                                             </div>
                                         </div>
@@ -678,12 +678,12 @@
                                                 {{ form_widget(formSocioeconomico.tieneParientesDiscapacidad, {'attr':{'class':'jupper'} }) }}
                                             </div>
                                         </div>
-                                        <div id="div_tieneParientesDiscapacidad" >
-                                            <div class="datosParientesDiscapacidad" style="display: block">
+                                        <div id="div_tieneParientesDiscapacidad" style="display: none" >
+                                            <div class="col-md-12 col-sm-6" >
                                                 <div class="row" style="margin-top:1em">
-                                                    <div class="col-sm-3">Parentesco </div>
-                                                    <div class="col-sm-3">Tipo de discapacidad</div>                                                    
-                                                    <div class="col-sm-3">Nro. Carnet de Discapacidad</div>
+                                                    <div class="col-sm-3"><strong>Parentesco</strong> </div>
+                                                    <div class="col-sm-3"><strong>Tipo de discapacidad</strong></div>                                                    
+                                                    <div class="col-sm-6"><strong>Nro. Carnet de Discapacidad</strong></div>
                                                    {#  <div class="col-sm-3 text-center"><button type="button" class="btn btn-danger btn-small">Borrar</button></div> #}
                                                 </div>
                                                 <div class="row" style="margin-top:1em">
@@ -1396,7 +1396,7 @@
                                                                 </fieldset>
                                                             </div>
                                                             <div class="col-md-4">
-                                                                <div id="p_mensaje">Opciones</div>
+                                                                <div id="p_mensaje">Opciones </div>
                                                                 <div id="p_opciones">
                                                                     {% if padre.segipId is not null %}
                                                                         <div id="p_top1" style="padding:10px; border:1px solid #cccccc">
@@ -1438,7 +1438,7 @@
                                                                         </div>
                                                                     {% else %}
                                                                         <div id="p_top2" style="padding:10px; border:1px solid #cccccc">
-                                                                            <p>Para buscar datos del padre, debe introducir los siguientes campos.</p>
+                                                                            <p>Para buscar datos del padre, debe introducir los siguientes campos. </p>
                                                                             {% if inscripcion.institucioneducativaCurso.gestionTipo.id == 2019 %}
                                                                                 <p class="sinCarnet">
                                                                                     <label><input type="checkbox" id="pb_sinCarnet" autocomplete="off"> El padre no cuenta con carnet</label>
@@ -1966,9 +1966,9 @@
                                     </div>
                                 {# </div> #}
                             </div>
-                            <div {% if rude.registroFinalizado >= 6 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab7">
+                            <div {% if rude.registroFinalizado >= 5 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab7">
                                 <fieldset class="fieldset">
-                                    <legend class="legend">VI. FINALIZAR REGISTRO RUDE</legend>
+                                    <legend class="legend">VII. FINALIZAR REGISTRO RUDE ES </legend>
                                     <div class="ml-10">
                                         <div class="row">
                                             <div class="col-md-12">
@@ -1995,8 +1995,9 @@
                                                     {{ form_widget(formLugar) }}
                                                 </form>
                                             </div>
-                                            {% if false %}
-                                                <div id="btnImprimir" class="col-md-12" {% if rude.registroFinalizado < 5 %} style="display:none" {% else %} style="display:block" {% endif %}>
+                                                                                            
+                                            {% if true %}
+                                                <div id="btnImprimir" class="col-md-12" {% if rude.registroFinalizado == 5 %} style="display:none" {% else %} style="display:block" {% endif %}>
                                                     <br>
                                                     <div class="block-print">
                                                         <p>Imprimir Formulario RUDE del estudiante</p>
@@ -2009,7 +2010,7 @@
                                                 <div id="btnImprimir" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                                     <br>                               
                                                     <div class="alert alert-success">
-                                                        <strong>Aviso </strong> Registro RUDE finalizado.
+                                                        <strong>Aviso </strong> Registro RUDE ES finalizado.
                                                     </div>
                                                 </div>
                                             {% endif %}
@@ -2058,6 +2059,7 @@
 
     $(function(){
         verificarPaisNacimiento();
+        validarOtroGradoDiscapacidad();
         // cargarGradoDiscapacidad();
         validarTieneDiscapacidad();
         validarAccesoInternet();
@@ -2077,6 +2079,7 @@
         mostrarTipoIdentificacion();
         mostrarTipoIdentificacionMadre();
         mostrarTipoIdentificacionTutor();
+       
     });
 
     $(".js-example-basic-multiple").select2({
@@ -2253,7 +2256,7 @@
         }  
     });
     // VALIDAR SI TIENE OTRO GRADO DISCAPACIDAD EN CASO(MULTIPLE,INTELECTUAL,FISICO/MOTORA)
-    function validarOtroGradoDiscapacidad(){ //Pendiente validar solo numero 
+    function validarOtroGradoDiscapacidad(){
         var accesos = $('#form_gradoDiscapacidad').val();
         if(accesos==='99'){
             $('#otroGradodiscapacidad').css('display','block');            
@@ -2781,18 +2784,16 @@
     {
         if (this.value == 1)
         {
-            $('#div_tieneParientesDiscapacidad').show();
+            $('#div_tieneParientesDiscapacidad').show(1000);
             $('#form_parienteDiscapacidad0').attr('required','required');
-            //$('#form_parienteDiscapacidad1').attr('required','required');
-            //$('#form_parienteDiscapacidad2').attr('required','required');
             //discapacidad
             $('#form_discapacidad0').attr('required','required');
-            //$('#form_discapacidad1').attr('required','required');
-            //$('#form_discapacidad2').attr('required','required');
+            //carnet
+            $('#form_carnet0').attr('required','required');
         }
         else
         {
-            $('#div_tieneParientesDiscapacidad').hide();
+            $('#div_tieneParientesDiscapacidad').hide(1000);
             $('#form_parienteDiscapacidad0').val('');
             $('#form_parienteDiscapacidad1').val('');  
             $('#form_parienteDiscapacidad2').val('');             
@@ -2806,6 +2807,10 @@
             $('#form_discapacidad0').removeAttr('required');
             $('#form_discapacidad1').removeAttr('required');
             $('#form_discapacidad2').removeAttr('required');
+            //carnet
+             $('#form_carnet0').val('');
+             $('#form_carnet1').val('');
+             $('#form_carnet2').val('');
         }
     });
 
@@ -2900,7 +2905,7 @@
     function saveFormLugar(){
         var data = $('#formLugar').serialize();
         $.ajax({
-            url: Routing.generate('info_estudiante_rude_nuevo_save_formLugar'),
+            url: Routing.generate('info_estudiante_rudees_nuevo_save_formLugar'),
             type: 'post',
             data: data,
             beforeSend: function(){

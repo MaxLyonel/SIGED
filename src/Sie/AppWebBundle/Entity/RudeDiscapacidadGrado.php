@@ -222,4 +222,32 @@ class RudeDiscapacidadGrado
     
 
     
+    /**
+     * @var string
+     */
+    private $gradoOtro;
+
+
+    /**
+     * Set gradoOtro
+     *
+     * @param string $gradoOtro
+     * @return RudeDiscapacidadGrado
+     */
+    public function setGradoOtro($gradoOtro)
+    {
+        $this->gradoOtro = $gradoOtro;
+    
+        return $this;
+    }
+
+    /**
+     * Get gradoOtro
+     *
+     * @return string 
+     */
+    public function getGradoOtro()
+    {
+        return $this->gradoOtro;
+    }
 }
