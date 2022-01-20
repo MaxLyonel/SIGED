@@ -41,7 +41,7 @@
 							<h2 class="nm-tc nm-mb-1">CONSULTA TU DATO</h2>
 							<form method="post" id="verificarInfo">
 								<div class="form-group">
-									<label >CODIGO RUDE</label>
+									<label >CÓDIGO RUDE</label>
 									<input class="form-control" type="text" name="codigo" maxlength="20" tabindex="1" placeholder="Ingresar codigo..." required>
 								</div>	
 
@@ -113,6 +113,7 @@
 <script src="{{asset('loginCel/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{asset('loginCel/js/script.js')}}"></script>
 <script type="text/javascript">
+document.oncontextmenu = function(){return false}
 function valideKey(evt){
 	var code = (evt.which) ? evt.which : evt.keyCode;
 	if(code==8) { // backspace.
@@ -134,7 +135,7 @@ function validar_nro(){
 		  	if (valores['0']==0) {
 		    	$("#error_validar_nro").html("<b style='color: #ff0000;'>Numero no valido</b>");
 		  	}else{
-		  	  	$("#error_validar_nro").html("<b style='color: #008000;'>Numero valido</b>");
+		  	  	$("#error_validar_nro").html('<b style="color: #008000;">Numero valido</b><button type="button" id="ver" onclick="guadarDatos()" class="btn btn-block btn-success btn-lg">GUARDAR DATOS</button>');
 		  	}
 		});
 	}
@@ -151,15 +152,12 @@ $("#verificarInfo").submit(function(event) {
 	    	var valores = eval(d);
 		  	if (valores['nombre']==0) {
 		  		document.getElementById('boton').disabled=false;
-		    	$("#ver_conte").html("<b style='color: #ff0000;'>INFORMACION NO EXISTENTE</b>");
+		    	$("#ver_conte").html("<b style='color: #ff0000;'>INFORMACIÓN NO EXISTENTE</b>");
 		  	}else{
 		  		document.getElementById('boton').disabled=true;
 		  		document.getElementById("boton").style.display = "none";
-		  	  	$("#ver_conte").html('<div class="form-group"><b >Hola ('+valores['nombre']+')</b><br><label >NUMERO DE CELULAR</label><input class="form-control" name="number"  onkeyup="validar_nro()" id="number" type="text" maxlength="8" placeholder="..." onkeypress="return valideKey(event);" ><input type="hidden" id="token" value="'+valores['token']+'"></div><div style="text-align:center" id="error_validar_nro">  </div>	<button type="button" onclick="guadarDatos()" class="btn btn-block btn-success">GUARDAR DATOS</button>');
+		  	  	$("#ver_conte").html('<div class="form-group"><b >Hola ('+valores['nombre']+')</b><br><label >NUMERO DE CELULAR</label><input class="form-control" name="number"  onkeyup="validar_nro()" id="number" type="text" maxlength="8" placeholder="..." onkeypress="return valideKey(event);" ><input type="hidden" id="token" value="'+valores['token']+'"></div><div style="text-align:center" id="error_validar_nro">  </div>	');
 		  	}
-	        /*setTimeout(function(){
-	             window.location='';
-	        },1000);*/
 	    }
 	});
 });
