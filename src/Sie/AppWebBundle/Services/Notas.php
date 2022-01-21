@@ -4320,6 +4320,117 @@ die;/*
         }
     }
 
+    public function actualizarEstadoMatriculaEspecial($idInscripcion){
+        
+        try {
+            $this->em->getConnection()->beginTransaction();
+            $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+
+            // ARRAY PARA EL LOG
+            $anterior = [];
+            $anterior['id'] = $inscripcion->getId();
+            $anterior['estadoMatricula'] = $inscripcion->getEstadomatriculaTipo()->getId();
+            ////////////////////
+
+            $sie = $inscripcion->getInstitucioneducativaCurso()->getInstitucioneducativa()->getId();
+            $gestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
+            $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
+            $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+
+            $gestionActual = $this->session->get('currentyear');
+
+            //$operativo = $this->funciones->obtenerOperativo($sie,$gestion);
+            $operativo = $this->funciones->obtenerOperativoTrimestre2020($sie,$gestion);
+            
+            $tipo = 'Trimestre';
+            // ACTUALIZAMOS EL ESTADO DE MATRICULA DE EDUCACION INICIAL A PROMOVIDO
+            if($nivel == 11 or $nivel == 1 or $nivel == 403 or ($nivel.$grado == 121)){
+                // SE ACTUALIZA EL ESTADO DE MATRICULA SI EL OPERATIVO ACTUAL ES MAYOR A 4TO BIMESTRE
+                //if($operativo >= 4){
+                if($operativo >= 1){
+                    $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+
+                    $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                    $this->em->persist($inscripcion);
+                    $this->em->flush();
+
+                    $nuevo = [];
+                    $nuevo['id'] = $inscripcion->getId();
+                    $nuevo['estadoMatricula'] = $inscripcion->getEstadomatriculaTipo()->getId();       
+
+                    if ($anterior['estadoMatricula'] != $nuevo['estadoMatricula']) {
+                        $this->funciones->setLogTransaccion(
+                            $inscripcion->getId(),
+                            'estudiante_inscripcion',
+                            'U',
+                            '',
+                            $nuevo,
+                            $anterior,
+                            'SERVICIO NOTAS - ESTADO MATRICULA',
+                            json_encode(array( 'file' => basename(_FILE, '.php'), 'function' => __FUNCTION_ ))
+                        );
+                    }
+
+                }
+            }else{
+                // ACTUALIZAMOS EL ESTADO DE MATRICULA DE PRIMARIA Y SECUNDARIA
+                $asignaturas = $this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findby(array('estudianteInscripcion'=>$idInscripcion));
+                $cont =0;
+                $total=0;
+                $arrayPromedios = array();
+                foreach ($asignaturas as $a) {
+                    // Notas Bimestrales
+                    if($tipo == 'Bimestre' or ($tipo == 'Trimestre' and $gestion >= 2020)){
+                        //$notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>5));
+                        $notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId(),'notaTipo'=>9));
+                        //$notaPromedio = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findOneBy(array('estudianteAsignatura'=>$a->getId()));
+                        if($notaPromedio){
+                            /**
+                             * GESTION 2018 NO SE CONSIDERAN LAS MATERIAS DE
+                             * 1052 - CIENCIAS NATURALES: FISICA
+                             * 1053 - CIENCIAS NATURALES: QUIMICA
+                             * PARA LA PROMOCION DEL ESTUDIANTE
+                             */
+                            $codigoAsignatura = $a->getInstitucioneducativaCursoOferta()->getAsignaturaTipo()->getId();
+                            if($gestion >= 2018){
+                                if($codigoAsignatura != 1052 and $codigoAsignatura != 1053){
+                                    $arrayPromedios[] = $notaPromedio->getNotaCuantitativa();
+                                    $total=$total+  $notaPromedio->getNotaCuantitativa();
+                                    $cont++;  
+                                }
+                            }else{
+                                $arrayPromedios[] = $notaPromedio->getNotaCuantitativa();
+                            }
+                        } else {
+                            $arrayPromedios[] = 0; 
+                        }
+                        
+                    }
+                    
+                }
+                $promedio = $total/$cont;
+                if(round($promedio,0)>50){
+                    $nuevoEstado=5;
+                }else{
+                    $nuevoEstado=11;
+                }
+                $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
+
+                    $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
+                    $this->em->persist($inscripcion);
+                    $this->em->flush();
+                
+                
+            }           
+            $this->em->getConnection()->commit();
+            return new JsonResponse(array('msg'=>'ok'));
+        } catch (Exception $e) {
+            $this->em->getConnection()->rollback();
+            return new JsonResponse(array('msg'=>'error'));
+        }
+    }
+    
+
     public function actualizarEstadoMatriculaDB($idInscripcion){
         
         try {

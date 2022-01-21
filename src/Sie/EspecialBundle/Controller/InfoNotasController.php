@@ -148,6 +148,7 @@ class InfoNotasController extends Controller {
                         break;
                 case 3: //Intelectual
                 case 5: //Multiple
+                    
                         switch ($nivel) {
                             case 400:
                             case 401:
@@ -213,7 +214,7 @@ class InfoNotasController extends Controller {
                         break;
             }
             //dump($vista);
-           //dump($notas);die;
+          //dump($notas);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
                     'notas'=>$notas,
@@ -266,7 +267,11 @@ class InfoNotasController extends Controller {
             }
             // Verificamos si se actualizara el estado de matrícula
             if($request->get('actualizar') == true){
-                $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+                if($gestion>=2021){
+                    $this->get('notas')->actualizarEstadoMatriculaEspecial($idInscripcion);
+                }else{
+                    $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+                }
             }
             
             // Actualizar estado de matricula de los notas que son cualitativas siempre 
