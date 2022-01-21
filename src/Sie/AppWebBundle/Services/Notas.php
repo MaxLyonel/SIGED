@@ -5678,7 +5678,9 @@ die;/*
             return null;
         }
     }
-
+/**TODO
+ * 
+ */
     public function especial_cualitativo_visual($idInscripcion,$operativo){
         try {
             //dump($idInscripcion);die;
@@ -5753,23 +5755,25 @@ die;/*
                                     ->innerJoin('SieAppWebBundle:NotaTipo','nt','with','enc.notaTipo = nt.id')
                                     ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','iec.gestionTipo = gt.id')
                                     ->where('ei.estudiante = '. $inscripcion->getEstudiante()->getId())
-                                    ->andWhere('gt.id > 2019')
+                                    ->andWhere('gt.id > 2020')
                                     ->andWhere('iece.especialProgramaTipo = '.$programa)
                                     ->orderBy('gt.id','DESC')
                                     ->addOrderBy('nt.id','DESC')
                                     ->setMaxResults(1)
                                     ->getQuery()
-                                    ->getResult();                                    
-            //dump($cualitativas, $idInscripcion,$gestion);die;
+                                    ->getResult();          
+                                    dump($cualitativas);
+           
             if($cualitativas){
                 if(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] == 78){
+                    
                     $inicio = 0;
                     $fin = 0;
                     $etapasArray[0] = array('idNotaTipo'=>$cualitativas[0]['idNotaTipo'],
                                             'etapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'],
                                             'fechaEtapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['fechaEtapa']
                                     );
-                }else{
+                }else{ 
                     $inicio = 0;
                     $fin = 1;
                     if(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] == 80){
@@ -5801,6 +5805,7 @@ die;/*
                                 );
                 $idEstudianteInscripcion = $idInscripcion;
             }
+            
             //dump($cualitativas, $idInscripcion,$gestion,$etapasArray);die;
             $asignaturasC = $this->em->createQueryBuilder()
                                 ->select('at.id, at.area, asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
@@ -5816,7 +5821,9 @@ die;/*
                                 ->setParameter('idInscripcion',$idEstudianteInscripcion)
                                 ->getQuery()
                                 ->getResult();
-            //dump($asignaturasC,$asignaturas);die;
+
+            
+          // dump($asignaturasC,$asignaturas);die;
             if($asignaturas){
                 foreach ($asignaturasC as $key=>$a) {
                     //dump($asignaturas,$a,$key);die;
