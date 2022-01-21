@@ -5989,7 +5989,7 @@ die;/*
                 
             }
 
-            die;
+            
             // dump($notaCualitativa);die;
 
             /* Datos de las notas cualitativas de primaria gestion 2013 */
