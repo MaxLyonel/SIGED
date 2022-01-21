@@ -67,6 +67,7 @@ class InfoNotasController extends Controller {
                 case 1: // Auditiva
                         //if($nivel != 405){
                         $progserv = $cursoEspecial->getEspecialProgramaTipo()->getId();
+                        //dump($progserv);dump($nivel);die;
                         if($nivel == 403 or $nivel == 404 or ($nivel == 411 and $progserv == 19)){//Verificar el seguimiento para 19
 
                             if($progserv == 19) {
@@ -87,7 +88,7 @@ class InfoNotasController extends Controller {
                                 if($notas['tipoNota'] == 'Trimestre'){
                                     $template = 'trimestral';
                                 }else{
-                                    if($gestion==2021)
+                                    if($gestion>=2021)
                                         $template = 'regularEspecial';
                                     else
                                         $template = 'regular';
@@ -99,6 +100,7 @@ class InfoNotasController extends Controller {
                                 if($operativo >= 3 or $gestion < $gestionActual){
                                     $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(5,11)));
                                 }
+                                
                             }
                         }elseif(in_array($nivel, array(410,411)) and $gestion > 2019){
                             $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
@@ -142,6 +144,7 @@ class InfoNotasController extends Controller {
                             $seguimiento = true;
                             $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
                         }
+                        
                         break;
                 case 3: //Intelectual
                 case 5: //Multiple
@@ -236,10 +239,11 @@ class InfoNotasController extends Controller {
 
     public function createUpdateAction(Request $request){
         try {
+            
             $idInscripcion = $request->get('idInscripcion');
             $discapacidad = $request->get('discapacidad');
             $em = $this->getDoctrine()->getManager();
-            //dump ($request); die;
+          // dump($discapacidad); dump ($request); die;
             // Registramos las notas
             $gestion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion)->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             
