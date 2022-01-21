@@ -11,7 +11,9 @@ use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta;
 use Sie\AppWebBundle\Entity\InstitucioneducativaCursoEspecial;
+use Sie\AppWebBundle\Entity\InstitucioneducativaCursoModalidadAtencion;
 use Sie\AppWebBundle\Entity\EspecialModalidadTipo;
+
 
 /**
  * EstudianteInscripcion controller.
@@ -334,13 +336,15 @@ class CreacionCursosEspecialController extends Controller {
 
     public function createAction(Request $request){
         try{
+            
            
-            $form = $request->get('form');           
+            $form = $request->get('form');
+            
             $nivelTecnico = 99;
-            if(isset($form['nivelTecnico'])){                
-                $nivelTecnico = $form['nivelTecnico'];
+            if(isset($form['nivelTecnico'])){
+                $nivelTecnico = $form['nivelTecnico']?$form['nivelTecnico']:99;
             }
-
+            //dump($nivelTecnico);die;
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso_especial');")->execute();
             $em->getConnection()->prepare("select * from sp_reinicia_secuencia('institucioneducativa_curso');")->execute();
@@ -460,6 +464,16 @@ class CreacionCursosEspecialController extends Controller {
             $em->getConnection()->beginTransaction();
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->find($request->get('idCurso'));
             $cursosie = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($curso->getInstitucioneducativaCurso()->getId());
+
+            // remove modalidad on course
+            $objModalidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoModalidadAtencion')->findBy(array('institucioneducativaCurso'=>$cursosie->getId()));
+            if($objModalidad); {
+                foreach ($objModalidad as $keyMod => $valueMod) {
+                    $em->remove($valueMod);
+                    $em->flush();
+                }
+            }            
+            // end remove modalidad on course
             /*
              * Verificamos si tiene estudiantes inscritos
              */
@@ -662,7 +676,10 @@ class CreacionCursosEspecialController extends Controller {
         elseif ($nivel == "403" ) {
             $grados = array(1,2);
         }
-        elseif ($nivel == "404" or $nivel == "405" ) { //TECNICA
+        elseif ($nivel == "404" ) { //EDUC PRIMARIA
+            $grados = array(1,2,3,4,5,6);
+        }
+        elseif ($nivel == "405" ) { //TECNICA
             $grados = array(1,2,3,4,5,6);
             if($area==1 or $area==2 or $area==4){
                 $grados = array(1,2);
@@ -698,16 +715,18 @@ class CreacionCursosEspecialController extends Controller {
                 $niveltecnico = array(1,2,3);
             }
         }
-        
-        $query = $em->createQuery(
-            'SELECT g.id, g.nivelTecnico FROM SieAppWebBundle:EspecialNivelTecnicoTipo g
-                            WHERE g.id IN (:id)'
-            )->setParameter('id',$niveltecnico);
-
-        $nivelestecnicos = $query->getResult();
         $nivelestecnicosArray = array();
-        for($i=0;$i<count($nivelestecnicos);$i++){
-            $nivelestecnicosArray[$nivelestecnicos[$i]['id']] = $nivelestecnicos[$i]['nivelTecnico'];
+        if($niveltecnico){
+            $query = $em->createQuery(
+                'SELECT g.id, g.nivelTecnico FROM SieAppWebBundle:EspecialNivelTecnicoTipo g
+                                WHERE g.id IN (:id)'
+                )->setParameter('id',$niveltecnico);
+
+            $nivelestecnicos = $query->getResult();
+            
+            for($i=0;$i<count($nivelestecnicos);$i++){
+                $nivelestecnicosArray[$nivelestecnicos[$i]['id']] = $nivelestecnicos[$i]['nivelTecnico'];
+            }
         }
             //dump($nivelestecnicosArray);die;
         $response = new JsonResponse();
@@ -788,6 +807,7 @@ class CreacionCursosEspecialController extends Controller {
             if ($this->session->get('idGestion') < 2020) {
                 $programas = array(13);
             } else {
+                
                 $programas = array(19, 20, 21, 22);
             }
         }

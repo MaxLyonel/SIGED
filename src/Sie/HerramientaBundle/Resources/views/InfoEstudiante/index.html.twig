@@ -1,15 +1,33 @@
 {% extends 'layoutHerramienta.html.twig' %}
 
 {% block contentoption %}
-    <!-- Start page header -->
-      {% include 'SieHerramientaBundle:Principal:breadcrumbstrail.html.twig' with {'sie': odataUedu.id, 'gestion':gestion , 'opcion': 'Estudiante'} %}
-    <!--/ End page header -->
-    <style type="text/css">
-        .dropdown-header{
-            background: #3f729b !important;
-            color: #EEEEEE;
-        }
-    </style>
+<!-- Start page header -->
+{% include 'SieHerramientaBundle:Principal:breadcrumbstrail.html.twig' with {'sie': odataUedu.id, 'gestion':gestion , 'opcion': 'Estudiante'} %}
+<!--/ End page header -->
+<style type="text/css">
+.dropdown-header{
+    background: #3f729b !important;
+    color: #EEEEEE;
+}
+.close1 {
+font-size: 1.28571em;
+top: -0.85714em;
+position: absolute;
+right: -0.85714em;
+height: 2em;
+width: 2em;
+background-color: #313a46;
+opacity: 1;
+border: 2px solid #ffffff;
+text-shadow: none;
+color: #ffffff;
+border-radius: 50%;
+text-align: center;
+line-height: 1.83333em;}
+.panel-title1{
+    text-shadow: 3px 3px 2px #000;font-weight:bold;
+}
+</style>
 
     <div class="body-content animated fadeIn">
 
@@ -223,6 +241,14 @@
                                                                             {% endif %}
                                                                         {% endif %}
 
+                                                                        {# icon de asignar paralelo #}
+                                                                       
+                                                                        {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Incripción Lote">
+                                                                            <button class="btn btn-circle btn-success btn-stroke " onclick="asignarParalelo('{{dataParalelo.infoUe}}');">
+                                                                                <i class="fa fa-check-square-o"></i>
+                                                                            </button>
+                                                                        </div> #}
+
                                                                     </li>
                                                                 {% endfor %}
                                                             </ul>
@@ -255,6 +281,19 @@
     <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">
 
     </div><!-- /.modal -->
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h1 class="panel-title1" align="center">ASIGNAR PARALELO ESTUDIANTES</h1>
+                        <button type="button" class="close1" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="panel-body panel-default" id="modal1_con"></div>
+                </div>
+            </div>
+        </div>
+    </div><!-- /.modal -->
     <!--/ End body content -->
 {% endblock %}
 {% block javascripts%}
@@ -281,6 +320,8 @@
                 e.stopPropagation();
             });
         });
+
+        
 
         var cerrarRude = function(sie, gestion){
           $.ajax({
@@ -361,6 +402,31 @@
             });
         };
 
+        var seeStudents = function (infoUe) {
+
+            $.ajax({
+                type: 'get',
+                data: ({infoUe: infoUe}),
+                url: Routing.generate('herramienta_info_estudiante_see_students'),
+                beforeSend: function () {
+                    $("#idstudents").empty();
+                    $("#idstudents").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
+                },
+                success: function (data) {
+                    $("#idstudents").empty();
+                    $("#idstudents").append(data);
+                    $('.tooltips').tooltip();
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
         var seeStudents = function (infoUe) {
 
             $.ajax({
@@ -531,6 +597,7 @@
             });
         };
 
+     
         var getDatosCurso = function (infoUe) {
             $.ajax({
                 type: 'post',
@@ -576,6 +643,8 @@
                 }
             });
         };
+
+
         var inscriptionWithRude = function (aData) {
 
             $.ajax({
@@ -662,6 +731,8 @@
             });
 
         };
+
+
 
 
   /* the new to do the inscriptions*/
@@ -904,7 +975,30 @@
                 }
             });
         };       
-
-
+function asignarParalelo(infoUe){
+    $("#modal1_con").html('');
+    $('#modal1').modal('show');
+    /*$.post('{{ path('herramienta_asignarPararlelo_index') }}', {infoUe:infoUe}, function(data) {
+        $("#modal1_con").html(data);
+    });*/
+    $.ajax({
+        type: 'post',
+        data: ({infoUe: infoUe}),
+        url: "{{ path('herramienta_asignarPararlelo_index') }}",
+        beforeSend: function () {
+            $("#modal1_con").empty();
+            $("#modal1_con").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+        },
+        success: function (data) { console.log(data);
+            $("#modal1_con").html(data);
+        },
+        statusCode: {
+            500: function () {
+            },
+            404: function () {
+            }
+        }
+    });
+};
     </script>
 {%endblock%}

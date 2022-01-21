@@ -1,0 +1,21 @@
+inscription_celular_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:InscriptionCelular:index }
+
+validar_nro:
+    path:     /validar_nro
+    defaults: { _controller: SieAppWebBundle:InscriptionCelular:validar_nro }
+    options:
+         expose: true
+
+verificarInfo:
+    path:     /verificarInfo
+    defaults: { _controller: SieAppWebBundle:InscriptionCelular:verificarInfo }
+    options:
+         expose: true
+
+guadarDatos:
+    path:     /guadarDatos
+    defaults: { _controller: SieAppWebBundle:InscriptionCelular:guadarDatos }
+    options:
+         expose: true

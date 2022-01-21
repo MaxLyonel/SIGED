@@ -820,11 +820,14 @@ class TramiteAceleracionController extends Controller
             ->orderBy("td.flujoProceso")
             ->getQuery()
             ->getResult();
+
         $datos1 = json_decode($resultDatos[0]->getdatos());
         $datos2 = json_decode($resultDatos[1]->getdatos());
         $restudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($datos1->estudiante_id);
         $estudiante = $restudiante->getNombre().' '.$restudiante->getPaterno().' '.$restudiante->getMaterno();
         $rude = $restudiante->getCodigoRude();
+        //added
+        $arrFechasolicitud = explode("/", $datos1->fecha_solicitud);
 
         // $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('estudiante'=>$restudiante), array('id'=>'DESC'));
         $restudianteinst = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->createQueryBuilder('eins')
@@ -884,7 +887,7 @@ class TramiteAceleracionController extends Controller
             ->setParameter('id', $codigo_sie)
             ->setParameter('nivel', $nivel_id)
             ->setParameter('grado', $grado_id)
-            ->setParameter('gestion', $this->session->get('currentyear'))
+            ->setParameter('gestion', $arrFechasolicitud[2])
             ->distinct()
             ->orderBy('iec.paraleloTipo', 'ASC')
             ->getQuery();
@@ -898,13 +901,13 @@ class TramiteAceleracionController extends Controller
             ->setParameter('id', $codigo_sie)
             ->setParameter('nivel', $nivel_id)
             ->setParameter('grado', $grado_id)
-            ->setParameter('gestion', $this->session->get('currentyear'))
+            ->setParameter('gestion', $arrFechasolicitud[2])
             ->distinct()
             ->orderBy('iec.turnoTipo', 'ASC')
             ->getQuery();
         $nivel_tipo = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel_id);
         $grado_tipo = $em->getRepository('SieAppWebBundle:GradoTipo')->find($grado_id);
-        $iecurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('institucioneducativa' => $codigo_sie, 'nivelTipo' => $nivel_id, 'gradoTipo' => $grado_id, 'paraleloTipo' => $paralelo_id, 'turnoTipo' => $turno_id, 'gestionTipo' => $this->session->get('currentyear')));
+        $iecurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('institucioneducativa' => $codigo_sie, 'nivelTipo' => $nivel_id, 'gradoTipo' => $grado_id, 'gestionTipo' => $arrFechasolicitud[2]));
         if (empty($iecurso)) {
             if ($paralelo_id > 1) {
                 $paralelo_id = 1;

@@ -214,7 +214,7 @@
                 <div class="panel panel-icon panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-search"></i>
-                        <strong> Si el estudiante no cuenta con Carnet de Identidad, debe solicitar la inscripción en la Dirección Distrital</strong>
+                        <strong>Si el estudiante no cuenta con Carnet de Identidad, debe solicitar la inscripción en la Dirección Distrital</strong>
                         <div class="pull-right">
                             {# <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a> #}
                         </div>                                        
@@ -277,7 +277,7 @@
                             
                             <div class="form-group row buscador">
 	                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar && Validar</button>
+	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar y Validar</button>
 	                            </div>
                         	</div>
 
@@ -350,9 +350,6 @@
 								</br>
                             	<!-- end data new studen  -->
 
-
-
-
                             	<p class="encabezado bg-primary">INFORMACIÓN ADICIONAL DEL ESTUDIANTE </p>
 
 	                            <div class="row">
@@ -396,7 +393,7 @@
 				      <label for="inscription">Tipo de Inscripcion</label>
 					<select name="arrTypeInscription" id="idarrIns_inscrip" v-model="dataNewStudent.typeInscription" class="custom-select form-control" >
 						<option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
-                                            	<option value="1">ARTÍCULO 14 R.M. 001/2021</option>
+                                            	<option value="1">ARTÍCULO 12 d) R.M. 001/2022</option>
                                             	<option value="2">REZAGO ESCOLAR</option>
                                         </select>
 
@@ -404,7 +401,7 @@
 					<div class="col-sm-4" v-if="allowwithoutci">
                                                      <label for="certificado">Adjuntar Documento 
 							<div v-if="dataNewStudent.typeInscription ==0">CERTIFICADO DE NACIMIENTO</div> 
-                                                 	<div v-if="dataNewStudent.typeInscription ==1">INFORME DE EVALUACIÓN PSICOPEDAGÓGICA INTEGRAL</div>
+                                                 	<div v-if="dataNewStudent.typeInscription ==1">CERTIFICACIÓN DE LA INSTITUCIÓN DE EVALUACIÓN PSICOPEDAGÓGICA INTEGRAL</div>
                                                  	<div v-if="dataNewStudent.typeInscription ==2">CERTIFICADO DE NACIMIENTO</div>
 							</label>
                                                         <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
@@ -564,8 +561,8 @@
 					<div class="col-md-4" >                       
                                       		<label for="provincia">Tipo de Inscripcion</label>
                                         	<select name="arrTypeInscription" id="idarrIns_inscrip" v-model="oldStudent.typeInscription" class="custom-select form-control" >
-							<option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
-                                            		<option value="1">ARTÍCULO 14 R.M. 001/2021</option>
+							                                  <option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
+                                            		<option value="1">ARTÍCULO 12 d) R.M. 001/2022</option>
                                             		<option value="2">REZAGO ESCOLAR</option>I                                           	
                                         	</select>
 
@@ -573,7 +570,7 @@
  				        <div class="col-sm-8">
                                          <label for="certificado">Adjuntar Documento
 						<div v-if="oldStudent.typeInscription ==0">CERTIFICADO DE NACIMIENTO</div> 
-						<div v-if="oldStudent.typeInscription ==1">INFORME DE EVALUACIÓN PSICOPEDAGÓGICA INTEGRAL</div> 
+						<div v-if="oldStudent.typeInscription ==1">CERTIFICACIÓN DE LA INSTITUCIÓN DE EVALUACIÓN PSICOPEDAGÓGICA INTEGRAL</div> 
 						<div v-if="oldStudent.typeInscription ==2">CERTIFICADO DE NACIMIENTO</div> 
 					</label>
                                          <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">

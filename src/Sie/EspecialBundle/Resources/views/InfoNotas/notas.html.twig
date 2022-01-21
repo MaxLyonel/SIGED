@@ -46,6 +46,7 @@
 						{% else %}					    
 						<h5>Notas <small style="float:right;color:#4D8595">Operativo Actual-{{notas.operativo}}</small></h5>
 						{% endif %}
+						
 					    {# {% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with {'notas':notas, 'vista':vista} %} #}
 						{% include 'SieAppWebBundle:Services/Notas:'~ template ~'.html.twig' with { 'notas':notas, 'vista':vista, 'discapacidad':discapacidad } %}
 						{% if discapacidad != 2 or (discapacidad == 2 and notas.gestion  < 2020)%}
@@ -69,12 +70,16 @@
 											{% if discapacidad in [3,5] and  notas.gestion > 2019 %}
 												{% if notas.estadoMatricula == 5 %}
 													{% set display = "display:block"%}
-													{% if notas.cualitativas.0.promovido == "CON APOYO" %}
-														{% set checked1 = "checked" %}
-														{% set checked2 = "" %}
-													{% else %}
-														{% set checked1 = "" %}
-														{% set checked2 = "checked" %}
+													
+													{% if notas.cualitativas %}
+													
+														{% if notas.cualitativas.0.promovido == "CON APOYO" %}
+															{% set checked1 = "checked" %}
+															{% set checked2 = "" %}
+														{% else %}
+															{% set checked1 = "" %}
+															{% set checked2 = "checked" %}
+														{% endif %}
 													{% endif %}
 												{% else %}
 													{% set checked1 = "" %}

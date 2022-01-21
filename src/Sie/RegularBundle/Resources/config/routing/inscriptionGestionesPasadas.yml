@@ -19,6 +19,12 @@ inscription_gestiones_pasadas_findIE:
      path:    /findIE/{id}/{gestionselected}
      defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:findIE }
      options:
+         expose: true 
+
+inscription_gestiones_pasadas_findIEAbierta:
+     path:    /findIEAbierta/{id}/{gestionselected}
+     defaults: { _controller: SieRegularBundle:InscriptionGestionesPasadas:findIEAbierta }
+     options:
          expose: true   
 
 inscription_gestiones_pasadas_findgrado:

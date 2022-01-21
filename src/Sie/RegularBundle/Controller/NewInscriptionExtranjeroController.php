@@ -62,7 +62,7 @@ class NewInscriptionExtranjeroController extends Controller{
     public function indexAction(Request $request){
       //disabled option by krlos
       //return $this->redirect($this->generateUrl('login'));
-     if (in_array($this->session->get('roluser'), array(8,7,10))){
+     if (in_array($this->session->get('roluser'), array(8,7,10,9))){
 
      }else{
       //to do the ue cal diff
@@ -101,6 +101,7 @@ class NewInscriptionExtranjeroController extends Controller{
 	        $arrExpedido[$value->getId()] = $value->getSigla();
 	      }
 	    $userAllowedOnwithoutCI = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
+      //HerramientaBundle/NewInscriptionEstranjero:index.html.twig
        	return $this->render($this->session->get('pathSystem') .':NewInscriptionExtranjero:index.html.twig', array(
        		'arrExpedido'=>$objExpedido,
        		'allowwithoutci' => $userAllowedOnwithoutCI,
@@ -187,17 +188,22 @@ class NewInscriptionExtranjeroController extends Controller{
 		      	// validate the year old on the student
 		      	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
 		        $yearStudent = $arrYearStudent['age'];
+            //dump($yearStudent);die;
 		        // check if the student is on 5 - 8 years old
-		        		        		
-		        		$dataGenderAndCountry = $this->getGenderAndCountry();
-		        		$arrGenero = $dataGenderAndCountry['gender'];
-		        		$arrPais 	 = $dataGenderAndCountry['country'];
-		        		$status = 'success';
-		            $code = 200;
-		            $message = "Estudiante cumple con los requerimientos!!!";
-		            $swcreatestudent = true; 
-
-
+              if( $yearStudent > 3 ){
+                  $dataGenderAndCountry = $this->getGenderAndCountry();
+                  $arrGenero = $dataGenderAndCountry['gender'];
+                  $arrPais 	 = $dataGenderAndCountry['country'];
+                  $status = 'success';
+                  $code = 200;
+                  $message = "Estudiante cumple con los requerimientos!!!";
+                  $swcreatestudent = true; 
+              }else{
+                $status = 'error';
+                $code = 400;
+                $message = "Estudiante no cumple con la edad requerida";
+                 $swcreatestudent = false; 
+              }
 		        
 		      }else{
 					$status = 'error';
@@ -320,8 +326,6 @@ class NewInscriptionExtranjeroController extends Controller{
         $response->setData($arrResponse);
   
         return $response;
-
-
 
     }
 
@@ -563,16 +567,16 @@ class NewInscriptionExtranjeroController extends Controller{
 		            $aniveles[] = array('id'=> $nivel[1], 'level'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel());
 		        }
 		        $status = 'success';
-				$code = 200;
-				$message = "Datos encontrados";
-				$swprocess = true; 
-				$nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";
-	        }else{
-	        	$status = 'error';
-				$code = 400;
-				$message = "Información no consolidada - no tiene level";
-				$swprocess = false; 
-				$nombreIE = false; 
+            $code = 200;
+            $message = "Datos encontrados";
+            $swprocess = true; 
+            $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";
+              }else{
+                $status = 'error';
+            $code = 400;
+            $message = "Información no consolidada -- no tiene level";
+            $swprocess = false; 
+            $nombreIE = false; 
 	        }
 	        
 
@@ -824,17 +828,17 @@ class NewInscriptionExtranjeroController extends Controller{
         
         $withoutcifind = ($arrDatos['withoutcifind']==false)?false:true;
         $swnewforeign = $arrDatos['swnewforeign'];
- 	if($swnewforeign == 1){
-		$fecNac = $arrDatos['fecnacfind'];
-	}else{
-		$fecNac = $arrDatos['fecNac'];
-	}
+          if($swnewforeign == 1){
+            $fecNac = $arrDatos['fecnacfind'];
+          }else{
+            $fecNac = $arrDatos['fecNac'];
+          }
 
         // validation if the ue is over 4 operativo
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
             
 		$swinscription=true;
-        if($operativo >= 4){
+        if($operativo >= 3){
             $status = 'error';
 			$code = 400;
 			$message = "No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos";
@@ -861,11 +865,12 @@ class NewInscriptionExtranjeroController extends Controller{
               //validate if the user download the sie file
               if($swAccess){
                 $status = 'error';
-				$code = 400;
-				$message = "No se puede realizar la inscripción debido a que ya descargo el archivo SIE";
-				$swinscription = false; 
+                $code = 400;
+                $message = "No se puede realizar la inscripción debido a que ya descargo el archivo SIE";
+                $swinscription = false; 
               }
             }
+         
 
             $arrStudent=array();
             $arrInscription=array();
@@ -880,7 +885,6 @@ class NewInscriptionExtranjeroController extends Controller{
 	                'institucioneducativa' => $sie,
 	                'gestionTipo' => $gestion,
 	            );
-
 
 	            //insert a new record with the new selected variables and put matriculaFinID like 5
 	            $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($arrQuery);
@@ -957,8 +961,8 @@ class NewInscriptionExtranjeroController extends Controller{
 	            $query->execute();
 	            //insert a new record with the new selected variables and put matriculaFinID like 5
 	            $studentInscription = new EstudianteInscripcion();
-	            $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
-	            $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
+	           // $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
+	           // $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
 	            $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
 	            $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($foreignStudentId));
 	            $studentInscription->setObservacion(1);

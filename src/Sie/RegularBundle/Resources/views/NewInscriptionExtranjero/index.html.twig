@@ -25,7 +25,7 @@
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-table"></i> Inscripción Extranjero <span></span></h2>
+        <h2><i class="fa fa-table"></i>Inscripción Extranjero <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -209,20 +209,34 @@
             <div class="col-xs-12 col-lg-12">
 
                 <div class="panel panel-icon panel-default">
-                    <div class="panel-heading">
-                        <i class="fa fa-search"></i>
-                        <strong> Si el estudiante no cuenta con Carnet de Identidad, debe solicitar la inscripción en la Dirección Distrital</strong>
-                        <div class="pull-right">
-                            {# <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a> #}
-                        </div>                                        
-                    </div>
+                    
                     {% if enableoption %}
                     <div class="panel-body">
                         <!-- form to search student -->
-                      <h4><strong> INSCRIPCIÓN POR DATOS DEL ESTUDIANTE </strong></h4></br> 
-
                          <form role="form">
-                            <div class="row">
+
+                          <ul class="nav nav-tabs" >
+                            <li role="presentation" class="active">
+                                <a href="#sinrude" data-toggle="tab">
+                                    <h5><strong> INSCRIPCIÓN POR DATOS DEL ESTUDIANTE </strong></h5>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#conrude" data-toggle="tab">
+                                    <h5><strong> INSCRIPCIÓN POR CÓDIGO RUDE </strong></h5>
+                                </a>
+                            </li>
+                          </ul>
+
+                              <!-- Tab panes -->
+                    <div class="tab-content">
+                          <div role="tabpanel" class="tab-pane fade in active" id="sinrude">
+                             <div class="panel-heading">
+                                <i class="fa fa-search"></i>
+                                <strong> Si el estudiante no cuenta con Carnet de Identidad, debe solicitar la inscripción en la Dirección Distrital</strong>
+                              </div>
+
+                              <div class="row">
                               <div class="col-sm-2">
                               <label for="ci">(*)Carnet de Identidad</label>
                               <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataNewStudent.cifind">
@@ -234,9 +248,9 @@
                               <div class="col-sm-1">
                               <label for="expedido">Expedido</label>
                                 <select name="DBExpedido" id="idarrExpe" v-model="dataNewStudent.expedidoIdfind" class="custom-select form-control"> 
- 								{% for entity in arrExpedido %}
+ 								                {% for entity in arrExpedido %}
                                   <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
-								{% endfor %}
+								                {% endfor %}
                                 </select> 
                               </div>
                               <div class="col-sm-3">
@@ -247,11 +261,10 @@
                               </div>
 
                               <div class="col-sm-3">
-								{% if allowwithoutci %}
-	                               <label for="form_caseespecial" class="validation">SIN CI :</label>
-	                       			<input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
-                       			{% endif %}
-
+                                {% if allowwithoutci %}
+                                    <label for="form_caseespecial" class="validation">SIN CI :</label>
+                                    <input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
+                                {% endif %}
                               </div>
 
                             </div>
@@ -278,7 +291,9 @@
 	                            </div>
                         	</div>
                           </br>
-                          <h4><strong> INSCRIPCIÓN POR CÓDIGO RUDE DEL ESTUDIANTE </strong></h4></br>
+                          </div>
+                          <div role="tabpanel" class="tab-pane" id="conrude">
+                             
                           <form>
                             <div class="form-group">
                               <label for="rude">Código Rude</label>
@@ -286,6 +301,10 @@
                             </div>
                             <button v-on:click="lookforrude()" type="button" class="btn btn-primary"><i class="fa fa-search"></i>**Buscar && Validar</button>
                           </form>
+                          </div>
+                    </div>
+                    <!-- end Tab panes -->
+                         
                         	<div v-if="buscando" class="text-center">
                                 <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
                             </div>
@@ -333,7 +352,7 @@
                             <div v-if="responseprocess">
 
                             	<!-- data new studen  -->
-                            	<p class="encabezado bg-primary">INFORMACIÓN DEL NUEVO ESTUDIANTE 4444</p>
+                            	<p class="encabezado bg-primary">1. INFORMACIÓN DEL NUEVO ESTUDIANTE </p>
                             	<table class="table table-dark">
 								  <tbody>
 								    <tr>
@@ -703,11 +722,6 @@
                         	</div>                        	                    	
                                                       
                           </form>
-
-
-
-                       
-                            
                             
                     </div>
                     {% else %}
