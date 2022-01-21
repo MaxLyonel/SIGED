@@ -2,7 +2,7 @@ Sie\AppWebBundle\Entity\RudeAccesoInternet:
     type: entity
     table: rude_acceso_internet
     indexes:
-        IDX_9AA172DE443E4890:
+        fk_rude_acceso_internet:
             columns:
                 - rude_id
         IDX_9AA172DE8C22AD53:

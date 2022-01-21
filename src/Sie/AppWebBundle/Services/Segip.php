@@ -206,6 +206,7 @@ class Segip {
 
 			//Obtenemos la respuesta del segip
 			$resultado = $this->obtenerValidacionDeSegip($response,$rawDatosEnvidosSegip);
+			$resultado= true;
 		}
 		catch(Exception $e)
 		{

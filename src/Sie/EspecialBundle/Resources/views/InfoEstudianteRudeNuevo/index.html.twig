@@ -1226,7 +1226,7 @@
                             </div>
                             <div {% if rude.registroFinalizado == 5 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab6">
                                 <fieldset class="fieldset">
-                                    <legend class="legend">VI. DATOS DEL PADRE, MADRE O TUTOR(A) DE LA O EL ESTUDIANTE</legend>
+                                    <legend class="legend">VI. DATOS DEL PADRE, MADRE O TUTOR(A) DE LA O EL ESTUDIANTE {{rude.registroFinalizado}}</legend>
                                     <form id="formConQuienVive">
                                         <div class="row form-group">
                                             <label class="col-md-6">6.1 LA O EL ESTUDIANTE VIVE HABITUALMENTE CON:</label>
@@ -2060,6 +2060,8 @@
     $(function(){
         verificarPaisNacimiento();
         validarOtroGradoDiscapacidad();
+        validarEspecifico();
+        validarTalento();
         // cargarGradoDiscapacidad();
         validarTieneDiscapacidad();
         validarAccesoInternet();
@@ -2201,7 +2203,9 @@
         if( accesos == '2'){//Especifico en           
             $('#secEspecifico').show(1000);           
             $('#form_especificoEn').attr('required','required');
-             $('#secTalentoOtro').hide(1000);
+            $('#secTalentoOtro').hide(1000);
+            $('#form_talentoOtro').removeAttr('required');
+            $('#form_talentoOtro').val('');
         }else{
             $('#secEspecifico').hide(1000);
             $('#form_especificoEn').val('');
@@ -2214,10 +2218,12 @@
     ////////////// 
     function validarTalento(){
         var accesos = $('#form_talentoExtraordinario').val();
-        if( accesos == '99'){//Especifico en           
+        if( accesos == '99'){//Otro           
             $('#secTalentoOtro').show(1000);           
-            $('#form_especificoEn').attr('required','required');
+            $('#form_talentoOtro').attr('required','required');
             $('#secEspecifico').hide(1000);
+            $('#form_especificoEn').removeAttr('required');
+            $('#form_especificoEn').val('');
         }else{
             $('#secTalentoOtro').hide(1000);
             $('#form_especificoEn').val('');

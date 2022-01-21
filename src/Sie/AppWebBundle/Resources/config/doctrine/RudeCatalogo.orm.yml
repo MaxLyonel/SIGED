@@ -2,15 +2,15 @@ Sie\AppWebBundle\Entity\RudeCatalogo:
     type: entity
     table: rude_catalogo
     indexes:
-        IDX_919369AC12A743E8:
-            columns:
-                - clase_tabla_tipo_id
         IDX_919369AC4080FEFA:
             columns:
                 - institucioneducativa_tipo_id
         IDX_919369AC179FF95:
             columns:
                 - gestion_tipo_id
+        IDX_919369AC12A743E8:
+            columns:
+                - clase_tabla_tipo_id
     id:
         id:
             type: smallint
@@ -57,15 +57,6 @@ Sie\AppWebBundle\Entity\RudeCatalogo:
             comment: ''
             column: fecha_modificacion
     manyToOne:
-        claseTablaTipo:
-            targetEntity: ClaseTablaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                clase_tabla_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         institucioneducativaTipo:
             targetEntity: InstitucioneducativaTipo
             cascade: {  }
@@ -82,6 +73,15 @@ Sie\AppWebBundle\Entity\RudeCatalogo:
             inversedBy: null
             joinColumns:
                 gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        claseTablaTipo:
+            targetEntity: ClaseTablaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                clase_tabla_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

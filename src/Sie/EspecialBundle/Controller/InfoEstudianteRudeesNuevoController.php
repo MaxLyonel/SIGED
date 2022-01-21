@@ -1666,39 +1666,51 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		{
 			$arrayAccesoInternet[] = $aie->getAccesoInternetTipo()->getId();
 		}
-		//dump($discapacidadTipoGradoPorcentaje_rude);
-		//dump($discapacidadTipoGradoPorcentaje_rude->getDiscapacidadOtroGrado()->getId());die;
-		if($discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==2||$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==5||$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==4){
+		//dump($discapacidadEstudiante);die;
+		if($discapacidadTipoGradoPorcentaje_rude){
+			if($discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==2||$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==5||$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo()->getId()==4){
+				$gradosArray = array();
+				$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findBy(array('id'=>array(2,7,9,99,32,33,34,8,35,36,37,38,39)));
+				foreach ($gradoDiscapacidad as $gd)
+					{
+						$gradosArray[] = $gd->getId();
+					}
+				$dataGrado = $discapacidadTipoGradoPorcentaje_rude->getDiscapacidadOtroGrado();
+				$entity='DiscapacidadTipo';
+			}else{
+				$gradosArray = array();
+				if($discapacidadEstudiante)
+				{
+					// SI LA DISCAPACDIDAD ES VISUAL ENTONCES SOLO MOSTRAMOS CIEETOS GRADOS DE DISCAPACIDAD
+					if($discapacidadEstudiante->getDiscapacidadTipo()->getId() == 10)
+					{
+						$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(6,5)));
+					}
+					else
+					{
+						$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(1,2,7,8)));
+					}
+
+					foreach ($gradoDiscapacidad as $gd)
+					{
+						$gradosArray[] = $gd->getId();
+					}
+				}
+				$dataGrado = $discapacidadTipoGradoPorcentaje_rude->getGradoDiscapacidadTipo();
+				$entity='GradoDiscapacidadTipo';
+			}
+		}else{
 			$gradosArray = array();
 			$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:DiscapacidadTipo')->findBy(array('id'=>array(2,7,9,99,32,33,34,8,35,36,37,38,39)));
 			foreach ($gradoDiscapacidad as $gd)
-				{
-					$gradosArray[] = $gd->getId();
-				}
-			$dataGrado = $discapacidadTipoGradoPorcentaje_rude->getDiscapacidadOtroGrado();
+					{
+						$gradosArray[] = $gd->getId();
+					}
+			$dataGrado=0;
 			$entity='DiscapacidadTipo';
-		}else{
-			$gradosArray = array();
-			if($discapacidadEstudiante)
-			{
-				// SI LA DISCAPACDIDAD ES VISUAL ENTONCES SOLO MOSTRAMOS CIEETOS GRADOS DE DISCAPACIDAD
-				if($discapacidadEstudiante->getDiscapacidadTipo()->getId() == 10)
-				{
-					$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(6,5)));
-				}
-				else
-				{
-					$gradoDiscapacidad = $em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->findBy(array('id'=>array(1,2,7,8)));
-				}
-
-				foreach ($gradoDiscapacidad as $gd)
-				{
-					$gradosArray[] = $gd->getId();
-				}
-			}
-			$dataGrado = $discapacidadTipoGradoPorcentaje_rude->getGradoDiscapacidadTipo();
-			$entity='GradoDiscapacidadTipo';
-		} //dump($gradosArray, $dataGrado);die;
+		}
+		//dump($discapacidadTipoGradoPorcentaje_rude->getDiscapacidadOtroGrado()->getId());die;
+			
 		$form = $this->createFormBuilder($rude)
 			->add('id', 'hidden')
 			->add('esEducacionEnCasa', 'choice', array(
@@ -1790,22 +1802,24 @@ class InfoEstudianteRudeesNuevoController extends Controller
 				'required' => false, 
 				'mapped'=>false,
 				'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getCoeficienteintelectual():'',
+				'max_length'=> 3,
 			))
 			->add('promedioCalificaciones', 'text', array(
 				'required' => false, 
 				'mapped'=>false,
 				'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getPromediocalificaciones():'',
+				'max_length'=> 3,
 			))
 			
 			->add('especificoEn', 'text', array(
 				'required' => false, 
 				'mapped'=>false,
-				//'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getEspecificoEn():'',
+				'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getEspecificoEn():'',
 			))
 			->add('talentoOtro', 'text', array(
 				'required' => false, 
 				'mapped'=>false,
-				//'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getPromediocalificaciones():'',
+				'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getTalentoOtro():'',
 			))
 			
 			->add('estrategiaAtencionIntegral', 'entity', array(
@@ -2025,7 +2039,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		$discapacidadGrado_new->setFechaModificacion(new \DateTime('now'));
 		$em->persist($discapacidadGrado_new);
 		$em->flush();
-	///aqui
+	
 		//4.2 
 		// ELIMINAMOS LOS DATOS DE LA DIFICULTAD DE APRENDIZAJE
 		$dificultadAprendizaje_rude = $em->getRepository('SieAppWebBundle:RudeDificultadAprendizaje')->findBy(array('rude'=>$rude->getId()));
@@ -2269,8 +2283,8 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		//$em->flush();
 
 		// Registro paso 5
-		if($rude->getRegistroFinalizado() < 5){
-			$rude->setRegistroFinalizado(5);
+		if($rude->getRegistroFinalizado() <= 5){
+			$rude->setRegistroFinalizado(6);
 		}
 
 		$em->flush();
