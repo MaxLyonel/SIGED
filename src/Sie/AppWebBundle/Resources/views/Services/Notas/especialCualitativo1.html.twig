@@ -180,7 +180,7 @@
     <div class="col-lg-12">
         {% if notas.cuantitativas|length > 0 %}
             <table class="table">
-                {% if notas.cualitativas|length > 0 and notas.operativo >= 4 %}
+                {% if notas.cualitativas|length > 0 and notas.operativo >= 3 %}
                     {% for c in notas.cualitativas %}
                         <tr>
                             <td style="padding:0px; margin:0px">
@@ -221,6 +221,7 @@
         var mensaje = "";
 
         $(".notaCualitativa").each(function (index) {
+            
             if($(this).val().length < 16){
                 mensaje = 'Las notas cualitativas deben tener al menos 16 dígitos';
                 enviar = false;
