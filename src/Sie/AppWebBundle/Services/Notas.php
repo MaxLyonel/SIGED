@@ -4409,11 +4409,13 @@ die;/*
                     
                 }
                 $promedio = $total/$cont;
-                if(round($promedio,0)>50){
+                
+                if(round($promedio,0)>=51){
                     $nuevoEstado=5;
                 }else{
                     $nuevoEstado=11;
                 }
+                
                 $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
 
                     $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find($nuevoEstado));
@@ -4429,7 +4431,7 @@ die;/*
             return new JsonResponse(array('msg'=>'error'));
         }
     }
-    
+
 
     public function actualizarEstadoMatriculaDB($idInscripcion){
         
@@ -5873,7 +5875,7 @@ die;/*
                                     ->setMaxResults(1)
                                     ->getQuery()
                                     ->getResult();          
-                                    dump($cualitativas);
+                                    //dump($cualitativas);
            
             if($cualitativas){
                 if(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] == 78){
