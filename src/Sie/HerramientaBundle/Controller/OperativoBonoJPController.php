@@ -842,7 +842,7 @@ class OperativoBonoJPController extends Controller
 		$stmt->execute($params);
 		return $stmt->fetch();
 	}
-		public function reporte_seguimiento_Bjp_pdfAction(){
+	public function reporte_seguimiento_Bjp_pdfAction(){
 		return $this->render('SieHerramientaBundle:ReporteSeguimientoBjpPdf:reporte_seguimiento_Bjp_pdf_index.html.twig');
 	}
 	public function imprimir_seguimiento_pdfAction(Request $request){
