@@ -239,8 +239,10 @@ class InfoNotasController extends Controller {
     }
 
     public function createUpdateAction(Request $request){
+    
+        
         try {
-            
+           
             $idInscripcion = $request->get('idInscripcion');
             $discapacidad = $request->get('discapacidad');
             $em = $this->getDoctrine()->getManager();
@@ -266,12 +268,16 @@ class InfoNotasController extends Controller {
                 $this->get('notas')->especialRegistro($request, $discapacidad);
             }
             // Verificamos si se actualizara el estado de matrícula
+           // $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+
+           
             if($request->get('actualizar') == true){
-                if($gestion>=2021){
-                    $this->get('notas')->actualizarEstadoMatriculaEspecial($idInscripcion);
-                }else{
-                    $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
-                }
+                $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+                //if($gestion>=2021){
+                  //  $this->get('notas')->actualizarEstadoMatriculaEspecial($idInscripcion);
+                //}else{
+                //    $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+              //  }
             }
             
             // Actualizar estado de matricula de los notas que son cualitativas siempre 
