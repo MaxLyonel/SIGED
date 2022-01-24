@@ -267,11 +267,13 @@ class InfoNotasController extends Controller {
             }
             // Verificamos si se actualizara el estado de matrícula
             if($request->get('actualizar') == true){
-                if($gestion>=2021){
-                    $this->get('notas')->actualizarEstadoMatriculaEspecial($idInscripcion);
-                }else{
-                    $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
-                }
+                $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+
+                //   if($gestion>=2021){
+                //   $this->get('notas')->actualizarEstadoMatriculaEspecial($idInscripcion);
+                //   }else{
+                //  $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+                //  }
             }
             
             // Actualizar estado de matricula de los notas que son cualitativas siempre 
