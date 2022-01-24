@@ -238,15 +238,13 @@ class InfoNotasController extends Controller {
         }
     }
 
-    public function createUpdateAction(Request $request){
-    
-        
+    public function createUpdateAction(Request $request){ 
         try {
-           
+            
             $idInscripcion = $request->get('idInscripcion');
             $discapacidad = $request->get('discapacidad');
             $em = $this->getDoctrine()->getManager();
-          // dump($discapacidad); dump ($request); die;
+         // dump($discapacidad); dump ($request); die;
             // Registramos las notas
             $gestion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion)->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             
@@ -268,16 +266,14 @@ class InfoNotasController extends Controller {
                 $this->get('notas')->especialRegistro($request, $discapacidad);
             }
             // Verificamos si se actualizara el estado de matrícula
-           // $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
-
-           
             if($request->get('actualizar') == true){
                 $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
-                //if($gestion>=2021){
-                  //  $this->get('notas')->actualizarEstadoMatriculaEspecial($idInscripcion);
-                //}else{
-                //    $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
-              //  }
+
+                //   if($gestion>=2021){
+                //   $this->get('notas')->actualizarEstadoMatriculaEspecial($idInscripcion);
+                //   }else{
+                //  $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+                //  }
             }
             
             // Actualizar estado de matricula de los notas que son cualitativas siempre 
