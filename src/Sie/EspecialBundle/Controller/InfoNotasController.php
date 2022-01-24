@@ -238,7 +238,7 @@ class InfoNotasController extends Controller {
         }
     }
 
-    public function createUpdateAction(Request $request){
+    public function createUpdateAction(Request $request){ //dump($request);die;
         try {
             
             $idInscripcion = $request->get('idInscripcion');
