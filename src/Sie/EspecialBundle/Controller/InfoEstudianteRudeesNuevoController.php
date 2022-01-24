@@ -3509,4 +3509,44 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		}
 		return $ids;
 	}
+	/**
+     * DESCARGA DE RUDE - ACADEMICO
+     */
+    public function downloadRudeEspecialAction(Request $request) {
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        //get the data send to the report
+        //get the values to build the report
+        $codue = $request->get('codue');
+        $rude = $request->get('rude');
+        $gestion = $request->get('gestion');
+        $eins = $request->get('eins');		
+        $socioregIdEntity = $em->getRepository('SieAppWebBundle:Rude')->findOneByEstudianteInscripcion($eins);
+		
+        $idlocalidad = $socioregIdEntity->getMunicipioLugarTipo();
+        //dump($idlocalidad);die;
+        $query = "select socioeconomico_lugar_recursivo(".$idlocalidad.");";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $countdir = count($po);
+
+        $porciones = explode("|", $po[0]['socioeconomico_lugar_recursivo']);
+
+        $dirProv = $porciones[3];
+        $dirMun = $porciones[4];
+        //dump($dirProv,$dirMun);die;
+        //get the values of report
+        //create the response object to down load the file
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'RUDE_' .$rude. '_' .$gestion. '.pdf'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rude2017.rptdesign&codue=' . $codue .'&rude='. $rude .'&gestion=' . $gestion .'&eins='. $eins .'&dirMun='. $dirMun .'&dirProv='. $dirProv . '&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }
 }
