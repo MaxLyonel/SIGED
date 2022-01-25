@@ -244,11 +244,11 @@ class InfoNotasController extends Controller {
             $idInscripcion = $request->get('idInscripcion');
             $discapacidad = $request->get('discapacidad');
             $em = $this->getDoctrine()->getManager();
-         // dump($discapacidad); dump ($request); die;
+//          dump($discapacidad); dump ($request); die;
             // Registramos las notas
             $gestion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion)->getInstitucioneducativaCurso()->getGestionTipo()->getId();
             
-            if($discapacidad == 2 and $gestion > 2019 and $request->get('nivel') == 411){
+            if($discapacidad == 2 and $gestion > 2019 and $request->get('nivel') == 411){ //visual //programas
                 if($request->get('notaCualitativa') == 80){
                     $idEstadoMatriicula = 79;
                 }else{

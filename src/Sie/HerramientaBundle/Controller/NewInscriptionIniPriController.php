@@ -170,6 +170,7 @@ class NewInscriptionIniPriController extends Controller
     	$arrPais = array();
 		$arrStudentExist = false;
 		$studentId = false;
+		$swci = false;
 		$existStudent = '';
     	// check if the inscription is by ci or not
 
@@ -180,7 +181,7 @@ class NewInscriptionIniPriController extends Controller
 			$arrayCondition['fechaNacimiento'] = new \DateTime(date("Y-m-d", strtotime($fecNac))) ;
 
 		if($withoutcifind){	
-
+			
 			// find the student by arrayCondition
 			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
 			$existStudent = false;
@@ -189,7 +190,7 @@ class NewInscriptionIniPriController extends Controller
 			}
 
 			$answerSegip = true;
-		}else{
+		}else{ 
 			$arrayCondition['carnetIdentidad'] = $carnet;
 			if($complemento){
 				$arrayCondition['complemento'] = $complemento;
@@ -219,8 +220,9 @@ class NewInscriptionIniPriController extends Controller
 			}
 
 		}
-		// dump($objStudent);
-		// die;
+		 //dump($objStudent); 
+		 //dump($existStudent);die;
+		 //die;
 		// check if the student exists
 		if(!$existStudent){
 		      // check if the data person is true
@@ -257,7 +259,7 @@ class NewInscriptionIniPriController extends Controller
 		      }
 
 		}else{
-
+			
 			$arrStudentExist = array();
 			if(sizeof($objStudent)>0){
 				foreach ($objStudent as $value) {
@@ -272,6 +274,10 @@ class NewInscriptionIniPriController extends Controller
 						'idStudent'=>$value->getId() ,
 						'articuleten'=>0 ,
 					);
+
+					if($value->getCarnetIdentidad()===trim($request->get('cifind'))){
+						$swci = true;
+					}
 				}
 				
 			}
@@ -285,7 +291,7 @@ class NewInscriptionIniPriController extends Controller
 			$swcreatestudent = false; 
 
 		}
-		
+		//dump($swci);dump($arrStudentExist);die;
        $arrResponse = array(
         'status'          => $status,
         'code'            => $code,
@@ -296,7 +302,7 @@ class NewInscriptionIniPriController extends Controller
         'arrStudentExist' => $arrStudentExist,    
         'existStudent' => $existStudent,    
         'swhomonimo' => $withoutcifind,
-        
+        'swci' => $swci,
       );
       
       $response->setStatusCode(200);
@@ -359,7 +365,7 @@ class NewInscriptionIniPriController extends Controller
       
       $response->setStatusCode(200);
       $response->setData($arrResponse);
-
+		
       return $response;    	
 				
     }
@@ -398,7 +404,7 @@ class NewInscriptionIniPriController extends Controller
       }    
 
 
-    public function goOldInscriptionAction(Request $request){
+    public function goOldInscriptionAction(Request $request){ 
     	$response = new JsonResponse();
     	$em = $this->getDoctrine()->getManager();
     	//get send values

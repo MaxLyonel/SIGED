@@ -258,7 +258,7 @@ class InfoEstudianteController extends Controller {
         //get the info ue
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
-//        dump($aInfoUeducativa);
+  //      dump($aInfoUeducativa);
 //        die;
         //get the values throght the infoUe
         $sie = $aInfoUeducativa['requestUser']['sie'];
