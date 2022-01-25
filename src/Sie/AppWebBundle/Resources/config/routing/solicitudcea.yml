@@ -1,0 +1,80 @@
+#fRnk: all
+solicitud:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:ConsultaLibreta:index" }
+
+solicitud_cea_apertura: #--
+    path:     /cea/apertura
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:apertura" }
+
+tramite_rue_buscar_edificio:
+    path:     /buscaredificio
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscaredificio" }
+
+tramite_rue_le_buscar_provincias:
+     path:    /provincias/{idDepartamento}/{censo}/
+     defaults: { _controller: "SieProcesosBundle:TramiteRue:provincias" }
+     options:
+         expose: true
+
+tramite_rue_le_buscar_municipios:
+     path:    /municipios/{idProvincia}/{censo}/
+     defaults: { _controller: "SieProcesosBundle:TramiteRue:municipios" }
+     options:
+         expose: true
+tramite_rue_le_buscar_comunidad:
+     path:    /comunidades/{idMunicipio}/{censo}/
+     defaults: { _controller: "SieProcesosBundle:TramiteRue:comunidad" }
+     options:
+         expose: true
+
+tramite_rue_le_buscar_cantones:
+     path:    /cantones/{idMunicipio}/{censo}/
+     defaults: { _controller: "SieProcesosBundle:TramiteRue:cantones" }
+     options:
+         expose: true
+
+tramite_rue_le_buscar_localidades:
+     path:    /localidades/{idCanton}/{censo}/
+     defaults: { _controller: "SieProcesosBundle:TramiteRue:localidades" }
+     options:
+         expose: true
+
+tramite_rue_le_buscar_distritos:
+     path:    /distritos/{idDepartamento}/  
+     defaults: { _controller: "SieProcesosBundle:TramiteRue:distritos" }
+     options:
+         expose: true
+
+tramite_rue_buscar_ruecomparte:
+    path:     /buscarrue/comparte
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:buscarRueComparte" }
+
+tramite_rue_validarnombredistrito:
+    path:     /validar/nombre/distrito
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:validarNombreDistrito" }
+
+tramite_cea_busca_requisitos:
+    path:     /buscarequisitos
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:buscarRequisitos" }
+
+tramite_cea_apertura_guardar:
+    path:     /apertura/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:aperturaGuardar" }
+
+tramite_cea_reapertura:
+    path:     /cea/reapertura/
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:reapertura" }
+
+tramite_cea_reapertura_guardar:
+    path:     /reapertura/guardar
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:reaperturaGuardar" }
+
+tramite_cea_buscar_siereapertura:
+    path:     /buscar/siereapertura
+    defaults: { _controller: "SieProcesosBundle:TramiteCea:buscarSieReapertura" }
+
+tramite_ceavalidarnombredistrito:
+    path:     /validar/nombre/distrito
+    defaults: { _controller: "SieProcesosBundle:TramiteRue:validarNombreDistrito" }
+

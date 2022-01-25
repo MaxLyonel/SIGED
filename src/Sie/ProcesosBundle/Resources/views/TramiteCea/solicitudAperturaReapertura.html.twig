@@ -1,0 +1,1192 @@
+{% if datos %}
+    {% if tramite_tipo.id == 73 %} {# apertura #}
+        <style>
+            #map2 {
+                width: 700px;
+                height: 500px;
+                background-color: grey;
+                position: relative;
+                outline: none;
+            }
+
+            .ckbox label {
+                display: inline !important;
+            }
+
+            .group {
+                border: 1px solid #ddd;
+                float: left;
+                padding: 10px;
+                margin: 10px;
+            }
+        </style>
+        <div class="row" id="solicitud">
+            <div class="col-md-12">
+                <!-- Start basic wizard vertical -->
+                <div id="basic-wizard-vertical">
+                    <div class="panel panel-tab panel-tab-double panel-tab-vertical rounded shadow">
+                        <!-- Start tabs heading -->
+                        <div class="panel-heading no-padding col-md-3">
+                            <ul class="nav nav-tabs nav-pills">
+                                <li class="active">
+                                    <a href="#tab1-1" data-toggle="tab" aria-expanded="true">
+                                        <i class="fa fa-file-text"></i>
+                                        <div>
+                                            <span class="text-strong">DATOS GENERALES</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab1-2" data-toggle="tab" aria-expanded="false">
+                                        <i class="glyphicon glyphicon-home"></i>
+                                        <div>
+                                            <span class="text-strong">UBICACIÓN GEOGRÁFICA</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab1-3" data-toggle="tab" aria-expanded="false">
+                                        <i class="glyphicon glyphicon-check"></i>
+                                        <div>
+                                            <span class="text-strong">DEPENDENCIA</span>
+                                            <span class="text-strong">NIVEL</span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab1-4" data-toggle="tab" aria-expanded="false">
+                                        <i class="fa fa-users"></i>
+                                        <div>
+                                            <span class="text-strong">CANTIDAD</span>
+                                            <span><small>ESTUDIANTES POR GRADO</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab1-5" data-toggle="tab" aria-expanded="false">
+                                        <i class="glyphicon glyphicon-user"></i>
+                                        <div>
+                                            <span class="text-strong">CANTIDAD</span>
+                                            <span><small>PERSONAL</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="">
+                                    <a href="#tab1-6" data-toggle="tab" aria-expanded="false">
+                                        <i class="glyphicon glyphicon-globe"></i>
+                                        <div>
+                                            <span class="text-strong">INFORMACIÓN</span>
+                                            <span class="text-strong">GEOREFERENCIAL</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div><!-- /.panel-heading -->
+                        <!--/ End tabs heading -->
+                        <!-- Start tabs content -->
+                        <div class="panel-body tab-content col-md-9">
+                            <div class="tab-pane fade inner-all in active" id="tab1-1">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="page-header">
+                                            DATOS GENERALES<br>
+                                        </h4>
+                                        <div class="form-body">
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-4">
+                                                        <strong>Nombre del CEA:</strong>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{ datos[tramite_tipo.tramiteTipo].institucioneducativa }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-4">
+                                                        <strong>Fecha de Fundación:</strong>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{ datos[tramite_tipo.tramiteTipo].fechafundacion }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-4">
+                                                        <strong>Teléfono de Referencia:</strong>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{ datos[tramite_tipo.tramiteTipo].telefono }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-4">
+                                                        <strong>Datos del Director/Encargado:</strong>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{ datos[tramite_tipo.tramiteTipo].director }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab1-2">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="page-header">
+                                            UBICACIÓN GEOGRÁFICA<br>
+                                        </h4>
+                                        <div class="form-body">
+                                            {% if datos[tramite_tipo.tramiteTipo].siecomparte is defined %}
+                                                <div class="row">
+                                                    <div id="msgcomparte"></div>
+                                                    COMPARTE EL EDIFICIO CON (Señale solo 1)
+                                                    <table class="table table-bordered table-striped" id="tabla">
+                                                        <tr>
+                                                            <th>Código SIE</th>
+                                                            <th>Nombre de la Institución Educativa</th>
+                                                            <th>Subsistema</th>
+                                                            <th>Dependencia</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>{{ datos[tramite_tipo.tramiteTipo].siecomparte }}</td>
+                                                            <td>{{ datos[tramite_tipo.tramiteTipo].siecompartedata.nombre }}</td>
+                                                            <td>{{ datos[tramite_tipo.tramiteTipo].siecompartedata.subsistema }}</td>
+                                                            <td>{{ datos[tramite_tipo.tramiteTipo].siecompartedata.dependencia }}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div></br>
+                                            {% endif %}
+                                            <div class="row">
+                                                {% if datos[tramite_tipo.tramiteTipo].lejurisdiccion is defined %}
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-4">
+                                                            <strong>Código Edificio Educativo:</strong>
+                                                        </div>
+                                                        <div class="col-md-8 form-inline">
+                                                            {{ datos[tramite_tipo.tramiteTipo].lejurisdiccion }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                <div class="col-md-6">
+                                                    <div class="col-md-12">
+                                                        <h5 class="page-header">Ubicación Geográfica</br>(Censo 2001 -
+                                                            R.U.E.)</h5>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Departamento:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{ datos[tramite_tipo.tramiteTipo].departamento2001 }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Provincia:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{ datos[tramite_tipo.tramiteTipo].provincia2001 }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Municipio:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{ datos[tramite_tipo.tramiteTipo].municipio2001 }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Cantón:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{ datos[tramite_tipo.tramiteTipo].canton2001 }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Localidad:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{ datos[tramite_tipo.tramiteTipo].localidad2001 }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="col-md-12">
+                                                        <h5 class="page-header">Ubicación Geográfica </br>
+                                                            (Censo 2012 - información referencial)</h5>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Departamento:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{ datos[tramite_tipo.tramiteTipo].departamento2012 }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Provincia:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{ datos[tramite_tipo.tramiteTipo].provincia2012 }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Municipio:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{ datos[tramite_tipo.tramiteTipo].municipio2012 }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Comunidad:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{ datos[tramite_tipo.tramiteTipo].comunidad2012 }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group  col-md-12">
+                                                        <div class="col-md-5">
+                                                            <strong>Distrito:</strong>
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            {{ datos[tramite_tipo.tramiteTipo].distrito }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <h5 class="page-header">Dirección</h5>
+                                                </div>
+                                                <div class="form-group  col-md-12">
+                                                    <div class="col-md-2">
+                                                        <strong>Zona:</strong>
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        {{ datos[tramite_tipo.tramiteTipo].zona }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group  col-md-12">
+                                                    <div class="col-md-2">
+                                                        <strong>Dirección:</strong>
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        {{ datos[tramite_tipo.tramiteTipo].direccion }}
+                                                    </div>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-2">
+                                                        <strong>Área geográfica:</strong>
+                                                    </div>
+                                                    <div class="col-md-10">
+                                                        {{ datos[tramite_tipo.tramiteTipo].i_area_apertura }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab1-3">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="page-header">
+                                            DEPENDENCIA<br>
+                                        </h4>
+                                        <div class="row">
+                                            <div class="form-group col-md-12">
+                                                <div class="col-md-4">
+                                                    <strong>Dependencia:</strong>
+                                                </div>
+                                                <div class="col-md-8">
+                                                    {{ datos[tramite_tipo.tramiteTipo].dependencia.dependencia }}
+                                                </div>
+                                            </div>
+                                            {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 2 %}
+                                                <div class="form-group col-md-12">
+                                                    <div class="col-md-4">
+                                                        <strong>Tipo de Convenio:</strong>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        {{ datos[tramite_tipo.tramiteTipo].conveniotipo.convenio }}
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <h4 class="page-header">
+                                            NIVEL DE ORGANIZACIÓN CURRICULAR<br>
+                                        </h4>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                {% set nivel = [] %}
+                                                {% for n in datos[tramite_tipo.tramiteTipo].niveltipo %}
+                                                    <li type=square>{{ n.nivel }}</li>
+                                                    {% set nivel = nivel|merge([n.id]) %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab1-4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="page-header">
+                                            CANTIDAD DE ESTUDIANTES POR GRADO<br>
+                                        </h4>
+                                        <div class="row">
+                                            {% if 201 in nivel or 202 in nivel %}
+                                                <div class="col-md-12 cant-epja">
+                                                    <strong>Formación Humanística</strong>
+                                                    <table class="table table-bordered table-striped"
+                                                           id="tabla">
+                                                        {% if 201 in nivel %}
+                                                            <tr>
+                                                                <th colspan="6">Educación Primaria de Adultos
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Aprendizajes Elementales</th>
+                                                                <th>Aprendizajes Avanzados</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_1_1 }}</td>
+                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_1_2 }}</td>
+                                                            </tr>
+                                                        {% endif %}
+                                                        {% if 202 in nivel %}
+                                                            <tr>
+                                                                <th colspan="6">Educación
+                                                                    Secundaria
+                                                                    de
+                                                                    Adultos
+                                                                </th>
+                                                            </tr>
+                                                            <tr>
+                                                                <th>Aprendizajes Aplicados</th>
+                                                                <th>Aprendizajes Complementarios</th>
+                                                                <th>Aprendizajes Especializados</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_2_1 }}</td>
+                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_2_2 }}</td>
+                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_11_2_3 }}</td>
+                                                            </tr>
+                                                        {% endif %}
+                                                    </table>
+                                                </div>
+                                            {% endif %}
+                                            {% if 203 in nivel or 204 in nivel or 205 in nivel %}
+                                                <div class="col-md-12 cant-epja"><br/>
+                                                    <strong>Formación Técnica</strong>
+                                                    <table class="table table-bordered table-striped"
+                                                           id="tabla">
+                                                        <tr>
+                                                            {% if 203 in nivel %}
+                                                                <th>Técnico Básico</th>
+                                                            {% endif %}
+                                                            {% if 204 in nivel %}
+                                                                <th>Técnico Auxiliar</th>
+                                                            {% endif %}
+                                                            {% if 205 in nivel %}
+                                                                <th>Técnico Medio</th>
+                                                            {% endif %}
+                                                        </tr>
+                                                        <tr>
+                                                            {% if 203 in nivel %}
+                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_12_1 }}</td>
+                                                            {% endif %}
+                                                            {% if 204 in nivel %}
+                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_12_2 }}</td>
+                                                            {% endif %}
+                                                            {% if 205 in nivel %}
+                                                                <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_12_3 }}</td>
+                                                            {% endif %}
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            {% endif %}
+                                            {% if 225 in nivel or 226 in nivel or 227 in nivel or 228 in nivel or 219 in nivel or 220 in nivel or 224 in nivel %}
+                                                <div class="col-md-12">
+                                                    <table class="table table-bordered table-striped"
+                                                           id="tabla">
+                                                        <tr>
+                                                            <th rowspan="2" class="text-center"
+                                                                style="vertical-align: middle">
+                                                                Programas
+                                                            </th>
+                                                            <th rowspan="2" class="text-center"
+                                                                style="vertical-align: middle">
+                                                                Capacitación (Cursos
+                                                                Cortos, 6 a
+                                                                100 horas)
+                                                            </th>
+                                                            <th colspan="3" class="text-center">
+                                                                Cursos Largos
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="text-center">Técnico
+                                                                Básico
+                                                            </th>
+                                                            <th class="text-center">Técnico
+                                                                Auxiliar
+                                                            </th>
+                                                            <th class="text-center">Técnico
+                                                                Medio
+                                                            </th>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Educación para el Fortalecimiento de
+                                                                Organizaciones Sociales
+                                                            </td>
+                                                            <td>{% if 225 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_1 }}{% endif %}</td>
+                                                            <td>{% if 219 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_1_1 }}{% endif %}</td>
+                                                            <td>{% if 220 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_1_2 }}{% endif %}</td>
+                                                            <td>{% if 224 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_1_3 }}{% endif %}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Educación Productiva
+                                                                Comunitaria
+                                                            </td>
+                                                            <td>{% if 226 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_2 }}{% endif %}</td>
+                                                            <td>{% if 219 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_2_1 }}{% endif %}</td>
+                                                            <td>{% if 220 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_2_2 }}{% endif %}</td>
+                                                            <td>{% if 224 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_2_3 }}{% endif %}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Educación para el Arte y la
+                                                                Cultura
+                                                            </td>
+                                                            <td>{% if 227 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_3 }}{% endif %}</td>
+                                                            <td>{% if 219 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_3_1 }}{% endif %}</td>
+                                                            <td>{% if 220 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_3_2 }}{% endif %}</td>
+                                                            <td>{% if 224 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_3_3 }}{% endif %}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Educación Abierta y Plural</td>
+                                                            <td>{% if 228 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_4 }}{% endif %}</td>
+                                                            <td>{% if 219 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_4_1 }}{% endif %}</td>
+                                                            <td>{% if 220 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_4_2 }}{% endif %}</td>
+                                                            <td>{% if 224 in nivel %}{{ datos[tramite_tipo.tramiteTipo].cantidad_13_4_3 }}{% endif %}</td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab1-5">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="page-header">
+                                            CANTIDAD DE PERSONAL<br>
+                                        </h4>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <table class="table table-striped table-bordered" id="tabla">
+                                                    <tr>
+                                                        <th>Administrativo</th>
+                                                        <th>Docente (Maestros)</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_adm }}</td>
+                                                        <td>{{ datos[tramite_tipo.tramiteTipo].cantidad_maestro }}</td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade inner-all" id="tab1-6">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h4 class="page-header">
+                                            INFORMACIÓN GEOREFERENCIAL<br>
+                                        </h4>
+                                        <div id="map2"></div>
+                                        <div class="form-group col-md-6 form-inline">
+                                            <strong>Latitud:</strong> {{ datos[tramite_tipo.tramiteTipo].latitud }}
+                                            <input type="hidden" id="latitud2"
+                                                   value="{{ datos[tramite_tipo.tramiteTipo].latitud }}">
+                                        </div>
+                                        <div class="form-group col-md-6 form-inline">
+                                            <strong>Longitud:</strong> {{ datos[tramite_tipo.tramiteTipo].longitud }}
+                                            <input type="hidden" id="longitud2"
+                                                   value="{{ datos[tramite_tipo.tramiteTipo].longitud }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- /.panel-body -->
+                        <!--/ End tabs content -->
+                        <!--/ End pager -->
+                    </div><!-- /.panel -->
+                </div><!-- /#basic-wizard-horizontal -->
+                <!--/ End basic wizard horizontal-->
+            </div>
+        </div></br>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <button type="button" class="btn btn-sm btn-success" data-toggle="modal"
+                        data-target="#modal_54_solicitud" data-placement="top" title="Requisitos de apertura"><i
+                            class="glyphicon glyphicon-plus"></i>Ver Requisitos Presentados
+                </button>
+            </div>
+        </div>
+        <div class="modal fade" role="dialog" aria-hidden="true" id="modal_54_solicitud" data-backdrop="false"
+             style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog modal-lg" id="modal_54_solicitud">
+                <div class="modal-content">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">
+                                    <span>REQUISITOS PRESENTADOS: {{ tramite_tipo.tramiteTipo|upper }}</span></h3>
+                            </div>
+                            <div class="pull-rigth">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <!-- Start basic wizard horizontal -->
+                                    <div id="basic-wizard-horizontal">
+                                        <div class="panel panel-tab rounded shadow">
+                                            <!-- Start tabs heading -->
+                                            <div class="panel-heading no-padding">
+                                                <ul class="nav nav-tabs nav-pills">
+                                                    <li class="active">
+                                                        <a href="#tab1-1-solicitud" data-toggle="tab"
+                                                           aria-expanded="false">
+                                                            <i class="fa fa-file-text"></i>
+                                                            <div>
+                                                                <span class="text-strong">1. Requisitos Legales</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                    <li class="">
+                                                        <a href="#tab1-2-solicitud" data-toggle="tab"
+                                                           aria-expanded="false">
+                                                            <i class="glyphicon glyphicon-home"></i>
+                                                            <div>
+                                                                <span class="text-strong">2. Requisitos de infraestructura</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                    <li class="">
+                                                        <a href="#tab1-3-solicitud" data-toggle="tab"
+                                                           aria-expanded="false">
+                                                            <i class="glyphicon glyphicon-list"></i>
+                                                            <div>
+                                                                <span class="text-strong">3. Técnico - Pedagógicos</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div><!-- /.panel-heading -->
+                                            <!--/ End tabs heading -->
+                                            <!-- Start tabs content -->
+                                            <div class="panel-body tab-content">
+                                                <div class="tab-pane fade inner-all in active" id="tab1-1-solicitud">
+                                                    <div class="row">
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-8">
+                                                                {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 1 %}
+                                                                    Solicitud de apertura dirigida a la Dirección Distrital Educativa correspondiente:
+                                                                {% elseif datos[tramite_tipo.tramiteTipo].dependencia.id == 2 %}
+                                                                    Solicitud de apertura dirigida a la Dirección Distrital Educativa correspondiente por la o el representante legal de la entidad prestadora de servicio:
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <a class="btn btn-lilac btn-xs"
+                                                                   href="{{ asset('uploads/archivos/flujos/rue/solicitud/'~gestion~'/'~codigo~'/'~ datos[tramite_tipo.tramiteTipo].i_solicitud_apertura ) }}"
+                                                                   target="_blank" data-placement="top"
+                                                                   title="Ver informe">
+                                                                    <i class="fa fa-file-pdf-o fa-2x"> </i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-12 ">
+                                                            <div class="ckbox ckbox-primary">
+                                                                <input id="checkbox-primary" checked="checked"
+                                                                       type="checkbox" disabled="disabled">
+                                                                <label for="checkbox-primary">Compromiso del Gobierno
+                                                                    Autónomo Municipal que autorice la dotación y
+                                                                    mantenimiento de la infraestructura, mobiliario,
+                                                                    equipamiento y atención de servicios básicos
+                                                                    (original).</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-8">
+                                                                Acta de Fundación del Centro:
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <a class="btn btn-lilac btn-xs"
+                                                                   href="{{ asset('uploads/archivos/flujos/rue/solicitud/'~gestion~'/'~codigo~'/'~ datos[tramite_tipo.tramiteTipo].i_actafundacion_apertura ) }}"
+                                                                   target="_blank" data-placement="top"
+                                                                   title="Ver informe">
+                                                                    <i class="fa fa-file-pdf-o fa-2x"> </i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        {% if datos[tramite_tipo.tramiteTipo].i_certdefuncion is defined %}
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-8">
+                                                                Certificado de defunción (en caso de llevar nombre de
+                                                                una persona fallecida meritoria), o reseña histórica
+                                                                (aprobada y/o emitida por la Comunidad):
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <a class="btn btn-lilac btn-xs"
+                                                                   href="{{ asset('uploads/archivos/flujos/rue/solicitud/'~gestion~'/'~codigo~'/'~ datos[tramite_tipo.tramiteTipo].i_certdefuncion ) }}"
+                                                                   target="_blank" data-placement="top"
+                                                                   title="Ver informe">
+                                                                    <i class="fa fa-file-pdf-o fa-2x"> </i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        {% endif %}
+                                                        {% if datos[tramite_tipo.tramiteTipo].dependencia.id == 2 %}
+                                                            <div class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" {% if datos[tramite_tipo.tramiteTipo].i_constitucion_apertura == 1 %} checked="checked" {% endif %}
+                                                                           type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Copia legalizada de
+                                                                        Testimonio de Constitución de la
+                                                                        Institución.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary" {% if datos[tramite_tipo.tramiteTipo].i_convenio_apertura == 1 %} checked="checked" {% endif %}
+                                                                           type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary">Convenio
+                                                                        Interinstitucional vigente entre el Ministerio
+                                                                        de Educación e Institución y/u Organización, que
+                                                                        estipule garantizar la infraestructura,
+                                                                        mobiliario, equipamiento y subvención.</label>
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                        <div class="form-group col-md-12 ">
+                                                            <div class="ckbox ckbox-primary">
+                                                                <input id="checkbox-primary" checked="checked"
+                                                                       type="checkbox" disabled="disabled">
+                                                                <label for="checkbox-primary">Copia legalizada del Folio
+                                                                    Real actualizado emitido por Derechos Reales o
+                                                                    Testimonio de Propiedad de la Matricula
+                                                                    Computarizada, en caso de capitales de departamento,
+                                                                    CEA’s del área, requieren la certificación de los
+                                                                    predios especificando el área educativa
+                                                                    total.</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade inner-all" id="tab1-2-solicitud">
+                                                    <div class="row">
+                                                        <div class="form-group col-md-12 ">
+                                                            <div class="ckbox ckbox-primary">
+                                                                <input id="checkbox-primary1" checked="checked"
+                                                                       type="checkbox" disabled="disabled">
+                                                                <label for="checkbox-primary1">Planos aprobados por el
+                                                                    Gobierno Autónomo Municipal correspondiente.</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-12 ">
+                                                            <div class="ckbox ckbox-primary">
+                                                                <input id="checkbox-primary1" checked="checked"
+                                                                       type="checkbox" disabled="disabled">
+                                                                <label for="checkbox-primary1">Formulario de Edificio
+                                                                    Escolar (original).</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-12 ">
+                                                            <div class="ckbox ckbox-primary">
+                                                                <input id="checkbox-primary1" checked="checked"
+                                                                       type="checkbox" disabled="disabled">
+                                                                <label for="checkbox-primary1">Formulario de
+                                                                    Actualización Geográfica (original).</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="tab-pane fade inner-all" id="tab1-3-solicitud">
+                                                    <div class="row">
+                                                        <div class="form-group col-md-12">
+                                                            Proyecto Educativo en el marco de las políticas educativas
+                                                            emitidas
+                                                            por el Ministerio de Educación, bajo la siguiente
+                                                            estructura:
+                                                        </div>
+                                                        <div class="group">
+                                                            <div class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" {% if datos[tramite_tipo.tramiteTipo].iii_curri_antecedentes == 1 %} checked="checked" {% endif %}
+                                                                           type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">Antecedentes.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" {% if datos[tramite_tipo.tramiteTipo].iii_curri_objgeneral == 1 %} checked="checked" {% endif %}
+                                                                           type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">Objetivo
+                                                                        General.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" {% if datos[tramite_tipo.tramiteTipo].iii_curri_objespecificos == 1 %} checked="checked" {% endif %}
+                                                                           type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">Objetivos
+                                                                        Específicos.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" {% if datos[tramite_tipo.tramiteTipo].iii_curri_diagnostico == 1 %} checked="checked" {% endif %}
+                                                                           type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">Diagnóstico de las
+                                                                        necesidades, potencialidades de la comunidad y
+                                                                        sostenibilidad del Centro.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" {% if datos[tramite_tipo.tramiteTipo].iii_curri_jussolicitud == 1 %} checked="checked" {% endif %}
+                                                                           type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">Justificación de la
+                                                                        Solicitud.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" {% if datos[tramite_tipo.tramiteTipo].iii_curri_jusinfraestructura == 1 %} checked="checked" {% endif %}
+                                                                           type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">Justificación de la
+                                                                        infraestructura, mobiliario, equipamiento e
+                                                                        ítems.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" {% if datos[tramite_tipo.tramiteTipo].iii_curri_planes == 1 %} checked="checked" {% endif %}
+                                                                           type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">Planes, programas y
+                                                                        mallas curriculares.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" {% if datos[tramite_tipo.tramiteTipo].iii_curri_proyeccion == 1 %} checked="checked" {% endif %}
+                                                                           type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">Proyección de la
+                                                                        solicitud en base a las Políticas Educativas en
+                                                                        vigencia.</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group col-md-12 ">
+                                                                <div class="ckbox ckbox-primary">
+                                                                    <input id="checkbox-primary1" {% if datos[tramite_tipo.tramiteTipo].iii_curri_conclusiones == 1 %} checked="checked" {% endif %}
+                                                                           type="checkbox" disabled="disabled">
+                                                                    <label for="checkbox-primary1">Conclusiones.</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group col-md-12 ">
+                                                            <div class="ckbox ckbox-primary">
+                                                                <input id="checkbox-primary1" {% if datos[tramite_tipo.tramiteTipo].iii_curri_informe_distrital == 1 %} checked="checked" {% endif %}
+                                                                       type="checkbox" disabled="disabled">
+                                                                <label for="checkbox-primary1">Informe Técnico del
+                                                                    Director Distrital de Educación (Original).</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!-- /.panel-body -->
+                                            <!--/ End tabs content -->
+                                            <!--/ End pager -->
+                                        </div><!-- /.panel -->
+                                    </div><!-- /#basic-wizard-horizontal -->
+                                    <!--/ End basic wizard horizontal-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-dialog -->
+        </div>
+    {% else %} {# reapertura #}
+        <div class="form-group col-md-12" style="background:#01B1E1"><h5><strong style="color:white">1. DATOS
+                    GENERALES</strong></h5></div>
+        <div class="row" id="solicitud">
+            <div class="form-group col-md-6">
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>CÓDIGO SIE:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.id }}
+                        <input type="hidden" name="form[institucioneducativaid]" value="{{ datos.institucioneducativa.id }}">
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>CÓDIGO DE EDIFICIO EDUCATIVO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.le_juridicciongeografica_id }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DEPENDENCIA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.dependencia|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DISTRITO EDUCATIVO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.distrito }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>FECHA DE FUNDACIÓN:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {# {{ datos.fechafundacion|date('d-m-Y') }} #}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6"><strong>NIVELES DE ORGANIZACIÓN CURRICULAR:</strong>
+                        <ul>
+                            {% for n in datos.institucioneducativaNivel %}
+                                <li type=square>{{ n.nivel }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>CENTRO DE EDUCACIÓN ALTERNATIVA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.institucioneducativa }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>ESTADO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.estadoinstitucion|upper }}
+                    </div>
+                </div>
+                {% if datos.institucioneducativa.dependencia_tipo_id == 2 %}
+                    <div class="form-group col-md-12">
+                        <div class="col-md-6">
+                            <strong>CONVENIO:</strong>
+                        </div>
+                        <div class="col-md-6">
+                            {{ datos.institucioneducativa.convenio }}
+                        </div>
+                    </div>
+                {% endif %}
+                {# <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>TELEFONO DE REFERENCIA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.institucioneducativa.telefono1 }}
+                    </div>
+                </div> #}
+            </div>
+        </div>
+        <div class="form-group col-md-12" style="background:#01B1E1"><h5><strong style="color:white">2. UBICACIÓN
+                    GEOGRÁFICA</strong></h5></div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <div class="form-group col-md-12" style="background:#E9F9FC">
+                    <h5><strong>Ubicación Geográfica (Censo 2012 - información referencial) </strong></h5>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DEPARTAMENTO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.departamento2012|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>PROVINCIA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.provincia2012|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>MUNICIPIO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.municipio2012|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>COMUNIDAD:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.comunidad2012|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>ZONA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.zona|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DIRECCIÓN:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.direccion|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>ÁREA GEOGRÁFICA ESTABLECIDA POR EL MUNICIPIO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {% if datos.institucioneducativa.area_municipio == 'U' %}
+                            URBANO
+                        {% elseif datos.institucioneducativa.area_municipio == 'R' %}
+                            RURAL
+                        {% else %}
+                            NO DEFINIDO
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group col-md-12" style="background:#E9F9FC">
+                    <h5><strong>Ubicación Geográfica (Censo 2001 - R.U.E.)</strong></h5>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DEPARTAMENTO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.departamento2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>PROVINCIA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.provincia2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>MUNICIPIO:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.municipio2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>CANTÓN:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.canton2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>LOCALIDAD:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.localidad2001|upper }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>ZONA:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.zona }}
+                    </div>
+                </div>
+                <div class="form-group col-md-12">
+                    <div class="col-md-6">
+                        <strong>DIRECCIÓN:</strong>
+                    </div>
+                    <div class="col-md-6">
+                        {{ datos.jurisdiccion_geografica.direccion }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-12" style="background:#01B1E1"><h5><strong style="color:white">3. DATOS A
+                    MODIFICAR</strong></h5></div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <div class="table-responsive col-md-12">
+                    <table class="table table-bordered table-striped" id="tablahistorico">
+                        <tr>
+                            <th>Tipo de trámite</th>
+                            <th>Dato antiguo</th>
+                            <th>Dato nuevo</th>
+                            <th>Ver Requisitos Presentados</th>
+                        </tr>
+                        <tr>
+                            <td>{{ datos.tramites[0].tramite_tipo }}</td>
+                            <td>
+                                {{ datos.institucioneducativa.estadoinstitucion|upper }}
+                            </td>
+                            <td>
+                                {{ datos[datos.tramites[0].tramite_tipo].estadoinstitucion|upper }}
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-xs btn-success" data-toggle="modal"
+                                        data-target="#modal_44" data-placement="top" title="Ver Requisitos"><i
+                                            class="glyphicon glyphicon-plus"></i></button>
+                            </td>
+
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-12" style="background:#01B1E1"><h5><strong style="color:white">4. JUSTIFICACIÓN DE
+                    LA MODIFICACIÓN</strong></h5></div>
+        <div class="row">
+            <div class="form-group  col-md-12">
+                <div class="col-md-3">
+                    <strong>JUSTIFICACIÓN:</strong>
+                </div>
+                <div class="col-md-9">
+                    {{ datos.justificacion }}
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" role="dialog" aria-hidden="true" id="modal_44" data-backdrop="false"
+             style="z-index:9999999999 !important; background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog modal-lg" id="modal_{{ tramite_tipo.id }}">
+                <div class="modal-content">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title">
+                                    <span>REQUISITOS PRESENTADOS: {{ tramite_tipo.tramiteTipo|upper }}</span></h3>
+                            </div>
+                            <div class="pull-rigth">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <!-- Start basic wizard horizontal -->
+                                    <div id="basic-wizard-horizontal">
+                                        <div class="panel panel-tab rounded shadow">
+                                            <!-- Start tabs heading -->
+                                            <div class="panel-heading no-padding">
+                                                <ul class="nav nav-tabs nav-pills">
+                                                    <li class="active">
+                                                        <a href="#tab1-1-solicitud" data-toggle="tab"
+                                                           aria-expanded="false">
+                                                            <i class="fa fa-file-text"></i>
+                                                            <div>
+                                                                <span class="text-strong">1. Requisitos Legales</span>
+                                                            </div>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div><!-- /.panel-heading -->
+                                            <!--/ End tabs heading -->
+                                            <!-- Start tabs content -->
+                                            <div class="panel-body tab-content">
+                                                <div class="tab-pane fade inner-all in active" id="tab1-1-solicitud">
+                                                    <div class="row">
+                                                        <div class="form-group col-md-12">
+                                                            <div class="col-md-6">
+                                                                Solicitud de Reapertura adjunto:
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <a class="btn btn-lilac btn-xs"
+                                                                   href="{{ asset('uploads/archivos/flujos/'~datos.institucioneducativa.id~'/rue/'~gestion~'/'~ datos[tramite_tipo.tramiteTipo].i_solicitud_reapertura ) }}"
+                                                                   target="_blank" data-placement="top"
+                                                                   title="Ver solicitud">
+                                                                    <i class="fa fa-file-pdf-o fa-2x"> </i>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!-- /.panel-body -->
+                                            <!--/ End tabs content -->
+                                            <!--/ End pager -->
+                                        </div><!-- /.panel -->
+                                    </div><!-- /#basic-wizard-horizontal -->
+                                    <!--/ End basic wizard horizontal-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                            <div class="pull-right">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /.modal-dialog -->
+        </div>
+    {% endif %}
+{% else %}
+    <div class="alert alert-danger">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+        El código es incorrecto
+    </div>
+{% endif %}
+<script>
+    $('.btn-lilac').click(function () {
+        $(this).removeClass("btn-lilac");
+        $(this).addClass("btn-teal");
+    });
+</script>
