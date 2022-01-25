@@ -28,7 +28,7 @@ class InfoPersonalAdmController extends Controller {
         //init the session values
         $this->session = new Session();
     }
-
+    
     /**
      * list of request
      *
@@ -54,6 +54,7 @@ class InfoPersonalAdmController extends Controller {
             $form = $request->get('form');
 
             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['sie']);
+            
             if (!$institucioneducativa) {
                 $this->get('session')->getFlashBag()->add('noSearch', 'El codigo ingresado no es válido');
                 if($this->session->get('roluser') == 7 || $this->session->get('roluser') == 8 || $this->session->get('roluser') == 10){
@@ -377,9 +378,10 @@ class InfoPersonalAdmController extends Controller {
     public function createAction(Request $request) {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
+        
         try {
             $form = $request->get('form');
-
+        
             if($form['fechaInicio'] == ""){
                 $msg = "Debe ingresar la fecha inicial de la asignación";
                 return $response->setData(array('estado'=>false, 'msg'=>$msg));
@@ -399,6 +401,18 @@ class InfoPersonalAdmController extends Controller {
                 $this->get('session')->getFlashBag()->add('newError', $msg);
                 return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
             }
+
+            // Verifica financimiento para privada
+            $unidadeducativa = $em->getRePository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucionEducativa']);
+            $uedependencia = $unidadeducativa->getdependenciaTipo();
+            
+            if (($uedependencia->getid() == 3)&&(in_array($form['financiamiento'], array("1", "0", "11")))){
+                $msg = "Financimiento no valido";
+                $em->getConnection()->rollback();
+                $this->get('session')->getFlashBag()->add('newError', $msg);
+                return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
+            }
+                      
 
             // Registrar sucursal
             $sucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array('institucioneducativa' => $form['institucionEducativa'], 'gestionTipo' => $form['gestion']));
@@ -434,7 +448,7 @@ class InfoPersonalAdmController extends Controller {
             $em->flush();
 
             $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('maestro_inscripcion');")->execute();
-
+            
             // Registro Maestro inscripcion
             $maestroinscripcion = new MaestroInscripcion();
             $maestroinscripcion->setCargoTipo($em->getRepository('SieAppWebBundle:CargoTipo')->findOneById($form['funcion']));
@@ -462,7 +476,7 @@ class InfoPersonalAdmController extends Controller {
             $maestroinscripcion->setAsignacionFechaFin($fechaFin);
             $em->persist($maestroinscripcion);
             $em->flush();
-
+             
             // Registro de idiomas que habla    
             for ($i = 1; $i < 10; $i++) {
                 $idioma = $request->get('idioma' . $i);
@@ -483,9 +497,11 @@ class InfoPersonalAdmController extends Controller {
                 }
             }
             $em->getConnection()->commit();
-            
+            //dump($em);
             $this->get('session')->getFlashBag()->add('newOk', 'Los datos fueron registrados correctamente');
+            //die;
             return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
+           
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
         }
