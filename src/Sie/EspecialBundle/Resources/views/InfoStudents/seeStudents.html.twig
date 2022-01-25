@@ -133,7 +133,8 @@
                                                 <i class="fa fa-user"></i>
                                             </button>
                                         </div> #}
-                                    {% if onlyview == false and gestion == app.session.get('currentyear') %}
+                                        
+                                    {% if onlyview == false and (gestion == app.session.get('currentyear') or gestion == 2021) %}  {#Solo hasta el 24 de enero 2022 #}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                         <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
                                             <i class="fa fa-trash"></i>

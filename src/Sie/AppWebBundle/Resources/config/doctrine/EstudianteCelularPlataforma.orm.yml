@@ -1,0 +1,60 @@
+Sie\AppWebBundle\Entity\EstudianteCelularPlataforma:
+    type: entity
+    table: estudiante_celular_plataforma
+    indexes:
+        IDX_A9FA5D52179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_A9FA5D5259590C39:
+            columns:
+                - estudiante_id
+    id:
+        id:
+            type: bigint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        celular:
+            type: string
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+        vigente:
+            type: boolean
+            nullable: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificado:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificado
+    manyToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

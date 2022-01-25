@@ -1,0 +1,142 @@
+<style type="text/css" media="screen">
+input[type=checkbox]{
+  content:'';
+  background:transparent;
+  border: 3px solid #88c64b;
+  border-radius: 25px;
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  margin-right: 20px;
+  text-align:center;
+  text-shadow:4px -2px 3px gray;
+  vertical-align:middle;
+  width;40px;
+}
+input[type=checkbox] + label{
+  cursor:pointer;
+}/*esta linea significa esto + el siguiente elemento*/
+
+</style>
+
+
+{% if dataInscription|length > 0 %}
+	<form name="f1" id="guardar_datos_asignacion_paralelo" method="post" accept-charset="utf-8">
+		<div class="row">
+			<div class="col-md-12 table-responsive">
+				<table class="table table-condensed table-bordered">
+					<tr>
+						<th>TURNO:</th><td>{{ turno }}</td>
+						<th>GRADO:</th><td>{{ grado }}</td>
+					</tr>
+					<tr>
+						<th>NIVEL:</th><td>{{ nivel }}</td>
+						<th>PARALELO:</th><td>"{{ paralelo }}"</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+
+		<input type="hidden" name="gradoid" value="{{ gradoid }}">
+		<input type="hidden" name="nivelid" value="{{ nivelid }}">
+		<input type="hidden" name="sie" value="{{ sie }}">
+		<input type="hidden" name="id_inst_curso" value="{{ id_inst_curso }}">
+		<input type="hidden" name="gestion" value="{{ gestion }}">
+
+		<div class="row" style="margin-top:1rem">
+			<div class="col-md-12">
+			<a href="javascript:seleccionar_todo()"><img width="30" src="{{asset('alert/checkbox1.png')}}" alt=""> Marcar todos</a> |
+			<a href="javascript:deseleccionar_todo()"><img width="30" src="{{asset('alert/checkbox2.jpg')}}" alt=""> Marcar ninguno</a>
+			<hr>
+				<div class="table-responsive listado-textos-registrados">
+					<table id="table_id" class=" table-striped table-condensed" style="width:100%;" border="1">
+					  <thead>
+						<tr>
+						  <th>CODIGO RUDE</th>
+						  <th>CARNET</th>
+						  <th>NOMBRE</th>
+						  <th>AP. PATERNO</th>
+						  <th>AP. MATERNO</th>
+						</tr>
+					  </thead>
+					  <tbody>
+					  {% for obj in dataInscription %}
+					  <tr>
+					  	<td style="padding:0px;"><label><span class="label label-primary">{{loop.index}}</span>	<input type="checkbox" name="estudiante_id[]" id="estudiante_id" value="{{obj.estudiante_id}}">{{obj.codigo_rude}}</label></td>
+					  	<td style="padding:0px;">{{obj.carnet_identidad}}</td>
+					  	<td style="padding:0px;">{{obj.nombre}}</td>
+					  	<td style="padding:0px;">{{obj.paterno}}</td>
+					  	<td style="padding:0px;">{{obj.materno}}</td>
+					  </tr>
+					  {% endfor %}
+					  </tbody>
+					</table>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="modal-footer">
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-right">
+					<button  type="submit" class="btn btn-primary btn-lg"  id="boton"> <i class="fa fa-save"></i>  GUARDAR DATOS</button>
+					<button  type="button" class="btn btn-danger btn-lg" data-dismiss="modal"> <i class="fa fa-close"></i> Cerrar</button>
+					<hr>
+				</div>
+			</div>
+		</div>
+	</form>
+
+<script type="text/javascript" src="{{asset('alert/lib/alertify.js')}}"></script>
+<link rel="stylesheet" href="{{asset('alert/themes/alertify.core.css')}}" />
+<link rel="stylesheet" href="{{asset('alert/themes/alertify.default.css')}}" />
+{% else %}
+	<div class="alert alert-danger"><span>ADVERTENCIA:</span> No existe informacion de estudinates para asignar...</div>
+	<button  type="button" class="btn btn-danger btn-lg" data-dismiss="modal"> <i class="fa fa-close"></i> Cerrar</button>
+{% endif %}
+
+<script>
+$(document).ready( function () {
+    $('#table_id').DataTable({
+    	pageLength: 30,
+        lengthMenu: [[30,60,100,-1],["30","60","100","Todos"]],
+    	paging: true,
+		ordering: false,
+		info: true
+    });
+} );
+
+function seleccionar_todo(){
+   for (i=0;i<document.f1.elements.length;i++)
+      if(document.f1.elements[i].type == "checkbox")
+         document.f1.elements[i].checked=1
+}
+function deseleccionar_todo(){
+   for (i=0;i<document.f1.elements.length;i++)
+      if(document.f1.elements[i].type == "checkbox")
+         document.f1.elements[i].checked=0
+}
+
+$("#guardar_datos_asignacion_paralelo").submit(function(event) {
+    event.preventDefault();
+    document.getElementById('boton').disabled=true;
+    $.ajax({
+        url:'{{path('guardar_datos_asignacion_paralelo')}}',
+        type:'POST',
+        data:$("form").serialize(),
+        success:function(dat){  
+        	var valores = eval(dat);
+			if (valores[0]===1) {
+				alertify.alert("<h3>Exitosamente guardados los datos</h3><b>.::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::.</b> ", function () {
+					$('#modal1').modal('hide')
+				});
+				alertify.success("Datos procesados...");
+			    // window.location=""
+			}else{
+				document.getElementById('boton').disabled=false;
+				alertify.error("Datos no ejecutados...");
+			}
+        }
+    });
+});
+</script>

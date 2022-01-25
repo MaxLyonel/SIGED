@@ -174,7 +174,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta = array();
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
-      $nivelesLibreta = array(401,402,408,403,404);
+      $nivelesLibreta = array(400,401,402,408,403,404);
       $programasLibreta = array(7,8,9,12,14,25,15);
       if($gestion >2019 and $nivel <> 405){
         $arrDataLibreta['calificaciones'] = true;
@@ -503,7 +503,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta = array();
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
-      $nivelesLibreta = array(401,402,403,404);
+      $nivelesLibreta = array(400,401,402,403,404, 408);
       $programasLibreta = array(7,8,9,12,14,15,25);
       if($gestion >2019 and $nivel <> 405){
         $arrDataLibreta['calificaciones'] = true;
@@ -765,7 +765,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta = array();
       $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
-      $nivelesLibreta = array(401,402,403,404);
+      $nivelesLibreta = array(400,401,402,403,404,408);
       $programasLibreta = array(7,8,9,12,14,15,25);
       
       if($gestion >2019 and $nivel <> 405){
@@ -1487,7 +1487,7 @@ public function checksegipstudentAction(Request $request){
     $arrDataLibreta = array();
     $arrDataLibreta['areaEspecialId'] = ($aInfoUeducativa['ueducativaInfoId']['areaEspecialId'])?$aInfoUeducativa['ueducativaInfoId']['areaEspecialId']:'';
     $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
-    $nivelesLibreta = array(401,402,408,403,404);
+    $nivelesLibreta = array(400,401,402,408,403,404);
     $programasLibreta = array(7,8,9,12,14,15,25);
     if($gestion >2019 and $nivel <> 405){
       $arrDataLibreta['calificaciones'] = true;

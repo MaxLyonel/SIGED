@@ -308,3 +308,7 @@ sie_app_web_personalhealth:
 sie_app_web_preinscription:
     resource: "@SieAppWebBundle/Resources/config/routing/preinscription.yml"
     prefix:   /preinscription       
+
+sie_app_web_inscriptionCelular:
+    resource: "@SieAppWebBundle/Resources/config/routing/inscriptionCelular.yml"
+    prefix:   /inscriptionCelular       

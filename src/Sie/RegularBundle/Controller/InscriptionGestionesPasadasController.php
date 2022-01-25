@@ -574,6 +574,80 @@ class InscriptionGestionesPasadasController extends Controller {
 
         return $response->setData(array('nombre' => $nombreIE, 'aniveles' => $aniveles));
     }
+    public function findIEAbiertaAction($id, $gestionselected) {
+        $em = $this->getDoctrine()->getManager();
+
+         /*
+         * verificamos si tiene tuicion
+         */
+        $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+        $query->bindValue(':user_id', $this->session->get('userId'));
+        $query->bindValue(':sie', $id);
+        $query->bindValue(':rolId', $this->session->get('roluser'));
+        $query->execute();
+        $aTuicion = $query->fetchAll();
+        
+        $aniveles = array();
+        if ($aTuicion[0]['get_ue_tuicion']) {
+
+                $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
+                    'id'=> $id,
+                    'estadoinstitucionTipo'=>10
+                        ));
+
+
+             if($institucion){
+                $validacionIniConsolidation = $this->get('funciones')->getConsolidationInitioOpe($id, $gestionselected);
+                
+                if($validacionIniConsolidation){
+                    //if($gestionselected == 2020){
+                        $nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";  
+                    /*}else{
+                        $nombreIE = ($institucion) ? ' La Institución Educativa '. $institucion->getInstitucioneducativa().' no tiene su información consolidada' : "";      
+                    }*/
+                }else{
+                    $nombreIE = ($institucion) ? ' La Institución Educativa '. $institucion->getInstitucioneducativa().' no tiene su información consolidada' : "";      
+                    //$nombreIE = ($institucion) ? $institucion->getInstitucioneducativa() : "";  
+                }
+
+
+            }else{
+                 $nombreIE = ' Insitucion Educativa no existe o esta cerrada...';
+            }
+            //get the Niveles
+
+            $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+            $query = $entity->createQueryBuilder('iec')
+                    ->select('(iec.nivelTipo)')
+                    //->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                    ->where('iec.institucioneducativa = :sie')
+                    ->andwhere('iec.gestionTipo = :gestion')
+                    ->setParameter('sie', $id)
+                    ->setParameter('gestion', $gestionselected)
+                    ->distinct()
+                    ->getQuery();
+            $aNiveles = $query->getResult();
+            foreach ($aNiveles as $nivel) {
+                $aniveles[$nivel[1]] = $em->getRepository('SieAppWebBundle:NivelTipo')->find($nivel[1])->getNivel();
+            }
+
+            /*     } else {
+              $nombreIE = 'No tiene Tuición';
+              } */
+
+            
+        } else {
+             $nombreIE = 'No tiene tuición sobre la unidad educativa';
+        }
+      
+        // if ($aTuicion[0]['get_ue_tuicion']) {
+        //get the IE
+        
+
+        $response = new JsonResponse();
+
+        return $response->setData(array('nombre' => $nombreIE, 'aniveles' => $aniveles));
+    }
 
     /**
      * get grado

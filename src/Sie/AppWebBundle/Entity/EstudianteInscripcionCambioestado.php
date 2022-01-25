@@ -276,4 +276,32 @@ class EstudianteInscripcionCambioestado
     {
         return $this->institucioneducativaAnt;
     }
+    /**
+     * @var string
+     */
+    private $urlDocumento;
+
+
+    /**
+     * Set urlDocumento
+     *
+     * @param string $urlDocumento
+     * @return EstudianteInscripcionCambioestado
+     */
+    public function setUrlDocumento($urlDocumento)
+    {
+        $this->urlDocumento = $urlDocumento;
+    
+        return $this;
+    }
+
+    /**
+     * Get urlDocumento
+     *
+     * @return string 
+     */
+    public function getUrlDocumento()
+    {
+        return $this->urlDocumento;
+    }
 }

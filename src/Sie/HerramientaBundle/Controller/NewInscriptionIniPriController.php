@@ -65,7 +65,7 @@ class NewInscriptionIniPriController extends Controller
     public function indexAction(Request $request){
      //disabled option by krlos
      //return $this->redirect($this->generateUrl('login'));
-     if (in_array($this->session->get('roluser'), array(8,10,7))){
+     if (in_array($this->session->get('roluser'), array(8,10,7,9))){
      }else{
      	//to do the ue cal diff
      	if(!($this->esGuanawek($this->session->get('ie_id'),$gestion=2020))){
@@ -229,7 +229,8 @@ class NewInscriptionIniPriController extends Controller
 		      	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
 		        $yearStudent = $arrYearStudent['age'];
 			// check if the student is on 5 - 8 years old
-			 $arrValidationYearOld = in_array($this->session->get('roluser'), array(7,8,10))?array(4,5,6,7,8,9,10,11,12,13,14,15,16,17,18):array(4,5,6);
+			 $arrValidationYearOld = in_array($this->session->get('roluser'), array(7,8,10,9))?array(4,5,6,7,8,9,10,11,12,13,14,15,16,17,18):array(4,5,6);
+			 
 			 //if($yearStudent<=8 && $yearStudent>=4){
 			 if(in_array( $yearStudent, $arrValidationYearOld )){
 		        		
@@ -280,7 +281,7 @@ class NewInscriptionIniPriController extends Controller
 
 			$status = 'error';
 			$code = 400;
-			$message = "Estudiante ya tiene registro, favor realizar la inscripción por el modulo de Omitidos/Transferencia";
+			$message = "Estudiante ya tiene registro, favor realizar la inscripción por el módulo de -> Nuevo Estudiante en la UE";
 			$swcreatestudent = false; 
 
 		}
@@ -625,7 +626,7 @@ class NewInscriptionIniPriController extends Controller
 	        }else{
 	        	$status = 'error';
 				$code = 400;
-				$message = "Información no consolidada - no tiene level";
+				$message = "Información no consolidada - el nivel de la UE no corresponde a Inicial/Primaria";
 				$swprocess = false; 
 				$nombreIE = false; 
 	        }
@@ -892,7 +893,7 @@ class NewInscriptionIniPriController extends Controller
         // validation if the ue is over 4 operativo
         $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
             
-	$swinscription=true;
+		$swinscription=true;
             if($operativo >= 3){
                 $status = 'error';
 				$code = 400;
@@ -1062,8 +1063,6 @@ die;*/
 			            $query->execute();
 			            //insert a new record with the new selected variables and put matriculaFinID like 5
 			            $studentInscription = new EstudianteInscripcion();
-			            $studentInscription->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
-			            $studentInscription->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion));
 			            $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(4));
 			            $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
 			            $studentInscription->setObservacion(1);
@@ -1117,35 +1116,35 @@ die;*/
 
 		            $archivador = $directoriomove.'/'.$new_name;
 		            //unlink($archivador);
-			    if(!move_uploaded_file($tmp_name, $archivador)){
-				$em->getConnection()->rollback();
-		               	$response->setStatusCode(500);
-		               	return $response;
-		             }
-                              //save info extranjero inscription
-                              $objEstudiantedoc = new EstudianteDocumento();
-			      
-			      $objEstudiantedoc->setObservacion($typeInscription);
-			      $objEstudiantedoc->setFechaRegistro(new \DateTime('now'));
-			      $objEstudiantedoc->setUrlDocumento($archivador);
-			      $objEstudiantedoc->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
-			      $objEstudiantedoc->setDocumentoTipo($em->getRepository('SieAppWebBundle:DocumentoTipo')->find(1));
+						if(!move_uploaded_file($tmp_name, $archivador)){
+						$em->getConnection()->rollback();
+								$response->setStatusCode(500);
+								return $response;
+							}
+									//save info extranjero inscription
+									$objEstudiantedoc = new EstudianteDocumento();
+						
+						$objEstudiantedoc->setObservacion($typeInscription);
+						$objEstudiantedoc->setFechaRegistro(new \DateTime('now'));
+						$objEstudiantedoc->setUrlDocumento($archivador);
+						$objEstudiantedoc->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($studentId));
+						$objEstudiantedoc->setDocumentoTipo($em->getRepository('SieAppWebBundle:DocumentoTipo')->find(1));
 
-                              $em->persist($objEstudiantedoc);
-                              $em->flush();
+									$em->persist($objEstudiantedoc);
+									$em->flush();
 
-		            //     // CREAMOS LOS DATOS DE LA IMAGEN
-		            $informe = array(
-		              'name' => $name,
-		              'type' => $type,
-		              'tmp_name' => 'nueva_ruta',
-		              'size' => $size,
-		              'new_name' => $new_name
-		            );
-		          }else{
-		              $informe = null;
-		              $archivador = 'empty';
-		          }
+							//     // CREAMOS LOS DATOS DE LA IMAGEN
+							$informe = array(
+							'name' => $name,
+							'type' => $type,
+							'tmp_name' => 'nueva_ruta',
+							'size' => $size,
+							'new_name' => $new_name
+							);
+						}else{
+							$informe = null;
+							$archivador = 'empty';
+						}
 
 			            $em->persist($studentInscription);
 			            $em->flush();          

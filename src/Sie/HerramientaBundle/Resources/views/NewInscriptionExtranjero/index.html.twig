@@ -211,125 +211,139 @@
 
         <div class="row">
             <div class="col-xs-12 col-lg-12">
-
                 <div class="panel panel-icon panel-default">
-                    <div class="panel-heading">
-                        <i class="fa fa-search"></i>
-                        <strong> Si el estudiante no cuenta con Carnet de Identidad, debe solicitar la inscripción en la Dirección Distrital</strong>
-                        <div class="pull-right">
-                            {# <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a> #}
-                        </div>                                        
-                    </div>
+
                     {% if enableoption %}
-                    <div class="panel-body">
+                      <div class="panel-body">
                         <!-- form to search student -->
-                       
-
                          <form role="form">
-                            <div class="row">
-                              <div class="col-sm-2">
-                              <label for="ci">(*)Carnet de Identidad</label>
-                              <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataNewStudent.cifind">
-                              </div>
-                              <div class="col-sm-2">
-                              <label for="complemento(s)">Complemento</label>
-                                  <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataNewStudent.complementofind">
-                              </div>
-                              <div class="col-sm-1">
-                              <label for="expedido">Expedido</label>
-                                <select name="DBExpedido" id="idarrExpe" v-model="dataNewStudent.expedidoIdfind" class="custom-select form-control"> 
- 								{% for entity in arrExpedido %}
-                                  <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
-								{% endfor %}
-                                </select> 
-                              </div>
-                              <div class="col-sm-3">
-                              	<label for="fechanac">(*)Fec. Nacimiento  dd-mm-aaaa</label>
-                              	    <!-- <vuejs-datepicker input-class="custom-date" :bootstrap-styling="true" :format="customFormatter" v-model="dataNewStudent.fecnacfindOrig"></vuejs-datepicker>
-                              	    <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataNewStudent.fecnacfind" > -->
-                                  <input type="text" placeholder="dd-mm-aaaa" id="form_idfecnac" name="form[idfecnac]" class="form-control jupper" v-model="dataNewStudent.fecnacfind">
+
+                          <ul class="nav nav-tabs" >
+                          <li role="presentation" class="active">
+                              <a href="#sinrude" data-toggle="tab">
+                                   <h5><strong> Inscripción por Datos del Estudiante </strong></h5>
+                              </a>
+                          </li>
+                          <li role="presentation">
+                              <a href="#conrude" data-toggle="tab">
+                                  <h5><strong> Inscripción POR código RUDE </strong></h5>
+                              </a>
+                          </li>
+                      </ul>
+                      <!-- Tab panes -->
+                    <div class="tab-content">
+                          <div role="tabpanel" class="tab-pane fade in active" id="sinrude">
+                             <div class="panel-heading">
+                                <i class="fa fa-search"></i>
+                                <strong> Si el estudiante no cuenta con Carnet de Identidad, debe solicitar la inscripción en la Dirección Distrital</strong>
                               </div>
 
-                              <div class="col-sm-3">
-								{% if allowwithoutci %}
-	                               <label for="form_caseespecial" class="validation">SIN CI :</label>
-	                       			<input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
-                       			{% endif %}
+                             <div class="row">
+                                  <div class="col-sm-2">
+                                    <label for="ci">(*)Carnet de Identidad</label>
+                                      <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataNewStudent.cifind">
+                                  </div>
+                                  <div class="col-sm-2">
+                                      <label for="complemento(s)">Complemento</label>
+                                      <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataNewStudent.complementofind">
+                                  </div>
 
-                              </div>
+                                  <div class="col-sm-1">
+                                      <label for="expedido">Expedido</label>
+                                      <select name="DBExpedido" id="idarrExpe" v-model="dataNewStudent.expedidoIdfind" class="custom-select form-control"> 
+                                        {% for entity in arrExpedido %}
+                                        <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
+                                        {% endfor %}
+                                      </select> 
+                                  </div>
 
-                            </div>
-                            </br>     
-                            <div class="row">
-                              <div class="col-sm-4">
-                              <label for="paterno">Paterno</label>
-                              <input type="input" class="form-control" placeholder="Paterno" v-model="dataNewStudent.paterno" maxlength="35" autocomplete="off" style="text-transform:uppercase">
-                              </div>
-                              <div class="col-sm-4">
-                              <label for="materno">Materno</label>
-                                  <input type="input" class="form-control" placeholder="Materno" v-model="dataNewStudent.materno" maxlength="35" autocomplete="off" style="text-transform:uppercase">
-                              </div>
-                              <div class="col-sm-4">
-                              <label for="Nombre(s)">(*)Nombre(s)</label>
-                                  <input type="input" class="form-control" placeholder="Nombre(s)" v-model="dataNewStudent.nombre" maxlength="35" autocomplete="off" style="text-transform:uppercase">
-                              </div>
-                            </div>
-                            </br>
-                            
-                            <div class="form-group row buscador">
-	                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i>**Buscar && Validar</button>
-	                            </div>
-                        	</div>
-                          </br>
-                          <h4><strong> INSCRIPCIÓN POR CÓDIGO RUDE DEL ESTUDIANTE </strong></h4></br>
-                          <form>
-                            <div class="form-group">
-                              <label for="rude">Código Rude</label>
-                              <input type="text" v-model="dataNewStudent.rude"  class="form-control" id="exampleInputPassword1" placeholder="Rude">
-                            </div>
-                            <button v-on:click="lookforrude()" type="button" class="btn btn-primary"><i class="fa fa-search"></i>**Buscar && Validar</button>
-                          </form>
-                        	<div v-if="buscando" class="text-center">
-                                <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                                  <div class="col-sm-3">
+                                      <label for="fechanac">(*)Fec. Nacimiento  dd-mm-aaaa</label>
+                                        <!-- <vuejs-datepicker input-class="custom-date" :bootstrap-styling="true" :format="customFormatter" v-model="dataNewStudent.fecnacfindOrig"></vuejs-datepicker>
+                                        <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataNewStudent.fecnacfind" > -->
+                                      <input type="text" placeholder="dd-mm-aaaa" id="form_idfecnac" name="form[idfecnac]" class="form-control jupper" v-model="dataNewStudent.fecnacfind">
+                                  </div>
+
+                                  <div class="col-sm-3">
+                                  {% if allowwithoutci %}
+                                      <label for="form_caseespecial" class="validation">SIN CI :</label>
+                                        <input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
+                                  {% endif %}
+                                  </div>
                             </div>
 
+                             </br>     
+                             <div class="row">
+                                  <div class="col-sm-4">
+                                    <label for="paterno">Paterno</label>
+                                    <input type="input" class="form-control" placeholder="Paterno" v-model="dataNewStudent.paterno" maxlength="35" autocomplete="off" style="text-transform:uppercase">
+                                  </div>
+                                  <div class="col-sm-4">
+                                      <label for="materno">Materno</label>
+                                      <input type="input" class="form-control" placeholder="Materno" v-model="dataNewStudent.materno" maxlength="35" autocomplete="off" style="text-transform:uppercase">
+                                  </div>
+                                  <div class="col-sm-4">
+                                      <label for="Nombre(s)">(*)Nombre(s)</label>
+                                      <input type="input" class="form-control" placeholder="Nombre(s)" v-model="dataNewStudent.nombre" maxlength="35" autocomplete="off" style="text-transform:uppercase">
+                                  </div>
+                               </div>
+                              </br>
+                                
+                                <div class="form-group row buscador">
+                                  <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                      <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i>**Buscar && Validar</button>
+                                  </div>
+                                </div>
+                              </br>
+                          </div>
+                          <div role="tabpanel" class="tab-pane" id="conrude">
+
+                             <form>
+                              <div class="form-group">
+                                <label for="rude">Código Rude</label>
+                                <input type="text" v-model="dataNewStudent.rude"  class="form-control" id="exampleInputPassword1" placeholder="Rude">
+                              </div>
+                              <button v-on:click="lookforrude()" type="button" class="btn btn-primary"><i class="fa fa-search"></i>**Buscar && Validar</button>
+                            </form>
+                          </div>
+                    </div>
+                    <!-- end Tab panes -->
+                          <div v-if="buscando" class="text-center">
+                             <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                          </div>
                             <div v-if=" message != '' && existStudent != ''">
-
                             	<!-- data new studen  -->
                             	<p class="encabezado bg-primary">INFORMACIÓN ESTUDIANTE(S) EXISTENTE</p>
                             	<table class="table table-dark">
-								  <tbody>
-								  	<tr>
-								  	  <th>#</th>
-								  	  <th>Cod. RUDE</th>
-								      <th>CI-COMPL.</th>
-								      <th>Paterno</th>
-								      <th>Materno</th>
-								      <th>Nombre(s)</th>
-								      <th>Fecha Nacimiento</th>	
-								  	</tr>
-								    
-								    <tr v-for="(DBstudent,rindex) in DBstudentExist">
-								      <td>${ rindex }</td>
-								      <td>${DBstudent.rude | uppercase}</td>
-								      <td>${DBstudent.carnet} ${DBstudent.complemento}</td>
-								      <td>${DBstudent.paterno | uppercase}</td>
-								      <td>${DBstudent.materno | uppercase}</td>
-								      <td>${DBstudent.nombre | uppercase}</td>
-								      <td>${DBstudent.fecNac} </td>
-								      <td><button v-on:click="oldInscription(DBstudent.idStudent, rindex)" type="button" class="btn btn-info"><i class="fa fa-book"></i> INSCRIBIR </button></td>
-								    </tr>
+                                <tbody>
+                                  <tr>
+                                    <th>#</th>
+                                    <th>Cod. RUDE</th>
+                                    <th>CI-COMPL.</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
+                                    <th>Nombre(s)</th>
+                                    <th>Fecha Nacimiento</th>	
+                                  </tr>
+                                  
+                                  <tr v-for="(DBstudent,rindex) in DBstudentExist">
+                                    <td>${ rindex }</td>
+                                    <td>${DBstudent.rude | uppercase}</td>
+                                    <td>${DBstudent.carnet} ${DBstudent.complemento}</td>
+                                    <td>${DBstudent.paterno | uppercase}</td>
+                                    <td>${DBstudent.materno | uppercase}</td>
+                                    <td>${DBstudent.nombre | uppercase}</td>
+                                    <td>${DBstudent.fecNac} </td>
+                                    <td><button v-on:click="oldInscription(DBstudent.idStudent, rindex)" type="button" class="btn btn-info" title="Estudiante encontrado, realizar inscripción"><i class="fa fa-book"></i> INSCRIBIR </button></td>
+                                  </tr>
 
-								    <tr >
-								    	<th colspan="3" align="center">
-								    		<button v-on:click="goHomonimo()" type="button" class="btn btn-info"><i class="fa fa-book"></i> INSCRIPCIÓN NUEVA</button>								    		
-								    	</th>
-								    </tr>
-								    
-								    
-								  </tbody>
-								</table>
+                                  <tr >
+                                    <th colspan="3" align="center">
+                                      <button v-on:click="goHomonimo()" type="button" class="btn btn-info" title="Caso de Homónimo"><i class="fa fa-book"></i> INSCRIPCIÓN NUEVA</button>								    		
+                                    </th>
+                                  </tr>
+                                </tbody>
+								            </table>
                         	</div>
 
                             <div class="alert alert-warning" v-if="message != ''"> <i class="fa fa-warning"></i> ${message}</div>
@@ -337,26 +351,26 @@
                             <div v-if="responseprocess">
 
                             	<!-- data new studen  -->
-                            	<p class="encabezado bg-primary">INFORMACIÓN DEL NUEVO ESTUDIANTE 4444</p>
+                            	<p class="encabezado bg-primary">INFORMACIÓN DEL NUEVO ESTUDIANTE</p>
                             	<table class="table table-dark">
-								  <tbody>
-								    <tr>
-								      <th>Paterno: ${dataNewStudent.paterno | uppercase}</th>
-								      <th>Materno: ${dataNewStudent.materno | uppercase}</th>
-								      <th>Nombre(s): ${dataNewStudent.nombre | uppercase}</th>
-								    </tr>
-								    <tr>
-								      <th>CI: ${dataNewStudent.cifind}</th>
-								      <th>Complemento: ${dataNewStudent.complementofind}</th>
-								      <th>Fecha Nacimiento: ${dataNewStudent.fecnacfind}</th>
-								      
-								    </tr>
-								    
-								    
-								  </tbody>
-								</table>
+                              <tbody>
+                                <tr>
+                                  <th>Paterno: ${dataNewStudent.paterno | uppercase}</th>
+                                  <th>Materno: ${dataNewStudent.materno | uppercase}</th>
+                                  <th>Nombre(s): ${dataNewStudent.nombre | uppercase}</th>
+                                </tr>
+                                <tr>
+                                  <th>CI: ${dataNewStudent.cifind}</th>
+                                  <th>Complemento: ${dataNewStudent.complementofind}</th>
+                                  <th>Fecha Nacimiento: ${dataNewStudent.fecnacfind}</th>
+                                  
+                                </tr>
+                                
+                                
+                              </tbody>
+                            </table>
 
-								</br>
+							            	</br>
                             	<!-- end data new studen  -->
 
 
@@ -425,7 +439,7 @@
 	                                  <label for="localidad">SIE</label>
 	                                  <input type="input" class="form-control" id="sieid" placeholder="SIE" v-model="dataNewStudent.sie" maxlength="8" v-on:keyup="getInfoUe(1);">
 	                              </div>
- 					<div class="col-sm-5" >
+ 					                        <div class="col-sm-5" >
                                          <label for="genero">Adjuntar Documumento: LIBRETA ESCOLAR/DOCUMENTO DE APROBACIÓN </label>
                                          <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
                                         </div>
@@ -491,7 +505,7 @@
 
                         	<div v-if="swinscription">
 				 <div class="alert alert-success" > <i class="fa fa-book"></i>Registro realizado con Ëxito</div>
-                        		<p class="encabezado bg-primary">INFORMACIÓN DEL NUEVO ESTUDIANTE 2222</p>
+                        		<p class="encabezado bg-primary">INFORMACIÓN DEL NUEVO ESTUDIANTE</p>
                             	<table class="table table-dark">
 								  <tbody>
 								    <tr>
@@ -537,7 +551,7 @@
 
 
                             	<!-- data new studen  -->
-                            	<p class="encabezado bg-primary">INFORMACIÓN DEL NUEVO ESTUDIANTE 3333</p>
+                            	<p class="encabezado bg-primary">INFORMACIÓN DEL NUEVO ESTUDIANTE </p>
                             	<table class="table table-dark">
 								  <tbody>
 								  	<tr>
@@ -612,7 +626,7 @@
 								#}
 	                            <p class="encabezado bg-primary">INFORMACIÓN UNIDAD EDUCATIVA</p>
 				
-				<div class="row">
+				                      <div class="row">
                                        <div class="col-sm-3">
                                         <label for="pais">Pais Procedencia:</label>
                                         <select name="arrPais" id="idarrPais_p" v-model="oldStudent.paisId" class="custom-select form-control">
@@ -632,8 +646,8 @@
                                  </div>
 
 
-				<div class="row">
-				</div>
+                                <div class="row">
+                                </div>
 
 
 
@@ -642,7 +656,7 @@
 	                                  <label for="sie">SIE</label>
 	                                  <input type="input" class="form-control" id="sieid" placeholder="SIE" v-model="oldStudent.sie" maxlength="8" v-on:keyup="getInfoUe(0);">
 	                              </div>
-					<div class="col-sm-5" >
+				                        	<div class="col-sm-5" >
                                              <label for="genero">Adjuntar Documento: LIBRETA ESCOLAR/DOCUMENTO DE APROBACIÓN </label>
                                              <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
                                         </div>
@@ -707,11 +721,6 @@
                         	</div>                        	                    	
                                                       
                           </form>
-
-
-
-                       
-                            
                             
                     </div>
                     {% else %}
@@ -1405,7 +1414,7 @@
                     }
 
 
-		  if (typeof this.informe != 'object') {
+		            if (typeof this.informe != 'object') {
                         Swal.fire(
                         'Adjuntar Documento',
                         'Debe adjuntar el DOCUMENTO SOLICITADO para ralizar la inscripción, puede ser un archivo de imagen o PDF',
@@ -1413,9 +1422,6 @@
                         );
                         return;
                     }
-
-
-
 
                 	Swal.fire({
                         title: 'Realizar Inscripción?',
@@ -1689,3 +1695,4 @@
 
     </script>
 {%endblock%}
+	

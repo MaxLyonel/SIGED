@@ -82,6 +82,7 @@ class Funciones {
     }
 
     public function obtenerOperativo($sie,$gestion){
+        
         $objRegistroConsolidado = $this->em->createQueryBuilder()
                 ->select('rc.bim1,rc.bim2,rc.bim3,rc.bim4')
                 ->from('SieAppWebBundle:RegistroConsolidacion', 'rc')
@@ -91,6 +92,8 @@ class Funciones {
                 ->setParameter('gestion',$gestion)
                 ->getQuery()
                 ->getResult();
+
+        
         if($gestion < 2020 ){
             $operativo = 5;
             if(!$objRegistroConsolidado){
@@ -337,6 +340,7 @@ class Funciones {
             dt.id codigo_distrito,
             dt.distrito,
             inst.id codigo_sie,
+            rc.gestion,
             inst.institucioneducativa,
             case when rc.bim1 > 0 then 'SI' else 'NO' end AS bim1,
             case when rc.bim2 > 0 then 'SI' else 'NO' end AS bim2,

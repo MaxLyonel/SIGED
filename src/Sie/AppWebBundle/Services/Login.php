@@ -24,8 +24,13 @@ class Login {
      * verificamos si tiene roles activos
      */
 	public function verificarRolesActivos($id, $key) {                
-        $gestion = '2021';
-        $semestre = '3';
+        /**
+         * TODO
+         * modificar gestion y semestre alternativa
+         */
+        $gestion = '2022';
+        $semestre = '2';
+
 
         $db = $this->em->getConnection();
         //******************
@@ -48,6 +53,7 @@ class Login {
                 b.institucioneducativa_tipo_id = 2
                 ";
         $stmt = $db->prepare($query);
+        
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();                
@@ -87,7 +93,7 @@ class Login {
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();                
-
+        //dump($stmt);die;
         //*****EN CASO DE QUE EXISTA VIGENTES EN LA GESTION
         if (count($po) > 0){ 
             $gestionReg = $gestion;                
@@ -324,7 +330,8 @@ class Login {
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
-        $po = $stmt->fetchAll();               
+        $po = $stmt->fetchAll();     
+      //  dump($po);    die;
         return $po;
 	}
 }

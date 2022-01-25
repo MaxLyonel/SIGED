@@ -58,6 +58,13 @@ Sie\AppWebBundle\Entity\EstudianteInscripcionCambioestado:
             unsigned: false
             comment: ''
             column: usuario_id
+        urlDocumento:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: url_documento
     manyToOne:
         estudianteInscripcion:
             targetEntity: EstudianteInscripcion
