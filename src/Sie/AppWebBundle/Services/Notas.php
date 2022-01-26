@@ -6405,10 +6405,13 @@ die;/*
                         $total += $notas[$i];
                         $cantidad += 1;
                     }
-                    else{
+
+                    if ($discapacidad == 1 and $request->get('operativo') == 3 and $nivel == 404 and $gestion>2020) {
+                        //TODO CORREGIR PROMEDIOS solo tipo 9
                         $total += $notas[$i];
                         $cantidad += 1;
                     }
+                    
                 }
                 $newNotaTipo = 5;
                 if($gestion >= 2021){
