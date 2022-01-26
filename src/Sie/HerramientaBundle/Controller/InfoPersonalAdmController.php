@@ -407,7 +407,7 @@ class InfoPersonalAdmController extends Controller {
             $uedependencia = $unidadeducativa->getdependenciaTipo();
             
             if (($uedependencia->getid() == 3)&&(in_array($form['financiamiento'], array("1", "0", "11")))){
-                $msg = "Financimiento no valido";
+                $msg = "Financimiento no valido, verifique financiamiento";
                 $em->getConnection()->rollback();
                 $this->get('session')->getFlashBag()->add('newError', $msg);
                 return $this->redirect($this->generateUrl('herramienta_info_personal_adm_index'));
