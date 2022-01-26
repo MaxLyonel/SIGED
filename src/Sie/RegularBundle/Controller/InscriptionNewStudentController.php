@@ -367,7 +367,7 @@ class InscriptionNewStudentController extends Controller {
           $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataStudent['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
           $yearStudent = $arrYearStudent['age'];  
       // //new student validation
-      
+      //dump($yearStudent);
         if ($yearStudent<=6){
           switch ($yearStudent) {
             case 4:
@@ -390,8 +390,8 @@ class InscriptionNewStudentController extends Controller {
         }else{
           //do inscription
           $swCorrectInscription =(str_replace('-','',$newLevelStudent)>='1212')?true:false;
-            $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
-            
+          $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
+            //dump($newLevelStudent, $this->aCursos[$keyNextLevelStudent]);die;
             if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
               $swCorrectInscription = true;
               //do the inscriptin
@@ -399,6 +399,11 @@ class InscriptionNewStudentController extends Controller {
               $swCorrectInscription = false;
             }
         }//end new student validation
+        $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
+        if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
+          $swCorrectInscription = true;
+        }
+
         $message='';
         if(!$swCorrectInscription){
           $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';
