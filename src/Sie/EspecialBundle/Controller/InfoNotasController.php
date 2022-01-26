@@ -62,7 +62,7 @@ class InfoNotasController extends Controller {
 
             $estadosMatricula = null;
 
-
+            
             switch ($discapacidad) {
                 case 1: // Auditiva
                         //if($nivel != 405){
@@ -107,7 +107,7 @@ class InfoNotasController extends Controller {
                             $template = 'especialSeguimiento';
                             $actualizarMatricula = false;
                             $seguimiento = true;
-                            if($operativo >= 4 or $gestion < $gestionActual){
+                            if($operativo >= 3 or $gestion < $gestionActual){
                                 $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78)));
                             }
                         }
@@ -134,6 +134,7 @@ class InfoNotasController extends Controller {
                                 $notas = $this->get('notas')->especial_cualitativo_visual($idInscripcion,$operativo);   
                                 $template = 'especialCualitativoVisual';
                                 $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(78,79)));
+                               // dump($notas);die;
                             }
                             
                             
@@ -275,7 +276,7 @@ class InfoNotasController extends Controller {
             // y cuando esten en el cuarto bimestre
             
             if(($request->get('operativo') >= 3 and $request->get('actualizar') == false and ($discapacidad <> 2 or ($discapacidad == 2 and $gestion  < 2020 ))) or (in_array($discapacidad, array(4,6,7)) and $request->get('actualizar') == false) or ($request->get('nivel') == 410 and $request->get('actualizar') == false) or ($request->get('nivel') == 411 and $discapacidad == 1 and $request->get('actualizar') == false)){
-                //dump($discapacidad);die;
+               
                 $idEstadoMatriicula = $request->get('nuevoEstadomatricula');
                 if($idEstadoMatriicula){
                     $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
