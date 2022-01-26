@@ -6053,10 +6053,10 @@ die;/*
                                     ->setMaxResults(1)
                                     ->getQuery()
                                     ->getResult();          
-                                    //dump($cualitativas);
+                                    //dump($cualitativas); die;
            
             if($cualitativas){
-                if(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] == 78){
+                if(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] == 78){ //78=CONCLUIDO
                     
                     $inicio = 0;
                     $fin = 0;
@@ -6065,12 +6065,13 @@ die;/*
                                             'fechaEtapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['fechaEtapa']
                                     );
                 }else{ 
+                    
                     $inicio = 0;
                     $fin = 1;
-                    if(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] == 80){
-                        $etapa = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'];
-                    }else{
+                    if(in_array(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] , array(79,80))){ //79=PROSIGUE, 80=EXTENDIDO
                         $etapa = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa']+1;
+                    }else{
+                        $etapa = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'];
                     }
                     if($cualitativas[0]['gestion'] == $gestion){
                         $idNotaTipo = $cualitativas[0]['idNotaTipo']+1;
