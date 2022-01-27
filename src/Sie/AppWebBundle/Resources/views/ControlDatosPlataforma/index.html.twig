@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zxx">
+<head>
+    <title>PLATAFORMA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link type="text/css" rel="stylesheet" href="{{asset('loginPlataforma/assets/css/bootstrap.min.css')}}">
+    <link type="text/css" rel="stylesheet" href="{{asset('loginPlataforma/assets/fonts/font-awesome/css/font-awesome.min.css')}}">
+    <link type="text/css" rel="stylesheet" href="{{asset('loginPlataforma/assets/fonts/flaticon/font/flaticon.css')}}">
+    <link rel="shortcut icon" href="{{asset('loginPlataforma/assets/img/favicon.ico')}}" type="image/x-icon" >
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="{{asset('loginPlataforma/assets/css/style.css')}}">
+
+</head>
+<body id="top">
+<div class="page_loader"></div>
+<div class="login-3">
+    <div class="login-3-inner">
+        <div class="container">
+            <div class="row login-box">
+                <div class="col-lg-12 pad-0 form-info">
+                    <div class="btn-section clearfix">
+                        <a href="{{path('estudiante_index')}}" class="link-btn active btn-1 active-bg default-bg">ESTUDIANTE</a>
+                        <a href="{{path('docente_index')}}" class="link-btn btn-2">DOCENTE</a>
+                    </div>
+                    <div class="form-section align-self-center">
+                        <img src="{{asset('img/logo-minedu.png')}}" alt="Logo Ministerio Educación" width="100%">
+                        <h1>Ministerio de Educación</h1>
+                        <h3>AULA - PLATAFORMA EDUCATIVA</h3>
+                        <div class="clearfix"></div>
+                        <form id="validar" method="POST">
+                            <div class="form-group">
+                                <label for="first_field" class="form-label">CODIGO RUDE</label>
+                                <input name="codigo" type="text" required maxlength="20" class="form-control" id="first_field" value="807305472013966" placeholder="Ingresar codigo rude..." aria-label="">
+                            </div>
+                            <div class="form-group ">
+                                <button type="submit" class="btn btn-primary btn-lg btn-black btn-theme">BUSCAR</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div id="ver_conte"></div> 
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{asset('loginPlataforma/assets/js/jquery-3.6.0.min.js')}}"></script>
+<script src="{{asset('loginPlataforma/assets/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{asset('loginPlataforma/assets/js/jquery.validate.min.js')}}"></script>
+<script src="{{asset('loginPlataforma/assets/js/app.js')}}"></script>
+<script type="text/javascript">
+document.oncontextmenu = function(){return true}
+$("#validar").submit(function(event) {
+    event.preventDefault();
+    // document.getElementById("ver_conte").style.display = "block";
+    // $("#ver_conte").html('');
+    $("#ver_conte").html('<div style="text-align:center">Buscando...<img width="50" src="{{asset('img/loading.gif')}}" /></div>');
+    $.ajax({
+        url:'{{path('validar_info_est')}}',
+        type:'POST',
+        data:$("form").serialize(),
+        success:function(dat){
+            $("#ver_conte").fadeIn(300).html(dat)
+        }
+    });
+});
+</script>
+</body>
+</html>
