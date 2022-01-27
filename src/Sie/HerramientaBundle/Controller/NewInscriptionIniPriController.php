@@ -940,7 +940,7 @@ class NewInscriptionIniPriController extends Controller
             // validate the year old on the student
 	      	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
 	        $yearStudent = $arrYearStudent['age'];		
-		//dump($yearStudent);die;			
+		//dump($arrYearStudent);die;			
 		switch($typeInscription){
 		case 0:
 			$swinscription = $this->correctOldYearValidation($yearStudent,$nivel,$grado);
@@ -971,9 +971,9 @@ class NewInscriptionIniPriController extends Controller
 		if(!$articuleten && !$swrezago){
 	        	$swinscription = $this->correctOldYearValidation($yearStudent,$nivel,$grado);
 		}*/
-/*dump($yearStudent);
-dump($swinscription);
-die;*/
+//dump($yearStudent);
+//dump($swinscription);
+//die;
             $arrStudent=array();
             $arrInscription=array();
             // check the years old validation
@@ -1238,17 +1238,17 @@ die;*/
 											$swinscription = false;                   
 		                }
 		                break;
-		              case 6:
+		              //case 6:
 		                # code...
-		                if($nivel=='12' && $grado=='1'){
+		              //  if($nivel=='12' && $grado=='1'){
 		                  //good
-		                }else{
-		                	$status = 'error';
-											$code = 400;
-											$message = "El estudiante no cumple con lo requerido en edad";
-											$swinscription = false; 
-		                }
-		                break;
+		               // }else{
+		                //	$status = 'error';
+						//					$code = 400;
+						//					$message = "El estudiante no cumple con lo requerido en edad";
+						//					$swinscription = false; 
+		               // }
+		               // break;
 		         //      case 7 or 8:
 		         //        if($nivel=='12' && $grado=='1'){
 		         //          //good
@@ -1268,6 +1268,18 @@ die;*/
 											$swinscription = false; 
 		                break;
         }
+		/***
+		 * Cuando el estudiante tiene mayor o igual a 6 años siempre ingresa a  primaria
+		*/
+				if($yearStudent>=6 && $nivel=='12' && $grado=='1'){
+			          //good
+			        }else{
+			        	$status = 'error';
+									    $code = 400;
+									    $message = "El estudiante no cumple con lo requerido en edad";
+									    $swinscription = false; 
+		        }
+			//        break;
 
         return($swinscription);
 

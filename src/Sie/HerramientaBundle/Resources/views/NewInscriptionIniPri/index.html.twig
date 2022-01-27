@@ -237,9 +237,9 @@
                               <div class="col-sm-1">
                               <label for="expedido">Expedido</label>
                                 <select name="DBExpedido" id="idarrExpe" v-model="dataNewStudent.expedidoIdfind" class="custom-select form-control"> 
- 								{% for entity in arrExpedido %}
-                                  <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
-								{% endfor %}
+ 								                  {% for entity in arrExpedido %}
+                                    <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
+								                  {% endfor %}
                                 </select> 
                               </div>
                               <div class="col-sm-3">
@@ -393,8 +393,8 @@
 				      <label for="inscription">Tipo de Inscripcion</label>
 					<select name="arrTypeInscription" id="idarrIns_inscrip" v-model="dataNewStudent.typeInscription" class="custom-select form-control" >
 						<option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
-                                            	<option value="1">ARTÍCULO 12 d) R.M. 001/2022</option>
-                                            	<option value="2">REZAGO ESCOLAR</option>
+                                            	<!-- option value="1">ARTÍCULO 12 d) R.M. 001/2022</option -->
+                                            	<!-- option value="2">REZAGO ESCOLAR</option -->
                                         </select>
 
                                       </div>
@@ -562,8 +562,8 @@
                                       		<label for="provincia">Tipo de Inscripcion</label>
                                         	<select name="arrTypeInscription" id="idarrIns_inscrip" v-model="oldStudent.typeInscription" class="custom-select form-control" >
 							                                  <option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
-                                            		<option value="1">ARTÍCULO 12 d) R.M. 001/2022</option>
-                                            		<option value="2">REZAGO ESCOLAR</option>I                                           	
+                                            		<!-- option value="1">ARTÍCULO 12 d) R.M. 001/2022</option -->
+                                            		<!--option value="2">REZAGO ESCOLAR</option-->
                                         	</select>
 
                                         </div>
