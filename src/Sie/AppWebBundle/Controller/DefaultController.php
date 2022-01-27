@@ -315,11 +315,20 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieProcesosBundle");
                 break;
             default :
-            $sysname = 'ESPECIAL';
-            $sysporlet = '#F44336';//red
-            $sysbutton = true;
-            $layout = 'layoutEspecialSie.html.twig';
-            $this->session->set('pathSystem', "SieEspecialBundle");
+                /*$sysname = 'ESPECIAL';
+                $sysporlet = '#F44336';//red
+                $sysbutton = true;
+                $layout = 'layoutEspecialSie.html.twig';
+                $this->session->set('pathSystem', "SieEspecialBundle");*/
+
+                $sysname = 'Sistema Académico Educación Regular';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutHerramienta.html.twig';
+                $this->session->set('pathSystem', "SieHerramientaBundle");
+                $this->session->set('color', 'primary');
+                $this->session->set('sistemaid', 6);
+
             break;            
             
                 // $sysname = 'REGULAR';
@@ -475,10 +484,40 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "AppWebBundle");
                 return $this->render('SieAppWebBundle:PreInscription:index.html.twig');
                 break;  
-            case '172.20.196.5:9006':
+            case '172.20.196.5:9006': /// control de datos cel students
                 $this->session->set('pathSystem', "AppWebBundle");
                 return $this->render('SieAppWebBundle:ControlDatosCelular:index.html.twig');
-                break;              
+                break;    
+            case '172.20.196.5:9007': /// login plataforma
+                $this->session->set('pathSystem', "AppWebBundle");
+                return $this->render('SieAppWebBundle:ControlDatosPlataforma:index.html.twig');
+                break;   
+            case '172.20.196.5:9008':
+                $sysname = 'Sistema Académico Educación Regular';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutHerramienta.html.twig';
+                $this->session->set('pathSystem', "SieHerramientaBundle");
+                $this->session->set('color', 'primary');
+                $this->session->set('sistemaid', 6);
+                break;
+            case '172.20.196.5:9009':
+                $sysname = 'Sistema Siged';
+                $sysporlet = 'blue';
+                $sysbutton = true;
+                $layout = 'layoutRegular.html.twig';
+                $this->session->set('pathSystem', "SieRegularBundle");
+                $this->session->set('sistemaid', 1);
+                $this->session->set('color', 'blue');
+                break;       
+            case '172.20.196.5:8010':
+                $sysname = 'Sistema Académico Educación Especial';
+                $sysporlet = 'red';
+                $sysbutton = true;
+                $layout = 'layoutEspecialSie.html.twig';
+                $this->session->set('pathSystem', "SieEspecialBundle");
+                $this->session->set('color', 'danger');
+                break;  
 
         }
 
