@@ -1226,7 +1226,7 @@
                             </div>
                             <div {% if rude.registroFinalizado == 5 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab6">
                                 <fieldset class="fieldset">
-                                    <legend class="legend">VI. DATOS DEL PADRE, MADRE O TUTOR(A) DE LA O EL ESTUDIANTE {{rude.registroFinalizado}}</legend>
+                                    <legend class="legend">VI. DATOS DEL PADRE, MADRE O TUTOR(A) DE LA O EL ESTUDIANTE</legend>
                                     <form id="formConQuienVive">
                                         <div class="row form-group">
                                             <label class="col-md-6">6.1 LA O EL ESTUDIANTE VIVE HABITUALMENTE CON:</label>
@@ -1966,6 +1966,7 @@
                                     </div>
                                 {# </div> #}
                             </div>
+                            
                             <div {% if rude.registroFinalizado >= 5 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab7">
                                 <fieldset class="fieldset">
                                     <legend class="legend">VII. FINALIZAR REGISTRO RUDE ES </legend>
@@ -2001,7 +2002,7 @@
                                                     <br>
                                                     <div class="block-print">
                                                         <p>Imprimir Formulario RUDE del estudiante</p>
-                                                        <a class="btn btn-success" style="padding:20px" href="{{path('download_rude', {'codue': inscripcion.institucioneducativaCurso.institucioneducativa.id, 'rude': inscripcion.estudiante.codigoRude, 'gestion': inscripcion.institucioneducativaCurso.gestionTipo.id, 'eins':inscripcion.id} )}}">
+                                                        <a class="btn btn-success" style="padding:20px" href="{{path('download_rude_especialOp2', {'codue': inscripcion.institucioneducativaCurso.institucioneducativa.id, 'rude': inscripcion.estudiante.codigoRude, 'gestion': inscripcion.institucioneducativaCurso.gestionTipo.id, 'eins':inscripcion.id} )}}">
                                                             <i class="fa fa-print" style="font-size:40px" ></i><br>Imprimir
                                                         </a>
                                                     </div>
