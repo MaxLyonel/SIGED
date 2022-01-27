@@ -243,11 +243,11 @@ line-height: 1.83333em;}
 
                                                                         {# icon de asignar paralelo #}
                                                                        
-                                                                        {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Incripción Lote">
+                                                                        <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Ratificación de inscripción">
                                                                             <button class="btn btn-circle btn-success btn-stroke " onclick="asignarParalelo('{{dataParalelo.infoUe}}');">
                                                                                 <i class="fa fa-check-square-o"></i>
                                                                             </button>
-                                                                        </div> #}
+                                                                        </div>
 
                                                                     </li>
                                                                 {% endfor %}
@@ -294,6 +294,20 @@ line-height: 1.83333em;}
             </div>
         </div>
     </div><!-- /.modal -->
+    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal2">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        {# <p class="panel-title1" align="center"> ***INFORMACION***  </p> #}
+                        Información
+                        <button type="button" class="close1" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="panel-body panel-default" id="modal2_con"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--/ End body content -->
 {% endblock %}
 {% block javascripts%}
