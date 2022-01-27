@@ -312,3 +312,6 @@ sie_app_web_preinscription:
 sie_app_web_inscriptionCelular:
     resource: "@SieAppWebBundle/Resources/config/routing/inscriptionCelular.yml"
     prefix:   /inscriptionCelular       
+sie_app_web_plataformaMoodle:
+    resource: "@SieAppWebBundle/Resources/config/routing/busquedaPlataformaMoodle.yml"
+    prefix:   /busquedaPlataformaMoodle 
