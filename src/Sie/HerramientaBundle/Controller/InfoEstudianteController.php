@@ -22,8 +22,13 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\InstitucioneducativaOperativoLog;
 use Sie\AppWebBundle\Entity\InstitucioneducativaHumanisticoTecnico;
+use Sie\AppWebBundle\Entity\InstitucioneducativaCurso;
+use Sie\AppWebBundle\Entity\Institucioneducativa;
+use Sie\AppWebBundle\Entity\GestionTipo;
 
+// use Monolog\Handler\NewRelicHandlerTest;
 
+ 
 use Doctrine\DBAL\Types\Type;
 Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
 
@@ -2133,5 +2138,34 @@ class InfoEstudianteController extends Controller {
         }
 
         return new JsonResponse(array('estado' => $estado, 'mensaje' => $mensaje));
+    }
+    public function visualizarContenidoAction(Request $request) {
+
+        // $response = new JsonResponse();
+        $infoUe = $request->get('infoUe');
+        $aInfoUeducativa = unserialize($infoUe);
+        $infoStudent = $request->get('infoStudent');
+
+        $aInfoStudent = json_decode($infoStudent,true);
+
+        $gestion = $aInfoUeducativa['requestUser']['gestion'];
+        $idest = $aInfoStudent['id'];
+     
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("SELECT
+            ei.observacion,
+            iec.gestion_tipo_id,
+            ie.institucioneducativa,
+            ie.id
+            FROM  estudiante_inscripcion AS ei
+            INNER JOIN institucioneducativa_curso AS iec ON iec.id = ei.institucioneducativa_curso_id
+            INNER JOIN institucioneducativa AS ie ON ie.id = iec.institucioneducativa_id
+            INNER JOIN gestion_tipo gt ON gt.id=iec.gestion_tipo_id
+            WHERE ei.estudiante_id = '$idest' AND gt.gestion = '$gestion' AND (ei.cod_ue_procedencia_id IS NOT null)
+            ORDER BY ei.id ASC LIMIT 1 ");
+        $query->execute();
+        $valor= $query->fetch();
+        return $this->render($this->session->get('pathSystem').':InfoEstudiante:descripcionTrasladoUEst.html.twig',array('valor'=>$valor));
+
     }
 }
