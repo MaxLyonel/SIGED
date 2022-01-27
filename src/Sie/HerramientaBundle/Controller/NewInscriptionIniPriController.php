@@ -310,7 +310,7 @@ class NewInscriptionIniPriController extends Controller
 
       return $response;
 
-      die;
+      //die;
     }
 
     public function gohomonimoAction(Request $request){

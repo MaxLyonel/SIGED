@@ -570,7 +570,7 @@ class InscriptionNewStudentController extends Controller {
 
        }
 
-      die;
+     // die;
     }
     /*
     // this is the next step to do the setting up NOTAS to student
@@ -1034,7 +1034,7 @@ class InscriptionNewStudentController extends Controller {
         $em->getConnection()->beginTransaction();
         //get the variblees
         $form = $request->get('form');
-      dump($form);die;  
+      //dump($form);die;  
         try {
             //insert a new record with the new selected variables and put matriculaFinID like 5
             $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
