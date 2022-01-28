@@ -1235,10 +1235,10 @@
         }
     };
     function visualizar_contenido(infoUe, infoStudent){
-        $("#modal2").modal('show')
-        $("#modal2_con").html('')
+        $("#modal").modal('show')
+        $("#modal").html('')
         $.post('{{path('visualizar_contenido')}}', {infoUe, infoStudent}, function(dato) {
-            $("#modal2_con").html(dato)
+            $("#modal").html(dato)
         });
     }
 
