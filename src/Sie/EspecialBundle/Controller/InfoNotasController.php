@@ -302,7 +302,7 @@ class InfoNotasController extends Controller {
                     $em->flush();
                 }
              }
-             die;
+             
             return new JsonResponse(array('msg'=>'ok'));
         } catch (Exception $e) {
             return new JsonResponse(array('msg'=>'error'));
