@@ -1,27 +1,25 @@
 <style type="text/css">
 .fondo{
 padding: 10px;
-margin: 15px 30px;
+margin: 15px 15px 0px 30px;
 border: #bdbcbc 1px dashed;
 box-shadow: 0px 3px 3px 2px #c5c5c5, 0px 8px 8px 5px #dee2e6;
 }
 .clo {font-size: 1.28571em;position: absolute;height: 2em;width: 2em;background-color: #313a46;opacity: 1;border: 2px solid #ffffff;box-shadow: 0px 3px 3px 2px #c5c5c5, 0px 8px 8px 5px #dee2e6;color: #ffffff;border-radius: 50%;text-align: center;line-height: 1.83333em;}
-@media screen and (max-width: 480px){ .valor_btn{ font-size:9px; } }
 </style>
 {# {{  dump(valor) }} #}
 {% if valor is not empty %}
 	{% for entity in valor %}
-	<div style="width:100%;">
+
 		<div class="clo">{{ loop.index }}</div>
 		<div class="fondo align-self-left ">
 			{# <div style="text-align:left;"><b>CODIGO SIE :</b> {{entity.cod_ue_id}}</div> #}
 			<div style="text-align:left;"><b>UNIDAD EDUCATIVA :</b> {{entity.desc_ue}}</div>
 			<div style="text-align:left;"><b>DEPARTAMENTO :</b> {{entity.des_dep}}</div> 
 			<div style="text-align:left;"><b>DISTRITO :</b> {{entity.des_dis}}</div> <br>	
-			<a href="https://{{entity.link}}" class="btn btn-primary btn-lg btn-black btn-theme valor_btn" target="_black">INGRESAR PLATAFORMA</a> <br>
+			<a href="https://{{entity.link}}" class="btn btn-success btn-lg btn-black btn-theme valor_btn" target="_black">INGRESAR PLATAFORMA</a> <br>
 		</div>	
-	</div>
 	{% endfor %}
 {% else %}
-    <b style="color:#ff0000;font-weight:bold;"><span class="fa fa-exclamation-triangle"></span> No se encontró información para el RUDE {{codigo}}, favor verifique si escribió correctamente su Código RUDE, caso contrario comuníquese con la Unidad Educativa o Dirección Distrital de Educación correspondiente</b>
+    <b style="color:#ff0000;font-weight:bold;"><span class="fa fa-exclamation-triangle"></span> {{descripcion}}</b>
 {% endif %}

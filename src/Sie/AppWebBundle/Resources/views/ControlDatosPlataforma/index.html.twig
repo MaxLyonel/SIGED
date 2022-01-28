@@ -31,7 +31,7 @@
                         <form id="validar" method="POST">
                             <div class="form-group">
                                 <label for="first_field" class="form-label">CODIGO RUDE</label>
-                                <input name="codigo" type="text" required maxlength="20" class="form-control" id="first_field" value="807305472013966" placeholder="Ingresar codigo rude..." aria-label="">
+                                <input name="codigo" id="codigo" type="text" required maxlength="20" class="form-control" id="first_field" value="807305472013966" placeholder="Ingresar codigo rude..." aria-label="">
                             </div>
                             <div class="form-group ">
                                 <button type="submit" class="btn btn-primary btn-lg btn-black btn-theme">BUSCAR</button>
@@ -50,6 +50,11 @@
 <script src="{{asset('loginPlataforma/assets/js/jquery.validate.min.js')}}"></script>
 <script src="{{asset('loginPlataforma/assets/js/app.js')}}"></script>
 <script type="text/javascript">
+$("#codigo").keyup(function(){              
+    var ta      =   $("#codigo");
+    letras      =   ta.val().replace(/ /g, "");
+    ta.val(letras)
+}); 
 document.oncontextmenu = function(){return true}
 $("#validar").submit(function(event) {
     event.preventDefault();

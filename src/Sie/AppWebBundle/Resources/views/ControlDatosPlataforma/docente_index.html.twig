@@ -26,18 +26,28 @@
                     <div class="form-section align-self-center">
                         <img src="{{asset('img/logo-minedu.png')}}" alt="Logo Ministerio Educación" width="100%">
                         <h1>Ministerio de Educación</h1>
-                        <h3>PLATAFORMA MOODLE</h3>
+                        <h3>AULA - PLATAFORMA EDUCATIVA</h3>
                         <div class="clearfix"></div>
                         <form id="validardoc" method="POST">
-                            <div class="form-group">
-                                <label for="first_field" class="form-label">CARNET IDENTIDAD</label>
-                                <input name="codigo" type="text" required maxlength="20" class="form-control" id="first_field" placeholder="Ingresar carnet id..." aria-label="">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <label for="first_field" class="form-label">CARNET IDENTIDAD</label>
+                                    <input name="codigo" type="text" required maxlength="12" class="form-control" onkeypress="return valideKey(event);" id="first_field" placeholder="Ingresar carnet identidad..." aria-label="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label for="first_field" class="form-label">COMPLEMENTO</label>
+                                    <input name="complemento" id="complemento" style="text-transform: uppercase;" type="text" maxlength="4" class="form-control" id="first_field" placeholder="Ingresar complemento..." aria-label="">
+                                </div>
                             </div>
                             <div class="form-group clearfix">
                                 <button type="submit" class="btn btn-primary btn-lg btn-black btn-theme">INGRESAR</button>
                             </div>
+                        </div>
                         </form>
-                        <div class="clearfix" id="ver_conte"></div>
+                        <div id="ver_conte"></div>
                     </div>
                 </div>
             </div>
@@ -54,7 +64,7 @@ $("#validardoc").submit(function(event) {
     event.preventDefault();
     $("#ver_conte").html('<div style="text-align:center">Buscando...<img src="{{asset('img/loading.gif')}}" /></div>');
     $.ajax({
-        url:'{{path('validar_info_est')}}',
+        url:'{{path('validar_info_doc')}}',
         type:'POST',
         data:$("form").serialize(),
         success:function(dat){
@@ -63,5 +73,22 @@ $("#validardoc").submit(function(event) {
     });
 });
 </script>
+<script type="text/javascript">
+$("#complemento").keyup(function(){              
+    var ta      =   $("#complemento");
+    letras      =   ta.val().replace(/ /g, "");
+    ta.val(letras)
+}); 
+function valideKey(evt){
+    var code = (evt.which) ? evt.which : evt.keyCode;
+    if(code==8) { // backspace.
+      return true;
+    } else if(code>=48 && code<=57) { // is a number.
+      return true;
+    } else{ // other keys.
+      return false;
+    }
+}
+</script> 
 </body>
 </html>

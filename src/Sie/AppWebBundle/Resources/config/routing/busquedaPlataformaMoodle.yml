@@ -14,8 +14,8 @@ validar_info_est:
     options:
          expose: true
 
-# guadarDatos:
-#     path:     /guadarDatos
-#     defaults: { _controller: SieAppWebBundle:busquedaPlataformamoodle:guadarDatos }
-#     options:
-#          expose: true
+validar_info_doc:
+    path:     /validarInfoDoc
+    defaults: { _controller: SieAppWebBundle:BusquedaPlataformaMoodle:validarInfoDoc }
+    options:
+         expose: true
