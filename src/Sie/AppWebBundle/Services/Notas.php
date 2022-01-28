@@ -6777,7 +6777,7 @@ die;/*
             }
             //dump($discapacidad); die;
             // Datos del siguimiento
-            if($gestion > 2019 and ($discapacidad == 4 or $discapacidad == 5 or $discapacidad == 6 or $discapacidad == 7 or $nivel == 410 or ($discapacidad == 1 and ($request->get('progserv') == 20 or $request->get('progserv') == 21 or $request->get('progserv') == 22 )))){
+            if($gestion > 2019 and ($discapacidad == 4 or ($discapacidad == 5 and ($nivel == 411 or $nivel==410)) or $discapacidad == 6 or $discapacidad == 7 or $nivel == 410 or ($discapacidad == 1 and ($request->get('progserv') == 20 or $request->get('progserv') == 21 or $request->get('progserv') == 22 )))){
                 
                 $seguimientoNota = new EstudianteNotaCualitativa();
                 $seguimientoNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($request->get('tipoNota')));

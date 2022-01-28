@@ -295,7 +295,7 @@ class InfoNotasController extends Controller {
                 }
             }
 
-            if($request->get('operativo') < 3 and ($discapacidad == 5 or $discapacidad == 4) and $gestion > 2020){
+            if($request->get('operativo') < 3 and (($discapacidad == 5 or $discapacidad == 4) and ($nivel == 410 or $nivel == 411)) and $gestion > 2020){
                 $idEstadoMatriicula = $request->get('nuevoEstadomatricula'); 
                 if($idEstadoMatriicula){
                     $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
