@@ -623,7 +623,7 @@
                             </div>
                             <div {% if rude.registroFinalizado == 2 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab3">
                                 <fieldset class="fieldset">
-                                    <legend class="legend">III. ASPECTOS SOCIAL</legend>
+                                    <legend class="legend">III. ASPECTO SOCIAL</legend>
                                     <form id="formSocioeconomicos" onsubmit="saveFormSocioeconomicos(); return false;">
                                         {{ form_widget(formSocioeconomico.id) }}
                                         <div class="row">
@@ -1998,11 +1998,11 @@
                                             </div>
                                                                                             
                                             {% if true %}
-                                                <div id="btnImprimir" class="col-md-12" {% if rude.registroFinalizado == 5 %} style="display:none" {% else %} style="display:block" {% endif %}>
+                                                <div id="btnImprimir" class="col-md-12" {% if rude.registroFinalizado > 5 %} style="display:none" {% else %} style="display:block" {% endif %}>
                                                     <br>
                                                     <div class="block-print">
                                                         <p>Imprimir Formulario RUDE del estudiante</p>
-                                                        <a class="btn btn-success" style="padding:20px" href="{{path('download_rude_especialOp2', {'codue': inscripcion.institucioneducativaCurso.institucioneducativa.id, 'rude': inscripcion.estudiante.codigoRude, 'gestion': inscripcion.institucioneducativaCurso.gestionTipo.id, 'eins':inscripcion.id} )}}">
+                                                        <a class="btn btn-success" style="padding:20px" href="{{path('downloadRudeEspecial', {'codue': inscripcion.institucioneducativaCurso.institucioneducativa.id, 'rude': inscripcion.estudiante.codigoRude, 'gestion': inscripcion.institucioneducativaCurso.gestionTipo.id, 'eins':inscripcion.id} )}}">
                                                             <i class="fa fa-print" style="font-size:40px" ></i><br>Imprimir
                                                         </a>
                                                     </div>

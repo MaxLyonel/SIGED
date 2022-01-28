@@ -64,28 +64,21 @@ class InfoEstudianteRudeesNuevoController extends Controller
 
 	public function indexAction(Request $request)
 	{
- 		
+		
 		$em = $this->getDoctrine()->getManager();
-
 		$infoUe = $request->get('infoUe');
 		$infoStudent = $request->get('infoStudent');
 		$editar = $request->get('editar');
-
 		$aInfoUeducativa = unserialize($infoUe);
 		$aInfoStudent = json_decode($infoStudent, TRUE);
-
 		$iec = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($aInfoUeducativa['ueducativaInfoId']['iecId']);
 		$sie = $iec->getInstitucioneducativa()->getId();
 		$gestion = $iec->getGestionTipo()->getId();
-
 		$idInscripcion = $aInfoStudent['eInsId'];
 		$inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscripcion);
-
 		$estudiante = $inscripcion->getEstudiante();
-
-		$rude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array(
-			'estudianteInscripcion'=>$inscripcion->getId()
-		));
+		$rude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion'=>$inscripcion->getId()));
+		
 		//obtenemos los datos de la tabla estado civil tipo
 		$estadoCivilData = $em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findAll();
 		if(!is_object($rude)){
@@ -101,17 +94,14 @@ class InfoEstudianteRudeesNuevoController extends Controller
 						->setParameter('estudiante', $estudiante->getId())
 						->setMaxResults(1)
 						->getQuery()
-						->getResult();
-
+						->getResult();			
 			if(count($rudeAnterior) == 1){
 
 				$rudeAnterior = $rudeAnterior[0];
-
 				$rude = clone $rudeAnterior;
 				$rude->setEstudianteInscripcion($inscripcion);
 				$em->persist($rude);
 				$em->flush();
-
 			}else{
 				$jg = $em->createQueryBuilder()
 							->select('jg')
@@ -121,9 +111,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 							->setParameter('sie', $sie)
 							->getQuery()
 							->getResult();
-
 				$direccion = 'ZONA '.$jg[0]->getZona().' '.$jg[0]->getDireccion();
-
 				$rude = new Rude();
 				$rude->setEstudianteInscripcion($inscripcion);
 				$rude->setInstitucioneducativaTipo($em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(1));
@@ -148,7 +136,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 
 		$ayudaComplemento = ["Complementito","Contenido del complemento, no se refiere al lugar de expedición del documento."];
 
-		$sistema  = $this->session->get('pathSystem');
+		$sistema  = $this->session->get('pathSystem');		
 		$vista = 'SieHerramientaBundle:InfoEstudianteRudeNuevo:index.html.twig';
 		switch ($sistema)
 		{
@@ -161,8 +149,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			default:
 				$vista = 'SieHerramientaBundle:InfoEstudianteRudeNuevo:index.html.twig';
 			break;
-		}
-		///dump($estudiante->getCodigoRude());die;
+		}		
 		$paralelo = $aInfoUeducativa['ueducativaInfo']['paralelo'];
 		$areaEspecial = $aInfoUeducativa['ueducativaInfo']['areaEspecial'];
 		$nivel= $aInfoUeducativa['ueducativaInfo']['nivel'];
@@ -178,7 +165,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$especialidadTipo = $em->getRepository('SieAppWebBundle:EspecialTecnicaEspecialidadTipo')->find($tecnica->getEspecialTecnicaEspecialidadTipo()); 
 			$especialidad = $especialidadTipo->getEspecialidad(); 
 		//Buscamos los servicios a los que se encuentre inscrito el estudiante
-		//dump($estudiante);die;
+		
 		$query2 = $em->getConnection()->prepare('select * FROM especial_servicio_tipo WHERE id in(
 							SELECT especial_servicio_tipo_id from institucioneducativa_curso_especial WHERE institucioneducativa_curso_id in (
 								SELECT id FROM institucioneducativa_curso WHERE id  in( SELECT institucioneducativa_curso_id from estudiante_inscripcion WHERE estudiante_id = '.$estudiante->getId().' and estadomatricula_tipo_id = 4 ) and nivel_tipo_id = 410  )) 
