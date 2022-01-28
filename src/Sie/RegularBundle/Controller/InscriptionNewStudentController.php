@@ -367,44 +367,42 @@ class InscriptionNewStudentController extends Controller {
           $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataStudent['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
           $yearStudent = $arrYearStudent['age'];  
       // //new student validation
-      
+
         if ($yearStudent<=6){
-          switch ($yearStudent) {
-            case 4:
-            # check level
-            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1111')?true:false;
-            break;
-            case 5:
-            # check level
-            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1112')?true:false;
-            break;
-            case 6:
-            # check level
-            $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1211')?true:false;
-            break;
-            default:
-              # code...
+            switch ($yearStudent) {
+              case 4:
+              # check level
+              $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1111')?true:false;
               break;
-          }
+              case 5:
+              # check level
+              $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1112')?true:false;
+              break;
+              case 6:
+              # check level
+              $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1211')?true:false;
+              break;
+              default:
+                # code...
+                break;
+            }
 
         }else{
           //do inscription
-          $swCorrectInscription =(str_replace('-','',$newLevelStudent)>='1212')?true:false;
-            $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
+          $swCorrectInscription =(str_replace('-','',$newLevelStudent)=='1211')?true:false; //si es mayor a 6 años siempre debe ir a primaria
             
-            if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
-              $swCorrectInscription = true;
-              //do the inscriptin
-            }else{//dump($newInfInscription);die;
-              $swCorrectInscription = false;
-            }
         }//end new student validation
+        $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
+          if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
+            $swCorrectInscription = true;
+          }
+
         $message='';
-        if(!$swCorrectInscription){
-          $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';
-          $this->addFlash('idNoInscription', $message);
-          $swCorrectInscription = false;
-        }
+          if(!$swCorrectInscription){
+            $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';
+            $this->addFlash('idNoInscription', $message);
+            $swCorrectInscription = false;
+          }
         /////////////////////////////////
          // $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
 
@@ -572,7 +570,7 @@ class InscriptionNewStudentController extends Controller {
 
        }
 
-      die;
+     // die;
     }
     /*
     // this is the next step to do the setting up NOTAS to student
@@ -1036,7 +1034,7 @@ class InscriptionNewStudentController extends Controller {
         $em->getConnection()->beginTransaction();
         //get the variblees
         $form = $request->get('form');
-      dump($form);die;  
+      //dump($form);die;  
         try {
             //insert a new record with the new selected variables and put matriculaFinID like 5
             $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(

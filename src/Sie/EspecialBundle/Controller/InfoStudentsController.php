@@ -177,13 +177,17 @@ class InfoStudentsController extends Controller {
       $nivelesLibreta = array(400,401,402,408,403,404);
       $programasLibreta = array(7,8,9,12,14,25,15);
       if($gestion >2019 and $nivel <> 405){
+        
         $arrDataLibreta['calificaciones'] = true;
       }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
         $arrDataLibreta['calificaciones'] = true;
       }else{
         $arrDataLibreta['calificaciones'] = false;
       }
-
+          $programasSinNotas = array(26,27); //No esta definido la forma de registro de las notas por tanto calificaciones=0
+      if(in_array($aInfoUeducativa['ueducativaInfoId']['programaId'], $programasSinNotas)  and $gestion>2020){
+          $arrDataLibreta['calificaciones'] = false;
+      }
 
       if((in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))) and $gestion>2019){
         $arrDataLibreta['libreta'] = true;
@@ -217,7 +221,7 @@ class InfoStudentsController extends Controller {
           }
         }
       }
-
+      
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
         'operativo_fin' => $operativo_fin,
         'objStudents' => $objStudents,

@@ -6053,10 +6053,10 @@ die;/*
                                     ->setMaxResults(1)
                                     ->getQuery()
                                     ->getResult();          
-                                    //dump($cualitativas);
+                                    //dump($cualitativas); die;
            
             if($cualitativas){
-                if(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] == 78){
+                if(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] == 78){ //78=CONCLUIDO
                     
                     $inicio = 0;
                     $fin = 0;
@@ -6065,12 +6065,13 @@ die;/*
                                             'fechaEtapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['fechaEtapa']
                                     );
                 }else{ 
+                    
                     $inicio = 0;
                     $fin = 1;
-                    if(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] == 80){
-                        $etapa = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'];
-                    }else{
+                    if(in_array(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] , array(79,80))){ //79=PROSIGUE, 80=EXTENDIDO
                         $etapa = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa']+1;
+                    }else{
+                        $etapa = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'];
                     }
                     if($cualitativas[0]['gestion'] == $gestion){
                         $idNotaTipo = $cualitativas[0]['idNotaTipo']+1;
@@ -6243,11 +6244,13 @@ die;/*
         $id_usuario = $this->session->get('userId');
         //dump($request);die;
         // Validar si existe la session del usuario
+        //dump($request);
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
         
         try {
+
             $this->em->getConnection()->beginTransaction();
             // Datos de las notas cuantitativas
             $idEstudianteNota = $request->get('idEstudianteNota');
@@ -6275,7 +6278,7 @@ die;/*
             }else{
                 $notas = $request->get('nota');
             }
-           // dump($notas);die;
+            // dump($notas);die;
 
             // Datos de las notas cualitativas
             $idEstudianteNotaCualitativa = $request->get('idEstudianteNotaCualitativa');
@@ -6404,10 +6407,13 @@ die;/*
                         $total += $notas[$i];
                         $cantidad += 1;
                     }
-                    else{
+
+                    if ($discapacidad == 1 and $request->get('operativo') == 3 and $nivel == 404 and $gestion>2020) {
+                        //TODO CORREGIR PROMEDIOS solo tipo 9
                         $total += $notas[$i];
                         $cantidad += 1;
                     }
+                    
                 }
                 $newNotaTipo = 5;
                 if($gestion >= 2021){
@@ -6769,9 +6775,9 @@ die;/*
                     }
                 }
             }
-            
+            //dump($discapacidad); die;
             // Datos del siguimiento
-            if($gestion > 2019 and ($discapacidad == 4 or $discapacidad == 6 or $discapacidad == 7 or $nivel == 410 or ($discapacidad == 1 and ($request->get('progserv') == 20 or $request->get('progserv') == 21 or $request->get('progserv') == 22 )))){
+            if($gestion > 2019 and ($discapacidad == 4 or $discapacidad == 5 or $discapacidad == 6 or $discapacidad == 7 or $nivel == 410 or ($discapacidad == 1 and ($request->get('progserv') == 20 or $request->get('progserv') == 21 or $request->get('progserv') == 22 )))){
                 
                 $seguimientoNota = new EstudianteNotaCualitativa();
                 $seguimientoNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($request->get('tipoNota')));

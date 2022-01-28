@@ -1198,15 +1198,14 @@ class InfoConsolidationController extends Controller {
     public function enabledOpeAction(Request $request){
       // get the send values
       $sie = $request->get('sie');
-      $gestion = $request->get('gestion');
+      $gestion = $this->session->get('currentyear');
       $em = $this->getDoctrine()->getManager();
-     
       $objRegistroConsolidado = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
         'unidadEducativa' => $sie,
-        'gestion'         => $gestion
+        'gestion'         => $this->session->get('currentyear')
       ));
+
       $operativo = $this->get('funciones')->obtenerOperativo($sie,$gestion);
-      
       switch ($operativo) {
           case 2:
               $objRegistroConsolidado->setBim2(0);
@@ -1246,12 +1245,8 @@ class InfoConsolidationController extends Controller {
 */
       $em->persist($objRegistroConsolidado);
       $em->flush();
-      
-      if( $objRegistroConsolidado->getInstitucioneducativaTipoId()==4){
-        return $this->redirectToRoute('herramienta_especial_infoconsolidation_gestion_index');
-      }else{
-        return $this->redirectToRoute('herramienta_infoconsolidation_gestion_index');
-      }
+
+      return $this->redirectToRoute('herramienta_infoconsolidation_gestion_index');
 
     }
 

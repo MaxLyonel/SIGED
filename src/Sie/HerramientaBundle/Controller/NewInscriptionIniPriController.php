@@ -170,6 +170,7 @@ class NewInscriptionIniPriController extends Controller
     	$arrPais = array();
 		$arrStudentExist = false;
 		$studentId = false;
+		$swci = false;
 		$existStudent = '';
     	// check if the inscription is by ci or not
 
@@ -180,7 +181,7 @@ class NewInscriptionIniPriController extends Controller
 			$arrayCondition['fechaNacimiento'] = new \DateTime(date("Y-m-d", strtotime($fecNac))) ;
 
 		if($withoutcifind){	
-
+			
 			// find the student by arrayCondition
 			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
 			$existStudent = false;
@@ -189,7 +190,7 @@ class NewInscriptionIniPriController extends Controller
 			}
 
 			$answerSegip = true;
-		}else{
+		}else{ 
 			$arrayCondition['carnetIdentidad'] = $carnet;
 			if($complemento){
 				$arrayCondition['complemento'] = $complemento;
@@ -219,8 +220,9 @@ class NewInscriptionIniPriController extends Controller
 			}
 
 		}
-		// dump($objStudent);
-		// die;
+		 //dump($objStudent); 
+		 //dump($existStudent);die;
+		 //die;
 		// check if the student exists
 		if(!$existStudent){
 		      // check if the data person is true
@@ -257,7 +259,7 @@ class NewInscriptionIniPriController extends Controller
 		      }
 
 		}else{
-
+			
 			$arrStudentExist = array();
 			if(sizeof($objStudent)>0){
 				foreach ($objStudent as $value) {
@@ -272,6 +274,10 @@ class NewInscriptionIniPriController extends Controller
 						'idStudent'=>$value->getId() ,
 						'articuleten'=>0 ,
 					);
+
+					if($value->getCarnetIdentidad()===trim($request->get('cifind'))){
+						$swci = true;
+					}
 				}
 				
 			}
@@ -285,7 +291,7 @@ class NewInscriptionIniPriController extends Controller
 			$swcreatestudent = false; 
 
 		}
-		
+		//dump($swci);dump($arrStudentExist);die;
        $arrResponse = array(
         'status'          => $status,
         'code'            => $code,
@@ -296,7 +302,7 @@ class NewInscriptionIniPriController extends Controller
         'arrStudentExist' => $arrStudentExist,    
         'existStudent' => $existStudent,    
         'swhomonimo' => $withoutcifind,
-        
+        'swci' => $swci,
       );
       
       $response->setStatusCode(200);
@@ -304,7 +310,7 @@ class NewInscriptionIniPriController extends Controller
 
       return $response;
 
-      die;
+      //die;
     }
 
     public function gohomonimoAction(Request $request){
@@ -359,7 +365,7 @@ class NewInscriptionIniPriController extends Controller
       
       $response->setStatusCode(200);
       $response->setData($arrResponse);
-
+		
       return $response;    	
 				
     }
@@ -398,7 +404,7 @@ class NewInscriptionIniPriController extends Controller
       }    
 
 
-    public function goOldInscriptionAction(Request $request){
+    public function goOldInscriptionAction(Request $request){ 
     	$response = new JsonResponse();
     	$em = $this->getDoctrine()->getManager();
     	//get send values
@@ -934,7 +940,7 @@ class NewInscriptionIniPriController extends Controller
             // validate the year old on the student
 	      	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
 	        $yearStudent = $arrYearStudent['age'];		
-		//dump($yearStudent);die;			
+		//dump($arrYearStudent);die;			
 		switch($typeInscription){
 		case 0:
 			$swinscription = $this->correctOldYearValidation($yearStudent,$nivel,$grado);
@@ -965,9 +971,9 @@ class NewInscriptionIniPriController extends Controller
 		if(!$articuleten && !$swrezago){
 	        	$swinscription = $this->correctOldYearValidation($yearStudent,$nivel,$grado);
 		}*/
-/*dump($yearStudent);
-dump($swinscription);
-die;*/
+//dump($yearStudent);
+//dump($swinscription);
+//die;
             $arrStudent=array();
             $arrInscription=array();
             // check the years old validation
@@ -1207,6 +1213,7 @@ die;*/
     }    
 
     private function correctOldYearValidation($yearStudent, $nivel, $grado){
+		//dump($yearStudent, $nivel, $grado);
 				$swinscription=true;
 	            switch ($yearStudent) {
 		              case 4:
@@ -1232,17 +1239,17 @@ die;*/
 											$swinscription = false;                   
 		                }
 		                break;
-		              case 6:
+		              //case 6:
 		                # code...
-		                if($nivel=='12' && $grado=='1'){
+		              //  if($nivel=='12' && $grado=='1'){
 		                  //good
-		                }else{
-		                	$status = 'error';
-											$code = 400;
-											$message = "El estudiante no cumple con lo requerido en edad";
-											$swinscription = false; 
-		                }
-		                break;
+		               // }else{
+		                //	$status = 'error';
+						//					$code = 400;
+						//					$message = "El estudiante no cumple con lo requerido en edad";
+						//					$swinscription = false; 
+		               // }
+		               // break;
 		         //      case 7 or 8:
 		         //        if($nivel=='12' && $grado=='1'){
 		         //          //good
@@ -1262,7 +1269,15 @@ die;*/
 											$swinscription = false; 
 		                break;
         }
-
+		/***
+		 * Cuando el estudiante tiene mayor o igual a 6 años siempre ingresa a  primaria
+		*/
+				if($yearStudent>=6 && $nivel=='12' && $grado=='1'){
+					$swinscription = true; 
+			          //good
+			    }
+			//        break;
+			
         return($swinscription);
 
     }

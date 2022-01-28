@@ -237,9 +237,9 @@
                               <div class="col-sm-1">
                               <label for="expedido">Expedido</label>
                                 <select name="DBExpedido" id="idarrExpe" v-model="dataNewStudent.expedidoIdfind" class="custom-select form-control"> 
- 								{% for entity in arrExpedido %}
-                                  <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
-								{% endfor %}
+ 								                  {% for entity in arrExpedido %}
+                                    <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
+								                  {% endfor %}
                                 </select> 
                               </div>
                               <div class="col-sm-3">
@@ -312,9 +312,9 @@
 								      <td  v-if="allowwithoutci"><button v-on:click="oldInscription(DBstudent.idStudent, rindex)" type="button" class="btn btn-info"><i class="fa fa-book"></i> INSCRIBIR </button></td>
 								    </tr>
 
-								    <tr v-if="allowwithoutci">
+								    <tr v-if="allowwithoutci && !swci" >
 								    	<th colspan="3" align="center">
-								    		<button v-on:click="goHomonimo()" type="button" class="btn btn-warning"><i class="fa fa-book"></i> HOMONIMO PERFECTO</button>								    		
+								    		<button v-on:click="goHomonimo()" type="button" class="btn btn-warning"><i class="fa fa-book"></i> HOMONIMO PERFECTO - ${swci} </button>								    		
 								    	</th>
 								    </tr>
 								    
@@ -393,8 +393,8 @@
 				      <label for="inscription">Tipo de Inscripcion</label>
 					<select name="arrTypeInscription" id="idarrIns_inscrip" v-model="dataNewStudent.typeInscription" class="custom-select form-control" >
 						<option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
-                                            	<option value="1">ARTÍCULO 12 d) R.M. 001/2022</option>
-                                            	<option value="2">REZAGO ESCOLAR</option>
+                                            	<!-- option value="1">ARTÍCULO 12 d) R.M. 001/2022</option -->
+                                            	<!-- option value="2">REZAGO ESCOLAR</option -->
                                         </select>
 
                                       </div>
@@ -562,8 +562,8 @@
                                       		<label for="provincia">Tipo de Inscripcion</label>
                                         	<select name="arrTypeInscription" id="idarrIns_inscrip" v-model="oldStudent.typeInscription" class="custom-select form-control" >
 							                                  <option value="0">INICIAL(1Y2)/PRIMARIA(1)</option>
-                                            		<option value="1">ARTÍCULO 12 d) R.M. 001/2022</option>
-                                            		<option value="2">REZAGO ESCOLAR</option>I                                           	
+                                            		<!-- option value="1">ARTÍCULO 12 d) R.M. 001/2022</option -->
+                                            		<!--option value="2">REZAGO ESCOLAR</option-->
                                         	</select>
 
                                         </div>
@@ -701,9 +701,9 @@
 
             data: {
               state: {isSending: false},
-		allowwithoutci : '{{allowwithoutci}}',
+		          allowwithoutci : '{{allowwithoutci}}',
             	dataNewStudent: {'withoutcifind':false, 'swnewforeign':false, 'articuleten':false, 'swrezago':false},
- 		oldStudent: {'articuleten':false, 'swrezago':false},
+ 		          oldStudent: {'articuleten':false, 'swrezago':false},
             	responseprocess:false,
             	swprocessue:false,
             	swinscription:false,
@@ -713,6 +713,7 @@
                 existStudent:false,
                 swhomonimo:false,
             	message:'',           	
+            	swci:'',           	
             	messageue:'',           	
                 DBPais: {},
                 DBDepto: {},
@@ -791,9 +792,9 @@
                 	_this.clearFields();
                 	this.state.isSending = false;
                     
-                    if (typeof this.dataNewStudent.withoutcifind === "undefined") {
-					  this.dataNewStudent.withoutcifind = false;
-					}
+                  if (typeof this.dataNewStudent.withoutcifind === "undefined") {
+					          this.dataNewStudent.withoutcifind = false;
+					        }
 					if(!this.dataNewStudent.withoutcifind){
 						if (typeof this.dataNewStudent.cifind === "undefined") {
 	        				Swal.fire(
@@ -838,13 +839,14 @@
 					if (typeof this.dataNewStudent.expedidoIdfind === "undefined") {
 					  this.dataNewStudent.expedidoIdfind = 0;
 					}					
-				
+                    
 					
                     axios.get(Routing.generate('newinscriptionInipri_checksegipstudent', this.dataNewStudent ))
                     .then(response => {
                         if (response.status == 200) {
                         	this.responseprocess = response.data.swcreatestudent;
                         	this.message = response.data.message;
+                          this.swci = response.data.swci;
                         	this.DBGenero= response.data.arrGenero;
                         	this.DBPais= response.data.arrPais;
                         	this.DBstudentExist= response.data.arrStudentExist;
@@ -875,7 +877,7 @@
                     }).then((result) => {
                     	if (result.value) {                	
 
-						axios.get(Routing.generate('newinscriptionInipri_gohomonimo', this.dataNewStudent ))
+						          axios.get(Routing.generate('newinscriptionInipri_gohomonimo', this.dataNewStudent ))
 	                    .then(response => {
 	                        if (response.status == 200) {
 	                        	this.responseprocess = response.data.swcreatestudent;

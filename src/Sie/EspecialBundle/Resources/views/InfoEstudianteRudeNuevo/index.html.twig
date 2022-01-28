@@ -2001,7 +2001,7 @@
                                                 <div id="btnImprimir" class="col-md-12" {% if rude.registroFinalizado > 5 %} style="display:none" {% else %} style="display:block" {% endif %}>
                                                     <br>
                                                     <div class="block-print">
-                                                        <p>Imprimir Formulario RUDE del estudiante</p>
+                                                        <p>Imprimir Formulario RUDE del estudiante ---</p>
                                                         <a class="btn btn-success" style="padding:20px" href="{{path('downloadRudeEspecial', {'codue': inscripcion.institucioneducativaCurso.institucioneducativa.id, 'rude': inscripcion.estudiante.codigoRude, 'gestion': inscripcion.institucioneducativaCurso.gestionTipo.id, 'eins':inscripcion.id} )}}">
                                                             <i class="fa fa-print" style="font-size:40px" ></i><br>Imprimir
                                                         </a>

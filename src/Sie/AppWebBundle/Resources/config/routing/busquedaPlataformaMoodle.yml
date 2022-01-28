@@ -1,8 +1,8 @@
-estudiante_index:
+estudiante_plataforma_index:
     path:     /
     defaults: { _controller: SieAppWebBundle:BusquedaPlataformaMoodle:index }
 
-docente_index:
+docente_plataforma_index:
     path:     /docente
     defaults: { _controller: SieAppWebBundle:BusquedaPlataformaMoodle:docente }
     options:
