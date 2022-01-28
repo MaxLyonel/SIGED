@@ -1213,6 +1213,7 @@ class NewInscriptionIniPriController extends Controller
     }    
 
     private function correctOldYearValidation($yearStudent, $nivel, $grado){
+		//dump($yearStudent, $nivel, $grado);
 				$swinscription=true;
 	            switch ($yearStudent) {
 		              case 4:
@@ -1272,15 +1273,11 @@ class NewInscriptionIniPriController extends Controller
 		 * Cuando el estudiante tiene mayor o igual a 6 años siempre ingresa a  primaria
 		*/
 				if($yearStudent>=6 && $nivel=='12' && $grado=='1'){
+					$swinscription = true; 
 			          //good
-			        }else{
-			        	$status = 'error';
-									    $code = 400;
-									    $message = "El estudiante no cumple con lo requerido en edad";
-									    $swinscription = false; 
-		        }
+			    }
 			//        break;
-
+			
         return($swinscription);
 
     }
