@@ -35,5 +35,5 @@ herramienta_inforeporte_estudiantes_en_situacion_de_vulnerabilidad:
     methods:  ['GET','POST']
 
 herramienta_infoconsolidation_enabledOpe:
-    path:     /enabledOpe/{sie}
+    path:     /enabledOpe/{sie}/{gestion}
     defaults: { _controller: SieHerramientaBundle:InfoConsolidation:enabledOpe }    
