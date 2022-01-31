@@ -113,13 +113,13 @@ info_estudiante_rudees_nuevo_save_formLugar:
     options:
          expose: true
 #REPORTE ESPECIAL
-download_rude_especial:
+downloadRudeEspecial:
     path:    /downloadrudeespecial/{codue}/{rude}/{gestion}/{eins}
     defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:downloadRudeEspecial" }
 #REPORTE ESPECIAL OP2            
-download_rude_especialOp2:
-    path:    /downloadrudeespecial/{codue}/{rude}/{gestion}/{eins}
-    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:downloadRudEE" }         
+#download_rude_especialOp2:
+#    path:    /downloadrudeespecial/{codue}/{rude}/{gestion}/{eins}
+#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:downloadRudEE" }         
 
 
          
