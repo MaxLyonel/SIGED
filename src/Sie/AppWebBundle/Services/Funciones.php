@@ -341,7 +341,8 @@ class Funciones {
             case when rc.bim1 > 0 then 'SI' else 'NO' end AS bim1,
             case when rc.bim2 > 0 then 'SI' else 'NO' end AS bim2,
             case when rc.bim3 > 0 then 'SI' else 'NO' end AS bim3,
-            case when rc.bim4 > 0 then 'SI' else 'NO' end AS bim4
+            case when rc.bim4 > 0 then 'SI' else 'NO' end AS bim4,
+            rc.gestion
             FROM registro_consolidacion rc
             INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
             INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
