@@ -538,7 +538,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 
 	public function saveFormDireccionAction(Request $request)
 	{
-		$form = $request->get('form'); dump($form);die;
+		$form = $request->get('form');
 		// dump((integer)$form['idLugar']);die;
 		$em = $this->getDoctrine()->getManager();
 
