@@ -538,12 +538,9 @@ class InfoEstudianteRudeesNuevoController extends Controller
 
 	public function saveFormDireccionAction(Request $request)
 	{
-		$form = $request->get('form');
-		// dump((integer)$form['idLugar']);die;
+		$form = $request->get('form');		
 		$em = $this->getDoctrine()->getManager();
-
 		$rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['id']);
-
 		$rude->setMunicipioLugarTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find((integer)$form['municipioLugarTipo']));
 		$rude->setLocalidad($form['localidad'] ? mb_strtoupper($form['localidad'], 'utf-8') : '');
 		$rude->setZona($form['zona'] ? mb_strtoupper($form['zona'], 'utf-8') : '');
