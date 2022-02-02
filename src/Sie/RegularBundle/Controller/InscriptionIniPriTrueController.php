@@ -290,16 +290,23 @@ class InscriptionIniPriTrueController extends Controller {
           
 
         }
-        $dateTime = new \DateTime('now');
-        // dump($dateTime);die();
+        
         $formOmitido = $this->createFormBuilder()
-                ->setAction($this->generateUrl('inscription_ini_pri_rue_save'))
+                ->setAction($this->generateUrl('inscription_ini_pri_rue_save'));
 
                 /*->add('questionStatus', 'choice', array('choices'=>$arrQuestion, 'attr'=>array('class'=>'form-control','onchange'=>'myFunctionSH(this.value)')))
                 ->add('observation', 'textarea', array('attr'=>array('class'=>'form-control')))
                 ->add('classdays', 'choice', array('choices'=>$arrDias, 'attr'=>array('class'=>'form-control')))*/
-                ->add('dateRequest', 'text', array('attr'=> array('class'=>'form-control', 'readonly' => true)))
-               
+                if(in_array($this->session->get('roluser'), array(9))) {
+                  $formOmitido = $formOmitido 
+                  ->add('dateRequest', 'text', array('attr'=> array('class'=>'form-control', 'readonly' => true)))
+                  ;
+                }else{
+                  $formOmitido = $formOmitido
+                  ->add('dateRequest', 'text', array('attr'=> array('class'=>'form-control')))
+                  ;
+                }
+                $formOmitido = $formOmitido
                 ->add('nivelId', 'hidden', array('data'=>$data['nivelId'],'attr' => array('class' => 'form-control')))
                 ->add('cicloId', 'hidden', array('data'=>$data['cicloId'],'attr' => array('class' => 'form-control')))
                 ->add('gradoId', 'hidden', array('data'=>$data['gradoId'],'attr' => array('class' => 'form-control')))
@@ -317,21 +324,21 @@ class InscriptionIniPriTrueController extends Controller {
                 ->add('codigoRude', 'hidden', array('data'=>$codigoRude))
                 ->add('idOtraInscripcion', 'hidden', array('data'=>$idOtraInscripcion))
                 ->add('observacionOmitido', 'textarea', array('label' => 'Registre una breve justificación de la inscripción del estudiante', 'attr' => array('maxlength' => 250,'rows'=>"3" ,'class' => 'form-control','required' => true )));
-        if($this->session->get('ie_id') > 0 ){
+        /*if($this->session->get('ie_id') > 0 ){
            $formOmitido = $formOmitido 
                 ->add('institucionEducativa', 'text', array('data'=>$this->session->get('ie_id'), 'label' => 'SIE', 'attr' => array('readonly' => true,'maxlength' => 8, 'class' => 'form-control')))
                 ->add('institucionEducativaName', 'text', array('data'=>$this->session->get('ie_nombre'),'label' => 'Institución Educativa', 'disabled' => true, 'attr' => array('readonly' => true,'class' => 'form-control')))
                 ->add('paralelo', 'choice', array('choices'=>$paralelos, 'empty_value' => 'Seleccionar...','attr' => array('class' => 'form-control', 'required' => true)))
                 ;
 
-        }else{
+        }else{*/
           $formOmitido = $formOmitido 
                   ->add('institucionEducativa', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control')))
                   ->add('institucionEducativaName', 'text', array('label' => 'Institución Educativa', 'disabled' => true, 'attr' => array('class' => 'form-control')))
                   ->add('paralelo', 'choice', array('attr' => array('class' => 'form-control', 'required' => true)))
                   ->add('lastue', 'hidden', array('data' => $data['sie']))
                   ;
-        }           
+        // }           
 
 
 
