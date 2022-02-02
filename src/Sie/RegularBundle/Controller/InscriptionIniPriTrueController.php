@@ -290,13 +290,15 @@ class InscriptionIniPriTrueController extends Controller {
           
 
         }
+        $dateTime = new \DateTime('now');
+        // dump($dateTime);die();
         $formOmitido = $this->createFormBuilder()
                 ->setAction($this->generateUrl('inscription_ini_pri_rue_save'))
 
                 /*->add('questionStatus', 'choice', array('choices'=>$arrQuestion, 'attr'=>array('class'=>'form-control','onchange'=>'myFunctionSH(this.value)')))
                 ->add('observation', 'textarea', array('attr'=>array('class'=>'form-control')))
                 ->add('classdays', 'choice', array('choices'=>$arrDias, 'attr'=>array('class'=>'form-control')))*/
-                ->add('dateRequest', 'text', array('attr'=>array('class'=>'form-control')))
+                ->add('dateRequest', 'text', array('attr'=> array('class'=>'form-control', 'readonly' => true)))
                
                 ->add('nivelId', 'hidden', array('data'=>$data['nivelId'],'attr' => array('class' => 'form-control')))
                 ->add('cicloId', 'hidden', array('data'=>$data['cicloId'],'attr' => array('class' => 'form-control')))
@@ -788,7 +790,7 @@ class InscriptionIniPriTrueController extends Controller {
       return  $this->createFormBuilder()
                 ->setAction($this->generateUrl('regularizarNotas_show'))
                 // ->add('idInscripcion','text',array('data'=>$data))
-                ->add('setNotas','submit',array('label'=>'Registrar Notas','attr'=>array('class'=>'btn btn-success')))
+                // ->add('setNotas','submit',array('label'=>'Registrar Notas','attr'=>array('class'=>'btn btn-success')))
               ->getForm();
     }
     public function saveNotasInscriptionAction(Request $request){
