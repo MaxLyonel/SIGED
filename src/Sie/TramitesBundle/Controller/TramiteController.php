@@ -4391,6 +4391,10 @@ class TramiteController extends Controller {
                         $answerSegip = false;
                         if ($carnetIdentidad > 0){
                             $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnetIdentidad ,$arrParametros, 'prod', 'academico');
+                            if(!$answerSegip){
+                                $arrParametros['extranjero']='e'; // extranjero
+                                $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnetIdentidad ,$arrParametros, 'prod', 'academico');
+                            }
                         }
                         
                         if($answerSegip){

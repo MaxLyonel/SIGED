@@ -679,6 +679,7 @@ class TramiteConvalidacionController extends Controller {
                 $student->setComplemento(strtoupper($newStudent['complemento']));
                 $student->setPasaporte(strtoupper($newStudent['pasaporte']));
                 $student->setExpedido($entityExpedido);
+                $student->setSegipId(1);
                 $student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
                 $student->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($newStudent['pais']));
                 if (isset($newStudent['provincia'])){
