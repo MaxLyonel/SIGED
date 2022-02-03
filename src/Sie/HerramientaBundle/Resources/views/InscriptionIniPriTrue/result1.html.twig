@@ -62,7 +62,7 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Estudiante</th>
+                    <th>Estudiante (1)</th>
                     <th>Se identifico que el estudiante esta inscrito en otra unidad educativa</th>
                 </tr>
             </thead>
@@ -273,6 +273,11 @@
 
     <script>
         $(function(){
+          var fecha = new Date();
+          var mes = fecha.getMonth()+1; //obteniendo mes
+          var dia = fecha.getDate(); //obteniendo dia
+          var ano = fecha.getFullYear(); //obteniendo año
+          $("#form_dateRequest").val(mes+'-'+dia+'-'+ano) ;
         $("#form_dateRequest").inputmask({ "alias": "dd-mm-yyyy", "placeholder": "dd-mm-aaaa" });
         });
             function institucionEducativa(id) {

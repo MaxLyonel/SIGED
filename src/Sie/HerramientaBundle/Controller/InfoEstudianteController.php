@@ -2162,7 +2162,7 @@ class InfoEstudianteController extends Controller {
             INNER JOIN institucioneducativa AS ie ON ie.id = iec.institucioneducativa_id
             INNER JOIN gestion_tipo gt ON gt.id=iec.gestion_tipo_id
             WHERE ei.estudiante_id = '$idest' AND gt.gestion = '$gestion' AND (ei.cod_ue_procedencia_id IS NOT null)
-            ORDER BY ei.id ASC LIMIT 1 ");
+            ORDER BY ei.id DESC LIMIT 1 ");
         $query->execute();
         $valor= $query->fetch();
         return $this->render($this->session->get('pathSystem').':InfoEstudiante:descripcionTrasladoUEst.html.twig',array('valor'=>$valor));
