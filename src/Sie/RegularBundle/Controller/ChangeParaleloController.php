@@ -35,7 +35,7 @@ class ChangeParaleloController extends Controller {
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         
-         if (in_array($this->session->get('roluser'), array(8,10,7))){            
+         if (in_array($this->session->get('roluser'), array(9,8,10,7))){            
          }else{
           return $this->redirect($this->generateUrl('login'));  
          }        
@@ -63,6 +63,7 @@ class ChangeParaleloController extends Controller {
      * @return type the list of student and inscripion data
      */
     public function resultAction(Request $request) {
+        $sesion = $request->getSession();
         //get the value to send
         $rude = strtoupper(trim($request->get('rude')));
         //find the id of student
@@ -78,11 +79,15 @@ class ChangeParaleloController extends Controller {
         if ($objStudent) {
             //look for inscription data
             $oInscription = $em->getRepository('SieAppWebBundle:Estudiante')->getHistoryPerStudent($objStudent->getId(), $this->session->get('currentyear'));
+            
+            // dump($oInscription[0]['sie']);
+            // dump($sesion->get('ie_id'));
+            // dump($sesion->get('roluser'));
             if ($oInscription) {
+
                 //get paralelos
                 $this->oparalelos = $this->getParalelosStudent($oInscription[0]['nivelId'], $oInscription[0]['cicloId'], $oInscription[0]['gradoId'], $oInscription[0]['sie']);
                 $inscriptionForm = $this->createInscriptionForm($objStudent->getId(), $oInscription[0]['sie'], $oInscription, $rude)->createView();
-
                 //check if exists data
                 if (!$oInscription) {
                     $message = 'Estdiante no cuenta con Historial';
@@ -96,12 +101,19 @@ class ChangeParaleloController extends Controller {
                 $exist = false;
                 $oInscription = array();
             }
+            if ($oInscription[0]['sie']!=$sesion->get('ie_id') and $sesion->get('roluser') == 9){
+                $message = 'No tiene tuición, no puede realizar este cambio';
+                $this->addFlash('warningrein', $message);
+                $exist = false;
+                $oInscription = array();
+            }
+
         } else {
             $message = 'Código RUDE no existe';
             $this->addFlash('warningrein', $message);
             $exist = false;
         }
-
+        //die;
         return $this->render($this->session->get('pathSystem') . ':ChangeParalelo:result.html.twig', array(
                     'dataInscription' => $oInscription,
                     'form' => $inscriptionForm,
