@@ -274,10 +274,10 @@
     <script>
         $(function(){
           var fecha = new Date();
-          var mes = fecha.getMonth()+1; //obteniendo mes
           var dia = fecha.getDate(); //obteniendo dia
+          var mes = fecha.getMonth()+1; //obteniendo mes
           var ano = fecha.getFullYear(); //obteniendo año
-          $("#form_dateRequest").val(mes+'-'+dia+'-'+ano) ;
+          $("#form_dateRequest").val(dia+'-'+mes+'-'+ano) ;
 
         $("#form_dateRequest").inputmask({ "alias": "dd-mm-yyyy", "placeholder": "dd-mm-aaaa" });
         });
