@@ -62,7 +62,7 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>Estudiante</th>
+                    <th>Estudiante (2)</th>
                     <th>Se identifico que el estudiante esta inscrito en otra unidad educativa</th>
                 </tr>
             </thead>
@@ -124,11 +124,11 @@
                               {{form_widget(formInscription.observation)}}
                           </div>
                           #}
-                         
+
                       </div>
                       <div class="row">
                          <div class="col-md-6">
-                              <label>(*) Fecha Inscripción del la/el Estudiante (dd-mm-yyyy) </label>
+                              {# <label>(*) Fecha Inscripción del la/el Estudiante (dd-mm-yyyy) </label> #}
                               {{form_widget(formInscription.dateRequest)}}
                           </div>
                       </div>
@@ -273,6 +273,12 @@
 
     <script>
         $(function(){
+          var fecha = new Date();
+          var dia = fecha.getDate(); //obteniendo dia
+          var mes = fecha.getMonth()+1; //obteniendo mes
+          var ano = fecha.getFullYear(); //obteniendo año
+          $("#form_dateRequest").val(dia+'-'+mes+'-'+ano) ;
+
         $("#form_dateRequest").inputmask({ "alias": "dd-mm-yyyy", "placeholder": "dd-mm-aaaa" });
         });
             function institucionEducativa(id) {
@@ -462,10 +468,10 @@
             } else{
                 //iguals
             }           
+            var fecha = new Date();
+          var ano = fecha.getFullYear(); //obteniendo año
 
-
-
-          if(arrDate[2]!=year){
+          if(arrDate[2]!=ano){
              Swal.fire({
                 icon: 'error',
                 title: 'El año introducido no es el correcto!',
