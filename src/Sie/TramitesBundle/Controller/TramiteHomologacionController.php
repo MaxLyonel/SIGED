@@ -680,10 +680,10 @@ class TramiteHomologacionController extends Controller {
                     'fechaNacimiento' => $fechaNacimiento,
                 )); 
 
-                //if(count($objEstudiante) > 0){
-                //    $msg = 'El estudiante '.$newStudent['nombre'].' '.$newStudent['paterno'].' '.$newStudent['materno'].' ya existe, no puede registrarse nuevamente';
-                //    return $response->setData(array('estado' => false, 'msg' => $msg));
-                //}
+                if(count($objEstudiante) > 0){
+                    $msg = 'El estudiante '.$newStudent['nombre'].' '.$newStudent['paterno'].' '.$newStudent['materno'].' ya existe, no puede registrarse nuevamente';
+                    return $response->setData(array('estado' => false, 'msg' => $msg));
+                }
                 // $query = $em->getConnection()->prepare("select * from sp_reinicia_secuencia('estudiante');");
                 // $query->execute();
 
@@ -726,7 +726,8 @@ class TramiteHomologacionController extends Controller {
 
                 $em->persist($student);
                 //$em->flush();
-                $studentId = $student->getId();                 
+                $studentId = $student->getId();   
+                             
             } else {
                 $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('id' => $studentId));
                 if(count($student)>0){
