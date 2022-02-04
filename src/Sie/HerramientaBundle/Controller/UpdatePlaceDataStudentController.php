@@ -398,6 +398,7 @@ class UpdatePlaceDataStudentController extends Controller
             return $this->redirectToRoute('sie_estudiantes');
           }
 
+          
             //get the values to the build the forms
             $m1 = isset($form['mode1']) ? $form['mode1'] : 0;
             $m2 = isset($form['mode2']) ? $form['mode2'] : 0;

@@ -114,6 +114,11 @@ class RegistroConsolidacion
      */
     private $boletin;
 
+    /**
+     * @var integer
+     */
+    private $inscripcion;
+
 
     /**
      * Set tipo
@@ -596,5 +601,28 @@ class RegistroConsolidacion
     public function getBoletin()
     {
         return $this->boletin;
+    }
+
+      /**
+     * Set inscripcion
+     *
+     * @param integer $inscripcion
+     * @return RegistroConsolidacion
+     */
+    public function setInscripcion($inscripcion)
+    {
+        $this->inscripcion = $inscripcion;
+    
+        return $this;
+    }
+
+    /**
+     * Get inscripcion
+     *
+     * @return integer 
+     */
+    public function getInscripcion()
+    {
+        return $this->inscripcion;
     }
 }

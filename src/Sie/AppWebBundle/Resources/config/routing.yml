@@ -315,3 +315,7 @@ sie_app_web_inscriptionCelular:
 sie_app_web_plataformaMoodle:
     resource: "@SieAppWebBundle/Resources/config/routing/busquedaPlataformaMoodle.yml"
     prefix:   /busquedaPlataformaMoodle 
+# modulo para unificacion de Rudes en el proceso de Inscripcion gestion actual
+sie_app_web_rudeunificationinscription:
+    resource: "@SieAppWebBundle/Resources/config/routing/rudeUnificationInscription.yml"
+    prefix:   /sie/newunificationrudeinsc
