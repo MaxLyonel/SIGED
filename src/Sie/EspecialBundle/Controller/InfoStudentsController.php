@@ -136,7 +136,7 @@ class InfoStudentsController extends Controller {
       $paraleloname = $aInfoUeducativa['ueducativaInfo']['paralelo'];
       $nivelname = $aInfoUeducativa['ueducativaInfo']['nivel'];
       $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
-//dump($aInfoUeducativa);die;
+      
       //get db connexion
       $em = $this->getDoctrine()->getManager();
       $objArea = $em->getRepository('SieAppWebBundle:EspecialAreaTipo')->find($aInfoUeducativa['ueducativaInfoId']['areaEspecialId']);
@@ -184,8 +184,13 @@ class InfoStudentsController extends Controller {
       }else{
         $arrDataLibreta['calificaciones'] = false;
       }
-          $programasSinNotas = array(26,27); //No esta definido la forma de registro de las notas por tanto calificaciones=0
+       $programasSinNotas = array(26,27); //No esta definido la forma de registro de las notas por tanto calificaciones=0
       if(in_array($aInfoUeducativa['ueducativaInfoId']['programaId'], $programasSinNotas)  and $gestion>2020){
+          $arrDataLibreta['calificaciones'] = false;
+      }
+    //para visual y programas
+    //dump($nivel); dump($objArea->getId());
+      if(($nivel==410 or $nivel==411) and $gestion>2020 and $objArea->getId()==3){
           $arrDataLibreta['calificaciones'] = false;
       }
 
@@ -221,7 +226,7 @@ class InfoStudentsController extends Controller {
           }
         }
       }
-      
+     // dump($arrDataLibreta['calificaciones']);die;
       return $this->render($this->session->get('pathSystem') . ':InfoStudents:seeStudents.html.twig', array(
         'operativo_fin' => $operativo_fin,
         'objStudents' => $objStudents,
