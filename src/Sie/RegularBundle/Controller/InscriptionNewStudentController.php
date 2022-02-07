@@ -210,6 +210,17 @@ class InscriptionNewStudentController extends Controller {
                 return $this->redirectToRoute('inscription_new_student_index');
             }
 
+            if($this->session->get('roluser')==9){ //si es director verificar que el operativo no este cerrado
+              $objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                    'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
+                  ));
+                if($objRegConsolidation){
+                  $message = "No se puede realizar la inscripción debido a que la Unidad Educativa ya cerró su operativo de Inscripción";
+                  $this->addFlash('notiext', $message);
+                  return $this->redirectToRoute('inscription_new_student_index');
+                }
+            }
+
             $formInsc = $this->createFormInsc($student->getId(), $sw, $infoInscription, $form['gestion'], $form['codigoRude']);
             //everything is ok build the info
             return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:result.html.twig', array(

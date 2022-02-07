@@ -1748,7 +1748,7 @@ class InboxController extends Controller {
       $query = $em->getConnection()->prepare('select * from sp_validacion_regular_inscripcion_ig_web(:gestion, :sie, :valor)');
       $query->bindValue(':gestion', $form['gestion']);
       $query->bindValue(':sie', $form['sie']);      
-      $query->bindValue(':valor', 0);      
+      $query->bindValue(':valor','0');      
       $query->execute();
       $inconsistencia = $query->fetchAll();
       //dump($this->session->get('pathSystem'));die;
