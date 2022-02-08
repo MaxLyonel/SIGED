@@ -56,8 +56,11 @@ input[type=checkbox] + label{
 						<a href="javascript:seleccionar_todo()"><img width="30" src="{{asset('alert/checkbox1.png')}}" alt=""> Marcar todos</a> |
 						<a href="javascript:deseleccionar_todo()"><img width="30" src="{{asset('alert/checkbox2.jpg')}}" alt=""> Marcar ninguno</a>
 						<hr>
+						 <div class="alert alert-danger alert-dismissible" role="alert">
+                    		<strong>NOTA:</strong> Debe seleccionar a los estudiantes que pertenecerán a {{ nivel }} / {{ grado }} / {{ paralelo }}
+                		</div>
 							<div class="table-responsive listado-textos-registrados">
-								<table id="table_id" class=" table-striped table-condensed" style="width:100%;" border="1">
+								<table  class=" table-striped table-condensed" style="width:100%;" border="1">
 								  <thead>
 									<tr>
 									  <th>CODIGO RUDE</th>
@@ -99,7 +102,7 @@ input[type=checkbox] + label{
 			<link rel="stylesheet" href="{{asset('alert/themes/alertify.core.css')}}" />
 			<link rel="stylesheet" href="{{asset('alert/themes/alertify.default.css')}}" />
 			{% else %}
-				<div class="alert alert-danger"><span>ADVERTENCIA:</span> No existe informacion de estudinates para asignar...</div>
+				<div class="alert alert-danger"><span>ADVERTENCIA:</span> No existe informacion de estudiantes para asignar...</div>
 				<button  type="button" class="btn btn-danger btn-lg" data-dismiss="modal"> <i class="fa fa-close"></i> Cerrar</button>
 			{% endif %}            	
             </div>
@@ -133,6 +136,7 @@ function deseleccionar_todo(){
 $("#guardar_datos_asignacion_paralelo").submit(function(event) {
     event.preventDefault();
     document.getElementById('boton').disabled=true;
+	
     $.ajax({
         url:'{{path('guardar_datos_asignacion_paralelo')}}',
         type:'POST',
@@ -140,8 +144,9 @@ $("#guardar_datos_asignacion_paralelo").submit(function(event) {
         success:function(dat){  
         	var valores = eval(dat);
 			if (valores[0]===1) {
-				alertify.alert("<h3>Exitosamente guardados los datos</h3><b>.::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::.</b> ", function () {
-					$('#modal1').modal('hide')
+				alertify.alert("<h3>Se guardaron los datos Exitosamente </h3><b>.::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::.</b> ", function () {
+					$('#modal').modal('hide')
+                
 				});
 				alertify.success("Datos procesados...");
 			    // window.location=""

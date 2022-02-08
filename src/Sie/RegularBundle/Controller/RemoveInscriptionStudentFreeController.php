@@ -203,12 +203,13 @@ class RemoveInscriptionStudentFreeController extends Controller {
       $rolesAllowed = array(7,10);
       if(in_array($rolUser,$rolesAllowed)){
         // $arrEstados = array('4'=>'EFECTIVO', '9'=>'RETIRADO TRASLADO','5'=>'PROMOVIDO');
-        $arrEstados = array('4'=>'EFECTIVO', '5'=>'PROMOVIDO');
+       // $arrEstados = array('4'=>'EFECTIVO', '5'=>'PROMOVIDO');
+       $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO');
       }else{
         // $arrEstados = array( '10'=>'RETIRO ABANDONO',/*'6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO'*/);
         if($rolUser == 8)
           // $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO','5'=>'PROMOVIDO');
-          $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO','5'=>'PROMOVIDO');
+          $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO');
         else
           $arrEstados = array();
       }
