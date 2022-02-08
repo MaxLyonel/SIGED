@@ -738,9 +738,9 @@ class TextoEducativoController extends Controller
 
         $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array('gestionTipo'=>$gestion, 'institucioneducativa'=>$sie, 'nivelTipo'=>$nivel, 'gradoTipo'=>$grado, 'paraleloTipo'=>$paralelo ));
         $id_inst_curso=$entity->getId();
-
+        //dump($nivel, $grado, $id_inst_curso );die;
         $query = $em->getConnection()->prepare("create temporary table estudiantes_regular_seleccionables_".$sie."_".$nivel."_".$grado." as select * from sp_regular_listado_inscripcion_ig('".$gestion_a."','".$gestion."','".$sie."','".$nivel."','".$grado."','".$id_inst_curso."') order by paterno,materno,nombre");
-		$query->execute();
+		    $query->execute();
 
 
         $query1 = $em->getConnection()->prepare("select * from estudiantes_regular_seleccionables_".$sie."_".$nivel."_".$grado." ");
@@ -772,8 +772,8 @@ class TextoEducativoController extends Controller
         ));
     }
     public function guardar_datos_asignacion_paraleloAction(Request $request){
-    	$em = $this->getDoctrine()->getManager();
-    	$response = new JsonResponse();
+    	  $em = $this->getDoctrine()->getManager();
+    	  $response = new JsonResponse();
         $gradoid = $request->get('gradoid');
         $nivelid = $request->get('nivelid');
         $sie = $request->get('sie');
@@ -787,19 +787,43 @@ class TextoEducativoController extends Controller
 				// $datos = array();
 				for($i=0;$i<count($estudiante_id);$i++){	
 					// $datos[]=$estudiante_id[$i];
-					$estInscripcion = new EstudianteInscripcion();
-					$estInscripcion->setNumMatricula(0);
-	                $estInscripcion->setObservacionId(0);
-	                $estInscripcion->setObservacion(0);
-	                $estInscripcion->setFechaInscripcion(new \DateTime('now'));
-	                $estInscripcion->setApreciacionFinal('');
-	                $estInscripcion->setOperativoId(1);
-	                $estInscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
-	                $estInscripcion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudiante_id[$i]));
-	                $estInscripcion->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($id_inst_curso));
-	                $estInscripcion->setFechaRegistro(new \DateTime('now'));
-	                $em->persist($estInscripcion);
-                     $em->flush();
+
+          $inscriptionsGestionSelected = $em->createQueryBuilder()
+          ->select('ei.id as idInscripcion')
+          ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+          ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
+          ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+          ->leftjoin('SieAppWebBundle:Institucioneducativa', 'i', 'WITH', 'iec.institucioneducativa = i.id')
+          ->where('e.id = :idEstudiante')
+          ->andWhere('ei.estadomatriculaTipo = 4')
+          ->andWhere('iec.gestionTipo = :gestion')
+          ->andWhere('i.institucioneducativaTipo = :tipoue')
+          ->setParameter('idEstudiante', $estudiante_id[$i])
+          ->setParameter('gestion',  $gestion)
+          ->setParameter('tipoue', 1)
+          ->getQuery()
+          ->getResult();
+            // dump($inscriptionsGestionSelected); die;
+            //check if the student has more than one inscription
+            if(sizeof($inscriptionsGestionSelected)>0){
+                //already register
+               
+            }else{
+
+					      $estInscripcion = new EstudianteInscripcion();
+					      $estInscripcion->setNumMatricula(0);
+	              $estInscripcion->setObservacionId(0);
+	              $estInscripcion->setObservacion(0);
+	              $estInscripcion->setFechaInscripcion(new \DateTime('now'));
+	              $estInscripcion->setApreciacionFinal('');
+	              $estInscripcion->setOperativoId(1);
+	              $estInscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
+	              $estInscripcion->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->findOneById($estudiante_id[$i]));
+	              $estInscripcion->setInstitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($id_inst_curso));
+	              $estInscripcion->setFechaRegistro(new \DateTime('now'));
+	              $em->persist($estInscripcion);
+                $em->flush();
+              }
 				}	
 				// $dato_string=implode(",",$datos);
 				/*$query = $em->getConnection()->prepare("update estudiantes_regular_seleccionables_".$sie."_".$nivelid."_".$gradoid." set  es_seleccionado='t' where estudiante_id IN (".$dato_string.") ");
