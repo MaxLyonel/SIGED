@@ -470,12 +470,17 @@ class InscriptionIniPriTrueController extends Controller {
       }
 
       // validation if the ue is over 4 operativo
-      $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$form['gestionIns']);
-      if($operativo){
-        $message = 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada cerró su operativo de inscripción';
+      $objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+        'unidadEducativa' => $form['institucionEducativa'],  'gestion' => $form['gestionIns'])
+      );
+      
+      if($objRegConsolidation){
+        $message = 'No se puede realizar la inscripción debido a que la Unidad Educativa  ya cerro el operativo de Inscripción';
         $this->addFlash('idNoInscription', $message);
         return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
       }
+        //dump($objRegConsolidation);die;
+   
 
       //validation inscription in the same U.E
       $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($form['codigoRude'],$form['gestionIns']);
