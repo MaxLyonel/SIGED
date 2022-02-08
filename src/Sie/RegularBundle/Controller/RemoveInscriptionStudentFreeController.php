@@ -597,7 +597,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
           $this->addFlash('okchange', $message);
           $response = new JsonResponse();
           //check the tipo of matricula
-          if($form['estadoNew']==4){
+          if($form['estadoNew']==4444444){ //se aplico en proceso de inscripción no aplica notas
             return $this->render($this->session->get('pathSystem') . ':RemoveInscriptionStudentFree:setNotasChangeStatus.html.twig', array(
                       'setNotasForm'   => $this->setNotasForm($arrDataInfo['estInsId'])->createView(),
                       'idInscripcion'  => $arrDataInfo['estInsId'],
