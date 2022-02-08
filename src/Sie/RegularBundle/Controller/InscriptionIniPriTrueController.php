@@ -124,7 +124,6 @@ class InscriptionIniPriTrueController extends Controller {
         $data = array();
 
         $form = $request->get('form');
-      
         /**
          * add validation QA
          * @var [type]
@@ -175,7 +174,16 @@ class InscriptionIniPriTrueController extends Controller {
                       ->setParameter('tipoue', 1)
                       ->getQuery()
                       ->getResult();
-            // dump($inscriptionsGestionSelected);die;
+            // dump($inscriptionsGestionSelected);
+
+            //check if is in teh same UE
+            //if($this->session->get('ie_id')==$inscriptionsGestionSelected[0]['idInscripcion']){}
+            //check if the student has more than one inscription
+            if(sizeof($inscriptionsGestionSelected)==2){
+                $message = "El estudiante solo debe contar con una inscripción vigente en la presente Gestión, verifique el Historial";
+                $this->addFlash('notiext', $message);
+                return $this->redirect($this->generateUrl('inscription_ini_pri_rue_index'));
+            }
             // $inscriptionsGestionSelected = $this->getCurrentInscriptionsByGestoin($student->getCodigoRude(), $form['gestion']);
             //check if the student was Approved on the gestion selected
             if (sizeof($inscriptionsGestionSelected)>0) {
@@ -216,6 +224,8 @@ class InscriptionIniPriTrueController extends Controller {
             $this->addFlash('notiext', $message);
             return $this->redirectToRoute('inscription_ini_pri_rue_index');
         }
+
+       
     }
     /**
      * buil the Omitidos form
@@ -341,7 +351,6 @@ class InscriptionIniPriTrueController extends Controller {
         // }           
 
 
-
               $formOmitido = $formOmitido   ->add('save', 'button', array('label' => 'Verificar y Registrar', 'attr'=> array('class' => 'btn btn-success' , 'onclick'=>'checkInscription()')))
                 ->getForm();
 
@@ -462,15 +471,15 @@ class InscriptionIniPriTrueController extends Controller {
 
       // validation if the ue is over 4 operativo
       $operativo = $this->get('funciones')->obtenerOperativo($form['institucionEducativa'],$form['gestionIns']);
-      if($operativo >= 3){
-        $message = 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada ya se consolidaron todos los operativos';
+      if($operativo){
+        $message = 'No se puede realizar la inscripción debido a que para la Unidad Educativa seleccionada cerró su operativo de inscripción';
         $this->addFlash('idNoInscription', $message);
         return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
       }
 
       //validation inscription in the same U.E
       $objCurrentInscriptionStudent = $this->getCurrentInscriptionsByGestoinValida($form['codigoRude'],$form['gestionIns']);
-
+        
         if($objCurrentInscriptionStudent){
           if ($objCurrentInscriptionStudent[0]['sie']==$form['institucionEducativa']){
             $message = 'Estudiante ya cuenta con inscripción en la misma Unidad Educativa, realize el cambio de estado';
