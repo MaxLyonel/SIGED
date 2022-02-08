@@ -110,6 +110,61 @@
             {% endfor %}
         </div>
     </div>
+
+     <div class="row">
+        <div class="col-lg-12">
+            <div class="portlet portlet-green">
+                <div class="portlet-heading">
+                    <div class="portlet-title">
+                        <h4>CREAR NUEVO CURSO</h4>
+                    </div>
+                    <div class="portlet-widgets">
+                        <a data-toggle="collapse" data-parent="#accordion" href="basic-form-elements.html#panelinstitucion"><i class="fa fa-chevron-down"></i></a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div id="panelinstitucion2" class="panel-collapse collapse in">
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            
+                            <div style="background: #EEE; padding:3px 10px 10px 10px">                               
+                                {{form_start(formNuevo,{'attr':{'id':'formCursos','onsubmit':'return validateFormNuevoCurso()'} })}}
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-6">
+                                        {{form_label(formNuevo.nuevoTurno)}}
+                                        {{form_widget(formNuevo.nuevoTurno)}}
+                                    </div>
+                                    <div class="col-lg-3 col-md-6">
+                                        {{form_label(formNuevo.nuevoNivel)}}
+                                        {{form_widget(formNuevo.nuevoNivel)}}
+                                    </div>
+                                    <div class="col-lg-3 col-md-6">
+                                        {{form_label(formNuevo.nuevoGrado)}}
+                                        {{form_widget(formNuevo.nuevoGrado)}}
+                                    </div>
+                                    <div class="col-lg-3 col-md-6">
+                                        {{form_label(formNuevo.nuevoParalelo)}}
+                                        {{form_widget(formNuevo.nuevoParalelo)}}
+                                    </div>
+                                    <div class="col-lg-4 col-lg-offset-4" style="text-align:center;">
+                                        <br>                                       
+                                        {{form_widget(formNuevo.crear)}}
+                                    </div>
+                                </div>
+                                {{form_end(formNuevo)}}
+                            </div>
+
+                             <div id="divNuevoCurso">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
     <div class="row">
         <div class="col-lg-12">
             <div class="portlet portlet-blue">
@@ -169,12 +224,19 @@
                                 </div>
                                 {{form_end(form)}}
                             </div>
+
+                           
+
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    
+   
 
     <div class="row">
         <div class="col-lg-12">
@@ -379,6 +441,62 @@
                         return false;
                     }
 
+                    var xhr2;
+                    function validateFormNuevoCurso() {
+                        var turno = $('#form_nuevoTurno').val();
+                        var nivel = $('#form_nuevoNivel').val();
+                        var grado = $('#form_nuevoGrado').val();
+                        var paralelo = $('#form_nuevoParalelo').val();
+                        if (turno == '') {
+                            alert('Debe seleccionar un turno');
+                            return false;
+                        }
+                        if (nivel == '') {
+                            alert('Debe seleccionar un nivel');
+                            return false;
+                        }
+                        if (grado == '') {
+                            alert('Debe seleccionar un grado');
+                            return false;
+                        }
+                        if (paralelo == '') {
+                            alert('Debe seleccionar un paralelo');
+                            return false;
+                        }
+
+                        if (xhr2 && xhr2.readyState != 4) {
+                            xhr2.abort();
+                        }
+
+                        var formData = $('#formCursos').serialize();
+                        $.ajax({
+                            type: 'post',
+                            url: Routing.generate('areas_listar_areas_nuevo_curso'),
+                            data: formData,
+                            beforeSend: function () {
+                                $("#divNuevoCurso").empty();
+                                $("#divNuevoCurso").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                            },
+                            success: function (data) {
+                                if(data.exito == 1){
+                                    $("#divNuevoCurso").empty();
+                                    $("#divNuevoCurso").append('<div class="alert alert-success"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso se ha creado con exito.</div>');
+                                }else{
+                                    $("#divNuevoCurso").empty();
+                                    $("#divNuevoCurso").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no ha podido ser creado.</div>');    
+                                }
+                                
+                                //$(".tooltips").tooltip();
+                            },
+                            error: function (data) {
+                                $("#divNuevoCurso").empty();
+                                $("#divNuevoCurso").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no ha podido ser creado</div>');
+                            }
+                        });
+                        return false;
+                    }
+
+
                     function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, divResultado) {
                         $('#nivelModal').empty();
                         $('#nivelModal').append((nivel));
@@ -486,6 +604,8 @@
 
                     var xhr6;
                     var deleteArea = function(idco, asignatura){
+
+                                               
                         if(confirm('Esta seguro(a) de eliminar el área de '+ asignatura +'?\nTenga en cuenta que tambien se eliminaran las calificaciones de los estudiantes.')){
                             $.ajax({
                                 type: 'get',
