@@ -441,8 +441,9 @@
                         return false;
                     }
 
-                    var xhr2;
+                    var xhr2;                   
                     function validateFormNuevoCurso() {
+                      
                         var turno = $('#form_nuevoTurno').val();
                         var nivel = $('#form_nuevoNivel').val();
                         var grado = $('#form_nuevoGrado').val();
@@ -469,36 +470,43 @@
                         }
 
                         var formData = $('#formCursos').serialize();
-                        $.ajax({
-                            type: 'post',
-                            url: Routing.generate('areas_listar_areas_nuevo_curso'),
-                            data: formData,
-                            beforeSend: function () {
-                                $("#divNuevoCurso").empty();
-                                $("#divNuevoCurso").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
-                            },
-                            success: function (data) {
-                                if(data.exito == 1){
+                         if(confirm('¿Esta seguro de que desea crear el curso?\nPresione aceptar para confirmar.')){
+                            $.ajax({
+                                type: 'post',
+                                url: Routing.generate('areas_listar_areas_nuevo_curso'),
+                                data: formData,
+                                beforeSend: function () {
                                     $("#divNuevoCurso").empty();
-                                    $("#divNuevoCurso").append('<div class="alert alert-success"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso se ha creado con exito.</div>');
-                                }else{
+                                    $("#divNuevoCurso").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                                },
+                                success: function (data) {
+                                    if(data.exito == 1){
+                                        $("#divNuevoCurso").empty();
+                                        $("#divNuevoCurso").append('<div class="alert alert-success"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso se ha creado con exito.</div>');
+                                    }else{
+                                        $("#divNuevoCurso").empty();
+                                        $("#divNuevoCurso").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no ha podido ser creado.</div>');    
+                                    }
+                                    
+                                    //$(".tooltips").tooltip();
+                                },
+                                error: function (data) {
                                     $("#divNuevoCurso").empty();
-                                    $("#divNuevoCurso").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no ha podido ser creado.</div>');    
+                                    $("#divNuevoCurso").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no ha podido ser creado</div>');
                                 }
-                                
-                                //$(".tooltips").tooltip();
-                            },
-                            error: function (data) {
-                                $("#divNuevoCurso").empty();
-                                $("#divNuevoCurso").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> El curso no ha podido ser creado</div>');
-                            }
-                        });
-                        return false;
+                            });
+                        }        
+
+                        return false;        
+                        
                     }
 
-
-                    function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, divResultado) {
-                        $('#nivelModal').empty();
+                    /*
+                    dcastillo, se ha aumentado parametros, para la creacion de la oferta
+                    */
+                    function mostrarAreas(nivel, grado, paralelo, idInstitucionCurso, idNivel, divResultado,institucioneducativa,gestionTipo,turnoTipo,nivelTipo,gradoTipo,paraleloTipo) {                        
+                        
+                        /*$('#nivelModal').empty();
                         $('#nivelModal').append((nivel));
                         $('#gradoModal').empty();
                         $('#gradoModal').append(grado);
@@ -510,21 +518,32 @@
                         $('#idInstitucionCurso').empty();
                         $('#idInstitucionCurso').val(idInstitucionCurso);
                         $('#idNivel').empty();
-                        $('#idNivel').val(idNivel);
+                        $('#idNivel').val(idNivel);     */
 
-                        $.ajax({
-                            type: 'get',
-                            url: Routing.generate('areas_listar_areas_nivel', {'idNivel': idNivel, 'idCurso': idInstitucionCurso}),
-                            beforeSend: function () {
-                                $("#areasModal").empty();
-                                $("#areasModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
-                            },
-                            success: function (data) {
-                                $("#areasModal").empty();
-                                $("#areasModal").append(data);
-                            }
-                        });
-                        $('#newModal').modal('show');
+                        if(confirm('¿Esta seguro de que desea crear Areas?\nPresione aceptar para confirmar.')){                  
+                            $.ajax({
+                                type: 'get',
+                                url: Routing.generate('areas_listar_areas_nivel', {'idNivel': idNivel, 'idCurso': idInstitucionCurso, 'institucioneducativa':institucioneducativa,'gestionTipo':gestionTipo, 'turnoTipo': turnoTipo,'nivelTipo':nivelTipo,'gradoTipo':gradoTipo,'paraleloTipo':paraleloTipo}),
+                                beforeSend: function () {
+                                    $("body").css("cursor", "progress");
+
+                                    /*$("#areasModal").empty();
+                                    $("#areasModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");*/
+                                },
+                                success: function (data) {
+                                    /*$("#areasModal").empty();
+                                    $("#areasModal").append(data);*/
+                                    $("body").css("cursor", "default");
+                                    if(data.exito == 1){
+                                         alert('Las Areas han sido asignadas con exito !!');
+                                    }else{
+                                         alert('No se han podido registrar Areas para este curso !! \nPosiblemente ya existen, por favor revisar.');
+                                    }
+                                   
+                                }
+                            });
+                            //$('#newModal').modal('show');
+                        }
                     }
 
                     function marcarTodasAreas() {

@@ -457,11 +457,18 @@ class AreasController extends Controller {
         $areasCurso = $this->get('areas')->getAreas($idCurso);
         $operativo = $this->get('funciones')->obtenerOperativo($form['idInstitucion'],$form['idGestion']);
 
+        //dacastillo: se adicionan parametros enviados
         return $this->render('SieRegularBundle:Areas:listaAreasCurso.html.twig', array(
             'areas' => $areasCurso,
             'curso' => $curso,
             'mensaje' => $mensaje,
-            'operativo'=>$operativo
+            'operativo'=>$operativo,
+            'institucioneducativa' => $form['idInstitucion'],
+            'gestionTipo' => $form['idGestion'],
+            'turnoTipo' => $form['turno'],
+            'nivelTipo' => $form['nivel'],
+            'gradoTipo' => $form['grado'],
+            'paraleloTipo' => $form['paralelo']
         ));
     }
 
@@ -473,12 +480,62 @@ class AreasController extends Controller {
      * ventana modal
      */
 
-    public function lista_areas_nivelAction($idNivel, $idCurso) {
+    public function lista_areas_nivelAction($idNivel, $idCurso, $institucioneducativa,$gestionTipo,$turnoTipo,$nivelTipo,$gradoTipo,$paraleloTipo) {        
+                    
+            /* inicio modificacion dcastillo 
+            necesito 
+            igestion character varying,  
+            icodue character varying, 
+            iturno character varying, 
+            inivel character varying, *
+            igrado character varying, 
+            iparalelo character varying
+            select sp_crea_curso_oferta('2022', '80730274', '2', '12', '1','3')
+            */
+
+            $em = $this->getDoctrine()->getManager();      
+            $query = $em->getConnection()->prepare("select * FROM sp_crea_curso_oferta('$gestionTipo', '$institucioneducativa', '$turnoTipo', '$nivelTipo', '$gradoTipo','$paraleloTipo') ");
+            $query->execute();
+            $valor= $query->fetchAll();
+            $res= $valor[0]['sp_crea_curso_oferta'];
+            /* fin modificacion */
+
+            $res= $valor[0]['sp_crea_curso_oferta'];
+            $response = new JsonResponse();
+            return $response->setData(array('exito'=>$res,'mensaje'=>''));
+    }
+
+    /**
+     * dcastillo
+     * esto se deja por el momento
+     */
+    public function lista_areas_nivelActionOLD($idNivel, $idCurso, $institucioneducativa,$gestionTipo,$turnoTipo,$nivelTipo,$gradoTipo,$paraleloTipo) {        
         try {
+            dump('comensando'); 
+            /* inicio modificacion dcastillo 
+            necesito 
+            igestion character varying,  
+            icodue character varying, 
+            iturno character varying, 
+            inivel character varying, *
+            igrado character varying, 
+            iparalelo character varying
+            select sp_crea_curso_oferta('2022', '80730274', '2', '12', '1','3')
+            */
+
+            $em = $this->getDoctrine()->getManager();      
+            $query = $em->getConnection()->prepare("select * FROM sp_crea_curso_oferta('$gestionTipo', '$institucioneducativa', '$turnoTipo', '$nivelTipo', '$gradoTipo','$paraleloTipo') ");
+            $query->execute();
+            $valor= $query->fetchAll();
+            $res= $valor[0]['sp_crea_curso_oferta'];
+            //var_dump($res);die;
+            /* fin modificacion */
+            
+            //dump('fin'); die;
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
             $this->session = new Session();
-
+            
             $areas = $this->get('areas')->getAreas($idCurso);
             $idsAsignaturas = $areas['asignaturas'];
 
@@ -491,7 +548,7 @@ class AreasController extends Controller {
             ->getResult();
             
             $areasCurso = $areas['cursoOferta'];
-
+                
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($idCurso);
             
             $tmpAsignaturaHistorico = $em->getRepository('SieAppWebBundle:TmpAsignaturaHistorico')->findBy(array(
