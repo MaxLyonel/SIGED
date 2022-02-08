@@ -179,7 +179,7 @@ class InscriptionIniPriTrueController extends Controller {
             //check if is in teh same UE
             //if($this->session->get('ie_id')==$inscriptionsGestionSelected[0]['idInscripcion']){}
             //check if the student has more than one inscription
-            if(sizeof($inscriptionsGestionSelected)==2){
+            if(sizeof($inscriptionsGestionSelected)>=2){
                 $message = "El estudiante solo debe contar con una inscripción vigente en la presente Gestión, verifique el Historial";
                 $this->addFlash('notiext', $message);
                 return $this->redirect($this->generateUrl('inscription_ini_pri_rue_index'));
