@@ -144,6 +144,8 @@ class AreasController extends Controller {
             for ($i = 0; $i < count($turnos); $i++) {
                 $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
             }
+
+
             /**
              * Creamos el formulario de busqueda de turno nivel grado y paralelo
              */
@@ -156,6 +158,66 @@ class AreasController extends Controller {
                     ->add('paralelo', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'validateForm()')))
                     ->add('buscar', 'submit', array('label' => 'Buscar Curso', 'attr' => array('class' => 'btn btn-info btn-block')))
                     ->getForm();
+            
+            //dcastillo formNuevo
+            // turnos menos 10,11
+            $RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            //dump($result); die;
+            $turnos = $result;
+            $turnosArray = array();
+            for ($i = 0; $i < count($turnos); $i++) {
+                $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+            }
+            // niveles solo 11,12,13
+            $RAW_QUERY = 'SELECT * FROM nivel_tipo where id  in (11,12,13);';            
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();                            
+            $niveles = $result;
+            $nivelesArray = array();
+            for ($i = 0; $i < count($niveles); $i++) {
+                $nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
+            }
+            // grados menos 7,8,14,15,16,17,41,42,43,99
+            $RAW_QUERY = 'SELECT * FROM grado_tipo where id in (1,2,3,4,5,6);';            
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();                            
+            $grados = $result;
+            $gradosArray = array();
+            for ($i = 0; $i < count($grados); $i++) {
+                $gradosArray[$grados[$i]['id']] = $grados[$i]['grado'];
+            }
+            // paralelos de la A - Z
+            $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';            
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();                            
+            $paralelos = $result;
+            $paralelosArray = array();
+            for ($i = 0; $i < count($paralelos); $i++) {
+                $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+            }
+
+
+
+
+            $formNuevo = $this->createFormBuilder()
+            ->add('idInstitucion', 'hidden', array('data' => $institucion))
+            ->add('idGestion', 'hidden', array('data' => $gestion))
+            ->add('nuevoTurno', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $turnosArray, 'attr' => array('class' => 'form-control')))            
+            ->add('nuevoNivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $nivelesArray, 'attr' => array('class' => 'form-control')))            
+            //->add('nivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarGrados()')))
+            //->add('grado', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarParalelos()')))
+            ->add('nuevoGrado', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $gradosArray, 'attr' => array('class' => 'form-control')))            
+            ->add('nuevoParalelo', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $paralelosArray, 'attr' => array('class' => 'form-control')))            
+            //->add('paralelo', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'validateForm()')))
+            ->add('crear', 'submit', array('label' => 'Crear Curso', 'attr' => array('class' => 'btn btn-success btn-block')))
+            ->getForm();
+
             /*
              * obtenemos los datos de la unidad educativa
              */
@@ -169,9 +231,9 @@ class AreasController extends Controller {
             $em->getConnection()->commit();
 
 
-
+            //dcastillo aqui llama a esa pantalla donde se van a crear los cursos
             return $this->render('SieRegularBundle:Areas:index.html.twig', array(
-                        'turnos' => $turnosArray, 'institucion' => $institucion, 'gestion' => $gestion, 'tipoUE'=>$tipoUE , 'form' => $form->createView()
+                        'turnos' => $turnosArray, 'institucion' => $institucion, 'gestion' => $gestion, 'tipoUE'=>$tipoUE , 'form' => $form->createView(), 'formNuevo' => $formNuevo->createView()
             ));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -402,6 +464,9 @@ class AreasController extends Controller {
             'operativo'=>$operativo
         ));
     }
+
+
+
 
     /*
      * Lista de areas segun el nivel
@@ -708,5 +773,54 @@ class AreasController extends Controller {
         }
         return $lit;
     }
+
+    /*
+    dcastillo crear nuevos cursos
+    */
+    public function crear_areas_cursoAction(Request $request) {
+       
+        $form = $request->get('form');
+        
+        $turno_id = $form['nuevoTurno'];
+        $nivel_id = $form['nuevoNivel'];
+        $grado_id = $form['nuevoGrado'];
+        $paralelo_id = $form['nuevoParalelo'];
+        
+        $institucion_id = $form['idInstitucion'];
+        $gestion_id = $form['idGestion'];
+
+         /*dump($institucion_id);
+        dump($gestion_id);
+        
+        die;*/
+
+        /*
+        select sp_crea_nuevo_curso('2022', '80730274', '2', '12', '1','4')
+        devuelte 0 si ya tiene curso_oferta y 1 si registro correcamente
+        (igestion character varying,  
+        icodue character varying, 
+        iturno character varying, 
+        inivel character varying, 
+        igrado character varying, 
+        iparalelo character varying)
+        */
+
+        $em = $this->getDoctrine()->getManager();      
+        $query = $em->getConnection()->prepare("select * FROM sp_crea_nuevo_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id') ");
+        $query->execute();
+        $valor= $query->fetchAll();
+        //dump($valor[0]['sp_crea_nuevo_curso']); die;
+        
+        /*$RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
+        $statement = $em->getConnection()->prepare($RAW_QUERY);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        dump($result); die;*/
+
+
+        $res= $valor[0]['sp_crea_nuevo_curso'];
+        $response = new JsonResponse();
+        return $response->setData(array('exito'=>$res,'mensaje'=>''));
+    }   
 
 }
