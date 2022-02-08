@@ -24,9 +24,9 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if co.idAsignatura in areas.posiblesEliminar %}
+                        {#  {% if co.idAsignatura in areas.posiblesEliminar %}
                             <button onclick="deleteArea({{co.id}},new String('{{co.asignatura}}'))" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Delete"><i class="fa fa-times"></i></button>            
-                        {% endif %}
+                        {% endif %}  #} 
                     </td>
                 </tr>
             {% endfor %}
