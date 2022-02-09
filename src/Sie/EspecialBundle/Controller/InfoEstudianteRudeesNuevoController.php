@@ -218,7 +218,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 	 * DATOS DE LA O EL ESTUDIANTE
 	 */
 	private function createFormEstudiante($rude, $e)
-	{
+	{	
 		$em = $this->getDoctrine()->getManager();
 		$pais = $e->getPaisTipo()->getId();
 		if($pais == 1){
@@ -249,7 +249,19 @@ class InfoEstudianteRudeesNuevoController extends Controller
 				$provincias[$p->getid()] = $p->getlugar();
 			}
 		}
-
+		//verificacion si el estudiante tiene CI
+		$estudianteInscripcion = $em->getRepository('SieAppWebBundle:estudianteInscripcion')->findById(array($rude->getEstudianteInscripcion()->getId()));
+		$estudianteCi=$estudianteInscripcion[0]->getEstudiante()->getCarnetIdentidad();
+		$estudiantePasaporte=$estudianteInscripcion[0]->getEstudiante()->getPasaporte();
+		
+		$tieneCi = 0;
+		$tienePasaporte=0;
+		if($estudianteCi!=''){
+			$tieneCi=1;
+		}
+		if($estudiantePasaporte!=''){
+			$tienePasaporte=1;
+		}
 		// DISCAPACIDAD DEL ESTUDIANTE 
 		
 		$discapacidadEstudiante = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->findOneBy(array('rude'=>$rude->getId()));
@@ -348,6 +360,8 @@ class InfoEstudianteRudeesNuevoController extends Controller
 						))
 					->add('departamentoNacimiento', 'hidden', array('data'=>$departamentoNacimiento->getLugar()))
 					->add('provinciaNacimiento', 'hidden', array('data'=>$provinciaNacimiento->getLugar()))
+					->add('tieneCi', 'hidden', array('data'=>$tieneCi))
+					->add('tienePasaporte', 'hidden', array('data'=>$tienePasaporte))
 					->getForm();
 
 		return $form;
@@ -392,9 +406,12 @@ class InfoEstudianteRudeesNuevoController extends Controller
 	{
 	
 		$em = $this->getDoctrine()->getManager();
-		$form = $request->get('form');
+		$form = $request->get('form'); //dump($form);die; dump($form['tieneDiscapacidad']);die;
 		$estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['estudianteId']);		
 		$rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['rudeId']);
+		if($form['discapacidadId']=='nuevo'){
+			$tieneDiscapacidad=0;
+		}else{$tieneDiscapacidad = 1; }
 		//Se guardan los datos de Cert de nacimiento		
 		$estudiante->setOficialia($form['oficialia']);
 		$estudiante->setLibro($form['libro']);
@@ -402,13 +419,14 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		$estudiante->setFolio($form['folio']);
 		
 		
-		$rude->setTieneDiscapacidad($form['tieneDiscapacidad']);
+		$rude->setTieneDiscapacidad($tieneDiscapacidad);
 		$carnetIbc=empty($form['carnetIbc'])?0:1;
 		$rude->setTieneCarnetDiscapacidad($carnetIbc);
+		$rude->setTieneCi($form['tieneCi']);
 		
 		$em->persist($estudiante);
 		$em->flush();
-		//dump($form);die;
+		
 		// DISCAPACIDADES
 		if($form['tieneDiscapacidad'] == true){
 			// Si tiene discapacidad lo registramos o Actualizamos			
@@ -1975,7 +1993,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		$form = $request->get('form');//dump($form);die;
 		$em = $this->getDoctrine()->getManager();
 		$rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['id']);
-
+		//dump($rude);die;
 		//4.1.1
 		// ELIMINAMOS LOS DATOS DEL ORIGEN DE LA DISCAPACIDAD
 		$discapacidadOrigen_rude = $em->getRepository('SieAppWebBundle:RudeDiscapcidadOrigen')->findOneBy(array('rude'=>$rude->getId()));
@@ -1991,8 +2009,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		$discapacidadOrigen_new->setFechaModificacion(new \DateTime('now'));
 		$discapacidadOrigen_new->setDiscapacidadOrigenTipo($em->getRepository('SieAppWebBundle:DiscapacidadOrigenTipo')->find($form['discapacidadOrigen']));
 		$em->persist($discapacidadOrigen_new);
-		$em->flush();
-
+		$em->flush();		
 		//4.1.2
 		$rude->setEsEducacionEnCasa($form['esEducacionEnCasa']);
 		//Registramos el tipo de discapacidad 
@@ -2008,7 +2025,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		
 		// CREAMOS LOS DATOS DEL GRADO DE LA DISCAPACIDAD 
 		//dump($form);die;
-		$discapacidadGrado_new = new RudeDiscapacidadGrado();// dump($form['discapacidad'],$form['gradoDiscapacidad']);die;
+		$discapacidadGrado_new = new RudeDiscapacidadGrado();
 		$discapacidadGrado_new->setRude($rude);
 		$discapacidadGrado_new->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
 		if($form['discapacidad']==2||$form['discapacidad']==5||$form['discapacidad']==4){//INTELECTUAL FISICO/MOTORA MULTIPLE
@@ -2032,18 +2049,17 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$em->remove($i);
 			$em->flush();
 		}
-		// CREAMOS LOS DATOS DE LA DIFICULTAD DE APRENDIZAJE
+		// CREAMOS LOS DATOS DE LA DIFICULTAD DE APRENDIZAJE		
 		foreach($form['dificultadAprendizaje'] as $i)
 		{
 			$dificultadAprendizaje_new = new RudeDificultadAprendizaje();
-			$dificultadAprendizaje_new->setRude($rude);
-			$dificultadAprendizaje_new->setDificultadAprendizajeTipo($em->getRepository('SieAppWebBundle:DificultadAprendizajeTipo')->find($i));
+			$dificultadAprendizaje_new->setRude($rude);		
+			$dificultadAprendizaje_new->setDificultadAprendizajeTipo($em->getRepository('SieAppWebBundle:DificultadAprendizajeTipo')->find($i));		
 			$dificultadAprendizaje_new->setFechaRegistro(new \DateTime('now'));
 			$dificultadAprendizaje_new->setFechaModificacion(new \DateTime('now'));
 			$em->persist($dificultadAprendizaje_new);
 			$em->flush();
-		}
-		
+		}	
 		//4.3
 		// ELIMINAMOS LOS DATOS DE TALENTO EXTRAORDINARIO
 		$talentoextraordinario_rude = $em->getRepository('SieAppWebBundle:RudeTalentoExtraordinario')->findOneBy(array('rude'=>$rude->getId()));
@@ -2071,17 +2087,22 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		$em->persist($talentoextraordinario_new);
 		$em->flush();
 		
+		$estrategiaAtencionIntegral_new = new RudeEstrategiaAtencionIntegral();		
 		foreach($form['estrategiaAtencionIntegral'] as $i)
 		{
 			$estrategiaAtencionIntegral_new = new RudeEstrategiaAtencionIntegral();
 			$estrategiaAtencionIntegral_new->setRude($rude);
 			$estrategiaAtencionIntegral_new->setEstrategiaAtencionIntegralTipo($em->getRepository('SieAppWebBundle:EstrategiaAtencionIntegralTipo')->find($i));
+			if($i===99)
+			{ //pendiente
+				$dificultadAprendizaje_new->setEstrategiaOtro($form['estrategiaOtro']);
+			}			
 			$estrategiaAtencionIntegral_new->setFechaRegistro(new \DateTime('now'));
 			$estrategiaAtencionIntegral_new->setFechaModificacion(new \DateTime('now'));
 			$em->persist($estrategiaAtencionIntegral_new);
 			$em->flush();
 		}
-	
+		
 		//4.4
 		// ELIMINAMOS LOS SERVICIOS
 		$eliminarServicios = $em->createQueryBuilder()

@@ -303,6 +303,8 @@
                                         {{ form_widget(formEstudiante.rudeId) }}
                                         {{ form_widget(formEstudiante.estudianteId) }}
                                         {{ form_widget(formEstudiante.discapacidadId) }}
+                                        {{ form_widget(formEstudiante.tieneCi) }}
+                                        {{ form_widget(formEstudiante.tienePasaporte) }}
                                         <div class="row">
                                             <div class="col-md-6 col-sm-6">
                                                 <p><strong>1.1 APELLIDO(S) Y NOMBRE(S)</strong></p>
@@ -456,9 +458,9 @@
                                             </div>
                                             <div class="col-md-6 col-sm-6">
                                                 <div id="form_tieneCertificadoNacimiento" class="radioNacimiento">
-                                                    <input type="radio" id="form_tieneDiscapacidad_0" name="form[tieneDiscapacidad]" required="required" value="1" checked="checked"  >
-                                                    <label for="form_tieneDiscapacidad_0" class="required">Si</label>
-                                                    <input type="radio" id="form_TieneNacimiento_no" name="form[tieneDiscapacidad]" required="required" value="0" >
+                                                    <input type="radio" id="form_tieneNacimiento_0" name="form[tieneNacimiento]" required="required" value="1" checked="checked"  >
+                                                    <label for="form_tieneNacimiento_0" class="required">Si</label>
+                                                    <input type="radio" id="form_TieneNacimiento_no" name="form[tieneNacimiento]" required="required" value="0" >
                                                     <label for="form_tieneDiscapacidad_1" class="required">No</label>
                                                 </div>
                                                 <div id="secNacimiento" >
