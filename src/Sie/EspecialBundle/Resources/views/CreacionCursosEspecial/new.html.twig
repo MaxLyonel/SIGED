@@ -411,9 +411,10 @@
             }
             if(area == 4){
                 $("#divFisicoMotor").show();
-                $(".fisicoMotor").attr('required', true);
-                $("#form_educacionCasa").prop('checked', true);
-                $("#form_educacionCasa").prop('disabled', true);
+                $(".fisicoMotor").attr('required', false);
+                //$(".fisicoMotor").removeAttr('required');
+                $("#form_educacionCasa").prop('checked', false);
+                $("#form_educacionCasa").prop('disabled', false);
             }else{
                 $("#divFisicoMotor").hide();
                 $(".fisicoMotor").removeAttr('required');

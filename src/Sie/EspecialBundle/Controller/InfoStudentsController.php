@@ -335,7 +335,11 @@ class InfoStudentsController extends Controller {
             ));
         }
       }
-      
+      $listaprogramas = array(7,8,9,10,11,14,15,16);
+      if($dataUe['requestUser']['gestion'] >= 2022){
+        $listaprogramas = array(7,8,25,29,26,12);
+      }
+     
       if($dataUe['ueducativaInfoId']['areaEspecialId'] == 2 and $dataUe['ueducativaInfoId']['programaId'] == 12) {
         $inscriptionvisual = $em->getRepository('SieAppWebBundle:EstudianteInscripcion');
         $query = $inscriptionvisual->createQueryBuilder('ei')
@@ -350,7 +354,7 @@ class InfoStudentsController extends Controller {
           ->setParameter('id', $objStudent->getId())
           ->setParameter('gestion', $dataUe['requestUser']['gestion'])
           ->setParameter('mat', array(4,79,80))
-          ->setParameter('prog', array(7,8,9,10,11,14,15,16))
+          ->setParameter('prog', $listaprogramas)
           ->setParameter('nivel', 405)
           ->getQuery();
 

@@ -405,17 +405,18 @@ class CreacionCursosEspecialController extends Controller {
                  */
 
                 $lugar = "";
-                //dump($form);die;
+                //dump($form['educacionCasa']);die;
                 if ((isset($form['educacionCasa']) and ($form['educacionCasa'] == 1 or $form['educacionCasa']==true)) or $form['area'] == 4 ){
                     if(isset($form['multiple'])){
                         $lugar="EDUCACION SOCIOCOMUNITARIA EN CASA" . '-' . $form['multiple'];
                     }elseif(isset($form['fisicoMotor']) and $form['fisicoMotor'] != 'Otro'){
                         $lugar="EDUCACION SOCIOCOMUNITARIA EN CASA" . '-' . $form['fisicoMotor'];
+                    }elseif(!isset($form['fisicoMotor']) and !isset($form['educacionCasa'])){
+                         $lugar="";   
                     }else {
                         $lugar="EDUCACION SOCIOCOMUNITARIA EN CASA";
-                    }
-                }   
-                
+                    }                    
+                }
                 if (isset($form['multiple']) && $form['area'] == 5 && !isset($form['educacionCasa'])){
                         $lugar=$form['multiple'];
                 }
