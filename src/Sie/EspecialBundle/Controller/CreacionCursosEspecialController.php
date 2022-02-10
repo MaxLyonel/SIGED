@@ -595,7 +595,7 @@ class CreacionCursosEspecialController extends Controller {
                 if($modalidad == 1){
                     $nivelesArray = array(410,411);
                 }else{
-                    $nivelesArray = array(99);
+                    $nivelesArray = array(410);
                 }
                 
             }
@@ -651,7 +651,7 @@ class CreacionCursosEspecialController extends Controller {
         return $response->setData(array('niveles' => $nivelesArray));
     }
 
-    public function listarGradosAction($nivel, $area) { 
+    public function listarGradosAction($nivel, $area) {//  dump($nivel, $area);die;
 
         $this->session = new Session();
 
@@ -688,7 +688,8 @@ class CreacionCursosEspecialController extends Controller {
         }
         elseif ($nivel == "407"  ) {
             $grados = array(41,42,43);
-        } else  {
+        }        
+        else  {
             $grados = array(99);
         }
         
@@ -770,7 +771,8 @@ class CreacionCursosEspecialController extends Controller {
                 }else{
                     $servicios = array(20);
                 }
-            }//array(1,2,3,4,5,20)
+            }
+            //array(1,2,3,4,5,20)
         }
         elseif ($area == "2" and $nivel == "410" and  $grado == "99" ) {
             if($modalidad == 1){
