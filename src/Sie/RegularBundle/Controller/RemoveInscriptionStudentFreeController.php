@@ -203,12 +203,13 @@ class RemoveInscriptionStudentFreeController extends Controller {
       $rolesAllowed = array(7,10);
       if(in_array($rolUser,$rolesAllowed)){
         // $arrEstados = array('4'=>'EFECTIVO', '9'=>'RETIRADO TRASLADO','5'=>'PROMOVIDO');
-        $arrEstados = array('4'=>'EFECTIVO', '5'=>'PROMOVIDO');
+       // $arrEstados = array('4'=>'EFECTIVO', '5'=>'PROMOVIDO');
+       $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO');
       }else{
         // $arrEstados = array( '10'=>'RETIRO ABANDONO',/*'6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO'*/);
         if($rolUser == 8)
           // $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO','9'=>'RETIRADO TRASLADO','5'=>'PROMOVIDO');
-          $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO','5'=>'PROMOVIDO');
+          $arrEstados = array('4'=>'EFECTIVO', '10'=>'RETIRO ABANDONO','6'=>'NO INCORPORADO');
         else
           $arrEstados = array();
       }
@@ -271,7 +272,8 @@ class RemoveInscriptionStudentFreeController extends Controller {
         $message = 'No realizado, esta intentando cambiar al mismo estado... ';
         $this->addFlash('changestate', $message);
       }
-
+      
+    if($this->session->get('roluser')==9 ){ // para directores UE
       // add validation about tuicion of user
       $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
       $query->bindValue(':user_id', $this->session->get('userId'));
@@ -285,6 +287,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
         $message = "Usuario no tiene tuición para realizar la operación";
         $this->addFlash('changestate', $message);
       }
+    }
       // dump($estadoNew);die;
       //ge notas to do the changeMatricula to Retiro Abandono
       $swChangeStatus = false;
@@ -594,7 +597,7 @@ class RemoveInscriptionStudentFreeController extends Controller {
           $this->addFlash('okchange', $message);
           $response = new JsonResponse();
           //check the tipo of matricula
-          if($form['estadoNew']==4){
+          if($form['estadoNew']==4444444){ //se aplico en proceso de inscripción no aplica notas
             return $this->render($this->session->get('pathSystem') . ':RemoveInscriptionStudentFree:setNotasChangeStatus.html.twig', array(
                       'setNotasForm'   => $this->setNotasForm($arrDataInfo['estInsId'])->createView(),
                       'idInscripcion'  => $arrDataInfo['estInsId'],

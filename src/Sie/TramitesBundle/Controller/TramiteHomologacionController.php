@@ -715,6 +715,7 @@ class TramiteHomologacionController extends Controller {
                 $student->setComplemento($newStudent['complemento']);
                 $student->setPasaporte($newStudent['pasaporte']);
                 $student->setExpedido($entityExpedido);
+                $student->setSegipId(1);
                 $student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
                 $student->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($newStudent['pais']));
                 if (isset($newStudent['provincia'])){
@@ -725,7 +726,8 @@ class TramiteHomologacionController extends Controller {
 
                 $em->persist($student);
                 //$em->flush();
-                $studentId = $student->getId();                 
+                $studentId = $student->getId();   
+                             
             } else {
                 $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('id' => $studentId));
                 if(count($student)>0){
@@ -733,11 +735,11 @@ class TramiteHomologacionController extends Controller {
                     $newStudent['complemento'] = $student->getComplemento();
                     $newStudent['pasaporte'] = $student->getPasaporte();
                     $rude = $student->getCodigoRude();
-                    // $segipId = $student->getSegipId();
-                    // if ($segipId != 1){
-                    //     $msg = 'Datos del estudiante '.strtoupper($newStudent['nombre'].' '.$newStudent['paterno'].' '.$newStudent['materno']).', no validados';
-                    //     return $response->setData(array('estado' => false, 'msg' => $msg));
-                    // } 
+                    $segipId = $student->getSegipId();
+                    if ($segipId != 1){
+                        $msg = 'Datos del estudiante '.strtoupper($newStudent['nombre'].' '.$newStudent['paterno'].' '.$newStudent['materno']).', no validados';
+                        return $response->setData(array('estado' => false, 'msg' => $msg));
+                    } 
                 }
             }
             

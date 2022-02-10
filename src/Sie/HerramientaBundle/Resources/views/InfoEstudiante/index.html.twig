@@ -282,33 +282,7 @@ line-height: 1.83333em;}
     <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal">
 
     </div><!-- /.modal -->
-    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h1 class="panel-title1" align="center">ASIGNAR PARALELO ESTUDIANTES</h1>
-                        <button type="button" class="close1" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    </div>
-                    <div class="panel-body panel-default" id="modal1_con"></div>
-                </div>
-            </div>
-        </div>
-    </div><!-- /.modal -->
-    <div class="modal fade bs-example-modal-table" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" id="modal2">
-        <div class="modal-dialog ">
-            <div class="modal-content">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        {# <p class="panel-title1" align="center"> ***INFORMACION***  </p> #}
-                        Información
-                        <button type="button" class="close1" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    </div>
-                    <div class="panel-body panel-default" id="modal2_con"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <!--/ End body content -->
 {% endblock %}
 {% block javascripts%}
@@ -991,8 +965,8 @@ line-height: 1.83333em;}
             });
         };       
 function asignarParalelo(infoUe){
-    $("#modal1_con").html('');
-    $('#modal1').modal('show');
+    $("#modal").html('');
+    $('#modal').modal('show');
     /*$.post('{{ path('herramienta_asignarPararlelo_index') }}', {infoUe:infoUe}, function(data) {
         $("#modal1_con").html(data);
     });*/
@@ -1001,11 +975,11 @@ function asignarParalelo(infoUe){
         data: ({infoUe: infoUe}),
         url: "{{ path('herramienta_asignarPararlelo_index') }}",
         beforeSend: function () {
-            $("#modal1_con").empty();
-            $("#modal1_con").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
+            $("#modal").empty();
+            $("#modal").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}" /></div>');
         },
         success: function (data) { console.log(data);
-            $("#modal1_con").html(data);
+            $("#modal").html(data);
         },
         statusCode: {
             500: function () {

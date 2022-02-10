@@ -42,8 +42,14 @@ areas_listar_areas_curso:
     options:
          expose: true
 
+areas_listar_areas_nuevo_curso:
+    path:     /lista_areas_curso_a_nuevo/
+    defaults: { _controller: "SieRegularBundle:Areas:crear_areas_curso" }
+    options:
+         expose: true
+
 areas_listar_areas_nivel:
-    path:     /lista_areas_nivel/{idNivel}/{idCurso}
+    path:     /lista_areas_nivel/{idNivel}/{idCurso}/{institucioneducativa}/{gestionTipo}/{turnoTipo}/{nivelTipo}/{gradoTipo}/{paraleloTipo}
     defaults: { _controller: "SieRegularBundle:Areas:lista_areas_nivel" }
     options:
          expose: true

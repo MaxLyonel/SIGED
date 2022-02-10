@@ -25,7 +25,7 @@
         {% include 'SieHerramientaBundle:Principal:list_inconsistencia.html.twig' with {'objObsQA': objObsQA, 'sie': data.ieducativa.id,'institucion': data.ieducativa.institucioneducativa, 'gestion': data.gestion} %}
     {% endif %}
 
-    <h3 style="color:#ff0000;" align="center"> Trimestre {{bimestre}} Cerrado </h3>
+    <h3 style="color:#ff0000;" align="center"> Trimestre {{bimestre}} Cerrado</h3>
     <input type="hidden" id="bimestre" value="{{bimestre}}">
 
 
@@ -99,7 +99,7 @@
                         </div>
                     </div>
                 {% endif %}
-                 {% if bimestre == '0' and data.gestion==app.session.get('currentyear') %}
+                
                  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo de Inscripción">
@@ -113,24 +113,71 @@
                         </div>
                     </div>
                 </div>
-                {% endif %}
 
-                 {% if bimestre < '3' and data.gestion!=app.session.get('currentyear') %}
-                    <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-                        <div class="thumbnail">
-                            <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
-                            <div class="caption text-center">
-                                <h4>Cerrar Operativo</h4>
-                                <div class="thumbnail-action">
-                                    {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
-                                        {{form_widget(closeOperativoform.next)}}
-                                    {{form_end(closeOperativoform)}}
-                                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="thumbnail">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
+                        <div class="caption text-center">
+                            <h4>Cerrar Operativo</h4>
+                            <div class="thumbnail-action">
+                                {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
+                                    {{form_widget(closeOperativoform.next)}}
+                                {{form_end(closeOperativoform)}}
                             </div>
                         </div>
                     </div>
-                {% endif %}
+                </div>
+                
             {% endif %}
+
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/operativo-salud300.jpg')}}" alt="Operativo Salud">
+                    <div class="caption text-center">
+                        <h4>Operativo salud</h4>
+                        <div class="thumbnail-action">
+                            {{form_start(operativoSaludform)}}
+                                {{form_widget(operativoSaludform.next)}}
+                            {{form_end(operativoSaludform)}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="thumbnail">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Rude">
+                        <div class="caption text-center">
+                            <h4>Cerrar Operativo Rude</h4>
+                            <div class="thumbnail-action">
+                                {{form_start(closeOperativoRudeform, { 'attr':{'id':'formCloseOperativo' }} )}}
+                                    {{form_widget(closeOperativoRudeform.next)}}
+                                {{form_end(closeOperativoRudeform)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('images/juancito.jpg')}}" alt="Operativo Bono Juancito Pinto">
+                    &nbsp;
+                    <div class="caption text-center">
+                        <h4>Operativo Bono JP</h4>
+                        <div class="thumbnail-action">
+                            {% if operativoBonoJP %}
+                                <a href="{{path('operativo_bono_jp_ddjj',{sie:data.ieducativa.id,gestion:data.gestion})}}" target="_blank" class="btn btn-success btn-md btn-block">Descargar DDJJ</a>
+                            {% else %}
+                            {{form_start(operativoBonoJPform, { 'attr':{'id':'formCerrarBonoJs' }} )}}
+                                {{form_widget(operativoBonoJPform.next)}}
+                            {{form_end(operativoBonoJPform)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
         <div class="row">
@@ -249,7 +296,7 @@
 
          var closeOperativoInscription = function(){
             if(confirm('¿Está segura/o de cerrar el operativo de INSCRIPCIÓN?')){
-                formData = $('#formCloseOperativoInscription').serialize();
+                formData = $('#formCloseOperativo').serialize();
                 $.ajax({
                     type: 'post',
                     url: Routing.generate('herramienta_inbox_close_operativo_inscription'),

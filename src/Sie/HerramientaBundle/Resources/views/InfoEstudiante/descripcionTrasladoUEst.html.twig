@@ -1,21 +1,35 @@
-{# {{ dump(valor) }} #}
-<h1 class="panel-title1" align="center">UNIDAD EDUCATIVA VIGENTE </h1>
-<table class="table table-dark">
-  <thead>
-    <tr>
-      <th scope="col">CODIGO SIE:</th>
-      <th scope="col">{{valor.id}}</th>
-    </tr>
-    <tr>
-      <th scope="col">UNIDAD EDUCATIVA :</th>
-      <th scope="col">{{valor.institucioneducativa}}</th>
-    </tr>
-    <tr>
-      <th scope="col">JUSTIFICACION</th>
-      <th scope="col">{{valor.observacion}}</th>
-    </tr>
-  </thead>
-  <tbody>
-    
-  </tbody>
-</table>
+<div class="modal-dialog ">
+    <div class="modal-content">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                {# <p class="panel-title1" align="center"> ***INFORMACION***  </p> #}
+                Información
+                <button type="button" class="close1" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="panel-body panel-default" >
+
+              {# {{ dump(valor) }} #}
+              <h1 class="panel-title1" align="center">UNIDAD EDUCATIVA VIGENTE </h1>
+              <table class="table table-dark">
+                <thead>
+                  <tr>
+                    <th scope="col">CODIGO SIE:</th>
+                    <th scope="col">{{valor.id}}</th>
+                  </tr>
+                  <tr>
+                    <th scope="col">UNIDAD EDUCATIVA :</th>
+                    <th scope="col">{{valor.institucioneducativa}}</th>
+                  </tr>
+                  <tr>
+                    <th scope="col">JUSTIFICACION</th>
+                    <th scope="col">{{valor.observacion}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  
+                </tbody>
+              </table>              
+            </div>
+        </div>
+    </div>
+</div>

@@ -154,6 +154,8 @@ class NewInscriptionIniPriController extends Controller
     }
 
     public function checksegipstudentAction(Request $request){
+		
+		
     	//ini vars
     	$response = new JsonResponse();
     	$em = $this->getDoctrine()->getManager();
@@ -248,7 +250,7 @@ class NewInscriptionIniPriController extends Controller
 		        }else{
 		        	$status = 'error';
 				$code = 400;
-				$message = "Estudiante no cumple con la edad requerida";
+				$message = "Estudiante no cumple con la edad requerida.";
 				$swcreatestudent = false; 
 		        }
 		      }else{
@@ -291,6 +293,19 @@ class NewInscriptionIniPriController extends Controller
 			$swcreatestudent = false; 
 
 		}
+
+		if($this->session->get('roluser')==9){ //si es director verificar que el operativo no este cerrado
+			$objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+				 		'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
+				 	));
+		    if($objRegConsolidation){
+		        $status = 'error';
+		 		$code = 400;
+		 		$message = "No se puede realizar la inscripción debido a que la Unidad Educativa ya cerró su operativo de Inscripción";
+		 		$swcreatestudent = false; 
+		     }
+		}
+
 		//dump($swci);dump($arrStudentExist);die;
        $arrResponse = array(
         'status'          => $status,

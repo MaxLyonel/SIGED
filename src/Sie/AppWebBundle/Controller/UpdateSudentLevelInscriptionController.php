@@ -17,7 +17,11 @@ use Sie\AppWebBundle\Entity\EstudianteDocumento;
 use Sie\AppWebBundle\Entity\EstudianteInscripcionExtranjero; 
 use Symfony\Component\Validator\Constraints\DateTime;
 
-class UpdateSudentLevelController extends Controller{
+ /**
+     * Modulo para la corrección de nivel, grado, paralelo y turno para las UE
+    */
+
+class UpdateSudentLevelInscriptionController extends Controller{
     
 
     public $session;
@@ -40,8 +44,6 @@ class UpdateSudentLevelController extends Controller{
     // index method by krlos
     public function indexAction(Request $request){
        // return $this->redirect($this->generateUrl('login'));
-      
-
         $form = is_array(($request->get('form')))?$request->get('form'):false;
         if(!$form){
             $form = array(
@@ -64,14 +66,14 @@ class UpdateSudentLevelController extends Controller{
         ));
     }
 
-    public function lookStudentDataAction(Request $request){ //dump($request);
+    public function lookStudentDataAction(Request $request){
 
         // get the send values
-        $response = new JsonResponse();
         $codigoRude =  mb_strtoupper($request->get('codigoRude'),'utf-8');
+
+        // set the ini var
+        $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager(); 
-        $swObs=false;
-        
         $arrStudentExist = array();
         $dataInscriptionR = array();
         $code = 200;
@@ -88,28 +90,12 @@ class UpdateSudentLevelController extends Controller{
         $swObservation = false;
         $messageObservaation = '';
         
-        if (in_array($this->session->get('roluser'), array(9))){ // el director solo puede trabajar su inscripcion
-            //dump($codigoRude);
-            $tuicionUe = $this->get('funciones')->getInscriptionToValidateTuicionUe($codigoRude, $this->currentyear);
-            if($tuicionUe){
-                //do change
-            }
-            else{
-                $swObs=true;
-                $mensaje = 'Usted no tiene Tuición sobre la inscripción del Estudiante ';
-            }
-        }
 
         $arrayCondition = array('codigoRude'=>$codigoRude);
         // get the students info
         $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
-
-        if( $objStudent==0 ){
-            $swObs = true;
-            $mensaje = 'Estudiante No existe o no cuenta con Historial';
-        }
         // continue if exists
-        if(sizeof($objStudent)>0 && $swObs==false){
+        if(sizeof($objStudent)>0){
             $objStudent = $objStudent[0];
             // the student exist
              $arrStudentExist = array(
@@ -140,7 +126,7 @@ class UpdateSudentLevelController extends Controller{
 
               next($inscriptions);
             }
-            //dump($arrLastInscription);dump($sw);die;
+
              $arrayConditionInscription = array(
                     'codigoRude'=>$codigoRude,
                     'matriculaId'=>4,
@@ -159,9 +145,8 @@ class UpdateSudentLevelController extends Controller{
             }else{
                 $arrCurrenteInscription = array();
             }
-            
             // thee student has history_?
-            if(!$sw){ 
+            if(!$sw){
                 $arrayConditionInscription = array(
                     'codigoRude'=>$codigoRude,
                     'matriculaId'=>4,
@@ -253,7 +238,7 @@ class UpdateSudentLevelController extends Controller{
         }else{
             // the studnet no exist
             $code = 200;
-            $message = $mensaje;
+            $message = "Estudiante No existeo no cuenta con Historial";
             $status = "";
             $existStudentData = false;
             $swObservation = false;
@@ -274,7 +259,7 @@ class UpdateSudentLevelController extends Controller{
         'swUpdateLevelGradoIniPri' => $swUpdateLevelGradoIniPri,        
         'arrLevel' => $arrLevel,        
       );
-      //dump($arrResponse);die;
+      
       $response->setStatusCode(200);
       $response->setData($arrResponse);
 

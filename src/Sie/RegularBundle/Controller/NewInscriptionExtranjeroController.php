@@ -240,6 +240,18 @@ class NewInscriptionExtranjeroController extends Controller{
 			$swcreatestudent = false; 
 
 		}
+
+      if($this->session->get('roluser')==9){ //si es director verificar que el operativo no este cerrado
+        $objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+              'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
+            ));
+          if($objRegConsolidation){
+              $status = 'error';
+              $code = 400;
+              $message = "No se puede realizar la inscripción debido a que la Unidad Educativa ya cerró su operativo de Inscripción";
+            $swcreatestudent = false; 
+          }
+      }
 		
        $arrResponse = array(
         'status'          => $status,

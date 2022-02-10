@@ -341,7 +341,8 @@ class Funciones {
             case when rc.bim1 > 0 then 'SI' else 'NO' end AS bim1,
             case when rc.bim2 > 0 then 'SI' else 'NO' end AS bim2,
             case when rc.bim3 > 0 then 'SI' else 'NO' end AS bim3,
-            case when rc.bim4 > 0 then 'SI' else 'NO' end AS bim4
+            case when rc.bim4 > 0 then 'SI' else 'NO' end AS bim4,
+            rc.gestion
             FROM registro_consolidacion rc
             INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
             INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
@@ -1778,6 +1779,51 @@ class Funciones {
                 
     }    
 
+    /**
+     * Service to check the users tuicion in inscription process
+     * @param  [array] $codrude    [codigoRude, gestion]
+     */
+    public function getInscriptionToValidateTuicionUe($rue, $gestion){
+        //$this->session->get('roluser')
+        //look for the current inscription on 4.5.11 matricula id
+        $entity = $this->em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select('iec')
+                ->leftjoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                ->leftjoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'ei.institucioneducativaCurso = iec.id')
+                ->where('e.codigoRude = :id')
+                ->andWhere('ei.estadomatriculaTipo IN (:mat)')
+                ->andWhere('iec.gestionTipo = :gestion');
+        $query = $query->setParameter('id', $rue)
+                ->setParameter('mat', array(4))
+                ->setParameter('gestion', $gestion)
+                ->orderBy('ei.fechaInscripcion', 'DESC')
+                ->getQuery();
+        
+        $objCurrentInscripcion = $query->getResult();
+        $swtucion = false;
+        if($objCurrentInscripcion){
+            while (($objectUe = current($objCurrentInscripcion)) !== FALSE && !$swtucion) {
+                // check the tución info
+                $currentSie = $objectUe->getInstitucioneducativa()->getId();
+              
+                $query = $this->em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+                $query->bindValue(':user_id', $this->session->get('userId'));
+                $query->bindValue(':sie', $currentSie);
+                $query->bindValue(':rolId', $this->session->get('roluser'));
+                $query->execute();
+                $aTuicion = $query->fetch(); 
+                if($aTuicion['get_ue_tuicion']){
+                    $swtucion = $aTuicion['get_ue_tuicion'];
+                }
+                next($objCurrentInscripcion);
+            }
+            return ($swtucion);
+        }else{
+            return false;
+        }
+                
+    } 
     /**
      * [existeInscripcionSimilarAprobado description]
      * @param  integer    $idInscripcion [inscripcion del estudiante para verificar si existe otra inscripcion similar con los diferentes estados]

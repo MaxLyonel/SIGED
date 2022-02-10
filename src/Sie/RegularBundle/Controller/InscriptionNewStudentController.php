@@ -210,6 +210,17 @@ class InscriptionNewStudentController extends Controller {
                 return $this->redirectToRoute('inscription_new_student_index');
             }
 
+            if($this->session->get('roluser')==9){ //si es director verificar que el operativo no este cerrado
+              $objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+                    'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
+                  ));
+                if($objRegConsolidation){
+                  $message = "No se puede realizar la inscripción debido a que la Unidad Educativa ya cerró su operativo de Inscripción";
+                  $this->addFlash('notiext', $message);
+                  return $this->redirectToRoute('inscription_new_student_index');
+                }
+            }
+
             $formInsc = $this->createFormInsc($student->getId(), $sw, $infoInscription, $form['gestion'], $form['codigoRude']);
             //everything is ok build the info
             return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:result.html.twig', array(
@@ -350,17 +361,18 @@ class InscriptionNewStudentController extends Controller {
         // getCourseOld
         $newInfInscription = $this->getCourseOld($dataCurrentInscription['nivelId'],$dataCurrentInscription['cicloId'],$dataCurrentInscription['gradoId'],$dataCurrentInscription['estadoMatriculaId']);
         $currentLevelStudent = $this->aCursos[$newInfInscription-1];
-        // dump($this->aCursos[$newInfInscription-1]);
+         //dump($this->aCursos[$newInfInscription-1]);
       }
       // dump($currentLevelStudent);die;
       $newLevelStudent = $form['nivel'].'-'.$this->getNewCicloStudent($form).'-'.$form['grado'];// dump($newLevelStudent);die;
-//dump(((str_replace('-','',$newLevelStudent)) ));
+
 //dump(str_replace('-','',$currentLevelStudent) );die;
     //if doesnt have next curso info is new or extranjero do the inscription
      
     if( (str_replace('-','',$currentLevelStudent) )!=''){
       $arrIniPriLevel = array('11-1-0','11-1-1','11-1-2','12-1-1');
       if(in_array($currentLevelStudent, $arrIniPriLevel)){
+        
         //|| ($currentLevelStudent == '12-1-1')
          //do the inscription
           $dataStudent = unserialize($form['newdata']);
@@ -393,16 +405,17 @@ class InscriptionNewStudentController extends Controller {
             
         }//end new student validation
         $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
-          if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
-            $swCorrectInscription = true;
-          }
-
-        $message='';
-          if(!$swCorrectInscription){
-            $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';
-            $this->addFlash('idNoInscription', $message);
-            $swCorrectInscription = false;
-          }
+        $nextDataLevelStudent = str_replace('-','',$this->aCursos[$keyNextLevelStudent]);
+        //dump($nextDataLevelStudent);
+        //dump($newLevelStudent);
+        if($nextDataLevelStudent > str_replace('-','',$newLevelStudent) && $nextDataLevelStudent!='1112'){
+          $swCorrectInscription = false;
+        }
+        if($nextDataLevelStudent==str_replace('-','',$newLevelStudent) &&  $swCorrectInscription==false ){
+          $swCorrectInscription = true;
+        }
+        
+       
         /////////////////////////////////
          // $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
 
@@ -420,7 +433,7 @@ class InscriptionNewStudentController extends Controller {
          //   $swCorrectInscription = false;
          // }
 
-       }else{
+       }else{ 
          //get the current level inscription to do the validation
          $keyNextLevelStudent = $this->getInfoInscriptionStudent($currentLevelStudent, $dataCurrentInscription['estadoMatriculaId']);
         //  dump($keyNextLevelStudent);die;
@@ -435,7 +448,7 @@ class InscriptionNewStudentController extends Controller {
              if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
                //do the inscriptin
              }else{//dump($newInfInscription);die;
-               $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';////mensaje
+               $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde.';////mensaje
                $this->addFlash('idNoInscription', $message);
                $swCorrectInscription = false;
              }
@@ -449,11 +462,11 @@ class InscriptionNewStudentController extends Controller {
            $swCorrectInscription = false;
          }
        }
-    }else{
+    }else{ 
       //do inscription inicial/ primaria or extranjero
       //get the year of student
 
-          $dataStudent = unserialize($form['newdata']);
+         /* $dataStudent = unserialize($form['newdata']);
           $arrYearStudent =$this->get('funciones')->getTheCurrentYear($dataStudent['fechaNacimiento']->format('d-m-Y'), '30-6-'.date('Y'));
           $yearStudent = $arrYearStudent['age'];  
           // //new student validation
@@ -485,9 +498,16 @@ class InscriptionNewStudentController extends Controller {
           $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde';
           $this->addFlash('idNoInscription', $message);
           $swCorrectInscription = false;
-        }
+        }*/
 
     }///end validation
+    if(!$swCorrectInscription){
+      $message = 'Estudiante No inscrito, el curso seleccionado no le corresponde ..';
+      $this->addFlash('idNoInscription', $message);
+      $swCorrectInscription = false;
+    }
+  //dump($swCorrectInscription);
+//die;
     //check the inscription
        if($swCorrectInscription){
          //get the id of course

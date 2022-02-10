@@ -5862,16 +5862,20 @@ die;/*
             $arrayCualitativas = array();
 
             $cualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$idInscripcion),array('notaTipo'=>'ASC'));
-
+            //  dump($cualitativas);die;
             if($nivel == 400 or $nivel == 401 or $nivel == 408 or $nivel == 402 or $nivel == 403 or $nivel != 411){
                 // Para inicial
                 $existe = false;
                 foreach ($cualitativas as $c) {
                     if($c->getNotaTipo()->getId() == 18){
-                        
-                        if (($nivel == 400 or $nivel == 401 or $nivel == 408 or $nivel == 402) and $gestion > 2019){
+                       
+                        if (($nivel == 400 or $nivel == 401 or $nivel == 408 or $nivel == 402 or $nivel == 403) and $gestion > 2019){
+                       //json validar
                             $nota['notaCualitativa'] = json_decode($c->getNotaCualitativa(),true)['notaCualitativa'];
                             $nota['promovido'] = json_decode($c->getNotaCualitativa(),true)['promovido'];
+                            if(!json_decode($c->getNotaCualitativa(),true)['notaCualitativa'] && $nota['notaCualitativa']==''){
+                                $nota['notaCualitativa'] = $c->getNotaCualitativa();
+                            }
                         }else{
                             $nota['notaCualitativa'] = $c->getNotaCualitativa();
                             $nota['promovido'] = '';
@@ -6249,9 +6253,9 @@ die;/*
             return $this->redirect($this->generateUrl('login'));
         }
         
+            
         try {
-
-            $this->em->getConnection()->beginTransaction();
+                $this->em->getConnection()->beginTransaction();
             // Datos de las notas cuantitativas
             $idEstudianteNota = $request->get('idEstudianteNota');
             $idNotaTipo = $request->get('idNotaTipo');
@@ -6289,8 +6293,6 @@ die;/*
                 $notaCualitativa[0] = array('notaCualitativa'=>mb_strtoupper($notaCualitativa[0],'utf-8'),'promovido'=>mb_strtoupper($promovido,'utf-8'));
                 
             }
-
-            
             // dump($notaCualitativa);die;
 
             /* Datos de las notas cualitativas de primaria gestion 2013 */
@@ -6312,6 +6314,7 @@ die;/*
                     if($idEstudianteNota[$i] == 'nuevo'){
                         
                         //if((!in_array($nivel, $nivelesCualitativos) and $notas[$i] != 0 ) or (in_array($nivel, $nivelesCualitativos) and $notas[$i] != "")){
+
                             $newNota = new EstudianteNota();
                             $newNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($idNotaTipo[$i]));
                             $newNota->setEstudianteAsignatura($this->em->getRepository('SieAppWebBundle:EstudianteAsignatura')->find($idEstudianteAsignatura[$i]));
@@ -6335,6 +6338,7 @@ die;/*
                             $newNota->setObs('');
                             $this->em->persist($newNota);
                             $this->em->flush();
+                            
                             //dump($newNota);die;
                             // Registro de notas estudiante en el log
                             $arrayNota = [];
@@ -6408,8 +6412,7 @@ die;/*
                         $cantidad += 1;
                     }
 
-                    if ($discapacidad == 1 and $request->get('operativo') == 3 and $nivel == 404 and $gestion>2020) {
-                        //TODO CORREGIR PROMEDIOS solo tipo 9
+                    if ($discapacidad == 1 and (($i+1)%4 == 0) and $request->get('operativo') == 3 and $nivel == 404 and $gestion>2020) {
                         $total += $notas[$i];
                         $cantidad += 1;
                     }
@@ -6777,7 +6780,7 @@ die;/*
             }
             //dump($discapacidad); die;
             // Datos del siguimiento
-            if($gestion > 2019 and ($discapacidad == 4 or $discapacidad == 5 or $discapacidad == 6 or $discapacidad == 7 or $nivel == 410 or ($discapacidad == 1 and ($request->get('progserv') == 20 or $request->get('progserv') == 21 or $request->get('progserv') == 22 )))){
+            if($gestion > 2019 and ($discapacidad == 4 or ($discapacidad == 5 and ($nivel == 411 or $nivel==410)) or $discapacidad == 6 or $discapacidad == 7 or $nivel == 410 or ($discapacidad == 1 and ($request->get('progserv') == 20 or $request->get('progserv') == 21 or $request->get('progserv') == 22 )))){
                 
                 $seguimientoNota = new EstudianteNotaCualitativa();
                 $seguimientoNota->setNotaTipo($this->em->getRepository('SieAppWebBundle:NotaTipo')->find($request->get('tipoNota')));
