@@ -312,7 +312,7 @@ class CreacionCursosEspecialController extends Controller {
                     ->add('nivelTecnicoId','hidden',array('data'=> $nivelTecnico))
                     ->add('paralelo','choice',array('label'=>'Paralelo','choices'=>$paralelos,'attr'=>array('class'=>'form-control')))
                     ->add('fisicoMotor','choice',array('label'=>'Fisico-Motora','choices'=>array('Físico-Motora/Auditiva'=>'Físico-Motora/Auditiva','Físico-Motora/Visual'=>'Físico-Motora/Visual','Otro'=>'Otro'),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
-                    ->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Auditiva/Multiple'=>'Auditiva/Multiple','Físico-Motora/Multiple'=>'Físico-Motora/Multiple','Intelectual/Múltiple'=>'Intelectual/Múltiple', 'Visual/Auditiva'=>'Visual/Auditiva','Visual/Intelectual'=>'Visual/Intelectual' ),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
+                    ->add('multiple','choice',array('label'=>'Multiple','choices'=>array('Auditiva/Multiple'=>'Auditiva/Multiple','Físico-Motora/Multiple'=>'Físico-Motora/Multiple','Intelectual/Múltiple'=>'Intelectual/Múltiple', 'Visual/Auditiva'=>'Visual/Auditiva','Visual/Intelectual'=>'Visual/Intelectual','Intelectual/Auditiva'=>'Intelectual/Auditiva' ),'multiple' => false,'expanded' => true,'attr'=>array('class'=>'form-control')))
                     ->add('educacionCasa', CheckboxType::class, array('label'=>'Educación Sociocomunitaria en Casa','required' => false))
                     ->add('guardar','submit',array('label'=>'Crear Oferta','attr'=>array('class'=>'btn btn-primary')))
                     ->getForm();
@@ -569,7 +569,7 @@ class CreacionCursosEspecialController extends Controller {
         }
         elseif ($area == "2" ) {
             if($modalidad == 1){
-                $nivelesArray = array(405,410,411); 
+                $nivelesArray = array(410,411); 
             }else{
                 $nivelesArray = array(410,411);
             }
@@ -821,8 +821,12 @@ class CreacionCursosEspecialController extends Controller {
                 if($modalidad == 1){ //DIRECTA
                     if ($this->session->get('idGestion') < 2021) {
                         $programas = array(7,8,9,11,12,14,15,16);
-                    }else{
+                    }
+                    if ($this->session->get('idGestion') == 2021) {
                         $programas = array(7,8,9,12,15,25,26,27);   //--- se agrego nuevos programas cambio denom en BD 24=25
+                    }
+                    if ($this->session->get('idGestion') > 2021) {
+                        $programas = array(7,8,12,25,26,29);   //--- se agrego nuevos programas cambio denom en BD 24=25
                     }
                 }else{ //INDIRECTA
                     $programas = array(10);
@@ -838,7 +842,7 @@ class CreacionCursosEspecialController extends Controller {
             if ($this->session->get('idGestion') < 2020) {
                 $programas = array(1,2,3,4,5,6);
             }else{
-                $programas = array(5,6);
+                $programas = array(5,6,17);
             }
         }elseif ($area == "4" and $nivel == "411" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2020) {
