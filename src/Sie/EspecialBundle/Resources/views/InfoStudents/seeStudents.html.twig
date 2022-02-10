@@ -128,11 +128,11 @@
                                             </form>
                                         {% endif %}        
                                     {% endif %}
-                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE">
+                                         {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE ES">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>
                                             </button>
-                                        </div>
+                                        </div> #}
                                         
                                     {% if onlyview == false and (gestion == app.session.get('currentyear') or gestion== 2021) %}  {#Solo hasta el 24 de enero 2022 #}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
@@ -383,7 +383,7 @@
                   format: 'dd-mm-yyyy',
                   language: "es"
                 });
-                //$('#modal').modal({backdrop: 'static', keyboard: false})
+                $('#modal').modal({backdrop: 'static', keyboard: false})
             },
             statusCode: {
                 500: function () {
