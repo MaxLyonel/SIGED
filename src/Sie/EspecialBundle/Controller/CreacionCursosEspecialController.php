@@ -776,7 +776,7 @@ class CreacionCursosEspecialController extends Controller {
         }
         elseif ($area == "2" and $nivel == "410" and  $grado == "99" ) {
             if($modalidad == 1){
-                $servicios = array(1,2,3,4,5);
+                $servicios = array(1,2,3,4,5,28);
             }else{
                 $servicios = array(21);
             }//array(1,2,3,4,5,21)
