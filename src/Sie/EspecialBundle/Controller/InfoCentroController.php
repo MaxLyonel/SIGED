@@ -490,4 +490,23 @@ class InfoCentroController extends Controller {
         ));
     }
 
+    public function observacionesMaestrosAction(Request $request) {
+
+        $institucion = $request->getSession()->get('ie_id');
+        $gestion = $request->getSession()->get('idGestion'); // sale 2014 ???
+        
+
+        $em = $this->getDoctrine()->getManager();      
+        //$query = $em->getConnection()->prepare("select * FROM sp_crea_curso_oferta('$gestionTipo', '$institucioneducativa', '$turnoTipo', '$nivelTipo', '$gradoTipo','$paraleloTipo') ");
+        //$query = $em->getConnection()->prepare("select * from public.sp_alerta_materia_sin_maestro('2022', '80730274')");
+        $query = $em->getConnection()->prepare("select * from public.sp_alerta_materia_sin_maestro('2022', '$institucion')");
+        $query->execute();
+        $valor= $query->fetchAll();
+        
+        $response = new JsonResponse();
+        return $response->setData(array('data'=>$valor,'mensaje'=>''));
+  
+      }
+  
+
 }
