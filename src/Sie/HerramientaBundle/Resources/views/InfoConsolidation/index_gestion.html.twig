@@ -2,6 +2,22 @@
 
 {% block contentoption %}
 
+    <style>
+    .modal-header-danger {
+        color:#fff;
+        padding:9px 15px;
+        border-bottom:1px solid #eee;
+        background-color: #d9534f;
+        -webkit-border-top-left-radius: 5px;
+        -webkit-border-top-right-radius: 5px;
+        -moz-border-radius-topleft: 5px;
+        -moz-border-radius-topright: 5px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    </style>
+
+
     <!-- Start page header -->
     <div class="header-content">
         <h2><i class="fa fa-table"></i> Información General <span></span></h2>
@@ -60,6 +76,28 @@
         </div><!-- /.panel -->
         <!--/ End default panel -->
     </div>
+
+    <div class="modal  modal-flex fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header modal-header-danger">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="flexModalLabel">¡Advertencia!</h4>                 
+                </div>
+                <div class="modal-body">
+                    <div id="infoModal">
+                            HELLO
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>                    
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
 {% endblock %}
 {% block javascripts%}
     {{parent()}}
@@ -122,6 +160,39 @@
 
     $(document).ready(function(){
         cargatablas();
+        mostrarModal();
     });
+
+     function mostrarModal() {
+
+        gestionid = 5;
+        ueid = 50;
+
+        $.ajax({
+            type: 'get',
+            //url: Routing.generate('herramienta_especial_registro_consol', {'gestionid': gestionid}),
+            url: Routing.generate('observaciones_maestros_ue', {'gestionid': gestionid, 'ueid': ueid }),
+            beforeSend: function () {
+                $("#infoModal").empty();
+                $("#infoModal").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" style="width: 80px;" /></div>');
+            },
+            success: function (data) {
+                //$("#infoModal").remove();
+                $("#infoModal").empty();
+                $("#infoModal").append(data);
+                
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+
+        $('#newModal').modal('show');
+     }
     </script>
 {% endblock %}
