@@ -1,13 +1,16 @@
-Sie\AppWebBundle\Entity\RudeRecibioPago:
+Sie\AppWebBundle\Entity\RudeParienteDiscapacidad:
     type: entity
-    table: rude_recibio_pago
+    table: rude_pariente_discapacidad
     indexes:
-        fk_rude_recibio_pago:
+        IDX_2B41A7BB39ED8040:
+            columns:
+                - discapacidad_tipo_id
+        IDX_2B41A7BB443E4890:
             columns:
                 - rude_id
-        IDX_BE6845CC6690F67:
+        IDX_2B41A7BBA937D64E:
             columns:
-                - pago_tipo_id
+                - pariente_tipo_id
     id:
         id:
             type: integer
@@ -18,24 +21,26 @@ Sie\AppWebBundle\Entity\RudeRecibioPago:
             generator:
                 strategy: SEQUENCE
     fields:
+        nroCarnet:
+            type: string
+            nullable: true
+            length: 50
+            fixed: false
+            comment: ''
+            column: nro_carnet
         fechaRegistro:
             type: datetime
             nullable: true
             comment: ''
             column: fecha_registro
-        fechaModificacion:
-            type: datetime
-            nullable: true
-            comment: ''
-            column: fecha_modificacion
     manyToOne:
-        pagoTipo:
-            targetEntity: PagoTipo
+        discapacidadTipo:
+            targetEntity: DiscapacidadTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                pago_tipo_id:
+                discapacidad_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         rude:
@@ -45,6 +50,15 @@ Sie\AppWebBundle\Entity\RudeRecibioPago:
             inversedBy: null
             joinColumns:
                 rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        parienteTipo:
+            targetEntity: ApoderadoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                pariente_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

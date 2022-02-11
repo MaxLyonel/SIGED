@@ -164,4 +164,32 @@ class RudeVive
     {
         return $this->viveOtro;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\Rude
+     */
+    private $rude;
+
+
+    /**
+     * Set rude
+     *
+     * @param \Sie\AppWebBundle\Entity\Rude $rude
+     * @return RudeVive
+     */
+    public function setRude(\Sie\AppWebBundle\Entity\Rude $rude = null)
+    {
+        $this->rude = $rude;
+    
+        return $this;
+    }
+
+    /**
+     * Get rude
+     *
+     * @return \Sie\AppWebBundle\Entity\Rude 
+     */
+    public function getRude()
+    {
+        return $this->rude;
+    }
 }

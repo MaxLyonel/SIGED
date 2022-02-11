@@ -2,7 +2,7 @@ Sie\AppWebBundle\Entity\RudeAbandono:
     type: entity
     table: rude_abandono
     indexes:
-        IDX_2763E313443E4890:
+        fk_rude_abandono:
             columns:
                 - rude_id
         IDX_2763E313682C04C7:

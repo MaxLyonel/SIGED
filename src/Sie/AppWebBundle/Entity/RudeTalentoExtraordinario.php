@@ -205,4 +205,60 @@ class RudeTalentoExtraordinario
     {
         return $this->talentoExtraordinarioTipo;
     }
+    /**
+     * @var string
+     */
+    private $especificoEn;
+
+    /**
+     * @var string
+     */
+    private $talentoOtro;
+
+
+    /**
+     * Set especificoEn
+     *
+     * @param string $especificoEn
+     * @return RudeTalentoExtraordinario
+     */
+    public function setEspecificoEn($especificoEn)
+    {
+        $this->especificoEn = $especificoEn;
+    
+        return $this;
+    }
+
+    /**
+     * Get especificoEn
+     *
+     * @return string 
+     */
+    public function getEspecificoEn()
+    {
+        return $this->especificoEn;
+    }
+
+    /**
+     * Set talentoOtro
+     *
+     * @param string $talentoOtro
+     * @return RudeTalentoExtraordinario
+     */
+    public function setTalentoOtro($talentoOtro)
+    {
+        $this->talentoOtro = $talentoOtro;
+    
+        return $this;
+    }
+
+    /**
+     * Get talentoOtro
+     *
+     * @return string 
+     */
+    public function getTalentoOtro()
+    {
+        return $this->talentoOtro;
+    }
 }

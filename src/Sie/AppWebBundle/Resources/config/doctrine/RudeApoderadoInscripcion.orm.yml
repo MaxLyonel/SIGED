@@ -2,24 +2,28 @@ Sie\AppWebBundle\Entity\RudeApoderadoInscripcion:
     type: entity
     table: rude_apoderado_inscripcion
     indexes:
-        IDX_1D3B1650C861DD7C:
+        fk_rude_apoderado_inscripcion:
             columns:
-                - apoderado_tipo_id
+                - persona_id
+                - estudiante_inscripcion_id
         IDX_1D3B1650F5F88DB9:
             columns:
                 - persona_id
-        IDX_1D3B1650A1104027:
-            columns:
-                - estudiante_inscripcion_id
-        IDX_1D3B16505BD19E43:
-            columns:
-                - idioma_materno_tipo_id
-        IDX_1D3B1650A6223D4D:
-            columns:
-                - instruccion_tipo_id
         IDX_1D3B165018853B5C:
             columns:
                 - ocupacion_tipo_id
+        IDX_1D3B1650A6223D4D:
+            columns:
+                - instruccion_tipo_id
+        IDX_1D3B16505BD19E43:
+            columns:
+                - idioma_materno_tipo_id
+        IDX_1D3B1650A1104027:
+            columns:
+                - estudiante_inscripcion_id
+        IDX_1D3B1650C861DD7C:
+            columns:
+                - apoderado_tipo_id
     id:
         id:
             type: integer
@@ -52,16 +56,17 @@ Sie\AppWebBundle\Entity\RudeApoderadoInscripcion:
             type: boolean
             nullable: true
             comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
     manyToOne:
-        apoderadoTipo:
-            targetEntity: ApoderadoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                apoderado_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         persona:
             targetEntity: Persona
             cascade: {  }
@@ -71,22 +76,13 @@ Sie\AppWebBundle\Entity\RudeApoderadoInscripcion:
                 persona_id:
                     referencedColumnName: id
             orphanRemoval: false
-        estudianteInscripcion:
-            targetEntity: EstudianteInscripcion
+        ocupacionTipo:
+            targetEntity: ApoderadoOcupacionTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                estudiante_inscripcion_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        idiomaMaternoTipo:
-            targetEntity: IdiomaTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                idioma_materno_tipo_id:
+                ocupacion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         instruccionTipo:
@@ -98,13 +94,31 @@ Sie\AppWebBundle\Entity\RudeApoderadoInscripcion:
                 instruccion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        ocupacionTipo:
-            targetEntity: ApoderadoOcupacionTipo
+        idiomaMaternoTipo:
+            targetEntity: IdiomaTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                ocupacion_tipo_id:
+                idioma_materno_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudianteInscripcion:
+            targetEntity: EstudianteInscripcion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        apoderadoTipo:
+            targetEntity: ApoderadoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                apoderado_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

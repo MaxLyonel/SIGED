@@ -1,13 +1,13 @@
-Sie\AppWebBundle\Entity\RudeRecibioPago:
+Sie\AppWebBundle\Entity\RudeProcedenciaAgua:
     type: entity
-    table: rude_recibio_pago
+    table: rude_procedencia_agua
     indexes:
-        fk_rude_recibio_pago:
+        IDX_100441DFF9DEA452:
+            columns:
+                - aguaproviene_tipo_id
+        IDX_100441DF443E4890:
             columns:
                 - rude_id
-        IDX_BE6845CC6690F67:
-            columns:
-                - pago_tipo_id
     id:
         id:
             type: integer
@@ -29,13 +29,13 @@ Sie\AppWebBundle\Entity\RudeRecibioPago:
             comment: ''
             column: fecha_modificacion
     manyToOne:
-        pagoTipo:
-            targetEntity: PagoTipo
+        aguaprovieneTipo:
+            targetEntity: AguaprovieneTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                pago_tipo_id:
+                aguaproviene_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         rude:

@@ -1,13 +1,13 @@
-Sie\AppWebBundle\Entity\RudeRecibioPago:
+Sie\AppWebBundle\Entity\RudeDesague:
     type: entity
-    table: rude_recibio_pago
+    table: rude_desague
     indexes:
-        fk_rude_recibio_pago:
+        IDX_460F9F99443E4890:
             columns:
                 - rude_id
-        IDX_BE6845CC6690F67:
+        IDX_460F9F996410ABFA:
             columns:
-                - pago_tipo_id
+                - desague_tipo_id
     id:
         id:
             type: integer
@@ -29,15 +29,6 @@ Sie\AppWebBundle\Entity\RudeRecibioPago:
             comment: ''
             column: fecha_modificacion
     manyToOne:
-        pagoTipo:
-            targetEntity: PagoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                pago_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         rude:
             targetEntity: Rude
             cascade: {  }
@@ -45,6 +36,15 @@ Sie\AppWebBundle\Entity\RudeRecibioPago:
             inversedBy: null
             joinColumns:
                 rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        desagueTipo:
+            targetEntity: DesagueTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                desague_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

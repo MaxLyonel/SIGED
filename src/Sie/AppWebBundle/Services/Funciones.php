@@ -1695,7 +1695,7 @@ class Funciones {
                         $cantidad = $cantidad + 1;
                     }
                 }
-                if($cantidad >= 2 and (preg_match("/EDUCACION SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or preg_match("/EDUCACIÓN SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or $infoUe['ueducativaInfoId']['areaEspecialId']==4)){
+                if($cantidad >= 2 and (preg_match("/EDUCACION SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or preg_match("/EDUCACIÓN SOCIOCOMUNITARIA EN CASA/i", $iecLugar) and $infoUe['ueducativaInfoId']['areaEspecialId']==4)){
                     $data['cupo'] = "NO";
                     $data['msg'] = "El curso o grupo no puede tener más de <strong>". $cantidad. " estudiantes activos.</strong>";
                 }else{

@@ -1,6 +1,13 @@
 Sie\AppWebBundle\Entity\RudeVive:
     type: entity
     table: rude_vive
+    indexes:
+        IDX_C808A44C0A0913:
+            columns:
+                - vive_con
+        IDX_C808A44443E4890:
+            columns:
+                - rude_id
     id:
         id:
             type: integer
@@ -11,18 +18,6 @@ Sie\AppWebBundle\Entity\RudeVive:
             generator:
                 strategy: SEQUENCE
     fields:
-        rudeId:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: rude_id
-        viveCon:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-            column: vive_con
         fechaRegistro:
             type: datetime
             nullable: true
@@ -40,4 +35,23 @@ Sie\AppWebBundle\Entity\RudeVive:
             fixed: false
             comment: ''
             column: vive_otro
+    manyToOne:
+        viveCon:
+            targetEntity: ApoderadoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                vive_con:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
     lifecycleCallbacks: {  }
