@@ -1081,7 +1081,12 @@ class InscriptionNewStudentController extends Controller {
             //$studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find());
             $em->persist($studentInscription);
             $em->flush();
+            
             //add the areas to the student
+            $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+            $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+            $query->execute();
+
             $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
             $em->getConnection()->commit();
             $this->session->getFlashBag()->add('goodext', 'Inscripción realizada sin problemas');

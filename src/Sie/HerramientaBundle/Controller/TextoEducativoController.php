@@ -823,6 +823,12 @@ class TextoEducativoController extends Controller
 	              $estInscripcion->setFechaRegistro(new \DateTime('now'));
 	              $em->persist($estInscripcion);
                 $em->flush();
+                
+                //add the areas to the student
+                $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+                $query->bindValue(':estudiante_inscripcion_id', $estInscripcion->getId());
+                $query->execute();
+                    
               }
 				}	
 				// $dato_string=implode(",",$datos);
