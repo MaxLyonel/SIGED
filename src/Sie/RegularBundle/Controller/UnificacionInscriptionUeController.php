@@ -39,9 +39,11 @@ class UnificacionInscriptionUeController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
-        if ($this->session->get('roluser')!=8){
+        
+        /*if (in_array($this->session->get('roluser'), array(7,10))
+            $this->session->get('roluser')!=8){
             return $this->redirect($this->generateUrl('login'));
-        }
+        }*/
         //set the student and inscriptions data
         $student = array();
         $dataInscriptionR = array();
@@ -88,18 +90,32 @@ class UnificacionInscriptionUeController extends Controller {
 
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $rude));
 
-            if (in_array($this->session->get('roluser'), array(9))){ // el director solo puede trabajar su inscripcion
-                //dump($codigoRude);
-                $tuicionUe = $this->get('funciones')->getInscriptionToValidateTuicionUe($rude, $gestion);
-                if($tuicionUe){
-                    //do change
-                }
-                else{
+            if (in_array($this->session->get('roluser'), array(7,9,10))){ // el director solo puede trabajar su inscripcion
+                $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :rolId::INT)');
+                $query->bindValue(':user_id', $this->session->get('userId'));
+                $query->bindValue(':sie', $sie);
+                $query->bindValue(':rolId', $this->session->get('roluser'));
+                $query->execute();
+                $aTuicion = $query->fetchAll();
+    
+                if ($aTuicion[0]['get_ue_tuicion']) {
+                    
+                } else {
                     $message = 'No tiene tuición sobre la Inscripción del Estudiante.'; 
                     $this->addFlash('notihistory', $message);
                     $sw = false;
                     return $this->redirectToRoute('unificacion_inscription_index');
                 }
+
+                //dump($codigoRude);
+                /*
+                $tuicionUe = $this->get('funciones')->getInscriptionToValidateTuicionUe($rude, $gestion);
+                if($tuicionUe){
+                    //do change
+                }
+                else{
+                    
+                }*/
             }
 
             if($student){
@@ -373,7 +389,7 @@ class UnificacionInscriptionUeController extends Controller {
             $studentInscription->setObservacionId($objStudentInscription->getObservacionId());
             $studentInscription->setObservacion($objStudentInscription->getObservacion());
             $studentInscription->setFechaInscripcion($objStudentInscription->getFechaInscripcion());
-            $studentInscription->setApreciacionFinal($objStudentInscription->getApreciacionFinal());
+            $studentInscription->setApreciacionFinal('CORREGIR DOBLE INSCRIPCION '.$objStudentInscription->getApreciacionFinal());
             $studentInscription->setOperativoId($objStudentInscription->getOperativoId());
             $studentInscription->setFechaRegistro($objStudentInscription->getFechaRegistro());
             $studentInscription->setOrganizacion($objStudentInscription->getOrganizacion());
