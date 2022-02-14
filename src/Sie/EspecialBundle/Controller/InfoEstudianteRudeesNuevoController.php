@@ -428,51 +428,49 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		$em->flush();
 		
 		// DISCAPACIDADES
-		if($form['tieneDiscapacidad'] == true){
-			// Si tiene discapacidad lo registramos o Actualizamos			
-			$discapacidadId = $form['discapacidadId'];
-			if($discapacidadId == 'nuevo'){
-				$discapacidad = new RudeDiscapacidadGrado();
-				$discapacidad->setRude($em->getRepository('SieAppWebBundle:Rude')->find($form['rudeId']));
-				$discapacidad->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find(isset($form['discapacidad'])?$form['discapacidad']:0));
-				$discapacidad->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find(isset($form['gradoDiscapacidad'])?$form['gradoDiscapacidad']:0));
-				$discapacidad->setFechaRegistro(new \DateTime('now'));
-				$em->persist($discapacidad);
-				$em->flush();
-			}else{
-				$discapacidad = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->find($discapacidadId);
-				if($discapacidad){
-					$discapacidad->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
-					$discapacidad->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find($form['gradoDiscapacidad']));
-					$discapacidad->setFechaModificacion(new \DateTime('now'));
+			/* if($form['tieneDiscapacidad'] == true){
+				// Si tiene discapacidad lo registramos o Actualizamos			
+				$discapacidadId = $form['discapacidadId'];
+				if($discapacidadId == 'nuevo'){
+					$discapacidad = new RudeDiscapacidadGrado();
+					$discapacidad->setRude($em->getRepository('SieAppWebBundle:Rude')->find($form['rudeId']));
+					$discapacidad->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find(isset($form['discapacidad'])?$form['discapacidad']:0));
+					$discapacidad->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find(isset($form['gradoDiscapacidad'])?$form['gradoDiscapacidad']:0));
+					$discapacidad->setFechaRegistro(new \DateTime('now'));
 					$em->persist($discapacidad);
 					$em->flush();
+				}else{
+					$discapacidad = $em->getRepository('SieAppWebBundle:RudeDiscapacidadGrado')->find($discapacidadId);
+					if($discapacidad){
+						$discapacidad->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
+						$discapacidad->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find($form['gradoDiscapacidad']));
+						$discapacidad->setFechaModificacion(new \DateTime('now'));
+						$em->persist($discapacidad);
+						$em->flush();
+					}
 				}
-			}
 
-			$estudiante->setCarnetIbc(isset($form['carnetIbc'])?$form['carnetIbc']:0);
-			$em->flush($estudiante);
-		}else{
-			// Si no titne discapacidad lo eliminamos
-			$eliminar = $em->createQueryBuilder()
-				->delete('')
-				->from('SieAppWebBundle:RudeDiscapacidadGrado','rdg')
-				->where('rdg.rude = :rudeId')
-				->setParameter('rudeId', $form['rudeId'])
-				->getQuery()
-				->getResult();
+				$estudiante->setCarnetIbc(isset($form['carnetIbc'])?$form['carnetIbc']:0);
+				$em->flush($estudiante);
+			}else{
+				// Si no titne discapacidad lo eliminamos
+				$eliminar = $em->createQueryBuilder()
+					->delete('')
+					->from('SieAppWebBundle:RudeDiscapacidadGrado','rdg')
+					->where('rdg.rude = :rudeId')
+					->setParameter('rudeId', $form['rudeId'])
+					->getQuery()
+					->getResult();
 
-			$estudiante->setCarnetIbc('');
-			$em->flush($estudiante);
-		}
+				$estudiante->setCarnetIbc('');
+				$em->flush($estudiante);
+			} */
 
 		// Registro de paso 1
 		if($rude->getRegistroFinalizado() < 1){
 			$rude->setRegistroFinalizado(1);
 			$em->flush();
-		}
-		
-
+		}	
 		$response = new JsonResponse();
 		return $response->setData(['msg'=>true]);
 	}
@@ -3480,12 +3478,9 @@ class InfoEstudianteRudeesNuevoController extends Controller
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
         $query = "select * from discapacidad_tipo where es_vigente='t' and origendiscapacidad in ('Auditiva','Visual','Intelectual','Física/Motora','Múltiple','Psíquica');";
-        $stmt = $db->prepare($query);
-        //$params = array();
-        //$stmt->execute($params);
+        $stmt = $db->prepare($query);        
         $stmt->execute();
         $catalogo=$stmt->fetchAll();
-
 		$ids = [];
 		foreach ($catalogo as $c)
 		{

@@ -2048,18 +2048,18 @@
     // var paso = 1;
     // console.log(paso);
     
-    // $('.validarTab').on('click', function(e){
-    //  var propHref = e.currentTarget.attributes.href.nodeValue;
-    //  var pasoSeleccionado = propHref.charAt(propHref.length - 1);
+    /*$('.validarTab').on('click', function(e){
+         var propHref = e.currentTarget.attributes.href.nodeValue;
+         var pasoSeleccionado = propHref.charAt(propHref.length - 1);
 
-    //  if(pasoSeleccionado > paso){
-    //      setTimeout(function(){
-    //          $('#paso'+paso).click();
-    //          $('#paso'+paso).click();
-    //      },1000);
-    //  }
-    // });
-
+        if(pasoSeleccionado > paso){
+         setTimeout(function(){
+             $('#paso'+paso).click();
+              $('#paso'+paso).click();
+          },1000);
+      }
+    });*/
+    
     $(function(){
         verificarPaisNacimiento();
         validarOtroGradoDiscapacidad();
@@ -2079,11 +2079,11 @@
         $("#form_fechaRegistroRude").inputmask({ "alias": "dd-mm-yyyy", "placeholder": "dd-mm-aaaa" });
 
         $('[data-toggle="tooltip"]').tooltip();
-        //estadoCivil();
-        //
+       
         mostrarTipoIdentificacion();
         mostrarTipoIdentificacionMadre();
         mostrarTipoIdentificacionTutor();
+        validarTieneParientes();
        
     });
 
@@ -2198,7 +2198,13 @@
         validarViveOtro();
     });
     //////////////
-
+    jQuery("#form_porcentaje").on('input', function (evt) {
+        // Allow only numbers.
+        jQuery(this).val(jQuery(this).val().replace(/[^0-9]/g, ''));
+    });
+    $('#form_porcentaje').on('change',function(){
+                
+    });
     //VALIDACION EspecificoEn:
     
     function validarEspecifico(){
@@ -2727,41 +2733,7 @@
             }
         }
     });
-
-    // // Bloqueo de discapacidad
-    // $('#form_seccionvEstudianteEsdiscapacidadSensorialComunicacion').change(function(){
-    //     bloquearDiscapacidad();
-    // });
-    // $('#form_seccionvEstudianteEsdiscapacidadMotriz').change(function(){
-    //     bloquearDiscapacidad();
-    // });
-    // $('#form_seccionvEstudianteEsdiscapacidadMental').change(function(){
-    //     bloquearDiscapacidad();
-    // });
-    // $('#form_seccionvEstudianteDiscapacidadOtro').on('change', function(){
-    //     bloquearDiscapacidad();
-    // });
-
-    // function bloquearDiscapacidad(){
-    //     var blocked = true;
-    //     if($('#form_seccionvEstudianteEsdiscapacidadSensorialComunicacion').val() == 1){ blocked = false; }
-    //     if($('#form_seccionvEstudianteEsdiscapacidadMotriz').val() == 1){ blocked = false; }
-    //     if($('#form_seccionvEstudianteEsdiscapacidadMental').val() == 1){ blocked = false; }
-    //     if($('#form_seccionvEstudianteDiscapacidadOtro').val() != ""){ blocked = false; }
-
-    //     if(blocked == true){
-    //         $('#form_seccionvDiscapacidadTipo').removeAttr('required');
-    //         $('#form_seccionvDiscapacidadTipo').val('');
-    //         $('#form_seccionvDiscapacidadTipo').attr('disabled','disabled');
-    //     }else{
-    //         $('#form_seccionvDiscapacidadTipo').removeAttr('disabled');
-    //         $('#form_seccionvDiscapacidadTipo').attr('required','required');
-    //     }
-        
-    // }
-
-    // bloquearDiscapacidad();
-
+    
     // Trabajo
     $('#form_seccionvActividadTipo').on('change', function(){
         if(this.value == 9){
@@ -2801,7 +2773,7 @@
             $('#form_carnet0').attr('required','required');
         }
         else
-        {
+        {  
             $('#div_tieneParientesDiscapacidad').hide(1000);
             $('#form_parienteDiscapacidad0').val('');
             $('#form_parienteDiscapacidad1').val('');  
@@ -2820,8 +2792,35 @@
              $('#form_carnet0').val('');
              $('#form_carnet1').val('');
              $('#form_carnet2').val('');
+
+             $('#form_carnet0').removeAttr('required');
+            $('#form_carnet1').removeAttr('required');
+            $('#form_carnet2').removeAttr('required');
         }
     });
+
+    function validarTieneParientes(){
+         if($('#form_tieneParientesDiscapacidad_1').is(':checked')){
+
+            $('#form_parienteDiscapacidad0').removeAttr('required');
+            $('#form_parienteDiscapacidad1').removeAttr('required');
+            $('#form_parienteDiscapacidad2').removeAttr('required');
+            
+            $('#form_discapacidad0').removeAttr('required');
+            $('#form_discapacidad1').removeAttr('required');
+            $('#form_discapacidad2').removeAttr('required');
+
+            $('#form_carnet0').removeAttr('required');
+            $('#form_carnet1').removeAttr('required');
+            $('#form_carnet2').removeAttr('required');
+        }else{
+            $('#form_parienteDiscapacidad0').attr('required','required');
+            //discapacidad
+            $('#form_discapacidad0').attr('required','required');
+            //carnet
+            $('#form_carnet0').attr('required','required'); 
+        }
+    }
 
     function saveFormSocioeconomicos()
     {
