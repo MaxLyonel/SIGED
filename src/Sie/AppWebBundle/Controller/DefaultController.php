@@ -489,6 +489,7 @@ class DefaultController extends Controller {
                 return $this->render('SieAppWebBundle:ControlDatosCelular:index.html.twig');
                 break;    
             case '172.20.196.5:9007': /// login plataforma
+	    case 'aula.minedu.gob.bo':
                 $this->session->set('pathSystem', "AppWebBundle");
                 return $this->render('SieAppWebBundle:ControlDatosPlataforma:index.html.twig');
                 break;   
