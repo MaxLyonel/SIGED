@@ -178,7 +178,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$serviciosArray[] = $gd['servicio'];
 		}
 		
-		
+		//dump($nivel,$programa);die;
 		return $this->render( $vista , [
 			'sie'=>$sie,
 			'estudiante'=>$estudiante,
@@ -1799,13 +1799,13 @@ class InfoEstudianteRudeesNuevoController extends Controller
 				'mapped'=>false
 			))
 			->add('coeficienteIntelectual', 'text', array(
-				'required' => false, 
+				'required' => true, 
 				'mapped'=>false,
 				'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getCoeficienteintelectual():'',
 				'max_length'=> 3,
 			))
 			->add('promedioCalificaciones', 'text', array(
-				'required' => false, 
+				'required' => true, 
 				'mapped'=>false,
 				'data'=>($talentoextraordinario_rude)?$talentoextraordinario_rude->getPromediocalificaciones():'',
 				'max_length'=> 3,
@@ -2460,14 +2460,8 @@ class InfoEstudianteRudeesNuevoController extends Controller
 
 	public function createFormApoderado($rude, $idInscripcion, $datos)
 	{
-
-		// $idInscripcion = $inscripcion->getId();
-
-		// $padreTutor = $this->obtenerApoderado($idInscripcion,array(1,3,4,5,6,7,8,9,10,11,12,13))[0];
-
-		// dump($datos['tipoApoderado']);die;
+		
 		$tipoApoderado = $datos['tipoApoderado'];
-
 		$em = $this->getDoctrine()->getManager();
 
 		// DEFINICION DE GENEROS POR TIPO DE APODERADO

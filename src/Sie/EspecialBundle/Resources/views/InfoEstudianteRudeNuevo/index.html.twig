@@ -1125,7 +1125,7 @@
                                             </div>
                                              {% if nivel == 'Programas'%}
                                             <div class="col-md-6 col-sm-6">
-                                              {{Programa}}
+                                              {{programa}}
                                             </div>
                                             {% endif %}
                                              {% if nivel == 'Servicios'%}
@@ -1210,10 +1210,18 @@
                                         {% endif %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
-                                                <p><strong>5.7 SERVICIOS MULTIDISCIPLINARIOS QUE RECIBE LA O EL ESTUDIANTE</strong> (Puede marcar más de una opción)</p>
+                                                <p><strong>5.7 SERVICIOS MULTIDISCIPLINARIOS QUE RECIBE LA O EL ESTUDIANTE</strong></p>
                                             </div>
-                                            <div class="col-md-6 col-sm-6">
-                                                Servicioss
+                                            <div class="col-md-6 col-sm-6">                                              
+                                               {% if serviciosArray is empty %}
+                                               El/la estudiante no recibe servicios multidisciplinarios.
+                                               {% else %}
+                                               <ol>
+                                                {% for data in serviciosArray %}
+                                                  <li>{{data}}</li>
+                                                {% endfor %}                                                
+                                               </ol>
+                                               {% endif %}                                             
                                             </div>
                                         </div>
 
@@ -2197,13 +2205,42 @@
     $('#form_viveCon').on('change', function(){
         validarViveOtro();
     });
-    //////////////
+    //Validacion solo numero --porcentaje
     jQuery("#form_porcentaje").on('input', function (evt) {
         // Allow only numbers.
         jQuery(this).val(jQuery(this).val().replace(/[^0-9]/g, ''));
     });
     $('#form_porcentaje').on('change',function(){
-                
+        let valorProcentaje = document.getElementById("form_porcentaje").value; 
+        if(valorProcentaje>100){
+            alert('El valor no debe superar al 100%');
+            $('#form_porcentaje').val('');
+            document.getElementById("form_porcentaje").focus();
+        }    
+    });
+    //Validacion solo numero --form_coeficienteIntelectual
+    jQuery("#form_coeficienteIntelectual").on('input', function (evt) {
+       jQuery(this).val(jQuery(this).val().replace(/[^0-9]/g, ''));
+    });
+     $('#form_coeficienteIntelectual').on('change',function(){
+        let valorProcentaje = document.getElementById("form_coeficienteIntelectual").value; 
+        if(valorProcentaje>100){
+            alert('El valor no debe superar al 100%');
+            $('#form_coeficienteIntelectual').val('');
+            document.getElementById("form_coeficienteIntelectual").focus();
+        }    
+    });
+    //Validacion solo numero --form_promedioCalificaciones
+    jQuery("#form_promedioCalificaciones").on('input', function (evt) {
+       jQuery(this).val(jQuery(this).val().replace(/[^0-9]/g, ''));
+    });
+     $('#form_promedioCalificaciones').on('change',function(){
+        let valorProcentaje = document.getElementById("form_promedioCalificaciones").value; 
+        if(valorProcentaje>100){
+            alert('El valor no debe superar al 100%');
+            $('#form_promedioCalificaciones').val('');
+            document.getElementById("form_promedioCalificaciones").focus();
+        }    
     });
     //VALIDACION EspecificoEn:
     
