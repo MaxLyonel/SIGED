@@ -41,3 +41,9 @@ observaciones_maestros_ue:
 herramienta_especial_infoconsolidation_gestion_index:
     path:     /consolgestion
     defaults: { _controller: SieEspecialBundle:InfoCentro:consolidacionGestion }
+
+herramienta_infoconsolidation_inconsistencias_modal:
+    path:     /{ueid}/consolgestionincosistenciasmodal/
+    defaults: { _controller: SieEspecialBundle:InfoCentro:getInconsistencias }
+    options:
+        expose: true

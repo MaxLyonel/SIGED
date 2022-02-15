@@ -188,8 +188,8 @@ class InfoConsolidationController extends Controller {
    * list of request
    *
    */
-  public function indexAction(Request $request) {
-
+  public function indexAction(Request $request) {     
+   
     $aAccess = array(5, 2, 9);
     if (in_array($this->session->get('roluser'), $aAccess)) {
         $institutionData1 = $this->getDataUe($this->session->get('ie_id'));
@@ -336,14 +336,14 @@ class InfoConsolidationController extends Controller {
     }
     
     $consol = $this->get('sie_app_web.funciones')->reporteConsol($gestionactual, $roluser, $roluserlugarid, $instipoid);
-
+    
     switch ($roluser) {
         case 8:
-            $ues = $this->get('sie_app_web.funciones')->estadisticaConsolNal($gestionactual, $instipoid);
+            $ues = $this->get('sie_app_web.funciones')->estadisticaConsolNal($gestionactual, $instipoid);            
             break;
 
         case 7:
-            $ues = $this->get('sie_app_web.funciones')->estadisticaConsolDptal($gestionactual, $roluserlugarid, $instipoid);
+            $ues = $this->get('sie_app_web.funciones')->estadisticaConsolDptal($gestionactual, $roluserlugarid, $instipoid);            
             break;
 
         case 10:
@@ -1257,6 +1257,113 @@ class InfoConsolidationController extends Controller {
 
 
     }
+
+    public function observacionesMaestrosAction(Request $request) {
+
+      $institucion = $request->getSession()->get('ie_id');
+      $gestion = $request->getSession()->get('idGestion');
+
+      dump('data2');
+      dump($institucion);
+      dump($gestion);
+      die;
+
+      $response = new JsonResponse();
+      return $response->setData(array('data'=>1,'mensaje'=>''));
+
+    }
+
+    /**
+     * dcastillo
+     */
+    public function consolidacionGestionInconsistenciasAction(Request $request) {
+
+      $em = $this->getDoctrine()->getManager();
+      $gestionactual = $this->session->get('currentyear');
+      $roluser = $this->session->get('roluser');
+      $roluserlugarid = $this->session->get('roluserlugarid');
+      $bundle = $this->session->get('pathSystem');
+  
+      switch ($bundle) {
+          case 'SieRegularBundle':
+          case 'SieHerramientaBundle':
+              $instipoid = 1;
+              $mingestion = 2014;
+              $title = 'Reporte de inconsistencias del Operativo de Inscripcion';
+              $label = 'Cantidad de Unidades Educativas que reportaron información';
+              $label_distrito = 'Cantidad de Unidades Educativas que reportaron información en el distrito';
+              break;
+  
+          case 'SieEspecialBundle':
+              $instipoid = 4;
+              $mingestion = 2013;
+              $title = 'Reporte de cierre de operativos por gestión y Centro de Educación Especial';
+              $label = 'Cantidad de Centros que reportaron matrícula';
+              $label_distrito = 'Cantidad de Centros que reportaron matrícula en el distrito';
+              break;
+          
+          default:
+              $instipoid = 1;
+              $mingestion = 2014;
+              $title = 'Reporte de inconsistencias del Operativo de Inscripcion';
+              $label = 'Cantidad de Unidades Educativas que reportaron información';
+              $label_distrito = 'Cantidad de Unidades Educativas que reportaron información en el distrito';
+              break;
+      }
+      
+      /* dcastillo nueva funcion */
+      $consol = $this->get('sie_app_web.funciones')->reporteNoConsol($gestionactual, $roluser, $roluserlugarid, $instipoid);
+      
+      switch ($roluser) {
+          case 8:
+              $ues = $this->get('sie_app_web.funciones')->estadisticaConsolNal($gestionactual, $instipoid);            
+              break;
+  
+          case 7:
+              $ues = $this->get('sie_app_web.funciones')->estadisticaConsolDptal($gestionactual, $roluserlugarid, $instipoid);            
+              break;
+  
+          case 10:
+              $ues = $this->get('sie_app_web.funciones')->estadisticaConsolDtal($gestionactual, $roluserlugarid, $instipoid);
+              break;
+  
+          default:
+              $ues = null;
+              break;
+      }
+  
+      $gestiones = $em->getRepository('SieAppWebBundle:GestionTipo')->findBy(array(), array('id' => 'DESC'));
+  
+      $gestionesArray = array();
+      
+      foreach ($gestiones as $value) {
+          if ($value->getId() >= $mingestion) {
+              $gestionesArray[$value->getId()] = $value->getGestion();
+          }
+      }
+      
+      return $this->render($this->session->get('pathSystem') . ':InfoConsolidationInconsistencias:index_gestion.html.twig', array(
+          'consol' => $consol,
+          'gestiones' => $gestionesArray,
+          'gestionactual' => $gestionactual,
+          'title' => $title,
+          'label' => $label,
+          'label_distrito' => $label_distrito,
+          'ues' => $ues
+      ));
+    }
+
+
+    /**
+     * dcastillo
+     * mostrar modal con inconsistencias
+     */
+    public function getInconsistenciasAction(Request $request) {
+      
+    }
+
+    
+
 
 
 
