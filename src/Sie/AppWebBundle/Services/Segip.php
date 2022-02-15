@@ -198,15 +198,14 @@ class Segip {
 			//$tipo_persona = 1;//1: nacional, 2:extranjero
 			//DATOS DE PRUEBA, QUITAR EN PRODUCCION
 			$url = $this->getUrlBase($env)."personas/contrastacion/?lista_campo=$lista_campo&tipo_persona=$tipo_persona";
+			
 			$response = $this->client->request(
 			    'GET', 
 			    $url, 
 			    ['headers' => ['Accept' => 'application/json', 'Authorization' => $token],
 			    ['debug' => true]])->getBody()->getContents();
-
 			//Obtenemos la respuesta del segip
 			$resultado = $this->obtenerValidacionDeSegip($response,$rawDatosEnvidosSegip);
-			$resultado= true;
 		}
 		catch(Exception $e)
 		{
