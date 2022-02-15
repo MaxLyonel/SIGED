@@ -2,18 +2,15 @@ Sie\AppWebBundle\Entity\RudeDiscapacidadGrado:
     type: entity
     table: rude_discapacidad_grado
     indexes:
-        fk_rude_discapacidad_grado:
-            columns:
-                - rude_id
-        IDX_16C57E15DD1D5DCE:
-            columns:
-                - discapacidad_otro_grado_id
-        IDX_16C57E15FA6D71F9:
-            columns:
-                - grado_discapacidad_tipo_id
         IDX_16C57E1539ED8040:
             columns:
                 - discapacidad_tipo_id
+        IDX_16C57E15443E4890:
+            columns:
+                - rude_id
+        IDX_16C57E15FA6D71F9:
+            columns:
+                - grado_discapacidad_tipo_id
     id:
         id:
             type: integer
@@ -34,37 +31,7 @@ Sie\AppWebBundle\Entity\RudeDiscapacidadGrado:
             nullable: true
             comment: ''
             column: fecha_modificacion
-        porcentaje:
-            type: integer
-            nullable: true
-            unsigned: false
-            comment: ''
-        gradoOtro:
-            type: string
-            nullable: true
-            length: 255
-            fixed: false
-            comment: ''
-            column: grado_otro
     manyToOne:
-        discapacidadOtroGrado:
-            targetEntity: DiscapacidadTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                discapacidad_otro_grado_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        gradoDiscapacidadTipo:
-            targetEntity: GradoDiscapacidadTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                grado_discapacidad_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         discapacidadTipo:
             targetEntity: DiscapacidadTipo
             cascade: {  }
@@ -81,6 +48,15 @@ Sie\AppWebBundle\Entity\RudeDiscapacidadGrado:
             inversedBy: null
             joinColumns:
                 rude_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gradoDiscapacidadTipo:
+            targetEntity: GradoDiscapacidadTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                grado_discapacidad_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

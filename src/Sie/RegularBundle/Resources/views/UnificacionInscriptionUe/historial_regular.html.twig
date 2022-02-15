@@ -1,0 +1,59 @@
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h3 class="text-primary">Historial de Inscripción de Educación Regular</h3>
+    </div>
+</div>
+ <div class="portlet-body">
+    <div id="no-more-tables">
+         <table class="table table-bordered table-hover cf">
+      <thead>
+        <tr role="row">
+          <th class="text-center">Gestión</th>
+          <th class="text-center">Unidad Educativa</th>
+          <th class="text-center">Nivel</th>
+          <th class="text-center">Grado</th>
+          <th class="text-center">Paralelo</th>
+          <th class="text-center">Turno</th>
+          <th class="text-center">Estado Matrícula</th>
+          <th class="text-center">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody role="alert" aria-live="polite" aria-relevant="all">
+      {% set  total = 0 %}
+        {% for data in dataInscription %}
+          {% if data.estadoMatriculaId==4 %}
+            {% set  total = total + 1 %}
+          {% endif %}
+          <tr>
+            <td>{{data.gestion}}</td>
+            <td>{{data.sie}} - {{data.institucioneducativa}}</td>
+            <td>{{data.nivel }} </td>
+            <td>{{data.grado}}</td>
+            <td>{{data.paralelo}}</td>
+            <td>{{data.turno}} </td>
+            <td class="text-center">{{data.estadoMatricula}}</td>
+            <td class="text-center">
+             {% if data.estadoMatriculaId!=4 or total>=2 %}
+                  <a href="{{path( 'unificacion_inscription_remove', {
+                        'idstudent':data.eId,
+                        'nivel':data.nivelId,
+                        'grado':data.gradoId,
+                        'paralelo':data.paraleloId,
+                        'turno':data.turnoId,
+                        'sie':data.sie,
+                        'gestion':data.gestion,
+                        'eiid':data.eiId } )}}" onclick="javascript:if (confirm('¿Está seguro de corregir la Inscripción ?')) {
+                              return true;
+                          } else {
+                              return false;
+                          }
+                  " class="text-danger"><span class="glyphicon glyphicon-minus-sign"></span> corregir Inscripción</a>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
