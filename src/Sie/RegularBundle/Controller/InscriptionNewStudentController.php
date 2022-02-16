@@ -1083,9 +1083,15 @@ class InscriptionNewStudentController extends Controller {
             $em->flush();
             
             //add the areas to the student
-            $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+            //$query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+            //$query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+            //$query->execute();
+
+            $query = $em->getConnection()->prepare('SELECT * from sp_crea_estudiante_asignatura_regular(:sie::VARCHAR, :estudiante_inscripcion_id::VARCHAR)');
             $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+						$query->bindValue(':sie', $form['institucionEducativa']);
             $query->execute();
+
 
             $responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId(), $form['gestionIns']);
             $em->getConnection()->commit();

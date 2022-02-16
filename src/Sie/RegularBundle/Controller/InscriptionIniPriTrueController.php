@@ -658,7 +658,8 @@ class InscriptionIniPriTrueController extends Controller {
 
          //$student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['codigoRude']));
           //Recupero el CodUE de procedencia $form['codigoRude']
-           $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude'] ));
+           $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude'] )); 
+
            $query = $em->getConnection()->prepare('SELECT cod_ue_procedencia_id 
                                                    FROM estudiante_inscripcion  
                                                    WHERE estudiante_id ='. $estudiante->getId() .'
@@ -695,9 +696,13 @@ class InscriptionIniPriTrueController extends Controller {
 
           //add the areas to the student
           //$responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId());    
-          $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
-          $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
-          $query->execute();         
+          //$query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+          //$query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+         // $query->execute();         
+            $query = $em->getConnection()->prepare('SELECT * from sp_crea_estudiante_asignatura_regular(:sie::VARCHAR, :estudiante_inscripcion_id::VARCHAR)');
+            $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+            $query->bindValue(':sie', $form['institucionEducativa']);
+            $query->execute();
 
         /*=============================================================
         =            ACTUALIZACION DEL ESTADO DE MATRICULA            =
