@@ -287,6 +287,7 @@
 
     function verifica_errores() {
         //no importa por que en el controller se tienen estos datos de la sesion
+        console.log('verifica_errores')
         gestionid = 5;
         ueid = 50;
         $.ajax({
@@ -305,7 +306,7 @@
 
     //dcastillo
     function mostrarModal() {
-
+        console.log('mostrarModal');
         gestionid = 5;
         ueid = 50;
         $("#infoModal").hide();
