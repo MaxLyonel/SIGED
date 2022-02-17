@@ -183,11 +183,9 @@ class NewInscriptionIniPriController extends Controller
 			$arrayCondition['materno'] = mb_strtoupper($materno,'utf-8');
 			$arrayCondition['nombre']  = mb_strtoupper($nombre,'utf-8');
 			$arrayCondition['fechaNacimiento'] = new \DateTime(date("Y-m-d", strtotime($fecNac))) ;
-
-		if($withoutcifind){	
-			
-			// find the student by arrayCondition
 			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
+		if($withoutcifind && ($carnet=='' || !$carnet )){	
+			// find the student by arrayCondition
 			$existStudent = false;
 			if(sizeof($objStudent)>0){
 				$existStudent=true;				
@@ -201,13 +199,12 @@ class NewInscriptionIniPriController extends Controller
 			}else{
 				$arrayCondition['complemento'] = "";
 			}
-			// dump($arrayCondition);die;
 
 			// find the student by arrayCondition
-			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
+			$objStudentCi = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
 			// dump($objStudent);die;
 			$existStudent = false;
-			if(sizeof($objStudent)>0){
+			if(sizeof($objStudentCi)>0){
 				$existStudent=true;				
 			}
 			if(!$existStudent){
@@ -222,8 +219,11 @@ class NewInscriptionIniPriController extends Controller
 		      	
 				$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
 			}
-
+			if($answerSegip && sizeof($objStudent)>0){
+				$existStudent=true;				
+			}
 		}
+
 		 //dump($objStudent); 
 		 //dump($existStudent);die;
 		 //die;
@@ -291,7 +291,7 @@ class NewInscriptionIniPriController extends Controller
 
 			$status = 'error';
 			$code = 400;
-			$message = "Estudiante ya tiene registro, favor realizar la inscripción por el módulo de -> Nuevo Estudiante en la UE";
+			$message = "Estudiante ya tiene registro ";
 			$swcreatestudent = false; 
 
 		}

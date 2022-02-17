@@ -47,6 +47,7 @@ class NewInscriptionEspecialController extends Controller
         if (!isset($this->userlogged)) {
             return $this->redirect($this->generateUrl('login'));
         }
+		
 			$enableoption = true; 
 			$message = ''; 
        
@@ -59,7 +60,7 @@ class NewInscriptionEspecialController extends Controller
 	        $arrExpedido[$value->getId()] = $value->getSigla();
 	      }
 		
-	    $userAllowedOnwithoutCI = in_array($this->session->get('roluser'), array(8,10))?true:false;
+	    $userAllowedOnwithoutCI = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
        	return $this->render($this->session->get('pathSystem') .':NewInscriptionEspecial:index.html.twig', array(
        		'arrExpedido'=>$objExpedido,
        		'allowwithoutci' => $userAllowedOnwithoutCI,
@@ -136,8 +137,13 @@ class NewInscriptionEspecialController extends Controller
 		      	
 				$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
 			}
+			if($answerSegip && sizeof($objStudent)>0){
+				$existStudent=true;				
+			}
 
 		}
+
+		
 	
 		// check if the student exists
 		if(!$existStudent){
