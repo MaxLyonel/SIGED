@@ -527,6 +527,7 @@ class NewInscriptionEspecialController extends Controller
       if ($aTuicion[0]['get_ue_tuicion']) {
         //get the IE
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneBy(array(
+			'id'=>$id,
 			'institucioneducativaTipo'=>4
 				));
 		
