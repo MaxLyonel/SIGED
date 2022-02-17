@@ -126,6 +126,7 @@ class Segip {
     		$opcional['ci']=$carnet;
     		$camposMinimosRequeridos = array_keys($opcional);
     		list($lista_campo,$tipo_persona,$rawDatosEnvidosSegip) = $this->getJsonDatosVerificacion($opcional,$camposMinimosRequeridos);
+			
     		$persona['ConsultaDatoPersonaEnJsonResult']['DatosPersonaEnFormatoJson']=$lista_campo;
     		return $persona;
     	}
@@ -174,6 +175,7 @@ class Segip {
 	//funcion modificada el 28/06/2021
 	public function verificarPersonaPorCarnet($carnet, $opcional, $env, $sistema)
 	{
+		
 		//funcion modificada el 28/06/2021
 		$resultado = false;
 		$token = $this->getToken($env,$sistema);
@@ -182,8 +184,13 @@ class Segip {
 			$datosVerificacion = $opcional;
 			$datosVerificacion = new \ArrayObject($opcional);
 			$datosVerificacion['ci']=$carnet;
+			//dump($datosVerificacion); die;
 			list($lista_campo,$tipo_persona,$rawDatosEnvidosSegip) = $this->getJsonDatosVerificacion($datosVerificacion);
-			
+			/*dump($lista_campo);
+			dump($tipo_persona);
+			dump($rawDatosEnvidosSegip);
+			die;*/
+
 			//DATOS DE PRUEBA, QUITAR EN PRODUCCION
 			//$lista_campo='{"ComplementoVisible":"1","NumeroDocumento":"13814118","Complemento":"1F","Nombres":"JHONSON JOEL","PrimerApellido":"QUEZO","SegundoApellido":"MANUELO","FechaNacimiento":"04/08/2007","LugarNacimientoPais":"BOLIVIA","LugarNacimientoDepartamento":"LA PAZ","LugarNacimientoProvincia":"MURILLO","LugarNacimientoLocalidad":"EL ALTO"}';
 			//$respuestaJson = array();
@@ -198,7 +205,7 @@ class Segip {
 			//$tipo_persona = 1;//1: nacional, 2:extranjero
 			//DATOS DE PRUEBA, QUITAR EN PRODUCCION
 			$url = $this->getUrlBase($env)."personas/contrastacion/?lista_campo=$lista_campo&tipo_persona=$tipo_persona";
-			
+			//dump($url); die;
 			$response = $this->client->request(
 			    'GET', 
 			    $url, 
@@ -206,6 +213,7 @@ class Segip {
 			    ['debug' => true]])->getBody()->getContents();
 			//Obtenemos la respuesta del segip
 			$resultado = $this->obtenerValidacionDeSegip($response,$rawDatosEnvidosSegip);
+			//dump($resultado); die; //dcastillo para verificar el resultado de nacionla y extranjero
 		}
 		catch(Exception $e)
 		{
@@ -218,8 +226,18 @@ class Segip {
 	private function getJsonDatosVerificacion($datosVerificacion,$camposMinimosRequeridos=array('ci','complemento','fecha_nacimiento'))
 	{
 		$respuestaJson = array();
-		$tipo_persona = 1; //nacional
+		$tipo_persona = 1; //nacional he aqui el error
 		$datosMinimos = 0;
+
+		/**
+		 * dcastillo: lo que venga del form 1 NACIONAL 2 EXTRANJERO
+		 * que ya viene en datosVerificacion, si no existe hasta que se adecuen todos los formularios
+		 * pregunta si existe y se queda con 1
+		 */
+		if (isset($datosVerificacion['tipo_persona'])) {
+			$tipo_persona = $datosVerificacion['tipo_persona'];
+		}
+		
 
 		foreach ($datosVerificacion as $key => $valor)
 		{
@@ -260,7 +278,7 @@ class Segip {
 				$datosMinimos++;
 			}
 		}
-		//verificacion de si extranjero
+		//verificacion de si extranjero, aqui nunca entra, no importa ya viene del form
 		if(array_key_exists('extranjero', $datosVerificacion)==true)
 			$tipo_persona=2; //extranjero
 
@@ -276,7 +294,7 @@ class Segip {
 	}
 
 	/*Nueva funcion 26/08/2021*/
-	private function obtenerValidacionDeSegip($respuestaSegip,$datosEnviadosSegip)
+	private function obtenerValidacionDeSegip($respuestaSegip,$datosEnviadosSegip)	
 	{
 		$esCorrecto = true;
 		/*
@@ -296,6 +314,7 @@ class Segip {
 		try
 		{
 			$respustaSegipJsonDecode = json_decode($respuestaSegip);
+			
 			if(property_exists($respustaSegipJsonDecode,'ConsultaDatoPersonaContrastacionResult'))
 			{
 				$respuestaTmp = $respustaSegipJsonDecode->ConsultaDatoPersonaContrastacionResult;

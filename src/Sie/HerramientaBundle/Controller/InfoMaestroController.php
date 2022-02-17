@@ -294,8 +294,7 @@ class InfoMaestroController extends Controller {
         return $form;
     }
 
-    public function resultAction(Request $request) {
-
+    public function resultAction(Request $request) {        
         // Verificamos si no ha caducado la session
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
@@ -332,6 +331,14 @@ class InfoMaestroController extends Controller {
     public function verificarPersonaAction(Request $request){
         
         $form = $request->get('sie_verificar_persona_segip');
+        $tipo_persona = 1;
+        //si llega desde el form, estopara que otros formualrio no tengan error
+        // mientras son modificados
+        if ($request->get('nacionalidad')) {
+            //NA: nacional, EX: extranjero
+            $nacionalidad = $request->get('nacionalidad'); //EX o NA
+            $tipo_persona = ($nacionalidad == 'NA') ? 1 : 2;
+        }
 
         $data = [
             'carnet' => $form['carnet'],
@@ -339,7 +346,8 @@ class InfoMaestroController extends Controller {
             'primer_apellido' => $form['primer_apellido'],
             'segundo_apellido' => $form['segundo_apellido'],
             'nombre' => $form['nombre'],
-            'fecha_nacimiento' => $form['fecha_nacimiento']
+            'fecha_nacimiento' => $form['fecha_nacimiento'],
+            'tipo_persona' => $tipo_persona,  //tiene que venir del form
         ];
 
         $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
