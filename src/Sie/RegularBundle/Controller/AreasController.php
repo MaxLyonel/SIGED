@@ -158,10 +158,10 @@ class AreasController extends Controller {
                     ->add('paralelo', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control','onchange' => 'validateForm()')))
                     ->add('buscar', 'submit', array('label' => 'Buscar Curso', 'attr' => array('class' => 'btn btn-info btn-block')))
                     ->getForm();
-            
+
             //dcastillo formNuevo
             // turnos menos 10,11
-            $RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
+            /*$RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
             $statement = $em->getConnection()->prepare($RAW_QUERY);
             $statement->execute();
             $result = $statement->fetchAll();
@@ -170,7 +170,27 @@ class AreasController extends Controller {
             $turnosArray = array();
             for ($i = 0; $i < count($turnos); $i++) {
                 $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+            }*/
+
+            // Lista de turnos validos para la unidad educativa
+            $query = $em->createQuery(
+                'SELECT DISTINCT tt.id,tt.turno
+                    FROM SieAppWebBundle:InstitucioneducativaCurso iec
+                    JOIN iec.institucioneducativa ie
+                    JOIN iec.turnoTipo tt
+                    WHERE ie.id = :id
+                    AND iec.gestionTipo = :gestion
+                    ORDER BY tt.id'
+            )
+            ->setParameter('id', $institucion)
+                ->setParameter('gestion', $gestion);
+            $turnos = $query->getResult();
+            $turnosArray = array();
+            for ($i = 0; $i < count($turnos); $i++) {
+                $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
             }
+
+
             // niveles solo 11,12,13
             $RAW_QUERY = 'SELECT * FROM nivel_tipo where id  in (11,12,13);';            
             $statement = $em->getConnection()->prepare($RAW_QUERY);
@@ -181,6 +201,9 @@ class AreasController extends Controller {
             for ($i = 0; $i < count($niveles); $i++) {
                 $nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
             }
+
+            
+
             // grados menos 7,8,14,15,16,17,41,42,43,99
             $RAW_QUERY = 'SELECT * FROM grado_tipo where id in (1,2,3,4,5,6);';            
             $statement = $em->getConnection()->prepare($RAW_QUERY);
@@ -191,25 +214,45 @@ class AreasController extends Controller {
             for ($i = 0; $i < count($grados); $i++) {
                 $gradosArray[$grados[$i]['id']] = $grados[$i]['grado'];
             }
-            // paralelos de la A - Z
-            $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';            
-            $statement = $em->getConnection()->prepare($RAW_QUERY);
-            $statement->execute();
-            $result = $statement->fetchAll();                            
-            $paralelos = $result;
-            $paralelosArray = array();
-            for ($i = 0; $i < count($paralelos); $i++) {
-                $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
-            }
 
+            //$gradosArray = [];
+
+            // paralelos de la A - Z
+            if ($this->session->get('roluser') == 8)
+            //$rol = 1;
+            //if ($rol == 9)
+             {
+                //SOLO  UNIDAD MOSTRAR PARALELO A                
+                $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                $statement = $em->getConnection()->prepare($RAW_QUERY);
+                $statement->execute();
+                $result = $statement->fetchAll();
+                $paralelos = $result;
+                $paralelosArray = array();
+                for ($i = 0; $i < count($paralelos); $i++) {
+                    $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                }                
+
+             }else{
+                //TODOS LOS DEMAS DE LA B A LA Z
+                $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
+                $statement = $em->getConnection()->prepare($RAW_QUERY);
+                $statement->execute();
+                $result = $statement->fetchAll();
+                $paralelos = $result;
+                $paralelosArray = array();
+                for ($i = 0; $i < count($paralelos); $i++) {
+                    $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                }
+             }
 
 
 
             $formNuevo = $this->createFormBuilder()
             ->add('idInstitucion', 'hidden', array('data' => $institucion))
             ->add('idGestion', 'hidden', array('data' => $gestion))
-            ->add('nuevoTurno', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $turnosArray, 'attr' => array('class' => 'form-control')))            
-            ->add('nuevoNivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $nivelesArray, 'attr' => array('class' => 'form-control')))            
+            ->add('nuevoTurno', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $turnosArray, 'attr' => array('class' => 'form-control', 'onchange' => 'cargarNiveles2()')))            
+            ->add('nuevoNivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $nivelesArray, 'attr' => array('class' => 'form-control', 'onchange' => 'cargarGrados2()')))            
             //->add('nivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarGrados()')))
             //->add('grado', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarParalelos()')))
             ->add('nuevoGrado', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $gradosArray, 'attr' => array('class' => 'form-control')))            
