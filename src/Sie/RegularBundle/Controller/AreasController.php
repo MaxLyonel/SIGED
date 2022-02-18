@@ -190,12 +190,36 @@ class AreasController extends Controller {
                 $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
             }
 
+            //dump($institucion); die;
 
-            // niveles solo 11,12,13
-            $RAW_QUERY = 'SELECT * FROM nivel_tipo where id  in (11,12,13);';            
+            // niveles solo 11,12,13 reqerimiento incial erroneo
+            /*$RAW_QUERY = 'SELECT * FROM nivel_tipo where id  in (11,12,13);';            
             $statement = $em->getConnection()->prepare($RAW_QUERY);
             $statement->execute();
             $result = $statement->fetchAll();                            
+            $niveles = $result;
+            $nivelesArray = array();
+            for ($i = 0; $i < count($niveles); $i++) {
+                $nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
+            }*/
+
+            //sacamos solo los PERMITIDOS segun RUE para esa UE
+            $RAW_QUERY = "SELECT
+                nivel_tipo.id, 
+                nivel_tipo.nivel, 
+                nivel_tipo.vigente, 
+                institucioneducativa_nivel_autorizado.institucioneducativa_id
+            FROM
+                institucioneducativa_nivel_autorizado
+                INNER JOIN
+                nivel_tipo
+                ON 
+                    institucioneducativa_nivel_autorizado.nivel_tipo_id = nivel_tipo.id
+            where institucioneducativa_id = '" . $institucion."' and vigente = true";
+
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
             $niveles = $result;
             $nivelesArray = array();
             for ($i = 0; $i < count($niveles); $i++) {
@@ -215,43 +239,26 @@ class AreasController extends Controller {
                 $gradosArray[$grados[$i]['id']] = $grados[$i]['grado'];
             }
 
-            //$gradosArray = [];
-
-            // paralelos de la A - Z
-            if ($this->session->get('roluser') == 8)
-            //$rol = 1;
-            //if ($rol == 9)
-             {
-                //SOLO  UNIDAD MOSTRAR PARALELO A                
-                $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
-                $statement = $em->getConnection()->prepare($RAW_QUERY);
-                $statement->execute();
-                $result = $statement->fetchAll();
-                $paralelos = $result;
-                $paralelosArray = array();
-                for ($i = 0; $i < count($paralelos); $i++) {
-                    $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
-                }                
-
-             }else{
-                //TODOS LOS DEMAS DE LA B A LA Z
-                $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
-                $statement = $em->getConnection()->prepare($RAW_QUERY);
-                $statement->execute();
-                $result = $statement->fetchAll();
-                $paralelos = $result;
-                $paralelosArray = array();
-                for ($i = 0; $i < count($paralelos); $i++) {
-                    $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
-                }
-             }
+                      
+            //TODOS LOS DEMAS DE LA B A LA Z
+            //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
+            $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            $paralelos = $result;
+            $paralelosArray = array();
+            for ($i = 0; $i < count($paralelos); $i++) {
+                $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+            }
+           
 
 
 
             $formNuevo = $this->createFormBuilder()
             ->add('idInstitucion', 'hidden', array('data' => $institucion))
             ->add('idGestion', 'hidden', array('data' => $gestion))
-            ->add('nuevoTurno', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $turnosArray, 'attr' => array('class' => 'form-control', 'onchange' => 'cargarNiveles2()')))            
+            ->add('nuevoTurno', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $turnosArray, 'attr' => array('class' => 'form-control', )))            
             ->add('nuevoNivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'choices' => $nivelesArray, 'attr' => array('class' => 'form-control', 'onchange' => 'cargarGrados2()')))            
             //->add('nivel', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarGrados()')))
             //->add('grado', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...', 'attr' => array('class' => 'form-control', 'onchange' => 'cargarParalelos()')))
@@ -479,7 +486,7 @@ class AreasController extends Controller {
         $em = $this->getDoctrine()->getManager();
         
         $form = $request->get('form');
-        
+                
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
             'institucioneducativa' => $form['idInstitucion'],
             'gestionTipo' => $form['idGestion'],
@@ -500,6 +507,10 @@ class AreasController extends Controller {
         $areasCurso = $this->get('areas')->getAreas($idCurso);
         $operativo = $this->get('funciones')->obtenerOperativo($form['idInstitucion'],$form['idGestion']);
 
+        
+        $existenOfertas = sizeof($areasCurso['cursoOferta']);
+        //dump($existenOfertas); exit;
+
         //dacastillo: se adicionan parametros enviados
         return $this->render('SieRegularBundle:Areas:listaAreasCurso.html.twig', array(
             'areas' => $areasCurso,
@@ -511,7 +522,9 @@ class AreasController extends Controller {
             'turnoTipo' => $form['turno'],
             'nivelTipo' => $form['nivel'],
             'gradoTipo' => $form['grado'],
-            'paraleloTipo' => $form['paralelo']
+            'paraleloTipo' => $form['paralelo'],
+            'existenOfertas' => $existenOfertas
+            
         ));
     }
 
@@ -535,17 +548,70 @@ class AreasController extends Controller {
             iparalelo character varying
             select sp_crea_curso_oferta('2022', '80730274', '2', '12', '1','3')
             */
+           
+           //nueva regla
+            /*if director = true and nivel_autorizado and  paralelo = A entonces                
+                ejecuta
+            else
+                msg "Acuda a su tecnico distrital o departamental para la ahabilitacion correspondiente"*/
+
+            // validamos que el nivel sea autorizado
+            $sql = "select count(*) from
+                (
+                SELECT
+                    nivel_tipo.id, 
+                    nivel_tipo.nivel, 
+                    nivel_tipo.vigente, 
+                    institucioneducativa_nivel_autorizado.institucioneducativa_id
+                FROM
+                    institucioneducativa_nivel_autorizado
+                    INNER JOIN
+                    nivel_tipo
+                    ON 
+                        institucioneducativa_nivel_autorizado.nivel_tipo_id = nivel_tipo.id
+                where institucioneducativa_id = '".$institucioneducativa."' and vigente = true
+                )as tmp where id = " . $nivelTipo;
 
             $em = $this->getDoctrine()->getManager();      
-            $query = $em->getConnection()->prepare("select * FROM sp_crea_curso_oferta('$gestionTipo', '$institucioneducativa', '$turnoTipo', '$nivelTipo', '$gradoTipo','$paraleloTipo') ");
-            $query->execute();
-            $valor= $query->fetchAll();
-            $res= $valor[0]['sp_crea_curso_oferta'];
-            /* fin modificacion */
+            $statement = $em->getConnection()->prepare($sql);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            //dump($result[0]['count']); die;
+            $nivelautorizado = $result[0]['count'];
 
-            $res= $valor[0]['sp_crea_curso_oferta'];
-            $response = new JsonResponse();
-            return $response->setData(array('exito'=>$res,'mensaje'=>''));
+
+            //director
+           if($this->session->get('roluser') == 9 ){
+
+                //if($paralelo_id == 1 and $nivelautorizado == 1) {
+
+                    $em = $this->getDoctrine()->getManager();      
+                    $query = $em->getConnection()->prepare("select * FROM sp_crea_curso_oferta('$gestionTipo', '$institucioneducativa', '$turnoTipo', '$nivelTipo', '$gradoTipo','$paraleloTipo') ");
+                    $query->execute();
+                    $valor= $query->fetchAll();
+                    $res= $valor[0]['sp_crea_curso_oferta'];
+                    /* fin modificacion */
+
+                    $res= $valor[0]['sp_crea_curso_oferta'];
+                    $response = new JsonResponse();
+                    return $response->setData(array('exito'=>$res,'mensaje'=>''));
+
+
+
+                /*}else{
+                    $msg = 'Acuda a su Tecnico SIE Distrital o Departamental para la habilitacion Correspondiente';
+                    $response = new JsonResponse();
+                    return $response->setData(array('exito'=>0,'mensaje'=>$msj));    
+                }*/
+
+           }else {
+                $msg = 'Su usuario no puede realizar esta operacion !!';
+                $response = new JsonResponse();
+                return $response->setData(array('exito'=>-1,'mensaje'=>$msg));
+           }
+
+
+           
     }
 
     /**
@@ -904,6 +970,7 @@ class AreasController extends Controller {
         igrado character varying, 
         iparalelo character varying)
         */
+       
 
         $em = $this->getDoctrine()->getManager();      
         $query = $em->getConnection()->prepare("select * FROM sp_crea_nuevo_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id') ");
@@ -921,6 +988,10 @@ class AreasController extends Controller {
         $res= $valor[0]['sp_crea_nuevo_curso'];
         $response = new JsonResponse();
         return $response->setData(array('exito'=>$res,'mensaje'=>''));
+
+           
+
+       
     }   
 
 }
