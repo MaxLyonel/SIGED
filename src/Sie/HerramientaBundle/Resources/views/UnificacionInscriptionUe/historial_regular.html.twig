@@ -49,7 +49,7 @@
               {# if ( (app.session.get('roluser') == '8') or (app.session.get('roluser') == '7') or (app.session.get('roluser') == '10')) #}
               {% if app.session.get('roluser') == '8' %}
                 <br>
-                  <a href="{{path( 'remove_inscription_sie_remove', {
+                  <a href="{{path( 'unificacion_inscription_remove', {
                         'idstudent':data.estudiante_id_raep,
                         'nivel':data.nivel_tipo_id_r,
                         'grado':data.grado_tipo_id_r,
