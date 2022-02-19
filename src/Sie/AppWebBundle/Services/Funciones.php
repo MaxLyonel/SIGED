@@ -359,6 +359,105 @@ class Funciones {
             codigo_distrito,
             codigo_sie;
         ");
+        
+        $query->execute();
+        $registro_consolidacion = $query->fetchAll();
+        return $registro_consolidacion;
+    }
+
+    /**
+     * dcastillo
+     * los que NO han cerrado operativo en la gestion actual
+     */
+    public function reporteNoConsol($gestionid, $roluser, $roluserlugarid, $instipoid){
+
+        $lugar = $this->em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
+        
+        switch ($roluser) {
+            case '7':
+                $where = "lt4.codigo = '".$lugar->getCodigo()."'";
+                break;
+
+            case '8':
+                $where = '1 = 1';
+                break;
+
+            case '10':
+                $where = "dt.id = '".$lugar->getCodigo()."'";
+                break;
+
+            default:
+                $where = '1 = 0';
+                break;
+        }
+
+        /*$query = $this->em->getConnection()->prepare("
+            SELECT
+            lt4.codigo AS codigo_departamento,
+            lt4.lugar AS departamento,
+            dt.id codigo_distrito,
+            dt.distrito,
+            inst.id codigo_sie,
+            inst.institucioneducativa,
+            case when rc.bim1 > 0 then 'SI' else 'NO' end AS bim1,
+            case when rc.bim2 > 0 then 'SI' else 'NO' end AS bim2,
+            case when rc.bim3 > 0 then 'SI' else 'NO' end AS bim3,
+            case when rc.bim4 > 0 then 'SI' else 'NO' end AS bim4,
+            rc.gestion
+            FROM registro_consolidacion rc
+            INNER JOIN institucioneducativa inst ON rc.unidad_educativa = inst.id
+            INNER JOIN jurisdiccion_geografica jg on jg.id = inst.le_juridicciongeografica_id
+            LEFT JOIN lugar_tipo lt ON lt.id = jg.lugar_tipo_id_localidad
+            LEFT JOIN lugar_tipo lt1 ON lt1.id = lt.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt2 ON lt2.id = lt1.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt3 ON lt3.id = lt2.lugar_tipo_id
+            LEFT JOIN lugar_tipo lt4 ON lt4.id = lt3.lugar_tipo_id
+            INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.id
+            WHERE ".$where." AND rc.gestion = ".$gestionid." AND
+            rc.institucioneducativa_tipo_id = ".$instipoid." AND inst.estadoinstitucion_tipo_id = 10
+            ORDER BY
+            codigo_departamento,
+            codigo_distrito,
+            codigo_sie;
+        ");*/
+
+        $query = $this->em->getConnection()->prepare("
+        SELECT
+            * 
+        FROM
+            (
+            SELECT
+                inst.ID,
+                lt4.codigo AS codigo_departamento,
+                lt4.lugar AS departamento,
+                dt.ID codigo_distrito,
+                dt.distrito,
+                inst.ID codigo_sie,
+                inst.institucioneducativa,
+                'NO' AS bim1,
+                'NO' AS bim2,
+                'NO' AS bim3,
+                'NO' AS bim4 --rc.gestion
+                
+            FROM
+                institucioneducativa inst
+                INNER JOIN jurisdiccion_geografica jg ON jg.ID = inst.le_juridicciongeografica_id
+                LEFT JOIN lugar_tipo lt ON lt.ID = jg.lugar_tipo_id_localidad
+                LEFT JOIN lugar_tipo lt1 ON lt1.ID = lt.lugar_tipo_id
+                LEFT JOIN lugar_tipo lt2 ON lt2.ID = lt1.lugar_tipo_id
+                LEFT JOIN lugar_tipo lt3 ON lt3.ID = lt2.lugar_tipo_id
+                LEFT JOIN lugar_tipo lt4 ON lt4.ID = lt3.lugar_tipo_id
+                INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.ID 
+            WHERE ".$where."  AND inst.estadoinstitucion_tipo_id =  10 and inst.institucioneducativa_acreditacion_tipo_id = 1
+            ORDER BY
+                codigo_departamento,
+                codigo_distrito,
+                codigo_sie 
+            ) AS datos 
+        WHERE
+            datos.codigo_sie NOT IN ( SELECT unidad_educativa FROM registro_consolidacion WHERE gestion = ".$gestionid." AND institucioneducativa_tipo_id = ".$instipoid." )
+        ");
+
         $query->execute();
         $registro_consolidacion = $query->fetchAll();
         return $registro_consolidacion;
@@ -1695,7 +1794,7 @@ class Funciones {
                         $cantidad = $cantidad + 1;
                     }
                 }
-                if($cantidad >= 2 and (preg_match("/EDUCACION SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or preg_match("/EDUCACIÓN SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or $infoUe['ueducativaInfoId']['areaEspecialId']==4)){
+                if($cantidad >= 2 and (preg_match("/EDUCACION SOCIOCOMUNITARIA EN CASA/i", $iecLugar) or preg_match("/EDUCACIÓN SOCIOCOMUNITARIA EN CASA/i", $iecLugar) and $infoUe['ueducativaInfoId']['areaEspecialId']==4)){
                     $data['cupo'] = "NO";
                     $data['msg'] = "El curso o grupo no puede tener más de <strong>". $cantidad. " estudiantes activos.</strong>";
                 }else{

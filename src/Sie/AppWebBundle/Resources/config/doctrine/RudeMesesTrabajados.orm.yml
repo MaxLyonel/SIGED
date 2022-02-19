@@ -2,7 +2,7 @@ Sie\AppWebBundle\Entity\RudeMesesTrabajados:
     type: entity
     table: rude_meses_trabajados
     indexes:
-        IDX_CE6F519D443E4890:
+        fk_rude_meses_trabajados:
             columns:
                 - rude_id
         IDX_CE6F519DB66A0A8F:

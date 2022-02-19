@@ -149,4 +149,32 @@ class RudeEstrategiaAtencionIntegral
     {
         return $this->rude;
     }
+    /**
+     * @var string
+     */
+    private $estrategiaOtro;
+
+
+    /**
+     * Set estrategiaOtro
+     *
+     * @param string $estrategiaOtro
+     * @return RudeEstrategiaAtencionIntegral
+     */
+    public function setEstrategiaOtro($estrategiaOtro)
+    {
+        $this->estrategiaOtro = $estrategiaOtro;
+    
+        return $this;
+    }
+
+    /**
+     * Get estrategiaOtro
+     *
+     * @return string 
+     */
+    public function getEstrategiaOtro()
+    {
+        return $this->estrategiaOtro;
+    }
 }

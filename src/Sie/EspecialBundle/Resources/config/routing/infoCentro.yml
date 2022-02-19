@@ -32,6 +32,18 @@ herramienta_especial_registro_consol:
     options:
         expose: true
 
+observaciones_maestros_ue:
+    path:     /{gestionid}/{ueid}/observacionesMaestros/
+    defaults: { _controller: SieEspecialBundle:InfoCentro:observacionesMaestros }
+    options:
+        expose: true
+
 herramienta_especial_infoconsolidation_gestion_index:
     path:     /consolgestion
     defaults: { _controller: SieEspecialBundle:InfoCentro:consolidacionGestion }
+
+herramienta_infoconsolidation_inconsistencias_modal:
+    path:     /{ueid}/consolgestionincosistenciasmodal/
+    defaults: { _controller: SieEspecialBundle:InfoCentro:getInconsistencias }
+    options:
+        expose: true

@@ -100,9 +100,26 @@ info_estudiante_rudees_nuevo_save_formConQuienVive:
 #    options:
 #         expose: true
 #
+
+info_estudiante_rude_nuevo_save_formApoderadoEspecial:
+    path:     /saveFormApoderado
+    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveFormApoderado" }
+    options:
+         expose: true
 ## TAB 7
-#info_estudiante_rudees_nuevo_save_formLugar:
-#    path:     /saveFormLugar
-#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeESNuevo:saveFormLugar" }
-#    options:
-#         expose: true
+info_estudiante_rudees_nuevo_save_formLugar:
+    path:     /saveFormLugarEs
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormLugar" }
+    options:
+         expose: true
+#REPORTE ESPECIAL
+downloadRudeEspecial:
+    path:    /downloadrudeespecial/{codue}/{rude}/{gestion}/{eins}
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:downloadRudeEspecial" }
+#REPORTE ESPECIAL OP2            
+#download_rude_especialOp2:
+#    path:    /downloadrudeespecial/{codue}/{rude}/{gestion}/{eins}
+#    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:downloadRudEE" }         
+
+
+         

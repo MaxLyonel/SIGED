@@ -1,0 +1,40 @@
+newinscriptionEspecial_index:
+    path:     /insesp
+    defaults: { _controller: SieEspecialBundle:NewInscriptionEspecial:index }
+    options:
+         expose: true
+
+newinscriptionEspecial_checksegipstudent:
+    path:     /checksegipstudent
+    defaults: { _controller: SieEspecialBundle:NewInscriptionEspecial:checksegipstudent }
+    options:
+         expose: true
+  
+newinscriptionEspecial_getdepto:
+    path:     /getdepto
+    defaults: { _controller: SieEspecialBundle:NewInscriptionEspecial:getdepto }
+    options:
+         expose: true
+  
+newinscriptionEspecial_getprovincia:
+    path:     /getprovincia
+    defaults: { _controller: SieEspecialBundle:NewInscriptionEspecial:getprovincia }
+    options:
+         expose: true
+  
+newinscriptionEspecial_getInfoUe:
+    path:     /getInfoUe
+    defaults: { _controller: SieEspecialBundle:NewInscriptionEspecial:getInfoUe }
+    options:
+         expose: true
+   
+newinscriptionEspecial_doInscriptionEspecial:
+    path:     /doInscriptionEspecial
+    defaults: { _controller: SieEspecialBundle:NewInscriptionEspecial:doInscriptionEspecial }
+    options:
+         expose: true
+  
+
+
+
+         

@@ -143,6 +143,7 @@ class NewInscriptionIniPriController extends Controller
 	      foreach ($objExpedido as $value) {
 	        $arrExpedido[$value->getId()] = $value->getSigla();
 	      }
+		//dump($this->session->get('pathSystem'));die;
 	    $userAllowedOnwithoutCI = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
        	return $this->render($this->session->get('pathSystem') .':NewInscriptionIniPri:index.html.twig', array(
        		'arrExpedido'=>$objExpedido,
@@ -174,6 +175,7 @@ class NewInscriptionIniPriController extends Controller
 		$studentId = false;
 		$swci = false;
 		$existStudent = '';
+		$existHomonimo = '';
     	// check if the inscription is by ci or not
 
     	// list($day, $month, $year) = explode('-', $fecNac);
@@ -181,11 +183,9 @@ class NewInscriptionIniPriController extends Controller
 			$arrayCondition['materno'] = mb_strtoupper($materno,'utf-8');
 			$arrayCondition['nombre']  = mb_strtoupper($nombre,'utf-8');
 			$arrayCondition['fechaNacimiento'] = new \DateTime(date("Y-m-d", strtotime($fecNac))) ;
-
-		if($withoutcifind){	
-			
-			// find the student by arrayCondition
 			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
+		if($withoutcifind && ($carnet=='' || !$carnet )){	
+			// find the student by arrayCondition
 			$existStudent = false;
 			if(sizeof($objStudent)>0){
 				$existStudent=true;				
@@ -199,13 +199,12 @@ class NewInscriptionIniPriController extends Controller
 			}else{
 				$arrayCondition['complemento'] = "";
 			}
-			// dump($arrayCondition);die;
 
 			// find the student by arrayCondition
-			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
+			$objStudentCi = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
 			// dump($objStudent);die;
 			$existStudent = false;
-			if(sizeof($objStudent)>0){
+			if(sizeof($objStudentCi)>0){
 				$existStudent=true;				
 			}
 			if(!$existStudent){
@@ -220,15 +219,18 @@ class NewInscriptionIniPriController extends Controller
 		      	
 				$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
 			}
-
+			if($answerSegip && sizeof($objStudent)>0){
+				$existStudent=true;				
+			}
 		}
+
 		 //dump($objStudent); 
 		 //dump($existStudent);die;
 		 //die;
 		// check if the student exists
 		if(!$existStudent){
 		      // check if the data person is true
-		      if($answerSegip){
+		    if($answerSegip){
 		      	// validate the year old on the student
 		      	$arrYearStudent =$this->get('funciones')->getTheCurrentYear($fecNac, '30-6-'.date('Y'));
 		        $yearStudent = $arrYearStudent['age'];
@@ -289,10 +291,21 @@ class NewInscriptionIniPriController extends Controller
 
 			$status = 'error';
 			$code = 400;
-			$message = "Estudiante ya tiene registro, favor realizar la inscripción por el módulo de -> Nuevo Estudiante en la UE";
+			$message = "Estudiante ya tiene registro ";
 			$swcreatestudent = false; 
 
 		}
+
+		/* TODO CAMBIAR LOGICA CUANDO ESTUDIANTE HISTORIAL SIN CI Y NUEVA INSCRIPCION CON CI
+		$swCurrentInscription = $this->getCurrentInscriptionsByGestoinValida($objStudent->getId(),$this->session->get('currentyear'));
+		//dump($swCurrentInscription);die;
+		if($swCurrentInscription){
+			$status = 'error';
+			$code = 400;
+			$message = "Estudiante ya cuenta con registro de Inscripción en la presente gestión";
+			$swcreatestudent = false; 
+		}
+		*/
 
 		if($this->session->get('roluser')==9){ //si es director verificar que el operativo no este cerrado
 			$objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
@@ -1171,8 +1184,10 @@ class NewInscriptionIniPriController extends Controller
 			            $em->flush();          
                         //add the areas to the student
                         //$responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId());    
-                        $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+                        //$query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+						$query = $em->getConnection()->prepare('SELECT * from sp_crea_estudiante_asignatura_regular(:sie::VARCHAR, :estudiante_inscripcion_id::VARCHAR)');
                         $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+						$query->bindValue(':sie', $sie);
                         $query->execute();
                           
 
@@ -1192,7 +1207,7 @@ class NewInscriptionIniPriController extends Controller
 
 			            $status = 'success';
 						$code = 200;
-						$message = "Estudiante inscripto Correctamente";
+						$message = "Estudiante inscrito Correctamente";
 						$swinscription = true; 
 
 				        } catch (Exception $ex) {

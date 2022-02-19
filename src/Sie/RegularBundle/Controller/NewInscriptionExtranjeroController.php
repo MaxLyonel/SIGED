@@ -138,8 +138,9 @@ class NewInscriptionExtranjeroController extends Controller{
 			$arrayCondition['materno'] = mb_strtoupper($materno,'utf-8');
 			$arrayCondition['nombre']  = mb_strtoupper($nombre,'utf-8');
 			$arrayCondition['fechaNacimiento'] = new \DateTime(date("Y-m-d", strtotime($fecNac))) ;
+			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
 
-		if($withoutcifind){	
+		if($withoutcifind && ($carnet=='' || !$carnet )){	
 
 			// find the student by arrayCondition
 			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
@@ -159,10 +160,10 @@ class NewInscriptionExtranjeroController extends Controller{
 			// dump($arrayCondition);die;
 
 			// find the student by arrayCondition
-			$objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
+			$objStudentCi = $em->getRepository('SieAppWebBundle:Estudiante')->findBy($arrayCondition);
 			// dump($objStudent);die;
 			$existStudent = false;
-			if(sizeof($objStudent)>0){
+			if(sizeof($objStudentCi)>0){
 				$existStudent=true;				
 			}
 			if(!$existStudent){
@@ -177,7 +178,13 @@ class NewInscriptionExtranjeroController extends Controller{
 		      	
 				$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
 			}
+      if($answerSegip && sizeof($objStudent)>0){
+				$existStudent=true;				
+			}
 
+		}
+    if(sizeof($objStudent)>0){
+			$existStudent=true;				
 		}
 		// dump($objStudent);
 		// die;
@@ -622,7 +629,7 @@ class NewInscriptionExtranjeroController extends Controller{
       return $response;
 
         
-		$response->setStatusCode(200);
+		  $response->setStatusCode(200);
         return $response->setData(array());
     }        
 
@@ -1007,10 +1014,14 @@ class NewInscriptionExtranjeroController extends Controller{
 
               //add the areas to the student
               //$responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId());    
-              $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
-              $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
-              $query->execute();
-                  
+              //$query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+              //$query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+             // $query->execute();
+                
+             $query = $em->getConnection()->prepare('SELECT * from sp_crea_estudiante_asignatura_regular(:sie::VARCHAR, :estudiante_inscripcion_id::VARCHAR)');
+             $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+             $query->bindValue(':sie', $sie);
+             $query->execute();
 
 	            if($swnewforeign == 1 or $swnewforeign==0){
 	            	 // save the file in case if exists

@@ -2,7 +2,7 @@ Sie\AppWebBundle\Entity\RudeMedioTransporte:
     type: entity
     table: rude_medio_transporte
     indexes:
-        IDX_58C04E4A443E4890:
+        fk_rude_medio_transporte:
             columns:
                 - rude_id
         IDX_58C04E4ACE756387:
@@ -39,15 +39,6 @@ Sie\AppWebBundle\Entity\RudeMedioTransporte:
             comment: ''
             column: llega_otro
     manyToOne:
-        rude:
-            targetEntity: Rude
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                rude_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         tiempoMaximoTrayectoTipo:
             targetEntity: TiempoMaximoTrayectoTipo
             cascade: {  }
@@ -55,6 +46,15 @@ Sie\AppWebBundle\Entity\RudeMedioTransporte:
             inversedBy: null
             joinColumns:
                 tiempo_maximo_trayecto_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        rude:
+            targetEntity: Rude
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rude_id:
                     referencedColumnName: id
             orphanRemoval: false
         medioTransporteTipo:

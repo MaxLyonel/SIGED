@@ -86,3 +86,7 @@ sie_especial_chagestatusstudent:
 sie_especial_info_estudianteRudeESNuevo:
     resource: "@SieEspecialBundle/Resources/config/routing/infoEstudianteRudeES.yml"
     prefix:   /sie/infoEstudianteRudeESNuevo    
+#inscripcion Especial
+sie_especial_new_InscriptionEspecial:
+    resource: "@SieEspecialBundle/Resources/config/routing/newInscriptionEspecial.yml"
+    prefix:   /sie/newInscriptionEspecial    
