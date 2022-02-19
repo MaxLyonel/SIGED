@@ -536,7 +536,9 @@ class AreasController extends Controller {
      * ventana modal
      */
 
-    public function lista_areas_nivelAction($idNivel, $idCurso, $institucioneducativa,$gestionTipo,$turnoTipo,$nivelTipo,$gradoTipo,$paraleloTipo) {        
+    public function lista_areas_nivelAction($idNivel, $idCurso, $institucioneducativa,$gestionTipo,$turnoTipo,$nivelTipo,$gradoTipo,$paraleloTipo) {  
+
+           //llega desde la otra pantalla
                     
             /* inicio modificacion dcastillo 
             necesito 
@@ -581,7 +583,7 @@ class AreasController extends Controller {
 
 
             //director
-           if($this->session->get('roluser') == 9 ){
+           //if($this->session->get('roluser') == 9 ){
 
                 //if($paralelo_id == 1 and $nivelautorizado == 1) {
 
@@ -604,11 +606,11 @@ class AreasController extends Controller {
                     return $response->setData(array('exito'=>0,'mensaje'=>$msj));    
                 }*/
 
-           }else {
+           /*}else {
                 $msg = 'Su usuario no puede realizar esta operacion !!';
                 $response = new JsonResponse();
                 return $response->setData(array('exito'=>-1,'mensaje'=>$msg));
-           }
+           }*/
 
 
            
