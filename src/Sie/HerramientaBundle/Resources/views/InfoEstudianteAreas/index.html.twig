@@ -12,13 +12,13 @@
             </div>
             <div class="panel-body">
 
-                 {% if existenareas == 0 and curso.paraleloTipo.paralelo|upper == 'A' and nivelautorizado != 0 %}       
+                {% if existenareas == 0 and curso.paraleloTipo.paralelo|upper == 'A' and nivelautorizado != 0 %}       
 
                     <span style="float:right; margin-bottom:10px">
-                        <button data-title="3456" onclick="crear_areas('{{curso.turnoTipo.id}}','{{curso.nivelTipo.id}}','{{curso.paraleloTipo.id}}','{{curso.gradoTipo.id}}','{{curso.institucioneducativa.id}}')" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Área</button>
+                        <button  type="button" data-title="3456" onclick="crear_areas('{{curso.turnoTipo.id}}','{{curso.nivelTipo.id}}','{{curso.paraleloTipo.id}}','{{curso.gradoTipo.id}}','{{curso.institucioneducativa.id}}')" class="btn btn-wordpress"><i class="fa fa-plus-circle text-white"></i> Adicionar Área</button>
                     </span>
-
-                 {% endif %}
+                {% endif %}
+               
 
 
                 {% if areas is not null %}                   
