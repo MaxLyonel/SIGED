@@ -473,6 +473,7 @@ class CreacionCursosController extends Controller {
                             $em->remove($valueM);
                             $em->flush();
                         }
+                        
                     }
                 }
             }

@@ -591,7 +591,7 @@ class AreasController extends Controller {
                         'areas' => $areasCurso,
                         'curso' => $curso,
                         'mensaje' => '',
-                        'operativo'=>$operativo
+                        'operativo'=>$operativo 
             ));
 
             $em->getConnection()->commit();
