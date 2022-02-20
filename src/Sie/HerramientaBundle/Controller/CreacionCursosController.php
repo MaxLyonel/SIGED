@@ -156,6 +156,7 @@ class CreacionCursosController extends Controller {
      * Creacion del formulario de nuevo curso
      */
     public function newAction(Request $request){
+        //dump($request); die;
         try{
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -197,7 +198,7 @@ class CreacionCursosController extends Controller {
                 /*
                  * Listamos los turnos validos
                  */
-                $query = $em->createQuery(
+                /*$query = $em->createQuery(
                                         'SELECT t FROM SieAppWebBundle:TurnoTipo t
                                         WHERE t.id IN (:id)'
                                         )->setParameter('id',array(1,2,4,8,9,10,11));
@@ -205,11 +206,31 @@ class CreacionCursosController extends Controller {
                 $turnosArray = array();
                 foreach ($turnos_result as $t){
                     $turnosArray[$t->getId()] = $t->getTurno();
+                }*/
+
+                $institucion_ed = $request->getSession()->get('idInstitucion');
+                $query = $em->createQuery(
+                    'SELECT DISTINCT tt.id,tt.turno
+                        FROM SieAppWebBundle:InstitucioneducativaCurso iec
+                        JOIN iec.institucioneducativa ie
+                        JOIN iec.turnoTipo tt
+                        WHERE ie.id = :id
+                        AND iec.gestionTipo = :gestion
+                        ORDER BY tt.id'
+                )
+                ->setParameter('id', $institucion_ed)
+                    ->setParameter('gestion', 2022);
+                $turnos = $query->getResult();
+                $turnosArray = array();
+                for ($i = 0; $i < count($turnos); $i++) {
+                    $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
                 }
+
+
                 /*
                  * Listamos los niveles validos
                  */
-                $query = $em->createQuery(
+                /*$query = $em->createQuery(
                                         'SELECT n FROM SieAppWebBundle:NivelTipo n
                                         WHERE n.id IN (:id)'
                                         )->setParameter('id',array(11,12,13));
@@ -217,7 +238,33 @@ class CreacionCursosController extends Controller {
                 $niveles = array();
                 foreach ($niveles_result as $n){
                     $niveles[$n->getId()] = $n->getNivel();
+                }*/
+
+                //sacamos solo los PERMITIDOS segun RUE para esa UE
+                $institucion_ed = $request->getSession()->get('idInstitucion');
+                $RAW_QUERY = "SELECT
+                    nivel_tipo.id, 
+                    nivel_tipo.nivel, 
+                    nivel_tipo.vigente, 
+                    institucioneducativa_nivel_autorizado.institucioneducativa_id
+                FROM
+                    institucioneducativa_nivel_autorizado
+                    INNER JOIN
+                    nivel_tipo
+                    ON 
+                        institucioneducativa_nivel_autorizado.nivel_tipo_id = nivel_tipo.id
+                where institucioneducativa_id = '" . $institucion_ed."' and vigente = true";
+                
+                $statement = $em->getConnection()->prepare($RAW_QUERY);
+                $statement->execute();
+                $result = $statement->fetchAll();
+                $nivelesx = $result;
+                $nivelesArray = array();
+                for ($i = 0; $i < count($nivelesx); $i++) {
+                    $niveles[$nivelesx[$i]['id']] = $nivelesx[$i]['nivel'];
                 }
+
+
 //            }
             /*
              * Listamos los grados para nivel inicial 
@@ -234,7 +281,7 @@ class CreacionCursosController extends Controller {
             /*
              * Listamos los paralelos validos 
              */
-            $query = $em->createQuery(
+            /*$query = $em->createQuery(
                                     'SELECT p FROM SieAppWebBundle:ParaleloTipo p
                                     WHERE p.id != :id'
                                     )->setParameter('id',0);
@@ -242,7 +289,22 @@ class CreacionCursosController extends Controller {
             $paralelos = array();
             foreach ($paralelos_result as $p){
                 $paralelos[$p->getId()] = $p->getParalelo();
+            }*/
+
+            //TODOS LOS DEMAS DE LA B A LA Z
+            //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
+            $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            $paralelosx = $result;
+            $paralelosArray = array();
+            for ($i = 0; $i < count($paralelosx); $i++) {
+                $paralelos[$paralelosx[$i]['id']] = $paralelosx[$i]['paralelo'];
             }
+
+
+
             if($this->session->get('roluser') != 8){
                 $form = $this->createFormBuilder()
                         ->setAction($this->generateUrl('herramienta_creacioncursos_create'))
@@ -274,8 +336,52 @@ class CreacionCursosController extends Controller {
         }
         
     }
-    
+
+
     public function createAction(Request $request){
+
+        $form = $request->get('form');
+
+        //dump($form); die;
+        
+        $turno_id = $form['turno'];
+        $nivel_id = $form['nivel'];
+        $grado_id = $form['grado'];
+        $paralelo_id = $form['paralelo'];
+        
+        $institucion_id = $form['idInstitucion'];
+        $gestion_id = $form['idGestion'];
+
+        $em = $this->getDoctrine()->getManager();      
+        $query = $em->getConnection()->prepare("select * FROM sp_crea_nuevo_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id') ");
+        $query->execute();
+        $valor= $query->fetchAll();
+        //dump($valor[0]['sp_crea_nuevo_curso']); die;
+        
+        /*$RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
+        $statement = $em->getConnection()->prepare($RAW_QUERY);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        dump($result); die;*/
+
+
+        $res= $valor[0]['sp_crea_nuevo_curso'];
+        /*$response = new JsonResponse();
+        return $response->setData(array('exito'=>$res,'mensaje'=>''));*/
+        if($res == 1){
+            $this->get('session')->getFlashBag()->add('msgOk', 'Curso creado correctamente');
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_index'));
+        }else{
+            $this->get('session')->getFlashBag()->add('msgError', 'EL curso no se ha podido crear');
+            return $this->redirect($this->generateUrl('herramienta_ieducativa_index'));
+        }
+        
+
+
+    }
+
+    
+    public function createActionOLD(Request $request){
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         try{
@@ -601,24 +707,61 @@ class CreacionCursosController extends Controller {
         }
     }
 
-    public function getAreasAction(Request $request){        
+    public function getAreasAction(Request $request){      
+        //aqui llama al modal
         $iecId = $request->get('cursoId');
         $em = $this->getDoctrine()->getManager();
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($iecId);
         $operativo = 0;
         $infoUe = null;
         $areas = $this->get('areas')->getAreas($iecId);
+             
+        //dump($curso->getNivelTipo()->getId()); die;
+        //dump($curso->getId()); die;
+        //dcastillo NIVEL AUTORIZADO
 
+        $sql = "select count(*) from
+                (
+                SELECT
+                    nivel_tipo.id, 
+                    nivel_tipo.nivel, 
+                    nivel_tipo.vigente, 
+                    institucioneducativa_nivel_autorizado.institucioneducativa_id
+                FROM
+                    institucioneducativa_nivel_autorizado
+                    INNER JOIN
+                    nivel_tipo
+                    ON 
+                        institucioneducativa_nivel_autorizado.nivel_tipo_id = nivel_tipo.id
+                where institucioneducativa_id = '".$request->getSession()->get('idInstitucion')."' and vigente = true
+                )as tmp where id = " . $curso->getNivelTipo()->getId();
+        
+        
+        $em = $this->getDoctrine()->getManager();      
+        $statement = $em->getConnection()->prepare($sql);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        //dump($result[0]['count']); die;
+        $nivelautorizado = $result[0]['count'];
+
+
+
+        $existenareas = sizeOf($areas['cursoOferta']);
+        //dump($curso); die;
         if($areas){
             return $this->render('SieHerramientaBundle:InfoEstudianteAreas:index.html.twig',array(
                 'infoUe'=>$infoUe,
                 'curso'=>$curso,
                 'operativo'=>$operativo,
-                'areas'=>$areas
+                'areas'=>$areas,
+                'existenareas' => $existenareas,
+                'nivelautorizado' => $nivelautorizado
             ));
         }
         return $this->render('SieHerramientaBundle:InfoEstudianteAreas:index.html.twig',array(
-                'areas'=>null
+                'areas'=>null,
+                'existenareas' => $existenareas,
+                'nivelautorizado' => $nivelautorizado
         ));
     }
 
