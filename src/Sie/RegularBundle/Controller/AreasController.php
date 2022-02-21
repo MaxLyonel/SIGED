@@ -247,8 +247,21 @@ class AreasController extends Controller {
             $dependencia = $result;
             //dump($dependencia[0]['dependencia_tipo_id']); die;
             $dependencia_tipo_id = $dependencia[0]['dependencia_tipo_id'];
+           
+            //TODOS
             
-            if( $dependencia_tipo_id == 3) { 
+            //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
+            $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            $paralelos = $result;
+            $paralelosArray = array();
+            for ($i = 0; $i < count($paralelos); $i++) {
+                $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+            }
+            
+            /*if( $dependencia_tipo_id == 3) { 
                 // es privada
                 //TODOS LOS DEMAS DE LA B A LA Z
                 //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
@@ -275,7 +288,7 @@ class AreasController extends Controller {
                 for ($i = 0; $i < count($paralelos); $i++) {
                     $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
                 }
-            }
+            }*/
 
 
             $formNuevo = $this->createFormBuilder()
@@ -556,8 +569,7 @@ class AreasController extends Controller {
 
         
         $existenOfertas = sizeof($areasCurso['cursoOferta']);
-        //dump($existenOfertas); exit;
-
+        
         //dacastillo: se adicionan parametros enviados
         return $this->render('SieRegularBundle:Areas:listaAreasCurso.html.twig', array(
             'areas' => $areasCurso,
