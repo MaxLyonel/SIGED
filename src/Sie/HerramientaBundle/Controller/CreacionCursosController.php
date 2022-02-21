@@ -291,17 +291,44 @@ class CreacionCursosController extends Controller {
                 $paralelos[$p->getId()] = $p->getParalelo();
             }*/
 
+            // SI ES PUBLICO SOLO A SI ES PRIVADO TODOS LOS PARALELOS
             //TODOS LOS DEMAS DE LA B A LA Z
             //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
-            $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+
+            $RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$request->getSession()->get('idInstitucion');            
             $statement = $em->getConnection()->prepare($RAW_QUERY);
             $statement->execute();
             $result = $statement->fetchAll();
-            $paralelosx = $result;
-            $paralelosArray = array();
-            for ($i = 0; $i < count($paralelosx); $i++) {
-                $paralelos[$paralelosx[$i]['id']] = $paralelosx[$i]['paralelo'];
-            }
+            $dependencia = $result;
+            //dump($dependencia[0]['dependencia_tipo_id']); die;
+            $dependencia_tipo_id = $dependencia[0]['dependencia_tipo_id'];
+            
+            if( $dependencia_tipo_id == 3) {
+
+                $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) >= 1;';
+                $statement = $em->getConnection()->prepare($RAW_QUERY);
+                $statement->execute();
+                $result = $statement->fetchAll();
+                $paralelosx = $result;
+                $paralelosArray = array();
+                for ($i = 0; $i < count($paralelosx); $i++) {
+                    $paralelos[$paralelosx[$i]['id']] = $paralelosx[$i]['paralelo'];
+
+                }
+
+            }else{
+                // es fiscal u otro tipo
+                $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                $statement = $em->getConnection()->prepare($RAW_QUERY);
+                $statement->execute();
+                $result = $statement->fetchAll();
+                $paralelosx = $result;
+                $paralelosArray = array();
+                for ($i = 0; $i < count($paralelosx); $i++) {
+                    $paralelos[$paralelosx[$i]['id']] = $paralelosx[$i]['paralelo'];
+
+                }
+            }           
 
 
 

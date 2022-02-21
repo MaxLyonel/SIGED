@@ -37,7 +37,8 @@
                     <br>
                     {% if app.session.get('acceso_total') %}  
                         {% if areas.tipoUE != 2 and areas.vista != 0 %}
-                            <div class="btn-group" style="width:650px; float:right;">
+                             
+                             {#<div class="btn-group" style="width:650px; float:right;">
                                 <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
                                     Agregar Área <span class="caret"></span>
                                 </button>
@@ -52,7 +53,8 @@
                                         <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
                                     {% endif %}
                                 </ul>
-                            </div>
+                            </div> #}
+                            
                         {# {% else %}
                             {% if areas.tipoUE == 2 and areas.vista != 0 %}
                                 <div class="btn-group" style="width:650px; float:right;">
