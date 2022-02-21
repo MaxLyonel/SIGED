@@ -188,9 +188,7 @@ class AreasController extends Controller {
             $turnosArray = array();
             for ($i = 0; $i < count($turnos); $i++) {
                 $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
-            }
-
-            //dump($institucion); die;
+            }           
 
             // niveles solo 11,12,13 reqerimiento incial erroneo
             /*$RAW_QUERY = 'SELECT * FROM nivel_tipo where id  in (11,12,13);';            
@@ -239,20 +237,45 @@ class AreasController extends Controller {
                 $gradosArray[$grados[$i]['id']] = $grados[$i]['grado'];
             }
 
-                      
-            //TODOS LOS DEMAS DE LA B A LA Z
-            //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
-            $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+
+            //dcastillo: 2102 - habilitar todos los paralelos si es privada, solo A si es fiscal
+            //$RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$request->getSession()->get('idInstitucion');            
+            $RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$institucion;                   
             $statement = $em->getConnection()->prepare($RAW_QUERY);
             $statement->execute();
             $result = $statement->fetchAll();
-            $paralelos = $result;
-            $paralelosArray = array();
-            for ($i = 0; $i < count($paralelos); $i++) {
-                $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
-            }
-           
+            $dependencia = $result;
+            //dump($dependencia[0]['dependencia_tipo_id']); die;
+            $dependencia_tipo_id = $dependencia[0]['dependencia_tipo_id'];
+            
+            if( $dependencia_tipo_id == 3) { 
+                // es privada
+                //TODOS LOS DEMAS DE LA B A LA Z
+                //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
+                $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+                $statement = $em->getConnection()->prepare($RAW_QUERY);
+                $statement->execute();
+                $result = $statement->fetchAll();
+                $paralelos = $result;
+                $paralelosArray = array();
+                for ($i = 0; $i < count($paralelos); $i++) {
+                    $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                }
 
+            }else{
+                // es fiscal y similares
+                 //TODOS LOS DEMAS DE LA B A LA Z
+                //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
+                $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                $statement = $em->getConnection()->prepare($RAW_QUERY);
+                $statement->execute();
+                $result = $statement->fetchAll();
+                $paralelos = $result;
+                $paralelosArray = array();
+                for ($i = 0; $i < count($paralelos); $i++) {
+                    $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                }
+            }
 
 
             $formNuevo = $this->createFormBuilder()
@@ -486,6 +509,30 @@ class AreasController extends Controller {
         $em = $this->getDoctrine()->getManager();
         
         $form = $request->get('form');
+
+        // vemos is el nivel es autorizado en el RUDE
+        $sql = "select count(*) from
+                (
+                SELECT
+                    nivel_tipo.id, 
+                    nivel_tipo.nivel, 
+                    nivel_tipo.vigente, 
+                    institucioneducativa_nivel_autorizado.institucioneducativa_id
+                FROM
+                    institucioneducativa_nivel_autorizado
+                    INNER JOIN
+                    nivel_tipo
+                    ON 
+                        institucioneducativa_nivel_autorizado.nivel_tipo_id = nivel_tipo.id
+                where institucioneducativa_id = '".$form['idInstitucion']."' and vigente = true
+                )as tmp where id = " . $form['nivel'];
+                        
+        $em = $this->getDoctrine()->getManager();      
+        $statement = $em->getConnection()->prepare($sql);
+        $statement->execute();
+        $result = $statement->fetchAll();
+        //dump($result[0]['count']); die;
+        $nivelautorizado = $result[0]['count'];
                 
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
             'institucioneducativa' => $form['idInstitucion'],
@@ -493,7 +540,7 @@ class AreasController extends Controller {
             'turnoTipo' => $form['turno'],
             'nivelTipo' => $form['nivel'],
             'gradoTipo' => $form['grado'],
-            'paraleloTipo' => $form['paralelo']
+            'paraleloTipo' => $form['paralelo'],           
         ));
 
         if ($curso) {
@@ -523,7 +570,8 @@ class AreasController extends Controller {
             'nivelTipo' => $form['nivel'],
             'gradoTipo' => $form['grado'],
             'paraleloTipo' => $form['paralelo'],
-            'existenOfertas' => $existenOfertas
+            'existenOfertas' => $existenOfertas,
+            'nivelautorizado' => $nivelautorizado
             
         ));
     }
@@ -957,8 +1005,12 @@ class AreasController extends Controller {
         $institucion_id = $form['idInstitucion'];
         $gestion_id = $form['idGestion'];
 
-         /*dump($institucion_id);
-        dump($gestion_id);
+        /*dump('institucion_id'. $institucion_id);
+        dump('gestion_id: '. $gestion_id);
+        dump('nivel_id: '.$nivel_id);
+        dump('paralelo_id: '. $paralelo_id);
+        dump('turno_id: ' . $turno_id);
+        dump('grado_id: ' . $grado_id);
         
         die;*/
 
