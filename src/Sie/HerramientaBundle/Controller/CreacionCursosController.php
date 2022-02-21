@@ -760,7 +760,8 @@ class CreacionCursosController extends Controller {
         }
         return $this->render('SieHerramientaBundle:InfoEstudianteAreas:index.html.twig',array(
                 'areas'=>null,
-                'existenareas' => $existenareas
+                'existenareas' => $existenareas,
+                'nivelautorizado' => $nivelautorizado
         ));
     }
 
