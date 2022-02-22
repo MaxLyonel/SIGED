@@ -173,6 +173,7 @@ class RudeUnificationController extends Controller{
                 'nombre' => $studenta->getNombre(),
                 'ci' => $studenta->getCarnetIdentidad(),
                 'complemento' => $studenta->getNombre(),
+                'complemento' => $studenta->getComplemento(),
                 'fechaNac' => $studenta->getfechaNacimiento()->format('d-m-Y'),
                 
             );
