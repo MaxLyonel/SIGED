@@ -188,7 +188,51 @@ class AreasController extends Controller {
             $turnosArray = array();
             for ($i = 0; $i < count($turnos); $i++) {
                 $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
-            }           
+            }    
+            
+            /**
+             * dcastillo 2202: 
+             * si no hay turnos, ver gestion anterior, si no hay habilitar todos
+             */
+
+             if(sizeof($turnosArray) == 0){
+
+                // vemos si hay la gestion anterior
+                $query = $em->createQuery(
+                    'SELECT DISTINCT tt.id,tt.turno
+                        FROM SieAppWebBundle:InstitucioneducativaCurso iec
+                        JOIN iec.institucioneducativa ie
+                        JOIN iec.turnoTipo tt
+                        WHERE ie.id = :id
+                        AND iec.gestionTipo = :gestion
+                        ORDER BY tt.id'
+                )
+                ->setParameter('id', $institucion)
+                    ->setParameter('gestion', $gestion - 1);
+                $turnos = $query->getResult();
+                $turnosArray = array();
+                for ($i = 0; $i < count($turnos); $i++) {
+                    $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+                }    
+
+                if(sizeof($turnosArray) == 0){
+                    // no hay en la gestion anterior, entonces se muestran todos
+
+                    $RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
+                    $statement = $em->getConnection()->prepare($RAW_QUERY);
+                    $statement->execute();
+                    $result = $statement->fetchAll();                  
+                    $turnos = $result;
+                    $turnosArray = array();
+                    for ($i = 0; $i < count($turnos); $i++) {
+                        $turnosArray[$turnos[$i]['id']] = $turnos[$i]['turno'];
+                    }
+
+                }
+
+             }
+
+
 
             // niveles solo 11,12,13 reqerimiento incial erroneo
             /*$RAW_QUERY = 'SELECT * FROM nivel_tipo where id  in (11,12,13);';            
