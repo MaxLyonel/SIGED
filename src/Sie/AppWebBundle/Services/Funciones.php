@@ -370,7 +370,7 @@ class Funciones {
      * los que NO han cerrado operativo en la gestion actual
      */
     public function reporteNoConsol($gestionid, $roluser, $roluserlugarid, $instipoid){
-
+        
         $lugar = $this->em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
         
         switch ($roluser) {
@@ -448,7 +448,7 @@ class Funciones {
                 LEFT JOIN lugar_tipo lt3 ON lt3.ID = lt2.lugar_tipo_id
                 LEFT JOIN lugar_tipo lt4 ON lt4.ID = lt3.lugar_tipo_id
                 INNER JOIN distrito_tipo dt ON jg.distrito_tipo_id = dt.ID 
-            WHERE ".$where."  AND inst.estadoinstitucion_tipo_id =  10 and inst.institucioneducativa_acreditacion_tipo_id = 1
+            WHERE ".$where."  AND inst.estadoinstitucion_tipo_id =  10 and inst.institucioneducativa_acreditacion_tipo_id = 1 and inst.institucioneducativa_tipo_id = 1 
             ORDER BY
                 codigo_departamento,
                 codigo_distrito,

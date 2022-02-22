@@ -1195,7 +1195,62 @@ class InfoConsolidationController extends Controller {
 
         return $colegios;
     }
+
+    /**
+     * dcastillo
+     * borra registro de registro_consolidacion
+     * 210222
+     */
+
     public function enabledOpeAction(Request $request){
+
+      
+      $sie = $request->get('sie');
+      $gestion = $request->get('gestion');      
+      $em = $this->getDoctrine()->getManager();
+      $objRegistroConsolidado = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+        'unidadEducativa' => $sie,
+        'gestion'         => $gestion
+      ));
+      
+
+      $em = $this->getDoctrine()->getManager();
+      /*$query = $em->getConnection()->prepare("
+          delete from registro_consolidacion where gestion = ".$gestion." and unidad_educativa = " . $sie
+          );
+      $query->execute();*/
+
+      $query = $em->getConnection()->prepare("delete from registro_consolidacion where gestion = ".$gestion." and unidad_educativa = " . $sie);
+      //$query = $em->getConnection()->prepare("delete from registro_consolidacion where gestion = 2025 and unidad_educativa = " . $sie);
+        
+      $res = $query->execute();
+      //$valor= $query->fetchAll();   
+      
+      /*if($res){
+
+        $response = new JsonResponse();
+        //return $response->setData(array('data'=>$valor,'existe'=> 0));
+        return $response->setData(array('data'=>1,'msg'=> 'Aperturado'));
+
+      }
+      $response = new JsonResponse();
+      //return $response->setData(array('data'=>$valor,'existe'=> 0));
+      return $response->setData(array('data'=>0,'msg'=> 'Error'));*/
+
+      
+
+
+      if($objRegistroConsolidado->getInstitucioneducativaTipoId()==4)   
+      return $this->redirectToRoute('herramienta_especial_infoconsolidation_gestion_index');
+      else
+      return $this->redirectToRoute('herramienta_infoconsolidation_gestion_index');  
+
+
+
+    }
+
+
+    public function enabledOpeActionOLD(Request $request){
       // get the send values
       $sie = $request->get('sie');
       $gestion = $request->get('gestion');
