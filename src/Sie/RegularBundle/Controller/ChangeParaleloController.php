@@ -264,7 +264,7 @@ class ChangeParaleloController extends Controller {
                     $this->addFlash('successchangeparalelo', $message);
                 } elseif($sqlResponse[0]['sp_regular_cambio_paralelo']==2){
                     $em->getConnection()->rollback();
-                    $message = "El paralelo destino no observacion en areas, favor comuniquese con su técnico de distrito...";
+                    $message = "El paralelo destino tiene observacion en areas, favor comuniquese con su técnico de distrito/departamento...";
                     $this->addFlash('warningchangeparalelo', $message);
                 } else {
                     $em->getConnection()->rollback();
