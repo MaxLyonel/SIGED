@@ -164,7 +164,8 @@ class NewInscriptionExtranjeroController extends Controller{
 			// dump($objStudent);die;
 			$existStudent = false;
 			if(sizeof($objStudentCi)>0){
-				$existStudent=true;				
+				$existStudent=true;		
+        $answerSegip = true;				
 			}
 			if(!$existStudent){
 				// to do the segip validation
