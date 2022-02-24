@@ -128,6 +128,7 @@ class NewInscriptionExtranjeroController extends Controller{
     	$expedidoIdfind = $request->get('expedidoIdfind');
 
       //dcastillo 2402
+      // para validacion segip
       $tipo_persona = $request->get('tipo_persona');
 
     	$arrGenero = array();
