@@ -253,19 +253,41 @@
 								                {% endfor %}
                                 </select> 
                               </div>
-                              <div class="col-sm-3">
+                              <div class="col-sm-2">
                               	<label for="fechanac">(*)Fec. Nacimiento  dd-mm-aaaa</label>
                               	    <!-- <vuejs-datepicker input-class="custom-date" :bootstrap-styling="true" :format="customFormatter" v-model="dataNewStudent.fecnacfindOrig"></vuejs-datepicker>
                               	    <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataNewStudent.fecnacfind" > -->
                                   <input type="text" placeholder="dd-mm-aaaa" id="form_idfecnac" name="form[idfecnac]" class="form-control jupper" v-model="dataNewStudent.fecnacfind">
                               </div>
 
-                              <div class="col-sm-3">
+                              <div class="col-sm-1">
                                 {% if allowwithoutci %}
                                     <label for="form_caseespecial" class="validation">SIN CI :</label>
                                     <input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
                                 {% endif %}
                               </div>
+
+                              
+
+                              <div class="col-sm-3">
+
+                                  <div class="form-group">
+
+                                      <input class="form-check-input" type="radio" name="nacionalidad" id="nacional" value="NA"  v-model="tipo_persona" checked>
+                                      <label class="form-check-label" for="nacional">
+                                          Carnet de Identidad Nacional 
+                                      </label>
+                                  </div>
+                                  <div class="form-check">
+                                      <input class="form-check-input" type="radio" name="nacionalidad" id="extranjero" value="EX" v-model="tipo_persona">
+                                      <label class="form-check-label" for="extranjero">
+                                          Carnet de Identidad Extranjero (Comienza con 'E')
+                                      </label>
+                                  </div>
+                                  
+                              </div>
+
+                              
 
                             </div>
                             </br>     
@@ -287,7 +309,7 @@
                             
                             <div class="form-group row buscador">
 	                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i>**Buscar && Validar</button>
+	                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i>Buscar && Validar</button>
 	                            </div>
                         	</div>
                           </br>
@@ -767,6 +789,7 @@
 			  },*/
 
             data: {
+              tuipo_persona: '',
             	state: {isSending: false},
             	dataNewStudent: {'withoutcifind':false, 'swnewforeign':false},
             	oldStudent:{'withoutcifind':false, 'swnewforeign':false},
@@ -964,6 +987,16 @@
 					if (typeof this.dataNewStudent.expedidoIdfind === "undefined") {
 					  this.dataNewStudent.expedidoIdfind = 0;
 					}					
+
+          //dcastillo 2402
+          this.dataNewStudent.tipo_persona = 1;
+          if(this.tipo_persona == 'EX'){
+            // si es extranjero
+            this.dataNewStudent.tipo_persona = 2;
+          } 
+          console.log('objeto dataNewStudent:');
+          console.log(this.dataNewStudent);
+
 				
 					
                     axios.get(Routing.generate('newForeign_checksegipstudent', this.dataNewStudent ))

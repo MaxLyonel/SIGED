@@ -113,7 +113,7 @@ class NewInscriptionExtranjeroController extends Controller{
     }
 
     public function checksegipstudentAction(Request $request){
-    	// dump($request);die;
+    	
     	//ini vars
     	$response = new JsonResponse();
     	$em = $this->getDoctrine()->getManager();
@@ -126,6 +126,10 @@ class NewInscriptionExtranjeroController extends Controller{
     	$nombre = trim($request->get('nombre'));
     	$withoutcifind = ($request->get('withoutcifind')=='false')?false:true;
     	$expedidoIdfind = $request->get('expedidoIdfind');
+
+      //dcastillo 2402
+      $tipo_persona = $request->get('tipo_persona');
+
     	$arrGenero = array();
     	$arrPais = array();
 		$arrStudentExist = false;
@@ -173,7 +177,8 @@ class NewInscriptionExtranjeroController extends Controller{
 			        'primer_apellido'=>$paterno,
 			        'segundo_apellido'=>$materno,
 			        'nombre'=>$nombre,
-			        'fecha_nacimiento'=>$fecNac
+			        'fecha_nacimiento'=>$fecNac,
+              'tipo_persona' => $tipo_persona
 		      	);
 		      	
 				$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
