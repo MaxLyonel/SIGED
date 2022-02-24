@@ -205,7 +205,8 @@ class NewInscriptionIniPriController extends Controller
 			// dump($objStudent);die;
 			$existStudent = false;
 			if(sizeof($objStudentCi)>0){
-				$existStudent=true;				
+				$existStudent=true;	
+				$answerSegip = true;			
 			}
 			if(!$existStudent){
 				// to do the segip validation
@@ -220,7 +221,7 @@ class NewInscriptionIniPriController extends Controller
 				$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
 			}
 			if($answerSegip && sizeof($objStudent)>0){
-				$existStudent=true;				
+				$existStudent = true;				
 			}
 		}
 
