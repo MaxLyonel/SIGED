@@ -1185,8 +1185,6 @@ class AreasController extends Controller {
         $response = new JsonResponse();
         return $response->setData(array('exito'=>$res,'mensaje'=>''));
 
-           
-
        
     }   
 
