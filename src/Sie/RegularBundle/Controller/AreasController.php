@@ -232,6 +232,16 @@ class AreasController extends Controller {
 
              }
 
+             //dcastillo: 2102 - habilitar todos los paralelos si es privada, solo A si es fiscal
+            //$RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$request->getSession()->get('idInstitucion');            
+            $RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$institucion;                   
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            $dependencia = $result;
+            //dump($dependencia[0]['dependencia_tipo_id']); die;
+            $dependencia_tipo_id = $dependencia[0]['dependencia_tipo_id'];
+
 
 
             // niveles solo 11,12,13 reqerimiento incial erroneo
@@ -246,6 +256,8 @@ class AreasController extends Controller {
             }*/
 
             //sacamos solo los PERMITIDOS segun RUE para esa UE
+            $sw_nivel_primario = false;
+            $sw_nivel_inicial = false;
             $RAW_QUERY = "SELECT
                 nivel_tipo.id, 
                 nivel_tipo.nivel, 
@@ -266,8 +278,55 @@ class AreasController extends Controller {
             $nivelesArray = array();
             for ($i = 0; $i < count($niveles); $i++) {
                 $nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
+                
+                //para el caso multigrado
+                if($niveles[$i]['id'] == 12){
+                    //esta UE tiene habilitada Primaria Comunitaria Vocacional
+                    $sw_nivel_primario = true;
+                }
+                if($niveles[$i]['id'] == 11){
+                    //esta UE tiene habilitada Inicial en Familia Comunitaria
+                    $sw_nivel_inicial = true;
+                }
+
             }
 
+            /**
+             * dcastillo 2302: si tiene nivel primario, se adiciona nivel inicial y solo paralelo A
+             * solo si es publico caso mULTIGRADOS
+             */
+
+             $sw_habilita_multigrado= false;
+
+             //vemos si la ue tiene al menos un multigrado en primaria gestion 2022 en la tabla 
+             //institucioneducativa_curso, campo multigrado en nivel_tipo_id = primaria
+             $RAW_QUERY = '
+             SELECT count(*) as existe_multigrado FROM institucioneducativa_curso 
+             where institucioneducativa_id = ' .$institucion . ' and gestion_tipo_id = ' . $gestion . ' and nivel_tipo_id = 12' ;                   
+
+             $statement = $em->getConnection()->prepare($RAW_QUERY);
+             $statement->execute();
+             $result = $statement->fetchAll();
+             $es_multigrado_result = $result;
+             $es_multigrado = false;
+             if($es_multigrado_result[0]['existe_multigrado'] != 0){
+                $es_multigrado = true;
+             }
+
+             /*dump($sw_nivel_primario);
+             dump($sw_nivel_inicial);
+             dump($dependencia_tipo_id);
+             dump($es_multigrado);
+             die;*/
+
+
+             if($sw_nivel_primario == true and $sw_nivel_inicial == false and $dependencia_tipo_id != 3 and $es_multigrado == true)
+             {
+                 //tiene nivel primario pero no tiene nivel incial, entonces aumentamos nivel incial
+                 $nivelesArray[11] = 'Inicial en Familia Comunitaria';
+                 //array_push($nivelesArray,[11,'Inicial en Familia Comunitaria']);
+                 $sw_habilita_multigrado= true;
+             }
             
 
             // grados menos 7,8,14,15,16,17,41,42,43,99
@@ -282,28 +341,54 @@ class AreasController extends Controller {
             }
 
 
-            //dcastillo: 2102 - habilitar todos los paralelos si es privada, solo A si es fiscal
-            //$RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$request->getSession()->get('idInstitucion');            
-            $RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$institucion;                   
-            $statement = $em->getConnection()->prepare($RAW_QUERY);
-            $statement->execute();
-            $result = $statement->fetchAll();
-            $dependencia = $result;
-            //dump($dependencia[0]['dependencia_tipo_id']); die;
-            $dependencia_tipo_id = $dependencia[0]['dependencia_tipo_id'];
+            
            
             //TODOS
             
-            //$RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26 and CAST (id AS INTEGER) > 1;';
-            $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
-            $statement = $em->getConnection()->prepare($RAW_QUERY);
-            $statement->execute();
-            $result = $statement->fetchAll();
-            $paralelos = $result;
-            $paralelosArray = array();
-            for ($i = 0; $i < count($paralelos); $i++) {
-                $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+            if( $sw_habilita_multigrado == false){
+                // como estaba incialmente antes de multigrado
+                if($dependencia_tipo_id != 3 ){
+
+                    $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                    $statement = $em->getConnection()->prepare($RAW_QUERY);
+                    $statement->execute();
+                    $result = $statement->fetchAll();
+                    $paralelos = $result;
+                    $paralelosArray = array();
+                    for ($i = 0; $i < count($paralelos); $i++) {
+                        $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                    }
+
+                }else{
+
+                    $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+                    $statement = $em->getConnection()->prepare($RAW_QUERY);
+                    $statement->execute();
+                    $result = $statement->fetchAll();
+                    $paralelos = $result;
+                    $paralelosArray = array();
+                    for ($i = 0; $i < count($paralelos); $i++) {
+                        $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                    }
+
+                }
+            }else{
+                if($dependencia_tipo_id != 3 ){
+                    // es fiscal y similares y ademas
+                    //es un caso multigrado, solos e habilita el paralelo A
+                    $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                    $statement = $em->getConnection()->prepare($RAW_QUERY);
+                    $statement->execute();
+                    $result = $statement->fetchAll();
+                    $paralelos = $result;
+                    $paralelosArray = array();
+                    for ($i = 0; $i < count($paralelos); $i++) {
+                        $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                    }
+                }
+
             }
+            
             
             /*if( $dependencia_tipo_id == 3) { 
                 // es privada
@@ -597,7 +682,8 @@ class AreasController extends Controller {
             'turnoTipo' => $form['turno'],
             'nivelTipo' => $form['nivel'],
             'gradoTipo' => $form['grado'],
-            'paraleloTipo' => $form['paralelo'],           
+            'paraleloTipo' => $form['paralelo'],  
+                     
         ));
 
         if ($curso) {
