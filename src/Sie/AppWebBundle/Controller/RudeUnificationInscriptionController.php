@@ -1042,6 +1042,7 @@ class RudeUnificationInscriptionController extends Controller{
                             foreach ($objOferta as $value) {
                                 $em->remove($value);
                             }
+                            $em->flush();  
                         }
 
                         $em->remove($inscrip);                          
@@ -1161,6 +1162,7 @@ class RudeUnificationInscriptionController extends Controller{
                                     foreach ($objOferta as $value) {
                                         $em->remove($value);
                                     }
+                                    $em->flush();  
                                 }
 
 
