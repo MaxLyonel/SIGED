@@ -347,7 +347,7 @@ class AreasController extends Controller {
 
                     if($this->session->get('roluser') == 9 )
                     {
-                        //es director
+                        //es director?
                         $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
                         $statement = $em->getConnection()->prepare($RAW_QUERY);
                         $statement->execute();
