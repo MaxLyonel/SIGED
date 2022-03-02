@@ -319,7 +319,6 @@ class AreasController extends Controller {
              dump($es_multigrado);
              die;*/
 
-
              if($sw_nivel_primario == true and $sw_nivel_inicial == false and $dependencia_tipo_id != 3 and $es_multigrado == true)
              {
                  //tiene nivel primario pero no tiene nivel incial, entonces aumentamos nivel incial
@@ -339,9 +338,6 @@ class AreasController extends Controller {
             for ($i = 0; $i < count($grados); $i++) {
                 $gradosArray[$grados[$i]['id']] = $grados[$i]['grado'];
             }
-
-
-            
            
             //TODOS
             
@@ -349,15 +345,38 @@ class AreasController extends Controller {
                 // como estaba incialmente antes de multigrado
                 if($dependencia_tipo_id != 3 ){
 
-                    $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
-                    $statement = $em->getConnection()->prepare($RAW_QUERY);
-                    $statement->execute();
-                    $result = $statement->fetchAll();
-                    $paralelos = $result;
-                    $paralelosArray = array();
-                    for ($i = 0; $i < count($paralelos); $i++) {
-                        $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                    if($this->session->get('roluser') == 9 )
+                    {
+                        //es director
+                        $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                        $statement = $em->getConnection()->prepare($RAW_QUERY);
+                        $statement->execute();
+                        $result = $statement->fetchAll();
+                        $paralelos = $result;
+                        $paralelosArray = array();
+                        for ($i = 0; $i < count($paralelos); $i++) {
+                            $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                        }
+
+                    }else{
+                        // es distrital o departamental o nacional
+                        if($this->session->get('roluser') == 7 or $this->session->get('roluser') == 11 or $this->session->get('roluser') == 8 ){
+
+                            $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+                            $statement = $em->getConnection()->prepare($RAW_QUERY);
+                            $statement->execute();
+                            $result = $statement->fetchAll();
+                            $paralelos = $result;
+                            $paralelosArray = array();
+                            for ($i = 0; $i < count($paralelos); $i++) {
+                                $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                            }
+
+                        }
                     }
+
+                    
+                    
 
                 }else{
 
