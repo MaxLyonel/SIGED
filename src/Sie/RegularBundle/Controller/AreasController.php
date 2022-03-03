@@ -694,6 +694,30 @@ class AreasController extends Controller {
         $result = $statement->fetchAll();
         //dump($result[0]['count']); die;
         $nivelautorizado = $result[0]['count'];
+
+        /**
+         * dcastillo 3/3/22
+         * si no es nivel autorizado, puede ser multigrado
+         */
+        if($nivelautorizado == 0){                  //No es nivel autorizado            
+
+            $RAW_QUERY = 'SELECT dependencia_tipo_id FROM institucioneducativa where  CAST (id AS INTEGER) = ' .$form['idInstitucion'];                   
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            $dependencia = $result;            
+            $dependencia_tipo_id = $dependencia[0]['dependencia_tipo_id'];
+
+            if($dependencia_tipo_id != 3){          //es fiscal o derivados
+                if($form['nivel'] == 11) {          // es nivel Inicial ? puede ser ser multigrado
+                    if($form['paralelo'] == 1){     // es paralelo A ?
+                        $nivelautorizado = 1;       
+                    }
+
+                }
+            }
+        }
+
                 
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
             'institucioneducativa' => $form['idInstitucion'],
