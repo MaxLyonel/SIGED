@@ -1,0 +1,6 @@
+homonimo_index:
+    path:     /homonimoInd
+    defaults: { _controller: SieAppWebBundle:Homonimo:index }
+    options:
+       expose: true
+

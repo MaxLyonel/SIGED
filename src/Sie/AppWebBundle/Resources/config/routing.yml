@@ -319,3 +319,8 @@ sie_app_web_plataformaMoodle:
 sie_app_web_rudeunificationinscription:
     resource: "@SieAppWebBundle/Resources/config/routing/rudeUnificationInscription.yml"
     prefix:   /sie/newunificationrudeinsc
+
+# modulo para gestion de homónimos
+sie_app_web_homonimo:
+    resource: "@SieAppWebBundle/Resources/config/routing/homonimo.yml"
+    prefix:   /sie/homonimo
