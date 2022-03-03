@@ -1020,8 +1020,9 @@ class RudeUnificationController extends Controller{
                         }
                         $em->flush();                                
                         /*end   remove data rude*/                        
-
+                        /*
                         $em->remove($inscrip);
+                        */
                         //if the student has oferta
                         $objOferta = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion'=>$inscrip->getId()));
                         if(sizeof($objOferta)>0){
