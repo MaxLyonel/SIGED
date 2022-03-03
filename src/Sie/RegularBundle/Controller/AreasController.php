@@ -1227,7 +1227,6 @@ class AreasController extends Controller {
         $res= $valor[0]['sp_crea_nuevo_curso'];
         $response = new JsonResponse();
         return $response->setData(array('exito'=>$res,'mensaje'=>''));
-
        
     }   
 
