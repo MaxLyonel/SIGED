@@ -392,10 +392,27 @@ class AreasController extends Controller {
 
                 }
             }else{
-                if($dependencia_tipo_id != 3 ){
-                    // es fiscal y similares y ademas
-                    //es un caso multigrado, solos e habilita el paralelo A
-                    $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+
+                if($this->session->get('roluser') == 9 )
+                {
+                    if($dependencia_tipo_id != 3 ){
+                        // es fiscal y similares y ademas
+                        //es un caso multigrado, solos e habilita el paralelo A
+                        $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                        $statement = $em->getConnection()->prepare($RAW_QUERY);
+                        $statement->execute();
+                        $result = $statement->fetchAll();
+                        $paralelos = $result;
+                        $paralelosArray = array();
+                        for ($i = 0; $i < count($paralelos); $i++) {
+                            $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                        }
+                    }
+                }
+                
+                if($this->session->get('roluser') == 7 or $this->session->get('roluser') == 8 or $this->session->get('roluser') == 10)
+                {
+                    $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
                     $statement = $em->getConnection()->prepare($RAW_QUERY);
                     $statement->execute();
                     $result = $statement->fetchAll();
@@ -404,6 +421,7 @@ class AreasController extends Controller {
                     for ($i = 0; $i < count($paralelos); $i++) {
                         $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
                     }
+
                 }
 
             }
