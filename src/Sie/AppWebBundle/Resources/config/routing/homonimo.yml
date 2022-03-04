@@ -1,6 +1,17 @@
 homonimo_index:
-    path:     /homonimoInd
+    path:     /
     defaults: { _controller: SieAppWebBundle:Homonimo:index }
     options:
        expose: true
 
+homonimo_historial_estudiantes:
+    path:     /datos
+    defaults: { _controller: SieAppWebBundle:Homonimo:datos }
+    options:
+       expose: true
+
+homonimo_guardar_estudiantes:
+    path:     /guardar
+    defaults: { _controller: SieAppWebBundle:Homonimo:guardar }
+    options:
+       expose: true 
