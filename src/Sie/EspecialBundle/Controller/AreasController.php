@@ -1898,7 +1898,7 @@ class AreasController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro');
         $query = $entity->createQueryBuilder('iecom')
-                ->select("distinct iecom.id as institucioneducativaCursoOfertaMaestroId, mi.id as maestroInscripcionId, nota.notaTipo, p.nombre, p.paterno, p.materno, p.carnet as carnetIdentidad, p.complemento, ft.financiamiento, ft.id as financiamientoId, iecom.asignacionFechaInicio, iecom.asignacionFechaFin, iecom.item, iecom.horasMes")                
+                ->select("distinct iecom.id as institucioneducativaCursoOfertaMaestroId, mi.id as maestroInscripcionId, mi.item as itemMaestro, nota.notaTipo, p.nombre, p.paterno, p.materno, p.carnet as carnetIdentidad, p.complemento, ft.financiamiento, ft.id as financiamientoId, iecom.asignacionFechaInicio, iecom.asignacionFechaFin, iecom.item, iecom.horasMes")                
                 ->innerJoin('SieAppWebBundle:MaestroInscripcion', 'mi', 'WITH', 'mi.id = iecom.maestroInscripcion')
                 ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'p.id = mi.persona')
                 ->innerJoin('SieAppWebBundle:NotaTipo', 'nota', 'WITH', 'nota.id = iecom.notaTipo')

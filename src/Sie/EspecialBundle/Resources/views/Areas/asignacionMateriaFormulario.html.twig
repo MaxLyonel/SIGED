@@ -21,7 +21,7 @@
                     <div class="media-body">
                         <h5 class="media-heading"> {{ maestro.paterno }} {{ maestro.materno }} {{ maestro.nombre }}
                             <a class="btn btn-danger pull-right" title="Inactivar Maestro" onclick="eliminar('{{ maestro.institucioneducativaCursoOfertaMaestroId|base64_encode }}','media{{key}}')"><i class="fa fa-trash-o"></i></a>
-                            <a class="btn btn-success pull-right" title="Editar datos" onclick="loadForm('{{ maestro.institucioneducativaCursoOfertaMaestroId|base64_encode }}','media{{key}}','{{ maestro.horasMes }}','{{ maestro.item }}', '{{ maestro.nombre }} {{ maestro.paterno }} {{ maestro.materno }}', '{{ maestro.carnetIdentidad }}', '{% if maestro.asignacionFechaInicio != null %}{{ maestro.asignacionFechaInicio|date('d-m-Y') }}{% endif %}', '{% if maestro.asignacionFechaFin != null %}{{ maestro.asignacionFechaFin|date('d-m-Y') }}{% endif %}', '{{ maestro.financiamientoId }}', '{{ maestro.maestroInscripcionId }}')"><i class="fa fa-edit"></i></a>
+                            <a class="btn btn-success pull-right" title="Editar datos" onclick="loadForm('{{ maestro.institucioneducativaCursoOfertaMaestroId|base64_encode }}','media{{key}}','{{ maestro.horasMes }}','{{ maestro.itemMaestro }}','{{ maestro.item }}', '{{ maestro.nombre }} {{ maestro.paterno }} {{ maestro.materno }}', '{{ maestro.carnetIdentidad }}', '{% if maestro.asignacionFechaInicio != null %}{{ maestro.asignacionFechaInicio|date('d-m-Y') }}{% endif %}', '{% if maestro.asignacionFechaFin != null %}{{ maestro.asignacionFechaFin|date('d-m-Y') }}{% endif %}', '{{ maestro.financiamientoId }}', '{{ maestro.maestroInscripcionId }}')"><i class="fa fa-edit"></i></a>
                             {% if maestro.complemento == "" %}
                               C.I.  {{ maestro.carnetIdentidad }}
                             {% else %}
@@ -257,7 +257,7 @@
         return true
     }
 
-    var loadForm = function(ofertaMaestro, media, horas,item, nombre, ci, fechaInicio, fechaFin, financiamiento, maestroId){   
+    var loadForm = function(ofertaMaestro, media, horas,itemMaestro,item, nombre, ci, fechaInicio, fechaFin, financiamiento, maestroId){   
         init();   
         
         $('#form_title').html("Modificación de asignación");
@@ -265,6 +265,10 @@
         $('#form_ci').html(ci);
         $('#form_horasMes').val(horas);
         $('#form_item').val(item);
+        if(item=='' && itemMaestro!=''){
+        $('#form_item').val(itemMaestro);    
+        }
+        
         $('#form_ofertaMaestro').val(ofertaMaestro);
         $('#form_financiamiento').val(financiamiento);
         $('#form_fechaInicio').val(fechaInicio);
