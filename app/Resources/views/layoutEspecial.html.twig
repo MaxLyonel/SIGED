@@ -42,9 +42,7 @@
             <![endif]-->
             <link href="{{asset('css/plugins/bootstrap-datepicker/datepicker3.css')}}" rel="stylesheet">
             <link href="{{asset('css/plugins/bootstrap-timepicker/bootstrap-timepicker.min.css')}}" rel="stylesheet">
-
-            <link href="{{asset('css/jquery.typeahead.min.css')}}" rel="stylesheet">
-
+           
         {% endblock %}
 
 
@@ -755,6 +753,17 @@
         <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
         <script src="{{ asset('js/initialize.js')}}"></script>
+
+            <link href="{{asset('css/jquery.typeahead.min.css')}}" rel="stylesheet">
+
+            <script type="text/javascript">
+                $('.calendario').datepicker({
+                    format: 'dd-mm-yyyy',
+                    todayBtn: 'linked',
+                    language: 'es',
+                    autoclose: true
+                });
+            </script>
     {% endblock %}
 </body>
 
