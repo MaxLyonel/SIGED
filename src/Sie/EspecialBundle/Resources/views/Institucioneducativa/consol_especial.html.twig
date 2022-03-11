@@ -47,7 +47,9 @@
                                 {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 7 or app.session.get('roluser') == 8 %}
                                 
                             	   {#<a href="{{path('herramienta_infoconsolidation_enabledOpe',{'sie': registro.codigo_sie,'gestion':registro.gestion})}}" class="btn btn-xs btn-warning" onclick="return confirm('¿Está segura/o de restablecer el registro?');"><i class="fa fa-fw fa-edit"></i> Restablecer</a>#}
+								   {#
                             	   <a href="{{path('herramienta_infoconsolidation_enabledOpe',{'sie': registro.codigo_sie,'gestion':registro.gestion})}}" class="btn btn-xs btn-warning" onclick="return confirm('¿Está segura/o de restablecer el operativo? ');"><i class="fa fa-fw fa-edit"></i> Restablecer</a>
+								   #}
                                 {% endif %}
                         	</td>
                 	</tr>
