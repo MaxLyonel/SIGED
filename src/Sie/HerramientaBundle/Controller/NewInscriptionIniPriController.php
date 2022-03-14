@@ -122,19 +122,19 @@ class NewInscriptionIniPriController extends Controller
 			$enableoption = true; 
 			$message = ''; 
         // this is to check if the ue has registro_consolidacion
-        // if($this->session->get('roluser')==9){
+         if($this->session->get('roluser')==9){
 
-        // 	$objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-        // 		'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
-        // 	));
+         	$objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+         		'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
+         	));
         	
-	    //     if(!$objRegConsolidation){
-	    //         $status = 'error';
-		// 		$code = 400;
-		// 		$message = "No se puede realizar la inscripción debido a que la Unidad Educativa no se consolido el operativo Inscripciones";
-		// 		$enableoption = false; 
-	    //     }
-        // }       
+	         if($objRegConsolidation){
+	             $status = 'error';
+		 		$code = 400;
+		 		$message = "No  puede realizar la inscripción debido a que la Unidad Educativa ya consolido el operativo de Inscripciones ".$this->session->get('currentyear')." ";
+		 		$enableoption = false; 
+	         }
+         }       
         
         $arrExpedido = array();
          // this is to the new person
