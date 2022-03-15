@@ -100,10 +100,13 @@ class RegularizationMaestroController extends Controller {
                 }
                 //check if the operativo is closed
                 $operativo = $this->operativo($form['institucioneducativa'],$form['gestion']);
+               
+                /*
                 if($operativo < 5){
                   $this->get('session')->getFlashBag()->add('noSearchInfo', 'Información sin consolidar');
                   return $this->render('SieRegularBundle:RegularizationMaestro:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                 }
+                */
 
                 //check if the ue did it  the validation
                 $objRegularization = $em->getRepository('SieAppWebBundle:LogRegularizacionMaestro')->findOneBy(
@@ -751,20 +754,33 @@ class RegularizationMaestroController extends Controller {
                         ->getQuery()
                         ->getResult();
                 $array = array();
+                 //dcastillo 1303
+                 // se aumenta el value al estilo roly
                 foreach ($totalAreasCurso as $tac) {
                     $array[$tac['idAsignatura']] = array('id' => $tac['id'],
                         'area' => 'Area',
                         'idAsignatura' => $tac['idAsignatura'],
-                        'asignatura' => $tac['asignatura']);
+                        'asignatura' => $tac['asignatura'],
+                        'value' => base64_encode(json_encode(array('institucioneducativa_curso_oferta_id'=>$tac['id'], 'nota_tipo_id'=>0)))
+                    );
+                       
+                       
                 }
                 $areasCurso = $array;
                 $operativo = $this->operativo($form['idInstitucion'],$form['idGestion']);
                 $em->getConnection()->commit();
+                
+                //dcastillo 1003
+                $info = base64_encode(json_encode(array('sie'=>$form['idInstitucion'], 'gestion'=>$form['idGestion'])));
+               
+
                 return $this->render('SieRegularBundle:RegularizationMaestro:listaAreasCurso.html.twig', array(
                             'areasCurso' => $areasCurso,
                             'curso' => $curso,
                             'mensaje' => $mensaje,
-                            'operativo'=>$operativo
+                            'operativo'=>$operativo,
+                            'info'=>$info,
+
 
                 ));
             } else {
@@ -900,6 +916,7 @@ class RegularizationMaestroController extends Controller {
             $areasCurso = $array;
 
             $em->getConnection()->commit();
+            
             return $this->render('SieRegularBundle:RegularizationMaestro:listaAreasCurso.html.twig', array('areasCurso' => $areasCurso, 'curso' => $curso, 'mensaje' => ''));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -1021,6 +1038,7 @@ class RegularizationMaestroController extends Controller {
                 $areasCurso = $array;
 
             $em->getConnection()->commit();
+          
             return $this->render('SieRegularBundle:RegularizationMaestro:listaAreasCurso.html.twig', array('areasCurso' => $areasCurso, 'curso' => $curso, 'mensaje' => $mensaje));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();

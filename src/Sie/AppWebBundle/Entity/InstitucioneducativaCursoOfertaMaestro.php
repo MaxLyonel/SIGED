@@ -34,6 +34,7 @@ class InstitucioneducativaCursoOfertaMaestro
      */
     private $esVigenteMaestro;
 
+
     /**
      * @var \Sie\AppWebBundle\Entity\InstitucioneducativaCursoOferta
      */
@@ -49,6 +50,36 @@ class InstitucioneducativaCursoOfertaMaestro
      */
     private $notaTipo;
 
+    /**
+     * @var string
+     */
+    private $observacion;       //dcastillo 0803
+
+
+
+    /**
+     * Get observacion
+     *
+     * @return string 
+     */
+    public function getObservacion()
+    {
+        return $this->observacion;
+    }
+
+    /**
+     * Set observacion
+     *
+     * @param string $observacion
+     * @return InstitucioneducativaCursoOfertaMaestro
+     */
+    public function setObservacion($observacion)
+    {
+        $this->observacion = $observacion;
+    
+        return $this;
+    }
+    
 
     /**
      * Get id

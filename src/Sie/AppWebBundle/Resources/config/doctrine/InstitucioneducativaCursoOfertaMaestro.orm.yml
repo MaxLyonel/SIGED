@@ -70,6 +70,12 @@ Sie\AppWebBundle\Entity\InstitucioneducativaCursoOfertaMaestro:
             nullable: true
             comment: ''
             column: asignacion_fecha_fin
+        observacion:
+            type: string
+            nullable: true
+            length: 200
+            fixed: false
+            comment: ''
     manyToOne:
         financiamientoTipo:
             targetEntity: FinanciamientoTipo

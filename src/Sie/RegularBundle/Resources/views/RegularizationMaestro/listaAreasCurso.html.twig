@@ -1,6 +1,8 @@
 <h4 class="text-orange text-center"><ins>{{curso.nivelTipo.nivel}} - {{curso.gradoTipo.grado}} - {{curso.paraleloTipo.paralelo}}</ins></h4>
 <hr>
 
+<input type="hidden" name="form_info" id="form_info" value="{{info}}">
+
 <h4><i class="fa fa-list-alt"></i> Áreas Humanísticas
     {% if (app.session.get('roluser') == 8 or app.session.get('roluser') == 7) and operativo < 4 %}
     <span style="float:right; margin-bottom:10px">
@@ -38,6 +40,7 @@
                         <td data-title="Area">{{cursoOferta.asignatura}}&nbsp;</td>
 
                         <td data-title="Acciones">
+                        {#
                         {% if curso.gestionTipo.id <= app.session.get('currentyear') %}
                             <button class="btn" onclick="addpop({{cursoOferta.id}})" title="Asignar maestro"><i class="fa fa-users text-lilac"></i></button>
                             <div class="arrow-before" style="display:none; margin-left:10px;" id="before{{cursoOferta.id}}"></div><div class="arrow-after" style="display:none;margin-left:10px;" id="after{{cursoOferta.id}}"></div>
@@ -45,6 +48,9 @@
 
                             </div>
                         {% endif %}
+                        #}
+
+                        <button class="btn btn-default btn-sm" onclick="formulario('{{cursoOferta.value}}')" title="Asignar Maestro"><i class="fa fa-users text-lilac" data-toggle="modal" data-target="#popup"></i></button>
 
                         </td>
                     </tr>
@@ -73,8 +79,62 @@
 {% endif %}
 </div>
 </strong>
+
+<div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true" data-backdrop="static">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title" id="standardModalLabel">&nbsp;</h4>
+        </div>
+        <div class="modal-body" id="popupBody">
+            
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            {#<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar SIGED</button>#}
+        </div>
+    </div>
+    <!-- /.modal-content -->
+</div>
+<!-- /.modal-dialog -->
+</div>
+
+
+
 <script>
     $(document).ready( function(){
         $(".tooltips").tooltip();
     });
+
+    //SIGEDdcastillo
+    var formulario = function(val, bot){            
+            console.log('siged');       
+            $('#popup').modal('show');  
+            console.log(val);    
+
+            //val = 'eyJpbnN0aXR1Y2lvbmVkdWNhdGl2YV9jdXJzb19vZmVydGFfaWQiOjY5MjQyODk5LCJub3RhX3RpcG9faWQiOjB9';
+           // botonForm = $(bot); 
+            var info = document.getElementById('form_info').value;
+            console.log(info);
+            //var info = 'eyJzaWUiOiI4MDczMDU0NyIsImdlc3Rpb24iOjIwMjF9';
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_formulario', {'val': val, 'info': info, 'sistema': 1}),
+                beforeSend: function () {
+                    $("#popupBody").empty();
+                    $("#popupBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    $("#popupBody").empty();  
+                    $("#popupBody").html(data);                  
+                },
+                error: function(error){          
+                    $("#popupBody").empty();           
+                    $("#popupBody").append('<div class="text-center">Error</div>');   
+                },
+            });   
+        }      
+
+
 </script>
