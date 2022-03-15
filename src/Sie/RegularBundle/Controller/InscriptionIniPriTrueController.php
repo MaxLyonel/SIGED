@@ -471,16 +471,18 @@ class InscriptionIniPriTrueController extends Controller {
           return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
       }
 
+      if($this->session->get('roluser')==9){
       // validation if the ue is over 4 operativo
-      $objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-        'unidadEducativa' => $form['institucionEducativa'],  'gestion' => $form['gestionIns'])
-      );
-      
-      if($objRegConsolidation){
-        $message = 'No se puede realizar la inscripción debido a que la Unidad Educativa  ya cerro el operativo de Inscripción';
-        $this->addFlash('idNoInscription', $message);
-        return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
-      }
+        $objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+            'unidadEducativa' => $form['institucionEducativa'],  'gestion' => $form['gestionIns'])
+        );
+        
+        if($objRegConsolidation){
+            $message = 'No se puede realizar la inscripción debido a que la Unidad Educativa  ya cerró el operativo de Inscripción';
+            $this->addFlash('idNoInscription', $message);
+            return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
+        }
+    }
         //dump($objRegConsolidation);die;
    
 
