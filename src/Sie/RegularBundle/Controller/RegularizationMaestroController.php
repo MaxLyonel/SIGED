@@ -113,10 +113,11 @@ class RegularizationMaestroController extends Controller {
                     array('institucioneducativaId'=>$form['institucioneducativa'])
                   );
 
-                if($objRegularization){
+                //  dcastillo caso: Ya se encuentra Validado la Información de esta Unidad Educativa 80830017 
+                /*if($objRegularization){
                   $this->get('session')->getFlashBag()->add('noSearch', 'Ya se encuentra Validado la Información de esta Unidad Educativa '.$form['institucioneducativa']);
                   return $this->render('SieRegularBundle:RegularizationMaestro:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
-                }
+                }*/
 
 
             } else {
