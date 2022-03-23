@@ -1425,6 +1425,33 @@ public function checksegipstudentAction(Request $request){
       return $response;     
         
     }  
+      /*Modificacion de estado de matricula*/
+  public function cambiarEstadoMatriculaAction(Request $request){
+    //dump($request);die;
+    $em = $this->getDoctrine()->getManager();
+    $estInsId = $request->get('estInsId');
+    $eslibreta = $request->get('eslibreta');
+    $infoUe = $request->get('infoUe');
+    //dump($estInsId);die;
+    $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($estInsId);
+    $estadomatriculaId = $inscripcion->getEstadomatriculaTipo()->getId();
+    if($eslibreta == true){
+      $emPermitidos = array(10,6,$estadomatriculaId);
+    }else{
+      $emPermitidos = array(6,$estadomatriculaId);
+    }
+    $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>$emPermitidos));
+    $emArray = array();
+    foreach($estadosMatricula as $em){
+      $emArray[$em->getId()] = $em->getestadomatricula();
+
+    }
+    
+    return $this->render('SieEspecialBundle:InfoStudents:cambiarEstadoMatricula.html.twig', array(
+      'form'=>$this->estadoMatriculaForm($estadomatriculaId,$estInsId,$emArray,$infoUe)->createView(),
+      'inscripcion' => $inscripcion,
+    ));
+  }
   /**
   *  Formulario de estado matricula
   **/

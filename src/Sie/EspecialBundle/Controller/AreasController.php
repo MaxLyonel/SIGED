@@ -454,7 +454,7 @@ class AreasController extends Controller {
                     ->setParameter('turno', $turno)
                     ->setParameter('nivel', $nivel)
                     ->setParameter('grado', $grado)
-                    ->setParameter('programa', array(30)); //antes 17?
+                    ->setParameter('programa', array(31)); //antes 17?
 
             $paralelos = $query->getResult();
 //dump($paralelos);die;
