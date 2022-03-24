@@ -836,7 +836,7 @@ class CreacionCursosEspecialController extends Controller {
         elseif (($area == "3" or $area == "5") and $nivel == "411" and  $grado == "99" ) {
             $programas = array(99);
             if ($this->session->get('idGestion') > 2020) {
-                $programas = array(28);
+                $programas = array(28,30);
             }
         }elseif ($area == "6" and $nivel == "411" and  $grado == "99" ) {
             if ($this->session->get('idGestion') < 2020) {
