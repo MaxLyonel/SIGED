@@ -229,11 +229,14 @@ class TramiteAddModCalificationController extends Controller {
         $datos = [];
         $promedioGeneral = ''; // PARA PRIMARIA 2019
         if(count($tramitePendiente)<=0) {
-            $datos = $this->get('notas')->regular($idInscripcion, $operativo - 1);
-            // dump($datos);die;
+            $datos = $this->get('notas')->regularDB($idInscripcion, $operativo);
+            
+            // dump($operativo);
+            // dump($datos['cualitativas']);
+            // die;
             if($datos['gestion'] >= 2019 and $datos['nivel'] == 12){
                 foreach ($datos['cualitativas'] as $key => $value) {
-                    if ($value['idNotaTipo'] == 5) {
+                    if ($value['idNotaTipo'] == 9) {
                         $promedioGeneral = $value['notaCuantitativa'];
                     }
                 }
