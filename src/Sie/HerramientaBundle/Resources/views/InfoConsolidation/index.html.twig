@@ -274,16 +274,39 @@
 
     $(document).ready(function(){      
         //$('#example').DataTable();
-        mostrarModal();
+        verifica_errores();
+        /*alert(existe);
+        if (existe > 0){
+            mostrarModal();
+        }*/
     });
 
     function remove_string(str, startIndex, count) {
         return str.substr(0, startIndex) + str.substr(startIndex + count);
     }
 
+    function verifica_errores() {
+        //no importa por que en el controller se tienen estos datos de la sesion
+        console.log('verifica_errores')
+        gestionid = 5;
+        ueid = 50;
+        $.ajax({
+            type: 'get',            
+            url: Routing.generate('observaciones_maestros_ue', {'gestionid': gestionid, 'ueid': ueid }),            
+            success: function (data) {                
+                console.log(data.existe);
+                if(data.existe != 0){
+                    mostrarModal();
+                }else{
+                    console.log('sin observaciones');
+                }
+            },            
+        });        
+     }
+
     //dcastillo
     function mostrarModal() {
-
+        console.log('mostrarModal');
         gestionid = 5;
         ueid = 50;
         $("#infoModal").hide();

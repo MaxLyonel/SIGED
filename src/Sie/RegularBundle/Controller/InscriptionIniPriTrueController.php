@@ -70,7 +70,7 @@ class InscriptionIniPriTrueController extends Controller {
         $enableoption = true; 
         $message = ''; 
         // this is to check if the ue has registro_consolidacion
-        /*if( in_array($this->session->get('roluser'), array(7,8,9,10))  ){
+        if( in_array($this->session->get('roluser'), array(9))  ){
 
           $objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
             'unidadEducativa' => $this->session->get('ie_id'),  'gestion' => $this->session->get('currentyear')
@@ -79,10 +79,10 @@ class InscriptionIniPriTrueController extends Controller {
           if($objRegConsolidation){
               $status = 'error';
               $code = 400;
-              $message = "No se puede realizar la inscripción debido a que la Unidad Educativa no se consolido el operativo Inscripciones";
+              $message = "No se puede realizar la inscripción debido a que la Unidad Educativa ya consolidó el operativo  de Inscripción ". $this->session->get('currentyear')."";
               $enableoption = false; 
           }
-        } */     
+        } 
 
 
 
@@ -116,7 +116,7 @@ class InscriptionIniPriTrueController extends Controller {
      * obtien el formulario para realizar la modificacion
      * @param Request $request
      */
-    public function resultAction(Request $request) {
+    public function resultAction(Request $request) {  
 
         $em = $this->getDoctrine()->getManager();
         //flag to know is a new estranjero student
@@ -187,7 +187,7 @@ class InscriptionIniPriTrueController extends Controller {
             // $inscriptionsGestionSelected = $this->getCurrentInscriptionsByGestoin($student->getCodigoRude(), $form['gestion']);
             //check if the student was Approved on the gestion selected
             if (sizeof($inscriptionsGestionSelected)>0) {
-
+                
                $inscriptions = $this->getCurrentInscriptionsStudent($student->getCodigoRude());
                 // $message = "El estudiante cuenta con inscripción en la gestion seleccionada";
                 // $this->addFlash('notiext', $message);
@@ -198,6 +198,7 @@ class InscriptionIniPriTrueController extends Controller {
                  $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => strtoupper($form['codigoRude'])));
                 $formInsc = $this->createFormInsc1($student->getId(), $sw, $inscriptionsGestionSelected[0], $form['gestion'], $form['codigoRude'], $idOtraInscripcion);
                 //everything is ok build the info
+               // dump ($this->session->get('pathSystem'));die;
                 return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:result1.html.twig', array(
                             'datastudent' => $student,
                             'currentInscription' => $inscriptions,
@@ -210,9 +211,10 @@ class InscriptionIniPriTrueController extends Controller {
               return $this->redirect($this->generateUrl('inscription_ini_pri_rue_index'));
               
             }
-
+         
             $formInsc = $this->createFormInsc($student->getId(), $sw, $infoInscription, $form['gestion'], $form['codigoRude']);
             //everything is ok build the info
+         
             return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:result.html.twig', array(
                         'datastudent' => $student,
                         'currentInscription' => $inscriptions,
@@ -233,7 +235,7 @@ class InscriptionIniPriTrueController extends Controller {
      * @return type form
      */
     private function createFormInsc($idStudent, $sw, $data, $gestionIns, $codigoRude) {
-      
+        
         $em = $this->getDoctrine()->getManager();
 
          $formOmitido = $this->createFormBuilder()
@@ -364,7 +366,7 @@ class InscriptionIniPriTrueController extends Controller {
      * @param type $g like grado
      * @return type
      */
-    public function findIEAction($id, $nivel, $grado, $lastue) {
+    public function findIEAction($id, $nivel, $grado, $lastue) { 
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id);
         $paralelo = array();
@@ -469,16 +471,18 @@ class InscriptionIniPriTrueController extends Controller {
           return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
       }
 
+      if($this->session->get('roluser')==9){
       // validation if the ue is over 4 operativo
-      $objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
-        'unidadEducativa' => $form['institucionEducativa'],  'gestion' => $form['gestionIns'])
-      );
-      
-      if($objRegConsolidation){
-        $message = 'No se puede realizar la inscripción debido a que la Unidad Educativa  ya cerro el operativo de Inscripción';
-        $this->addFlash('idNoInscription', $message);
-        return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
-      }
+        $objRegConsolidation =  $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+            'unidadEducativa' => $form['institucionEducativa'],  'gestion' => $form['gestionIns'])
+        );
+        
+        if($objRegConsolidation){
+            $message = 'No se puede realizar la inscripción debido a que la Unidad Educativa  ya cerró el operativo de Inscripción';
+            $this->addFlash('idNoInscription', $message);
+            return $this->render($this->session->get('pathSystem') . ':InscriptionIniPriTrue:menssageInscription.html.twig', array('setNotasInscription'=> $setNotasInscription));
+        }
+    }
         //dump($objRegConsolidation);die;
    
 
@@ -658,7 +662,8 @@ class InscriptionIniPriTrueController extends Controller {
 
          //$student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$form['codigoRude']));
           //Recupero el CodUE de procedencia $form['codigoRude']
-           $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude'] ));
+           $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude'] )); 
+
            $query = $em->getConnection()->prepare('SELECT cod_ue_procedencia_id 
                                                    FROM estudiante_inscripcion  
                                                    WHERE estudiante_id ='. $estudiante->getId() .'
@@ -695,9 +700,13 @@ class InscriptionIniPriTrueController extends Controller {
 
           //add the areas to the student
           //$responseAddAreas = $this->addAreasToStudent($studentInscription->getId(), $objCurso->getId());    
-          $query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
-          $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
-          $query->execute();         
+          //$query = $em->getConnection()->prepare('SELECT * from sp_genera_estudiante_asignatura(:estudiante_inscripcion_id::VARCHAR)');
+          //$query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+         // $query->execute();         
+            $query = $em->getConnection()->prepare('SELECT * from sp_crea_estudiante_asignatura_regular(:sie::VARCHAR, :estudiante_inscripcion_id::VARCHAR)');
+            $query->bindValue(':estudiante_inscripcion_id', $studentInscription->getId());
+            $query->bindValue(':sie', $form['institucionEducativa']);
+            $query->execute();
 
         /*=============================================================
         =            ACTUALIZACION DEL ESTADO DE MATRICULA            =

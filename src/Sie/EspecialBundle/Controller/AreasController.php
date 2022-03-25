@@ -14,6 +14,7 @@ use Sie\AppWebBundle\Entity\InstitucioneducativaCursoOfertaMaestro;
 use Sie\AppWebBundle\Entity\EstudianteAsignatura;
 use Sie\AppWebBundle\Entity\EstudianteNota;
 
+
 /**
  * areas especial controller.
  *
@@ -27,7 +28,7 @@ class AreasController extends Controller {
         $this->session = new Session();
     }
     
-    public function searchAction(Request $request) {
+    public function searchAction(Request $request) { 
         // Verificacmos si existe la session de usuario
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
@@ -58,7 +59,7 @@ class AreasController extends Controller {
      * Lista de estudiantes inscritos en la institucion educativa
      *
      */
-    public function indexAction(Request $request, $op) {
+    public function indexAction(Request $request, $op) { 
         // Verificacmos si existe la session de usuario
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
@@ -453,10 +454,10 @@ class AreasController extends Controller {
                     ->setParameter('turno', $turno)
                     ->setParameter('nivel', $nivel)
                     ->setParameter('grado', $grado)
-                    ->setParameter('programa', array(17));
+                    ->setParameter('programa', array(31)); //antes 17?
 
             $paralelos = $query->getResult();
-
+//dump($paralelos);die;
             $paralelosArray = array();
 
             for ($i = 0; $i < count($paralelos); $i++) {
@@ -502,8 +503,8 @@ class AreasController extends Controller {
             //dump($idNivel); dump($idCurso); dump($idarea); die;
 
             switch($idNivel){
-                case 400: 
-                case 401: switch ($grado) {
+                case 400: //Independencia personal 
+                case 401: switch ($grado) { //Independencia personal 1
                                 case 1:
                                 case 2:
                                     $asignaturas = $em->createQuery(
@@ -527,7 +528,7 @@ class AreasController extends Controller {
                                     break;*/
                             }
                  break;
-                 case 408: $asignaturas = $em->createQuery(
+                 case 408: $asignaturas = $em->createQuery( //Independencia personal 2
                                 'SELECT at
                                 FROM SieAppWebBundle:AsignaturaTipo at
                                 WHERE at.id IN (:ids)
@@ -535,7 +536,7 @@ class AreasController extends Controller {
                                 )->setParameter('ids',array(468,469,470,471,472,473,474))
                                 ->getResult();
                   break;
-                case 402: $asignaturas = $em->createQuery(
+                case 402: $asignaturas = $em->createQuery( //Independencia Social
                             'SELECT at
                             FROM SieAppWebBundle:AsignaturaTipo at
                             WHERE at.id IN (:ids)
@@ -543,7 +544,7 @@ class AreasController extends Controller {
                             )->setParameter('ids',array(468,469,470,471,472,473,474))
                             ->getResult();
                   break;
-                case 411:   $programa = $institucionCursoEspecial->getEspecialProgramaTipo()->getId();
+                case 411:   $programa = $institucionCursoEspecial->getEspecialProgramaTipo()->getId(); //programas
                             //dump($programa);die;
                             switch($programa){
                                 case 7:
@@ -699,7 +700,7 @@ class AreasController extends Controller {
                                     break;
                             }
                             break;
-                case 410:   
+                case 410:   //servicio
                             if($idarea==7){
                                 $asignaturas = $em->createQuery(
                                     'SELECT at
@@ -714,15 +715,16 @@ class AreasController extends Controller {
                                     FROM SieAppWebBundle:AsignaturaTipo at
                                     WHERE at.id IN (:ids)
                                     ORDER BY at.id ASC'
-                                    )->setParameter('ids',array(4))
+                                    )->setParameter('ids',array(4)) //especial
                                     ->getResult();
-                            $programaServicio = $institucionCursoEspecial->getEspecialServicioTipo()->getServicio();
-                            $esvisual = true;
-                            $progSer = "Servicio";
+                                $programaServicio = $institucionCursoEspecial->getEspecialServicioTipo()->getServicio();
+                                $esvisual = true;
+                                $progSer = "Servicio";
 
                             }
                             break;                            
-                case 11:    $asignaturas = $em->createQuery(
+                case 11:   //Inicial
+                     $asignaturas = $em->createQuery(
                                     'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
                                     WHERE at.asignaturaNivel = :idNivel
@@ -732,7 +734,7 @@ class AreasController extends Controller {
                             ->setParameter('ids',array(1000,1001,1002,1003))
                             ->getResult();
                             break;
-                case 403:
+                case 403: //Educacion Inicial
                        $asignaturas = $em->createQuery(
                             'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
@@ -745,7 +747,8 @@ class AreasController extends Controller {
                                     break;
 
 
-                case 12:    $asignaturas = $em->createQuery(
+                case 12:   //Primaria
+                     $asignaturas = $em->createQuery(
                                     'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
                                     WHERE at.asignaturaNivel = :idNivel
@@ -755,7 +758,8 @@ class AreasController extends Controller {
                             ->setParameter('ids',array(1011,1012,1013,1014,1015,1016,1017,1018,1019))
                             ->getResult();
                             break;
-                case 404:   $rasignaturas = $em->createQuery(
+                case 404: //Educación primaria
+                      $rasignaturas = $em->createQuery(
                             'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
                                     WHERE at.asignaturaNivel = :idNivel
@@ -774,7 +778,8 @@ class AreasController extends Controller {
                                 break;
 
 
-                case 13:    switch ($grado) {
+                case 13:   //Educ Secundaria
+                     switch ($grado) {
                                 case 1:
                                 case 2:
                                     $asignaturas = $em->createQuery(
@@ -828,8 +833,9 @@ class AreasController extends Controller {
             }
            ;
 
-
+//dump($programaServicio);die;
             $areasNivel = $asignaturas;
+            
             $areasCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso' => $idCurso));
 
             $areasArray = array();
@@ -879,7 +885,7 @@ class AreasController extends Controller {
                            ->getQuery()
                            ->getResult();
             $em->getConnection()->commit();
-           //dump($maestros);die;
+           //dump($areasArray);die;
             return $this->render('SieEspecialBundle:Areas:listaAreas.html.twig', array('areasNivel' => $areasArray, 'maestros' => $maestros,'esvisual'=>$esvisual,'progSer'=>$progSer));
         } catch (Exception $ex) {
             //$em->getConnection()->rollback();
@@ -890,7 +896,7 @@ class AreasController extends Controller {
      * Registrar las areas seleccionadas y listar las nuevas areas del curso
      */
 
-    public function lista_areas_cursoAction(Request $request) {
+    public function lista_areas_cursoAction(Request $request) { //dump("1");die;
         try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -903,8 +909,10 @@ class AreasController extends Controller {
                 $esvisual = false;
             }
 
-            if ($form['nivel'] != 405) {
+            if ($form['nivel'] != 405) { /**405 formacion tecnica */
                 $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($form['paralelo']);
+                $gestion = $curso->getGestionTipo()->getId();
+
                 if ($curso) {
                     $idCurso = $curso->getId();
                     $mensaje = '';
@@ -941,9 +949,22 @@ class AreasController extends Controller {
                         ->orderBy('at.id','ASC')
                         ->getQuery()
                         ->getResult();
-
                 $array = array();
+                  // dump($totalAreasCurso);die;
                 foreach ($totalAreasCurso as $tac) {
+                    //dump($tac['id']);die;
+
+                    $cursoOfertaMaestro = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro');
+                    $query = $cursoOfertaMaestro->createQueryBuilder('iecom')
+                            ->where('iecom.institucioneducativaCursoOferta = :institucionEducativaCursoOfertaId')
+                            ->andwhere('iecom.esVigenteAdministrativo = true')
+                            ->andWhere('iecom.esVigenteMaestro = true')
+                            ->andWhere('iecom.horasMes > 0')
+                            ->setParameter('institucionEducativaCursoOfertaId', $tac['id']);
+                    $cursoOfertaMaestro = $query->getQuery()->getResult();
+
+                    $totalMaestro = count($cursoOfertaMaestro);
+
                     if($tac['idAsignatura']==4){
                         if($tac['idPrograma']==99){
                             $programaServicio = $tac['servicio'];
@@ -959,9 +980,13 @@ class AreasController extends Controller {
                         'area' => ($tac['area']) ? $tac['area'] : "",
                         'idAsignatura' => $tac['idAsignatura'],
                         'asignatura' => $tac['asignatura'],
-                        'programaServicio' => $programaServicio);
+                        'programaServicio' => $programaServicio,
+                        'totalMaestro' => $totalMaestro)
+                        ;
                 }
+                
                 $areasCurso = $array;
+                
                 $em->getConnection()->commit();
                 return $this->render('SieEspecialBundle:Areas:listaAreasCurso.html.twig', array(
                             'areasCurso' => $areasCurso,
@@ -969,6 +994,7 @@ class AreasController extends Controller {
                             'mensaje' => $mensaje,
                             'esvisual' => $esvisual,
                             'progSer' => $progSer,
+                            'gestion' => $gestion,
                             'form' => $this->createFormToBuild($form['idInstitucion'], $form['idGestion'], '4')->createView()
                 ));
             } else {
@@ -1000,8 +1026,10 @@ class AreasController extends Controller {
             $em->getConnection()->beginTransaction();
             $this->session = new Session;
             $idCurso = $request->get('idInstitucionCurso');
+           // dump($idCurso);
             $idMaestroResponsable = $request->get('maestro_responsable');            
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
+            $gestion = $curso->getGestionTipo()->getId();
             if ($idMaestroResponsable!=null) {
                 $curso->setMaestroInscripcionAsesor($em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($idMaestroResponsable));
                 $em->persist($curso);
@@ -1028,6 +1056,8 @@ class AreasController extends Controller {
             /*
              * Areas registradas anteriormente
              */
+
+            // dump($areas);die;
             $areasCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->findBy(array('insitucioneducativaCurso' => $idCurso));
             /**
              * Aplicamos la funcion para actualizar el primary key
@@ -1044,7 +1074,7 @@ class AreasController extends Controller {
                 if($this->session->get('idGestion') == 2016 and $areas[$i] == 1039){
                     $existe = 'si';
                 }
-                if ($existe == 'no') {
+                if ($existe == 'no') {  
                     $newArea = new InstitucioneducativaCursoOferta();
                     $newArea->setAsignaturaTipo($em->getRepository('SieAppWebBundle:AsignaturaTipo')->find($areas[$i]));
                     $newArea->setInsitucioneducativaCurso($em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($request->get('idInstitucionCurso')));
@@ -1063,6 +1093,7 @@ class AreasController extends Controller {
                          $nuevoCOM->setFechaRegistro(new \DateTime('now'));
                          $nuevoCOM->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(0));
                          $nuevoCOM->setEsVigenteMaestro('t');
+                         $nuevoCOM->setEsVigenteAdministrativo('t');
                          $em->persist($nuevoCOM);
                          $em->flush();
                     }
@@ -1159,7 +1190,18 @@ class AreasController extends Controller {
                     ->getQuery()
                     ->getResult();
             $array = array();
+            
             foreach ($totalAreasCurso as $tac) {
+
+                $cursoOfertaMaestro = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro');
+                $query = $cursoOfertaMaestro->createQueryBuilder('iecom')
+                        ->where('iecom.institucioneducativaCursoOferta = :institucionEducativaCursoOfertaId')
+                        ->andwhere('iecom.esVigenteAdministrativo = true')
+                        ->andWhere('iecom.esVigenteMaestro = true')
+                        ->andWhere('iecom.horasMes > 0')
+                        ->setParameter('institucionEducativaCursoOfertaId', $tac['id']);
+                $cursoOfertaMaestro = $query->getQuery()->getResult();
+                $totalMaestro = count($cursoOfertaMaestro);
                 if($tac['idAsignatura']==4){
                     if($tac['idPrograma']==99){
                         $programaServicio = $tac['servicio'];
@@ -1175,7 +1217,8 @@ class AreasController extends Controller {
                     'area' => $tac['area'],
                     'idAsignatura' => $tac['idAsignatura'],
                     'asignatura' => $tac['asignatura'],
-                    'programaServicio' => $programaServicio);
+                    'programaServicio' => $programaServicio,
+                    'totalMaestro' => $totalMaestro);
             }
             $areasCurso = $array;
 
@@ -1186,6 +1229,7 @@ class AreasController extends Controller {
                     'mensaje'       => '',
                     'esvisual'      => $esvisual,
                     'progSer'       => $progSer,
+                    'gestion'       => $gestion,
                     'form'          => $this->createFormToBuild($this->session->get('idInstitucion'), $this->session->get('idGestion'), '4')->createView()));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -1202,6 +1246,7 @@ class AreasController extends Controller {
         try {
             $cursoOferta = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($idCursoOferta);
             $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($cursoOferta->getInsitucioneducativaCurso()->getId());
+            $gestion = $curso->getGestionTipo()->getId();
             $cursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso'=>$curso->getId()));
             $idEspecialArea = $cursoEspecial->getEspecialAreaTipo()->getId();
             if($idEspecialArea == 2 or $idEspecialArea == 4){
@@ -1307,6 +1352,17 @@ class AreasController extends Controller {
                         ->getResult();
                 $array = array();
                 foreach ($totalAreasCurso as $tac) {
+                    
+                    $cursoOfertaMaestro = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro');
+                    $query = $cursoOfertaMaestro->createQueryBuilder('iecom')
+                            ->where('iecom.institucioneducativaCursoOferta = :institucionEducativaCursoOfertaId')
+                            ->andwhere('iecom.esVigenteAdministrativo = true')
+                            ->andWhere('iecom.esVigenteMaestro = true')
+                            ->andWhere('iecom.horasMes > 0')
+                            ->setParameter('institucionEducativaCursoOfertaId', $tac['id']);
+                    $cursoOfertaMaestro = $query->getQuery()->getResult();
+
+                    $totalMaestro = count($cursoOfertaMaestro);
                     if($tac['idAsignatura']==4){
                         if($tac['idPrograma']==99){
                             $programaServicio = $tac['servicio'];
@@ -1322,7 +1378,8 @@ class AreasController extends Controller {
                         'area' => $tac['area'],
                         'idAsignatura' => $tac['idAsignatura'],
                         'asignatura' => $tac['asignatura'],
-                        'programaServicio' => $programaServicio);
+                        'programaServicio' => $programaServicio,
+                        'totalMaestro' => $totalMaestro);
                 }
                 $areasCurso = $array;
 
@@ -1333,6 +1390,7 @@ class AreasController extends Controller {
                 'mensaje'       => $mensaje,
                 'esvisual'      => $esvisual,
                 'progSer'       => $progSer,
+                'gestion'       => $gestion,
                 'form'          => $this->createFormToBuild($this->session->get('idInstitucion'), $this->session->get('idGestion'), '4')->createView()));
         } catch (Exception $ex) {
             $em->getConnection()->rollback();
@@ -1344,7 +1402,7 @@ class AreasController extends Controller {
      */
     public function maestrosAction(Request $request){
         $ieco = $request->get('idco');
-
+        //dump($ieco);die;
         $em = $this->getDoctrine()->getManager();
         $maestrosMateria = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findBy(array('institucioneducativaCursoOferta'=>$ieco));
 
@@ -1373,12 +1431,12 @@ class AreasController extends Controller {
             // Bimestrales
             $inicio = 0;
             $operativo = $this->operativo($sie,$gestion);
+            
             if($operativo == 5){
                 $fin = 4; //4;
             }else{
                 $fin = $operativo;
             }
-
         }
         
         for($i=$inicio;$i<=$fin;$i++){
@@ -1447,11 +1505,95 @@ class AreasController extends Controller {
             }
         }
         $operativo = $this->operativo($sie,$gestion);
-
-        return $this->render('SieEspecialBundle:Areas:maestros.html.twig',array('maestrosCursoOferta'=>$arrayMaestros, 'maestros'=>$maestros,'ieco'=>$ieco,'operativo'=>$operativo, 'responsable'=>$responsable));
+        //dump($arrayMaestros);die;
+        //TODO en Array Maestos se dibuja  la lista por el tipo de Nota por defecto entra como 0
+        return $this->render('SieEspecialBundle:Areas:maestros.html.twig',
+        array('maestrosCursoOferta'=>$arrayMaestros, 
+               'maestros'=>$maestros,
+               'ieco'=>$ieco,
+               'operativo'=>$operativo, 
+               'responsable'=>$responsable));
     }
 
-    public function maestrosAsignarAction(Request $request){
+    
+    /*
+     * Asignar maestro al area
+     * Autor: Cristina Vallejos
+     * Fecha: 07/03/2022
+     */
+    public function maestrosEspecialAction(Request $request){
+        date_default_timezone_set('America/La_Paz');
+        $ieco = $request->get('idco');
+        $em = $this->getDoctrine()->getManager();
+       // dump($ieco);die;
+        $maestroInscripcionId = 0;
+        $item = "";
+        $fechaInicio = "";
+        $fechaFin = "";
+        $financiamientoTipoEntity = array();
+        $maestroInscripcioEntity = array();
+        $formEnable = true;
+        
+        $listaMaestros = $this->getMaestrosInstitucionEducativaCursoOferta($ieco,0);
+        $detalleCursoOferta = $this->getInstitucionEducativaCursoOferta($ieco);
+        if(count($detalleCursoOferta )>0){
+            $detalleCursoOferta = $detalleCursoOferta[0];
+        }
+
+        $curso = $em->createQueryBuilder()
+        ->select('ie.id as sie, gt.id as gestion,iec.lugar, iec as maestro')
+        ->from('SieAppWebBundle:InstitucioneducativaCursoOferta','ieco')
+        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ieco.insitucioneducativaCurso = iec.id')
+        ->innerJoin('SieAppWebBundle:Institucioneducativa','ie','with','iec.institucioneducativa = ie.id')
+        ->innerJoin('SieAppWebBundle:GestionTipo','gt','with','iec.gestionTipo = gt.id')
+        ->where('ieco.id = :idCursoOferta')
+        ->setParameter('idCursoOferta',$ieco)
+        ->getQuery()
+        ->getResult();
+        
+        $sie = $curso[0]['sie'];
+        $gestion = $curso[0]['gestion'];
+       
+        $ofertaMaestro='';
+
+        $maestroInscripcionLista = $this->listaMaestroInscripcion($sie,$gestion);
+        $arrayMaestroInscripcionLista = array();
+        $arrayMaestroInscripcionLista[base64_encode(0)] = 'SIN ASIGNACIÓN DOCENTE';
+        foreach ($maestroInscripcionLista as $data) {
+            if($data['complemento'] != ""){
+                $arrayMaestroInscripcionLista[base64_encode($data['maestroInscripcionId'])] = $data['paterno']." ".$data['materno']." ".$data['nombre']." (C.I.: ".$data['carnetIdentidad']."-".$data['complemento'].")";
+            } else {
+                $arrayMaestroInscripcionLista[base64_encode($data['maestroInscripcionId'])] = $data['paterno']." ".$data['materno']." ".$data['nombre']." (C.I.: ".$data['carnetIdentidad'].")";
+            }
+        }
+
+        $form = $this->getFormRegistroMaestro($item, $fechaInicio, $fechaFin, $financiamientoTipoEntity, $arrayMaestroInscripcionLista, 0, $gestion, $ieco, $ofertaMaestro);
+        $arrayRangoFecha = array('inicio'=>"01-01-".$gestion,'final'=>"31-12-".$gestion);
+        $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'formNuevo'=>$form, 'formEnable'=>$formEnable, 'rangoFecha'=>$arrayRangoFecha);
+     
+        return $this->render('SieEspecialBundle:Areas:asignacionMateriaFormulario.html.twig', $arrayFormulario);
+    }
+
+    public function getFormRegistroMaestro($item, $fechaInicio, $fechaFin, $financiamientoTipoEntity, $maestroInscripcionLista, $maestroInscripcionId, $gestion, $ieco, $ofertaMaestro){
+        $form = $this->createFormBuilder()
+        ->add('ofertaMaestro', 'hidden', array('label' => 'Info', 'attr' => array('value' => $ofertaMaestro)))
+        ->add('ieco', 'hidden', array('label' => 'Info', 'attr' => array('value' => $ieco)))
+        ->add('horasMes', 'text', array('label' => 'Carga Horaria', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => '', 'style' => 'text-transform:uppercase', 'placeholder' => 'Horas' , 'maxlength' => 3, 'required' => true)))
+        ->add('item', 'text', array('label' => 'Item', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => '', 'style' => 'text-transform:uppercase', 'placeholder' => 'Item' , 'maxlength' => 5, 'required' => false)))
+        ->add('fechaInicio', 'text', array('label' => 'Fecha inicio de asignación (ej.: 01-01-'.$gestion.')', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaInicio, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha inicio de asignación' , 'maxlength' => 10, 'required' => true)))
+        ->add('fechaFin', 'text', array('label' => 'Fecha fin de asignación (ej.: 31-12-'.$gestion.')', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaFin, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha fin de asignación' , 'maxlength' => 10, 'required' => true)))
+        ->add('maestro', 'choice', array('choices' => $maestroInscripcionLista, 'label' => 'Maestro', 'empty_value' => 'Seleccione Maestro', 'data' => $maestroInscripcionId, 'attr' => array()))
+        ->add('financiamiento', 'entity', array('data' => $financiamientoTipoEntity, 'label' => 'Financiamiento', 'empty_value' => 'Seleccione Financiamiento', 'class' => 'Sie\AppWebBundle\Entity\FinanciamientoTipo',
+            'query_builder' => function(EntityRepository $er) {
+                return $er->createQueryBuilder('ft')
+                        ->orderBy('ft.id', 'ASC');
+            },
+        ))
+        ->getForm()->createView();
+        return $form;
+    }
+
+    public function maestrosAsignarAction(Request $request){//dump($request);die; //guardar maestro-asig
         $iecom = $request->get('iecom');
         $ieco = $request->get('ieco');
         $idmi = $request->get('idmi');
@@ -1492,6 +1634,179 @@ class AreasController extends Controller {
         return $response->setData(array('ieco'=>$ieco[0]));
     }
 
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que guardar la asignacion del maestro
+    // PARAMETROS: institucioneducativaCursoOfertaId, maestroInscripcionId
+    // AUTOR: CVALLEJOS
+    //****************************************************************************************************
+    public function asignarMaestroMateriaGuardarAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $em = $this->getDoctrine()->getManager();
+        $form = $request->get('form');
+
+        if(isset($form['maestro'])){
+            $maestroInscripcionId = base64_decode($form['maestro']);
+        } else {
+            $maestroInscripcionId = $info['maestro_inscripcion_id'];
+        }
+        
+        if($form['ofertaMaestro']){
+            $id_iecom = base64_decode($form['ofertaMaestro']);
+            $datoInstitucioneducativaCursoOfertaMaestro = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->find($id_iecom);//'notaTipo' => $notaTipoId
+            $maestroInscripcionId = $datoInstitucioneducativaCursoOfertaMaestro->getMaestroInscripcion()->getId();
+        }
+
+        $institucioneducativaCursoOfertaId = $form['ieco'];
+        $horasMes = $form['horasMes'];
+        $item = $form['item'];
+
+        $response = new JsonResponse();
+        
+        if($form['horasMes'] == ""){
+            $msg = "Debe ingresar las horas asignadas";
+            return $response->setData(array('estado'=>false, 'msg'=>$msg));
+        } else {
+            $horasMes = $form['horasMes'];
+        }        
+        
+        if($form['financiamiento'] == ""){
+            $msg = "Debe ingresar el financiamiento del item";
+            return $response->setData(array('estado'=>false, 'msg'=>$msg));
+        } else {
+            $financiamientoId = $form['financiamiento'];
+        }
+        if($form['fechaInicio'] == ""){
+            $msg = "Debe ingresar la fecha inicial de la asignación";
+            return $response->setData(array('estado'=>false, 'msg'=>$msg));
+        } else {
+            $fechaInicio = new \DateTime($form['fechaInicio']);
+        }
+        if($form['fechaFin'] == ""){
+            $msg = "Debe ingresar la fecha final de la asignación";
+            return $response->setData(array('estado'=>false, 'msg'=>$msg));
+        } else {
+            $fechaFin = new \DateTime($form['fechaFin']);
+        }
+        
+
+        if($fechaInicio > $fechaFin){
+            $msg = "Rango de fechas (".date_format($fechaInicio,'d-m-Y')." al ".date_format($fechaFin,'d-m-Y').") no valido, intente nuevamente";
+            return $response->setData(array('estado'=>false, 'msg'=>$msg));
+        }
+        
+        $msg = "";
+        $estado = true;
+       
+
+        $em->getConnection()->beginTransaction();
+        try {                
+
+            $institucioneducativaCursoOfertaEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($institucioneducativaCursoOfertaId);
+            if(count($institucioneducativaCursoOfertaEntity) <= 0){
+                $msg = "No existe el curso al cual quiere registrar, intente nuevamente";
+                return $response->setData(array('estado'=>false, 'msg'=>$msg));
+            }
+            
+            $gestionId = $institucioneducativaCursoOfertaEntity->getInsitucioneducativaCurso()->getGestionTipo()->getId();
+            $institucionEducativaId = $institucioneducativaCursoOfertaEntity->getInsitucioneducativaCurso()->getInstitucioneducativa()->getId();
+            $asignaturaId = $institucioneducativaCursoOfertaEntity->getAsignaturaTipo()->getId();
+            if($maestroInscripcionId == 0){
+                $msg = "Debe seleccionar un maestro";
+                return $response->setData(array('estado'=>false, 'msg'=>$msg));
+            } else {
+                $maestroInscripcionEntity = $em->getRepository('SieAppWebBundle:MaestroInscripcion')->find($maestroInscripcionId);
+            }
+    
+           /* 
+           $notaTipoEntity = $em->getRepository('SieAppWebBundle:NotaTipo')->find($notaTipoId);
+            if(count($notaTipoEntity) <= 0){
+                $msg = "No existe el tipo de nota al cual quiere registrar, intente nuevamente";
+                return $response->setData(array('estado'=>false, 'msg'=>$msg));
+            }
+            */
+            $financiamientoTipoEntity = $em->getRepository('SieAppWebBundle:FinanciamientoTipo')->find($financiamientoId);
+            if(count($financiamientoTipoEntity) <= 0){
+                $msg = "No existe el tipo de financiamiento al cual quiere registrar, intente nuevamente";
+                return $response->setData(array('estado'=>false, 'msg'=>$msg));
+            }
+    
+            $institucioneducativaCursoOfertaMaestroEntity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->findOneBy(array('maestroInscripcion' => $maestroInscripcionId, 'institucioneducativaCursoOferta' => $institucioneducativaCursoOfertaId ));//'notaTipo' => $notaTipoId
+            
+            if(count($institucioneducativaCursoOfertaMaestroEntity) > 0){ 
+                $institucioneducativaCursoOfertaMaestroEntity->setFechaModificacion($fechaActual);    
+                $institucioneducativaCursoOfertaMaestroEntity->setFechaModificacion($fechaActual);
+            }
+            else{ 
+                $institucioneducativaCursoOfertaMaestroEntity = new InstitucioneducativaCursoOfertaMaestro();     
+                $institucioneducativaCursoOfertaMaestroEntity->setInstitucionEducativaCursoOferta($institucioneducativaCursoOfertaEntity);
+                $institucioneducativaCursoOfertaMaestroEntity->setMaestroInscripcion($maestroInscripcionEntity);           
+                $institucioneducativaCursoOfertaMaestroEntity->setFechaRegistro($fechaActual);
+                $institucioneducativaCursoOfertaMaestroEntity->setNotaTipo($em->getRepository('SieAppWebBundle:NotaTipo')->find(0));
+            }
+            $institucioneducativaCursoOfertaMaestroEntity->setItem($item);
+            $institucioneducativaCursoOfertaMaestroEntity->setHorasMes($horasMes);
+            $institucioneducativaCursoOfertaMaestroEntity->setEsVigenteMaestro(true);
+            $institucioneducativaCursoOfertaMaestroEntity->setFinanciamientoTipo($financiamientoTipoEntity);
+            $institucioneducativaCursoOfertaMaestroEntity->setAsignacionFechaInicio($fechaInicio);
+            $institucioneducativaCursoOfertaMaestroEntity->setAsignacionFechaFin($fechaFin);
+            $institucioneducativaCursoOfertaMaestroEntity->setEsVigenteAdministrativo(true);
+            $em->persist($institucioneducativaCursoOfertaMaestroEntity);
+            $em->flush();
+            $em->getConnection()->commit();
+
+            $msg = "Datos registrados correctamente";
+            $estado = true;
+            $maestroAsignadoNombre = $institucioneducativaCursoOfertaMaestroEntity->getMaestroInscripcion()->getPersona()->getNombre();
+            $maestroAsignadoPaterno = $institucioneducativaCursoOfertaMaestroEntity->getMaestroInscripcion()->getPersona()->getPaterno();
+            $maestroAsignadoMaterno = $institucioneducativaCursoOfertaMaestroEntity->getMaestroInscripcion()->getPersona()->getMaterno();
+            $maestroAsignadoCI = $institucioneducativaCursoOfertaMaestroEntity->getMaestroInscripcion()->getPersona()->getCarnet();
+            $maestroAsignadoId = base64_encode($institucioneducativaCursoOfertaMaestroEntity->getId());
+            $maestroAsignadoItem = $institucioneducativaCursoOfertaMaestroEntity->getItem();
+            $maestroAsignadoFinanciamiento = $institucioneducativaCursoOfertaMaestroEntity->getFinanciamientoTipo()->getFinanciamiento();
+            $maestroAsignadoFinanciamientoId = $institucioneducativaCursoOfertaMaestroEntity->getFinanciamientoTipo()->getId();
+            $maestroAsignadoFechaInicio = date_format($institucioneducativaCursoOfertaMaestroEntity->getAsignacionFechaInicio(),'d-m-yy');
+            $maestroAsignadoFechaFin = date_format($institucioneducativaCursoOfertaMaestroEntity->getAsignacionFechaFin(),'d-m-yy');
+            $maestroAsignado = array('maestroOferta'=>$maestroAsignadoId,'maestroItem'=>$maestroAsignadoItem,'maestroNombre'=>$maestroAsignadoNombre,'maestroPaterno'=>$maestroAsignadoPaterno,'maestroMaterno'=>$maestroAsignadoMaterno,'maestroCI'=>$maestroAsignadoCI,'maestroFinanciamientoId'=>$maestroAsignadoFinanciamientoId,'maestroFinanciamiento'=>$maestroAsignadoFinanciamiento,'maestroFechaInicio'=>$maestroAsignadoFechaInicio,'maestroFechaFin'=>$maestroAsignadoFechaFin, 'maestroInscripcionId'=>base64_encode($maestroInscripcionId));
+            return $response->setData(array('estado'=>$estado, 'msg'=>$msg, 'maestro'=>$maestroAsignado));
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            $msg = "Dificultades al realizar el registro, intente nuevamente";
+            $estado = false;
+            return $response->setData(array('estado'=>$estado, 'msg'=>$msg));
+        }
+    }
+
+     //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que elimina la inscripcion del maestro en caso de no asignar a ningun paralelo
+    // PARAMETROS: maestroInscripcionId
+    // AUTOR: CVALLEJOS
+    //****************************************************************************************************
+    public function asignarMaestroMateriaEliminarAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        $id_iecom = base64_decode($request->get('ofertaMaestro'));
+        $datoInstitucioneducativaCursoOfertaMaestro = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro')->find($id_iecom);//'notaTipo' => $notaTipoId
+
+        if($datoInstitucioneducativaCursoOfertaMaestro){
+            $datoInstitucioneducativaCursoOfertaMaestro->setEsVigenteAdministrativo(false);
+            $datoInstitucioneducativaCursoOfertaMaestro->setEsVigenteMaestro(false);
+            $datoInstitucioneducativaCursoOfertaMaestro->setFechaModificacion($fechaActual);
+            $em->persist($datoInstitucioneducativaCursoOfertaMaestro);
+            $em->flush();
+            $msg = "El maestro ya no esta asignado";
+            return $response->setData(array('estado'=>true, 'msg'=>$msg));
+        }
+        
+    }
+
+    
+
     public function operativo($sie,$gestion){
         $em = $this->getDoctrine()->getManager();
         // Obtenemos el operativo para bloquear los controles
@@ -1506,7 +1821,7 @@ class AreasController extends Controller {
                         ->getResult();
         if(!$registroOperativo){
             // Si no existe es operativo inicio de gestion
-            $operativo = 0;
+            $operativo = 1;
         }else{
             if($registroOperativo[0]['bim1'] == 0 and $registroOperativo[0]['bim2'] == 0 and $registroOperativo[0]['bim3'] == 0 and $registroOperativo[0]['bim4'] == 0){
                 $operativo = 1; // Primer Bimestre
@@ -1538,6 +1853,9 @@ class AreasController extends Controller {
             case '7': $lit = '2do Trimestre'; break;
             case '8': $lit = '3er Trimestre'; break;
             case '18': $lit = 'Informe Final Inicial'; break;
+            case '55': $lit = '1er Semestre'; break;
+            case '56': $lit = '2do Semestre'; break;
+            case '57': $lit = 'Anual'; break;
         }
         return $lit;
     }
@@ -1576,4 +1894,89 @@ class AreasController extends Controller {
         return $response->setData(array('msg' => $msg , 'maestros' => $maestrosArray));
     }
 
-}
+    public function getMaestrosInstitucionEducativaCursoOferta($institucionEducativaCursoOfertaId, $notaTipoId){
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro');
+        $query = $entity->createQueryBuilder('iecom')
+                ->select("distinct iecom.id as institucioneducativaCursoOfertaMaestroId, mi.id as maestroInscripcionId, mi.item as itemMaestro, nota.notaTipo, p.nombre, p.paterno, p.materno, p.carnet as carnetIdentidad, p.complemento, ft.financiamiento, ft.id as financiamientoId, iecom.asignacionFechaInicio, iecom.asignacionFechaFin, iecom.item, iecom.horasMes")                
+                ->innerJoin('SieAppWebBundle:MaestroInscripcion', 'mi', 'WITH', 'mi.id = iecom.maestroInscripcion')
+                ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'p.id = mi.persona')
+                ->innerJoin('SieAppWebBundle:NotaTipo', 'nota', 'WITH', 'nota.id = iecom.notaTipo')
+                ->leftJoin('SieAppWebBundle:FinanciamientoTipo', 'ft', 'WITH', 'ft.id = iecom.financiamientoTipo')
+                ->where('iecom.institucioneducativaCursoOferta = :institucionEducativaCursoOfertaId')
+                ->andWhere('nota.id = :notaTipoId')
+              //  ->andWhere('iecom.esVigenteAdministrativo = true')
+                ->setParameter('institucionEducativaCursoOfertaId', $institucionEducativaCursoOfertaId)
+                ->setParameter('notaTipoId', $notaTipoId)
+                ->orderBy('iecom.id', 'ASC');
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+    public function getInstitucionEducativaCursoOferta($institucionEducativaCursoOfertaId){
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta');
+        $query = $entity->createQueryBuilder('ieco')
+                ->select("distinct ie.id as institucioneducativaId, ie.institucioneducativa, tt.turno, nt.nivel, gt.grado, pt.paralelo, at.asignatura, ept.programa, est.servicio, emt.modalidad, eat.areaEspecial")
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ieco.insitucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoEspecial', 'iece', 'WITH', 'iec.id = iece.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = iec.institucioneducativa')
+                ->innerJoin('SieAppWebBundle:AsignaturaTipo', 'at', 'WITH', 'at.id = ieco.asignaturaTipo')
+                ->innerJoin('SieAppWebBundle:NivelTipo', 'nt', 'WITH', 'nt.id = iec.nivelTipo')
+                ->innerJoin('SieAppWebBundle:TurnoTipo', 'tt', 'WITH', 'tt.id = iec.turnoTipo')
+                ->innerJoin('SieAppWebBundle:GradoTipo', 'gt', 'WITH', 'gt.id = iec.gradoTipo')
+                ->innerJoin('SieAppWebBundle:ParaleloTipo', 'pt', 'WITH', 'pt.id = iec.paraleloTipo')
+                ->innerJoin('SieAppWebBundle:EspecialProgramaTipo', 'ept', 'WITH', 'ept.id = iece.especialProgramaTipo')
+                ->innerJoin('SieAppWebBundle:EspecialServicioTipo', 'est', 'WITH', 'est.id = iece.especialServicioTipo')
+                ->innerJoin('SieAppWebBundle:EspecialAreaTipo', 'eat', 'WITH', 'eat.id = iece.especialAreaTipo')
+                ->innerJoin('SieAppWebBundle:EspecialModalidadTipo', 'emt', 'WITH', 'emt.id = iece.especialModalidadTipo')
+                ->where('ieco.id = :institucionEducativaCursoOfertaId')
+                ->setParameter('institucionEducativaCursoOfertaId', $institucionEducativaCursoOfertaId);
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+    public function listaMaestroInscripcion($institucionEducativaId, $gestionId){
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
+        $query = $entity->createQueryBuilder('mi')
+            ->select("distinct mi.id as maestroInscripcionId, p.nombre, p.paterno, p.materno, p.carnet as carnetIdentidad, p.complemento")                
+            ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'p.id = mi.persona')             
+            ->innerJoin('SieAppWebBundle:Institucioneducativa', 'ie', 'WITH', 'ie.id = mi.institucioneducativa')
+            ->where('ie.id = :institucionEducativaId')
+            ->andWhere('mi.gestionTipo = :gestionId')
+            ->andWhere('mi.cargoTipo = 0')
+            ->andWhere('p.id != 0')
+            ->setParameter('institucionEducativaId', $institucionEducativaId)
+            ->setParameter('gestionId', $gestionId)
+            ->orderBy('p.paterno', 'ASC', 'p.materno', 'ASC', 'p.nombre', 'ASC');
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+    public function getMaestroInscripcion($maestroInscripcioId){
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:MaestroInscripcion');
+        $query = $entity->createQueryBuilder('mi')
+            ->select("distinct mi.id as maestroInscripcionId, p.nombre, p.paterno, p.materno, p.carnet as carnetIdentidad, p.complemento")                
+            ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'p.id = mi.persona')
+            ->where('mi.id = :maestroInscripcionId')
+            ->setParameter('maestroInscripcionId', $maestroInscripcioId);
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+    public function getInstitucionEducativaCursoOfertaMaestroGestion($maestroInscripcioId, $gestionId){
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro');
+        $query = $entity->createQueryBuilder('iecom')
+                ->innerJoin('SieAppWebBundle:MaestroInscripcion', 'mi', 'WITH', 'mi.id = iecom.maestroInscripcion')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCursoOferta', 'ieco', 'WITH', 'ieco.id = iecom.institucioneducativaCursoOferta')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ieco.insitucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:GestionTipo', 'gt', 'WITH', 'gt.id = iec.gestionTipo')
+                ->where('mi.id = :maestroInscripcioId')
+                ->andWhere('gt.id = :gestionId')
+                ->setParameter('maestroInscripcioId', $maestroInscripcioId)
+                ->setParameter('gestionId', $gestionId);
+        $entity = $query->getQuery()->getResult();
+        return $entity;
+    }
+
+} 

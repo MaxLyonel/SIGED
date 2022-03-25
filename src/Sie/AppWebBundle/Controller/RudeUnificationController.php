@@ -173,6 +173,7 @@ class RudeUnificationController extends Controller{
                 'nombre' => $studenta->getNombre(),
                 'ci' => $studenta->getCarnetIdentidad(),
                 'complemento' => $studenta->getNombre(),
+                'complemento' => $studenta->getComplemento(),
                 'fechaNac' => $studenta->getfechaNacimiento()->format('d-m-Y'),
                 
             );
@@ -918,10 +919,15 @@ class RudeUnificationController extends Controller{
                     } 
                     if($unificationIniPri){ 
                         /*start remove data rude*/
-                        $ObjCambioStatus = $em->getRepository('SieAppWebBundle:EstudianteInscripcionCambioestado')->findOneBy(array('estudianteInscripcion'=>$inscrip->getId() ));
-                        if($ObjCambioStatus){
-                            $em->remove($ObjCambioStatus);                          
+
+                        $ObjCambioStatus = $em->getRepository('SieAppWebBundle:EstudianteInscripcionCambioestado')->findBy(array('estudianteInscripcion'=>$inscrip->getId() ));
+                        if(sizeof($ObjCambioStatus)>0){
+                            foreach ($ObjCambioStatus as $value) {
+                                $em->remove($value);
+                            }
+                            $em->flush();
                         }
+
                         //to remove all info about RUDE
                         $objRude = $em->getRepository('SieAppWebBundle:Rude')->findOneBy(array('estudianteInscripcion' => $inscrip->getId() ));
 
@@ -1014,23 +1020,33 @@ class RudeUnificationController extends Controller{
                         }
                         $em->flush();                                
                         /*end   remove data rude*/                        
-
+                        /*
                         $em->remove($inscrip);
+                        */
                         //if the student has oferta
                         $objOferta = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion'=>$inscrip->getId()));
                         if(sizeof($objOferta)>0){
                             foreach ($objOferta as $value) {
                                 $em->remove($value);
                             }
+                            $em->flush();  
                         }
 
                         $em->remove($inscrip);                          
                     }else{
                         $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($inscrip->getInstitucioneducativaCurso());                        
+                       
 
                         if($unificationNormal || $unificationForeign || $unificationIniPriCase2){
                             if($unificationIniPriCase2 && $inscrip->getEstadomatriculaTipo()->getId() == 4 && !$swChanteStatusCorrectInscription){
 
+                                $ObjCambioStatus = $em->getRepository('SieAppWebBundle:EstudianteInscripcionCambioestado')->findBy(array('estudianteInscripcion'=>$inscrip->getId() ));
+                                if(sizeof($ObjCambioStatus)>0){
+                                    foreach ($ObjCambioStatus as $value) {
+                                        $em->remove($value);
+                                    }
+                                    $em->flush();
+                                }
                                 // to change the matricula student
                                 $inscrip->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));
 
@@ -1134,6 +1150,7 @@ class RudeUnificationController extends Controller{
                                     foreach ($objOferta as $value) {
                                         $em->remove($value);
                                     }
+                                    $em->flush();  
                                 }
 
 

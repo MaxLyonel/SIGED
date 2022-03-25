@@ -1,0 +1,44 @@
+Sie\AppWebBundle\Entity\CtrCursoOferta:
+    type: entity
+    table: ctr_curso_oferta
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nivelTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: nivel_tipo_id
+        cicloTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: ciclo_tipo_id
+        gradoTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: grado_tipo_id
+        asignaturaTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: asignatura_tipo_id
+        gestionTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: gestion_tipo_id
+    lifecycleCallbacks: {  }

@@ -19,7 +19,7 @@ class PlataformaMoodleController extends Controller {
     public function __construct() {
         $this->session = new Session();
         $this->client = new Client([
-            'base_uri' => 'http://190.129.122.33:5000',
+            'base_uri' => 'http://190.129.122.22:5000',
         ]);
     }
 

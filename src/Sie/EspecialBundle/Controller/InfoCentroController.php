@@ -430,7 +430,7 @@ class InfoCentroController extends Controller {
         ));
     }
 
-    public function registroConsolAction(Request $request, $gestionid){
+    public function registroConsolAction(Request $request, $gestionid){       
         $gestionactual = $gestionid;
         $roluser = $this->session->get('roluser');
         $roluserlugarid = $this->session->get('roluserlugarid');
@@ -492,7 +492,9 @@ class InfoCentroController extends Controller {
 
     public function observacionesMaestrosAction(Request $request) {
 
-        $institucion = $request->getSession()->get('ie_id');
+        //dump( $request->getSession()); die;
+
+        $institucion = $request->getSession()->get('ie_id');        
         $gestion = $request->getSession()->get('idGestion'); // sale 2014 ???
         
 
@@ -500,13 +502,36 @@ class InfoCentroController extends Controller {
         //$query = $em->getConnection()->prepare("select * FROM sp_crea_curso_oferta('$gestionTipo', '$institucioneducativa', '$turnoTipo', '$nivelTipo', '$gradoTipo','$paraleloTipo') ");
         //$query = $em->getConnection()->prepare("select * from public.sp_alerta_materia_sin_maestro('2022', '80730274')");
         $query = $em->getConnection()->prepare("select * from public.sp_alerta_materia_sin_maestro('2022', '$institucion')");
-        $query->execute();
-        $valor= $query->fetchAll();
         
+        $query->execute();
+        $valor= $query->fetchAll();       
+
         $response = new JsonResponse();
-        return $response->setData(array('data'=>$valor,'mensaje'=>''));
+        //return $response->setData(array('data'=>$valor,'existe'=> 0));
+        return $response->setData(array('data'=>$valor,'existe'=> sizeof($valor)));
   
-      }
+    }
+
+    public function getInconsistenciasAction(Request $request) {
+
+         //dump( $request->get('ueid')); die;
+         $ueid = $request->get('ueid');
+         $institucion = $request->getSession()->get('ie_id');
+         $gestion = $request->getSession()->get('idGestion'); // sale 2014 ???
+         
+ 
+         $em = $this->getDoctrine()->getManager();      
+         //$query = $em->getConnection()->prepare("select * FROM sp_crea_curso_oferta('$gestionTipo', '$institucioneducativa', '$turnoTipo', '$nivelTipo', '$gradoTipo','$paraleloTipo') ");
+         //$query = $em->getConnection()->prepare("select * from public.sp_alerta_materia_sin_maestro('2022', '80730274')");
+         $query = $em->getConnection()->prepare("select * from sp_validacion_regular_inscripcion_ig_web('2022','$ueid','0');");
+         $query->execute();
+         $valor= $query->fetchAll();
+        // dump($valor); die;
+         
+         $response = new JsonResponse();
+         return $response->setData(array('data'=>$valor,'mensaje'=>''));
+
+    }
   
 
 }

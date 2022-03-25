@@ -294,8 +294,7 @@ class InfoMaestroController extends Controller {
         return $form;
     }
 
-    public function resultAction(Request $request) {
-
+    public function resultAction(Request $request) {        
         // Verificamos si no ha caducado la session
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
@@ -332,6 +331,14 @@ class InfoMaestroController extends Controller {
     public function verificarPersonaAction(Request $request){
         
         $form = $request->get('sie_verificar_persona_segip');
+        $tipo_persona = 1;
+        //si llega desde el form, estopara que otros formualrio no tengan error
+        // mientras son modificados
+        if ($request->get('nacionalidad')) {
+            //NA: nacional, EX: extranjero
+            $nacionalidad = $request->get('nacionalidad'); //EX o NA
+            $tipo_persona = ($nacionalidad == 'NA') ? 1 : 2;
+        }
 
         $data = [
             'carnet' => $form['carnet'],
@@ -339,7 +346,8 @@ class InfoMaestroController extends Controller {
             'primer_apellido' => $form['primer_apellido'],
             'segundo_apellido' => $form['segundo_apellido'],
             'nombre' => $form['nombre'],
-            'fecha_nacimiento' => $form['fecha_nacimiento']
+            'fecha_nacimiento' => $form['fecha_nacimiento'],
+            'tipo_persona' => $tipo_persona,  //tiene que venir del form
         ];
 
         $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
@@ -370,6 +378,8 @@ class InfoMaestroController extends Controller {
             'persona' => serialize($persona),
             'institucion' => $form['institucion'],
             'gestion' => $form['gestion'],
+            //dcastillo 2402 pasar esto al segundo formulario...
+            'tipo_persona' => $tipo_persona
         ));
     }
 
@@ -377,6 +387,9 @@ class InfoMaestroController extends Controller {
     {
         //NO PERMITIR REGISTRO DE PERSONAS
         //return $this->redirect($this->generateUrl('login'));
+
+        //aqui se adiciono un campo hidden en formulario_persona_new.html.twig
+        //por que por alguna razon, se hace dos validacione segip
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('sie_persona_datos');
@@ -387,16 +400,26 @@ class InfoMaestroController extends Controller {
         
         $fecha = str_replace('-','/',$persona['fecha_nacimiento']);
         $complemento = $persona['complemento'] == '0'? '':$persona['complemento'];
+
+        $tipo_persona = 1;
+        if ($form['tipo_persona']) {
+            //NA: nacional, EX: extranjero            
+            $tipo_persona = ($form['tipo_persona'] == "1") ? 1 : 2;
+        }
+
         $arrayDatosPersona = array(
             //'carnet'=>$form['carnet'],
             'complemento'=>$complemento,
             'paterno'=>$persona['primer_apellido'],
             'materno'=>$persona['segundo_apellido'],
             'nombre'=>$persona['nombre'],
-            'fecha_nacimiento' => $fecha
+            'fecha_nacimiento' => $fecha,
+            'tipo_persona' => $tipo_persona
         );
+        //dump($arrayDatosPersona); die;
 
         $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['carnet'], $arrayDatosPersona, 'prod', 'academico');
+        //dump($personaValida); die;
 
         if( $personaValida )
         {

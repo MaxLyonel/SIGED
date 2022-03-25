@@ -203,16 +203,10 @@ class UnificacionInscriptionUeController extends Controller {
 
         //   step 2 delete nota
             $objEstAsig = $em->getRepository('SieAppWebBundle:EstudianteAsignatura')->findBy(array('estudianteInscripcion' => $eiid, 'gestionTipo' => $gestion ));
-
-            
-            //step 3 delete asignatura
-            foreach ($objEstAsig as $element) {
-                $objNota = $em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura' => $element));
-                foreach($objNota as $element2)
-                {
-                    $em->remove($element2);
+            if(sizeof($objEstAsig)>0){
+                foreach ($objEstAsig as $element) {
+                    $em->remove($element);
                 }
-                $em->remove($element);
             }
             $em->flush();
         
