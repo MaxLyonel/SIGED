@@ -105,6 +105,13 @@
                                                                                     <i class="fa fa-group"></i>
                                                                                 </button>
                                                                             </div>
+
+                                                                            <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Modalidad">
+                                                                                <button class="btn btn-circle btn-primary btn-stroke " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getDatosModalidad('{{dataParalelo.infoUe}}');">
+                                                                                    <i class="fa fa-home"></i>
+                                                                                </button>
+                                                                            </div>                                                                            
+
                                                                         </li>
                                                                     {% endfor %}
                                                                 </ul>
@@ -291,6 +298,29 @@
                 success: function (data) {
                     $("#idstudents").empty();
                     $("#idstudents").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        };
+
+        var getDatosModalidad = function (infoUe) {
+            $.ajax({
+                type: 'post',
+                data: ({infoUe: infoUe}),
+                url: "{{ path('herramienta_modalidadCurso_index') }}",
+                beforeSend: function () {
+                    $('#modal').empty();
+                },
+                success: function (data) {
+                    $('#modal').empty();
+                    $('#modal').append(data);
                 },
                 statusCode: {
                     500: function () {
