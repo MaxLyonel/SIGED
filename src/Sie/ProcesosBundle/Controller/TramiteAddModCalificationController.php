@@ -1424,6 +1424,8 @@ class TramiteAddModCalificationController extends Controller {
         $insGestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
         $insNivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
         $insGrado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
+        dump($insNivel);
+        dump($datosNotas);
         // REGISTRAMOS LAS NOTAS CUANTITATIVAS
         if(count($datosNotas['notas']) > 0){
             foreach ($datosNotas['notas'] as $n) {
@@ -1454,6 +1456,9 @@ class TramiteAddModCalificationController extends Controller {
                     case 2020:
                                 $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
                                 break;                                
+                    case 2021:
+                                $this->get('notas')->calcularPromedioTrim2020($datoNota->getEstudianteAsignatura()->getId());                            
+                                break;                                                                
                     default:
                                 $this->get('notas')->calcularPromedioBimestral($datoNota->getEstudianteAsignatura()->getId());
                                 break;
@@ -1474,6 +1479,10 @@ class TramiteAddModCalificationController extends Controller {
             }
         }
 
+        // update the average
+        if($insNivel==12){
+            $this->get('notas')->updateAveragePrim($idInscripcion);
+        }
         // ACTUALIZAMOS EL ESTADO DE MATRICULA
         // $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
         $this->get('notas')->actualizarEstadoMatriculaIGP($idInscripcion);                    
@@ -1506,7 +1515,7 @@ class TramiteAddModCalificationController extends Controller {
             $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
             
             // OOBTENEMOS EL TIPO DE NOTA BIMESTRE O TRIMESTRE
-            $tipo = $this->get('notas')->getTipoNota($sie,$gestion,$nivel,$grado);
+            $tipo = $this->get('notas')->getTipoNota($sie,$gestion,$nivel,$grado, 'no');
             $array = [];
             $arrayPromedios = [];
             $cont = 0;

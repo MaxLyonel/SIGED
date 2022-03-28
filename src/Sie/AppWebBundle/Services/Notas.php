@@ -4872,6 +4872,37 @@ die;/*
         }
     }
 
+    public function updateAveragePrim($idInscripcion){
+
+        $asignaturasNotas = $this->em->createQueryBuilder()
+                            ->select('nt')
+                            ->from('SieAppWebBundle:EstudianteAsignatura','eas')
+                            ->innerJoin('SieAppWebBundle:EstudianteNota','nt','with','eas.id = nt.estudianteAsignatura')
+                            ->orderBy('nt.id','ASC')
+                            ->where('eas.estudianteInscripcion = :idInscripcion')
+                            ->andWhere('nt.notaTipo = :averagePrima')
+                            ->setParameter('idInscripcion',$idInscripcion)
+                            ->setParameter('averagePrima',9)
+                            ->getQuery()
+                            ->getResult();  
+        dump(sizeof($asignaturasNotas));
+        if(sizeof($asignaturasNotas)>0){
+            $averaSum = 0;
+            foreach ($asignaturasNotas as $value) {
+                $averaSum += $value->getNotaCuantitativa();
+                dump($value->getNotaCuantitativa());
+            }
+            $averaTotal = round($averaSum/sizeof($asignaturasNotas));
+            dump($averaTotal);
+            $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$idInscripcion));
+            $averagePrim->setNotaCuantitativa($averaTotal);
+            $this->em->persist($averagePrim);
+            $this->em->flush(); 
+        }
+        return $averaTotal;
+
+    }    
+
     public function actualizarEstadoMatriculaIGP($inscripcionId){
 
         $inscripcion = $this->em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneById($inscripcionId);
@@ -4929,6 +4960,7 @@ die;/*
             }
         }
         $operativo = $this->funciones->obtenerOperativo($iinstitucioneducativa_id, $igestion);
+        
         if($operativo==3 && $igestion == 2021){
             switch ($inivel_tipo_id) {
                 case '13':
@@ -4937,7 +4969,7 @@ die;/*
                     $resultado = $query->fetchAll();        
                     break;
                 case '12':
-                    $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotacualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
+                    $averagePrim=$this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findOneBy(array('estudianteInscripcion'=>$inscripcionId));
                     if($averagePrim->getNotaCuantitativa()>50){
                         $inscripcion->setEstadomatriculaTipo($this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
                     }else{
@@ -4977,6 +5009,7 @@ die;/*
         
         try {
             $notas = $this->em->getRepository('SieAppWebBundle:EstudianteNota')->findBy(array('estudianteAsignatura'=>$idEstudianteAsignatura));
+            
             //return($notas);            
             $PT = null;
             $ST = null;
@@ -7157,6 +7190,8 @@ die;/*
     }
     
     /*=====  End of  REGISTRO DE NOTAS ANTES DE REGISTRAR LAS MATERIAS  ======*/
+
+
     
     
     
