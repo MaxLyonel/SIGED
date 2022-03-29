@@ -849,6 +849,11 @@
                                         return 'La calificación no puede ser mayor a 100!'
                                     }
 
+                                    // NOTAS trimestrales - 2021
+                                    if ( gestion == 2021 && ((idNotaTipo == 6 || idNotaTipo == 7 || idNotaTipo == 8 ) && value > 100) ){
+                                        return 'La calificación no puede ser mayor a 100!'
+                                    }                                    
+
                                     nuevaNota.notaNueva = value;
 
                                     this.validarValorNota(nuevaNota);
