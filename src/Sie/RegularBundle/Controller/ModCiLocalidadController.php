@@ -574,8 +574,8 @@ class ModCiLocalidadController extends Controller {
                          $student->setLocalidadNac(strtoupper($form['localidad'])) ;
                          $student->setGeneroTipo ($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['genero']));
 
-                         $entity->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento'])) ;
-                        $entity->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['provincia'])) ;
+                         $student->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['departamento'])) ;
+                         $student->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['provincia'])) ;
                          
                          
                     
