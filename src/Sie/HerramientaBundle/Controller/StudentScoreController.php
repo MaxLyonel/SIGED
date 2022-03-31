@@ -55,7 +55,10 @@ class StudentScoreController extends Controller{
         	'grado'=>$grado,
         );
 
+        /*
         $tipoNota = $this->get('notas')->getTipoNota($sie,$gestion,$nivel,$grado);
+        */
+        $tipoNota = $this->get('notas')->getTipoNota($sie,$gestion,$nivel,$grado,'');
         $objDatalibreta = $this->getInfoLibreta($dataCurso);
 
         $tipoUE = $this->get('funciones')->getTipoUE($aInfoUe['requestUser']['sie'],$aInfoUe['requestUser']['gestion']);

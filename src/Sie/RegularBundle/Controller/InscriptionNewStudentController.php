@@ -302,7 +302,19 @@ class InscriptionNewStudentController extends Controller {
 
       //get values all data
       $form = $request->get('form');
+      $swCorrectInscription = true;
+
       $setNotasInscription=false;
+      if(unserialize($form['newdata'])){
+        
+      }else{ 
+        $message = 'Algunos datos no son correctos, no se puede realizar la inscripción..';
+        $this->addFlash('idNoInscription', $message);
+        $swCorrectInscription = false;
+        return $this->render($this->session->get('pathSystem') . ':InscriptionNewStudent:menssageInscription.html.twig', array());
+
+      }
+
 
       //validtation abuut if the ue close SEXTO
       if($form['nivel'] == 13 && $form['grado']==6 && $this->get('funciones')->verificarSextoSecundariaCerrado($form['institucionEducativa'],$form['gestionIns'])){
@@ -352,10 +364,8 @@ class InscriptionNewStudentController extends Controller {
       }
 
       ///validation
-      $swCorrectInscription = true;
-
+     
       $currentLevelStudent = $dataCurrentInscription['nivelId'].'-'.$dataCurrentInscription['cicloId'].'-'. $dataCurrentInscription['gradoId'];
-    
 
       if (!($dataCurrentInscription['nivelId']>10)) {
         // getCourseOld
@@ -445,6 +455,8 @@ class InscriptionNewStudentController extends Controller {
              $swCorrectInscription = false;
            }else{
              //validate the level selected
+             //dump($newLevelStudent);
+             //dump($this->aCursos[$keyNextLevelStudent]);die;
              if ($newLevelStudent == $this->aCursos[$keyNextLevelStudent]){
                //do the inscriptin
              }else{//dump($newInfInscription);die;
@@ -463,6 +475,9 @@ class InscriptionNewStudentController extends Controller {
          }
        }
     }else{ 
+      $message = 'Algunos datos no son correctos, no se puede realizar la inscripción ..';
+      $this->addFlash('idNoInscription', $message);
+      $swCorrectInscription = false;
       //do inscription inicial/ primaria or extranjero
       //get the year of student
 

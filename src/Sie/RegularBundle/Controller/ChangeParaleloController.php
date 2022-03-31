@@ -44,6 +44,8 @@ class ChangeParaleloController extends Controller {
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        //dump($this->session->get('pathSystem'));
+        //die;
         return $this->render($this->session->get('pathSystem') . ':ChangeParalelo:index.html.twig', array(
                     'form' => $this->craeteformsearch()->createView()
         ));
@@ -240,7 +242,7 @@ class ChangeParaleloController extends Controller {
             $objCourse = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy($newCondition);
 
             if($objCourseOld and $objCourse) {
-                $query = $em->getConnection()->prepare('SELECT sp_genera_cambio_paralelo_estudiante(:igestion, :iestudiante_id, :icoicodueo, :inivelo, :igradoo, :iparaleloo, :iturnoo, :iturnod, :iparalelod)');
+                $query = $em->getConnection()->prepare('SELECT sp_regular_cambio_paralelo(:igestion, :iestudiante_id, :icoicodueo, :inivelo, :igradoo, :iparaleloo, :iturnoo, :iturnod, :iparalelod)');
                 $query->bindValue(':igestion', $this->session->get('currentyear'));
                 $query->bindValue(':iestudiante_id', $form['idStudent']);
                 $query->bindValue(':icoicodueo', $form['ueid']);
@@ -254,12 +256,20 @@ class ChangeParaleloController extends Controller {
 
                 $sqlResponse = $query->fetchAll();
 
-                if($sqlResponse){
+                /*dump($sqlResponse[0]['sp_regular_cambio_paralelo']);
+                die;*/
+                if($sqlResponse[0]['sp_regular_cambio_paralelo']==1){
                     $em->getConnection()->commit();
-                    $message = "Cambio de paralelo realizado...";
-                } else{
+                    $message = "Se realizo el cambio de paralelo ...";
+                    $this->addFlash('successchangeparalelo', $message);
+                } elseif($sqlResponse[0]['sp_regular_cambio_paralelo']==2){
                     $em->getConnection()->rollback();
-                    $message = "Cambio de paralelo NO realizado...";
+                    $message = "El paralelo destino tiene observacion en areas, favor comuniquese con su técnico de distrito/departamento...";
+                    $this->addFlash('warningchangeparalelo', $message);
+                } else {
+                    $em->getConnection()->rollback();
+                    $message = "NO se realizo el Cambio de paralelo ...";
+                    $this->addFlash('warningchangeparalelo', $message);
                 }
             } else {
                 $em->getConnection()->rollback();
@@ -267,7 +277,7 @@ class ChangeParaleloController extends Controller {
             }
             
             
-            $this->addFlash('successchangeparalelo', $message);
+            
             //go the index page
             return $this->redirectToRoute('change_paralelo_sie_index');
         } catch (Exception $ex) {

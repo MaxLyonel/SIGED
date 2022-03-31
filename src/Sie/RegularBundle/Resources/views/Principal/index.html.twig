@@ -36,11 +36,33 @@
                                     </li>
                                 {% endif %}
                             {% else %}
+                                {#
                                 <li class="list-group-item">
                                     <h5 class="list-group-item-heading text-danger"><i class="fa fa-info-circle fa-fw"></i> No tiene notificaciones pendientes</h5>
                                 </li>
+                                #}
                             {% endfor %}
                         </ul>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <span class="badge badge-danger">Urgente</span>
+                                <h5 class="list-group-item-heading text-primary"><strong><span class="glyphicon glyphicon-time"></span> La Paz, 16 de marzo de 2022</strong></h5>
+                                <br>
+                                <p class="list-group-item-text list-group-item-text-notif text-justify"><i class="fa fa-rss-square text-warning"></i> Informamos a nuestros usuarios que debido a ataques del virus informático Redline Stealer, que recopila información de inicios de sesión, contraseñas, datos de autocompletar, cookies y detalles de tarjetas de crédito de todos los navegadores web basados en Gecko y Chromium, solicitamos tomar las siguientes acciones:
+
+
+                                </p>
+                                <br>
+                                <strong>
+                                <ul>
+                                    <li>Cambie las contraseñas actuales.</li>
+                                    <li>Evitar guardar las contraseñas en el navegador.</li>
+                                    <li>Escanee su computadora con un antivirus.</li>
+                                </ul>
+                                </strong>
+                            </li>   
+
+                        </ul>                         
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -166,11 +188,33 @@
                                     </li>
                                 {% endif %}
                             {% else %}
+                                {#
                                 <li class="list-group-item">
                                     <h5 class="list-group-item-heading text-danger"><i class="fa fa-info-circle fa-fw"></i> No tiene notificaciones pendientes</h5>
                                 </li>
+                                #}
                             {% endfor %}
                         </ul>
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <span class="badge badge-danger">Urgente</span>
+                                <h5 class="list-group-item-heading text-primary"><strong><span class="glyphicon glyphicon-time"></span> La Paz, 16 de marzo de 2022</strong></h5>
+                                <br>
+                                <p class="list-group-item-text list-group-item-text-notif text-justify"><i class="fa fa-rss-square text-warning"></i> Informamos a nuestros usuarios que debido a ataques del virus informático Redline Stealer, que recopila información de inicios de sesión, contraseñas, datos de autocompletar, cookies y detalles de tarjetas de crédito de todos los navegadores web basados en Gecko y Chromium, solicitamos tomar las siguientes acciones:
+
+
+                                </p>
+                                <br>
+                                <strong>
+                                <ul>
+                                    <li>Cambie las contraseñas actuales.</li>
+                                    <li>Evitar guardar las contraseñas en el navegador.</li>
+                                    <li>Escanee su computadora con un antivirus.</li>
+                                </ul>
+                                </strong>
+                            </li>   
+
+                        </ul>                        
                         <a href="{{ path('notificacion_list') }}" class="btn btn-primary">Leer todas las notificaciones</a>
                     </div>
                 </div>

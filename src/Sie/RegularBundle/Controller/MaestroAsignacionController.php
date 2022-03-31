@@ -162,6 +162,7 @@ class MaestroAsignacionController extends Controller {
         $info = json_decode(base64_decode($request->get('info')), true);
         $institucionEducativaId = $info["sie"];
         $gestionId = $info["gestion"];
+        
         // $validacionProcesoId = $info["vp_id"];
                 
         $response = new JsonResponse();
@@ -525,12 +526,18 @@ class MaestroAsignacionController extends Controller {
     // PARAMETROS: datos
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function asignarMaestroMateriaFormularioAction(Request $request) {
+    public function asignarMaestroMateriaFormularioAction(Request $request) {       
+        
         $info = json_decode(base64_decode($request->get('info')), true);
         $val = json_decode(base64_decode($request->get('val')), true);
+        $sistema = $request->get('sistema');
         
         $maestroInscripcionId = 0;
+        
+        //aqui llegan los maestros ya asignados para ese area
         $listaMaestros = $this->getMaestrosInstitucionEducativaCursoOferta($val['institucioneducativa_curso_oferta_id'], $val['nota_tipo_id']);
+        
+        //dump($listaMaestros);die;
         // dump($listaMaestros);dump($val['institucioneducativa_curso_oferta_id'], $val['nota_tipo_id']);die;
         $detalleCursoOferta = $this->getInstitucionEducativaCursoOferta($val['institucioneducativa_curso_oferta_id']);
         if(count($detalleCursoOferta )>0){
@@ -582,7 +589,7 @@ class MaestroAsignacionController extends Controller {
                 $formEnable = false;
             } 
         }
-        
+     
         $notaTipo = $notaTipoEntity->getNotaTipo();
         
         if (isset($info["vp_id"])){
@@ -605,8 +612,14 @@ class MaestroAsignacionController extends Controller {
                 
         if (isset($info["vp_id"])){
             return $this->render('SieRegularBundle:MaestroAsignacion:asignacionMateriaFormulario.html.twig', $arrayFormulario);
-        } else {            
-            return $this->render('SieRegularBundle:MaestroAsignacion:asignacionMaestroFormulario.html.twig', $arrayFormulario);
+        } else {     
+            if($sistema == 2) {
+                //viene del academico
+                return $this->render('SieRegularBundle:MaestroAsignacion:asignacionMaestroFormulario.html.twig', $arrayFormulario);
+            } else{
+                //viene del siged
+                return $this->render('SieRegularBundle:MaestroAsignacion:asignacionMaestroFormularioSiged.html.twig', $arrayFormulario);
+            }     
         }
     }
 
@@ -615,7 +628,7 @@ class MaestroAsignacionController extends Controller {
         ->add('ofertaMaestro', 'hidden', array('label' => 'Info', 'attr' => array('value' => base64_encode(json_encode($val)))))
         ->add('item', 'text', array('label' => 'Item', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $item, 'style' => 'text-transform:uppercase', 'placeholder' => 'Item' , 'maxlength' => 10, 'required' => true)))
         ->add('fechaInicio', 'text', array('label' => 'Fecha inicio de asignación (ej.: 01-01-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaInicio, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha inicio de asignación (ej.: 01-01-2020)' , 'maxlength' => 10, 'required' => true)))
-        ->add('fechaFin', 'text', array('label' => 'Fecha final de asignación (ej.: 31-12-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaFin, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha fin de asignación (ej.: 31-12-2020)' , 'maxlength' => 10, 'required' => true)))
+        ->add('fechaFin', 'text', array('label' => 'Fecha final de asignación (ej.: 31-12-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaFin, 'style' => 'text-transform:uppercase', 'placeholder' => '----Fecha fin de asignación (ej.: 31-12-2020)' , 'maxlength' => 10, 'required' => true)))
         ->add('financiamiento', 'entity', array('data' => $financiamientoTipoEntity, 'label' => 'Financiamiento', 'empty_value' => 'Seleccione Financiamiento', 'class' => 'Sie\AppWebBundle\Entity\FinanciamientoTipo',
             'query_builder' => function(EntityRepository $er) {
                 return $er->createQueryBuilder('ft')
@@ -626,11 +639,14 @@ class MaestroAsignacionController extends Controller {
         return $form;
     }
 
-    public function getMaestrosInstitucionEducativaCursoOferta($institucionEducativaCursoOfertaId, $notaTipoId){
+    /**
+     * dcastillo 0403 se aumenta horasMes
+     */
+    public function getMaestrosInstitucionEducativaCursoOferta($institucionEducativaCursoOfertaId, $notaTipoId){       
         $em = $this->getDoctrine()->getManager();
         $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOfertaMaestro');
         $query = $entity->createQueryBuilder('iecom')
-                ->select("distinct iecom.id as institucioneducativaCursoOfertaMaestroId, mi.id as maestroInscripcionId, nota.notaTipo, p.nombre, p.paterno, p.materno, p.carnet as carnetIdentidad, p.complemento, ft.financiamiento, ft.id as financiamientoId, iecom.asignacionFechaInicio, iecom.asignacionFechaFin, iecom.item")                
+                ->select("distinct iecom.id as institucioneducativaCursoOfertaMaestroId, mi.id as maestroInscripcionId, nota.notaTipo, p.nombre, p.paterno, p.materno, p.carnet as carnetIdentidad, p.complemento, ft.financiamiento, ft.id as financiamientoId, iecom.asignacionFechaInicio, iecom.asignacionFechaFin, iecom.item, iecom.horasMes, iecom.observacion")                
                 ->innerJoin('SieAppWebBundle:MaestroInscripcion', 'mi', 'WITH', 'mi.id = iecom.maestroInscripcion')
                 ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'p.id = mi.persona')
                 ->innerJoin('SieAppWebBundle:NotaTipo', 'nota', 'WITH', 'nota.id = iecom.notaTipo')
@@ -680,12 +696,12 @@ class MaestroAsignacionController extends Controller {
     // PARAMETROS: institucioneducativaCursoOfertaId, maestroInscripcionId
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function asignarMaestroMateriaGuardaAction(Request $request) {
+    public function asignarMaestroMateriaGuardaAction(Request $request) {       //guarda lo que envia el form
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         // $institucioneducativaCursoOfertaId = base64_decode($request->get('oferta'));
         // $maestroInscripcionId = base64_decode($request->get('maestro'));
-        $form = $request->get('form');
+        $form = $request->get('form');       
         $info = json_decode(base64_decode($form['ofertaMaestro']), true);
         
         $notaTipoId = $info['nota_tipo_id'];
@@ -741,7 +757,14 @@ class MaestroAsignacionController extends Controller {
                 $msg = "No existe el curso al cual quiere registrar, intente nuevamente";
                 return $response->setData(array('estado'=>false, 'msg'=>$msg));
             }
-            $horasMes = $institucioneducativaCursoOfertaEntity->getHorasmes();
+
+            //dcastillo 0303
+            // original echo por Roly anntes cambio, en varios casos devuelve NULL, por la base de datos
+            //$horasMes = $institucioneducativaCursoOfertaEntity->getHorasmes();
+            //ahora viene del formulario
+            $horasMes = $form['horas'];
+            $observacion = $form['observacion'];
+           
             $gestionId = $institucioneducativaCursoOfertaEntity->getInsitucioneducativaCurso()->getGestionTipo()->getId();
             $institucionEducativaId = $institucioneducativaCursoOfertaEntity->getInsitucioneducativaCurso()->getInstitucioneducativa()->getId();
             // $institucionEducativaId = $maestroInscripcionEntity->getInstitucioneducativa()->getId();
@@ -787,6 +810,10 @@ class MaestroAsignacionController extends Controller {
                     $maestroinscripcion->setFechaModificacion($fechaActual);
                     $em->persist($maestroinscripcion);
                     $maestroInscripcionEntity = $maestroinscripcion;
+
+                    //dcastillo todos los demas volverlos false
+
+                    
                 } else {
                     $msg = "No existe la inscripcion del maestro que solicita asignar, intente nuevamente";
                     return $response->setData(array('estado'=>false, 'msg'=>$msg));
@@ -833,7 +860,11 @@ class MaestroAsignacionController extends Controller {
             $InstitucioneducativaCursoOfertaMaestroEntity = new InstitucioneducativaCursoOfertaMaestro();            
             $InstitucioneducativaCursoOfertaMaestroEntity->setInstitucionEducativaCursoOferta($institucioneducativaCursoOfertaEntity);
             $InstitucioneducativaCursoOfertaMaestroEntity->setMaestroInscripcion($maestroInscripcionEntity);
+            
+            //dcastillo
             $InstitucioneducativaCursoOfertaMaestroEntity->setHorasMes($horasMes);
+            $InstitucioneducativaCursoOfertaMaestroEntity->setObservacion($observacion);
+
             $InstitucioneducativaCursoOfertaMaestroEntity->setFechaRegistro($fechaActual);
             $InstitucioneducativaCursoOfertaMaestroEntity->setNotaTipo($notaTipoEntity);
             $InstitucioneducativaCursoOfertaMaestroEntity->setEsVigenteMaestro(true);
@@ -1343,6 +1374,7 @@ class MaestroAsignacionController extends Controller {
         $val = array();
         $maestroInscripcionId = 0;
         $listaMaestros = $this->getMaestrosInstitucionEducativaCursoOferta($institucionEducativaCursoOfertaId, $notaTipoId);
+        
         $detalleCursoOferta = $this->getInstitucionEducativaCursoOferta($institucionEducativaCursoOfertaId);
         if(count($detalleCursoOferta )>0){
             $detalleCursoOferta = $detalleCursoOferta[0];
@@ -1374,6 +1406,7 @@ class MaestroAsignacionController extends Controller {
         //     $fechaFin = date_format($institucioneducativaCursoOfertaMaestroEntity->getAsignacionFechaFin(),'d-m-Y');
         //     $financiamientoTipoEntity = $institucioneducativaCursoOfertaMaestroEntity->getFinanciamientoTipo();
         // } else {
+            $horas=0;
             $item = "";
             $fechaInicio = "";
             $fechaFin = "";
@@ -1395,14 +1428,17 @@ class MaestroAsignacionController extends Controller {
         $arrayFormulario = array('titulo' => "Registro / Modificación de maestro", 'detalleCursoOferta' => $detalleCursoOferta, 'listaMaestros' => $listaMaestros, 'notaTipo'=>$notaTipo, 'formNuevo'=>$form, 'formCalidad'=>true, 'rangoFecha'=>$arrayRangoFecha);
 
         $arrayFormulario['formEnable'] = true;
-
+        
         return $this->render('SieRegularBundle:MaestroAsignacion:asignacionMaestroFormulario.html.twig', $arrayFormulario);
     }
 
+    //dcastillo 0303
     public function getFormRegistroMaestro($val, $item, $fechaInicio, $fechaFin, $financiamientoTipoEntity, $maestroInscripcionLista, $maestroInscripcionId){
         $form = $this->createFormBuilder()
         ->add('ofertaMaestro', 'hidden', array('label' => 'Info', 'attr' => array('value' => base64_encode(json_encode($val)))))
         ->add('item', 'text', array('label' => 'Item', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $item, 'style' => 'text-transform:uppercase', 'placeholder' => 'Item' , 'maxlength' => 10, 'required' => true)))
+        ->add('horas', 'integer', array('label' => 'Horas/Mes', 'invalid_message' => 'campo obligatorio', 'attr' => array('min' => 0, 'max' => 200, 'value' => '', 'style' => 'text-transform:uppercase', 'placeholder' => 'Total Horas Mes' , 'maxlength' => 3, 'required' => true)))
+        ->add('observacion', 'text', array('label' => 'Observacion/Motivo de la Asignacion', 'invalid_message' => 'campo obligatorio', 'attr' => array('min' => 0, 'max' => 200, 'value' => '', 'style' => 'text-transform:uppercase', 'placeholder' => 'Motivo de la Asignacion' , 'maxlength' => 150, 'required' => true)))
         ->add('fechaInicio', 'text', array('label' => 'Fecha inicio de asignación (ej.: 01-01-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaInicio, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha inicio de asignación' , 'maxlength' => 10, 'required' => true)))
         ->add('fechaFin', 'text', array('label' => 'Fecha fin de asignación (ej.: 31-12-2020)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $fechaFin, 'style' => 'text-transform:uppercase', 'placeholder' => 'Fecha fin de asignación' , 'maxlength' => 10, 'required' => true)))
         ->add('maestro', 'choice', array('choices' => $maestroInscripcionLista, 'label' => 'Maestro', 'empty_value' => 'Seleccione Maestro', 'data' => $maestroInscripcionId, 'attr' => array('onchange' => 'dato_maestro()')))

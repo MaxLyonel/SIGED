@@ -603,7 +603,14 @@
                                     if(data.exito == 1){
                                          alert('Las Areas han sido asignadas con exito !!');
                                     }else{
-                                         alert('No se han podido registrar Areas para este curso !! \nPosiblemente ya existen, por favor revisar.');
+                                        if(data.exito == -1){
+                                            alert(data.mensaje);
+
+                                        }else{
+                                             alert('No se han podido registrar Areas para este curso !! \nPosiblemente ya existen, por favor revisar.');    
+                                        }
+
+                                        
                                     }
                                    
                                 }

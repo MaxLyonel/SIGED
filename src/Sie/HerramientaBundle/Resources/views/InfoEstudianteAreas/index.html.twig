@@ -11,7 +11,18 @@
                 <div class="clearfix"></div>
             </div>
             <div class="panel-body">
-                {% if areas is not null %}
+
+                {% if existenareas == 0 and curso.paraleloTipo.paralelo|upper == 'A' and nivelautorizado != 0 %}       
+
+                    <span style="float:right; margin-bottom:10px">
+                        <button  type="button" data-title="3456" onclick="crear_areas('{{curso.turnoTipo.id}}','{{curso.nivelTipo.id}}','{{curso.paraleloTipo.id}}','{{curso.gradoTipo.id}}','{{curso.institucioneducativa.id}}')" class="btn btn-wordpress"><i class="fa fa-plus-circle text-white"></i> Adicionar Área</button>
+                    </span>
+                {% endif %}
+               
+
+
+                {% if areas is not null %}                   
+
                     <h5 class="text-lilac">Datos del Curso</h5>
                     <table class="table table-condensed table-bordered" style="background:#EEEEEE">
                         <tr>
@@ -26,7 +37,8 @@
                     <br>
                     {% if app.session.get('acceso_total') %}  
                         {% if areas.tipoUE != 2 and areas.vista != 0 %}
-                            <div class="btn-group" style="width:650px; float:right;">
+                             
+                             {#<div class="btn-group" style="width:650px; float:right;">
                                 <button type="button" class="btn btn-wordpress dropdown-toggle" data-toggle="dropdown" aria-expanded="false" style="float:right">
                                     Agregar Área <span class="caret"></span>
                                 </button>
@@ -41,7 +53,8 @@
                                         <li style="margin:5px;"><span class="text-warning">No hay asignaturas disponibles</span></li>
                                     {% endif %}
                                 </ul>
-                            </div>
+                            </div> #}
+                            
                         {# {% else %}
                             {% if areas.tipoUE == 2 and areas.vista != 0 %}
                                 <div class="btn-group" style="width:650px; float:right;">
@@ -73,6 +86,8 @@
 
                     </div>
                 {% else %}
+                    
+
                     <div class="alert alert-info">
                         Opciones no disponibles
                     </div>
@@ -210,6 +225,7 @@
 
         var enviar = true;
         var mensaje = "";
+        
 
         $(".maestro").each(function (index) {
             if($(this).val() == ""){
@@ -286,6 +302,57 @@
             newArea(materia,idCurso);
         }
     }
+
+    /*
+    dcastillo, se ha aumentado parametros, para la creacion de la oferta
+    */
+    //function crearareas(nivel, grado, paralelo, idInstitucionCurso, idNivel, divResultado,institucioneducativa,gestionTipo,turnoTipo,nivelTipo,gradoTipo,paraleloTipo) {                        
+    var crear_areas = function(turnoTipo,nivelTipo,paraleloTipo,gradoTipo, institucionid){       
+
+        console.log(turnoTipo);
+        console.log(nivelTipo);
+        console.log(paraleloTipo);
+        console.log(gradoTipo);
+        console.log(institucionid);
+        
+        idNivel = nivelTipo;
+        idInstitucionCurso = 1;
+        institucioneducativa = institucionid;
+        gestionTipo = 2022;
+
+
+        if(confirm('¿Esta seguro de que desea crear Areas?\nPresione aceptar para confirmar.')){                  
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('areas_listar_areas_nivel', {'idNivel': idNivel, 'idCurso': idInstitucionCurso, 'institucioneducativa':institucioneducativa,'gestionTipo':gestionTipo, 'turnoTipo': turnoTipo,'nivelTipo':nivelTipo,'gradoTipo':gradoTipo,'paraleloTipo':paraleloTipo}),
+                beforeSend: function () {
+                    $("body").css("cursor", "progress");
+
+                    /*$("#areasModal").empty();
+                    $("#areasModal").append("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");*/
+                },
+                success: function (data) {
+                    /*$("#areasModal").empty();
+                    $("#areasModal").append(data);*/
+                    $("body").css("cursor", "default");
+                    if(data.exito == 1){
+                            alert('Las Areas han sido asignadas con exito !!');
+                    }else{
+                        if(data.exito == -1){
+                            alert(data.mensaje);
+
+                        }else{
+                                alert('No se han podido registrar Areas para este curso !! \nPosiblemente ya existen, por favor revisar.');    
+                        }
+
+                        
+                    }
+                    
+                }
+            });           
+        }
+    }
+
 </script>
 <style>
     .arrow-before {

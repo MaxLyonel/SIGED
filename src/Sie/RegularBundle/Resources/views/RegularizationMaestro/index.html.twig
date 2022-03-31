@@ -175,13 +175,22 @@
                                 <br>
                                 <div class="row">
                                   <div class="col-md-12">
+                                    
+                                    <div class="alert alert-info">
+                                        Despues de realizar la reasignacion respectiva, como medio de validacion <strong> Visualize el reporte correspondiente </strong>
+                                    </div>
+                                    {#
                                     <div class="alert alert-danger">
-                                            Despues de realizar toda la actualización click sobre el boton <strong> "Guardar Cambios de Actualización" </strong>
-                                        </div>
+                                        Despues de realizar toda la actualización click sobre el boton <strong> "Guardar Cambios de Actualización" </strong>
+                                    </div>
+                                    #}
+
                                   </div>
 
                                 </div>
+                                {# dcastillo, 1003, ya los cambios se graban en el modal
                                 <div class="row">
+
 
                                 {{form_start(formReg, { 'attr':{'id':'formRegularizationMaestroId' }} )}}
                                   <div class="col-lg-4 col-lg-offset-4" style="text-align:center; display:block">
@@ -189,6 +198,9 @@
                                   </div>
                                 </div>
                                 {{form_end(formReg)}}
+
+                                #}
+
                             </div>
                         </div>
                     </div>
