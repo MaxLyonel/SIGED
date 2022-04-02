@@ -3889,7 +3889,7 @@ class ReporteController extends Controller {
 
         $arch = 'MinEdu_Matricula_Paralelo_'.date('YmdHis').'.xls';
         $response = new Response();
-        $response->headers->set('Content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_InformacionEstadistica_Paralelos_Nacional_v1_rcm.rptdesign&__format=xls'));
@@ -3900,6 +3900,35 @@ class ReporteController extends Controller {
         $response->headers->set('Expires', '0');
         return $response;
     }
+
+
+
+
+    public function informacionGeneralModalidadAtencionRegularAction(Request $request) {
+    /*
+                * Define la zona horaria y halla la fecha actual
+                */
+            date_default_timezone_set('America/La_Paz');
+            $fechaActual = new \DateTime(date('Y-m-d'));
+            $gestionActual = date_format($fechaActual,'Y');
+            $em = $this->getDoctrine()->getManager();
+    
+            $arch = 'MinEdu_Matricula_Paralelo_'.date('YmdHis').'.pdf';
+
+
+
+        $response = new Response();
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
+    
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'reg_est_InformacionEstadistica_ModalidadAtencion_Nacional_v1_rcm.rptdesign&__format=pdf'));
+            
+            $response->setStatusCode(200);
+            $response->headers->set('Content-Transfer-Encoding', 'binary');
+            $response->headers->set('Pragma', 'no-cache');
+            $response->headers->set('Expires', '0');
+            return $response;
+        }
 
     /**
      * Imprime reportes estadisticos valoracion cuantitativa - en desarrollo segun el tipo de rol en formato PDF

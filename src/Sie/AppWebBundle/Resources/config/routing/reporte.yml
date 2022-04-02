@@ -10,6 +10,10 @@ reporte_regular_informacion_general_paralelo:
     path:     /informacion/general/regular/paralelo
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralParaleloRegular }
 
+reporte_regular_informacion_general_modalidadatencion:
+    path:     /informacion/general/regular/modalidadatencion
+    defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralModalidadAtencionRegular }
+
 reporte_regular_informacion_general_unidad_educativa:
     path:     /informacion/general/regular/unidad/educativa
     defaults: { _controller: SieAppWebBundle:Reporte:informacionGeneralRegularInstitucionEducativa }
