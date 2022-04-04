@@ -985,7 +985,7 @@ class OlimEstudianteInscripcionController extends Controller{
             }
         }
 
-        if($arrDataInscription['materiaId'] == 18){
+        if($arrDataInscription['materiaId'] == 29){
             return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:commonInscriptionFeria.html.twig', array(
                 'form' => $this->CommonInscriptionFeriaForm($arrDataInscription)->createView(),
                 'groupId' => $groupId,
