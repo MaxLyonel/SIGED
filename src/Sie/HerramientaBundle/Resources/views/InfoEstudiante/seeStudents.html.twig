@@ -457,7 +457,7 @@
 
                                     {# {{ app.session.get('esGuanawek') }} #}
                                     {% if app.session.get('esGuanawek') and app.session.get('esGuanawek')==1 %}
-                                        {% if gestion > 2019 and nivel == 13 and grado >= 5 %}
+                                        {% if gestion == 2021 and nivel == 13 and grado >= 5 %}
 
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones-..">
                                                 <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="validarEspecialidad2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
@@ -465,7 +465,7 @@
                                                 </button>
                                             </div>
                                         {% else %}
-                                            {% if gestion > 2019 %}
+                                            {% if gestion > 2021 %}
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones.-.">
                                                 <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                     <i class="fa fa-list"></i>
