@@ -1495,7 +1495,13 @@ class OlimEstudianteInscripcionController extends Controller{
         
         // die;
         //get the discapacidad
-         $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+         // $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+       $entity = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo');
+       $query = $entity->createQueryBuilder('odt')
+               ->distinct()
+               ->orderBy('odt.id', 'ASC')
+               ->getQuery();
+       $objDiscapacidad = $query->getResult();        
         
        
         // dump($jsonDataInscription);die;
@@ -1671,7 +1677,13 @@ class OlimEstudianteInscripcionController extends Controller{
        
        // die;
        //get the discapacidad
-        $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+        // $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+       $entity = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo');
+       $query = $entity->createQueryBuilder('odt')
+               ->distinct()
+               ->orderBy('odt.id', 'ASC')
+               ->getQuery();
+       $objDiscapacidad = $query->getResult();
        
        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
            'objStudentsToOlimpiadas' => $arrCorrectStudent,
