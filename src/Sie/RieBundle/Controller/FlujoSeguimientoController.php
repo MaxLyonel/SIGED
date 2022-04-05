@@ -75,7 +75,7 @@ class FlujoSeguimientoController extends Controller
         $form = $request->get('form');
         //dump($id);die;
         $data = $this->listarF(5,$form['tramite']);
-        //dump($data);die;
+       // dump($data);die;
         //if (($form['proceso'] == 5 && !$data['nombre']) || ($form['proceso'] == 14 && !$data['nombre_ie']) || ($form['proceso'] == 6 && !$data['estudiante']) || ($form['proceso'] == 7 && !$data['estudiante'])) 
         if (!$data['nombre']) 
         {
@@ -95,7 +95,7 @@ class FlujoSeguimientoController extends Controller
         /**
          * TRAMITE RUE
          */
-        if($flujotipo == 5) 
+        if($flujotipo == 5)  //SOLICITUD DE REGISTRO DE IT
         {
             $query = $em->getConnection()->prepare('select p.id, p.flujo,d.institucioneducativa, p.proceso_tipo, p.orden, p.es_evaluacion,p.variable_evaluacion, p.condicion, p.nombre,d.valor_evaluacion, p.condicion_tarea_siguiente, p.plazo, p.tarea_ant_id, p.tarea_sig_id, p.rol_tipo_id,d.id as td_id,d.tramite_id,d.codritt,d.obs, d.flujo_proceso_id,d.fecha_registro,d.usuario_remitente_id,d.usuario_destinatario_id
         from
