@@ -1251,7 +1251,7 @@ class InboxController extends Controller {
       ));*/
 
       $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
-      
+      $periodo = 0;
       /*$periodo = 0;
       if($registroConsol)
       {
