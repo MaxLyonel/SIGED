@@ -61,7 +61,10 @@
                                 <tbody>
                                     {% for dato in resoluciones %}
                                         <tr>
-                                            {% if esAcreditado == false and  app.session.get('roluser') == 7 and institucion.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %}
+                                            {# 
+                                                {% if esAcreditado == false and  app.session.get('roluser') == 7 and institucion.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %} 
+                                             #}
+                                            {% if app.session.get('roluser') == 7 and institucion.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %}
                                             <td>
                                                 <form action="{{path('oac_edit_resolucion')}}" method="post" style="display:inline-block">
                                                     <input type="hidden" name="idRie" value="{{institucion.id}}">

@@ -37,9 +37,9 @@ rie_delete:
     methods:  GET
     
 rie_delete_itt:
-    path:     /deleteitt
+    path:     /deleteitt/{idRie}
     defaults: { _controller: "SieRieBundle:RegistroInstitucionEducativa:deleteitt" }
-    methods:  POST
+    methods:  GET
 
 
 rie_result:
