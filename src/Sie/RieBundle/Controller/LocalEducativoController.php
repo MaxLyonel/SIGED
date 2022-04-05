@@ -16,13 +16,14 @@ use Sie\AppWebBundle\Form\InstitucioneducativaType;
  * Institucioneducativa controller.
  *
  */
-class LocalEducativoController extends Controller {
 
+class LocalEducativoController extends Controller {
+   
     /**
      * locales educativos  entities.
      *
      */
-    public function indexAction(Request $request){
+    public function indexAction(Request $request){ 
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
         if (!isset($id_usuario)){
@@ -209,6 +210,9 @@ class LocalEducativoController extends Controller {
      *
      */
     public function createAction(Request $request) {
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+       
     	try{
     		$em = $this->getDoctrine()->getManager();
             $form = $request->get('form');
@@ -233,8 +237,12 @@ class LocalEducativoController extends Controller {
             $entity->setZona(mb_strtoupper($form['zona'], 'utf-8'));
             $entity->setDireccion(mb_strtoupper($form['direccion'], 'utf-8'));
             $entity->setJuridiccionAcreditacionTipo($em->getRepository('SieAppWebBundle:JurisdiccionGeograficaAcreditacionTipo')->find(3));
+            $entity->setUsuarioId($id_usuario);
+            $entity->setFechaRegistro(new \DateTime('now'));
+            $entity->setFechaModificacion(new \DateTime('now'));
             $em->persist($entity);
     		$em->flush();
+            
     		$this->get('session')->getFlashBag()->add('mensaje', 'El local educativo fue registrada correctamente  con el codigo:  ' .  $entity->getId() );
             return $this->redirect($this->generateUrl('lei'));
                   
