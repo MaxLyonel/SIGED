@@ -10,7 +10,7 @@ use Sie\AppWebBundle\Entity\OlimEstudianteInscripcion;
 use Sie\AppWebBundle\Entity\OlimInscripcionGrupoProyecto;
 use Sie\AppWebBundle\Form\OlimEstudianteInscripcionType;
 use Symfony\Component\HttpFoundation\Session\Session;
-
+use Doctrine\ORM\EntityRepository;
 /**
  * OlimEstudianteInscripcion controller.
  *
@@ -2151,7 +2151,13 @@ class OlimEstudianteInscripcionController extends Controller{
         return $this->createFormBuilder()
                 ->add('fono', 'text')
                 ->add('email', 'text')
-                ->add('discapacidad', 'entity', array('class'=>'SieAppWebBundle:OlimDiscapacidadTipo', 'property'=>'discapacidad'/*, 'empty_value'=>'Seleccionar...'*/))
+                //->add('discapacidad', 'entity', array('class'=>'SieAppWebBundle:OlimDiscapacidadTipo', 'property'=>'discapacidad'/*, 'empty_value'=>'Seleccionar...'*/))
+                ->add('discapacidad', 'entity', array('class' => 'SieAppWebBundle:OlimDiscapacidadTipo',
+                    'query_builder' => function (EntityRepository $e) {
+                        return $e->createQueryBuilder('odt')
+                                ->orderBy('odt.id', 'ASC')
+                        ;
+                    }, 'property' => 'discapacidad'))                
                 ->add('jsonDataInscription','hidden', array('data'=>$jsonDataInscription) )
                 ->add('doInscription', 'button', array('label'=>'Inscribir','attr'=>array('class'=>'btn btn-warning btn-xs', 'onclick'=>'saveExternalInscription();')))
                 ->getForm()
