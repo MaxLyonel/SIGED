@@ -2,7 +2,7 @@
 
 namespace Sie\AppWebBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityRepository; 
 
 /**
  * EstudianteDiplomaticoRepository
