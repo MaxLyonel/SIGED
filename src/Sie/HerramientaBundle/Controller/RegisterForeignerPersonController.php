@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Entity\Persona;
 use Sie\AppWebBundle\Entity\EstudiantePersonaDiplomatico;
+use Sie\AppWebBundle\Entity\Estudiante; 
+use Sie\AppWebBundle\Entity\EstudianteDiplomatico; 
 
 
 class RegisterForeignerPersonController extends Controller{
@@ -62,7 +64,7 @@ class RegisterForeignerPersonController extends Controller{
     }    
     public function indexAction(){
         //se deshabilito la inscripcion de extranjeros
-        return $this->redirect($this->generateUrl('login'));
+        //return $this->redirect($this->generateUrl('login'));      //dcastillo       
 
         $ie_id=$this->session->get('ie_id');
         
@@ -78,12 +80,178 @@ class RegisterForeignerPersonController extends Controller{
             ));
         
     }
+
     public function registerAction(Request $request){
+
+        $sesion = $request->getSession();
+        $usuarioId = $sesion->get('userId');
+        $em = $this->getDoctrine()->getManager();
+
+                        
+        $datos = $request->get('datos');    	
+        $file = $request->get('informe');            
+        $form = json_decode($request->get('datos'), true);
+
+        //dump(isset($_FILES['informe']));die;
+
+
+        if(isset($_FILES['informe']) == false){
+            //dump('no file'); die;
+
+            $status = 404;
+            $message = "Falta el Archivo !";
+            $code = 3; // id del registro insertado
+
+            $arrResponse = array(
+            'existe'          => -1,
+            'code'            => $code,
+            'message'         => $message,                
+            );               
+            
+            $response = new JsonResponse();
+            $response->setStatusCode(200);
+            $response->setData($arrResponse);
+            return $response;
+            
+        }else{
+            // hay archivo, se procede
+
+            $file = $_FILES['informe'];
+            $type = $file['type'];
+            $size = $file['size'];
+            $tmp_name = $file['tmp_name'];
+            $name = $file['name'];
+            $extension = explode('.', $name);
+            $extension = $extension[count($extension)-1];
+            $new_name =  $usuarioId.'_'.date('YmdHis').'.'.$extension;
+            // GUARDAMOS EL ARCHIVO
+            $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/insExtranjeros/' .date('Y');
+
+            if (!file_exists($directorio)) {
+                mkdir($directorio, 0775, true);
+            }
+            $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/insExtranjeros/' .date('Y').'/'. $usuarioId;
+            if (!file_exists($directoriomove)) {
+                mkdir($directoriomove, 0775, true);
+            }
+
+            $archivador = $directoriomove.'/'.$new_name;           
+            if(!move_uploaded_file($tmp_name, $archivador)){
+                $em->getConnection()->rollback();
+                echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+            }
+
+            $RAW_QUERY = "
+            SELECT id as estudiante_id FROM estudiante 
+            where codigo_rude = '" .$form['rude'] ."'" ;              
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            $student = $result;
+
+
+            //dump($student); die;
+            $estudiante = $student[0]['estudiante_id']; // 29838390;
+            $pais_tipo_id = $form['paisId'];
+            $nro_documento = $form['numero_documento']; //'A006312-2';
+            $embajada = $form['embajada']; //'Embajada Alemana';
+            $pasaporte = $form["nro_pasaporte"]; //'210736581';
+            $cargo = $form['cargo']; //'Hija del representante de la ONU';
+            $vigencia = date($form["fecha_vencimiento"]); //date('2022-03-21');
+            $categoria_documento = 'A';
+
+            $created_user_id = $usuarioId;
+            $created_at = date('Y-m-d h:i:s');
+            $update_user_id = $usuarioId;
+            $update_at = date('Y-m-d h:i:s');
+
+            //si ya existe
+
+            /*$RAW_QUERY = '
+            SELECT count(*) as existe FROM estudiante_diplomatico 
+            where estudiante_id = ' .$estudiante ;  */
+            
+            $RAW_QUERY = "
+            SELECT count(*) as existe FROM estudiante_diplomatico 
+            where estudiante_id = " .$estudiante . " and nro_documento = '" . $form['numero_documento'] . "'";  
+            
+            $statement = $em->getConnection()->prepare($RAW_QUERY);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            $existe_result = $result;
+                   
+            if($existe_result[0]['existe'] != "0"){
+               // ya esta inscrito
+               
+                $status = 404;
+                $message = "Registro ya existe !";
+                $code = 2; // id del registro insertado
+
+                $arrResponse = array(
+                'existe'          => 1,
+                'code'            => $code,
+                'message'         => $message,                
+                );               
+                
+                $response = new JsonResponse();
+                $response->setStatusCode(200);
+                $response->setData($arrResponse);
+                return $response;
+            }
+            
+            
+            $queryInsert = $em->getConnection()->prepare(
+                    "INSERT INTO estudiante_diplomatico( estudiante_id, pais_tipo_id, nro_documento, embajada, pasaporte, cargo, vigencia, "                
+                    . "categoria_documento, created_user_id, created_at, update_user_id, update_at, documento_path) "
+                    . "VALUES(:estudiante_id, :pais_tipo_id, :nro_documento, :embajada, :pasaporte,"
+                    . ":cargo, :vigencia, :categoria_documento, :created_user_id, :created_at, "
+                    . ":update_user_id, :update_at, :documento_path)");
+
+            $queryInsert->bindValue(':estudiante_id', $estudiante);
+            //$queryInsert->bindValue(':pais_tipo_id', (string) $max);
+            $queryInsert->bindValue(':pais_tipo_id', $pais_tipo_id);
+            $queryInsert->bindValue(':nro_documento', $nro_documento);
+            $queryInsert->bindValue(':embajada', $embajada);
+            $queryInsert->bindValue(':pasaporte', $pasaporte);
+            $queryInsert->bindValue(':cargo', $cargo);
+            $queryInsert->bindValue(':vigencia', $vigencia);
+            $queryInsert->bindValue(':categoria_documento', $categoria_documento);
+            $queryInsert->bindValue(':created_user_id', $created_user_id);
+            $queryInsert->bindValue(':created_at', $created_at);
+            $queryInsert->bindValue(':update_user_id', $update_user_id);
+            $queryInsert->bindValue(':update_at', $update_at);
+            $queryInsert->bindValue(':documento_path', $archivador);
+            $queryInsert->execute();        
+
+            //dump('save'); die;
+            //TODO: poner en un try ..ctach
+            $status = 200;
+            $message = "Registro Exitoso !";
+            $code = 1; // id del registro insertado
+
+            $arrResponse = array(
+            'existe'          => 0,
+            'code'            => $code,
+            'message'         => $message,                
+            );
+            
+            $response = new JsonResponse();
+            $response->setStatusCode(200);
+            $response->setData($arrResponse);
+    
+            return $response;
+
+        }       
+
+    }
+
+    public function register2Action(Request $request){
+
     	
         $response = new JsonResponse();
         $form = json_decode($request->get('datos'), true);
         $opcion = $request->get('opcion', null);    	
-// dump($form);die;
+        //dump($form);die;        
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         
@@ -189,6 +357,85 @@ class RegisterForeignerPersonController extends Controller{
         }    	
 
 
+
+    }
+
+    public function lookforrudeAction(Request $request){
+	    //dump($request);die;
+	    //create db conexion
+	    $em = $this->getDoctrine()->getManager();
+	    $response = new JsonResponse();
+   
+         // get the send values 
+	    $rude = $request->get('rude');
+	    $arrGenero = array();
+	    $arrPais = array();
+	    $withoutcifind=0;
+   	    $arrayCondition['codigoRude'] = $rude;
+        
+        // find the student by arrayCondition
+        $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy($arrayCondition);
+        
+        $existStudent = false;
+        $arrStudentExist = array();
+
+        if(sizeof($objStudent)>0){
+            $existStudent=true;
+            
+            if(sizeof($objStudent)>0){
+    
+                $arrStudentExist[] = array(
+                        'paterno'=>$objStudent->getPaterno(),
+                        'materno'=>$objStudent->getMaterno(),
+                        'nombre'=>$objStudent->getNombre(),
+                        'carnet'=>$objStudent->getCarnetIdentidad(),
+                        'complemento'=>$objStudent->getComplemento(),
+                        'fecNac'=>$objStudent->getFechaNacimiento()->format('d-m-Y') ,
+                        'fecnacfind'=>$objStudent->getFechaNacimiento()->format('d-m-Y') ,
+                        'rude'=>$objStudent->getCodigoRude() ,
+                        'idStudent'=>$objStudent->getId() ,
+                );
+                    
+    
+            }
+
+            // $studentId = $objStudent->getId();
+            $existStudent = true;
+            $status = 'success';
+            $code = 200;
+            $message = "Estudiante existe";
+            $swcreatestudent = false;
+
+
+        }else{
+            //no existe
+
+            $existStudent = false;
+            $status = 'error';
+            $code = 404;
+            $message = "Estudiante no existe";
+            $swcreatestudent = false;
+
+        }
+ 
+  
+         $arrResponse = array(
+          'status'          => $status,
+          'code'            => $code,
+          'message'         => $message,
+          'swcreatestudent' => $swcreatestudent,
+          'arrGenero' => $arrGenero,
+          'arrPais' => $arrPais,
+          'arrStudentExist' => $arrStudentExist,
+          'existStudent' => $existStudent,
+          'swhomonimo' => $withoutcifind,
+  
+        );
+  
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);
+  
+        return $response;
 
     }
 
