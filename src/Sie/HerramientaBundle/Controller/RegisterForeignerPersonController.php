@@ -157,7 +157,11 @@ class RegisterForeignerPersonController extends Controller{
             $embajada = $form['embajada']; //'Embajada Alemana';
             $pasaporte = $form["nro_pasaporte"]; //'210736581';
             $cargo = $form['cargo']; //'Hija del representante de la ONU';
-            $vigencia = date($form["fecha_vencimiento"]); //date('2022-03-21');
+            //$vigencia = date("Y-m-d",strtotime($form["fecha_vencimiento"])); //date('2022-03-21');
+
+            $var = $form["fecha_vencimiento"];
+            $date = str_replace('/', '-', $var);
+            $vigencia =  date('Y-m-d', strtotime($date));
             $categoria_documento = 'A';
 
             $created_user_id = $usuarioId;
