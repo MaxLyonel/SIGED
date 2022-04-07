@@ -1,0 +1,105 @@
+Sie\AppWebBundle\Entity\EstudianteDiplomatico:
+    type: entity
+    table: estudiante_diplomatico
+    indexes:
+        IDX_BA35CF1992548EB1:
+            columns:
+                - pais_tipo_id
+        IDX_BA35CF1959590C39:
+            columns:
+                - estudiante_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nroDocumento:
+            type: string
+            nullable: true
+            length: 25
+            fixed: false
+            comment: 'Numero carnet diplomatico'
+            column: nro_documento
+        embajada:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: 'Lugar donde se desarrollan funciones'
+        pasaporte:
+            type: string
+            nullable: true
+            length: 20
+            fixed: false
+            comment: 'Nro de  pasaporte'
+        cargo:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: 'Cargo dilomatico'
+        vigencia:
+            type: date
+            nullable: true
+            comment: 'Vigencia del carnet diplomatico'
+        categoriaDocumento:
+            type: string
+            nullable: true
+            length: 1
+            fixed: false
+            comment: 'Categoria del carnet diplomatico'
+            column: categoria_documento
+        documentoPath:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: 'Ubicacion Documento Adjunto'
+            column: documento_path
+        createdUserId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: created_user_id
+        createdAt:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: created_at
+        updateUserId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: update_user_id
+        updateAt:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: update_at
+    manyToOne:
+        paisTipo:
+            targetEntity: PaisTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                pais_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
