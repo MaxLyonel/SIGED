@@ -14,3 +14,8 @@ registerforeignerperson_loadData:
     options:
          expose: true
 
+registerforeignerperson_lookforrude:
+    path:     /lookforrude
+    defaults: { _controller: SieHerramientaBundle:RegisterForeignerPerson:lookforrude }
+    options:
+         expose: true

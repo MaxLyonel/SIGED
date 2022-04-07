@@ -112,7 +112,7 @@ class OlimEstadisticaController extends Controller{
 				union all 
 				select 1 as id, '0' as codigo, 'Bolivia' as nombre, count(*) as cantidad from olim_estudiante_inscripcion oei
 				where oei.gestion_tipo_id = :gestion::double precision
-				order by cantidad desc, nombre asc
+				order by cantidad desc, codigo asc, nombre asc
 			");
 		}
 
@@ -149,7 +149,7 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
 				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
 				group by lt4.id, lt4.codigo, lt4.lugar
-				order by cantidad desc, nombre asc
+				order by cantidad desc, codigo asc, nombre asc
 			");
 		}
 
@@ -182,7 +182,7 @@ class OlimEstadisticaController extends Controller{
 			left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
 			where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0			
 			group by lt.id, lt.codigo, lt.lugar
-			order by cantidad desc, nombre asc
+			order by cantidad desc, codigo asc, nombre asc
 			");
 		}
 		
@@ -414,7 +414,7 @@ class OlimEstadisticaController extends Controller{
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
 				where oei.gestion_tipo_id = :gestion::double precision
-				order by cantidad desc, nombre asc
+				order by cantidad desc, codigo asc, nombre asc
 			");
 		}
 
@@ -478,7 +478,7 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
 				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
 				group by lt4.id, lt4.codigo, lt4.lugar
-				order by cantidad desc, nombre asc	
+				order by cantidad desc, codigo asc, nombre asc	
 			");
 		}
 
@@ -538,7 +538,7 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
 				where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0			
 				group by lt.id, lt.codigo, lt.lugar
-				order by cantidad desc, nombre asc
+				order by cantidad desc, codigo asc, nombre asc
 			");
 		}
 		

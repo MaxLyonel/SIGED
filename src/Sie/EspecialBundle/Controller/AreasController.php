@@ -427,7 +427,7 @@ class AreasController extends Controller {
         }
     }
 
-    public function cargarParalelosAction($idInstitucion, $gestion, $turno, $area, $nivel, $grado) {
+    public function cargarParalelosAction($idInstitucion, $gestion, $turno, $area, $nivel, $grado) { 
         try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -454,7 +454,7 @@ class AreasController extends Controller {
                     ->setParameter('turno', $turno)
                     ->setParameter('nivel', $nivel)
                     ->setParameter('grado', $grado)
-                    ->setParameter('programa', array(31)); //antes 17?
+                    ->setParameter('programa', array(100)); //antes 17?
 
             $paralelos = $query->getResult();
 //dump($paralelos);die;
@@ -476,7 +476,9 @@ class AreasController extends Controller {
      * ventana modal
      */
 
-    public function lista_areas_nivelAction($idNivel, $idCurso, $mTipo) {
+    public function lista_areas_nivelAction($idNivel, $idCurso, $mTipo) { 
+        //dump($idCurso);die;
+        
         try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -701,7 +703,7 @@ class AreasController extends Controller {
                             }
                             break;
                 case 410:   //servicio
-                            if($idarea==7){
+                            /*if($idarea==7){
                                 $asignaturas = $em->createQuery(
                                     'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
@@ -721,7 +723,17 @@ class AreasController extends Controller {
                                 $esvisual = true;
                                 $progSer = "Servicio";
 
-                            }
+                            }*/
+                            $asignaturas = $em->createQuery(
+                                'SELECT at
+                                FROM SieAppWebBundle:AsignaturaTipo at
+                                WHERE at.id IN (:ids)
+                                ORDER BY at.id ASC'
+                                )->setParameter('ids',array(4)) //especial
+                                ->getResult();
+                            $programaServicio = $institucionCursoEspecial->getEspecialServicioTipo()->getServicio();
+                            $esvisual = true;
+                            $progSer = "Servicio";
                             break;                            
                 case 11:   //Inicial
                      $asignaturas = $em->createQuery(

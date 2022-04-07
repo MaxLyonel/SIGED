@@ -758,7 +758,8 @@ class CreacionCursosEspecialController extends Controller {
                         $servicios = array(1,2,3,4,5,25,26,27,28);
                     }
                 } else {
-                    $servicios = array(20);//8,9
+                    //$servicios = array(20);//8,9
+                    $servicios = array(8,9,30,31);//8,9
                 }
             }//array(8,9,10,11,12,14,15)
         }
@@ -803,7 +804,8 @@ class CreacionCursosEspecialController extends Controller {
     }
 
     public function listarProgramasAction($area,$nivel,$grado,$modalidad) {
-        
+       // dump($area);
+       // dump($nivel);die;
         $em = $this->getDoctrine()->getManager();
         $this->session = new Session();
         if ( $area == "1" and $nivel == "411" and  $grado == "99" ) {
@@ -855,7 +857,8 @@ class CreacionCursosEspecialController extends Controller {
                 $programas = array(99);
             } else {
                 if($modalidad == 1){
-                    $programas = array(23, 24);
+                    //$programas = array(23, 24);
+                    $programas = array(31,32,33,34,35,36);
                 }else{
                     $programas = array(99);
                 }

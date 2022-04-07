@@ -155,12 +155,14 @@ class ControlCalidadController extends Controller {
                 break;
         }
 
-        $gestiones = $query->getResult();
+        //$gestiones = $query->getResult();
+        $gestiones = array(0=>array('id'=>2021));
 
         return $this->render('SieRegularBundle:ControlCalidad:index.html.twig', array(
                     'entidades' => $entidades,
                     'gestiones' => $gestiones,
-                    'currentyear' => $currentyear,
+                    // 'currentyear' => $currentyear,
+                    'currentyear' => '2021',
                     'lugar_tipo_id' => $usuario_lugar->getId()
         ));
     }

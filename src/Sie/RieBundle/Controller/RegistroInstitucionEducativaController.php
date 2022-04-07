@@ -33,10 +33,12 @@ class RegistroInstitucionEducativaController extends Controller {
           $this->session = new Session();
       }
 
+     
+
     /**
      * Muestra formulario de Busqueda de la institución educativa
      */
-    public function indexAction(Request $request) {
+    public function indexAction(Request $request) { 
         $em = $this->getDoctrine()->getManager();
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');
@@ -53,6 +55,7 @@ class RegistroInstitucionEducativaController extends Controller {
      * Muestra listado de institutos técnicos/tecnológicos
      */    
     public function listAction(Request $request){
+
         $sesion = $request->getSession();
         $id_usuario = $sesion->get('userId');        
         $id_lugar = $sesion->get('roluserlugarid');
@@ -224,6 +227,7 @@ class RegistroInstitucionEducativaController extends Controller {
     		$entity->setInstitucioneducativa(mb_strtoupper($form['institucionEducativa'], 'utf-8'));
     		$entity->setFechaResolucion(new \DateTime($form['fechaResolucion']));
     		$entity->setFechaCreacion(new \DateTime('now'));
+            $entity->setFechaRegistro(new \DateTime('now'));
     		$entity->setNroResolucion(mb_strtoupper($form['nroResolucion'], 'utf-8'));
     		$entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($form['dependenciaTipo']));
             $entity->setConvenioTipo($em->getRepository('SieAppWebBundle:ConvenioTipo')->findOneById(0));
@@ -379,6 +383,7 @@ class RegistroInstitucionEducativaController extends Controller {
             $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
             $entity->setInstitucioneducativa(mb_strtoupper($form['institucionEducativa'], 'utf-8'));
             $entity->setFechaResolucion(new \DateTime($form['fechaResolucion']));
+            $entity->setFechaModificacion(new \DateTime('now'));
             $entity->setNroResolucion(mb_strtoupper($form['nroResolucion'], 'utf-8'));
             $entity->setDependenciaTipo($em->getRepository('SieAppWebBundle:DependenciaTipo')->findOneById($form['dependenciaTipo']));
             $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById($form['estadoInstitucionTipo']));
@@ -492,6 +497,7 @@ class RegistroInstitucionEducativaController extends Controller {
      * elimina el estado de ITT Estado = 11 (ELIMINADO)
      */
     public function deleteittAction(Request $request){
+        dump($request);die;
     	$em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
