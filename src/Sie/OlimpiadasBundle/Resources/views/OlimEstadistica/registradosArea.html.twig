@@ -57,6 +57,7 @@
                             <div class="clearfix"></div>
                         {% endif %}
                     </div>  
+                    {% if 0 > 0 %}
                     <div class="panel-sub-heading inner-all">
                         <small>
                             {% if estadistica is defined and estadistica|length > 0 %}
@@ -94,7 +95,8 @@
                                 </div>
                             {% endif %}
                         </small>
-                    </div>             
+                    </div>     
+                    {% endif %}        
                     <div class="panel-body">
                         {% if estadistica is defined and estadistica|length > 0 %}
                             {% set count = 0 %}
