@@ -6,3 +6,9 @@ consultalibreta_buscar:
     path:     /buscar
     defaults: { _controller: "SieAppWebBundle:ConsultaLibreta:buscar" }
     methods: POST
+
+consultalibreta_lookforCal:
+    path:   /lookfor
+    defaults: { _controller: "SieAppWebBundle:ConsultaLibreta:lookforCal" }
+    options:
+         expose: true
