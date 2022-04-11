@@ -808,6 +808,30 @@ class EstudianteUpdateController extends Controller {
         ));
     }
 
+
+    /*
+    save the log transaccion
+    */
+    private function updateQAstatus($student){
+      // dump($objOldValues);
+      // dump($arrNewValues);die;
+      $em = $this->getDoctrine()->getManager();
+      // get the student with observatino info
+      $objStudentObs =  $em->getRepository('SieAppWebBundle:ValidacionProceso')->getNacFechaAndGeneroInfo($student->getCodigoRude(), $this->session->get('yearQA'));
+      //opdate observation
+      foreach ($objStudentObs as $key => $value) {
+          //get observation values  to update
+          $objValidationProcessUpdate = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($value->getId());
+          $objValidationProcessUpdate->setEsActivo('t');
+          $em->persist($objValidationProcessUpdate);
+          $em->flush();
+
+      }
+
+      return true;
+    }
+
+
     /**
      * update an existing Estudiante entity.
      *
@@ -892,7 +916,8 @@ class EstudianteUpdateController extends Controller {
             }
             $typeMessage = 'success';
             $mainMessage = 'Guardado';
-            
+            // update QA status
+            $this->updateQAstatus($entity);
             // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
             // return $this->redirect($this->generateUrl('sie_estudiantes'));
         }else{
