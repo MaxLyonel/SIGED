@@ -1,6 +1,7 @@
 Sie\AppWebBundle\Entity\ValidacionProceso:
     type: entity
     table: validacion_proceso
+    repositoryClass: Sie\AppWebBundle\Entity\ValidacionProcesoRepository
     indexes:
         idx_regla_alumno:
             columns:

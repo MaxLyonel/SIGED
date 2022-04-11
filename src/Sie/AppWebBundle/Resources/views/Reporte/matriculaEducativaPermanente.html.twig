@@ -81,12 +81,10 @@
                                     <tr>
                                         <td>Estadistica</td>
                                         <td>
-                                            <button id="tour-13" onclick="document.forms['formEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
-
+                                            <button id="tour-13" onclick="document.forms['formEstadisticaPermanentePdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
                                                 <i class="fa fa-file-pdf-o"></i>
                                             </button>
-                                            <button id="tour-14" onclick="document.forms['formEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
-
+                                            <button id="tour-14" onclick="document.forms['formEstadisticaPermanenteXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
                                                 <i class="fa fa-file-excel-o"></i>
                                             </button>
 
@@ -96,11 +94,11 @@
                                         <td>Especialidades</td>
                                         <td>
 
-                                            <button id="tour-13" onclick="document.forms['formEspEstadisticaEspecialPdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
+                                            <button id="tour-13" onclick="document.forms['formEspEstadisticaPermanentePdf'].submit();" title="Descargar en formato PDF" class="btn btn-googleplus">
 
                                                 <i class="fa fa-file-pdf-o"></i>
                                             </button>
-                                            <button id="tour-14" onclick="document.forms['formEspEstadisticaEspecialXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
+                                            <button id="tour-14" onclick="document.forms['formEspEstadisticaPermanenteXls'].submit();" title="Descargar en formato EXCEL" class="btn btn-success">
 
                                                 <i class="fa fa-file-excel-o"></i>
                                             </button>
@@ -166,86 +164,18 @@
                     </div>
                 </div>
 
-                <form name="formEstadisticaEspecialPdf" id="formEstadisticaEspecialPdf" role="form" action="{{ path('estadistica_alternativa_informacion_general_print_pdf') }}" method="POST">
+                <form name="formEstadisticaPermanentePdf" id="formEstadisticaPermanentePdf" role="form" action="{{ path('estadistica_permanente_informacion_general_print_pdf') }}" method="POST">
                     <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
                     <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />     
                 </form> 
-                <form name="formEstadisticaEspecialXls" id="formEstadisticaEspecialXls" role="form" action="{{ path('estadistica_alternativa_informacion_general_print_xls') }}" method="POST">
+                <form name="formEstadisticaPermanenteXls" id="formEstadisticaPermanenteXls" role="form" action="{{ path('estadistica_permanente_informacion_general_print_xls') }}" method="POST">
                     <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
                     <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
                     <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />  
                     <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />   
-                </form>
-                <form name="formEspEstadisticaEspecialPdf" id="formEspEstadisticaEspecialPdf" role="form" action="{{ path('estadistica_esp_alternativa_informacion_general_print_pdf') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
-                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
-                </form>
-                <form name="formEspEstadisticaEspecialXls" id="formEspEstadisticaEspecialXls" role="form" action="{{ path('estadistica_esp_alternativa_informacion_general_print_xls') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
-                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
-                </form>
-
-                <form name="formEspCentrosPdf" id="formEspCentrosPdf" role="form" action="{{ path('estadistica_esp_alternativa_informacion_centro_print_pdf') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
-                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
-                </form>
-                <form name="formEspCentrosXls" id="formEspCentrosXls" role="form" action="{{ path('estadistica_esp_alternativa_informacion_centro_print_xls') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
-                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
-                </form>
-                <form name="formEspecialidadPdf" id="formEspecialidadPdf" role="form" action="{{ path('estadistica_especialidad_centro_print_pdf') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
-                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
-                    <input type="hidden" id="idesp" name="idesp" />
-                </form>
-                <form name="formEspecialidadXls" id="formEspecialidadXls" role="form" action="{{ path('estadistica_especialidad_centro_print_xls') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
-                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
-                    <input type="hidden" id="idespx" name="idespx" />
-                </form>
-                <form name="formCentroPdf" id="formCentroPdf" role="form" action="{{ path('estadistica_busqueda_especialidad_centro_print_pdf') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
-                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
-                    <input type="hidden" id="siecentrop" name="siecentrop" />
-                </form>
-                <form name="formCentroXls" id="formCentroXls" role="form" action="{{ path('estadistica_busqueda_especialidad_centro_print_xls') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
-                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
-                    <input type="hidden" id="siecentrox" name="siecentrox" />
-                </form>
-
-                <form name="formCentroEstPdf" id="formCentroEstPdf" role="form" action="{{ path('estadistica_busqueda_est_centro_print_pdf') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
-                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
-                    <input type="hidden" id="siecentroestp" name="siecentroestp" />
-                </form>
-                <form name="formCentroEstXls" id="formCentroEstXls" role="form" action="{{ path('estadistica_busqueda_est_centro_print_xls') }}" method="POST">
-                    <input type="hidden" name="gestion" value="{{ infoSubEntidad[0]['gestion'] }}" />
-                    <input type="hidden" name="periodo" value="{{infoSubEntidad[0]['periodo'] }}" />
-                    <input type="hidden" name="codigo" value="{{ infoEntidad.id|base64_encode }}" />
-                    <input type="hidden" name="rol" value="{{ infoEntidad.rolactual  }}" />
-                    <input type="hidden" id="siecentroestx" name="siecentroestx" />
-                </form>
+                </form>       
 
 
             {% endif %}
