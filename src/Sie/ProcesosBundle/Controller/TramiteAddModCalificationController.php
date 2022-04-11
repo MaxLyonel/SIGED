@@ -355,6 +355,27 @@ class TramiteAddModCalificationController extends Controller {
             $checkCuaderno = $request->get('checkCuaderno');
             $checkFormulario = $request->get('checkFormulario');
 
+
+
+            $dataInscription = array(
+                "gestion"=>$gestionInscripcion ,
+                "nivelId"=>$inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId(),
+                "nivel"=>$nivelInscripcion,
+                "gradoId"=>$inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId(),
+                "grado"=>$gradoInscripcion,
+                "paraleloId"=>$inscripcion->getInstitucioneducativaCurso()->getParaleloTipo()->getId(),
+                "paralelo"=>$paraleloInscripcion,
+                "turnoId"=>$inscripcion->getInstitucioneducativaCurso()->getTurnoTipo()->getId(),
+                "turno"=>$turnoInscripcion,
+                "keyId"=>"",
+                "notasRequest"=>"",
+                "idTramite"=>"",
+                "flujoTipo"=>$flujoTipo,
+                "sie"=>$sieInscripcion,
+                "posSelected"=>0,
+                "codigoRude"=>$codigoRude
+            );
+
             // ARMAMOS EL ARRAY DE LA DATA
             $data = array(
                 'idInscripcion'=> $idInscripcion,
@@ -377,6 +398,7 @@ class TramiteAddModCalificationController extends Controller {
                 'flujoTipo'=>$flujoTipo,
                 'notas'=> $notas,
                 'notasCualitativas'=>$notasCualitativas,
+                'dataInscription'=>array($dataInscription),
                 'justificacion'=>$justificacion,
                 'checkInforme'=>$checkInforme,
                 'checkCuaderno'=>$checkCuaderno,
