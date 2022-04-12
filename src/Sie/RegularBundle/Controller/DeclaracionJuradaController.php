@@ -85,7 +85,8 @@ class DeclaracionJuradaController extends Controller {
             $query = $em->getConnection()->prepare('SELECT get_ue_tuicion (:user_id::INT, :sie::INT, :roluser::INT)');
             $query->bindValue(':user_id', $this->session->get('userId'));
             $query->bindValue(':sie', $institucionEducativa->getId());
-            if($this->session->get('sysname') == 'DIPLOMAS' or $this->session->get('sysname') == 'TRAMITES'){
+            
+            if($this->session->get('sysname') == 'DIPLOMAS' or $this->session->get('sysname') == 'TRAMITES' or $this->session->get('sysname') == 'TRAMITE'){
                 $defaultTramiteController = new defaultTramiteController();
                 $defaultTramiteController->setContainer($this->container);
                 $rolOpcionTramite = 0;
