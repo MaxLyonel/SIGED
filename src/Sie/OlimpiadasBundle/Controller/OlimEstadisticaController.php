@@ -93,7 +93,7 @@ class OlimEstadisticaController extends Controller{
 
 		if($nivel == 0){
 			$query = $em->getConnection()->prepare("
-				select dep.id, dep.codigo, dep.lugar as nombre, COALESCE(oli.cantidad,0) as cantidad
+				select dep.id, cast(dep.codigo as integer) as codigo, dep.lugar as nombre, COALESCE(oli.cantidad,0) as cantidad
 				from (select * from lugar_tipo where lugar_nivel_id = 1) as dep
 				left join (
 				select lt4.id, count(*) as cantidad from olim_estudiante_inscripcion oei
@@ -110,15 +110,15 @@ class OlimEstadisticaController extends Controller{
 				group by lt4.id
 				) as oli on oli.id = dep.id
 				union all 
-				select 1 as id, '0' as codigo, 'Bolivia' as nombre, count(*) as cantidad from olim_estudiante_inscripcion oei
+				select 1 as id, cast('0' as integer) as codigo, 'Bolivia' as nombre, count(*) as cantidad from olim_estudiante_inscripcion oei
 				where oei.gestion_tipo_id = :gestion::double precision
-				order by cantidad desc, nombre asc
+				order by cantidad desc, codigo asc, nombre asc
 			");
 		}
 
 		if($nivel == 1){
 			$query = $em->getConnection()->prepare("
-				select dis.id, dis.codigo, UPPER(dis.lugar) as nombre, COALESCE(oli.cantidad,0) as cantidad
+				select dis.id, cast(dis.codigo as integer) as codigo, UPPER(dis.lugar) as nombre, COALESCE(oli.cantidad,0) as cantidad
 				from (select distinct lt.* from lugar_tipo as lt inner join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id inner join jurisdiccion_geografica as jg on jg.lugar_tipo_id_distrito = lt.id where lt.lugar_nivel_id = 7 and lt1.codigo = '".$codigo."') as dis
 				left join (
 				select lt5.id, count(*) as cantidad from olim_estudiante_inscripcion oei
@@ -136,7 +136,7 @@ class OlimEstadisticaController extends Controller{
 				group by lt5.id
 				) as oli on oli.id = dis.id
 				union all 
-				select lt4.id, lt4.codigo, UPPER(lt4.lugar) as nombre, count(*) as cantidad from olim_estudiante_inscripcion oei
+				select lt4.id, cast(lt4.codigo as integer) as codigo, UPPER(lt4.lugar) as nombre, count(*) as cantidad from olim_estudiante_inscripcion oei
 				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
 				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
 				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
@@ -149,13 +149,13 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
 				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
 				group by lt4.id, lt4.codigo, lt4.lugar
-				order by cantidad desc, nombre asc
+				order by cantidad desc, codigo asc, nombre asc
 			");
 		}
 
 		if($nivel == 7){
 			$query = $em->getConnection()->prepare("
-			select ue.id, ue.codigo, UPPER(ue.nombre) as nombre, COALESCE(oli.cantidad,0) as cantidad
+			select ue.id, cast(ue.codigo as integer) as codigo, UPPER(ue.nombre) as nombre, COALESCE(oli.cantidad,0) as cantidad
 			from (
 			select ie.id, cast(ie.id as varchar) as codigo, ie.institucioneducativa as nombre from lugar_tipo as lt 
 			inner join jurisdiccion_geografica as jg on jg.lugar_tipo_id_distrito = lt.id
@@ -174,7 +174,7 @@ class OlimEstadisticaController extends Controller{
 			group by ie.id
 			) as oli on oli.id = ue.id
 			union all 
-			select lt.id, lt.codigo, UPPER(lt.lugar) as nombre, count(*) as cantidad from olim_estudiante_inscripcion oei
+			select lt.id, cast(lt.codigo as integer) as codigo, UPPER(lt.lugar) as nombre, count(*) as cantidad from olim_estudiante_inscripcion oei
 			inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
 			inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
 			inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
@@ -182,7 +182,7 @@ class OlimEstadisticaController extends Controller{
 			left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
 			where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0			
 			group by lt.id, lt.codigo, lt.lugar
-			order by cantidad desc, nombre asc
+			order by cantidad desc, codigo asc, nombre asc
 			");
 		}
 		
@@ -348,13 +348,122 @@ class OlimEstadisticaController extends Controller{
 			} 	
 		}
 		$inscritos = $this->getRegistradosAreaEtapa1($nivel,$codigo,$gestionActual);
-
+		$inscritosArea = $this->getRegistradosAreaEtapa($nivel,$codigo,$gestionActual);
+		//dump($inscritos,$inscritosArea);die;
 
 		return $this->render('SieOlimpiadasBundle:OlimEstadistica:registradosArea.html.twig', array(
+			'estadisticaArea'=>$inscritosArea,
 			'estadistica'=>$inscritos,
 			'nivel'=>$nivel,
 			'nivelSiguiente'=>$nivelSiguiente,
 		));
+	}
+
+
+	/**
+     * Busca la cantidad de registros por área de la etapa 1 según el nivel de desagregacion, codigo del lugar y la gestión
+     * Autor: rcanaviri
+     * @param $nivel,$codigo,$gestion
+     * @return $entity
+     */
+	private function getRegistradosAreaEtapa($nivel,$codigo,$gestion){
+		$em = $this->getDoctrine()->getManager();
+
+		if($nivel == 0){
+			$query = $em->getConnection()->prepare("				
+				select omt.id, omt.materia as nombre
+				, count(*) as cantidad 
+				from olim_estudiante_inscripcion oei
+				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+				left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+				left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+				left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+				where oei.gestion_tipo_id = :gestion::double precision and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by omt.id, omt.materia
+				union all 
+				select 0 as id, 'Total' as nombre
+				, count(*) as cantidad 
+				from olim_estudiante_inscripcion oei
+				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
+				where oei.gestion_tipo_id = :gestion::double precision
+				order by id, nombre
+			");
+		}
+
+		if($nivel == 1){
+			$query = $em->getConnection()->prepare("				
+				select omt.id, omt.materia as nombre
+				, count(*) as cantidad 
+				from olim_estudiante_inscripcion oei
+				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+				left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+				left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+				left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by omt.id, omt.materia
+				union all 
+				select 0 as id, 'Total' as nombre
+				, count(*) as cantidad 
+				from olim_estudiante_inscripcion oei
+				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
+				left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
+				left join lugar_tipo as lt2 on lt2.id = lt1.lugar_tipo_id
+				left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
+				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
+				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."'
+				order by id, nombre	
+			");
+		}
+
+		if($nivel == 7){
+			$query = $em->getConnection()->prepare("
+				select omt.id, omt.materia as nombre
+				, count(*) as cantidad 
+				from olim_estudiante_inscripcion oei
+				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
+				where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				group by omt.id, omt.materia
+				union all 
+				select 0 as id, 'Total' as nombre
+				, count(*) as cantidad 
+				from olim_estudiante_inscripcion oei
+				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
+				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
+				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
+				inner join institucioneducativa as ie on ie.id  =  iec.institucioneducativa_id
+				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
+				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
+				where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' 
+				order by id, nombre	
+			");
+		}
+		
+		$query->bindValue(':gestion', $gestion);
+		$query->execute();
+		$inscritos = $query->fetchAll();
+		return $inscritos;
 	}
 
 	/**
@@ -414,7 +523,7 @@ class OlimEstadisticaController extends Controller{
 				from olim_estudiante_inscripcion oei
 				inner join olim_materia_tipo as omt on omt.id = oei.materia_tipo_id
 				where oei.gestion_tipo_id = :gestion::double precision
-				order by cantidad desc, nombre asc
+				order by cantidad desc, codigo asc, nombre asc
 			");
 		}
 
@@ -478,7 +587,7 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
 				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
 				group by lt4.id, lt4.codigo, lt4.lugar
-				order by cantidad desc, nombre asc	
+				order by cantidad desc, codigo asc, nombre asc	
 			");
 		}
 
@@ -538,7 +647,7 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
 				where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0			
 				group by lt.id, lt.codigo, lt.lugar
-				order by cantidad desc, nombre asc
+				order by cantidad desc, codigo asc, nombre asc
 			");
 		}
 		
