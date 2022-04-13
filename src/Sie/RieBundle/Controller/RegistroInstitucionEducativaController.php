@@ -447,8 +447,9 @@ class RegistroInstitucionEducativaController extends Controller {
      */
     public function deleteAction(Request $request){
         $em = $this->getDoctrine()->getManager();
+       
         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
-
+        
         if(!$entity){
             throw $this->createNotFoundException('No se puede encontrar la Institución Educativa.');
         }
@@ -458,7 +459,7 @@ class RegistroInstitucionEducativaController extends Controller {
         $nivelesInstitucionArray = $this->obtieneInstitucionNivelArray($entity->getId());
         $areformInstitucionArray = $this->obtieneInstitucionAreaFormArray($entity->getId());
         $datoSede                = $this->obtieneDatosSedeArray($request->get('idRie'), 'edit');
-
+       
         if($datoSede == 0){ return $this->redirect($this->generateUrl('rie_list')); }
 
         if($eliminar = $this->validarEliminacionInstituto($entity->getId())){ //opcion 1
@@ -466,9 +467,10 @@ class RegistroInstitucionEducativaController extends Controller {
         }else{ //opcion 0
             $this->get('session')->getFlashBag()->add('msgSearch', ' El instituto tiene subsedes ó tiene carreras autorizadas, no podrá eliminarlo. Consulte con el administrador');
         }
-
+        //dump($request->get('idRie'));
+        //dump($entity);die;
         $form = $this->createFormBuilder()
-        ->setAction($this->generateUrl('rie_delete_itt'))
+        //->setAction($this->generateUrl('rie_delete_itt'))
         ->add('idRie', 'hidden', array('data' => $entity->getId()))
         ->add('idRieSede', 'hidden', array('data' => $datoSede['codSede']))
         ->add('rie', 'text', array('label' => 'Código RIE', 'data' => $entity->getId(), 'attr' => array('class' => 'form-control', 'readonly' => true)))
@@ -497,12 +499,16 @@ class RegistroInstitucionEducativaController extends Controller {
      * elimina el estado de ITT Estado = 11 (ELIMINADO)
      */
     public function deleteittAction(Request $request){
-        dump($request);die;
     	$em = $this->getDoctrine()->getManager();
-        $form = $request->get('form');
-        $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['idRie']);
-        $entity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById(11));
-        $entity->setObsRue('ELIMINADO POR ERROR DE REGISTRO');
+        
+        $estado = $em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->findOneById(11);
+
+        $sesion = $request->getSession();
+        $id_usuario = $sesion->get('userId');
+
+        $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
+        $entity->setEstadoinstitucionTipo($estado);
+        $entity->setObsRue('ELIMINADO POR ERROR DE REGISTRO  usuario:'.$id_usuario);
         $em->persist($entity);
         $em->flush();
         return $this->redirect($this->generateUrl('rie_list'));
