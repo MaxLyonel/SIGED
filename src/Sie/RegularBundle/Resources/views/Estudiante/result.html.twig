@@ -506,6 +506,42 @@
                         <!--end mode3 form-->
 
 
+                        <!--mode4 form-->
+                        {% if form_mode4 is empty %}
+
+                        {%else%}
+
+                            {{form_start(form_mode4,{'attr':{'data-toggle': 'validator','form':'role', 'id':'formMode1Id'} })}}
+
+                            {% if calidad is defined %}
+                                <input type="hidden" id="form_calidad" name="form[calidad]" value="{{calidadValidacionId}}">
+                            {% endif %}
+                            <h5>MODIFICACION Y/O INCLUSIÓN DE FECHA DE NACIMIENTO</h5>
+                            <h6>Los campos con (*) son requeridos</h6>
+                            <div id="no-more-tables">
+                                <table class="table table-bordered table-hover cf">
+                                    <thead class="cf">
+                                        <tr class="info">
+                                            <th>Fecha Nacimiento</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td data-title="Fecha Nac.">
+                                                <div id="sandbox-container">
+                                                    {{form_widget(form_mode4.fechaNacimiento)}}
+                                                </div>
+                                            </td>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            {{form_widget(form_mode4.save)}}
+                            {{form_end(form_mode4)}}
+
+                            <div id="resutlUpdateId"></div>
+                        {% endif %}
+
                     </div>
                 </div>
             </div>

@@ -71,6 +71,7 @@
                                                 <input type="hidden" id="form_mode1" name="form[mode1]" value="1">
                                                 <input type="hidden" id="form_mode3" name="form[mode3]" value="1">
                                                 <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_calidad" name="form[calidad]" value="{{detalle.id}}">
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                             </form>
                                             <form action="{{path('ccalidad_ratificar_edad')}}" method="post">
