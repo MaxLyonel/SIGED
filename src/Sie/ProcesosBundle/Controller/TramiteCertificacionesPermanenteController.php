@@ -1413,7 +1413,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $pdf->Ln(11);
                 $contenido='<table border="0" cellpadding="1.5"> ';
                 $contenido.='<tr><td width="10.3%">&nbsp;</td><td  width="79.4%">';
-                $contenido.='<p style="text-align: justify;">Por haber concluido de manera satisfactoria con los Lineamientos Metodol&oacute;gicos del &Aacute;rea de Educaci&oacute;n Permanente del Subsistema de Educación Alternativa y Especial, conforme a la Ley de la Educación N° 070 “Avelino Siñani – Elizardo Pérez”, desarrollado por el Centro de  Educación Alternativa: "'.($request->get('centro') ? $request->get('centro') : '').'"</p>';
+                $contenido.='<p style="text-align: justify;">Por haber logrado de manera satisfactoria los objetos del curso en el marco de los Lineamientos Metodol&oacute;gicos del &Aacute;rea de Educaci&oacute;n Permanente del Subsistema de Educación Alternativa y Especial, conforme a la Ley de la Educación N° 070 “Avelino Siñani – Elizardo Pérez”, desarrollado por el Centro de  Educación Alternativa: "'.($request->get('centro') ? $request->get('centro') : '').'"</p>';
                 $contenido.='</td><td width="10.3%">&nbsp;</td></tr>';
                 $contenido.='</table>';                             
                 $pdf->writeHTML($contenido, true, false, true, false, '');
@@ -1439,7 +1439,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             }
            $pdf->Ln(20);
           
-            $pdf->Image('@'.$firmaDDE ,120, 260, 45, 45, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+            $pdf->Image('@'.$firmaDDE ,120, 265, 45, 45, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
             $firmas='<table cellpadding="0.5" style="font-size: 8px;">';
             $firmas.='<tr><td align="center" width="15%"><br/></td>
             <td align="center" width="36%"><br/><br/><br/><br/>__________________________________<br/>Directora(or) Centro EDUPER<br>'.''.'Sello y Firma</td>
