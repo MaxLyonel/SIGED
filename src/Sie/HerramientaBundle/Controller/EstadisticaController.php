@@ -315,8 +315,13 @@ class EstadisticaController extends Controller {
         $fechaEstadistica = $fechaActual->format('d-m-Y H:i:s');;
         $gestionProcesada = $gestionActual;
         
-        $chartDependencia = $chartController->chartPie($entityEstadistica[2],"Unidades Educativas según Dependencia",$gestionProcesada,"Unidades Educativas","chartContainerDependencia");
-        $chartArea = $chartController->chartSemiPieDonut3d($entityEstadistica[3],"Unidades Educativas según Área Geográfica",$gestionProcesada,"Unidades Educativas","chartContainerArea");
+        if(count($entityEstadistica)>0){
+            $chartDependencia = $chartController->chartPie($entityEstadistica[2],"Unidades Educativas según Dependencia",$gestionProcesada,"Unidades Educativas","chartContainerDependencia");
+            $chartArea = $chartController->chartSemiPieDonut3d($entityEstadistica[3],"Unidades Educativas según Área Geográfica",$gestionProcesada,"Unidades Educativas","chartContainerArea");
+        } else {
+            $chartDependencia = "";
+            $chartArea = "";
+        }
         
         $link = true;
         if ($rolUsuario == 10){
@@ -1262,6 +1267,7 @@ class EstadisticaController extends Controller {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        //$gestion = 2021;
 
         $em = $this->getDoctrine()->getManager();
 
@@ -1417,7 +1423,7 @@ class EstadisticaController extends Controller {
      * @return type
      */
     public function buscaEstadisticaModularUnidadEducativaAreaRol($area,$rol,$gestion) {
-
+        //$gestion = 2021; 
         $em = $this->getDoctrine()->getManager();
 
         $queryEntidad = $em->getConnection()->prepare("
@@ -1546,7 +1552,7 @@ class EstadisticaController extends Controller {
                 union all
                 
                 select 3 as tipo_id, 'Área Geográfica' as tipo_nombre, case t.area when 'U' then 1 when 'R' then 2 else 0 end as id, case t.area when 'U' then 'Urbano' when 'R' then 'Rural' else '' end as nombre
-                , sum(cantidad) as cantidad from tabla as t 
+                , sum(cantidad) as cantid ad from tabla as t 
                 group by t.area
                 
                 order by tipo_id, id

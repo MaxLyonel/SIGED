@@ -64,4 +64,4 @@ security:
         - { path: ^/pnpsie, roles: [ROLE_TECSS_*,ROLE_TECSN_PNP,ROLE_TECSDE_PNP,ROLE_TECSDI_PNP] }
         - { path: ^/diplomas/documento/bachiller/humanidades, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/diplomas, roles: [ROLE_RECUE_DIP,ROLE_RECD_DIP,ROLE_VENRD_DIP,ROLE_AUTT_DIP,ROLE_IMPD_DIP,ROLE_LEGD_DIP,ROLE_TECSN_SIG,ROLE_TECSDE_SIG,ROLE_TECSDI_SIG] }
-        - { path: ^/rittsie, roles: [ROLE_TECSN_RIE,ROLE_TECSDE_RIE] }
+        - { path: ^/rittsie, roles: [ROLE_TECSN_RIE,ROLE_TECSDE_RIE,ROLE_CONN_] }
