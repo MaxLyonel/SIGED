@@ -1410,14 +1410,14 @@ class TramiteCertificacionesPermanenteController extends Controller {
             if($request->get('idnivel')==1 || $request->get('idnivel')==20  ){ // CORRESPONDE A NIVEL BASICO O AUXILIAR                
                 //de 500 horas, desarrollado por el Centro de Educación Permanente:
                 //de 1000 horas, desarrollado por el Centro de Educación Permanente
-                $pdf->Ln(11);
+                $pdf->Ln(10);
                 $contenido='<table border="0" cellpadding="1.5"> ';
                 $contenido.='<tr><td width="10.3%">&nbsp;</td><td  width="79.4%">';
                 $contenido.='<p style="text-align: justify;">Por haber logrado de manera satisfactoria los objetos del curso en el marco de los Lineamientos Metodol&oacute;gicos del &Aacute;rea de Educaci&oacute;n Permanente del Subsistema de Educación Alternativa y Especial, conforme a la Ley de la Educación N° 070 “Avelino Siñani – Elizardo Pérez”, desarrollado por el Centro de  Educación Alternativa: "'.($request->get('centro') ? $request->get('centro') : '').'"</p>';
                 $contenido.='</td><td width="10.3%">&nbsp;</td></tr>';
                 $contenido.='</table>';                             
                 $pdf->writeHTML($contenido, true, false, true, false, '');
-                $pdf->Ln(17);
+                $pdf->Ln(16);
                 $pdf->Cell(25, 7, '', 0, 0, 'L');                
                 $mes=$this->ObtenerMes(date('m'));
                 $pdf->Cell(0, 2, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
@@ -1430,14 +1430,14 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $contenido.='</td><td width="10.3%">&nbsp;</td></tr>';
                 $contenido.='</table>';
                 $pdf->writeHTML($contenido, true, false, true, false, '');
-                $pdf->Ln(17);
+                $pdf->Ln(16);
                 $pdf->Cell(25, 7, '', 0, 0, 'L');                
                 $mes=$this->ObtenerMes(date('m'));
                 $pdf->Cell(0, 2, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
                 $pdf->Ln(5);
                 
             }
-           $pdf->Ln(20);
+           $pdf->Ln(16);
           
             $pdf->Image('@'.$firmaDDE ,120, 265, 45, 45, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
             $firmas='<table cellpadding="0.5" style="font-size: 8px;">';
