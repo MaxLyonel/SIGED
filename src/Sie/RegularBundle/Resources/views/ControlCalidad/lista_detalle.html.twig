@@ -31,16 +31,16 @@
                                     <td data-title="Gestion">{{detalle.gestionTipo}}</td>
                                     <td data-title="Observacion">{{detalle.obs}}</td>
                                     <td data-title="Unidad Educativa">{{detalle.institucionEducativaId}}</td>
-                                    <td data-title="Acciones">
+                                    <td data-title="Acciones"> 
                                     {# Para Unidades Educativas y Distritos #}
                                     
-                                    {% if app.session.get('roluser') in [9,10] %}
+                                    {% if app.session.get('roluser') in [7,9,10] %}
                                         {% if regla.id == 63  %}
 
                                             <button type="button" class="btn btn-link" onclick="editar_datos('{{detalle.gestionTipo}}','{{detalle.obs}}','{{detalle.id}}','{{detalle.institucionEducativaId}}','{{detalle.llave}}')"><span class="fa fa-pencil"></span>  Modificar</button>
                                             
                                         {% endif %}
-                                        {% if regla.id == 2 or regla.id == 3 or regla.id == 4 or regla.id == 6 or regla.id == 8 or regla.id == 12 or regla.id == 13 or regla.id == 16 %}
+                                        {% if regla.id == 2 or regla.id == 3 or regla.id == 4 or regla.id == 6  or regla.id == 12 or regla.id == 13 or regla.id == 16 %} {#or regla.id == 8#}
                                             <form action="{{path('ccalidad_verificar')}}" method="post">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
                                                 <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
@@ -50,6 +50,7 @@
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del estado actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
                                             </form>
                                         {% endif %}
+                                         
                                         {% if regla.id == 1 %}
                                             <form action="{{path('ccalidad_verificar')}}" method="post">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
@@ -71,6 +72,7 @@
                                                 <input type="hidden" id="form_mode1" name="form[mode1]" value="1">
                                                 <input type="hidden" id="form_mode3" name="form[mode3]" value="1">
                                                 <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_calidad" name="form[calidad]" value="{{detalle.id}}">
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                             </form>
                                             <form action="{{path('ccalidad_ratificar_edad')}}" method="post">
@@ -131,7 +133,7 @@
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
                                             </form>
                                         {% endif %}
-                                        {% if regla.id == 25 %}
+                                        {% if regla.id in 25 %}
                                             {% set rudes = detalle.llave|split('|') %}
                                             <form action="{{path('specialmodificationdata_student_index')}}" method="post" target="_blank">
                                                 <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
@@ -203,9 +205,23 @@
                                     {% endif %}
                                     
                                     {# Para Distritos #}
-                                    {% if app.session.get('roluser') == 10 %}
+                                    {% if app.session.get('roluser') in [7,10] %}
+                                         {% if regla.id in [24,25,26] %}
+                                            {% set rudes = detalle.llave|split('|') %}
+                                            <form action="{{path('specialmodificationdata_student_index')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_rude" name="form[rude]" value="{{rudes[0]}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Modificar Datos: {{rudes[0]}}</button>
+                                            </form>
+                                            <form action="{{path('specialmodificationdata_student_index')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_rude" name="form[rude]" value="{{rudes[1]}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Modificar Datos: {{rudes[1]}}</button>
+                                            </form>
+                                        {% endif %}
                                         
-                                        {% if regla.id in [24,26]  %}
+                                        {% if regla.id in [24,26,8]  %}
+                                        
                                             <form action="{{path('rudeunification_index')}}" method="post"  target="_blank">
                                                 <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
                                                 <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
@@ -213,13 +229,34 @@
                                                 <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
                                                 <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"> 
-                                                <div style="">Ir a solución</div> 
+                                                <div style=""><i class="fa fa-compress"></i> Unificar RUDES</div> 
                                                 </button>
                                             </form>
-                                            <div class="justificacion">
+                                             
+                                                <form action="{{path('homonimo_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
+                                                    <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"> 
+                                                    <div style=""><i class="fa fa-random"></i> Son Homónimos</div> 
+                                                    </button>
+                                                </form>
+                                           {# <div class="justificacion">
                                                 <button type="submit" class="btn btn-link" onclick="justificarHomonimoGemelo({{detalle.id}})"><i class="fa fa-edit"></i> Omitir: Homónimos/Gemelas(os)</button>
                                             </div>
+                                            #}
                                         {% endif %}
+                                         {% if regla.id in [24,25,26,8]  %}
+                                            <form action="{{path('ccalidad_verificar')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                            </form>
+                                         {% endif %}
                                         {% if regla.id == 6 %}
                                             <form action="{{path('regularizacionDobleInscripcion_result')}}" method="post">
                                                 <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
@@ -227,7 +264,7 @@
                                                 <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
                                             </form>
                                         {% endif %}
-                                        {% if regla.id == 8 %}
+                                        {% if regla.id == 88888 %}
                                             {% if detalle.solucionTipoId == 1 %}
                                                 <form action="{{path('deleteInscriptionQa_index')}}" method="post"  target="_blank">
                                                     <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
@@ -244,7 +281,7 @@
                                                     <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
                                                     <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
                                                     <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');">
-                                                    <div style="">Ir a solución</div>
+                                                    <div style="">Ir a solución..</div>
                                                     </button>
                                                 </form>
                                             {% endif %}

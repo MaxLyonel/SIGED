@@ -1,0 +1,24 @@
+Sie\AppWebBundle\Entity\EspecialMomentoTipo:
+    type: entity
+    table: especial_momento_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        momento:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        vigente:
+            type: boolean
+            nullable: true
+            comment: ''
+    lifecycleCallbacks: {  }

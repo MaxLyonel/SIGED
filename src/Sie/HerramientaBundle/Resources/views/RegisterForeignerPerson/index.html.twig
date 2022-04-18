@@ -22,143 +22,178 @@
 {% block contentoption %}
 
 
-    <!-- Start page header -->
-    <div class="header-content">
-        <h2><i class="fa fa-table"></i> Registro Diplomático/Extranjero <span></span></h2>
-        <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aquí:</span>
-            <ol class="breadcrumb">
-                <li>
-                    <i class="fa fa-home"></i>
-                    <a href="#">Registro Diplomático/Extranjero</a>
-                    <i class="fa fa-angle-right"></i>
-                </li>
-                <li class="active"></li>
-            </ol>
-        </div><!-- /.breadcrumb-wrapper -->
-    </div><!-- /.header-content -->
-    <!--/ End page header -->
+<!-- Start page header -->
+<div class="header-content">
+	<h2><i class="fa fa-table"></i> Registro Diplomáticos <span></span></h2>
+	<div class="breadcrumb-wrapper hidden-xs">
+		<span class="label">Usted esta aquí:</span>
+		<ol class="breadcrumb">
+			<li>
+				<i class="fa fa-home"></i>
+				<a href="#">Registro Diplomático</a>
+				<i class="fa fa-angle-right"></i>
+			</li>
+			<li class="active"></li>
+		</ol>
+	</div><!-- /.breadcrumb-wrapper -->
+</div><!-- /.header-content -->
+<!--/ End page header -->
 
-    <!-- /.row -->
-	<div id="app" v-cloak>
-		<div v-if="cortina" class="cortina">
-			{# <i class="fa fa-refresh fa-spin"></i> Procesando... #}
-		</div>
-		<div class="body-content animated fadeIn">
+<!-- /.row -->
+<div id="app" v-cloak>
+	{#<div v-if="cortina" class="cortina">
+		<i class="fa fa-refresh fa-spin"></i> Procesando... 
+	</div>#}
+	<div class="body-content animated fadeIn">
 
-			<div class="row">
-				<div class="col-md-12">
-					<div class="panel panel-default">
-						<div class="panel-body">
-								<h2 class="titulo">Registro Diplomático/Extranjero </h2>
-								<div class="col-md-12">
-									<div role="tabpanel">
-										<!-- Nav tabs -->
-										<ul class="nav nav-tabs" role="tablist">
-											<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
-												<a role="tab" data-toggle="tab">Datos Personales</a>
-											</li>
-										</ul>
-										<!-- Tab panes -->
-										<div class="tab-content">
-											<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<h3 class="titulo">Registro Hijos de Diplomáticos con Credencial de Cancilleria </h3>
+						<div class="col-md-12">
+							<div role="tabpanel">
+								<!-- Nav tabs -->
+								<ul class="nav nav-tabs" role="tablist">
+									<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
+										<a role="tab" data-toggle="tab">Datos Personales</a>
+									</li>
+								</ul>
+								<!-- Tab panes -->
+								<div class="tab-content">
+									<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
 
-												<div class="row">
-													<div class="form-group col-md-4">
-														<label>(*)Nombre(s)</label>
-														<input type="text" v-model="newperson.nombre" class="form-control jupper" maxlength="" v-on:keypress="">
-													</div>
-													<div class="form-group col-md-4">
-														<label>Paterno </label>
-														<input type="text" v-model="newperson.paterno" class="form-control jupper" maxlength="" v-on:keypress="">
-													</div>
-													<div class="form-group col-md-4">
-														<label>Materno  </label>
-														<input type="text" v-model="newperson.materno" class="form-control jupper" maxlength="" v-on:keypress="">
-													</div>													
-												</div>														
-												<div class="row">
-													<div class="form-group col-md-3">
-														<label>(*)F. Nacimiento  </label>
-														<input type="text" v-model="newperson.fechaNacimiento" class="form-control jupper" maxlength="" v-on:keypress="" id="form_idfecnac">
-													</div>
-
-													<div class="form-group col-md-3">
-														<label>(*)Género </label>														
-						                                <select name="arrGenero" id="idarrGenero_p" v-model="newperson.generoId" class="custom-select form-control">
-						                                  <option v-for="item in DBGenero"  :value="item.generoId">${ item.genero }</option>       
-						                                </select>														
-													</div>
-
-													<div class="form-group col-md-6">
-														<label>(*)País  </label>
-														{# <input type="text" v-model="newperson.pais" class="form-control jupper" maxlength="" v-on:keypress=""> #}
-						                                <select name="arrPais" id="idarrPais_p" v-model="newperson.paisId" class="custom-select form-control">
-						                                  <option v-for="item in DBPais"  :value="item.paisId">${ item.pais }</option>       
-						                                </select>														
-													</div>													
-												</div>
-												<div class="row">											
-													<div class="form-group col-md-5">
-														<label>(*)Nro. Documento </label>
-														<input type="text" v-model="newperson.run" class="form-control jupper" maxlength="" v-on:keypress="">
-													</div>
-													<div class="form-group col-md-7">
-														<label>(*)Lugar de Nacimiento  </label>
-														<input type="text" v-model="newperson.lugarNacimiento" class="form-control jupper" maxlength="" v-on:keypress="">
-													</div>
-												</div>												
-												<div class="row">
-													<div class="form-group col-md-6">
-														<label>(*)Adj. Documento </label>
-														<input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
-													</div>
-													<div class="form-group col-md-6">
-														<label>(*)Tipo de Registro </label>
-														<select name="arrTipoPersona" id="arrTipoPersona_id" class="custom-select form-control" v-model="newperson.typeofregister"><option value="13">Diplomático</option><option value="14">Extranjero</option></select>				
-													</div>													
-													
-												</div>																																				
+										<form>
+											<div class="form-group">
+												<label for="rude">Código RUDE: </label>
+												<input type="text" v-model="dataNewStudent.rude"  class="form-control" id="exampleInputPassword1" placeholder="Rude">
 											</div>
-										</div>
+											<button v-on:click="lookforrude()" type="button" class="btn btn-success"><i class="fa fa-search"></i> Buscar && Validar</button>
+										</form>
+
+																																										
 									</div>
 								</div>
-								<div class="col-md-12 text-center" v-if="!swregistry">
-									<button type="button" class="btn btn-primary" @click="register">Registrar</button>
-								</div>							
+							</div>
 
-						</div>
+							{# tabla con los datos encontrados #}
+							<div v-if="buscando" class="text-center">
+								<img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+							</div>
+
+							<div style="padding: 15px;">
+
+							<div v-if=" message != '' && existStudent != ''">
+                            	<!-- data new studen  -->
+                            	<p class=" bg-primary">&nbsp&nbsp  INFORMACIÓN ESTUDIANTE</p>
+                            	<table class="table table-dark">
+									<tbody>
+									<tr>
+										
+										<th>Cod. RUDE</th>
+										<th>CI-COMPL.</th>
+										<th>Paterno</th>
+										<th>Materno</th>
+										<th>Nombre(s)</th>
+										<th>Fecha Nacimiento</th>	
+									</tr>
+									
+									<tr v-for="(DBstudent,rindex) in DBstudentExist">
+										
+										<td>${DBstudent.rude | uppercase}</td>
+										<td>${DBstudent.carnet} ${DBstudent.complemento}</td>
+										<td>${DBstudent.paterno | uppercase}</td>
+										<td>${DBstudent.materno | uppercase}</td>
+										<td>${DBstudent.nombre | uppercase}</td>
+										<td>${DBstudent.fecNac} </td>										
+									</tr>
+
+									<tr >
+										<th colspan="6" align="left">
+										<button v-on:click="mostrarFormulario()" type="button" class="btn btn-success" title="Caso de Homónimo"> Proceder con  el Registro de Datos </button>								    		
+										</th>
+									</tr>
+									</tbody>
+								</table>
+                        	</div>
+
+							<br>
+
+							<div v-if="responseprocess">
+								                         	
+								<p class="encabezado bg-primary">&nbsp&nbsp  INFORMACIÓN COMPLEMENTARIA (CREDENCIAL CANCILLERIA)</p>
+
+								<div class="row">
+									<div class="col-sm-3">
+										<label for="pais">Pais Procedencia:</label>                                  
+										<select name="arrPais" id="idarrPais_p" v-model="dataNewStudent.paisId" class="custom-select js-example-basic-multiple form-control">
+											<option v-for="item in DBPais"  :value="item.paisId">${ item.pais }</option>       
+										</select>
+									</div>
+
+									 <div class="col-sm-3">
+										<label for="Numero de Documento">Numero de Documento Diplomatico:</label>
+										<input type="text" class="form-control" id="fromue" placeholder="" v-model="dataNewStudent.numero_documento" maxlength="15" >
+									</div>
+
+									<div class="col-sm-2">
+										<label for="pais">Categoria Documento:</label>                                  
+										<select name="arrCat" id="categoria_p" v-model="dataNewStudent.categoriaId" class="custom-select form-control">
+											<option v-for="item in categorias"  :value="item.id">${ item.description }</option>       
+										</select>
+									</div>
+
+									<div class="col-sm-2">
+										<label for="">Fecha de Vencimiento :</label>
+										<input type="text" class="form-control" id="fecha_vencimiento" placeholder="" v-model="dataNewStudent.fecha_vencimiento" maxlength="50" type="tel" v-mask="'##/##/####'" >
+									</div>
+
+									<div class="col-sm-2">
+										<label for="">Nro. Pasaporte :</label>
+										<input type="text" class="form-control" id="nro_pasaporte" placeholder="" v-model="dataNewStudent.nro_pasaporte" maxlength="15" >
+									</div>
+								</div>
+
+								</br>
+
+								<div class="row">
+									 <div class="col-sm-4">
+										<label for="">Embajada:</label>
+										<input type="text" class="form-control" id="embajada" placeholder="" v-model="dataNewStudent.embajada" maxlength="100" >
+									</div>
+
+									<div class="col-sm-4">
+										<label for="">Cargo Diplomatico:</label>
+										<input type="text" class="form-control" id="cargo" placeholder="" v-model="dataNewStudent.cargo" maxlength="150" >
+									</div>
+
+									<div class="col-sm-4" >
+										<label for="genero">Adjuntar Credencial Digitalizada</label>
+										<input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
+									</div>
+
+								</div>
+
+								</br>
+
+								<div class="row" style="padding: 15px;">
+
+									<button v-on:click="enviarFormulario()" type="button" class="btn btn-info" title="Caso de Homónimo"> Guardar Información </button>								    		
+								</div>
+
+							</div>
+
+							</div>
+
+
+						</div>												
 					</div>
 				</div>
 			</div>
-			<div>
-				<div class="col-md-12" v-if="swregistry">
-					<table class="table">
-					<thead>
-						<tr>
-						<th scope="col">NRO. DOCUMENTO</th>
-						<th scope="col">NOMBRE(S)</th>
-						<th scope="col">PATERNO</th>
-						<th scope="col">MATERNO</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-						<td> ${newperson.run} </td>
-						<td> ${newperson.nombre.toUpperCase()}</td>
-						<td> ${newperson.paterno.toUpperCase()}</td>
-						<td> ${newperson.materno.toUpperCase()}</td>
-						</tr>
-					</tbody>
-					</table>
-					<div class="col-md-12 text-center">
-						<button type="button" class="btn btn-success" @click="closeRegistry">Registrar Otro</button>
-					</div>					
-				</div>			
-			</div>
-
 		</div>
-	</div>	
+		
+	</div>
+</div>	
 
 {% endblock %}
 {% block javascripts%}
@@ -167,299 +202,470 @@
     // $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
   </script>
   
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
-    <script src="{{asset('js/inputmask.js')}}"></script>
-    <script type="text/javascript">
-// $("#fecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
-    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-the-mask/0.11.1/vue-the-mask.min.js" integrity="sha512-qXurwUG9teY1KFtbBifUHInCiNK/POQqJeFRSoaHg1pHEB1tBUlFKRsfPzm1D6b6ueeQOCKldvXYCtOsPURrcw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<link href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}" rel="stylesheet" />
+<script src="{{ asset('bower_components/select2/dist/js/select2.min.js') }}"></script>
 
 
-		var app = new Vue({
-		    delimiters: ['${', '}'],
-		    el: '#app',
-		    data: {
-		    	state: {isSending: false},
-		    	errores: [],
-		    	opcion: 1,
-		    	swregistry: false,
-		    	newperson: {
-		    		
-		    		nombre: '',
-		    		paterno: '',
-		    		materno: '',
-					genero: '',
-		    		fechaNacimiento: '',
-		    		pais: '',
-		    		lugarNacimiento: '',
-		    		run: '',
-		    		docAdjunto: '',
-		    		paisId: '',
-		    		generoId: '',
-		    		typeofregister: '',
 
-		    	},
-				informe:'',
-		    	validado: false,
-		    	cortina: false,
-				swConfirm:false,
-				DBPais: [],
-				DBGenero: [],
-		    	datos: []
-		    	
-		    },
-			filters: {
-				uppercase: function(v) {
-				  return v.toUpperCase();
-				}
-			},		    
-		    mounted(){	
-				this.loadData();
-                var selector = document.getElementById("form_idfecnac");
-                Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "mm-yyyy-dd", inputEventOnly: true}).mask(selector);				
-		    
-		    },
+<script type="text/javascript">
 
-		    methods: {
+	var app = new Vue({
+		delimiters: ['${', '}'],
+		el: '#app',
+		data: {
+
+			categorias: [
+				{'id': 'A', 'description': 'Cat.A'},
+				{'id': 'B', 'description': 'Cat.B'},
+				{'id': 'C', 'description': 'Cat.C'},
 				
-
-                getImage: function(event){
-                    var informe = event.target.files[0];
-                    var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
-                    if(!allowedExtensions.exec(event.target.value)){
-                        event.target.value = '';
-                        Swal.fire(
-                              'Archivo incorrecto!',
-                              'El archivo adjunto debe ser una imagen o un archivo pdf',
-                              'warning'
-                            );
-                        this.informe = '';
-                        return false;
-                    }else{
-                        var megas = (informe.size / 1024)/1024;
-                        if (megas > 2) {
-                            event.target.value = '';
-                            Swal.fire(
-                              'Tamaño no permitido!',
-                              'El archivo debe tener un tamaño menor a 2MB',
-                              'warning'
-                            );
-                            this.informe = '';
-                            return false;
-                        }
-                    }
-                    this.informe = event.target.files[0];
-                }, 		    
-				loadData(){
-					axios.get(Routing.generate('registerforeignerperson_loadData'))
-		    		.then(response => {
-						this.DBPais = response.data.datos.arrPais;
-						this.DBGenero = response.data.datos.arrGenero;
-		    		})
-		    		.catch(e = {
-
-		    		});					
+			],
+			opcion: 1,
+			dataNewStudent: 
+				{
+					'paisId':0,
+					'categoriaId':0,					
+					'withoutcifind':false, 
+					'swnewforeign':false,
+					'numero_documento' : '',
+					'fecha_vencimiento': '',
+					'nro_pasaporte': '',
+					'embajada': '',
+					'cargo' : ''
 				},
-		    	register(){
-		    		this.errores = [];
-		    		this.state.isSending = false;
 
-		    		if (this.opcion == 1) {	
-	                    if (typeof this.informe != 'object') {
-	                     	this.errores.push('Debe adjuntar Documento de Diplomático/Extranjero');   
-	                    }
-		    			if (this.newperson.run == '') {
-		    				this.errores.push('Nro. de Documento');
-		    			}	
-		    			if (this.newperson.fechaNacimiento == '') {
-		    				this.errores.push('Fecha Nacimiento');
-		    			}
-	                    if (typeof this.typeofregister == '') {
-	                     	this.errores.push('Tipo de Registro');   
-	                    }		    			
-		    			if (this.newperson.nombre == '') {
-		    				this.errores.push('Nombre');
-		    			}
+			buscando: false,
+			responseprocess : false,
+			swinscription : false,
+			swoldinscription : false,
+			swprocessue : false,
+			DBstudentExist:false,
+			oldStudent:false,
+			existStudent:false,
+			message : '',
+			DBDepto: '',
+			DBProvincia: '',
+			swhomonimo : false,			
+			oldStudent : false,
 
-		    			if (this.newperson.generoId == '') {
-		    				this.errores.push('Género');
-		    			}
-		    			if (this.newperson.paisId == '') {
-		    				this.errores.push('País');
-		    			}	                    
-		    		}
-		    			    	
-		    		if (this.errores.length > 0) {
-			    		let texto = '<div class="errores">';
-			    		$.each(this.errores, function (i, value) {
-	                        texto = texto + '<li>' + value + '</li>';
-	                    });
-	                    texto = texto + '</div>';
-		    			Swal.fire({
-		    		  		title:'Complete los siguientes datos',
-		    		  		html:texto,
-		    		  		type:'warning'
-		    			});
-		    			return false;
-		    		}
-		    		this.datos = [];
-		    		this.validado = false;
-		    		this.cortina = true;
-	    			Swal.fire({
-	    		  		title:'Procesando',
-	    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-search fa-spin"></i> Espere un momento</div> ',
-	    		  		type:'info',
-	    		  		showConfirmButton: false,
-	    			});
+			messageue:'',           	
+			DBPais: {},
+			DBDepto: {},
+			DBProvincia: {},
+			DBLevel: {},
+			DBGrado:{},
+			DBParalelo:{},
+			DBTurno:{},
+			DBNewStudent:{},
+			DBNewInscription:{},
+			DBstudentExist:{},
 
-            		var data = new FormData();
-                    data.append('datos', JSON.stringify(this.newperson));
-                    data.append('informe', this.informe);	    			
-					axios.post(Routing.generate('registerforeignerperson_register'), data )
-		    		/*axios.post(Routing.generate('registerforeignerperson_register', { newperson: this.newperson, opcion: this.opcion}))*/
-		    			.then(response => {
-		    				if (response.data.status === 'error') {
-			    				Swal.fire(
-	    					  		'Aviso',
-	    					  		response.data.msg,
-	    					  		'info'
-	    						)
-		    				}
+			swhistory:false,
+			historyReg:{},
+			historyAlt:{},
+			historyEsp:{},
+			historyPer:{},
+			
+			informe:'',
+			codigoRude:'',
+			gestion:'',
+			item:'',
+			arraOptionBuscar:'',
+			rudeBuscar:'',
+			optionBuscar:'',
+			studentId:'',
+			studentHistModId:false,
+			urlreport: '',
+			swOne:false,
+			swTwo:false,
+			responseSegip:'',
+			responseFormTwo:'',
+			respuesta:'',
+			dataStudentModif: {},
+			dataModifyToSend:[],
+			archivoAdjunto:'',
+			
+			showbuttonPDF:false,
+			swCertification:false,
 
-		    				if (response.data.status == 'success') {
-		    					Swal.close();
+			procesar: false,
+			
+			
+		},
+		filters: {
+			uppercase: function(v) {
+				return v.toUpperCase();
+			}
+		},	
+
+		components: {
+			//vuejsDatepicker
+		},
+
+		mounted(){	
+			//this.loadData(); 
+			//var selector = document.getElementById("fecha_vencimiento");
+			//Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "mm-yyyy-dd", inputEventOnly: true}).mask(selector);              
+		
+		},
+
+		methods: {
+
+			lookforrude: function(){
+				console.log('lookforrude');
+
+				this.procesar = false;
+
+				this.buscando = true;
+				this.responseprocess = false;
+				this.swinscription = false;
+				this.swoldinscription = false;
+				this.swprocessue = false;
+				this.DBstudentExist=false;
+				this.oldStudent=false;
+				this.existStudent=false;
+				this.message = '';
+				this.dataNewStudent.generoId= '';
+				this.dataNewStudent.paisId= '';
+				this.DBDepto= '';
+				this.DBProvincia= '';
+				this.dataNewStudent.localidad='';
+				this.dataNewStudent.sie = '';
+				this.swhomonimo = false;
+				this.dataNewStudent.nivelId='';
+				this.dataNewStudent.gradoId='';
+				this.dataNewStudent.paraleloId='';
+				this.dataNewStudent.turnoId='';
+				this.oldStudent = false;
+
+
+				if (typeof this.dataNewStudent.rude === "undefined") {
+					Swal.fire(
+						'Atencion !',
+						'Debe ingresar el  CÓDIGO RUDE DEL ESTUDIANTE',
+						'warning'
+						);
+					this.buscando = false;
+					return;
+				}
+
+				axios.get(Routing.generate('registerforeignerperson_lookforrude', this.dataNewStudent ))
+				.then(response => {
+					console.log(response);
+					if (response.status == 200) {
+							console.log(response.data);
+
+							if(response.data.existStudent == true){
+
+								this.responseprocess = response.data.swcreatestudent;
+								this.message = response.data.message;
+								this.DBGenero= response.data.arrGenero;
+								this.DBPais= response.data.arrPais;
+								this.DBstudentExist= response.data.arrStudentExist;
+								this.dataNewStudent.fecnacfind = this.DBstudentExist.fecnacfind;
+								this.existStudent = response.data.existStudent;
+
+							}else{
+								Swal.fire(
+								'Atencion !',
+								'CÓDIGO RUDE DEL ESTUDIANTE NO EXISTE',
+								'warning'
+								);
+							}
+							
+					}
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});
+
+			},
+
+			mostrarFormulario() {
+				console.log('mostrarFormulario');
+
+				this.swhomonimo = false;
+				this.swoldinscription = false;
+				this.oldStudent = false;
+				this.swprocessue = false;
+
+				this.dataNewStudent.swnewforeign = 1;
+
+				axios.get(Routing.generate('newForeign_gohomonimo', this.dataNewStudent ))
+				.then(response => {
+					if (response.status == 200) {
+						console.log(response.data);
+						this.responseprocess = response.data.swcreatestudent;
+						this.message = response.data.message;
+						this.DBGenero= response.data.arrGenero;
+						this.DBPais= response.data.arrPais;
+						// this.DBstudentExist= response.data.arrStudentExist;
+						this.existStudent = response.data.existStudent;
+						this.swhomonimo = response.data.swhomonimo;
+
+					}                        
+					this.buscando = false;
+				})
+				.catch(e => {
+					console.log(e);
+					this.buscando = false;
+				});
+
+
+			},
+
+			enviarFormulario(){
+
+				
+				var me = this;
+
+				Swal.fire({
+				title: 'Registrar la informacion ?',
+				text: "Verifique los datos antes de efectuar la operacion",	
+				type: 'question',		
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				cancelButtonText: 'Cancelar',
+				confirmButtonText: 'Registrar',
+				
+				}).then((result) => {
+					console.log(result);
+					if (result.value == true) {
+
+						//TODO: VALIDAR front
+						faltan_datos = false;
+						console.log(me.dataNewStudent);
+						
+						if(me.dataNewStudent.paisId == 0){
+							faltan_datos = true;
+						}
+						if(me.dataNewStudent.categoriaId == 0){
+							faltan_datos = true;
+						}
+						if(me.dataNewStudent.numero_documento == ''){
+							faltan_datos = true;
+						}
+						if(me.dataNewStudent.fecha_vencimiento == ''){
+							faltan_datos = true;
+						}else{
+							//es valida ?
+
+							if ( me.dataNewStudent.fecha_vencimiento !== 10 ){
+								console.log('error');
+							}
+
+
+							var vregexNaix = /^(0[1-9]|[1-2]\d|3[01])(\/)(0[1-9]|1[012])\2(\d{4})$/;
+							console.log(vregexNaix.test(me.dataNewStudent.fecha_vencimiento));
+							if(vregexNaix.test(me.dataNewStudent.fecha_vencimiento) == false){
+								Swal.fire(
+									'Atencion !',
+									'La fecha de vencimiento es invalida !',
+									'warning'
+									);
+								this.buscando = false;
+								return;
+							}else{
+								//el formato es valido...y los datos ?
+								var fecha = me.dataNewStudent.fecha_vencimiento.split("/");
+								var day = parseInt(fecha[0]);
+								var month = parseInt(fecha[1]);
+								var year = parseInt(fecha[2]);
+
+								error = false;
+
+								var ListofDays = [31,28,31,30,31,30,31,31,30,31,30,31];
+								if ( month === 1 || month > 2 )
+									if ( day > ListofDays[month-1] || day < 0 || ListofDays[month-1] === undefined )
+										error = true;
+
+								// Detecta si es año bisiesto y asigna a febrero 29 dias
+								if ( month === 2 ) {
+									var lyear = ( (!(year % 4) && year % 100) || !(year % 400) );
+									if ( lyear === false && day >= 29 )
+										error = true;
+									if ( lyear === true && day > 29 )
+										error = true;
+								}
+
+								if ( error === true ) {
+
+									Swal.fire(
+										'Atencion !',
+										'La fecha de vencimiento es invalida !',
+										'warning'
+										);
+									this.buscando = false;
+									return;
+
+								}
+
+
+							}						
 								
-		    					this.datos = response.data.datos;
-		    					this.swregistry = this.datos.swregistry;
-		    					
-		    				}
-		    				this.cortina = false;
-		    			})
-		    			.catch(e => {
-		    				Swal.fire(
-    					  		'Aviso',
-    					  		'No se pudo realizar la verficación',
-    					  		'error'
-    						)
-		    				this.cortina = false;
-		    			});
-		    	},
+						}
 
+
+						if(me.dataNewStudent.embajada == ''){
+							faltan_datos = true;
+						}
+						if(me.dataNewStudent.cargo == ''){
+							faltan_datos = true;
+						}
+
+
+						if(faltan_datos == true){
+							Swal.fire(
+								'Atencion !',
+								'Todos los datos son requeridos',
+								'warning'
+								);
+							this.buscando = false;
+							return;
+						}
+
+						
+
+
+						var data = new FormData();
+						data.append('datos', JSON.stringify(this.dataNewStudent));
+						//data.append('datos', this.dataNewStudent);
+						data.append('informe', this.informe);
+
+
+						//axios.post(Routing.generate('registerforeignerperson_register',{ datos:me.dataNewStudent }  ))
+						axios.post(Routing.generate('registerforeignerperson_register'), data)
+						.then(response => {
+							console.log(response);
+							if (response.status == 200) {
+
+								if(response.data.existe == 0)
+								{
+									Swal.fire(
+										'Datos Registrados!',
+										'El registro ha sido exitoso.',
+										'success'
+									);
+
+									//limpiar form
+									me.limpiarFormulario();			
+
+								}
+								if(response.data.existe == 1){
+									Swal.fire(
+										'Error!',
+										'El registro ya existe \n (RUDe y Nro.Credencial)',
+										'warning'
+									);
+
+								}	
+								if(response.data.existe == -1){
+									Swal.fire(
+										'Atencion!',
+										'Debe seleccionar el archivo corespondiente',
+										'warning'
+									);
+
+								}	
+
+							}else{
+								Swal.fire(
+									'Error!',
+									'Se ha producido un error en el registro de la informacion',
+									'warning'
+								);
+							}
+							//this.buscando = false;
+						})
+						.catch(e => {
+							console.log(e);
+							this.buscando = false;
+						});
+
+
+
+
+					}
+
+				});	
+                    
+			},
+
+			getImage: function(event){
+				console.log('archivo');
+
+				var informe = event.target.files[0];
+				var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+				if(!allowedExtensions.exec(event.target.value)){
+					event.target.value = '';
+					Swal.fire(
+							'Archivo incorrecto!',
+							'El archivo adjunto debe ser una imagen o un archivo pdf',
+							'warning'
+						);
+					this.informe = '';
+					return false;
+				}else{
+					var megas = (informe.size / 1024)/1024;
+					if (megas > 2) {
+						event.target.value = '';
+						Swal.fire(
+							'Tamaño no permitido!',
+							'El archivo debe tener un tamaño menor a 2MB',
+							'warning'
+						);
+						this.informe = '';
+						return false;
+					}
+				}
+				this.informe = event.target.files[0];
+
+			},
+
+			limpiarFormulario(){
+				console.log('limpiando');
+
+				this.dataNewStudent.numero_documento = '';
+				this.dataNewStudent.fecha_vencimiento = '';
+				this.dataNewStudent.nro_pasaporte = '';
+				this.dataNewStudent.embajada = '';
+				this.dataNewStudent.cargo = '';
+				this.dataNewStudent.paisId = 0;
+				this.dataNewStudent.rude = '';
+
+				this.buscando = false;
+				this.responseprocess = false;
+				this.existStudent = '';
+				
+			}
 			
+		},
+		
+	});
 
-                closeRegistry(id){
-                	this.swregistry = 0;
-                	this.cerrar();
+	$(document).ready(function(){
+		$('[data-toggle="tooltip"]').tooltip();
+		$("td").focus();
+		$("#fecha_vencimiento").inputmask({ "alias": "dd-mm-yyyy" });
+		//$("#idarrPais_p").select2();
+	});      
 
-                },		
-				validEmail(email){
-					var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-					return re.test(email);
-				},			
-			
-		    	cerrar(){
-
-		    		this.swregistry = false;
-		    		this.opcion = 1;
-		    		this.newperson.nombre = '';
-		    		this.newperson.run = '';
-		    		this.newperson.nombre = '';
-		    		this.newperson.paterno = '';
-		    		this.newperson.materno = '';
-		    		this.newperson.fechaNacimiento = '';
-		    		this.newperson.paisId = '';
-		    		this.newperson.generoId = '';
-		    		this.informe = '';
-		    		this.newperson.docAdjunto = '';
-		    		this.newperson.lugarNacimiento='';
-		    		document.getElementById("archivoAdjuntoId").value=null; 
-		    		
-		    		
-		    	},
-		    	validarFormatoFecha(campo) {
-	    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
-	    	        if ((campo.match(RegExPattern)) && (campo!='')) {
-	    	            return true;
-	    	        } else {
-	    	            return false;
-	    	        }
-		    	},
-		    	numerico: function(event){
-		    	    var k = event.charCode || event.keyCode;
-		    	    if ((k < 48 || k > 57) //NUmeros
-		    	        && (k != 13) //ENTER
-		    	        && (k != 8) //retroceso
-		    	        && (k != 9) //tab
-		    	    ){
-		    	        event.preventDefault();
-		    	        return false;
-		    	    }
-		    	},
-		    	alfabetico: function(event){
-	                var k = event.charCode || event.keyCode;
-	                if ((k < 97 || k > 122)//letras minusculas
-	                    && (k < 65 || k > 90) //letras mayusculas
-	                    && (k != 13) //ENTER
-	                    && (k != 8) //retroceso
-	                    && (k != 9) //tab
-	                    && (k != 241) //ñ
-	                     && (k != 209) //Ñ
-	                     && (k != 32) //espacio
-	                     && (k != 225) //á
-	                     && (k != 233) //é
-	                     && (k != 237) //í
-	                     && (k != 243) //ó
-	                     && (k != 250) //ú
-	                     && (k != 193) //Á
-	                     && (k != 201) //É
-	                     && (k != 205) //Í
-	                     && (k != 211) //Ó
-	                     && (k != 218) //Ú
-	                     && (k != 44) //coma ,
-	                     && (k != 46) //punto .
-	                ){
-	                	event.preventDefault();
-	                	return false;
-	                }
-	            },
-		    	alfanumerico: function(event){
-	                var k = event.charCode || event.keyCode;
-	                if ((k < 97 || k > 122)//letras minusculas
-	                    && (k < 65 || k > 90) //letras mayusculas
-	                    && (k < 48 || k > 57) //NUmeros
-	                    && (k != 13) //ENTER
-	                    && (k != 8) //retroceso
-	                    && (k != 9) //tab
-	                    && (k != 241) //ñ
-	                     && (k != 209) //Ñ
-	                     && (k != 32) //espacio
-	                     && (k != 225) //á
-	                     && (k != 233) //é
-	                     && (k != 237) //í
-	                     && (k != 243) //ó
-	                     && (k != 250) //ú
-	                     && (k != 193) //Á
-	                     && (k != 201) //É
-	                     && (k != 205) //Í
-	                     && (k != 211) //Ó
-	                     && (k != 218) //Ú
-	                     && (k != 44) //coma ,
-	                     && (k != 46) //punto .
-	                ){
-	                	event.preventDefault();
-	                	return false;
-	                }
-	            },
-		    }
-		});
-
-        $(document).ready(function(){
-            $('[data-toggle="tooltip"]').tooltip();
-            $("td").focus();
-        });        
+	$(".js-example-basic-multiple").select2({
+            tags: "true",
+            placeholder: "Seleccione una opción",
+            allowClear: true
+        });  
 
 
-    </script>
+
+</script>
 {%endblock%}
