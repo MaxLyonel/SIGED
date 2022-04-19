@@ -876,7 +876,8 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
 				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
 				left join olim_estudiante_inscripcion_curso_superior as oeics on oeics.olim_estudiante_inscripcion_id = oei.id
-				where oei.gestion_tipo_id = :gestion::double precision and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				left join olim_reglas_olimpiadas_tipo as orot on orot.id = oei.olim_reglas_olimpiadas_tipo_id
+				where oei.gestion_tipo_id = :gestion::double precision and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0 and (orot.categoria is not null and orot.categoria != '' and orot.categoria = 'General')
 				group by lt4.id, omt.id
 				) as oli on oli.departamento_id = dep.id
 				inner join olim_materia_tipo as omt on omt.id = oli.materia_id
@@ -902,7 +903,8 @@ class OlimEstadisticaController extends Controller{
 				inner join estudiante_inscripcion ei on ei.id = oei.estudiante_inscripcion_id
 				inner join institucioneducativa_curso iec on iec.id = ei.institucioneducativa_curso_id
 				left join olim_estudiante_inscripcion_curso_superior as oeics on oeics.olim_estudiante_inscripcion_id = oei.id
-				where oei.gestion_tipo_id = :gestion::double precision
+				left join olim_reglas_olimpiadas_tipo as orot on orot.id = oei.olim_reglas_olimpiadas_tipo_id
+				where oei.gestion_tipo_id = :gestion::double precision and (orot.categoria is not null and orot.categoria != '' and orot.categoria = 'General')
 				group by omt.id
 				order by codigo asc, materia asc
 			");
@@ -945,7 +947,8 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
 				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
 				left join olim_estudiante_inscripcion_curso_superior as oeics on oeics.olim_estudiante_inscripcion_id = oei.id
-				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				left join olim_reglas_olimpiadas_tipo as orot on orot.id = oei.olim_reglas_olimpiadas_tipo_id
+				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0 and (orot.categoria is not null and orot.categoria != '' and orot.categoria = 'General')
 				group by lt5.id, omt.id
 				) as oli on oli.id = dis.id
 				inner join olim_materia_tipo as omt on omt.id = oli.materia_id
@@ -979,7 +982,8 @@ class OlimEstadisticaController extends Controller{
 				left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
 				left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
 				left join olim_estudiante_inscripcion_curso_superior as oeics on oeics.olim_estudiante_inscripcion_id = oei.id
-				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				left join olim_reglas_olimpiadas_tipo as orot on orot.id = oei.olim_reglas_olimpiadas_tipo_id
+				where oei.gestion_tipo_id = :gestion::double precision and lt4.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0 and (orot.categoria is not null and orot.categoria != '' and orot.categoria = 'General')
 				group by lt4.id, lt4.codigo, lt4.lugar, omt.id
 				order by codigo asc, materia asc	
 			");
@@ -1023,7 +1027,8 @@ class OlimEstadisticaController extends Controller{
 				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
 				inner join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
 				left join olim_estudiante_inscripcion_curso_superior as oeics on oeics.olim_estudiante_inscripcion_id = oei.id
-				where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0
+				left join olim_reglas_olimpiadas_tipo as orot on orot.id = oei.olim_reglas_olimpiadas_tipo_id
+				where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0 and (orot.categoria is not null and orot.categoria != '' and orot.categoria = 'General')
 				group by ie.id, omt.id
 				) as oli on oli.id = ue.id
 				inner join olim_materia_tipo as omt on omt.id = oli.materia_id
@@ -1052,7 +1057,8 @@ class OlimEstadisticaController extends Controller{
 				inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
 				inner join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_distrito
 				left join olim_estudiante_inscripcion_curso_superior as oeics on oeics.olim_estudiante_inscripcion_id = oei.id
-				where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0			
+				left join olim_reglas_olimpiadas_tipo as orot on orot.id = oei.olim_reglas_olimpiadas_tipo_id
+				where oei.gestion_tipo_id = :gestion::double precision and lt.codigo = '".$codigo."' and iec.nivel_tipo_id in (12,13) and iec.grado_tipo_id <> 0 and (orot.categoria is not null and orot.categoria != '' and orot.categoria = 'General')			
 				group by lt.id, lt.codigo, lt.lugar, omt.id
 				order by codigo asc, materia asc	
 			");
