@@ -10,7 +10,7 @@ use Sie\AppWebBundle\Entity\OlimEstudianteInscripcion;
 use Sie\AppWebBundle\Entity\OlimInscripcionGrupoProyecto;
 use Sie\AppWebBundle\Form\OlimEstudianteInscripcionType;
 use Symfony\Component\HttpFoundation\Session\Session;
-
+use Doctrine\ORM\EntityRepository;
 /**
  * OlimEstudianteInscripcion controller.
  *
@@ -985,7 +985,7 @@ class OlimEstudianteInscripcionController extends Controller{
             }
         }
 
-        if($arrDataInscription['materiaId'] == 18){
+        if($arrDataInscription['materiaId'] == 29){
             return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:commonInscriptionFeria.html.twig', array(
                 'form' => $this->CommonInscriptionFeriaForm($arrDataInscription)->createView(),
                 'groupId' => $groupId,
@@ -1495,7 +1495,13 @@ class OlimEstudianteInscripcionController extends Controller{
         
         // die;
         //get the discapacidad
-         $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+         // $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+       $entity = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo');
+       $query = $entity->createQueryBuilder('odt')
+               ->distinct()
+               ->orderBy('odt.id', 'ASC')
+               ->getQuery();
+       $objDiscapacidad = $query->getResult();        
         
        
         // dump($jsonDataInscription);die;
@@ -1671,7 +1677,13 @@ class OlimEstudianteInscripcionController extends Controller{
        
        // die;
        //get the discapacidad
-        $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+        // $objDiscapacidad = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo')->findAll();
+       $entity = $em->getRepository('SieAppWebBundle:OlimDiscapacidadTipo');
+       $query = $entity->createQueryBuilder('odt')
+               ->distinct()
+               ->orderBy('odt.id', 'ASC')
+               ->getQuery();
+       $objDiscapacidad = $query->getResult();
        
        return $this->render('SieOlimpiadasBundle:OlimEstudianteInscripcion:getStudents.html.twig', array(
            'objStudentsToOlimpiadas' => $arrCorrectStudent,
@@ -2139,7 +2151,13 @@ class OlimEstudianteInscripcionController extends Controller{
         return $this->createFormBuilder()
                 ->add('fono', 'text')
                 ->add('email', 'text')
-                ->add('discapacidad', 'entity', array('class'=>'SieAppWebBundle:OlimDiscapacidadTipo', 'property'=>'discapacidad'/*, 'empty_value'=>'Seleccionar...'*/))
+                //->add('discapacidad', 'entity', array('class'=>'SieAppWebBundle:OlimDiscapacidadTipo', 'property'=>'discapacidad'/*, 'empty_value'=>'Seleccionar...'*/))
+                ->add('discapacidad', 'entity', array('class' => 'SieAppWebBundle:OlimDiscapacidadTipo',
+                    'query_builder' => function (EntityRepository $e) {
+                        return $e->createQueryBuilder('odt')
+                                ->orderBy('odt.id', 'ASC')
+                        ;
+                    }, 'property' => 'discapacidad'))                
                 ->add('jsonDataInscription','hidden', array('data'=>$jsonDataInscription) )
                 ->add('doInscription', 'button', array('label'=>'Inscribir','attr'=>array('class'=>'btn btn-warning btn-xs', 'onclick'=>'saveExternalInscription();')))
                 ->getForm()
