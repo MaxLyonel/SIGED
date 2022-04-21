@@ -373,6 +373,7 @@ class TextoEducativoController extends Controller
             'rol' => $rol,
             'departamentos'=>$arrayDepartamentos,
             'distritos'=>$arrayDistritos,
+            'currentyear'=> $this->session->get('currentyear')
             //'ues'=>$arrayUE,
         ));
       }
