@@ -827,7 +827,7 @@ class TramiteHomologacionController extends Controller {
                 //$em->flush();   
                 
                 //look for the course to the student
-                $objCurso = $studentInstitucioneducativaCurso;unset
+                $objCurso = $studentInstitucioneducativaCurso;
                 // $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
                 //     'nivelTipo' => $form['nivel'],
                 //     'gradoTipo' => $form['grado'],
