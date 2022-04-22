@@ -1,0 +1,430 @@
+
+{% extends 'layoutPermanente.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:800px;
+            margin-top:100px;
+        }
+        [v-cloak]{
+            display: none;
+        }
+        .tachado{
+            text-decoration: line-through;
+            /* color: #D5956E; */
+            color:  #D51528;
+            opacity: 0.4;
+        }        
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+    <div class="header-content">
+        <h2><i class="fa fa-th-large"></i>Habilitar Operativo Gestión-{{app.session.get('currentyear')}}</h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+               <li>
+                    <i class="fa fa-users"></i>
+                    Gestión
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="glyphicon glyphicon-cog"></i>
+                    Operativos
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    Habilitar Operativo
+                    <i class="fa fa-angle-right"></i>
+                </li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div>    
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warningremoveins') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- /.row -->
+    <div id="app">
+    <div v-cloak>
+
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div class="panel panel-icon panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-search"></i>
+                        <div class="pull-right">
+                            {# <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a> #}
+                        </div>                                        
+                    </div>
+                    <div class="panel-body">
+                        <!-- form to search student -->
+                <form name="form" method="post" data-toggle="validator" role="form" id="form_operativo1">
+                    <div class="row inline">
+                        <div class="form-group col-md-1" style="display:none">
+                            <label for="form_gestion" class="required">Gestión:</label>
+                            <select id="form_gestion" name="form[gestion]" class="form-control"><option value="2022">2022</option></select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="form_departamento" class="required">Departamento:</label>
+                            <select id="form_departamento" name="form[departamento]" class="form-control" {# onchange="distrito(this.value)" #} v-model="dataRequest.depto">
+                                <option v-for="item in DBDepto"  :value="item.id">${ item.depto }</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="form_operativo" class="required">Operativo:</label>
+                            <select id="form_operativo" name="form[operativo]" required="required" class="form-control" v-model="dataRequest.operative">
+                                <option v-for="item in DBOperative"  :value="item.id">${ item.operative }</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="form_fechainicio" class="required">Fecha inicio: (dia-mes-año)</label>
+                            <input type="text" id="form_fechainicio" name="form[fechainicio]" required="required" class="form-control datepicker hasDatepicker" placeholder="dd-mm-AAAA" maxlength="10" minlength="10" autocomplete="off" v-model="dataRequest.fecini">
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label for="form_fechafin" class="required">Fecha fin: (dia-mes-año)</label>
+                            <input type="text" id="form_fechafin" name="form[fechafin]" required="required" class="form-control datepicker hasDatepicker" placeholder="dd-mm-AAAA" maxlength="10" minlength="10" autocomplete="off" v-model="dataRequest.fecfin">
+                        </div>
+                        <div class="form-group col-md-2"> 
+                            <label></label>
+                            <button type="button" id="form_buscar" name="form[buscar]" class="form-control btn btn-primary" v-on:click="requestCentros()">Buscar</button>
+                            {# <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button></button> #}
+
+                        </div>
+                        </div>
+                    <input type="hidden" id="form__token" name="form[_token]" value="qJp340tEqZjJRaNOwM00KUFAmlqa2Tm6PCIQ_pOkIo4">
+                </form>
+
+                        {# <div class="form-group row buscador">
+                            
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                <input type="text" class="form-control" v-model="rudeBuscar" maxlength="18" v-on:keyup.enter="" placeholder="Código rude">
+                            </div>
+
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-right">
+                                <select id="form_arrOption" name="form[arrOption]" required="required" class="form-control col-lg-6 col-md-6 col-sm-6" v-model="arraOptionBuscar">
+                                    <option value="0">Concluyó el Bachillerato</option>
+                                    <option value="1">Tiene registro en gestiones pasadas</option>
+                                </select>
+                            </div>
+
+
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> </button>
+                            </div>
+                        </div> #}
+                        <!-- end form to search student -->
+                                                      
+
+                            <div class="alert alert-warning" v-if="respuesta != ''"> <i class="fa fa-warning"></i> ${respuesta}</div>
+                            <div v-if="buscando" class="text-center">
+                                <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                            </div>
+                            <!-- && !buscando -->
+                            {# <div v-if="studentId != ''  ">
+                            <!-- <div v-if="buscando"> -->
+
+                            <!-- </div> -->
+                            </div> #}
+                  
+                       
+                    </div>
+                </div>
+                <div id="dataStudent"></div>
+            </div>
+        </div>
+
+</div>
+</div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+    <script src="{{asset('js/inputmask.js')}}"></script>
+    <script>
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                
+                gestion:'',
+                
+                
+                
+                
+                
+                urlreport: '',
+                buscando:false,
+                swOne:false,
+                swTwo:false,
+                responseFormTwo:'',
+                respuesta:'',
+                DBPais: {},
+                DBDepto: [],
+                DBOperative: [],
+                dataRequest: {},
+                DBProvincia: {},
+                dataModifyToSend:[],
+                archivoAdjunto:'',
+                informe:'',
+                showbuttonPDF:false,
+                swCertification:false,
+                idDetalle: ''               
+            },
+            methods: {
+                loadData(){
+                    axios.get(Routing.generate('admoperative_loadData'))
+                    .then(response => {
+                        this.DBDepto = response.data.datos.arrDeptos;
+                        this.DBOperative = response.data.datos.arrOperatives;
+                    })
+                    .catch(e = {
+
+                    });                 
+                },                
+                requestCentros: function(){
+                    this.buscando = true;
+                    this.respuesta = '';
+                    this.swOne=false;
+                    this.swTwo=false;                    
+                    console.log(this.dataRequest);
+
+                    /*if (this.rudeBuscar.length == 0) {
+                        this.respuesta = 'Debe ingresar un código RUDE válido';
+                        this.buscando = false;
+                        return;
+                    }
+
+                    if (this.rudeBuscar.length < 13) {
+                        this.respuesta = 'El código RUDE ingresado no es válido';
+                        this.buscando = false;
+                        return;
+                    }
+                    if(this.optionBuscar < 0){
+                        this.respuesta = 'Debe ingresar un opcion de busqueda';
+                        this.buscando = false;
+                        return;
+                    }*/
+
+                    axios.get(Routing.generate('admoperative_requestCentros', this.dataRequest))
+                    .then(response => {
+                        if (response.status == 200) {
+
+                        }
+                        if( response.status == 202){
+                            this.respuesta = response.data;
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.buscando = false;
+                    });
+                },
+           
+
+            },
+            mounted(){
+                var selector = document.getElementById("form_fechainicio");
+                Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "mm-yyyy-dd", inputEventOnly: true}).mask(selector);                
+                var selector1 = document.getElementById("form_fechafin");
+                Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "mm-yyyy-dd", inputEventOnly: true}).mask(selector1);                 
+                this.loadData();
+            }
+        });
+
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $("td").focus();
+        });        
+
+
+    function validarFormatoFecha(campo) {
+        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+        if ((campo.match(RegExPattern)) && (campo!='')) {
+                return true;
+        } else {
+                return false;
+        }
+    }    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        var lookforStudent = function () {
+            //get the values
+           var rude = $('#form_codeRude').val();
+           var selectOption = $('#form_arrOption').val();
+            
+            if (rude.length <= 0) {
+                alert("Necesita código RUDE para realizar la busqueda");
+                return false;
+            }
+            if (selectOption == '') {
+                alert("Necesita seleccionar criterio de busqueda");
+                return false;
+            }
+            
+            dataForm = $('#idFormFindStudent').serialize();
+            $.ajax({
+                type: 'post',
+                data: dataForm,
+                url: Routing.generate('specialmodificationdata_student_lookfor_student'),
+                beforeSend: function () {
+                    $("#dataStudent").empty();
+                    $("#dataStudent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#dataStudent").empty();
+                    $("#dataStudent").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+                // formdataId
+        var updateDataStudent = function(){
+            var message = '';
+            if($('#form_resoladm').val()==''){
+                message+= '- Necesita Resolucion Administrativa\n';
+            }
+            if($('#form_fecharesoladm').val()==''){
+                message+= '- Necesita Fecha Resolucion Administrativa\n';
+            }
+            if($('#form_obs').val()==''){
+                message+= '- Necesita registrar justificativo\n';
+            }            
+            if(message){
+                alert(message);
+                return false;
+            }
+            if(!validarFormatoFecha($('#form_fecharesoladm').val())){
+              alert('Revise formato de Fecha Resolucion Administrativa (dd-mm-aaaa)');
+              return false;
+            }
+            
+            var dataForm = $('#formdataStudentId').serialize();
+            if (confirm('¿Esta seguro de realizar el cambio?')) {
+                    $.ajax({
+                        type: 'post',
+                        data: dataForm,
+                        url: Routing.generate('specialmodificationdata_student_updateDataStudent'),
+                        beforeSend: function () {
+                            $("#dataStudent").empty();
+                            $("#dataStudent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            
+                            $("#dataStudent").empty();
+                            $("#dataStudent").append(data);
+                        },
+                        statusCode: {
+                            500: function () {
+
+                            },
+                            404: function () {
+
+                            }
+                        }
+                    });
+            } else {
+              return false;
+            }
+        }
+
+
+    
+
+
+        function dep(es) {
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_departamentos_st', {'pais': parseInt(es)}),
+                beforeSend: function () {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    /*$("#localidad").empty();*/
+                    $("#div-load").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+
+                    $.each(data.departamento, function (i, value) {
+                        $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }
+
+
+
+        function prov(d) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_provincias_st', {'departamento': parseInt(d)}),
+                beforeSend: function () {
+                    $("#form_provincia").empty();
+                    $("#div-load-prov").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_provincia").empty();
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }        
+
+
+
+
+
+
+
+
+    </script>
+{%endblock%}

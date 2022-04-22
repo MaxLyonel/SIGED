@@ -1026,7 +1026,7 @@ class StudentsInscriptionsController extends Controller {
         $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
         $query->execute();
         $dataInscription = $query->fetchAll();
-        
+        dump($dataInscription);die;
         foreach ($dataInscription as $key => $inscription) {
             switch ($inscription['institucioneducativa_tipo_id_raep']) {
                 case '1':
@@ -1039,6 +1039,7 @@ class StudentsInscriptionsController extends Controller {
                     $dataInscriptionE[$key] = $inscription;
                     break;
                 case '5':
+                $bloquep = NULL;
                 if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 14)$bloquep ='Segundo';
                 if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 2) || $inscription['parte_p'] == 15)$bloquep = 'Tercero';
                 if(($inscription['bloque_p'] == 2 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 16)$bloquep = 'Quinto';

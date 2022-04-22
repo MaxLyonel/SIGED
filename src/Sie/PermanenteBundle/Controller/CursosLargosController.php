@@ -2950,6 +2950,7 @@ class CursosLargosController extends Controller {
               //dump($value);die;
                 $abandono=false;
                 $aprueba = false;
+                $no_incorporado = false;
                 $apbhoras = false;
                 $totalhoras=0;
                     $querya = $em->getConnection()->prepare('
@@ -2971,9 +2972,11 @@ class CursosLargosController extends Controller {
                         {
                             $aprueba = true;
                         }else{
-                            if ($mat['nota_cuantitativa'] == null)
-                            {
+                            if ($mat['nota_cuantitativa'] != null || $mat['nota_cuantitativa'] != 0){
                                 $abandono=true;
+                                
+                            }else{
+                                $no_incorporado=true;
                             }
                             $aprueba = false;
                         }
@@ -3005,6 +3008,14 @@ class CursosLargosController extends Controller {
                         }
                     }
                         //dump()
+                    if($no_incorporado)
+                    {
+                        $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $value['idestins']));
+                        $estudianteInscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(6));
+                        //  dump($estudianteInscripcion);die;
+                        $em->persist($estudianteInscripcion);
+                        $em->flush();
+                    }                    
                     if($abandono)
                     {
                         $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $value['idestins']));
@@ -3012,7 +3023,8 @@ class CursosLargosController extends Controller {
                         //  dump($estudianteInscripcion);die;
                         $em->persist($estudianteInscripcion);
                         $em->flush();
-                    }else{
+                    }
+                    if($aprueba){
                         if($aprueba && $apbhoras){
                            
                             $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $value['idestins']));
