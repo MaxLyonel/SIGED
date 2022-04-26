@@ -762,8 +762,16 @@ class MaestroAsignacionController extends Controller {
             // original echo por Roly anntes cambio, en varios casos devuelve NULL, por la base de datos
             //$horasMes = $institucioneducativaCursoOfertaEntity->getHorasmes();
             //ahora viene del formulario
-            $horasMes = $form['horas'];
-            $observacion = $form['observacion'];
+            $horasMes = 0;
+            if(isset($form['horas']) == true)
+            {
+                $horasMes = $form['horas'];
+            }
+
+            $observacion = '---';
+            if(isset($form['horas']) == true){
+                $observacion = $form['observacion'];
+            }
            
             $gestionId = $institucioneducativaCursoOfertaEntity->getInsitucioneducativaCurso()->getGestionTipo()->getId();
             $institucionEducativaId = $institucioneducativaCursoOfertaEntity->getInsitucioneducativaCurso()->getInstitucioneducativa()->getId();

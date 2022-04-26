@@ -155,12 +155,14 @@ class ControlCalidadController extends Controller {
                 break;
         }
 
-        $gestiones = $query->getResult();
+        //$gestiones = $query->getResult();
+        $gestiones = array(0=>array('id'=>2021));
 
         return $this->render('SieRegularBundle:ControlCalidad:index.html.twig', array(
                     'entidades' => $entidades,
                     'gestiones' => $gestiones,
-                    'currentyear' => $currentyear,
+                    // 'currentyear' => $currentyear,
+                    'currentyear' => '2021',
                     'lugar_tipo_id' => $usuario_lugar->getId()
         ));
     }
@@ -285,7 +287,7 @@ class ControlCalidadController extends Controller {
 
         $rol_usuario = $this->session->get('roluser');
 
-        if ($rol_usuario != '10' && $rol_usuario != '7' && $rol_usuario != '9' && $rol_usuario != '31') {
+        if ($rol_usuario != '10' && $rol_usuario != '7' && $rol_usuario != '8' && $rol_usuario != '9' && $rol_usuario != '31') {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
@@ -296,7 +298,7 @@ class ControlCalidadController extends Controller {
         $roluserlugarid = $this->session->get('roluserlugarid');
         
         $usuario_lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($roluserlugarid);
-
+        $dep = $usuario_lugar->getCodigo();
         $repository = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo');
 
         $qb = $em->createQueryBuilder();
@@ -325,6 +327,23 @@ class ControlCalidadController extends Controller {
                     ->addOrderBy('vp.institucionEducativaId', 'ASC')
                     ->getQuery();
                 break;
+                case 7://departamento
+                    $query = $repository->createQueryBuilder('vrt')
+                        ->select('vp')->distinct()
+                        ->innerJoin('SieAppWebBundle:ValidacionProceso', 'vp', 'WITH', 'vrt.id = vp.validacionReglaTipo')
+                        ->innerJoin('SieAppWebBundle:LugarTipo', 'l', 'WITH', 'vp.lugarTipoIdDistrito = l.id')
+                        ->where('vrt.id = :reglaTipo')
+                        ->andWhere('vp.esActivo = :esactivo')
+                        ->andWhere('vp.gestionTipo = :gestion')
+                        ->andWhere('l.codigo like :codigo')
+                        ->setParameter('reglaTipo', $id)
+                        ->setParameter('esactivo', 'f')
+                        ->setParameter('gestion', $gestion)
+                        ->setParameter('codigo', $dep .'%')
+                        ->orderBy('vp.gestionTipo', 'DESC')
+                        ->addOrderBy('vp.institucionEducativaId', 'ASC')
+                        ->getQuery();
+                    break;
             case 9://unidad educativa
                 $query = $repository->createQueryBuilder('vrt')
                     ->select('vp')->distinct()
@@ -358,7 +377,7 @@ class ControlCalidadController extends Controller {
         }
 
         $lista_detalle = $query->getResult();
-      
+      //dump($lista_detalle);die;
         // return $this->render('SieRegularBundle:ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla,'idiomas'=>$idiomas));
 
         //listar estado

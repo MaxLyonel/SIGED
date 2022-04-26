@@ -60,12 +60,16 @@
                                                     <td data-title="Descripcion">{{ lista.descripcion }}</td>
                                                     <td data-title="Detalle">{{ lista.detalle }}</td>
                                                     <td data-title="Acciones">
+                                                     
                                                         {% if app.session.get('roluser') == 10 or app.session.get('roluser') == 9 or app.session.get('roluser') == 31 %}
                                                             <button type="button" class="btn-link" onclick="mostrarDetalle({{lista.id}})" title="VerDetalles"><i class="fa fa-search"></i> Ver detalle</button>
                                                             {% if app.session.get('roluser') != 9 %}
-                                                                <a href="{{ path('ccalidad_grafico', { 'id': lista.id }) }}" class="btn-link"><i class="fa fa-search"></i> Ver gráfico</a>
+                                                                <a href="{{ path('ccalidad_grafico', { 'id': lista.id }) }}" class="btn-link"><i class="fa fa-search"></i> Ver gráfico.</a>
                                                             {% endif %}
-                                                        {% elseif app.session.get('roluser') == 7 %}
+                                                        {% elseif app.session.get('roluser') == 7 %} {#departamental#}
+                                                            {% if  lista.id in [8,12,24,25,26] %}
+                                                                <button type="button" class="btn-link" onclick="mostrarDetalle({{lista.id}})" title="VerDetalles"><i class="fa fa-search"></i> Ver detalle .</button>
+                                                            {% endif %}
                                                             <a href="{{ path('ccalidad_grafico', { 'id': lista.id }) }}" class="btn-link"><i class="fa fa-search"></i> Ver gráfico</a>
                                                         {% endif %}
                                                     </td>
@@ -75,6 +79,7 @@
                                     </table>
                                 </div>
                             {% else %}
+                             
                                 No presenta inconsistencias respecto a {{ entidad.entidad }} para la gestión {{gestion}}.
                             {% endif %}
                         </div>

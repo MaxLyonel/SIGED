@@ -35,6 +35,8 @@ class AreasController extends Controller {
         if (!$this->session->get('userId')) {
             return $this->redirect($this->generateUrl('login'));
         }
+
+       
         try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -95,6 +97,7 @@ class AreasController extends Controller {
                     return $this->render('SieRegularBundle:Areas:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                 }
             } else {
+               
                 $nivelUsuario = $request->getSession()->get('roluser');
                 if ($nivelUsuario != 1) { // si no es estudiante
                     // formulario de busqueda de institucion educativa
@@ -107,7 +110,7 @@ class AreasController extends Controller {
                             return $this->render('SieRegularBundle:Areas:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                         }
                     } else {
-
+                       //dcastillo
                         return $this->render('SieRegularBundle:Areas:search.html.twig', array('form' => $this->formSearch($request->getSession()->get('currentyear'))->createView()));
                     }
                 } else { // si es institucion educativa
@@ -116,6 +119,7 @@ class AreasController extends Controller {
                         $institucion = $sesinst;
                         $gestion = date('Y') - 1;
                     } else {
+                      
                         $funcion = new \Sie\AppWebBundle\Controller\FuncionesController();
                         $institucion = $funcion->ObtenerUnidadEducativaAction($request->getSession()->get('userId'), $request->getSession()->get('currentyear')); //5484231);
                         $gestion = date('Y') - 1;
@@ -482,6 +486,8 @@ class AreasController extends Controller {
 
             $em->getConnection()->commit();
 
+           
+
 
             //dcastillo aqui llama a esa pantalla donde se van a crear los cursos
             return $this->render('SieRegularBundle:Areas:index.html.twig', array(
@@ -500,9 +506,14 @@ class AreasController extends Controller {
 
     private function formSearch($gestionactual) {
         $gestiones = array();
-        for($i=$gestionactual;$i>=2008;$i--){
+        //dcastillo 3103 solo gestion actual
+        /*for($i=$gestionactual;$i>=2008;$i--){
             $gestiones[$i] = $i;
-        }
+        }*/
+
+        $gestiones[$gestionactual] = $gestionactual;
+
+
         $form = $this->createFormBuilder()
                 ->setAction($this->generateUrl('areas'))
                 ->add('institucioneducativa', 'text', array('required' => true, 'attr' => array('autocomplete' => 'off', 'maxlength' => 8)))

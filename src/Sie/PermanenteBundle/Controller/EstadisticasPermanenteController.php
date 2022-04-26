@@ -230,7 +230,7 @@ class EstadisticasPermanenteController extends Controller
 
         $entidad = $this->buscaEntidadRol($codigo,$rol);
    //     dump($gestion);die;
-        $subEntidades = $this->buscaSubEntidadRolEspecial($codigo,$rol,$gestion,$periodo);
+        $subEntidades = $this->buscaSubEntidadRolPermanente($codigo,$rol,$gestion,$periodo);
 
     //   dump($subEntidades);die;
         // devuelve un array con los diferentes tipos de reportes 1:sexo, 2:dependencia, 3:area
@@ -263,15 +263,15 @@ class EstadisticasPermanenteController extends Controller
       //  dump($subEntidades);die;
         // para seleccionar ti
         
-        $chartPoblacion = $this->chartColumn($entityEstadistica[5],"Estudiantes matriculados según Población",$gestion,"Estudiantes","chartContainerPoblacion");
+        $chartPoblacion = $this->chartColumn($entityEstadistica[4],"Participantes matriculados según Sub área",$gestion,"Participantes","chartContainerPoblacion");
 
         //$chartMatricula = $this->chartColumnInformacionGeneral($entityEstadistica,"Matrícula",$gestionProcesada,1,"chartContainerMatricula");
      //   $chartNivel = $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica[3],"Estudiantes matriculados según Etapa/Acreditación",$gestion,"Estudiantes","chartContainerNivel");
   //      $chartDiversa= $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica[1],"Estudiantes matriculados según Nivel",$gestion,"Estudiantes","chartContainerDiversa");
 //        //$chartNivelGrado = $this->chartDonutInformacionGeneralNivelGrado($entityEstadistica,"Estudiantes Matriculados según Nivel de Estudio y Año de Escolaridad ",$gestionProcesada,6,"chartContainerEfectivoNivelGrado");
-        $chartGenero= $this->chartPie($entityEstadistica[1],"Estudiantes matriculados según Sexo",$gestion,"Estudiantes","chartContainerGenero");
+        $chartGenero= $this->chartPie($entityEstadistica[1],"Participantes matriculados según Sexo",$gestion,"Participantes","chartContainerGenero");
 //        //$chartArea = $this->chartPyramidInformacionGeneral($entityEstadistica,"Estudiantes Matriculados según Área Geográfica",$gestionProcesada,4,"chartContainerEfectivoArea");
-        $chartDependencia = $this->chartSemiPieDonut3d($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestion,"Estudiantes","chartContainerDependencia");
+        $chartDependencia = $this->chartSemiPieDonut3d($entityEstadistica[2],"Participantes matriculados según Dependencia",$gestion,"Participantes","chartContainerDependencia");
       //  $chartDependencia1 = $this->chartColumn($entityEstadistica[4],"Estudiantes matriculados según Recintos Penitenciarios",$gestion,"Estudiantes","chartContainerDependencia1");
      //   $chartDependencia2 = $this->chartColumn($entityEstadistica[5],"Estudiantes matriculados según Trabajadoras(es) del Hogar",$gestion,"Estudiantes","chartContainerDependencia2");
    //     $chartOtro = $this->chartResponsive($entityEstadistica[2],"Estudiantes matriculados según Dependencia",$gestion,"Estudiantes","chartContainerOtro");
@@ -279,7 +279,7 @@ class EstadisticasPermanenteController extends Controller
 
 //dump($chartDependencia);die;
         if(count($subEntidades)>0 and isset($subEntidades)){
-            return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaPermanente.html.twig', array(
+            return $this->render('SieAppWebBundle' . ':Reporte:matriculaEducativaPermanente.html.twig', array(
                 'infoEntidad'=>$entidad,
                 'infoSubEntidad'=>$subEntidades,
                 'gestion'=>$gestion,
@@ -290,7 +290,7 @@ class EstadisticasPermanenteController extends Controller
                 'especialidades'=>$objEspecialidades,
             ));
         } else {
-            return $this->render($this->session->get('pathSystem') . ':Reporte:matriculaEducativaPermanente.html.twig', array(
+            return $this->render('SieAppWebBundle' . ':Reporte:matriculaEducativaPermanente.html.twig', array(
                 'infoEntidad'=>$entidad,
                 'gestion'=>$gestion,
                 'datoGraficoPoblacion'=>$chartPoblacion,
@@ -327,17 +327,17 @@ class EstadisticasPermanenteController extends Controller
             ,count(*) as cantidad
                             from institucioneducativa_curso iec
                             inner join institucioneducativa ie on iec.institucioneducativa_id = ie.id
-                            inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id
+                            inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id and ies.gestion_tipo_id = iec.gestion_tipo_id  and ies.periodo_tipo_id = iec.periodo_tipo_id and ies.sucursal_tipo_id = iec.sucursal_tipo_id
                             inner join institucioneducativa_tipo iet on iet.id=ie.institucioneducativa_tipo_id
-                                            inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
-                                            inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
+                            inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+                            inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
                             inner join estudiante as es on es.id = esi.estudiante_id
-                                        inner join genero_tipo as gt on gt.id=es.genero_tipo_id
-                                            inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
-                                            inner join permanente_programa_tipo ppt on ppt.id = piecc.programa_tipo_id
-                                            inner join permanente_sub_area_tipo psat on psat.id = piecc.sub_area_tipo_id
-                                            inner join permanente_poblacion_tipo ppot on ppot.id = piecc.poblacion_tipo_id
-                                            inner join permanente_area_tematica_tipo pat on pat.id = piecc.areatematica_tipo_id
+                            inner join genero_tipo as gt on gt.id=es.genero_tipo_id
+                            inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
+                            inner join permanente_programa_tipo ppt on ppt.id = piecc.programa_tipo_id
+                            inner join permanente_sub_area_tipo psat on psat.id = piecc.sub_area_tipo_id
+                            inner join permanente_poblacion_tipo ppot on ppot.id = piecc.poblacion_tipo_id
+                            inner join permanente_area_tematica_tipo pat on pat.id = piecc.areatematica_tipo_id
                             inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                             left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
                             left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
@@ -345,7 +345,7 @@ class EstadisticasPermanenteController extends Controller
                             left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
                             left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
                             left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-                            where iet.id =5 and ies.gestion_tipo_id = ".$gestionActual." --and lt4.codigo='".$area."'
+                            where iet.id =5 and iec.gestion_tipo_id = ".$gestionActual." --and lt4.codigo='".$area."'
                        group by ie.dependencia_tipo_id,ppt.id,psat.id,ppot.id,pat.id,gt.id
                                    )
                                    select 1 as tipo_id, 'Sexo' as tipo_nombre, gt.id, gt.genero as nombre, '' as subnombre
@@ -393,17 +393,17 @@ class EstadisticasPermanenteController extends Controller
                 ,count(*) as cantidad
                                 from institucioneducativa_curso iec
                                 inner join institucioneducativa ie on iec.institucioneducativa_id = ie.id
-                                inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id
+                                inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id and ies.gestion_tipo_id = iec.gestion_tipo_id  and ies.periodo_tipo_id = iec.periodo_tipo_id and ies.sucursal_tipo_id = iec.sucursal_tipo_id
                                 inner join institucioneducativa_tipo iet on iet.id=ie.institucioneducativa_tipo_id
-                                                inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
-                                                inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
+                                inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+                                inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
                                 inner join estudiante as es on es.id = esi.estudiante_id
-                                            inner join genero_tipo as gt on gt.id=es.genero_tipo_id
-                                                inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
-                                                inner join permanente_programa_tipo ppt on ppt.id = piecc.programa_tipo_id
-                                                inner join permanente_sub_area_tipo psat on psat.id = piecc.sub_area_tipo_id
-                                                inner join permanente_poblacion_tipo ppot on ppot.id = piecc.poblacion_tipo_id
-                                                inner join permanente_area_tematica_tipo pat on pat.id = piecc.areatematica_tipo_id
+                                inner join genero_tipo as gt on gt.id=es.genero_tipo_id
+                                inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
+                                inner join permanente_programa_tipo ppt on ppt.id = piecc.programa_tipo_id
+                                inner join permanente_sub_area_tipo psat on psat.id = piecc.sub_area_tipo_id
+                                inner join permanente_poblacion_tipo ppot on ppot.id = piecc.poblacion_tipo_id
+                                inner join permanente_area_tematica_tipo pat on pat.id = piecc.areatematica_tipo_id
                                 inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                                 left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
                                 left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
@@ -459,17 +459,17 @@ class EstadisticasPermanenteController extends Controller
                 ,count(*) as cantidad
                                 from institucioneducativa_curso iec
                                 inner join institucioneducativa ie on iec.institucioneducativa_id = ie.id
-                                inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id
+                                inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id and ies.gestion_tipo_id = iec.gestion_tipo_id  and ies.periodo_tipo_id = iec.periodo_tipo_id and ies.sucursal_tipo_id = iec.sucursal_tipo_id
                                 inner join institucioneducativa_tipo iet on iet.id=ie.institucioneducativa_tipo_id
-                                                inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
-                                                inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
+                                inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+                                inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
                                 inner join estudiante as es on es.id = esi.estudiante_id
-                                            inner join genero_tipo as gt on gt.id=es.genero_tipo_id
-                                                inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
-                                                inner join permanente_programa_tipo ppt on ppt.id = piecc.programa_tipo_id
-                                                inner join permanente_sub_area_tipo psat on psat.id = piecc.sub_area_tipo_id
-                                                inner join permanente_poblacion_tipo ppot on ppot.id = piecc.poblacion_tipo_id
-                                                inner join permanente_area_tematica_tipo pat on pat.id = piecc.areatematica_tipo_id
+                                inner join genero_tipo as gt on gt.id=es.genero_tipo_id
+                                inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
+                                inner join permanente_programa_tipo ppt on ppt.id = piecc.programa_tipo_id
+                                inner join permanente_sub_area_tipo psat on psat.id = piecc.sub_area_tipo_id
+                                inner join permanente_poblacion_tipo ppot on ppot.id = piecc.poblacion_tipo_id
+                                inner join permanente_area_tematica_tipo pat on pat.id = piecc.areatematica_tipo_id
                                 inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                                 left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
                                 left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
@@ -524,17 +524,17 @@ class EstadisticasPermanenteController extends Controller
                 ,count(*) as cantidad
                                 from institucioneducativa_curso iec
                                 inner join institucioneducativa ie on iec.institucioneducativa_id = ie.id
-                                inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id
+                                inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id and ies.gestion_tipo_id = iec.gestion_tipo_id  and ies.periodo_tipo_id = iec.periodo_tipo_id and ies.sucursal_tipo_id = iec.sucursal_tipo_id
                                 inner join institucioneducativa_tipo iet on iet.id=ie.institucioneducativa_tipo_id
-                                                inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
-                                                inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
+                                inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+                                inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
                                 inner join estudiante as es on es.id = esi.estudiante_id
-                                            inner join genero_tipo as gt on gt.id=es.genero_tipo_id
-                                                inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
-                                                inner join permanente_programa_tipo ppt on ppt.id = piecc.programa_tipo_id
-                                                inner join permanente_sub_area_tipo psat on psat.id = piecc.sub_area_tipo_id
-                                                inner join permanente_poblacion_tipo ppot on ppot.id = piecc.poblacion_tipo_id
-                                                inner join permanente_area_tematica_tipo pat on pat.id = piecc.areatematica_tipo_id
+                                inner join genero_tipo as gt on gt.id=es.genero_tipo_id
+                                inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
+                                inner join permanente_programa_tipo ppt on ppt.id = piecc.programa_tipo_id
+                                inner join permanente_sub_area_tipo psat on psat.id = piecc.sub_area_tipo_id
+                                inner join permanente_poblacion_tipo ppot on ppot.id = piecc.poblacion_tipo_id
+                                inner join permanente_area_tematica_tipo pat on pat.id = piecc.areatematica_tipo_id
                                 inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                                 left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
                                 left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
@@ -589,17 +589,17 @@ class EstadisticasPermanenteController extends Controller
                 ,count(*) as cantidad
                                 from institucioneducativa_curso iec
                                 inner join institucioneducativa ie on iec.institucioneducativa_id = ie.id
-                                inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id
+                                inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id and ies.gestion_tipo_id = iec.gestion_tipo_id  and ies.periodo_tipo_id = iec.periodo_tipo_id and ies.sucursal_tipo_id = iec.sucursal_tipo_id
                                 inner join institucioneducativa_tipo iet on iet.id=ie.institucioneducativa_tipo_id
-                                                inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
-                                                inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
+                                inner join dependencia_tipo as dt on dt.id = ie.dependencia_tipo_id
+                                inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
                                 inner join estudiante as es on es.id = esi.estudiante_id
-                                            inner join genero_tipo as gt on gt.id=es.genero_tipo_id
-                                                inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
-                                                inner join permanente_programa_tipo ppt on ppt.id = piecc.programa_tipo_id
-                                                inner join permanente_sub_area_tipo psat on psat.id = piecc.sub_area_tipo_id
-                                                inner join permanente_poblacion_tipo ppot on ppot.id = piecc.poblacion_tipo_id
-                                                inner join permanente_area_tematica_tipo pat on pat.id = piecc.areatematica_tipo_id
+                                inner join genero_tipo as gt on gt.id=es.genero_tipo_id
+                                inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
+                                inner join permanente_programa_tipo ppt on ppt.id = piecc.programa_tipo_id
+                                inner join permanente_sub_area_tipo psat on psat.id = piecc.sub_area_tipo_id
+                                inner join permanente_poblacion_tipo ppot on ppot.id = piecc.poblacion_tipo_id
+                                inner join permanente_area_tematica_tipo pat on pat.id = piecc.areatematica_tipo_id
                                 inner join jurisdiccion_geografica as jg on jg.id = ie.le_juridicciongeografica_id
                                 left join lugar_tipo as lt on lt.id = jg.lugar_tipo_id_localidad
                                 left join lugar_tipo as lt1 on lt1.id = lt.lugar_tipo_id
@@ -1427,7 +1427,7 @@ class EstadisticasPermanenteController extends Controller
      * @param Request $request
      * @return type
      */
-    public function buscaSubEntidadRolEspecial($area,$rol,$gestion,$periodo) {
+    public function buscaSubEntidadRolPermanente($area,$rol,$gestion,$periodo) {
         /*
          * Define la zona horaria y halla la fecha actual
          */
@@ -1441,11 +1441,10 @@ class EstadisticasPermanenteController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $queryEntidad = $em->getConnection()->prepare("
-        select  'Departamento' as nombreArea, lt4.codigo as codigo, lt4.lugar  as nombre, 7 as rolUsuario 
-            , count(*) as total_inscrito  
+        select  'Departamento' as nombreArea, lt4.codigo as codigo, lt4.lugar  as nombre, 7 as rolUsuario, count(*) as total_inscrito  
         from institucioneducativa_curso iec
         inner join institucioneducativa ie on iec.institucioneducativa_id = ie.id
-        inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id
+        inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id and ies.gestion_tipo_id = iec.gestion_tipo_id  and ies.periodo_tipo_id = iec.periodo_tipo_id and ies.sucursal_tipo_id = iec.sucursal_tipo_id 
         inner join institucioneducativa_tipo iet on iet.id=ie.institucioneducativa_tipo_id
         inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
         inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
@@ -1457,7 +1456,7 @@ class EstadisticasPermanenteController extends Controller
         left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
         left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
         left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-        where iet.id =5 and ies.gestion_tipo_id = ".$gestionActual."
+        where iet.id = 5 and iec.gestion_tipo_id = ".$gestionActual."
         group by lt4.id, lt4.codigo, lt4.lugar
         ");
 
@@ -1469,11 +1468,10 @@ class EstadisticasPermanenteController extends Controller
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
             $queryEntidad = $em->getConnection()->prepare("
-                     SELECT 'Centro de Educación Alternativa' as nombreArea, ie.id as codigo, ie.id::varchar||' - '||ie.institucioneducativa as nombre, 9 as rolUsuario 
-                     , count(*) as total_inscrito  
+                     SELECT 'Centro de Educación Alternativa' as nombreArea, ie.id as codigo, ie.id::varchar||' - '||ie.institucioneducativa as nombre, 9 as rolUsuario, count(*) as total_inscrito  
                      from institucioneducativa_curso iec
                      inner join institucioneducativa ie on iec.institucioneducativa_id = ie.id
-                     inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id
+                     inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id and ies.gestion_tipo_id = iec.gestion_tipo_id  and ies.periodo_tipo_id = iec.periodo_tipo_id and ies.sucursal_tipo_id = iec.sucursal_tipo_id 
                      inner join institucioneducativa_tipo iet on iet.id=ie.institucioneducativa_tipo_id
                      inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
                     inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
@@ -1485,7 +1483,7 @@ class EstadisticasPermanenteController extends Controller
                     left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
                     left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
                     left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-                     where iet.id =5 and ies.gestion_tipo_id = ".$gestionActual." and lt5.codigo='".$area."'
+                     where iet.id = 5 and iec.gestion_tipo_id = ".$gestionActual." and lt5.codigo='".$area."'
                      group by ie.id, ie.institucioneducativa
                     order by ie.id, ie.institucioneducativa
                    -- where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." and lt5.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
@@ -1496,11 +1494,10 @@ class EstadisticasPermanenteController extends Controller
         if($rol == 7) // Tecnico Departamental
         {
             $queryEntidad = $em->getConnection()->prepare("
- SELECT 'Distrito Educativo' as nombreArea, lt5.codigo as codigo, lt5.lugar  as nombre, 10 as rolUsuario 
- , count(*) as total_inscrito  
+                    SELECT 'Distrito Educativo' as nombreArea, lt5.codigo as codigo, lt5.lugar  as nombre, 10 as rolUsuario, count(*) as total_inscrito  
                      from institucioneducativa_curso iec
                      inner join institucioneducativa ie on iec.institucioneducativa_id = ie.id
-                     inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id
+                     inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id and ies.gestion_tipo_id = iec.gestion_tipo_id  and ies.periodo_tipo_id = iec.periodo_tipo_id and ies.sucursal_tipo_id = iec.sucursal_tipo_id 
                      inner join institucioneducativa_tipo iet on iet.id=ie.institucioneducativa_tipo_id
                      inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
                     inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
@@ -1512,7 +1509,7 @@ class EstadisticasPermanenteController extends Controller
                     left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
                     left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
                     left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-                     where iet.id =5 and ies.gestion_tipo_id = ".$gestionActual." and lt4.codigo='".$area."'
+                     where iet.id = 5 and iec.gestion_tipo_id = ".$gestionActual." and lt4.codigo='".$area."'
                      group by lt5.id, lt5.codigo, lt5.lugar
                      order by lt5.id, lt5.codigo, lt5.lugar
                      -- where f.gestion_tipo_id = ".$gestionActual." and f.periodo_tipo_id = ".$periodo." and lt4.codigo='".$area."'-- and cast(substring(cod_dis,1,1) as integer)=2
@@ -1523,11 +1520,10 @@ class EstadisticasPermanenteController extends Controller
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
             $queryEntidad = $em->getConnection()->prepare("
-                 SELECT 'Departamento' as nombreArea, lt4.codigo as codigo, lt4.lugar  as nombre, 7 as rolUsuario 
-                 , count(*) as total_inscrito  
+                 SELECT 'Departamento' as nombreArea, lt4.codigo as codigo, lt4.lugar  as nombre, 7 as rolUsuario, count(*) as total_inscrito  
                  from institucioneducativa_curso iec
                  inner join institucioneducativa ie on iec.institucioneducativa_id = ie.id
-                 inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id
+                 inner join institucioneducativa_sucursal ies on ies.institucioneducativa_id = ie.id and ies.gestion_tipo_id = iec.gestion_tipo_id  and ies.periodo_tipo_id = iec.periodo_tipo_id and ies.sucursal_tipo_id = iec.sucursal_tipo_id 
                  inner join institucioneducativa_tipo iet on iet.id=ie.institucioneducativa_tipo_id
                  inner join permanente_institucioneducativa_cursocorto piecc on piecc.institucioneducativa_curso_id = iec.id
                  inner join estudiante_inscripcion esi on iec.id=esi.institucioneducativa_curso_id 
@@ -1539,7 +1535,7 @@ class EstadisticasPermanenteController extends Controller
                  left join lugar_tipo as lt3 on lt3.id = lt2.lugar_tipo_id
                  left join lugar_tipo as lt4 on lt4.id = lt3.lugar_tipo_id
                  left join lugar_tipo as lt5 on lt5.id = jg.lugar_tipo_id_distrito
-                 where iet.id =5 and ies.gestion_tipo_id = ".$gestionActual." --and lt4.codigo='".$area."'
+                 where iet.id =5 and iec.gestion_tipo_id = ".$gestionActual." --and lt4.codigo='".$area."'
                  group by lt4.id, lt4.codigo, lt4.lugar
                  order by lt4.id, lt4.codigo, lt4.lugar
             ");
@@ -1560,7 +1556,7 @@ class EstadisticasPermanenteController extends Controller
      * @param Request $request
      * @return type
      */
-    public function informacionGeneralAlternativaPrintPdfAction(Request $request) {
+    public function informacionGeneralPermanentePrintPdfAction(Request $request) {
         /*
          * Define la zona horaria y halla la fecha actual
          */
@@ -1593,7 +1589,8 @@ class EstadisticasPermanenteController extends Controller
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
 
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_est_InformacionEstadistica_nacional_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion));
+        
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -1601,17 +1598,17 @@ class EstadisticasPermanenteController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_distrital_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&Distrito='.$codigoArea));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_est_InformacionEstadistica_distrital_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion.'&distrito='.$codigoArea));
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_departamental_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo.'&Departamento='.$codigoArea));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_est_InformacionEstadistica_departamental_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion.'&departamento='.$codigoArea));
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=pdf&Gestion='.$gestion.'&Periodo='.$periodo));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_est_InformacionEstadistica_nacional_v1_rcm.rptdesign&__format=pdf&gestion='.$gestion));
         }
 
         $response->setStatusCode(200);
@@ -1622,7 +1619,7 @@ class EstadisticasPermanenteController extends Controller
     }
 
 
-    public function informacionGeneralAlternativaPrintXlsAction(Request $request) {
+    public function informacionGeneralPermanentePrintXlsAction(Request $request) {
         /*
          * Define la zona horaria y halla la fecha actual
          */
@@ -1654,7 +1651,7 @@ class EstadisticasPermanenteController extends Controller
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', $arch));
      //   dump($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo);die;
         // por defecto
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_est_InformacionEstadistica_nacional_v1_rcm.rptdesign&__format=xlsx&gestion='.$gestion));
 
         if($rol == 9 or $rol == 5) // Director o Administrativo
         {
@@ -1662,19 +1659,19 @@ class EstadisticasPermanenteController extends Controller
 
         if($rol == 10 or $rol == 11) // Distrital o Tecnico Distrito
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_distrital_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&Distrito='.$codigoArea));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_est_InformacionEstadistica_distrital_v1_rcm.rptdesign&__format=xlsx&gestion='.$gestion.'&distrito='.$codigoArea));
 
         }
 
         if($rol == 7) // Tecnico Departamental
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_departamental_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo.'&Departamento='.$codigoArea));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_est_InformacionEstadistica_departamentalv1_rcm.rptdesign&__format=xlsx&gestion='.$gestion.'&departamento='.$codigoArea));
 
         }
 
         if($rol == 8 or $rol == 20) // Tecnico Nacional
         {
-            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_est_nacional_v1_ma.rptdesign&__format=xlsx&Gestion='.$gestion.'&Periodo='.$periodo));
+            $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'per_est_InformacionEstadistica_nacional_v1_rcm.rptdesign&__format=xlsx&gestion='.$gestion));
 
         }
 

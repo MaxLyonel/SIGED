@@ -79,6 +79,60 @@
                                 </div>
                             </div>
                             {{form_end(form)}}
+
+                            <div class="panel-body bs-example">
+                                <ul class="nav nav-tabs" id="myTab">
+                                    <li><a data-toggle="tab" href="#sectionA">Reportes por gestión (<label id="lbl_gestion"></label>)</a></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="sectionA" class="tab-pane fade in active">
+                                        <!--<h3>Reportes de Asignación de maestras(os)  </h3>-->
+                                        <div class="col-md-12">
+                                            <!-- Start list bank table -->
+                                            <div class="panel">
+                                                <div class="panel-body no-padding">
+                                                    <div class="table-responsive">
+
+                                                    <form name="formtable" role="form" action="{{ path('herramienta_alter_reporte_matricula_gestion_pdf') }}" method="POST" onsubmit="return verificaCampos()">
+                                                        <input type="hidden" name="ges" id="ges" value="0">               
+                                                        <table class="table">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>
+                                                                        <span class="pull-left text-capitalize">Matrícula Educativa por participantes</span>
+                                                                    </td>
+                                                                    <td class="text-center" style="width: 1%">
+                                                                        <input type="submit" name="btnGestionMatriculaPdf" id="btnGestionMatriculaPdf" class="btn btn-youtube" value="PDF" />
+                                                                    </td>
+                                                                    <td class="text-center" style="width: 1%">
+                                                                        <input type="submit" name="btnGestionMatriculaXls" id="btnGestionMatriculaXls" class="btn btn-primary" value="XLS" />
+                                                                    </td>
+                                                                    <!--
+                                                                    <td class="text-center" style="width: 1%">
+                                                                        <a onclick="generaPdf()", { ges: 2020 })}}" class="btn btn-googleplus">
+                                                                            PDF <i class="fa fa-file-pdf-o"  style="color: white;"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                    <td class="text-center" style="width: 1%">
+                                                                        <a href="" class="btn btn-success">
+                                                                            EXCEL <i class="fa fa-file-excel-o"></i>
+                                                                        </a>
+                                                                    </td>
+                                                                    -->
+                                                                </tr>  
+                                                            </tbody>
+                                                        </table>                                         
+                                                    </form>
+                                                    </div>
+                                                </div><!-- /.panel-body -->
+                                            </div>
+                                            <!--/ End list bank table -->
+                                        </div>
+                                        <p>. </p>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -91,6 +145,76 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-{
+    <script>
+        $(document).ready(function() {
+            $('#lbl_gestion').html($('#form_gestion').val());
+            $('#ges').val($('#form_gestion').val());
+
+            $('#form_gestion').change(function() {
+                $('#lbl_gestion').html($('#form_gestion').val());
+                $('#ges').val($('#form_gestion').val());
+
+                $("a").attr("href", "http://www.google.com/")
+            });
+
+
+        });      
+
+        var generaPdf = function(btn){
+            if($('#form_gestion').val() == "" || $('#form_gestion').val() == "0"){
+                alert("Debe seleccionar la gestión");
+                $('#form_gestion').focus();
+                return false;
+            }               
+            
+            var gestion = $('#form_gestion').val();
+            //var btn = $(this);
+            
+            $.ajax({
+                type: 'post',
+                url: Routing.generate('herramienta_alter_reporte_matricula_gestion_pdf'),
+                data: {'gestion': gestion},
+                beforeSend: function () {
+                    $('#form').append('<div style="text-align:center" id="load"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    //btn.hide();
+                },
+                success: function (data) { 
+                    //var blob=new Blob([data]);
+                    //var link=document.createElement('a');
+                    //link.href=window.URL.createObjectURL(blob);
+                    //link.download="hola.pdf";
+                    //link.click();
+
+                    var blob=new Blob([data]);
+                    var a = document.createElement('a');
+                    var url = window.URL.createObjectURL(blob);
+                    a.href = url;
+                    a.download = 'myfile.pdf';
+                    document.body.append(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+
+                }, 
+                error: function(error){
+                    $('#load').remove();
+                    alert("Error, no fue posible enviar el formulario, intente nuevamente");  
+                    //btn.show();
+                    return false;
+                },
+            });             
+        };
+
+        var verificaCampos = function(){            
+            var gestion = $('#ges').val();
+
+            if(gestion === ""){
+                alert("Error, debe seleccionar el año de escolaridad");  
+                return false;
+            }
+
+            return true;
+        }
+    </script>
 {% endblock %}
     

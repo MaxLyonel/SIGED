@@ -373,6 +373,7 @@ class TextoEducativoController extends Controller
             'rol' => $rol,
             'departamentos'=>$arrayDepartamentos,
             'distritos'=>$arrayDistritos,
+            'currentyear'=> $this->session->get('currentyear')
             //'ues'=>$arrayUE,
         ));
       }
@@ -539,7 +540,7 @@ class TextoEducativoController extends Controller
 								left JOIN institucioneducativa_curso_textos_educativos i on i.institucioneducativa_curso_id = c.id
 			where institucioneducativa_id = institucioneducativa_id_target and gestion_tipo_id = ? 
 			group by c.id
-			having count(i.trimestre_semestre)>=2
+			having count(i.trimestre_semestre)>=1
 			) as tmp) as cursos_registrados,
 			(select count(distinct c.id)
 			from institucioneducativa_curso  c
