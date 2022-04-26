@@ -556,7 +556,7 @@ class TramiteHomologacionController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
 
-        if($yearStudent >= 2011){
+        if($yearStudent >= 2010){
             return $formOmitido = $this->createFormBuilder()
                     ->setAction($this->generateUrl('tramite_homologacion_diploma_humanistico_savenew'))
                     ->add('institucionEducativa', 'text', array('label' => 'SIE', 'attr' => array('maxlength' => 8, 'class' => 'form-control')))
@@ -701,7 +701,7 @@ class TramiteHomologacionController extends Controller {
                         return $response->setData(array('estado' => false, 'msg' => $msg));
                     }
                 }
-
+                
                 if ($newStudent['ci'] > 0){   
                     $entityExpedido = $em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneBy(array('id' => $newStudent['expedido']));
                 } else {
