@@ -2599,17 +2599,16 @@ class CursosLargosController extends Controller {
           
                 if(sizeof($objRequest)>0){
                     // get the acreditacion to set months
-                    $months  = ($objRequest['acreditacion'] == 'TÉCNICO BÁSICO' || $objRequest[0]['acreditacion'] == 'TÉCNICO AUXILIAR')?3:5;
+                    $monthsInscription  = ($objRequest['acreditacion'] == 'TÉCNICO BÁSICO' || $objRequest[0]['acreditacion'] == 'TÉCNICO AUXILIAR')?3:5;
+                    $monthsNotas  = ($objRequest['acreditacion'] == 'TÉCNICO BÁSICO' || $objRequest[0]['acreditacion'] == 'TÉCNICO AUXILIAR')?4:6;
                     $f_ini = date('d-m-Y', strtotime($objRequest['fecha_inicio']));
                     if(!$sw){
-                        $f_limit = date("d-m-Y", strtotime($f_ini."+".$months." month") );
+                        $f_limit = date("d-m-Y", strtotime($f_ini."+".$monthsInscription." month") );
                     }else{
-                        $f_ini = date("d-m-Y", strtotime($f_ini."+".$months." month") );
-                        $f_limit = date("d-m-Y", strtotime($f_ini."+".$months." month") );
+                        $f_ini = date("d-m-Y", strtotime($f_ini."+".$monthsInscription." month") );
+                        $f_limit = date("d-m-Y", strtotime($f_ini."+".$monthsNotas." month") );
                     }
-                    dump($f_ini);
-                    dump($f_limit);
-
+                    //compare the limit ini and end operatvie
                     if(strtotime($f_ini)<= strtotime($today)  && strtotime($today) <= strtotime($f_limit)){
                         $swOpe = true;
                     }
@@ -3764,6 +3763,13 @@ class CursosLargosController extends Controller {
             ->getForm();
         //   dump($dataUe);
         //   dump($objStudents);die;
+        // get the infor about the operative
+        $swInscription  = $this->getOperativeData($sw=false, $idcurso);
+        $swCalification = false;
+        if(!$swInscription){
+            $swCalification =  $this->getOperativeData(!$swInscription, $idcurso);
+        }
+             
         return $this->render('SiePermanenteBundle:CursosLargos:seeInscritos.html.twig', array(
             'objStudents' => $objStudents,
             'objx' => $estadomatriculaArray,
@@ -3772,6 +3778,8 @@ class CursosLargosController extends Controller {
             'lstmod'=>$listamodcurso,
             'cursolargo'=>$cursosLargos,
             'existins' => $existins,
+            'swInscription' => $swInscription,
+            'swCalification' => $swCalification,
             'infoUe' => $infoUe,
            // 'dataUe' => $dataUe,
             'totalInscritos'=>count($objStudents)
