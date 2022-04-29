@@ -1,5 +1,4 @@
 {% if areasNivel is not empty %}
-
 <div id="wizard">
     <ol>
         <li>Seleccionar Áreas</li>
@@ -112,6 +111,7 @@
                     </div>
                 </div>
                 <div style="text-align: right">
+                    <input type="hidden" name="todasLasAsignaturas" id="todasLasAsignaturas" value="{{todasLasAsignaturas}}">
                     <button type="submit" class="btn btn-success" id="btnsave" onclick="return confirm('¿Está completamente segura/o de agregar el curso?, Nota: Una vez agregado no se puede eliminar.')"><i class="fa fa-save fa-fw"></i>Guardar cambios</button>
                 </div>
             </div>

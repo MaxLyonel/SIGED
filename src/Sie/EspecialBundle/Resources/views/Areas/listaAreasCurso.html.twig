@@ -1,12 +1,17 @@
 {% set onlyview = app.session.get('onlyview') %}
 <div class="col-lg-12">
 <h4 class="text-orange text-center"><ins>{{curso.nivelTipo.nivel}} - {{curso.gradoTipo.grado}} - {{curso.paraleloTipo.paralelo}} {% if(curso.lugar) %} ({{curso.lugar}}) {% endif %}</ins></h4>
+<h4 class="text-orange text-center">
+<ins>  {% if cursoEspecial.especialProgramaTipo.id!=99 %} {{cursoEspecial.especialProgramaTipo.programa}}{% endif %}
+{% if cursoEspecial.especialServicioTipo.id!=99 %} {{cursoEspecial.especialServicioTipo.servicio}}{% endif %}
+{% if cursoEspecial.especialMomentoTipo.id!=99 %} ({{cursoEspecial.especialMomentoTipo.momento}}){% endif %}
+</ins></h4>
 <hr>
 </div>
 <div class="col-lg-12">
     <div class="pull-right">
         {% if onlyview == false %}
-            <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}}, '{{curso.lugar}}' , 'divAreas')" class="btn btn-primary btn-md"><i class="fa fa-plus-circle text-white"></i> Adicionar Área para especial </button>
+            <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}}, '{{curso.lugar}}',  'divAreas')" class="btn btn-primary btn-md"><i class="fa fa-plus-circle text-white"></i> Adicionar Área para especial </button>
         {% endif %}
          <a class="btn btn-default" role="button" onclick="validateForm()">Actualizar</a>
     </div> 
@@ -67,6 +72,7 @@
                         <td data-title="Acciones">
                                 {% if gestion >=2022 %}
                                  <button type="btn" class="btn {{ botonColorClase }} btn-sm" onclick="asignarHoras({{cursoOferta.id}})"  title="Asignar maestro especial" > {{ botonNombre }}</button>
+                                   <button type="button" class="btn-link" onclick="eliminarArea({{cursoOferta.id}})" title="Eliminar"><i class="fa fa-trash-o text-danger"></i> Eliminar</button>
                                 {% else %}
                                 <button class="btn" onclick="addpop({{cursoOferta.id}})" title="Asignar maestro"><i class="fa fa-users text-lilac"></i></button>
                                 {% endif %}
@@ -103,7 +109,7 @@
 <div style="display:none">
     <h4><i class="fa fa-list-alt"></i> Áreas Técnicas
         <span style="float:right; margin-bottom:10px">
-            <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}}, '{{curso.lugar}}' , 'divAreas')" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Ã�rea</button>
+            <button data-title="3456" onclick="mostrarAreas(new String('{{curso.nivelTipo.nivel}}'), '{{curso.gradoTipo.grado}}', '{{curso.paraleloTipo.paralelo}}',{{curso.id}} ,{{curso.nivelTipo.id}}, '{{curso.lugar}}', 'divAreas')" class="btn btn-green btn-xs"><i class="fa fa-plus-circle text-white"></i> Adicionar Ã�rea</button>
         </span>
     </h4>
     {% if areasCurso is empty %}

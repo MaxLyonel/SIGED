@@ -53,6 +53,8 @@ class InfoStudentsController extends Controller {
       //$objLevelsOld = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getNivelBySieAndGestion($form['sie'], $form['gestion']);
       $objUeducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->getInfoUeducativaEspecialBySieGestion($form['sie'], $form['gestion']);
 
+      //dump($objUeducativa);die;
+
       $exist = true;
       $aInfoUnidadEductiva = array();
       if ($objUeducativa) {
@@ -60,7 +62,7 @@ class InfoStudentsController extends Controller {
 
               //get the literal data of unidad educativa
               $sinfoUeducativa = serialize(array(
-                  'ueducativaInfo' => array('nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno'], 'programa' => $uEducativa['programa'], 'servicio' => $uEducativa['servicio'], 'areaEspecial' => $uEducativa['areaEspecial'], 'iecLugar'=>$uEducativa['iecLugar']),
+                  'ueducativaInfo' => array('nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno'], 'programa' => $uEducativa['programa'], 'servicio' => $uEducativa['servicio'], 'areaEspecial' => $uEducativa['areaEspecial'], 'iecLugar'=>$uEducativa['iecLugar'], 'momento'=>$uEducativa['momento']),
                   'ueducativaInfoId' => array('paraleloId' => $uEducativa['paraleloId'], 'turnoId' => $uEducativa['turnoId'],'programaId'=>$uEducativa['especialProgramaTipo'],'servicioId'=>$uEducativa['especialServicioTipo'], 'nivelId' => $uEducativa['nivelId'], 'gradoId' => $uEducativa['gradoId'], 'cicloId' => $uEducativa['cicloTipoId'], 'iecId' => $uEducativa['iecId'], 'ieceId' => $uEducativa['ieceId'],'areaEspecialId' => $uEducativa['areaEspecialId']),
                   'requestUser' => array('sie' => $form['sie'], 'gestion' => $form['gestion'])
               ));
@@ -72,6 +74,9 @@ class InfoStudentsController extends Controller {
               }else{
                 $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['grado'].'/'.$uEducativa['programa']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
               } */
+              $momento = '';
+              if($uEducativa['momentoId']!=99)
+                $momento = ' ('.$uEducativa['momento'].')';
 
               if($uEducativa['iecLugar']){
                 if ($uEducativa['nivelId'] == 411){
@@ -84,7 +89,9 @@ class InfoStudentsController extends Controller {
                 
               }else{
                 if ($uEducativa['nivelId'] == 411){
-                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['programa']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
+                  
+                  $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['programa'].$momento][$uEducativa['paralelo']]  = array('infoUe' => $sinfoUeducativa);
+                  
                 }elseif($uEducativa['nivelId'] == 410){
                   $aInfoUnidadEductiva[$uEducativa['turno']]['('.$uEducativa['areaEspecial'].') '.$uEducativa['nivel']][$uEducativa['servicio']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa);
                 }else{
@@ -93,6 +100,7 @@ class InfoStudentsController extends Controller {
               }              
 
           }
+         // dump($aInfoUnidadEductiva);die;
 
       } else {
           $message = 'No existe información de la Unidad Educativa para la gestión seleccionada ó Código SIE no existe ';
@@ -121,7 +129,7 @@ class InfoStudentsController extends Controller {
       //get the info ue
       $infoUe = $request->get('infoUe');
       $aInfoUeducativa = unserialize($infoUe);
-      
+      //dump( $aInfoUeducativa);die;
       //get the values throght the infoUe
       $sie = $aInfoUeducativa['requestUser']['sie'];
       $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
@@ -136,6 +144,7 @@ class InfoStudentsController extends Controller {
       $paraleloname = $aInfoUeducativa['ueducativaInfo']['paralelo'];
       $nivelname = $aInfoUeducativa['ueducativaInfo']['nivel'];
       $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
+      $momento = $aInfoUeducativa['ueducativaInfo']['momento'];
       
       //get db connexion
       $em = $this->getDoctrine()->getManager();
