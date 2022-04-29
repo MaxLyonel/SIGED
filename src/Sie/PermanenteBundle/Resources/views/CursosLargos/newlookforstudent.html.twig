@@ -337,6 +337,15 @@
                               <input type="input" class="form-control" id="" placeholder="Localidad" v-model="newStudent.localidad" maxlength="30" autocomplete="off" style="text-transform:uppercase">
                           </div>
                         </div>
+                        <div class="row">
+                          <div class="col-sm-3">
+                                <label for="ext">Extranejero</label>
+                                <select name="arrApode" id="idarrGenero" v-model="newStudent.extranjero" class="custom-select form-control" v-model="newPerson.apoderado">  
+                                <option value="0">No</option>
+                                <option value="1">Si</option>
+                                </select> 
+                          </div>                          
+                        </div>                        
                         </br> 
                         <button v-on:click="validateandregisterNewStudent(1)" type="button" class="btn btn-warning">Verificar </button>
                     </div>
@@ -417,6 +426,15 @@
                                   <input type="input" class="form-control" id="" placeholder="Localidad" v-model="newStudent.localidad" maxlength="18" autocomplete="off" style="text-transform:uppercase">
                               </div>
                             </div>
+                            <div class="row">
+                              <div class="col-sm-3">
+                                    <label for="ext">Extranejero</label>
+                                    <select name="arrApode" id="idarrGenero" v-model="newStudent.extranjero" class="custom-select form-control" v-model="newPerson.apoderado">  
+                                    <option value="0">No</option>
+                                    <option value="1">Si</option>
+                                    </select> 
+                              </div>                          
+                            </div>                             
                             </br>
                             <button v-on:click="validateandregisterNewStudent(0)" type="button" class="btn btn-warning">Verificar </button>
                           </form>
