@@ -26,7 +26,11 @@ class ModalidadCursoController extends Controller {
 
     	$infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
-        $cursoId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+        if($this->session->get('pathSystem')  == 'SiePermanenteBundle'){
+            $cursoId = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecId'];
+        }else {
+            $cursoId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
+        }
 
         $week = date('W');
 
