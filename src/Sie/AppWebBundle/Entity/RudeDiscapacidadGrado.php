@@ -25,9 +25,19 @@ class RudeDiscapacidadGrado
     private $fechaModificacion;
 
     /**
+     * @var integer
+     */
+    private $porcentaje;
+
+    /**
+     * @var string
+     */
+    private $gradoOtro;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\DiscapacidadTipo
      */
-    private $discapacidadTipo;
+    private $discapacidadOtroGrado;
 
     /**
      * @var \Sie\AppWebBundle\Entity\Rude
@@ -38,6 +48,11 @@ class RudeDiscapacidadGrado
      * @var \Sie\AppWebBundle\Entity\GradoDiscapacidadTipo
      */
     private $gradoDiscapacidadTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\DiscapacidadTipo
+     */
+    private $discapacidadTipo;
 
 
     /**
@@ -97,26 +112,72 @@ class RudeDiscapacidadGrado
     }
 
     /**
-     * Set discapacidadTipo
+     * Set porcentaje
      *
-     * @param \Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadTipo
+     * @param integer $porcentaje
      * @return RudeDiscapacidadGrado
      */
-    public function setDiscapacidadTipo(\Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadTipo = null)
+    public function setPorcentaje($porcentaje)
     {
-        $this->discapacidadTipo = $discapacidadTipo;
+        $this->porcentaje = $porcentaje;
     
         return $this;
     }
 
     /**
-     * Get discapacidadTipo
+     * Get porcentaje
+     *
+     * @return integer 
+     */
+    public function getPorcentaje()
+    {
+        return $this->porcentaje;
+    }
+
+    /**
+     * Set gradoOtro
+     *
+     * @param string $gradoOtro
+     * @return RudeDiscapacidadGrado
+     */
+    public function setGradoOtro($gradoOtro)
+    {
+        $this->gradoOtro = $gradoOtro;
+    
+        return $this;
+    }
+
+    /**
+     * Get gradoOtro
+     *
+     * @return string 
+     */
+    public function getGradoOtro()
+    {
+        return $this->gradoOtro;
+    }
+
+    /**
+     * Set discapacidadOtroGrado
+     *
+     * @param \Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadOtroGrado
+     * @return RudeDiscapacidadGrado
+     */
+    public function setDiscapacidadOtroGrado(\Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadOtroGrado = null)
+    {
+        $this->discapacidadOtroGrado = $discapacidadOtroGrado;
+    
+        return $this;
+    }
+
+    /**
+     * Get discapacidadOtroGrado
      *
      * @return \Sie\AppWebBundle\Entity\DiscapacidadTipo 
      */
-    public function getDiscapacidadTipo()
+    public function getDiscapacidadOtroGrado()
     {
-        return $this->discapacidadTipo;
+        return $this->discapacidadOtroGrado;
     }
 
     /**
@@ -163,5 +224,28 @@ class RudeDiscapacidadGrado
     public function getGradoDiscapacidadTipo()
     {
         return $this->gradoDiscapacidadTipo;
+    }
+
+    /**
+     * Set discapacidadTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadTipo
+     * @return RudeDiscapacidadGrado
+     */
+    public function setDiscapacidadTipo(\Sie\AppWebBundle\Entity\DiscapacidadTipo $discapacidadTipo = null)
+    {
+        $this->discapacidadTipo = $discapacidadTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get discapacidadTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\DiscapacidadTipo 
+     */
+    public function getDiscapacidadTipo()
+    {
+        return $this->discapacidadTipo;
     }
 }
