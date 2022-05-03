@@ -66,7 +66,7 @@ class OfertaAcademicaController extends Controller {
                                       AND ie.estadoinstitucionTipo in (:idEstado)
                                       AND se.estado = :estadoSede
                                 ORDER BY ie.id ')
-                                    ->setParameter('idTipo', array(7, 8, 9))
+                                    ->setParameter('idTipo', array(7, 8, 9,11,12,13))
                                     ->setParameter('idEstado', 10)
                                     ->setParameter('estadoSede', TRUE);        
         $entities = $query->getResult(); 
@@ -86,6 +86,8 @@ class OfertaAcademicaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $listado = $this->listadoOfertaAcademica($request->get('idRie'));
+        //dump($listado);die;
+        //TODO quitar de la lista las carreras eliminadas por el usuario (19042022)
         $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
         $id_lugar = $sesion->get('roluserlugarid');
         $lugar = $em->getRepository('SieAppWebBundle:LugarTipo')->findOneById($id_lugar);

@@ -71,6 +71,40 @@
                             </div>	
 							{% endif %}
 
+                            <div class="form-group col-lg-6 col-md-12" id="divEc" {% if entity.dependenciaTipo.id == 3 %} style="display:show" {% else %}style="display:none" {% endif %}>
+                             <label class="form-label">Marque si corresponde a</label>
+                                <div class="ckbox ckbox-primary text-primary">
+                                    {% if ratificacion=='' %}
+                                   {{form_widget(form.vigencia,{ 'attr':{'onchange':'listarFechas()'}   }) }}
+                                    {% else %}
+                                    {{form_widget(form.vigencia,{ 'attr':{'onchange':'listarFechas()', 'checked':'checked'}   }) }}
+                                    {% endif %}
+                                        <label for="form_vigencia"><strong>Resolución de ratificación de vigencia del Instituto</strong></label>
+                                
+                                    </div>
+                                <div class="help-block with-errors"></div>
+                            </div>  
+                            
+                            <div class="form-group col-lg-6 col-md-12" id="divFechaInicio" {% if ratificacion == '' %}style="display:none"{% endif %} >
+                               <label class="form-label">{{form_label(form.fechaInicio)}}</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        {{form_widget(form.fechaInicio) }}
+                                        <br>
+                                    </div>
+                                </div>	
+                            </div>  
+
+                            <div class="form-group col-lg-6 col-md-12" id="divFechaFin" {% if ratificacion == '' %}style="display:none"{% endif %} >
+                               <label class="form-label">{{form_label(form.fechaFin)}}</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        {{form_widget(form.fechaFin) }}
+                                        <br>
+                                    </div>
+                                </div>	
+                            </div>  
+
                         </fieldset>
                         {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
                         <a href="{{path('historico_list', {'idRie': entity.id} )}}" class="btn btn-danger btn-lg m-l-15 waves-effect">Cancelar</a>
@@ -81,6 +115,19 @@
     </div>                
 
 {% endblock %}
-
+{% block javascripts %}
+    {{parent()}}
+    <script>
+        function listarFechas() {
+            if($("#form_vigencia").is(':checked')){
+                $("#divFechaInicio").show();
+                $("#divFechaFin").show();
+            }else{
+                $("#divFechaInicio").hide();
+                $("#divFechaFin").hide();
+            }
+        }
+    </script>
+{% endblock %}
 
 

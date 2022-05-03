@@ -55,7 +55,7 @@ class CarrerasController extends Controller {
                     FROM ttec_carrera_tipo AS carrera
               INNER JOIN ttec_area_formacion_tipo AS area ON carrera.ttec_area_formacion_tipo_id = area.id 
                LEFT JOIN ttec_institucioneducativa_carrera_autorizada AS autorizada ON carrera.id = autorizada.ttec_carrera_tipo_id 
-                   WHERE carrera.ttec_area_formacion_tipo_id < 200 
+                  -- WHERE carrera.ttec_area_formacion_tipo_id < 200 
                 GROUP BY carrera.id, area.area_formacion
                 ORDER BY carrera.nombre ASC ";
         $stmt = $db->prepare($query);
@@ -198,7 +198,8 @@ class CarrerasController extends Controller {
         $db = $em->getConnection();
         $query = "SELECT area.*
                     FROM ttec_area_formacion_tipo AS area
-                   WHERE area.id < 200 
+                    WHERE area_formacion is not null
+                 --  WHERE area.id < 200 
                 ORDER BY area_formacion ASC";
         $stmt = $db->prepare($query);
         $params = array();
