@@ -71,12 +71,12 @@ class RegistroInstitucionEducativaController extends Controller {
             AND ie.estadoinstitucionTipo in (:idEstado)
             AND se.estado = :estadoSede
             ORDER BY ie.id ')
-            ->setParameter('idTipo', array(7, 8, 9))
+            ->setParameter('idTipo', array(7, 8, 9,11,12,13))
             ->setParameter('idEstado', 10)
             ->setParameter('estadoSede', TRUE);
         
         $entities = $query->getResult();
-        
+        //dump($entities);die;
         return $this->render('SieRieBundle:RegistroInstitucionEducativa:list.html.twig', array(
             'entities' => $entities,
             'lugarUsuario' => intval($lugar->getCodigo())
@@ -605,7 +605,7 @@ class RegistroInstitucionEducativaController extends Controller {
                 FROM SieAppWebBundle:InstitucioneducativaTipo iet
                 WHERE iet.id in (:id)
                 ORDER BY iet.id ASC'
-            )->setParameter('id', array(7, 8, 9));
+            )->setParameter('id', array(7, 8, 9,11,12,13));
             $tipos = $query->getResult();
             $tiposArray = array();
             $tiposArray[0] = 'Seleccionar Tipo de Instituto...';
@@ -632,9 +632,10 @@ class RegistroInstitucionEducativaController extends Controller {
      * Obtiene Arrays de Area de Formación
      */ 
     public function obtieneAreaFormacionArray($id){
+        
         $em = $this->getDoctrine()->getManager();
         switch($id){
-            case '9': //instituto técnico y técnologico
+            case '9': //instituto técnico Y técnologico
                 $nuevoArray = array();
                 //areas técnicas
                 $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findBy(array('institucioneducativaTipo' => $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(7)));
@@ -646,19 +647,26 @@ class RegistroInstitucionEducativaController extends Controller {
                 foreach($datos as $dato){
                     $nuevoArray[$dato->getId()] = $dato->getAreaFormacion();
                 }
-                return $nuevoArray;
-
             break;
-
+            case '11': //CENTROS de capacitación artistica
+            case '12': //instituto de formación artistica
+            case '13': //escuelas
+                $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findBy(array('institucioneducativaTipo' => $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(12)));
+                $nuevoArray = array();
+                foreach($datos as $dato){
+                    $nuevoArray[$dato->getId()] = $dato->getAreaFormacion();
+                }
+            break;
             default: //instituto técnico ó tecnológico
                 $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findBy(array('institucioneducativaTipo' => $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find($id)));
                 $nuevoArray = array();
                 foreach($datos as $dato){
                     $nuevoArray[$dato->getId()] = $dato->getAreaFormacion();
                 }
-                return $nuevoArray; 
+               
             break;
         }
+        return $nuevoArray; 
     }
 
     /***

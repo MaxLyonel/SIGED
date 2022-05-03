@@ -190,7 +190,7 @@
                                         <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                         <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
                                         <td data-title="Modalidad">{% if  c.especialModalidadTipo %} {{c.especialModalidadTipo.modalidad}} {% endif %}</td>
-                                        <td data-title="Observación">{{ c.institucioneducativaCurso.lugar }}</td>
+                                        <td data-title="Observación">{{ c.institucioneducativaCurso.lugar }}  {% if c.especialMomentoTipo %} {{c.especialMomentoTipo.momento}} {% endif %} </td>
                                         <td data-title="Acciones">
                                             {% if onlyview %}
                                                 -
@@ -221,7 +221,7 @@
                                             <td data-title="Tecnica">{{c.especialNivelTecnicoTipo.nivelTecnico}}-{{c.especialTecnicaEspecialidadTipo.especialidad}}</td>
                                             <td data-title="Turno">{{c.institucioneducativaCurso.turnoTipo.turno}}</td>
                                             <td data-title="Modalidad">{% if  c.especialModalidadTipo %} {{c.especialModalidadTipo.modalidad}} {% endif %}</td>
-                                            <td data-title="Observación">{{ c.institucioneducativaCurso.lugar }}</td>
+                                            <td data-title="Observación">{{ c.institucioneducativaCurso.lugar }}  {% if c.especialMomentoTipo %} {{c.especialMomentoTipo.momento}} {% endif %} </td>
                                             <td data-title="Acciones">
                                                 {% if onlyview %}
                                                     -
@@ -247,4 +247,4 @@
                         </div>
                     </div>
                 </div>
-                    {% endblock %}
+     {% endblock %}

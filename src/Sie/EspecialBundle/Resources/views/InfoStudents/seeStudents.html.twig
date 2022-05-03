@@ -66,6 +66,7 @@
                         <td align="center" class="warning" colspan="4">Estudiantes Inscritos</br>
                             {{ueducativaInfo.turno}} - {{ueducativaInfo.areaEspecial}} - {{ueducativaInfo.nivel}} - {% if nivel not in [410,411] %} {{ueducativaInfo.grado}} {% endif %} {% if nivel == 410 %} {{ueducativaInfo.servicio}} {% endif %} {% if nivel == 411 %} {{ueducativaInfo.programa}} {% endif %} - {{ueducativaInfo.paralelo}}
                             {% if ueducativaInfo.iecLugar %} </br> {{ueducativaInfo.iecLugar}} {% endif %}
+                            {% if ueducativaInfo.momento !='No aplica' %} </br> ({{ueducativaInfo.momento}}) {% endif %}
                         </td>
                         <td>Opciones</td>
 
@@ -133,11 +134,11 @@
                                         {% endif %}    
                                         #}    
                                     {% endif %}
-                                         {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE ES">
+                                          <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE ES">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>
                                             </button>
-                                        </div> #}
+                                        </div> 
                                         
                                     {% if onlyview == false and (gestion == app.session.get('currentyear') ) %}  {#Solo hasta el 24 de enero 2022 #}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">

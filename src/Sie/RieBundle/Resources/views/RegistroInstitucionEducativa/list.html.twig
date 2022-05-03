@@ -39,7 +39,7 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-right">
                             <a href="{{path('rie_new')}}" class="btn btn-md bg-orange waves-effect">
-                                <i class="material-icons">add_box</i>Nueva Sede
+                                <i class="material-icons">add_box</i>Nueva Sede Central
                             </a>
                         </div>
                     </div>                
@@ -86,6 +86,7 @@
                                             <td>
                                                 
                                                 {# % if entity.institucioneducativa.id == entity.sede and entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %#}
+                                                
                                                 {% if entity.institucioneducativa.id == entity.sede %}
                                                 <a href="{{path('rie_new_subsede', {'idRie': entity.institucioneducativa.id})}}" class="btn btn-default btn-circle waves-effect waves-circle waves-float" data-toggle="tooltip" data-placement="top" title="Registrar Subsede">
                                                     <i class="material-icons">widgets</i>
