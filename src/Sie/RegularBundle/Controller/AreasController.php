@@ -366,6 +366,7 @@ class AreasController extends Controller {
              dump($dependencia_tipo_id);
              dump($es_multigrado);
              die;*/
+             
 
              if($sw_nivel_primario == true and $sw_nivel_inicial == false and $dependencia_tipo_id != 3 and $es_multigrado == true)
              {
@@ -786,7 +787,7 @@ class AreasController extends Controller {
         $statement = $em->getConnection()->prepare($sql);
         $statement->execute();
         $result = $statement->fetchAll();
-        dump($result[0]['count']); die;
+        //dump($result[0]['count']); die;
         $nivelautorizado = $result[0]['count'];
 
         /**
