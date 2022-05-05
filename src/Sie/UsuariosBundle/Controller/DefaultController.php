@@ -678,10 +678,31 @@ class DefaultController extends Controller
             $form_x = $request->get('sie_usuarios_form');
 
             $multiple = $form_x['rolTipo'];
-                        
+       
             $lugids = explode(",", $data['lugtipids']);
             $i = 0;
+            // here the validation by krlos idusuario
+            $idsrol = $em->getRepository('SieAppWebBundle:RolRolesAsignacion')->getFindByNotUserRolesId($this->session->get('roluser'),  $form_x['idusuario']);
+
+            $allowRols = array();
+            foreach ($idsrol as $value) {
+                $allowRols[] = $value['id'];
+            }
             
+            $swUpdate = true;
+            while (($valSend = current($multiple)) !== FALSE && $swUpdate) {
+                if(in_array($valSend, $allowRols) ){
+                    $swUpdate=true;
+                }else{
+                    $swUpdate=false;
+                }
+                next($multiple);
+            }
+            if(!$swUpdate){
+                return $response->setData(array('accion' => $data['accion'], 'mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!'));
+            }
+            // end here the validation by krlos idusuario
+
             foreach ($multiple as $value)
             {
                 $rolTipo = $this->getDoctrine()->getRepository('SieAppWebBundle:RolTipo')->find($value);
