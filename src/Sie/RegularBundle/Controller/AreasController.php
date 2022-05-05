@@ -366,6 +366,7 @@ class AreasController extends Controller {
              dump($dependencia_tipo_id);
              dump($es_multigrado);
              die;*/
+             
 
              if($sw_nivel_primario == true and $sw_nivel_inicial == false and $dependencia_tipo_id != 3 and $es_multigrado == true)
              {
