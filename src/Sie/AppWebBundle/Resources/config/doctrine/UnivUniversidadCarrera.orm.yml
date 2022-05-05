@@ -2,9 +2,6 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
     type: entity
     table: univ_universidad_carrera
     indexes:
-        IDX_729C05DBF67BB471:
-            columns:
-                - univ_periodo_academico_tipo_id
         IDX_729C05DBFDF04187:
             columns:
                 - univ_modalidad_ensenanza_tipo_id
@@ -93,15 +90,6 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             comment: ''
             column: fecha_modificacion
     manyToOne:
-        univPeriodoAcademicoTipo:
-            targetEntity: UnivPeriodoAcademicoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                univ_periodo_academico_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         univModalidadEnsenanzaTipo:
             targetEntity: UnivModalidadEnsenanzaTipo
             cascade: {  }

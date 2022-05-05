@@ -1,22 +1,19 @@
-Sie\AppWebBundle\Entity\UnivSede:
+Sie\AppWebBundle\Entity\UnivSedeSucursal:
     type: entity
-    table: univ_sede
+    table: univ_sede_sucursal
     indexes:
-        IDX_EB95A2804CCFB9B2:
+        IDX_88127A525D678D7A:
             columns:
-                - univ_sede_tipo_id
-        IDX_EB95A280DB38439E:
+                - estadoinstitucion_tipo_id
+        IDX_88127A52F67BB471:
             columns:
-                - usuario_id
-        IDX_EB95A280E6E3E104:
+                - univ_periodo_academico_tipo_id
+        IDX_88127A52179FF95:
             columns:
-                - univ_naturalezajuridica_tipo_id
-        IDX_EB95A280D0B300B1:
+                - gestion_tipo_id
+        IDX_88127A529B2067FB:
             columns:
-                - univ_universidad_id
-        IDX_EB95A280CBD110EA:
-            columns:
-                - univ_juridicciongeografica_id
+                - univ_sede_id
     id:
         id:
             type: integer
@@ -27,33 +24,55 @@ Sie\AppWebBundle\Entity\UnivSede:
             generator:
                 strategy: SEQUENCE
     fields:
-        sede:
-            type: string
-            nullable: false
-            length: 150
-            fixed: false
-            comment: ''
-        resolucionSuprema:
+        telefono1:
             type: string
             nullable: true
-            length: 150
+            length: 100
             fixed: false
             comment: ''
-            column: resolucion_suprema
-        resolucionMinisterial:
+        telefono2:
             type: string
             nullable: true
-            length: 150
+            length: 100
             fixed: false
             comment: ''
-            column: resolucion_ministerial
-        naturalezaJuridica:
+        referenciaTelefono2:
             type: string
             nullable: true
-            length: 150
+            length: 45
             fixed: false
             comment: ''
-            column: naturaleza_juridica
+            column: referencia_telefono2
+        inicioCalendarioAcademico:
+            type: date
+            nullable: true
+            comment: ''
+            column: inicio_calendario_academico
+        fax:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        casilla:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        sitioWeb:
+            type: string
+            nullable: true
+            length: 65
+            fixed: false
+            comment: ''
+            column: sitio_web
+        email:
+            type: string
+            nullable: true
+            length: 65
+            fixed: false
+            comment: ''
         fechaRegistro:
             type: datetime
             nullable: true
@@ -65,49 +84,40 @@ Sie\AppWebBundle\Entity\UnivSede:
             comment: ''
             column: fecha_modificacion
     manyToOne:
-        univSedeTipo:
-            targetEntity: UnivSedeTipo
+        estadoinstitucionTipo:
+            targetEntity: EstadoinstitucionTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                univ_sede_tipo_id:
+                estadoinstitucion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        usuario:
-            targetEntity: Usuario
+        univPeriodoAcademicoTipo:
+            targetEntity: UnivPeriodoAcademicoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                usuario_id:
+                univ_periodo_academico_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        univNaturalezajuridicaTipo:
-            targetEntity: UnivNaturalezajuridicaTipo
+        gestionTipo:
+            targetEntity: GestionTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                univ_naturalezajuridica_tipo_id:
+                gestion_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        univUniversidad:
-            targetEntity: UnivUniversidad
+        univSede:
+            targetEntity: UnivSede
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                univ_universidad_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        univJuridicciongeografica:
-            targetEntity: UnivJurisdiccionGeografica
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                univ_juridicciongeografica_id:
+                univ_sede_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
