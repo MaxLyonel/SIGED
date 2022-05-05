@@ -1,0 +1,3 @@
+sie_university_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: SieUniversityBundle:Default:index }
