@@ -786,7 +786,7 @@ class AreasController extends Controller {
         $statement = $em->getConnection()->prepare($sql);
         $statement->execute();
         $result = $statement->fetchAll();
-        dump($result[0]['count']); die;
+        //dump($result[0]['count']); die;
         $nivelautorizado = $result[0]['count'];
 
         /**
