@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\UnivCargoTipo:
+    type: entity
+    table: univ_cargo_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cargo:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

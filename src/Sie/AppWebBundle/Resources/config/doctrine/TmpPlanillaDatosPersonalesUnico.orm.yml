@@ -1,0 +1,58 @@
+Sie\AppWebBundle\Entity\TmpPlanillaDatosPersonalesUnico:
+    type: entity
+    table: tmp_planilla_datos_personales_unico
+    indexes:
+        fk_tmp_planilla_datos_personales_unico:
+            columns:
+                - gestion
+                - carnet
+    uniqueConstraints:
+        unic_data:
+            columns:
+                - carnet
+    id:
+        nro:
+            type: bigint
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gestion:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        carnet:
+            type: string
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        paterno:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        nombre1:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+        nombre2:
+            type: string
+            nullable: true
+            length: 15
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }
