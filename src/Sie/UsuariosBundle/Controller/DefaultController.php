@@ -681,7 +681,7 @@ class DefaultController extends Controller
        
             $lugids = explode(",", $data['lugtipids']);
             $i = 0;
-            dump($request);
+            
             // here the validation by krlos idusuario
             if($form_x['idusuario']){
                 $idsrol = $em->getRepository('SieAppWebBundle:RolRolesAsignacion')->getFindByNotUserRolesId($this->session->get('roluser'),  $form_x['idusuario']);
