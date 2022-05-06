@@ -1,3 +1,11 @@
 sie_university_homepage:
     path:     /hello/{name}
     defaults: { _controller: SieUniversityBundle:Default:index }
+
+uni_staff:
+    resource: "@SieUniversityBundle/Resources/config/routing/executivestaff.yml"
+    prefix:   /uni/staff
+
+uni_sedes:
+    resource: "@SieUniversityBundle/Resources/config/routing/infosedes.yml"
+    prefix:   /uni/sedes
