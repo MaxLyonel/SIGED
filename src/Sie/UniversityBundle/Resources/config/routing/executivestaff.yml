@@ -1,0 +1,11 @@
+
+staff_index:
+    path:     /
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:index }
+
+
+staff_lookforperson:
+    path:     /lookforperson
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:lookforperson }
+    options:
+        expose: true        
