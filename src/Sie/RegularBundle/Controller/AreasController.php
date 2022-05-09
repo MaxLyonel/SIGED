@@ -330,12 +330,12 @@ class AreasController extends Controller {
                 $es_modular = true;
             }
 
-            if($sw_nivel_secundario == false){
+            if($sw_nivel_secundario == false and $es_modular == true){
                     $nivelesArray[13] = 'Secundaria Comunitaria Productiva';
                     $paralelosArray[1] = 'A';
             }
 
-          
+            
 
 
 
@@ -366,7 +366,6 @@ class AreasController extends Controller {
              dump($dependencia_tipo_id);
              dump($es_multigrado);
              die;*/
-             
 
              if($sw_nivel_primario == true and $sw_nivel_inicial == false and $dependencia_tipo_id != 3 and $es_multigrado == true)
              {
@@ -390,7 +389,7 @@ class AreasController extends Controller {
            
             //TODOS
 
-            
+            //dump(sizeof($paralelosArray)); die;
             if(sizeof($paralelosArray) == 0)
             {
                       
