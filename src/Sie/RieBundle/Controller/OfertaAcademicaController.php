@@ -527,7 +527,7 @@ class OfertaAcademicaController extends Controller {
     public function obtieneRegimenEstudio(){
     $em = $this->getDoctrine()->getManager();
     $datosArray = array();
-    $datos = $em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findBy(array('id'=>array(1,2)));
+    $datos = $em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findBy(array('id'=>array(1,2,4)));
     //dump($datos);die;
     //$datos = $em->getRepository('SieAppWebBundle:TtecRegimenEstudioTipo')->findAll();
         foreach($datos as $dato){

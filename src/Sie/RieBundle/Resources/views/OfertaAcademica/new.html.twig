@@ -177,6 +177,18 @@
                 $("#form_tiempoEstudio").append('<option value="6">6</option>');
                 $("#form_tiempoEstudio").selectpicker('refresh');
             }
+             //TecSup ; Modular
+            if(regimen == 4)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").append('<option value="4">4</option>');
+                $("#form_tiempoEstudio").append('<option value="5">5</option>');
+                $("#form_tiempoEstudio").append('<option value="6">6</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }
             
             //TecMed ; Anual
             if(nivel == 501 && regimen == 1)
