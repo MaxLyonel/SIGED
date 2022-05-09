@@ -442,7 +442,7 @@ class PersonaController extends Controller
     }
 
     public function apropiacionpersonaAction() {
-
+        return $this->redirectToRoute('sie_usuarios_homepage'); 
         $formBuscarPersona = $this->createForm(new BuscarPersonaType(array('opcion'=>1)), null, array('action' => $this->generateUrl('sie_usuario_persona_buscar_carnet'), 'method' => 'POST',));
 
         return $this->render('SieUsuariosBundle:Default:usuariocarnet.html.twig', array(           

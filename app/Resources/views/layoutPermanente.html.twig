@@ -438,7 +438,22 @@
                             </a>
                         </li>   #}
                         
+                    {% endif %}  
+
+                    {% if app.session.get('roluser') in [7,8,10]  %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-users"></i></span>
+                                <span class="text">Seguimiento</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('herramienta_inforeporte_modalidad_atencion')}}">Reporte modalidad</a></li>
+                            </ul>
+                        </li>
                     {% endif %}
+
+
 
                     {% if (app.session.get('roluser') == 7) %} {#DEPTO#}
                         <li class="submenu">
