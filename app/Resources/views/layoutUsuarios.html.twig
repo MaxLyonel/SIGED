@@ -62,7 +62,7 @@
     {% endblock %}
     <body>
         <div id="wrapper">
-            <nav class="navbar-top" role="navigation">
+            {# <nav class="navbar-top" role="navigation">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle pull-right" data-toggle="collapse" data-target=".sidebar-collapse">
                         <i class="fa fa-bars"></i> Menu
@@ -106,8 +106,8 @@
 
                     </ul>
                 </div>
-            </nav>
-            <nav class="navbar-side" role="navigation">
+            </nav> #}
+            {# <nav class="navbar-side" role="navigation">
                 <div class="navbar-collapse sidebar-collapse collapse">
                     <ul id="side" class="nav navbar-nav side-nav">
                         <li class="side-user hidden-xs">
@@ -126,7 +126,7 @@
                             </p>
                             <div class="clearfix"></div>
                         </li>
-                            {# SUPER USUARIO #}
+                            
                             {% if app.session.get('roluser') == 31 %} 
                                 <li class="panel">
                                     <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuconfiguraciones">
@@ -139,7 +139,7 @@
                                 </li>
                             {% endif %}
 
-                            {# NACIONALES #}
+                            
                             {% if (app.session.get('roluser') == 8) or (app.session.get('roluser') == 31) %} 
                                 <li class="panel">
                                     <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
@@ -176,7 +176,7 @@
                                 </li> 
                             {% endif %}
 
-                            {# NACIONALES CENSO - RESPONSABLE DE EDUCACION SUPERIOR#}
+                            
                             {% if (app.session.get('roluser') == 30) or (app.session.get('roluser') == 41) %} 
                                 <li class="panel">
                                     <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
@@ -189,14 +189,14 @@
                                 </li>
                             {% endif %}
 
-                            {# DEPARTAMENTALES #}
+                            
                             {% if app.session.get('roluser') == 7 %}                             
                                 <li class="panel">
                                     <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
                                         <i class="fa fa-search"></i> Busquedas <i class="fa fa-caret-down"></i>
                                     </a>
                                     <ul class="collapse nav" id="menuBusquedas">         
-                                        {# <li><a class="fa fa-key" onclick="estudianteForm();"> Para la creación de nuevo RUDE. </a></li>                                          #}
+                                        
                                         <li><a class="fa fa-credit-card" href="{{ path('sie_personas_usuario_carnet') }}"> Por número de carnet.</a></li>
                                         <li><a class="fa fa-user" href="{{ path('sie_usuario_busqueda_nombreusuario') }}"> Por nombre de usuario.</a></li>
                                         <li><a class="glyphicon glyphicon-home" href="{{ path('sie_personas_usuario_cod_ie') }}"> Buscar por código de institución educativa.</a></li>
@@ -233,14 +233,14 @@
                                 </li>
                             {% endif %}
                             
-                            {# DISTRITALES #}
+                            
                             {% if app.session.get('roluser') == 10 %}                             
                                 <li class="panel">
                                     <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
                                         <i class="fa fa-search"></i> Busquedas <i class="fa fa-caret-down"></i>
                                     </a>
                                     <ul class="collapse nav" id="menuBusquedas">                
-                                        {# <li><a class="fa fa-key" onclick="estudianteForm();"> Para la creación de nuevo RUDE. </a></li>   #}
+                                        
                                         <li><a class="fa fa-credit-card" href="{{ path('sie_personas_usuario_carnet') }}"> Por número de carnet.</a></li>
                                         <li><a class="fa fa-user" href="{{ path('sie_usuario_busqueda_nombreusuario') }}"> Por nombre de usuario.</a></li>
                                     </ul>
@@ -260,7 +260,7 @@
                                         </a>
                                         <ul class="collapse nav" id="menuListas2">                                        
                                              <li><a class="glyphicon glyphicon-user" href="{{ path('sie_usuarios_personas_ie') }}"> Administrativos y Docentes</a></li>                                             
-                                             {#<li><a class="glyphicon glyphicon-file" href="{{ path('sie_usuario_ie_cursos', {'usuarioid': app.session.get('userId') }) }}"> Cursos - Apoderados</a></li>#}
+                                            
                                         </ul>
                                     </li>                                    
                                 {% endif %}
@@ -275,20 +275,20 @@
                                 </li>
                             {% endif %}
 
-                            {# PNP INFORMATICOS DEPARTAMENTALES #}
+                            
                             {% if (app.session.get('roluser') == 21) %} 
                                 <li class="panel">
                                     <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
                                         <i class="fa fa-search"></i> Busquedas <i class="fa fa-caret-down"></i>
                                     </a>
                                     <ul class="collapse nav" id="menuBusquedas">                      
-                                        {# <li><a class="fa fa-key" onclick="estudianteForm();"> Para la creación de nuevo RUDE. </a></li> #}
+                                        
                                         <li><a class="fa fa-credit-card" href="{{ path('sie_personas_usuario_carnet') }}"> Por número de carnet.</a></li>                                        
                                     </ul>
                                 </li>
                             {% endif %}
 
-                            {# PNP Pedagogo #}
+                            
                             {% if (app.session.get('roluser') == 29) %} 
                                 <li class="panel">
                                     <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
@@ -310,18 +310,19 @@
                                 </li>
                             {% endif %}
                             
-                            {# DIRECTOR #}
+                            
                             {% if app.session.get('roluser') == 9 %}
                                 <li class="panel">
                                     <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuBusquedas">
                                         <i class="fa fa-search"></i> Crear Rude <i class="fa fa-caret-down"></i>
                                     </a>
 
-                                    {# if app.session.get('directorAlternativa') #}
+                                    
                                     <ul class="collapse nav" id="menuBusquedas">                
-                                        {# <li><a class="fa fa-key" onclick="estudianteForm();"> Para la creación de nuevo RUDE. </a></li>  #}
+                                    
+
                                     </ul>
-                                    {# endif #}
+                                    
                                 </li>
                                 <li class="panel">
                                     <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuListas">
@@ -341,19 +342,12 @@
                                              <li><a class="glyphicon glyphicon-user" href="{{ path('sie_usuarios_apoderados_ie') }}"> Apoderados</a></li>
                                         </ul>
                                     </li>
-                                    {#<li class="panel">
-                                        <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#menuListas3">
-                                            <i class="fa fa-list-ul"></i> Listas <i class="fa fa-caret-down"></i>
-                                        </a>
-                                        <ul class="collapse nav" id="menuListas3">                                      
-                                             <li><a class="glyphicon glyphicon-file" href="{{ path('sie_usuario_ie_cursos', {'usuarioid': app.session.get('userId') }) }}"> Cursos </a></li>
-                                        </ul>
-                                    </li>#}
+                                   
                                 {% endif %}   
                             {% endif %}    
                     </ul>
                 </div>
-            </nav>
+            </nav> #}
 
             <!-- /.navbar-side -->
             <!-- end SIDE NAVIGATION -->
