@@ -1,3 +1,11 @@
 sie_university_homepage:
-    path:     /hello/{name}
+    path:     /homepage
     defaults: { _controller: SieUniversityBundle:Default:index }
+
+sie_university_sede:
+    path:     /sede
+    defaults: { _controller: SieUniversityBundle:Default:sede }
+
+sie_university_operativo:
+    path:     /operativo
+    defaults: { _controller: SieUniversityBundle:Default:operativo }
