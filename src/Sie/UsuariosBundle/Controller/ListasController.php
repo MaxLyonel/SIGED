@@ -410,6 +410,7 @@ class ListasController extends Controller
     }
     
     public function personasieAction() {
+        return $this->redirectToRoute('sie_usuarios_homepage'); 
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();            
         $query = "
