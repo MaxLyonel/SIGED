@@ -52,6 +52,10 @@ class DefaultController extends Controller
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        $arrRolAllow = array(7,8);
+        if(!in_array($this->session->get('roluser'), $arrRolAllow)){
+            return $this->redirectToRoute('principal_web');
+        }
         
         /////APODERADO////
 //        if ($this->session->get('roluser') == '3'){
@@ -773,6 +777,11 @@ class DefaultController extends Controller
     }
     
     public function userroleditAction($usuarioid) {
+        $arrRolAllow = array(8);
+        
+        if(!in_array($this->session->get('roluser'), $arrRolAllow)){
+            die('Lo sentimos... temporalmente fuera de servicio...');
+        }        
         $em = $this->getDoctrine()->getManager();        
         
         //LEYENDO ROLES QUE PUEDE CREAR EL USUARIO
