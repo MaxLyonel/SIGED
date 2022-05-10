@@ -1,0 +1,72 @@
+Sie\AppWebBundle\Entity\UnivRegistroConsolidacion:
+    type: entity
+    table: univ_registro_consolidacion
+    indexes:
+        IDX_35061F68179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_35061F68E752475D:
+            columns:
+                - univ_operativo_tipo_id
+        IDX_35061F689B2067FB:
+            columns:
+                - univ_sede_id
+    id: {  }
+    fields:
+        descripcionError:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: descripcion_error
+        fecha:
+            type: date
+            nullable: true
+            comment: ''
+        usuario:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        consulta:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        activo:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+    oneToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univOperativoTipo:
+            targetEntity: UnivOperativoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_operativo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univSede:
+            targetEntity: UnivSede
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_sede_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
