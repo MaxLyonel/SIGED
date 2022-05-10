@@ -300,50 +300,10 @@
 
             <!-- START @PAGE CONTENT -->
             <section id="page-content">
-                <!-- Start page header -->
-                <div class="header-content fixed-top">
-                    <h2>
-                        <i class="fa fa-home"></i>
-                        {% if titulo is defined  %}  {{ titulo }} {% endif %}
-                        <span>{% if subtitulo is defined  %}{{ subtitulo }} {% endif %}</span>
-                    </h2>
-                    <div class="breadcrumb-wrapper hidden-xs">
-                        <span class="label">Usted esta aquí:</span>
-                        <ol class="breadcrumb">
-                            <li>
-                                <i class="fa fa-home"></i>
-                                <a href="{{path('sie_university_homepage')}}">Inicio</a>
-                                {% block contentBread %}                                
-                                {% endblock %}
-                            </li>
-                        </ol>
-                    </div><!-- /.breadcrumb-wrapper -->
-                </div><!-- /.header-content -->
-                <!--/ End page header -->
-                 <!-- Start body content -->
-                <div class="body-content animated fadeIn">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="page-content">
-                                {% for type, flashMessage in app.session.flashbag.all() %}
-                                    <div class="alert alert-{{ type }} alert-dismissible" role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        {% if flashMessage.title is defined %}
-                                            <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
-                                            {{ flashMessage.message }}
-                                        {% else %}
-                                            &nbsp;
-                                        {% endif %}
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    {% block contentoption %}
-                        <!-- here the iptions content -->
-                    {% endblock %}
-                </div>
-                <!--/ End body content -->
+                {% block contentoption %}
+                    <!-- here the iptions content -->
+                {% endblock %}
+                
                 <!-- Start footer content -->
                 <footer class="footer-content">
                     <span id="copyright-year">2022</span> &copy;Administrador Creado por <a href="http://www.minedu.gob.bo" target="_blank">Ministerio de Educación</a>, Bolivia
@@ -1097,6 +1057,31 @@
             <i class="fa fa-angle-up"></i>
         </div><!-- /#back-top -->
         <!--/ END BACK TOP -->
+
+
+
+        <!-- Standard Modal -->
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="modalLabel">&nbsp;</h4>
+                    </div>
+                    <div class="modal-body" id="modalBody">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+
 
         {% block javascripts %}
 
