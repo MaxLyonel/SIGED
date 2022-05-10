@@ -1,0 +1,92 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+
+    <link href="{{asset('css/bootstrap-fileupload.min.css')}}" rel="stylesheet">
+    <link href="{{asset('css/bootstrap-fileupload.css')}}" rel="stylesheet">
+
+{% endblock %}
+
+
+
+{% block contentoption %}
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-globe animated flip"></i> Estudiantes en situación de vulnerabilidad <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-globe"></i>
+                    <a href="#">
+                    Estudiantes en situación de vulnerabilidad
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+      <div class="row">
+      	<div class="col-sm-12">
+			<div class="panel shadow">
+              <div class="panel-heading">
+              	<h4 class="text-center">Seguimiento del registro de estudiantes con vulnerabilidad por DISTRITO y UNIDAD EDUCATIVA</h4>
+              </div>
+              <div class="panel-body">
+				<div class="table-responsive">
+					<table class="table">
+					  <thead class="thead-dark">
+					    <tr>
+					      <th scope="col">#</th>
+					      <th scope="col">Departamento</th>
+					      <th scope="col">Distrito</th>
+					      <th scope="col">Unidad educativa</th>
+					      <th scope="col">¿Realizó el registro?</th>
+					    </tr>
+					  </thead>
+					  <tbody>
+					  	{% if (datos|length)>0 %}
+						  	{% for i in datos %}
+						    <tr style="background-color: {{ (i.registro >0)?'#28a74580 !important':'#ffdf7e !important' }}">
+						      <td scope="row" >{{loop.index}}</td>
+						      <td scope="row" style="background-color: {{ (i.registro >0)?'#28a74580 !important':'#ffdf7e !important' }}">{{i.departamento_nom}}</td>
+						      <td scope="row" style="background-color: {{ (i.registro >0)?'#28a74580 !important':'#ffdf7e !important' }}">{{i.distrito_nom}}</td>
+						      <td scope="row" style="background-color: {{ (i.registro >0)?'#28a74580 !important':'#ffdf7e !important' }}">{{i.ue_nom}}</td>
+						      <td scope="row" style="background-color: {{ (i.registro >0)?'#28a74580 !important':'#ffdf7e !important' }}">{{ (i.registro >0)?'SI':'NO' }}</td>
+						    </tr>
+						  	{% endfor %}
+					  	{% else %}
+					  		<tr>
+					  			<td colspan="7">No existen datos para mostrar</td>
+					  		</tr>
+					  	{% endif %}
+					  </tbody>
+					</table>
+				</div>
+              </div>
+             </div>
+
+      	</div>
+      </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts%}
+    {{parent()}}
+
+<script>
+
+
+</script>
+{% endblock %}
+

@@ -784,7 +784,30 @@ LIMIT ?';
         $gestion=filter_var($request->get('gestion'),FILTER_SANITIZE_NUMBER_INT);
         $mes=filter_var($request->get('mes'),FILTER_SANITIZE_NUMBER_INT);
 
-        $query = 'select * from sp_genera_reporte_modalidad_atencion(?,?,?,?);';
+        switch ($this->sesion->get('pathSystem')) {
+            case 'SieHerramientaBundle':
+                # code...
+                $typeSystem = 1;
+                break;
+            case 'SieHerramientaAlternativaBundle':
+                # code...
+                $typeSystem = 2;
+                break;
+            case 'SieEspecialBundle':
+                # code...
+                $typeSystem = 3;
+            case 'SiePermanenteBundle':
+                # code...
+                $typeSystem = 4;
+                break;
+            
+            default:
+                # code...
+                $typeSystem = 0;
+                break;
+        }
+
+        $query = 'select * from sp_genera_reporte_modalidad_atencion_niv(?,?,?,?,?);';
         $plantillaReporte = 'reporte_modalidad_atencion.html.twig';
         if($gestion == 2021)
         {
@@ -796,7 +819,7 @@ LIMIT ?';
         }
 
         $stmt = $db->prepare($query);
-        $params = array($gestion,$departamento,$distritoTmp,$mes);
+        $params = array($gestion,$departamento,$distritoTmp,$mes,$typeSystem);
         $stmt->execute($params);
         $datosReporte=$stmt->fetchAll();
 
