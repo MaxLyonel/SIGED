@@ -330,12 +330,12 @@ class AreasController extends Controller {
                 $es_modular = true;
             }
 
-            if($sw_nivel_secundario == false){
+            if($sw_nivel_secundario == false and $es_modular == true){
                     $nivelesArray[13] = 'Secundaria Comunitaria Productiva';
                     $paralelosArray[1] = 'A';
             }
 
-          
+            
 
 
 
@@ -345,7 +345,6 @@ class AreasController extends Controller {
              */
 
              $sw_habilita_multigrado= false;
-
              //vemos si la ue tiene al menos un multigrado en primaria gestion 2022 en la tabla 
              //institucioneducativa_curso, campo multigrado en nivel_tipo_id = primaria
              $RAW_QUERY = '
@@ -389,7 +388,7 @@ class AreasController extends Controller {
            
             //TODOS
 
-            
+            //dump(sizeof($paralelosArray)); die;
             if(sizeof($paralelosArray) == 0)
             {
                       
@@ -786,7 +785,7 @@ class AreasController extends Controller {
         $statement = $em->getConnection()->prepare($sql);
         $statement->execute();
         $result = $statement->fetchAll();
-        dump($result[0]['count']); die;
+        //dump($result[0]['count']); die;
         $nivelautorizado = $result[0]['count'];
 
         /**
@@ -1310,6 +1309,7 @@ class AreasController extends Controller {
         //dump($query); die;
         $query->execute();
         $valor= $query->fetchAll();
+
         //dump($valor[0]['sp_crea_nuevo_curso']); die;
         
         /*$RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
