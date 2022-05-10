@@ -10,6 +10,11 @@ use Doctrine\ORM\Mapping as ORM;
 class UnivRegistroConsolidacion
 {
     /**
+     * @var integer
+     */
+    private $id;
+
+    /**
      * @var string
      */
     private $descripcionError;
@@ -49,6 +54,16 @@ class UnivRegistroConsolidacion
      */
     private $univSede;
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set descripcionError

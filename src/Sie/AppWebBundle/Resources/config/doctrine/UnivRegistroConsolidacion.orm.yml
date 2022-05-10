@@ -11,7 +11,21 @@ Sie\AppWebBundle\Entity\UnivRegistroConsolidacion:
         IDX_35061F689B2067FB:
             columns:
                 - univ_sede_id
-    id: {  }
+    uniqueConstraints:
+        univ_registro_consolidacionunique_key:
+            columns:
+                - gestion_tipo_id
+                - univ_sede_id
+                - univ_operativo_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
     fields:
         descripcionError:
             type: string
@@ -41,7 +55,7 @@ Sie\AppWebBundle\Entity\UnivRegistroConsolidacion:
             nullable: true
             comment: ''
             default: false
-    oneToOne:
+    manyToOne:
         gestionTipo:
             targetEntity: GestionTipo
             cascade: {  }
