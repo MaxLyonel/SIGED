@@ -1,89 +1,91 @@
 {% extends 'layoutUniversity.html.twig' %}
-
-{% block contentoption %}
-    
-
-    <!-- Start page header -->
-    <div class="header-content">
-        <h2><i class="fa fa-list-alt"></i> Principal <span>Menú principal</span></h2>
-        <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">Usted esta aquí:</span>
-            <ol class="breadcrumb">
-                <li>
-                    <i class="fa fa-home"></i>
-                    <a href="#">Inicio</a>
-                    <i class="fa fa-angle-right"></i>
-                </li>
-            </ol>
-        </div><!-- /.breadcrumb-wrapper -->
-    </div><!-- /.header-content -->
-    <!--/ End page header -->
-
-    <div class="body-content animated fadeIn">          
-        <div class="row">
-            <div class="col-12 col-md-12 col-xl-2 bd-sidebar">           
-                <div class="bd-example">
-                <table class="table">
-                  <caption>Info User</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">First</th>
-                      <th scope="col">Last</th>
-                      <th scope="col">Handle</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                    </tr>
-                  </tbody>
-                </table>
+{% block contentBread %}
+<i class="fa fa-angle-right"></i>
+<a href="#">Gestiones</a>
+{% endblock %}
+{% block contentoption %}  
+  {% if usuario is defined %}
+    {% set correo = usuario.persona.correo %}
+    {% set telefono = usuario.persona.celular %}
+    {% set username = usuario.username %}
+    {% set nombre = usuario.persona.nombre ~ " " ~ usuario.persona.paterno ~ " " ~ usuario.persona.materno %}
+  {% else %}  
+    {% set correo = "" %}
+    {% set telefono = "" %}
+    {% set username = "" %}
+    {% set nombre = "" %}
+  {% endif %}  
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-4">
+            <div class="panel rounded shadow">
+                <div class="panel-body">
+                    <div class="inner-all">
+                        <ul class="list-unstyled">
+                            <li class="text-center">
+                                <img data-no-retina="" class="img-circle img-bordered-primary" src="{{asset('user.png')}}" alt="usuario" width="100px" height="100px">
+                            </li>
+                            <li class="text-center">
+                                <h4 class="text-capitalize">{{username}}</h4>
+                                <p class="text-capitalize">{{nombre}}</p>
+                            </li>
+                            <li><br></li>
+                            <li>
+                                <div class="btn-group-vertical btn-block">
+                                    <!-- <a href="" class="btn btn-default"><i class="fa fa-cog pull-right"></i>Editar cuenta</a> -->
+                                    <a href="{{path('logout')}}" class="btn btn-default"><i class="fa fa-sign-out pull-right"></i>Cerrar sessión</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            </div><!-- /.panel -->
+
+            <div class="panel rounded shadow">
+                <div class="panel-body no-padding rounded">
+                    <ul class="list-group no-margin">
+                        <li class="list-group-item"><i class="fa fa-envelope mr-5"></i> {{correo}}</li>
+                        <li class="list-group-item"><i class="fa fa-phone mr-5"></i> {{telefono}}</li>
+                    </ul>
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
+
         </div>
-        <div class="row">
-            <div class="col-12 col-md-12 col-xl-2 bd-sidebar">           
-                <div class="bd-example">
-                <table class="table">
-                  <caption>Info Univ</caption>
-                  <thead>
-                    <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">First</th>
-                      <th scope="col">Last</th>
-                      <th scope="col">Handle</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>Mark</td>
-                      <td>Otto</td>
-                      <td>@mdo</td>
-                    </tr>
-                  </tbody>
-                </table>
-                </div>
+        <div class="col-lg-9 col-md-9 col-sm-8">
+                <div class="panel shadow">
+                        <div class="panel-heading">
+                            <div id="tour-12" class="pull-left">
+                                <h3 class="panel-title"><i class="fa fa-tasks"></i> Notificaciones</h3>
+                            </div>
+                            <div class="pull-right">
+                                <div class="btn-green date-picker">
+                                    
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div id="tour-15" style="display: block;" class="panel-body">
+                        </div><!-- /.panel-body -->
+                    </div>
             </div>
+
         </div>
-
-        <!--Seccion del reporte de incio de actividades-->
-
-    </div>
-
-
-
-
 
 {% endblock %}
 {% block javascripts%}
-    {{parent()}}
-
+{{parent()}}
 <script>
-  
+
+    var ingresoGestion = function (gestion){
+        var formGestion = $('#form_gestion');
+        var formulario = $('#form')[0];
+        formGestion.val(gestion);
+        formulario.submit(); 
+        if (formGestion.val() == ""){
+          alert("Debe seleccionar una gestión válida");
+          return false;
+        }       
+        return true;
+    };
+
 </script>
 {% endblock %}

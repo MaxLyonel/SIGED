@@ -1,1 +1,100 @@
-Hello {{ name }}!
+{% extends 'layoutUniversity.html.twig' %}
+{% block contentBread %}
+<i class="fa fa-angle-right"></i>
+<a href="#">Sedes</a>
+{% endblock %}
+{% block contentoption %}
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="panel panel-invoice rounded">
+                    <div class="panel-sub-heading">
+                        <div class="row inner-all">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                                <h3 class="mt-0 text-primary"><strong>{{central.univUniversidad.universidad}}</strong></h3>
+                                <h4 class="mt-0 text-info">{{central.univUniversidad.abreviacion}}</h3>
+                            </div>
+                        </div>
+                        <div class="row inner-all">
+                            {% if msg is defined %}
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">
+                                    <div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> {{msg}}</div>
+                                </div>
+                            {% endif %}  
+                            <div class="col-lg-4 col-md-6 col-sm-6 col-sx-12 col-lg-offset-4 col-md-offset-3 col-sm-offset-3">
+                                <div class="panel">                                  
+                                    <form action="{{path('sie_university_sede')}}" method="post" name="form" id="form">
+                                        <input type="hidden" id="form_sede" name="form[sede]" value="">
+                                    </form>
+                                    <ul class="nav nav-pills nav-stacked nav-email mb-20 rounded shadow">
+                                        {% set c = 0 %}
+                                        {% for sede in sedes %}
+                                            {% set c = c + 1 %}
+                                            {% set id = sede.id|base64_encode %}
+                                            {% set nombre = sede.sede %}
+                                            {% set direccion = sede.univJuridicciongeografica.direccion %}
+                                            <li>
+                                                <a href="javascript:void(0);" onclick="ingresoSede('{{id}}')">
+                                                <i class="fa fa-institution"></i> {{nombre}}
+                                                <p class="email-summary">{{direccion}}</p>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>    
+                            </div>
+                        </div>
+                    </div><!-- /.panel-sub-heading -->
+                </div>
+        </div>             
+    </div><!-- /.row -->
+{% endblock %}
+
+{% block javascripts%}
+{{parent()}}
+<script>
+
+    var ingresoSede = function (sede){
+        var formSede = $('#form_sede');
+        var formulario = $('#form')[0];
+        formSede.val(sede);
+        formulario.submit();        
+        return true;
+    };
+
+    var ingresoSedePrueba = function (sede){
+        alert(sede);
+        var botonGuardar = $('#form_guardar');
+        var formulario = $('#form')[0];
+        var formData = new FormData(formulario);
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('sie_university_sede'),
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+                $('#formulario').append('<div style="text-align:center" id="load"><img src="{{asset('img/loading.gif')}}" /></div>');
+                botonGuardar.hide();
+            },
+            success: function (data) {
+                if(data.estado){         
+                    $('#modal').modal('hide');
+                    table.row.add([(table.rows().count()+1), data.info.departamento, data.info.tipo, data.info.persona, `<div id="img`+(table.rows().count()+1)+`" ><img style="display: block; width: 150px; height:150px;" src="data:image/png;base64,`+data.info.firma+`" /></div>`, data.info.fecha, `<div class="ckbox ckbox-primary"><input id="estado`+(table.rows().count()+1)+`" checked="checked" type="checkbox" onchange="modificaEstado(this, '`+data.info.id+`');"><label for="estado`+(table.rows().count()+1)+`"></label></div>`, `<button type='button' class='btn btn-inverse btn-stroke' data-toggle='modal' data-target='.bs-example-modal-form' onclick="modifica('`+data.info.id+`', '`+(table.rows().count()+1)+`');"><i class="fa fa-edit"></i> Cambiar Firma</button><button type="button" class="btn btn-danger" onclick="eliminar('`+data.info.id+`', '`+(table.rows().count()+1)+`',this);" ><i class="fa fa-trash"></i> Eliminar</button>`]);
+                    table.draw();
+                    alert("Correcto, "+data.msg);
+                } else {    
+                    $('#load').remove();
+                    $("#formulario").prepend('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');                 
+                    botonGuardar.show();
+                }                    
+            }, 
+            error: function(error){
+                $('#load').remove();
+                alert("Error, no fue posible enviar el formulario, intente nuevamente");  
+                botonGuardar.show();
+            },
+        }); 
+        return true;
+    };
+</script>
+{% endblock %}

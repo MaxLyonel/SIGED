@@ -121,7 +121,7 @@
         |=========================================================================================================================|
 
     -->
-    <body>
+    <body class="page-header-fixed page-sidebar-fixed">
 
         <!--[if lt IE 9]>
         <p class="upgrade-browser">Upps!! You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/" target="_blank">upgrade your browser</a> to improve your experience.</p>
@@ -146,7 +146,7 @@
 
                         <!-- Start brand -->
                         <a class="navbar-brand" href="{{path('principal_web')}}">
-                            <img class="logo" src="{{asset('webherramienta/img/logo/html/logo-white.png')}}" alt="brand logo"/>
+                            SUPERIOR
                         </a><!-- /.navbar-brand -->
                         <!--/ End brand -->
 
@@ -166,7 +166,7 @@
                 <!-- Start header right -->
                 <div class="header-right">
                     <!-- Start navbar toolbar -->
-                    <div class="navbar navbar-toolbar">
+                    <div class="navbar navbar-toolbar navbar-ale">
 
                         <!-- Start left navigation -->
                         <ul class="nav navbar-nav navbar-left">
@@ -181,17 +181,8 @@
 
                             <!-- Start form search -->
                             <li class="navbar-search">
-                                <!-- Just view on mobile screen-->
-                                <a href="form-element.html#" class="trigger-search"><i class="fa fa-search"></i></a>
-                                <!--form class="navbar-form">
-                                    <div class="form-group has-feedback">
-                                        <input type="text" class="form-control typeahead rounded" placeholder="Search for people, places and things">
-                                        <button type="submit" class="btn btn-theme fa fa-search form-control-feedback rounded"></button>
-                                    </div>
-                                </form-->
+                                
                             </li>
-                            <!--/ End form search -->
-
                         </ul><!-- /.navbar-left -->
                         <!--/ End left navigation -->
 
@@ -216,8 +207,6 @@
                                 </a>
                                 <!-- Start dropdown menu -->
                                 <ul class="dropdown-menu animated flipInX">
-                                    <li class="dropdown-header">Account</li>
-                                    <li><a href="{{path('sie_usuarios_homepage')}}"><i class="fa fa-user"></i>Gestión de usuarios</a></li>
                                     <li><a href="{{path('logout')}}"><i class="fa fa-sign-out"></i>Salir</a></li>
                                 </ul>
                                 <!--/ End dropdown menu -->
@@ -253,13 +242,13 @@
             |=========================================================================================================================|
 
             -->
-            <aside id="sidebar-left" class="sidebar-circle sidebar-ale">
+            <aside id="sidebar-left" class="sidebar-circle sidebar-dark">
 
                 <!-- Start left navigation - profile shortcut -->
                 <div class="sidebar-content">
                     <div class="media">
-                        <a class="pull-left has-notif avatar" href="page-profile.html">
-                            <img src="{{asset('webherramienta/img/avatar/50/1.png')}}" alt="admin">
+                        <a class="pull-left has-notif avatar" href="{{path('tramite_homepage')}}">
+                            <img src="{{asset('user.png')}}" alt="admin">
                             <i class="online"></i>
                         </a>
                         <div class="media-body">
@@ -271,12 +260,18 @@
                 <!--/ End left navigation -  profile shortcut -->
 
                 <!-- Start left navigation - menu -->
-
                 <ul class="sidebar-menu">
                     <li>
-                        <a href="{{path('principal_web')}}">
+                        <a href="{{path('sie_university_homepage')}}">
                             <span class="icon"><i class="fa fa-home"></i></span>
                             <span class="text">Inicio</span>
+                            {# <span class="selected"></span> #}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{path('sie_university_sede_index')}}">
+                            <span class="icon"><i class="fa fa-university"></i></span>
+                            <span class="text">Sede / Sub Sede</span>
                             {# <span class="selected"></span> #}
                         </a>
                     </li>
@@ -289,36 +284,30 @@
                         <ul>
                             <li><a href="#">Registro de Informacion</a></li>
                         </ul>
-                    </li>                      
-
-
-
+                    </li>                     
                 </ul><!-- /.sidebar-menu -->
                 <!--/ End left navigation - menu -->
 
                 <!-- Start left navigation - footer -->
                 <div class="sidebar-footer hidden-xs hidden-sm hidden-md">
-                    <!-- <a id="setting" class="pull-left" href="#" data-toggle="tooltip" data-placement="top" data-title="Setting"><i class="fa fa-cog"></i></a>
-                    <a id="fullscreen" class="pull-left" href="#" data-toggle="tooltip" data-placement="top" data-title="Fullscreen"><i class="fa fa-desktop"></i></a>
-                    <a id="lock-screen" data-url="page-signin.html" class="pull-left" href="#" data-toggle="tooltip" data-placement="top" data-title="Lock Screen"><i class="fa fa-lock"></i></a>
-                    <a id="logout" data-url="page-lock-screen.html" class="pull-left" href="#" data-toggle="tooltip" data-placement="top" data-title="Logout"><i class="fa fa-power-off"></i></a> -->
+                    <a id="fullscreen" class="pull-left" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-title="Fullscreen"><i class="fa fa-desktop"></i></a>
+                    <a id="lock-screen" data-url="{{path('logout')}}" class="pull-left" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-title="Lock Screen"><i class="fa fa-lock"></i></a>
+                    <a id="logout" data-url="{{path('logout')}}" class="pull-left" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" data-title="Logout"><i class="fa fa-power-off"></i></a>
                 </div><!-- /.sidebar-footer -->
                 <!--/ End left navigation - footer -->
-
             </aside><!-- /#sidebar-left -->
             <!--/ END SIDEBAR LEFT -->
 
             <!-- START @PAGE CONTENT -->
             <section id="page-content">
-
                 {% block contentoption %}
                     <!-- here the iptions content -->
                 {% endblock %}
-
+                
                 <!-- Start footer content -->
                 <footer class="footer-content">
-                    2016 - <span id="copyright-year"></span> &copy; Ministerio de Educación.
-                    <span class="pull-right">0.01 GB(0%) of 15 GB used</span>
+                    <span id="copyright-year">2022</span> &copy;Administrador Creado por <a href="http://www.minedu.gob.bo" target="_blank">Ministerio de Educación</a>, Bolivia
+                    <span class="pull-right">...</span>
                 </footer><!-- /.footer-content -->
                 <!--/ End footer content -->
 
@@ -1068,6 +1057,31 @@
             <i class="fa fa-angle-up"></i>
         </div><!-- /#back-top -->
         <!--/ END BACK TOP -->
+
+
+
+        <!-- Standard Modal -->
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="modal" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                        <h4 class="modal-title" id="modalLabel">&nbsp;</h4>
+                    </div>
+                    <div class="modal-body" id="modalBody">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+
+
 
         {% block javascripts %}
 

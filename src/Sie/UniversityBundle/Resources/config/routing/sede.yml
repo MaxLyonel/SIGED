@@ -1,0 +1,10 @@
+sie_university_sede_index:
+    path:     /index
+    defaults: { _controller: SieUniversityBundle:Sede:index }
+
+
+sie_university_sede_update:
+    path:     /update
+    defaults: { _controller: SieUniversityBundle:Sede:update }
+    options:
+        expose: true
