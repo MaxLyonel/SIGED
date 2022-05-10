@@ -4,6 +4,12 @@ staff_index:
     defaults: { _controller: SieUniversityBundle:ExecutiveStaff:index }
 
 
+staff_getAllStaff:
+    path:     /getAllStaff
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:getAllStaff }
+    options:
+        expose: true
+
 staff_lookforperson:
     path:     /lookforperson
     defaults: { _controller: SieUniversityBundle:ExecutiveStaff:lookforperson }

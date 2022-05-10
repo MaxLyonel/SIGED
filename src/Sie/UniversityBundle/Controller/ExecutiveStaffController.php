@@ -33,6 +33,30 @@ class ExecutiveStaffController extends Controller{
             ));    
     }
 
+    public function getAllStaffAction(Request $request){
+
+    	$response = new JsonResponse();
+    	$arrRequest = array('sedeId' => 65,  'userId' => 13820843, 'yearSelected' => $request->get('year'));
+    	$arrRegisteredStaff = $this->get('univfunctions')->getAllStaff($arrRequest);
+
+    	// check if the staffs exists
+    	if(sizeof($arrRegisteredStaff)>0){
+
+    	}else{
+    		$arrRegisteredStaff = array();
+    	}
+
+		$arrResponse = array(
+		    'swgetinfostaff'           => true,
+		    'arrRegisteredStaff'       => $arrRegisteredStaff,
+		    // 'swperson'                 => $swperson,
+		);
+		// dump($arrResponse);die;
+		$response->setStatusCode(200);
+		$response->setData($arrResponse);        
+		return $response;
+    }
+
     public function lookforpersonAction(Request $request){
       //ini json var
       	$response = new JsonResponse();    	
