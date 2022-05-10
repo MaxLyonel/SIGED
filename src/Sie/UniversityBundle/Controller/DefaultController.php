@@ -125,14 +125,15 @@ class DefaultController extends Controller
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $em = $this->getDoctrine()->getManager();
-        $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findBy(array('usuario' => $id_usuario));
-        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('usuario' => $id_usuario, 'univSedeTipo' => 1));
-        //dump($entityUnivSede);die;
 
         $form = $request->get('form');
         $sedeId = base64_decode($form['sede']);
         $gestionId = base64_decode($form['gestion']);
+
+        $em = $this->getDoctrine()->getManager();
+        $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findBy(array('usuario' => $id_usuario));
+        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('usuario' => $id_usuario, 'univSedeTipo' => 1));
+        //dump($entityUnivSede);die;
 
         if(!$this->tuisionSede($sedeId,$id_usuario)){
             //return $response->setData(array('estado' => false, 'msg' => 'Su sesión finalizo, ingrese nuevamente'));
@@ -146,6 +147,14 @@ class DefaultController extends Controller
             ));
         }
 
+        $this->session->set('gestion', $gestionId);
+
+        return $this->render('SieUniversityBundle:Default:index.html.twig', array(
+            'sedes' => $entityUnivSede,
+            'central' => $entityUnivSedeCentral,
+            'titulo' => "Sucursales"
+        ));
+
         $entityUnivSedeActual = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
         $titulo = $entityUnivSedeActual->getUnivUniversidad()->getUniversidad();
         $subtitulo = $entityUnivSedeActual->getSede();
@@ -156,10 +165,7 @@ class DefaultController extends Controller
             'sede' => $entityUnivSedeActual,
             'titulo' => $titulo,
             'subtitulo' => $subtitulo
-        ));
-
-        //$entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->find(5);
-        
+        ));        
         // $info = json_decode(base64_decode($request->get('info')), true);
     }
 }

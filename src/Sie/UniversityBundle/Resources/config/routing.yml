@@ -9,3 +9,12 @@ sie_university_sede:
 sie_university_operativo:
     path:     /operativo
     defaults: { _controller: SieUniversityBundle:Default:operativo }
+
+uni_staff:
+    resource: "@SieUniversityBundle/Resources/config/routing/executivestaff.yml"
+    prefix:   /uni/staff
+
+uni_sedes:
+    resource: "@SieUniversityBundle/Resources/config/routing/infosedes.yml"
+    prefix:   /uni/sedes
+
