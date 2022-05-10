@@ -1,0 +1,3 @@
+sie_university_sede_index:
+    path:     /index
+    defaults: { _controller: SieUniversityBundle:Sede:index }

@@ -4,49 +4,71 @@
 <a href="#">Gestiones</a>
 {% endblock %}
 {% block contentoption %}  
+  {% if usuario is defined %}
+    {% set correo = usuario.persona.correo %}
+    {% set telefono = usuario.persona.celular %}
+    {% set username = usuario.username %}
+    {% set nombre = usuario.persona.nombre ~ " " ~ usuario.persona.paterno ~ " " ~ usuario.persona.materno %}
+  {% else %}  
+    {% set correo = "" %}
+    {% set telefono = "" %}
+    {% set username = "" %}
+    {% set nombre = "" %}
+  {% endif %}  
     <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-            <div class="thumbnail">
-                <img src="{{asset('img/unidad-educativa300.jpg')}}" alt="Unidad Educativa">
-                <div class="caption text-center">
-                    <h4>Unidad Educativa</h4>
-                    <div class="thumbnail-action">
-                        {{form_start(uEducativaform)}}
+        <div class="col-lg-3 col-md-3 col-sm-4">
+            <div class="panel rounded shadow">
+                <div class="panel-body">
+                    <div class="inner-all">
+                        <ul class="list-unstyled">
+                            <li class="text-center">
+                                <img data-no-retina="" class="img-circle img-bordered-primary" src="{{asset('user.png')}}" alt="usuario" width="100px" height="100px">
+                            </li>
+                            <li class="text-center">
+                                <h4 class="text-capitalize">{{username}}</h4>
+                                <p class="text-capitalize">{{nombre}}</p>
+                            </li>
+                            <li><br></li>
+                            <li>
+                                <div class="btn-group-vertical btn-block">
+                                    <!-- <a href="" class="btn btn-default"><i class="fa fa-cog pull-right"></i>Editar cuenta</a> -->
+                                    <a href="{{path('logout')}}" class="btn btn-default"><i class="fa fa-sign-out pull-right"></i>Cerrar sessión</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div><!-- /.panel -->
 
+            <div class="panel rounded shadow">
+                <div class="panel-body no-padding rounded">
+                    <ul class="list-group no-margin">
+                        <li class="list-group-item"><i class="fa fa-envelope mr-5"></i> {{correo}}</li>
+                        <li class="list-group-item"><i class="fa fa-phone mr-5"></i> {{telefono}}</li>
+                    </ul>
+                </div><!-- /.panel-body -->
+            </div><!-- /.panel -->
 
-                            {{form_widget(uEducativaform.next)}}
-                        {{form_end(uEducativaform)}}
-                    </div>
-                </div>
-            </div>
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-            <div class="thumbnail">
-                <img src="{{asset('img/estudiantes300.jpg')}}" alt="Personal Docente">
-                <div class="caption text-center">
-                    <h4>Personal Docente</h4>
-                    <div class="thumbnail-action">
-                        {{form_start(infoMaestroform)}}
-                            {{form_widget(infoMaestroform.next)}}
-                        {{form_end(infoMaestroform)}}
+        <div class="col-lg-9 col-md-9 col-sm-8">
+                <div class="panel shadow">
+                        <div class="panel-heading">
+                            <div id="tour-12" class="pull-left">
+                                <h3 class="panel-title"><i class="fa fa-tasks"></i> Notificaciones</h3>
+                            </div>
+                            <div class="pull-right">
+                                <div class="btn-green date-picker">
+                                    
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div id="tour-15" style="display: block;" class="panel-body">
+                        </div><!-- /.panel-body -->
                     </div>
-                </div>
             </div>
+
         </div>
-        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
-            <div class="thumbnail">
-                <img src="{{asset('img/maestros300.jpg')}}" alt="Personal Administrativo">
-                <div class="caption text-center">
-                    <h4>Personal Administrativo</h4>
-                    <div class="thumbnail-action">
-                        {{form_start(personalAdmform)}}
-                            {{form_widget(personalAdmform.next)}}
-                        {{form_end(personalAdmform)}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div><!-- /.row -->
 
 {% endblock %}
 {% block javascripts%}

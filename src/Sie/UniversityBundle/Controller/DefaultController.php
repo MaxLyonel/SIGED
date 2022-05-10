@@ -27,14 +27,11 @@ class DefaultController extends Controller
         }
 
         $em = $this->getDoctrine()->getManager();
-        //$entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->find(5);
-        $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findBy(array('usuario' => $id_usuario));
-        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('usuario' => $id_usuario, 'univSedeTipo' => 1));
+        $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $id_usuario));
         //dump($entityUnivSede);die;
-        return $this->render('SieUniversityBundle:Default:index.html.twig', array(
-            'sedes' => $entityUnivSede,
-            'central' => $entityUnivSedeCentral,
-            'titulo' => "Sucursales"
+        return $this->render('SieUniversityBundle:Principal:index.html.twig', array(
+            'usuario' => $entityUsuario,
+            'titulo' => "Inicio"
         ));
         // $info = json_decode(base64_decode($request->get('info')), true);
     }
@@ -86,7 +83,7 @@ class DefaultController extends Controller
                 ->getQuery();
         $gestiones = $query->getResult();
         
-        return $this->render('SieUniversityBundle:Default:operativo.html.twig', array(
+        return $this->render('SieUniversityBundle:Principal:index.html.twig', array(
             'sede' => $entityUnivSedeActual,
             'titulo' => $titulo,
             'subtitulo' => $subtitulo,
