@@ -1588,8 +1588,8 @@ class InboxController extends Controller {
 
                 $registroConsol->setRude(1);            
                 $em->persist($registroConsol);
-               // $em->flush();
-               // $em->getConnection()->commit();
+                $em->flush();
+                $em->getConnection()->commit();
                 return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
                 'observation' => false,
                 'norow' => false,
