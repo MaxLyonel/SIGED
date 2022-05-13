@@ -1,0 +1,442 @@
+<div class="row"> 
+    <div class="col-lg-12 col-md-12">
+        {% if sedeDetalle is defined %}
+            {% set nombre = sedeDetalle.nombre %}
+            {% set resolucionMinisterial = sedeDetalle.resolucionMinisterial %}
+            {% set decretoSupremo = sedeDetalle.decretoSupremo %}
+            {% set naturalezaJuridica = sedeDetalle.naturalezaJuridica %}
+        {% else %}
+            {% set nombre = "" %}
+            {% set resolucionMinisterial = "" %}
+            {% set decretoSupremo = "" %}
+            {% set naturalezaJuridica = "" %}
+        {% endif %}    
+        <h3>{{ nombre }}</h3>
+        <h5><i class="fa fa-university fa-muted fa-fw"></i> R.M.:  {{ resolucionMinisterial }}</h5>
+        <p><i class="fa fa-building-o fa-muted fa-fw"></i> D.S.: {{ decretoSupremo }}</p>
+        <p><i class="fa fa-code-fork fa-muted fa-fw"></i> N.J.: {{ naturalezaJuridica }}</p>
+    </div> 
+</div> 
+<div class="row"> 
+    {% if form is defined %}
+        <div class="col-lg-12 col-md-12" id="maestroNuevo">
+            <div class="tile orange style="height: auto;">
+                {{form_start(form, {'attr': {'role': "form", 'id': "form"} } )}}
+                    {{ form_widget(form.info) }}
+                    <div class="row"> 
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.telefono) }}
+                            {{ form_widget(form.telefono, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.celular) }}
+                            {{ form_widget(form.celular, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.referenciaCelular) }}
+                            {{ form_widget(form.referenciaCelular, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.correo) }}
+                            {{ form_widget(form.correo, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.inicioCalendarioAcademico) }}
+                            <div id="sandbox-container1" class="sandbox-container">
+                                {{ form_widget(form.inicioCalendarioAcademico, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.fax) }}
+                            {{ form_widget(form.fax, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.casilla) }}
+                            {{ form_widget(form.casilla, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.sitioWeb) }}
+                            {{ form_widget(form.sitioWeb, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.departamento) }}
+                            {{ form_widget(form.departamento, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.provincia) }}
+                            {{ form_widget(form.provincia, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.municipio) }}
+                            {{ form_widget(form.municipio, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.comunidad) }}
+                            {{ form_widget(form.comunidad, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.latitud) }}
+                            {{ form_widget(form.latitud, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.longitud) }}
+                            {{ form_widget(form.longitud, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.zona) }}
+                            {{ form_widget(form.zona, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12">
+                            {{ form_label(form.direccion) }}
+                            {{ form_widget(form.direccion, { 'attr': {'class': 'form-control'} }) }}
+                        </div>   
+                    </div>  
+                    </br>     
+                    <div class="row">               
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">
+                            <a href="#" class="btn btn-primary btn-block" id="form_guardar">Guardar</a>
+                        </div>
+                    </div>
+                {{form_end(form)}}            
+            </div>
+        </div>
+    {% endif %}
+</div> 
+
+<script>
+    $('.sandbox-container input').datepicker({
+        autoclose: true,
+        todayHighlight: true,
+        format: 'dd-mm-yyyy',
+		language: 'es',
+        //endDate: '2022',
+        //startDate: '1800',
+    });
+
+    var listarProvincia = function(departamento){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
+        $('#form_provincia').empty();
+        $("#form_provincia").append('<option value="">Seleccionar Provincia</option>');
+        $('#form_municipio').empty();
+        $("#form_municipio").append('<option value="">Seleccionar Municipio</option>');
+        $('#form_comunidad').empty();
+        $("#form_comunidad").append('<option value="">Seleccionar Comunidad</option>');
+        if (departamento == "") {
+            return false;
+        }
+        peticion = $.ajax({
+            type: 'GET',
+            url: '{{ path('sie_university_sede_lista_provincia')}}',
+            data: {'departamento': departamento},
+            beforeSend: function () {
+                $('#form_provincia').attr('disabled', 'true');
+                $('#form_provincia').empty();
+                $("#form_provincia").append('<option value="">Cargando Datos..</option>');
+            },
+            success: function (data) {
+                $('#form_provincia').removeAttr('disabled');
+                $('#form_provincia').empty();
+                $("#form_provincia").append('<option value="">Seleccionar Provincia</option>');
+                if (data.lista != '') {
+                    for (var i in data.lista) {
+                        $("#form_provincia").append('<option value="' + data.lista[i].id + '">' + data.lista[i].nombre + '</option>');
+                    }
+                }
+            }
+        });
+    }
+
+    var listarMunicipio = function(provincia){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
+        $('#form_municipio').empty();
+        $("#form_municipio").append('<option value="">Seleccionar Municipio</option>');
+        $('#form_comunidad').empty();
+        $("#form_comunidad").append('<option value="">Seleccionar Comunidad</option>');
+        if (provincia == "") {
+            return false;
+        }
+        peticion = $.ajax({
+            type: 'GET',
+            url: '{{ path('sie_university_sede_lista_municipio')}}',
+            data: {'provincia': provincia},
+            beforeSend: function () {
+                $('#form_municipio').attr('disabled', 'true');
+                $('#form_municipio').empty();
+                $("#form_municipio").append('<option value="">Cargando Datos..</option>');
+            },
+            success: function (data) {
+                $('#form_municipio').removeAttr('disabled');
+                $('#form_municipio').empty();
+                $("#form_municipio").append('<option value="">Seleccionar Municipio</option>');
+                if (data.lista != '') {
+                    for (var i in data.lista) {
+                        $("#form_municipio").append('<option value="' + data.lista[i].id + '">' + data.lista[i].nombre + '</option>');
+                    }
+                }
+            }
+        });
+    }
+
+    var listarComunidad = function(municipio){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
+        $('#form_comunidad').empty();
+        $("#form_comunidad").append('<option value="">Seleccionar Comunidad</option>');
+        if (municipio == "") {
+            return false;
+        }
+        peticion = $.ajax({
+            type: 'GET',
+            url: '{{ path('sie_university_sede_lista_comunidad')}}',
+            data: {'municipio': municipio},
+            beforeSend: function () {
+                $('#form_comunidad').attr('disabled', 'true');
+                $('#form_comunidad').empty();
+                $("#form_comunidad").append('<option value="">Cargando Datos..</option>');
+            },
+            success: function (data) {
+                $('#form_comunidad').removeAttr('disabled');
+                $('#form_comunidad').empty();
+                $("#form_comunidad").append('<option value="">Seleccionar Comunidad</option>');
+                if (data.lista != '') {
+                    for (var i in data.lista) {
+                        $("#form_comunidad").append('<option value="' + data.lista[i].id + '">' + data.lista[i].nombre + '</option>');
+                    }
+                }
+            }
+        });
+    }
+
+
+
+    var asignar = function(){
+        var r = confirm("¿Desea guardar la asignacion del maestro?");
+        if (r == false) {
+            return false;
+        }
+        var validacion = validacionForm();
+        if(!validacion){
+            return validacion;
+        }
+        var asignaciones = document.getElementsByName('media[]');
+        var maestroNuevoContent = $('#maestroNuevo').html();
+        var boton = $('#form_asignar');
+        boton.hide();
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('maestroAsignacion_asignar_materia_guarda'),
+            data: $('#formNuevo').serialize(),
+            beforeSend: function () {  
+                $("#message").empty();       
+                $("#message").html('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {                  
+                $("#message").empty();
+                if(data.estado){               
+                    $("#message").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');
+                    $("#maestrosAsignadosContent").append(`<div class="media" id="media`+data.maestro.maestroCI+`" name="media[]"><div class="media-body"><h4 class="media-heading">`+data.maestro.maestroNombre+` `+data.maestro.maestroPaterno+` `+data.maestro.maestroMaterno+`<a class="btn btn-social-icon btn-danger pull-right" onclick="eliminar('`+data.maestro.maestroOferta+`','media`+data.maestro.maestroCI+`')"><i class="fa fa-trash-o"></i></a><a class="btn btn-social-icon btn-green pull-right" onclick="loadForm('`+data.maestro.maestroOferta+`','media`+data.maestro.maestroCI+`','`+data.maestro.maestroItem+`','`+data.maestro.maestroNombre+` `+data.maestro.maestroPaterno+` `+data.maestro.maestroMaterno+`', '`+data.maestro.maestroCI+`','`+data.maestro.maestroFechaInicio+`','`+data.maestro.maestroFechaFin+`','`+data.maestro.maestroFinanciamientoId+`')"><i class="fa fa-edit"></i></a></h4><p>C.I. `+data.maestro.maestroCI+` - Item: `+data.maestro.maestroItem+`<br>Ft. Fto.: `+data.maestro.maestroFinanciamiento+` - (Asignado: `+data.maestro.maestroFechaInicio+` al `+data.maestro.maestroFechaFin+`)</p></div></div>`); 
+                    if(asignaciones.length > 0){
+                        botonForm.removeClass('btn-default');
+                        botonForm.addClass('btn-green');
+                        botonForm.html("SI");
+                    } else {
+                        botonForm.removeClass('btn-green');
+                        botonForm.addClass('btn-default');
+                        botonForm.html("NO");
+                    }
+                } else {
+                    $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');
+                    boton.show();
+                }                
+            },
+            error: function(error){ 
+                $("#message").empty();      
+                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');                 
+                boton.show();
+            },
+        });    
+    }
+
+    var eliminar = function(ofertaMaestro, media){
+        var asignaciones = document.getElementsByName('media[]');
+        var registro = $('#'+media);
+        var registroContent = $('#'+media).html();
+        var botonAsignar = $('#form_asignar');
+        var r = confirm("¿Desea eliminar el registro?");
+        if (r == false) {
+            return false;
+        }
+        $.ajax({
+            type: 'delete',
+            url: Routing.generate('maestroAsignacion_asignar_materia_elimina'),
+            data: {'ofertaMaestro':ofertaMaestro},
+            beforeSend: function () {  
+                registro.empty();       
+                registro.html('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {     
+                $('#message').empty();             
+                registro.empty();
+                if(data.estado){
+                    registro.remove();
+                    botonAsignar.show();     
+                    $("#message").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');
+                    if(asignaciones.length > 0){
+                        botonForm.removeClass('btn-default');
+                        botonForm.addClass('btn-green');
+                        botonForm.html("SI");
+                    } else {
+                        botonForm.removeClass('btn-green');
+                        botonForm.addClass('btn-default');
+                        botonForm.html("NO");
+                    }  
+                } else {
+                    $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');
+                    registro.html(registroContent);
+                }            
+            },
+            error: function(error){ 
+                registro.empty();      
+                registro.html(registroContent);
+            },
+        });    
+    }
+ 
+    var nuevoOfertaMaestro = "";
+    var nuevoOfertaMaestroNombre = "";
+    var nuevoOfertaMaestroCI = "";
+    var mediaMaestro = null;
+
+    var init = function(){
+        nuevoOfertaMaestro = "";
+        nuevoOfertaMaestroNombre = "";
+        nuevoOfertaMaestroCI = "";
+        mediaMaestro = "";
+    }
+
+    var validacionForm = function(){
+        if($('#form_ofertMaestro').val() == ""){
+            alert("Cargue nuevamente el formulario");
+            return false;
+        }
+        if($('#form_item').val() == ""){
+            alert("Debe ingresar el item de la asignación");
+            $('#form_item').focus();
+            return false;
+        }
+        if($('#form_financiamiento').val() == "0" || $('#form_financiamiento').val() == ""){
+            alert("Debe ingresar el financiamiento del item");
+            $('#form_financiamiento').focus();
+            return false;
+        }
+        if($('#form_fechaInicio').val() == ""){
+            alert("Debe ingresar la fecha inicial de la asignación");
+            $('#form_fechaInicio').focus();
+            return false;
+        }
+        if($('#form_fechaFin').val() == ""){
+            alert("Debe ingresar la fecha final de la asignación");
+            $('#form_fechaFin').focus();
+            return false;
+        }
+        return true
+    }
+
+    var loadForm = function(ofertaMaestro, media, item, nombre, ci, fechaInicio, fechaFin, financiamiento){   
+        init();   
+        nuevoOfertaMaestro = $('#form_ofertaMaestro').val();
+        nuevoOfertaMaestroNombre = $('#form_nombre').val();
+        nuevoOfertaMaestroCI = $('#form_ci').val();
+        mediaMaestro = media;
+        $('#form_title').html("Modificación de asignación");
+        $('#form_nombre').html(nombre);
+        $('#form_ci').html(ci);
+        $('#form_item').val(item);
+        $('#form_ofertaMaestro').val(ofertaMaestro);
+        $('#form_financiamiento').val(financiamiento);
+        $('#form_fechaInicio').val(fechaInicio);
+        $('#form_fechaFin').val(fechaFin);
+        $('#form_editar').show();
+        $('#form_cancelar').show();
+        $('#form_asignar').hide();   
+        $('#maestroNuevo > div').removeClass('orange');
+        $('#maestroNuevo > div').addClass('green'); 
+        $('#'+mediaMaestro+' > div > h4 > a').hide();
+    } 
+
+    $('#form_cancelar').on("click", function(){
+        restoreForm();
+    });
+
+    var restoreForm = function(){
+        $('#'+mediaMaestro+' > div > h4 > a').show();
+        $('#maestroNuevo > div').removeClass('green');
+        $('#maestroNuevo > div').addClass('orange');
+        $('#form_ofertaMaestro').val(nuevoOfertaMaestro);
+        $('#form_nombre').html(nuevoOfertaMaestroNombre);
+        $('#form_ci').html(nuevoOfertaMaestroCI);
+        $('#form_title').html("Maestro Observado");
+        $('#form_item').val("");
+        $('#form_financiamiento').val(null);
+        $('#form_fechaInicio').val("");
+        $('#form_fechaFin').val("");
+        $('#form_editar').hide();
+        $('#form_cancelar').hide();
+        if($('#form_enabled').val() == "true"){
+            $('#form_asignar').show();
+        }              
+        $('#'+mediaMaestro).show();
+        init();  
+    }
+
+    $('#form_editar').on("click", function(){
+        var validacion = validacionForm();
+        if(!validacion){
+            return validacion;
+        }
+        var botonEditar = $('#form_editar');
+        var botonCancelar = $('#form_cancelar');
+        botonEditar.hide();
+        botonCancelar.hide();
+        $('#'+mediaMaestro+' > div > h4 > a').show();
+        var divMediaMaestro = $('#'+mediaMaestro);
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('maestroAsignacion_asignar_materia_edita'),
+            data: $('#formNuevo').serialize(),
+            beforeSend: function () {  
+                $("#message").empty();       
+                $("#message").html('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {                  
+                $("#message").empty();
+                if(data.estado){   
+                    divMediaMaestro.remove();            
+                    $("#message").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');
+                    $("#maestrosAsignadosContent").append(`<div class="media" id="media`+data.maestro.maestroCI+`" name="media[]"><div class="media-body"><h4 class="media-heading">`+data.maestro.maestroNombre+` `+data.maestro.maestroPaterno+` `+data.maestro.maestroMaterno+`<a class="btn btn-social-icon btn-danger pull-right" onclick="eliminar('`+data.maestro.maestroOferta+`','media`+data.maestro.maestroCI+`')"><i class="fa fa-trash-o"></i></a><a class="btn btn-social-icon btn-green pull-right" onclick="loadForm('`+data.maestro.maestroOferta+`','media`+data.maestro.maestroCI+`','`+data.maestro.maestroItem+`','`+data.maestro.maestroNombre+` `+data.maestro.maestroPaterno+` `+data.maestro.maestroMaterno+`','`+data.maestro.maestroCI+`','`+data.maestro.maestroFechaInicio+`','`+data.maestro.maestroFechaFin+`','`+data.maestro.maestroFinanciamientoId+`')"><i class="fa fa-edit"></i></a></h4><p>C.I. `+data.maestro.maestroCI+` - Item: `+data.maestro.maestroItem+`<br>Ft. Fto.: `+data.maestro.maestroFinanciamiento+` - (Asignado: `+data.maestro.maestroFechaInicio+` al `+data.maestro.maestroFechaFin+`)</p></div></div>`); 
+                    restoreForm();
+                } else {
+                    $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');
+                    botonEditar.show();
+                    botonCancelar.show();
+                }           
+            },
+            error: function(error){ 
+                $("#message").empty();      
+                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');                 
+                botonEditar.show();
+                botonCancelar.show();
+            },
+        });        
+    });
+
+
+</script>
