@@ -70,11 +70,6 @@ class UnivSedeSucursal
     private $estadoinstitucionTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\UnivPeriodoAcademicoTipo
-     */
-    private $univPeriodoAcademicoTipo;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\GestionTipo
      */
     private $gestionTipo;
@@ -346,29 +341,6 @@ class UnivSedeSucursal
     public function getEstadoinstitucionTipo()
     {
         return $this->estadoinstitucionTipo;
-    }
-
-    /**
-     * Set univPeriodoAcademicoTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\UnivPeriodoAcademicoTipo $univPeriodoAcademicoTipo
-     * @return UnivSedeSucursal
-     */
-    public function setUnivPeriodoAcademicoTipo(\Sie\AppWebBundle\Entity\UnivPeriodoAcademicoTipo $univPeriodoAcademicoTipo = null)
-    {
-        $this->univPeriodoAcademicoTipo = $univPeriodoAcademicoTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get univPeriodoAcademicoTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\UnivPeriodoAcademicoTipo 
-     */
-    public function getUnivPeriodoAcademicoTipo()
-    {
-        return $this->univPeriodoAcademicoTipo;
     }
 
     /**
