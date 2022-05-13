@@ -28,10 +28,15 @@ class DefaultController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $id_usuario));
+
+        $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findBy(array('usuario' => $id_usuario));
+        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('usuario' => $id_usuario, 'univSedeTipo' => 1));
         //dump($entityUnivSede);die;
-        return $this->render('SieUniversityBundle:Principal:index.html.twig', array(
+        return $this->render('SieUniversityBundle:Default:index.html.twig', array(
             'usuario' => $entityUsuario,
-            'titulo' => "Inicio"
+            'titulo' => "Sedes",
+            'sedes' => $entityUnivSede,
+            'central' => $entityUnivSedeCentral,
         ));
         // $info = json_decode(base64_decode($request->get('info')), true);
     }

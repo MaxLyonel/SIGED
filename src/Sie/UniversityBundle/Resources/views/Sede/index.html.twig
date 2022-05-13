@@ -1,65 +1,137 @@
 {% extends 'layoutUniversity.html.twig' %}
-{% block contentBread %}
-<i class="fa fa-angle-right"></i>
-<a href="#">Sedes</a>
+
+{% block stylesheets %}
+    {{parent()}}
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { top:0; bottom:0; width:100%; height: 260px; }
+    </style>
 {% endblock %}
-{% block contentoption %}
-    {% if sedes is defined  %}
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="panel">                        
-                    <div class="panel-head">
-                        <table id="tabla" class="table table-striped table-bordered table-default" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th style="width:50px; text-align:center;">#</th>
-                                    <th style="text-align:center;">SEDE</th>
-                                    <th style="width:50px; text-align:center;">
-                                        &nbsp;
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% set c = 0 %}
-                                {% for sede in sedes %}
-                                    {% set c = c + 1 %}
-                                    {% set id = sede.id|base64_encode %}
-                                    {% set nombre = sede.sede %}
-                                    {% set sucursal = sede.sucursal %}
-                                    <tr>
-                                        <td style="text-align:center;">
-                                            {{c}}
-                                        </td>
-                                        <td>{{ nombre }}</td>
-                                        <td>
-                                            {% if sucursal == 0 %}
-                                                <a href="javascript:void(0);" onclick="ingresoSede('{{id}}',this)" class="btn btn-warning" data-toggle="modal" data-target="#modal">Actualizar</a>
-                                            {% else  %}
-                                                <a href="javascript:void(0);" onclick="ingresoSede('{{id}}',this)" class="btn btn-success" data-toggle="modal" data-target="#modal">Actualizar</a>
-                                                
-                                            {% endif  %}
-                                        </td>    
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div><!-- /.panel-body -->
+
+{% block contentoption %}  
+  <!-- Start page header -->
+  <div class="header-content fixed-top">
+      <h2>
+          <i class="fa fa-home"></i>
+          {% if titulo is defined  %}  {{ titulo }} {% endif %}
+          <span>{% if subtitulo is defined  %}{{ subtitulo }} {% endif %}</span>
+      </h2>
+      <div class="breadcrumb-wrapper hidden-xs">
+          <span class="label">Usted esta aquí:</span>
+          <ol class="breadcrumb">
+              <li>
+                  <i class="fa fa-home"></i>
+                  <a href="{{path('sie_university_homepage')}}">Inicio</a>
+              </li>
+          </ol>
+      </div><!-- /.breadcrumb-wrapper -->
+  </div><!-- /.header-content -->
+  <!--/ End page header -->
+    <!-- Start body content -->
+  <div class="body-content animated fadeIn">
+      <div class="row">
+          <div class="col-lg-12">
+              <div class="page-content">
+                  {% for type, flashMessage in app.session.flashbag.all() %}
+                      <div class="alert alert-{{ type }} alert-dismissible" role="alert">
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                          {% if flashMessage.title is defined %}
+                              <strong><i class='fa fa-envelope'></i> {{ flashMessage.title }}: </strong>
+                              {{ flashMessage.message }}
+                          {% else %}
+                              &nbsp;
+                          {% endif %}
+                      </div>
+                  {% endfor %}
+              </div>
+          </div>
+      </div>
+      
+
+  {% if usuario is defined %}
+    {% set correo = usuario.persona.correo %}
+    {% set telefono = usuario.persona.celular %}
+    {% set username = usuario.username %}
+    {% set nombre = usuario.persona.nombre ~ " " ~ usuario.persona.paterno ~ " " ~ usuario.persona.materno %}
+  {% else %}  
+    {% set correo = "" %}
+    {% set telefono = "" %}
+    {% set username = "" %}
+    {% set nombre = "" %}
+  {% endif %}  
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-4">                
+            <ul class="nav nav-pills nav-stacked nav-email rounded">
+                {% for gestion in gestiones %}
+                    {% set id = gestion.id|base64_encode %}
+                    {% set nombre = gestion.gestion %}
+                    <li {%if datos.gestion == gestion.id %}class="active"{%endif%}>
+                        <a href="javascript:void(0);" onclick="ingresoSedeGestion('{{id}}')">
+                            {{nombre}}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-lg-9 col-md-9 col-sm-8">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="panel shadow">
+                        <div class="panel-heading text-center p-3 mb-2 bg-teal text-white">
+                            <h4><span>{{ datos.gestion }}</span></h4>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div class="panel-sub-heading">
+                            <div class="row inner-all">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <address>
+                                        <i class="fa fa-phone"></i> <strong>Teléfono: </strong>{{datos.telefono}}<br>
+                                        <i class="fa fa-mobile"></i> <strong>Celular: </strong>{{datos.celular}}<br>
+                                        <i class="fa fa-phone-square"></i> <strong>Ref. Celular: </strong>{{datos.referenciaCelular}}<br>
+                                        <i class="fa fa-calendar"></i> <strong>Inicio Calendario Académico: </strong>{{datos.inicioCalendarioAcademico}}<br>
+                                        <i class="fa fa-envelope-o"></i> <strong>Correo: </strong>{{datos.correo}}<br>
+                                        <i class="fa fa-fax"></i> <strong>Fax: </strong>{{datos.fax}}<br>
+                                        <i class="fa fa-home"></i> <strong>Casilla: </strong>{{datos.casilla}}<br>
+                                        <i class="fa fa-tag"></i> <strong>Sitio: </strong>{{datos.sitio}}<br>
+                                        <i class="fa fa-globe"></i> <strong>Departamento: </strong>{{datos.telefono}}<br>
+                                        <i class="fa fa-map-sings"></i> <strong>Provincia: </strong>{{datos.celular}}<br>
+                                        <i class="fa fa-map-marker"></i> <strong>Municipio: </strong>{{datos.referenciaCelular}}<br>
+                                        <i class="fa fa-map-pin"></i> <strong>Comunidad: </strong>{{datos.inicioCalendarioAcademico}}<br>
+                                        <i class="fa fa-map-o"></i> <strong>Zona: </strong>{{datos.correo}}<br>
+                                        <i class="fa fa-ticket"></i> <strong>Dirección: </strong>{{datos.fax}}
+                                    </address>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">                                                              
+                                    <div id="map"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body text-center">
+                            {% if editar is defined %}
+                                <a href="javascript:void(0);" class="btn btn-primary btn-block" onclick="ingresoSedeSucursal('{{info}}')">Modificar</a>
+                            {% else %} 
+                                <a href="javascript:void(0);" class="btn btn-success btn-block" onclick="ingresoSedeSucursal('{{info}}')">Registrar</a>
+                            {% endif %} 
+                        </div><!-- /.panel-heading -->
+                    </div>
                 </div>
             </div>
-        </div><!-- /.row -->
-    {% endif %}
+        </div>
+  </div>
+  <!--/ End body content -->
 
 {% endblock %}
-
 {% block javascripts%}
 {{parent()}}
 <script>
 
-    var ingresoSede = function (sede, bot){
+    var ingresoSedeSucursal = function (info){
         botonForm = $(bot); 
         $.ajax({
             type: 'post',
-            url: Routing.generate('sie_university_sede_update', {'sede': sede}),
+            url: Routing.generate('sie_university_sede_update', {'info': info}),
             beforeSend: function () {
                 $("#modalBody").empty();
                 $("#modalBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
@@ -75,42 +147,16 @@
         });     
     };
 
- 
 
-    var ingresoSedePrueba = function (sede){
-        alert(sede);
-        var botonGuardar = $('#form_guardar');
-        var formulario = $('#form')[0];
-        var formData = new FormData(formulario);
-        $.ajax({
-            type: 'post',
-            url: Routing.generate('sie_university_sede'),
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function () {
-                $('#formulario').append('<div style="text-align:center" id="load"><img src="{{asset('img/loading.gif')}}" /></div>');
-                botonGuardar.hide();
-            },
-            success: function (data) {
-                if(data.estado){         
-                    $('#modal').modal('hide');
-                    table.row.add([(table.rows().count()+1), data.info.departamento, data.info.tipo, data.info.persona, `<div id="img`+(table.rows().count()+1)+`" ><img style="display: block; width: 150px; height:150px;" src="data:image/png;base64,`+data.info.firma+`" /></div>`, data.info.fecha, `<div class="ckbox ckbox-primary"><input id="estado`+(table.rows().count()+1)+`" checked="checked" type="checkbox" onchange="modificaEstado(this, '`+data.info.id+`');"><label for="estado`+(table.rows().count()+1)+`"></label></div>`, `<button type='button' class='btn btn-inverse btn-stroke' data-toggle='modal' data-target='.bs-example-modal-form' onclick="modifica('`+data.info.id+`', '`+(table.rows().count()+1)+`');"><i class="fa fa-edit"></i> Cambiar Firma</button><button type="button" class="btn btn-danger" onclick="eliminar('`+data.info.id+`', '`+(table.rows().count()+1)+`',this);" ><i class="fa fa-trash"></i> Eliminar</button>`]);
-                    table.draw();
-                    alert("Correcto, "+data.msg);
-                } else {    
-                    $('#load').remove();
-                    $("#formulario").prepend('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');                 
-                    botonGuardar.show();
-                }                    
-            }, 
-            error: function(error){
-                $('#load').remove();
-                alert("Error, no fue posible enviar el formulario, intente nuevamente");  
-                botonGuardar.show();
-            },
-        }); 
-        return true;
-    };
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoianVybGFuIiwiYSI6ImNqd3RkNjZjYzAxd2k0MGw1a3A4dmJuZjIifQ.hcnCGlBc18MaYfIFG22P-Q'; // Nuestro Token de acceso
+    var map = new mapboxgl.Map({
+        container: 'map', // id del contenedor
+        style: 'mapbox://styles/mapbox/streets-v9', // localización del mapa de estilo
+        center: [{{datos.latitud}},{{datos.longitud}}], // Posición inicial
+        zoom: 13 // Zoom inicial
+    });
+
+
 </script>
 {% endblock %}
