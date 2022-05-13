@@ -5,9 +5,6 @@ Sie\AppWebBundle\Entity\UnivSedeSucursal:
         IDX_88127A525D678D7A:
             columns:
                 - estadoinstitucion_tipo_id
-        IDX_88127A52F67BB471:
-            columns:
-                - univ_periodo_academico_tipo_id
         IDX_88127A52179FF95:
             columns:
                 - gestion_tipo_id
@@ -91,15 +88,6 @@ Sie\AppWebBundle\Entity\UnivSedeSucursal:
             inversedBy: null
             joinColumns:
                 estadoinstitucion_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        univPeriodoAcademicoTipo:
-            targetEntity: UnivPeriodoAcademicoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                univ_periodo_academico_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         gestionTipo:
