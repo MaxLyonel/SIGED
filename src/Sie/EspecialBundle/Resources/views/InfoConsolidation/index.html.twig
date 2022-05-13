@@ -1,0 +1,420 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block contentoption %}
+
+    <style>
+    .modal-header-danger {
+        color:#fff;
+        padding:9px 15px;
+        border-bottom:1px solid #eee;
+        background-color: #d9534f;
+        -webkit-border-top-left-radius: 5px;
+        -webkit-border-top-right-radius: 5px;
+        -moz-border-radius-topleft: 5px;
+        -moz-border-radius-topright: 5px;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+    
+    </style>
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Información General <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="dashboard.html">
+                    Información Unidad Educativa
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+
+
+    <div class="body-content animated fadeIn">
+      {% include 'SieHerramientaBundle:Principal:infoue.html.twig' with {'titulo': 'Información Consolidada', 'gestion': data.gestion,'sie': data.ieducativa.id, 'ieducativa': data.ieducativa.institucioneducativa, 'opcion': 'Consolidación Info'} %}
+      <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <!-- Lista de tramites aprobados por la DDE -->
+        {% if infoConsolidations %}
+          <div class="panel">
+              <div class="panel-heading">
+                  <div class="pull-left">
+                      <h3 class="panel-title">Información Consolidada</h3>
+                  </div>
+
+                  <div class="clearfix"></div>
+              </div><!-- /.panel-heading -->
+                <div class="panel-body no-padding">
+                    <div class="table-responsive" style="margin-top: -1px;">
+                        <table class="table table-primary">
+                            <thead>
+                            <tr>
+                                <th class="text-center border-right" style="width: 1%;">No.</th>
+                                <th>Código SIE</th>
+                                <th>Gestión</th>
+                                <th>1er bim</th>
+                                <th>2do bim</th>
+                                <th>3er bim</th>
+                                <th>4to bim</th>
+                                <th class="text-center" style="width: 12%;">Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% set cont = 1 %}
+                            {% for infoConsolidation in infoConsolidations %}
+
+                            <tr class="border-primary">
+                                            <td class="text-center border-right"><strong>{{ loop.index }}</strong></td>
+                                            <td>{{ infoConsolidation.unidadEducativa }}</td>
+                                            <td>{{ infoConsolidation.gestion }}</td>
+                                            <td>{% if infoConsolidation.bim1 > 1 %}
+                                                  WEB
+                                                {% else %}
+                                                  ESCRITORIO
+                                                {% endif %}
+                                            </td>
+                                            <td>{% if infoConsolidation.bim2 > 1 %}
+                                                  WEB
+                                                {% else %}
+                                                  ESCRITORIO
+                                                {% endif %}
+                                            </td>
+                                            <td>{% if infoConsolidation.bim3 > 1 %}
+                                                  WEB
+                                                {% else %}
+                                                  ESCRITORIO
+                                                {% endif %}
+                                            </td>
+                                            <td>{% if infoConsolidation.bim4 > 1 %}
+                                                  WEB
+                                                {% else %}
+                                                  ESCRITORIO
+                                                {% endif %}
+                                            </td>
+
+                                            <td class="text-center">
+                                            {% if app.session.get('currentyear') !=  infoConsolidation.gestion %} 
+                                                {% set items = {
+                                                                'gestion': infoConsolidation.gestion,
+                                                                'id'     : infoConsolidation.unidadEducativa,
+                                                                'tipo'   : 'krlos'
+                                                } %}
+                                                {% set jsnFullUeInfo = items|json_encode() %}
+                                                {# if( infoConsolidation.gestion == app.session.get('currentyear')-1 )  and (app.session.get('ue_modular') or app.session.get('ue_plena') or app.session.get('ue_tecteg')) #}
+                                                    <form action="{{path('herramienta_inbox_open')}}" method="post" style="display: inline-block">
+                                                        <!-- this is the new start-->
+                                                        <input type="hidden" id="form_data" name="form[data]" required="required" value="{{jsnFullUeInfo}}">
+                                                        <!-- this is the new end-->
+                                                        <button type="submit" class="btn btn-xs btn-success" data-toggle="tooltip" data-placement="top" data-original-title="Ver Información {{infoConsolidation.gestion}}"><i class="fa fa-pencil"> Ver Información</i></button>
+                                                    </form>
+                                                {# endif #}
+                                            {% endif %}
+                                            </td>
+                                        </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div><!-- /.panel-body -->
+              </div><!-- /.panel -->
+                              <!--/ End team table -->
+          {% else %}
+            <div class="callout callout-info">
+              <p><strong>¡Información!</strong> No tiene solicitudes aprobadas por la DDE.</p>
+              <p>Ir a <a href="{{path('sie_herramienta_tramite_index')}}"><strong>Seguimiento de solicitudes</strong></a></p>
+            </div>
+            {% endif %}
+            <div id="logs"></div>
+                  <!--end lista tramites aprobados por la DDE -->
+                </div>
+      </div>
+      {#<div class="row">
+        <div class="col-md-12">
+            <!-- Start default panel -->
+            <div class="panel panel-primary rounded shadow">
+                <!-- Start panel heading -->
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{title}}</h3>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <!--/ End panel heading -->
+                <!-- Start panel content -->
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-md-2 col-md-offset-3 control-label text-right" for="gestiones"><strong>Seleccionar gestión:</strong></label>
+                            <div class="col-md-2">
+                                <select onchange="registroConsol(this.value)" id="gestiones" class="form-control">
+                                    {% for gestion in gestiones %}
+                                        <option value="{{gestion}}">{{gestion}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-12" id="tableConsol">
+                            {% include 'SieEspecialBundle:Institucioneducativa:consol_especial.html.twig' with {'consolEspecial': consol, 'label': label, 'label_distrito': label_distrito} %}
+                        </div>
+                    </div>
+                </div><!-- /.panel-body -->
+                <!--/ End panel content -->
+            </div><!-- /.panel -->
+            <!--/ End default panel -->
+
+        </div>
+    </div><!-- /.row -->#}
+    </div>
+
+    <div class="modal  modal-flex fade" id="newModal" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true" style="display: none;" data-backdrop="static" data-keyboard="false">
+         <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header modal-header-danger">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4 class="modal-title" id="flexModalLabel">¡ Debe realizar las siguientes acciones !</h4>                 
+                </div>
+                <div class="modal-body">
+                    <div id="infoModal2" class="text-center">
+                        <h5>PROCESANDO INFORMACION</h5>
+                        <div class="text-center display: flex; justify-content: center;"><img src="{{asset('img/loading.gif')}}"  /></div>                        
+                    </div>
+                    <div id="infoModal">
+                            <table id="example" class="table table-striped table-bordered" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Las siguientes materias no tienen asignado un maestro</th>                                    
+                                </tr>
+                            </thead>
+                            <tbody id='tbodyexample'>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                   
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cerrar</button>                    
+                    <button type="button" class="btn btn-default pull-left" id="btnImprimir">Imprimir</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+    
+
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+    var xhr1;
+    function validateForm(contador) {
+        if (xhr1 && xhr1.readyState != 4) {
+            xhr1.abort();
+        }
+
+        var formData = $('#formVal'+contador).serialize();
+
+        xhr1 = $.ajax({
+            type: 'post',
+            url: Routing.generate('sie_herramienta_tramite_validacionue'),
+            data: formData,
+            beforeSend: function () {
+                $("#logs").empty();
+                $("#logs").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+            },
+            success: function (data) {
+                $("#logs").empty();
+                $("#logs").html(data);
+            },
+            error: function (data) {
+                $("#logs").empty();
+                $("#logs").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+            }
+        });
+
+        return false;
+    }
+
+    document.querySelector("#btnImprimir").addEventListener("click", function() {
+    var div = document.querySelector("#infoModal");
+    imprimirElemento(div);
+    });
+
+    function imprimirElemento(elemento) {
+        var ventana = window.open('', 'PRINT', 'height=400,width=600');
+        ventana.document.write('<html><head><title>' + document.title + '</title>');
+        ventana.document.write('<link rel="stylesheet" href="style.css">'); //Aquí agregué la hoja de estilos
+        ventana.document.write('</head><body >');
+        ventana.document.write(elemento.innerHTML);
+        ventana.document.write('</body></html>');
+        ventana.document.close();
+        ventana.focus();
+        ventana.onload = function() {
+            ventana.print();
+            ventana.close();
+        };
+        return true;
+        }
+
+    $(document).ready(function(){      
+        //$('#example').DataTable();
+        verifica_errores();
+        /*alert(existe);
+        if (existe > 0){
+            mostrarModal();
+        }*/
+    });
+
+    function remove_string(str, startIndex, count) {
+        return str.substr(0, startIndex) + str.substr(startIndex + count);
+    }
+
+    function verifica_errores() {
+        //no importa por que en el controller se tienen estos datos de la sesion
+        console.log('verifica_errores')
+        gestionid = 5;
+        ueid = 50;
+        $.ajax({
+            type: 'get',            
+            url: Routing.generate('observaciones_maestros_ue', {'gestionid': gestionid, 'ueid': ueid }),            
+            success: function (data) {                
+                console.log(data.existe);
+                if(data.existe != 0){
+                    mostrarModal();
+                }else{
+                    console.log('sin observaciones');
+                }
+            },            
+        });        
+     }
+
+    //dcastillo
+    function mostrarModal() {
+        console.log('mostrarModal');
+        gestionid = 5;
+        ueid = 50;
+        $("#infoModal").hide();
+
+        $.ajax({
+            type: 'get',
+            //url: Routing.generate('herramienta_especial_registro_consol', {'gestionid': gestionid}),
+            url: Routing.generate('observaciones_maestros_ue', {'gestionid': gestionid, 'ueid': ueid }),
+            beforeSend: function () {
+                 $("#infoModal").hide();                   
+                /*$("#infoModal2").empty();
+                $("#infoModal2").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');*/                
+            },
+            success: function (data) {
+                /*console.log(data.data.length);
+                console.log(data);*/
+                $("#infoModal2").remove();
+                $("#infoModal2").empty();
+                //$("#infoModal").append(data);
+                
+                var tbody = $('#tbodyexample');
+                
+                for (var i = 0; i < data.data.length ; i++) {
+                    // create an <tr> element, append it to the <tbody> and cache it as a variable:
+                    var tr = $('<tr/>').appendTo(tbody);                   
+                    tr.append('<td>' + remove_string(data.data[i]['observacion'],0,54) + '</td>');                   
+                }
+
+                $("#infoModal").show();
+                
+               // $('#example').DataTable().ajax.reload();
+
+                
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+
+        $('#newModal').modal('show');
+     }
+    
+    /*var registroConsol = function (gestionid) {
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('herramienta_especial_registro_consol', {'gestionid': gestionid}),
+            beforeSend: function () {
+                $("#tableConsol").empty();
+                $("#tableConsol").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" style="width: 80px;" /></div>');
+            },
+            success: function (data) {
+                $("#listaConsol").remove();
+                $("#tableConsol").empty();
+                $("#tableConsol").append(data);
+                cargatablas();
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+    };
+
+    var cargatablas = function (identif){
+        // Setup - add a text input to each footer cell
+        $('#listaConsol tfoot th').each( function () {
+            var title = $(this).text();
+            if(title.trim() === "" || title === "#"){
+                $(this).html('');
+            } else {
+                $(this).html( '<input type="text" class="form-control" style="width: 100%; box-sizing: border-box;" placeholder="Buscar '+title+'" />' );
+            }
+        } );
+
+        // DataTable
+        var table = $('#listaConsol').DataTable( {
+                "order": [[ 0, "asc" ]],
+                "columnDefs": [
+                    { "orderable": false, "targets": [8,7,6,5] }
+                ],
+            }
+        );
+
+        // Apply the search
+        table.columns().every( function () {
+            var that = this;
+
+            $( 'input', this.footer() ).on( 'keyup change', function () {
+                if ( that.search() !== this.value ) {
+                    that
+                        .search( this.value )
+                        .draw();
+                }
+            } );
+        } );
+    };
+
+    $(document).ready(function(){
+        cargatablas();
+    });*/
+    </script>
+{% endblock %}

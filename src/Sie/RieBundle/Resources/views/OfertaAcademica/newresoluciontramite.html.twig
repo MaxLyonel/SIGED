@@ -45,7 +45,12 @@
                                     {{form_widget(form.ttecCarreraTipo)}}  
                                 </div>
                             </div>                            
-
+                            <label class="form-label pull-left col-blue">{{form_label(form.operacion) }}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.operacion, {'attr':{'onchange':'cargarDetalle()'}}) }}
+                                </div>
+                            </div>   
                             <label class="form-label">{{form_label(form.resolucion)}}</label>
                             <div class="form-group">
                                 <div class="form-line">
@@ -60,39 +65,47 @@
                                 </div>
                             </div>    
 
-                            <label class="form-label">{{form_label(form.nivelTipo)}}</label>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    {{form_widget(form.nivelTipo,{'attr':{'onchange':'cargarTiempoEstudio()'}}) }}
-                                </div>
+                              <div class="form-group col-lg-6 col-md-12" id="nivelTipo" style="display:none" >
+                                <label class="form-label">{{form_label(form.nivelTipo )}}</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        {{form_widget(form.nivelTipo ) }}
+                                    </div>
+                                </div>                                                                                                             
                             </div>                                                                                                             
 
-                            <label class="form-label">{{form_label(form.regimenEstudio)}}</label>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    {{form_widget(form.regimenEstudio,{'attr':{'onchange':'cargarTiempoEstudio()'}}) }}
-                                </div>
+                            <div class="form-group col-lg-6 col-md-12" id="regimenEstudio" style="display:none" >
+                                <label class="form-label">{{form_label(form.regimenEstudio)}}</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        {{form_widget(form.regimenEstudio , {'attr':{'onchange':'cargarTiempoEstudio()'}}) }}
+                                    </div>
+                                </div>                                                                                    
+                            </div>                                                                                    
+                            <div class="form-group col-lg-6 col-md-12" id="tiempoEstudio" style="display:none" >
+                                <label class="form-label">{{form_label(form.tiempoEstudio)}}</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        {{form_widget(form.tiempoEstudio) }}
+                                    </div>
+                                </div>                                                                                    
                             </div>                                                                                    
 
-                            <label class="form-label">{{form_label(form.tiempoEstudio)}}</label>
-                            <div class="form-group">
+                            <div class="form-group col-lg-6 col-md-12" id="cargaHoraria" style="display:none" >
+                                <label class="form-label">{{form_label(form.cargaHoraria)}}</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        {{form_widget(form.cargaHoraria) }}
+                                    </div>
+                                </div>                                                                                    
+                            </div> 
+                            <label class="form-label">{{form_label(form.descripcion)}}</label>
+                             <div class="form-group">
                                 <div class="form-line">
-                                    {{form_widget(form.tiempoEstudio) }}
-                                </div>
-                            </div>                                                                                    
-
-                            <label class="form-label">{{form_label(form.cargaHoraria)}}</label>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    {{form_widget(form.cargaHoraria) }}
-                                </div>
-                            </div>                                                                                    
-                            <label class="form-label pull-left col-blue">{{form_label(form.operacion)}}</label>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    {{form_widget(form.operacion) }}
-                                </div>
-                            </div>                                                                                    
+								    {{form_widget(form.descripcion) }}                               
+                                </div>                                                                                   
+                            </div>                                                                                   
+                                                                                                             
                         </fieldset>
                             {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
                             <a href="{{path('oac_list', {'idRie': institucion.getId()})}}" class="btn btn-danger btn-lg m-l-15 waves-effect">Cancelar</a>
@@ -253,6 +266,26 @@
                 $("#form_tiempoEstudio").selectpicker('refresh');
             }    
 
+        }
+
+        function cargarDetalle() {
+            operacion = $("#form_operacion").val();
+
+            if(operacion =='RECTIFICACION'){
+                 $("#nivelTipo").show();
+                 $("#regimenEstudio").show();
+                 $("#tiempoEstudio").show();
+                 $("#cargaHoraria").show();
+                
+
+            }
+            else{
+                $("#nivelTipo").hide();
+                 $("#regimenEstudio").hide();
+                 $("#tiempoEstudio").hide();
+                 $("#cargaHoraria").hide();
+            }
+            
         }
 
     </script>

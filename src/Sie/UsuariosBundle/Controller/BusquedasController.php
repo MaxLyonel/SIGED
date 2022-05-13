@@ -17,11 +17,14 @@ use Sie\UsuariosBundle\Form\CodIEType;
 class BusquedasController extends Controller
 {
     private $session;
+    public $arrUserAllow;
     /**
      * the class constructor
      */
     public function __construct() {
         $this->session = new Session();
+        $this->arrUserAllow = array(5609814,3625644,5062963,4284063,5727128,4300231,1314301,3295554,1897494);
+
     }
     
     public function codiepersonasAction(Request $request) {
@@ -62,6 +65,13 @@ class BusquedasController extends Controller
 
     
     public function formcarnetAction() {
+
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }
+
         $formBuscarPersona = $this->createForm(new BuscarPersonaType(array('opcion'=>0)), null, array('action' => $this->generateUrl('sie_usuario_persona_buscar_carnet'), 'method' => 'POST',));
 
         return $this->render('SieUsuariosBundle:Default:usuariocarnet.html.twig', array(           
@@ -387,6 +397,12 @@ class BusquedasController extends Controller
     }
     
     public function formusuarioAction() {
+
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }        
         $form = $this->createForm(new PersonaUsuarioType(), null, array('action' => $this->generateUrl('sie_usuario_resultado_nombreusuario'), 'method' => 'POST',));        
         return $this->render('SieUsuariosBundle:Busquedas:personausuario.html.twig', array(           
             'form'   => $form->createView(),
@@ -591,6 +607,12 @@ class BusquedasController extends Controller
     }
 
     public function formcodieAction() {
+
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }
         $form = $this->createForm(new CodIEType(), null, array('action' => $this->generateUrl('sie_usuario_cod_ie_buscar'), 'method' => 'POST',));        
         return $this->render('SieUsuariosBundle:Default:codie.html.twig', array(           
             'form'   => $form->createView(),
@@ -659,6 +681,13 @@ class BusquedasController extends Controller
     }        
     
     public function apoderadosieAction() {
+
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }
+
         $em = $this->getDoctrine()->getManager();
         //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();            
