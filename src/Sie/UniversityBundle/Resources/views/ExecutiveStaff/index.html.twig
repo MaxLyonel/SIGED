@@ -134,7 +134,32 @@
 		  /*background: #f2f2f2;*/
 		  padding: 2px;
 		  border: 0px solid grey;
-		}    	
+		}
+
+*{box-sizing:border-box;}
+
+.formatk{
+    width:750px;
+    padding:16px;
+    border-radius:10px;
+    margin:auto;
+    background-color:#e5e7e9 ;
+}
+.formatyears {
+    width:200px;
+    padding:16px;
+    border-radius:10px;
+    margin:auto;
+    background-color:#e5e7e9;
+}
+.formatallstaff{
+    width:100%;
+    padding:16px;
+    border-radius:10px;
+    margin:auto;
+    background-color:#e5e7e9;
+}
+
     </style>
 
     <div class="header-content">
@@ -170,20 +195,22 @@
 
 					 <div class="row">
 				    	<div class="col-sm-2">
-							<table class="table">
-							  <thead class="thead-dark">
-							    <tr>
-							      <th scope="col">#</th>
-							      <th scope="col">Gestion</th>
-							    </tr>
-							  </thead>
-							  <tbody>
-							    <tr>
-							      <th scope="row">1</th>
-							      <td>  <a href='#' v-on:click="getAllStaff(2022)">2022</a></td>
-							    </tr>						  
-							  </tbody>
-							</table>				    	
+                            <div class="formatyears">
+    							<table class="table ">
+    							  <thead class="thead-dark">
+    							    <tr>
+    							      <th scope="col">#</th>
+    							      <th scope="col">Gestion</th>
+    							    </tr>
+    							  </thead>
+    							  <tbody>
+    							    <tr v-for="(operative, index) in arrOperative">
+    							      <th scope="row">${index+1}</th>
+    							      <td>  <a href='#' v-on:click.prevent="getAllStaff(operative.gestion_tipo_id)">${operative.gestion_tipo_id}</a></td>
+    							    </tr>						  
+    							  </tbody>
+    							</table>
+                            </div>
 				    	</div>
 				    	<div class="col-sm-10">
 
@@ -193,38 +220,40 @@
 				            <div class="panel panel-default" v-if="swgetinfostaff">
 				                <div class="panel-heading container-fluid">
 				                    <h3 class="panel-title"> <i class="fa fa-file"></i> Personal Ejecutivo ${yearSelected}</h3>
-				                     <a class="btn btn-primary yearOld" data-toggle="modal" href='#modalEstudiante' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Nuevo Personal </a>							        			                    
+				                     <a class="btn btn-primary yearOld" data-toggle="modal" href='#modalPerson' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Nuevo Personal ${yearSelected}</a>							        			                    
 				                </div>
 				                <div class="panel-body">
 				                    <div class="row">
 				                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-											<table class="table" v-if="arrRegisteredStaff.length>0">
-											  <thead class="thead-dark">
-											    <tr>
-											      <th scope="col">#</th>
-											      <th scope="col">CI</th>
-											      <th scope="col">Complemento</th>
-											      <th scope="col">Paterno</th>
-											      <th scope="col">Materno</th>
-											      <th scope="col">Nombre(s)</th>
-											      <th scope="col">Formacion</th>
-											      <th scope="col">Cargo</th>
-											    </tr>
-											  </thead>
-											  <tbody>
-											    <tr v-for=" (registeredStaff, index) in arrRegisteredStaff ">
-											      <th scope="row">${index + 1}</th>
-											      <td>${registeredStaff.carnet}</td>
-											      <td>${registeredStaff.complemento}</td>
-											      <td>${registeredStaff.paterno}</td>
-											      <td>${registeredStaff.materno}</td>
-											      <td>${registeredStaff.nombre}</td>
-											      <td>${registeredStaff.formacion}</td>
-											      <td>${registeredStaff.cargo}</td>
-											      
-											    </tr>						  
-											  </tbody>
-											</table>
+                                            <div class="formatallstaff">
+    											<table class="table" v-if="arrRegisteredStaff.length>0">
+    											  <thead class="thead-dark">
+    											    <tr>
+    											      <th scope="col">#</th>
+    											      <th scope="col">CI</th>
+    											      <th scope="col">Complemento</th>
+    											      <th scope="col">Paterno</th>
+    											      <th scope="col">Materno</th>
+    											      <th scope="col">Nombre(s)</th>
+    											      <th scope="col">Formacion</th>
+    											      <th scope="col">Cargo</th>
+    											    </tr>
+    											  </thead>
+    											  <tbody>
+    											    <tr v-for=" (registeredStaff, index) in arrRegisteredStaff ">
+    											      <th scope="row">${index + 1}</th>
+    											      <td>${registeredStaff.carnet}</td>
+    											      <td>${registeredStaff.complemento}</td>
+    											      <td>${registeredStaff.paterno}</td>
+    											      <td>${registeredStaff.materno}</td>
+    											      <td>${registeredStaff.nombre}</td>
+    											      <td>${registeredStaff.formacion}</td>
+    											      <td>${registeredStaff.cargo}</td>
+    											      
+    											    </tr>						  
+    											  </tbody>
+    											</table>
+                                            </div>
 
 				                            <div class="text-center">
 				                            </div>
@@ -249,7 +278,7 @@
 
     </div>
 
-        <div class="modal fade" id="modalEstudiante">
+        <div class="modal fade" id="modalPerson">
             <div class="modal-dialog" style="width:800px">
                 <div class="modal-content">
                     <div class="modal-header yearOld">
@@ -257,20 +286,18 @@
                         <h4 class="modal-title"> <i class="fa fa-search"></i> Buscar Personal</h4>
                     </div>
                     <div class="modal-body">
-                        <form name="form" method="post" data-toggle="validator" role="form" id="idSearchStudentForm" class="form-inline">
+                        <form name="form" method="post" data-toggle="validator" role="form" id="idSearchStudentForm" class="form-inline formatk" >
                                 <div class="form-body">
                                   <div class="row">
                                       <div class="col-md-10 col-md-offset-1">
                                         <input type="text" v-model="DBsearch.cibuscar" id="form_ci" name="form[ci]" required="required" class="form-control" placeholder="Carnet Identidad" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="9" autocomplete="off" style="text-transform:uppercase">
                                         <input type="text" v-model="DBsearch.complementoval" id="form_complemento" name="form[complemento]" required="required" class="form-control" placeholder="Complemento" pattern="[A-Za-z0-9\sñÑ]{3,18}" maxlength="2" autocomplete="off" style="text-transform:uppercase">
                                         
-                                        <button v-on:click="lookforperson()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar </button>
+                                        <button v-on:click.prevent="lookforperson(yearSelected)" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar </button>
                                         <button v-on:click="closeit" type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>
                                       </div>
                                   </div>
                                 </div><!-- /.form-body -->
-
-                            
                         </form>                        
 
                         <div class="alert alert-warning" v-if="respuesta != ''"> <i class="fa fa-warning"></i> ${respuesta}</div>
@@ -287,134 +314,175 @@
 			                    </div>
 			                        <div class="panel-body">
 			                          <h4>Datos de la Busqueda</h4>
-			                        	<form role="form">
+			                        	<form role="form" class="formatk">
 				                            <div class="row">
 				                              <div class="col-sm-4">
 				                              <label for="paterno">Paterno</label>
-				                              <input type="input" class="form-control" placeholder="Paterno" v-model="dataPerson.paterno" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swperson'>
+				                              <input type="text" class="form-control" placeholder="Paterno" v-model="dataPerson.paterno" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swperson'>
 				                              </div>
 				                              <div class="col-sm-4">
 				                              <label for="materno">Materno</label>
-				                                  <input type="input" class="form-control" placeholder="Materno" v-model="dataPerson.materno" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swperson'>
+				                                  <input type="text" class="form-control" placeholder="Materno" v-model="dataPerson.materno" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swperson'>
 				                              </div>
 				                              <div class="col-sm-4">
 				                              <label for="Nombre(s)">Nombre(s)</label>
-				                                  <input type="input" class="form-control" placeholder="Nombre(s)" v-model="dataPerson.nombre" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swperson'>
+				                                  <input type="text" class="form-control" placeholder="Nombre(s)" v-model="dataPerson.nombre" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swperson'>
 				                              </div>
 				                            </div>
 				                            </br>  
 
 				                            <div class="row">
-				                              <div class="col-sm-3">
-				                              <label for="ci">Carnet de Identidad</label>
+				                              <div class="col-sm-6">
+				                              <label for="ci">C. I.</label>
 				                              <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataPerson.carnet" v-bind:readonly='swperson'>
 				                              </div>
-				                              <div class="col-sm-3">
+				                              <div class="col-sm-6">
 				                              <label for="complemento(s)">Complemento</label>
 				                                  <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataPerson.complemento" v-bind:readonly='swperson'>
 				                              </div>
 
-				                              <div class="col-sm-3">
-				                              <label for="fechanac">Fec. Nacimiento</label>
-				                                  <input type="text" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="dd-mm-aaaa" v-model="dataPerson.fecNac" v-bind:readonly='swperson'>
-				                              </div>
-				                              <div class="col-sm-3" v-if='!swperson'>
-				                              <label for="genero">G&eacute;nero</label>
-				                                <select name="arrGenero" id="idarrGenero" v-model="dataPerson.generoId" class="custom-select form-control" v-model="dataPerson.genero">  
-				                                  <option value="1">Masculino</option>
-				                                  <option value="2">Femenino</option>
-				                                </select>
-				                              </div>
-				                            </div>
-				                            <div v-if="!swperson">
-												<div class="row" >
-													<div class="col-sm-3">
-													      <label for="ext">Extranejero</label>
-													      <select name="arrApode" id="idarrGenero" v-model="dataPerson.extranjero" class="custom-select form-control" v-model="dataPerson.foreign">  
-													      <option value="0">No</option>
-													      <option value="1">Si</option>
-													      </select> 
-													</div>                          
-												</div> 
-												<div {# v-if="!swperson" #}>
-													<div class="row">
-													  <div class="col-sm-3">
-													    <button v-on:click="validateSegip()" type="button" class="btn btn-danger"><i class="fa fa-book"></i>Validar segip </button>
-													  </div>
-													</div> 
-												</div>												
+											
 											</div>
+
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label for="fechanac">F. Nacimiento</label>
+                                                    <input type="input" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="dd-mm-aaaa" v-model="dataPerson.fecNac" v-bind:readonly='swperson'>
+                                                </div>
+                                                <div class="col-sm-6" v-if='!swperson'>
+                                                    <label for="genero">G&eacute;nero</label>
+                                                    <select name="arrGenero" id="idarrGenero" v-model="dataPerson.generoId" class="custom-select form-control" v-model="dataPerson.genero">  
+                                                        <option value="1">Masculino</option>
+                                                        <option value="2">Femenino</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div v-if="!swperson">
+                                                <div class="row" >
+                                                    <div class="col-sm-12">
+                                                          <label for="ext">Extranejero</label>
+                                                          <select name="arrApode" id="idarrGenero" v-model="dataPerson.extranjero" class="custom-select form-control" v-model="dataPerson.foreign">  
+                                                          <option value="0">No</option>
+                                                          <option value="1">Si</option>
+                                                          </select> 
+                                                    </div>                          
+                                                </div> 
+                                                <div {# v-if="!swperson" #}>
+                                                    <div class="row">
+                                                      <div class="col-sm-12">
+                                                        <button {# :disabled="disabledbutton" #} v-on:click.prevent="validateSegip()" type="button" class="btn btn-success"><i class="fa fa-book"></i>Validar segip </button>
+                                                      </div>
+                                                    </div>
+                                                      <div class="col-sm-12" v-if="swsegip">
+                                                        <div class="alert alert-danger" role="alert">
+                                                            validacion segip: Los datos registrados no coinciden...
+                                                        </div>
+                                                      </div>
+                                                </div>
+                                            </div>                                              
 											{# data Personal University #}
-											<div v-if="swperson">
-					                            <div class="row">
-					                              <div class="col-sm-3">
-					                              <label for="ci">Referencia</label>
-					                              <input type="text" class="form-control" placeholder="Referencia" v-model="dataPerson.ref" >
-					                              </div>
-					                              <div class="col-sm-3">
-					                              <label for="telefono">Telefono</label>
-					                                  <input type="text" class="form-control" placeholder="Telefono"  maxlength="8" autocomplete="off" style="text-transform:uppercase" v-model="dataPerson.telefono">
-					                              </div>
 
-					                              <div class="col-sm-3">
-					                              <label for="fechanac">Fax</label>
-					                                  <input type="text" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="Fax" v-model="dataPerson.fax">
-					                              </div>
-					                              <div class="col-sm-3" >
-					                              <label for="genero">Casilla</label>
-					                                <input type="text" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="Casilla" v-model="dataPerson.casilla">
-					                              </div>
-					                            </div>
+                                            <div class="alert alert-warning" role="alert" v-if="existsPersonStaffRegistered">
+                                                Ya existe el registro de esta persona...
+                                            </div>
+                                            <div v-else>
+    											<div v-if="swperson">
+                                                    <div class="row">
 
-					                            <div class="row">
-					                              <div class="col-sm-3">
-					                              <label for="ci">descripcion</label>
-					                              <input type="text" class="form-control" placeholder="descripcion" v-model="dataPerson.descripcion" >
-					                              </div>
-					                              <div class="col-sm-3">
-					                              <label for="complemento(s)">email</label>
-					                                  <input type="text" class="form-control" placeholder="email"  autocomplete="off" v-model="dataPerson.email">
-					                              </div>
+                                                      <div class="col-sm-6">
+                                                      <label for="telefono">Cargo</label>
+                                                        <select name="arrGenero" id="idarrGenero" class="custom-select form-control" v-model="dataPerson.cargo">  
+                                                          <option v-for=" training in DBTraining " :value="training.id">${training.cargo}</option>
+                                                          
+                                                        </select>
+                                                      </div>
 
-					                              <div class="col-sm-3">
-					                              <label for="formaciondescripcion">Formacion descripcion</label>
-					                                  <input type="text" class="form-control" id="form_idfecnac"placeholder="formaciondescripcion" v-model="dataPerson.formaciondescripcion">
-					                              </div>
-					                              <div class="col-sm-3" >
-					                              <label for="documentos_acad">Documentos Academica</label>
-					                                <input type="text" class="form-control" id="form_idfecnac" placeholder="documentos_acad" v-model="dataPerson.documentos_acad">
-					                              </div>
-					                            </div>
+                                                      <div class="col-sm-6">
+                                                      <label for="ci">Formacion</label>
+                                                        <select name="arrGenero" id="idarrGenero" class="custom-select form-control" v-model="dataPerson.formacion">  
+                                                          <option v-for=" position in DBPosition" :value="position.id">${position.cargo}</option>
+                                                        </select>
+                                                      </div>
 
-					                            <div class="row">
-					                              <div class="col-sm-3">
-					                              <label for="gestion_nombramiento_id">Gestion Nombramiento_id</label>
-					                              <input type="text" class="form-control" placeholder="gestion_nombramiento_id" v-model="dataPerson.gestion_nombramiento_id" >
-					                              </div>
-					                              <div class="col-sm-3">
-					                              <label for="ratificacion_anio_ini">Ratificacion_anio_inicio</label>
-					                                  <input type="text" class="form-control" placeholder="ratificacion_anio_ini"  autocomplete="off" v-model="dataPerson.ratificacion_anio_ini">
-					                              </div>
+                                                    </div>
 
-					                              <div class="col-sm-3">
-					                              <label for="ratificacion_anio_fin">Ratificacion anio fin</label>
-					                                  <input type="text" class="form-control" id="form_ratificacion_anio_fin"placeholder="ratificacion_anio_fin" v-model="dataPerson.ratificacion_anio_fin">
-					                              </div>
-					                              <div class="col-sm-3" >
-					                              <label for="fecha_registro_firma">Fecha registro firma</label>
-					                                <input type="text" class="form-control" id="form_idfecnac" placeholder="fecha_registro_firma" v-model="dataPerson.fecha_registro_firma">
-					                              </div>
-					                            </div>
 
-												<div {# v-if="!swperson" #}>
-													<div class="row">
-													  <div class="col-sm-3">
-													    <button v-on:click="registerPerson()" type="button" class="btn btn-warning"><i class="fa fa-book"></i>Registrar </button>
-													  </div>
-													</div> 
-												</div>					                            
+    					                            <div class="row">
+    					                              <div class="col-sm-3">
+    					                              <label for="ci">Referencia</label>
+    					                              <input type="text" class="form-control" placeholder="Referencia" v-model="dataPerson.ref" >
+    					                              </div>
+    					                              <div class="col-sm-3">
+    					                              <label for="telefono">Telefono</label>
+    					                                  <input type="text" class="form-control" placeholder="Telefono"  maxlength="8" autocomplete="off" style="text-transform:uppercase" v-model="dataPerson.telefono">
+    					                              </div>
 
-				                            </div>
+    					                              <div class="col-sm-3">
+    					                              <label for="fechanac">Fax</label>
+    					                                  <input type="text" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="Fax" v-model="dataPerson.fax">
+    					                              </div>
+    					                              <div class="col-sm-3" >
+    					                              <label for="genero">Casilla</label>
+    					                                <input type="text" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="Casilla" v-model="dataPerson.casilla">
+    					                              </div>
+    					                            </div>
+
+    					                            <div class="row">
+
+                                                      <div class="col-sm-3">
+                                                      <label for="complemento(s)">email</label>
+                                                          <input type="text" class="form-control" placeholder="email"  autocomplete="off" v-model="dataPerson.email">
+                                                      </div>
+
+    					                              <div class="col-sm-3">
+    					                              <label for="ci">descripcion</label>
+                                                       <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"  v-model="dataPerson.descripcion"></textarea>
+    					                              </div>
+
+
+
+    					                              <div class="col-sm-3">
+    					                              <label for="formaciondescripcion">Formacion descripcion</label>
+                                                          <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"  v-model="dataPerson.formaciondescripcion"></textarea>
+    					                              </div>
+    					                              <div class="col-sm-3" >
+    					                              <label for="documentos_acad">Documentos Academicos</label>
+    					                                {# <input type="text" class="form-control" id="form_idfecnac" placeholder="documentos_acad" v-model="dataPerson.documentos_acad"> #}
+                                                          <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
+    					                              </div>
+    					                            </div>
+
+    					                            <div class="row">
+    					                              <div class="col-sm-3">
+    					                              <label for="gestion_nombramiento_id">Gestion Nombramiento_id</label>
+    					                              <input type="text" class="form-control" placeholder="gestion_nombramiento_id" v-model="dataPerson.gestion_nombramiento_id" >
+    					                              </div>
+    					                              <div class="col-sm-3">
+    					                              <label for="ratificacion_anio_ini">Ratificacion_anio_inicio</label>
+    					                                  <input type="text" class="form-control" placeholder="ratificacion_anio_ini"  autocomplete="off" v-model="dataPerson.ratificacion_anio_ini">
+    					                              </div>
+
+    					                              <div class="col-sm-3">
+    					                              <label for="ratificacion_anio_fin">Ratificacion anio fin</label>
+    					                                  <input type="text" class="form-control" id="form_ratificacion_anio_fin"placeholder="ratificacion_anio_fin" v-model="dataPerson.ratificacion_anio_fin">
+    					                              </div>
+    					                              <div class="col-sm-3" >
+    					                              <label for="fecha_registro_firma">Fecha registro firma</label>
+    					                                <input type="text" class="form-control" id="form_idfecnac" placeholder="fecha_registro_firma" v-model="dataPerson.fecha_registro_firma">
+    					                              </div>
+    					                            </div>
+
+    												<div {# v-if="!swperson" #}>
+    													<div class="row">
+    													  <div class="col-sm-3">
+    													    <button v-on:click.prevent="registerNewPersonStaff(yearSelected)" type="button" class="btn btn-success"><i class="fa fa-book"></i>Registrar </button>
+    													  </div>
+    													</div> 
+    												</div>					                            
+
+    				                            </div>
+                                            </div>
 
 		                            
 			                            
@@ -444,17 +512,9 @@
                 
                 buscando: false,
                 respuesta: '',
-                
-                
-                inscripciones: [],
+
                 datos: [],
 
-                idInscripcion: '',
-                flujoTipo: '',
-                notas: [],
-                filas: [],
-                notasCualitativas: [],
-                filasCualitativas: [],
                 justificacion: '',
                 informe: '',
                 flujoTipo: '',
@@ -473,16 +533,94 @@
                 checkFormulario: false,
 
                 DBsearch: [],
-                dataPerson: [],
+                dataPerson: {
+                            cargo:"",
+                            carnet:"",
+                            casilla:"",
+                            complemento:"",
+                            descripcion:"",
+                            documentos_acad:"",
+                            email:"",
+                            expedido:"",
+                            expedidoId:"",
+                            expedidoId2:"",
+                            extranjero:"",
+                            fax:"",
+                            fecNac:"",
+                            fecha_registro_firma:"",
+                            foreign:"",
+                            formacion:"",
+                            formaciondescripcion:"",
+                            genero:"",
+                            generoId:"",
+                            gestion_nombramiento_id:"",
+                            materno:"",
+                            nombre:"",
+                            paterno:"",
+                            personId:"",
+                            ratificacion_anio_fin:"",
+                            ratificacion_anio_ini:"",
+                            ref:"",
+                            telefono:"",                
+                },
+                DBTraining: [],
+                DBPosition: [],
                 arrRegisteredStaff: [],
-                swperson: false,
+                arrOperative:[],
                 answer: false,
-                swgetinfostaff: false,
+                swperson: false,                
+                swsegip: false,                
                 yearSelected:0,
                 buscandoall: false,
+                disabledbutton: false,
+                swgetinfostaff: false,
+                sedeId: {{ sedeId }},
+                existsPersonStaffRegistered: false,
+
+                
 
             },
+            mounted(){
+                this.getAllOperative(this.sedeId);
+            },
             methods: {
+                getImage: function(event){
+                    var informe = event.target.files[0];
+                    var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+                    if(!allowedExtensions.exec(event.target.value)){
+                        event.target.value = '';
+                        Swal.fire(
+                              'Archivo incorrecto!',
+                              'El archivo adjunto debe ser una imagen o un archivo pdf',
+                              'warning'
+                            );
+                        this.informe = '';
+                        return false;
+                    }else{
+                        var megas = (informe.size / 1024)/1024;
+                        if (megas > 2) {
+                            event.target.value = '';
+                            Swal.fire(
+                              'Tamaño no permitido!',
+                              'El archivo debe tener un tamaño menor a 2MB',
+                              'warning'
+                            );
+                            this.informe = '';
+                            return false;
+                        }
+                    }
+                    this.informe = event.target.files[0];
+                },                 
+                getAllOperative: function(sedeId){
+                    
+                    axios.get(Routing.generate('staff_getAllOperative',{ sedeId: sedeId}))
+                        .then(response => {
+                            this.arrOperative = response.data.arrOperative;
+                        })
+                        .catch(e = {
+
+                        });                    
+                },
                 cerrarModal: function(){
                     $('#modalCalificaciones').modal('hide');
                 },
@@ -494,12 +632,55 @@
                     return false;
                 },
                 clearDataPerson: function(){
-                	this.dataPerson = [];
+                	this.dataPerson = {
+                            cargo:"",
+                            carnet:"",
+                            casilla:"",
+                            complemento:"",
+                            descripcion:"",
+                            documentos_acad:"",
+                            email:"",
+                            expedido:"",
+                            expedidoId:"",
+                            expedidoId2:"",
+                            extranjero:"",
+                            fax:"",
+                            fecNac:"",
+                            fecha_registro_firma:"",
+                            foreign:"",
+                            formacion:"",
+                            formaciondescripcion:"",
+                            genero:"",
+                            generoId:"",
+                            gestion_nombramiento_id:"",
+                            materno:"",
+                            nombre:"",
+                            paterno:"",
+                            personId:"",
+                            ratificacion_anio_fin:"",
+                            ratificacion_anio_ini:"",
+                            ref:"",
+                            telefono:"",                
+                    };
 
                 },
                 validateSegip: function(){
 
-                	this.swperson = true;
+                    this.swperson = false;
+                    this.swsegip = false;
+                    this.disabledbutton = false;
+                    
+                    axios.get(Routing.generate('staff_validateDataSegip',this.dataPerson))
+                        .then(response => {
+                            this.swperson = response.data.swperson;
+                            this.swsegip = response.data.swsegip;
+                            this.disabledbutton = response.data.disabledbutton;
+                        })
+                        .catch(e = {
+
+                        });  
+
+                	
 
                 },
 				getAllStaff: function(inyear){
@@ -539,26 +720,15 @@
                 	this.DBsearch = [];
 
                 },
-                lookforperson: function(){
+                lookforperson: function(yearchoose){
                     this.buscando = true;
                     this.estudiante = '';
                     this.carnet = '';
                     this.complemento = '';
                     this.inscripciones = '';
                     this.respuesta = '';
-                    this.datos = '';
-                    
-                    this.directorNombre = '';
-                    this.directorCarnet = '';
-                    this.directorComplemento = '';
+                    this.datos = '';                    
 
-                    this.idInscripcion = '';
-                    this.sie = '';
-                    this.institucioneducativa = '';
-                    this.nivel = '';
-                    this.grado = '';
-                    this.paralelo = '';
-                    this.turno = '';
                     this.gestion = '';
                     this.departamento = '';
                     this.distrito = '';
@@ -569,6 +739,10 @@
                     this.filasCualitativas = [];
                     this.justificacion = '';
                     this.informe = '';
+                    this.DBTraining = [];
+                    this.DBPosition = [];
+                    this.swperson = false;
+                    this.existsPersonStaffRegistered = false;
 
                     this.clearDataPerson();
 
@@ -586,6 +760,8 @@
                     if(typeof(this.DBsearch.complementoval)  === 'undefined'){
                     	this.DBsearch.complementoval = '';
                     }
+                    this.DBsearch.yearchoose = yearchoose;
+                    this.DBsearch.sedeId = this.sedeId;
                     axios.get(Routing.generate('staff_lookforperson', this.DBsearch))
                     .then(response => {
                         if (response.status == 200) {
@@ -594,6 +770,9 @@
 
                         	this.swperson   = response.data.swperson;
                         	this.answer   = response.data.answer;
+                            this.existsPersonStaffRegistered   = response.data.existsPersonStaffRegistered;
+                            this.DBTraining = response.data.arrPosition;
+                            this.DBPosition = response.data.arrTraining;
 
                             $('[data-toggle="tooltip"]').tooltip();
                         }
@@ -609,9 +788,71 @@
                     });
                 },
 
+                registerNewPersonStaff: function(yearchoose){
 
-            },
-            mounted(){
+
+
+
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                        'Adjuntar Documentos',
+                        'Debe adjuntar documentos academicos, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+                    }                    
+
+                    Swal.fire({
+                        title: 'Registrar Personal?',
+                        text: "esta seguro de realizar el registro",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.value) {
+                            var data = new FormData();
+                            this.dataPerson.yearchoose = yearchoose;
+                            this.dataPerson.sedeId = this.sedeId;
+                            data.append('datos', JSON.stringify(this.dataPerson));
+                            data.append('informe', this.informe);
+                            // data.append('yearchoose', yearchoose);
+                            // data.append('sedeId', this.sedeId);
+                                                        
+                             axios.post(Routing.generate('staff_savestaff'), data)
+                            .then(response => {
+                                if (response.status == 200) {
+                                    // this.showbuttonPDF = false;
+                                    // this.studentHistModId = false;
+                                    // this.studentId = false;
+                                    // if(response.data.showbuttonPDF){
+                                    //    this.showbuttonPDF = response.data.showbuttonPDF;
+                                    //    this.studentHistModId = response.data.studentHistModId;
+                                    //    this.studentId = response.data.studentId;
+                                    //    this.urlreport = response.data.urlreport;
+                                    // }
+                                    console.log(response.data.answerSegip);
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                }
+                                if( response.status == 202){
+                                    this.respuesta = response.data;
+                                }
+                                this.buscando = false;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                this.buscando = false;
+                            });
+
+                            
+                        }
+                    })                   
+
+                }
+
+
             }
         });
 
