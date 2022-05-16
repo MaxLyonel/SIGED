@@ -6,7 +6,7 @@
     <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.49.0/mapbox-gl.css' rel='stylesheet' />
     <style>
         body { margin:0; padding:0; }
-        #map { top:0; bottom:0; width:100%; height: 260px; }
+        #map { top:0; bottom:0; width:100%; height: 300px; }
     </style>
 {% endblock %}
 
@@ -62,7 +62,12 @@
     {% set nombre = "" %}
   {% endif %}  
     <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-4">                
+        <div class="col-lg-3 col-md-3 col-sm-4">    
+            <form name="form" id="form" role="form" action="{{ path('sie_university_sede_index') }}" method="POST" onsubmit="return verificaCampos()">
+                <input type="hidden" name="_token" value="{{ csrf_token('gestiones') }}">
+                <input type="hidden" id="form_sede" name="form[sede]" value="{{sede.id|base64_encode}}">  
+                <input type="hidden" id="form_gestion" name="form[gestion]" value="">             
+            </form>            
             <ul class="nav nav-pills nav-stacked nav-email rounded">
                 {% for gestion in gestiones %}
                     {% set id = gestion.id|base64_encode %}
@@ -95,12 +100,14 @@
                                         <i class="fa fa-fax"></i> <strong>Fax: </strong>{{datos.fax}}<br>
                                         <i class="fa fa-home"></i> <strong>Casilla: </strong>{{datos.casilla}}<br>
                                         <i class="fa fa-tag"></i> <strong>Sitio: </strong>{{datos.sitio}}<br>
-                                        <i class="fa fa-globe"></i> <strong>Departamento: </strong>{{datos.telefono}}<br>
-                                        <i class="fa fa-map-sings"></i> <strong>Provincia: </strong>{{datos.celular}}<br>
-                                        <i class="fa fa-map-marker"></i> <strong>Municipio: </strong>{{datos.referenciaCelular}}<br>
-                                        <i class="fa fa-map-pin"></i> <strong>Comunidad: </strong>{{datos.inicioCalendarioAcademico}}<br>
+                                        <i class="fa fa-globe"></i> <strong>Departamento: </strong>{{datos.departamento.lugar}}<br>
+                                        <i class="fa fa-map-signs"></i> <strong>Provincia: </strong>{{datos.provincia.lugar}}<br>
+                                        <i class="fa fa-map-marker"></i> <strong>Municipio: </strong>{{datos.municipio.lugar}}<br>
+                                        <i class="fa fa-map-pin"></i> <strong>Comunidad: </strong>{{datos.comunidad.lugar}}<br>
                                         <i class="fa fa-map-o"></i> <strong>Zona: </strong>{{datos.correo}}<br>
-                                        <i class="fa fa-ticket"></i> <strong>Dirección: </strong>{{datos.fax}}
+                                        <i class="fa fa-ticket"></i> <strong>Dirección: </strong>{{datos.fax}}<br>
+                                        <i class="fa fa-map"></i> <strong>Latitud: </strong>{{datos.latitud}}<br>
+                                        <i class="fa fa-map"></i> <strong>Longitud: </strong>{{datos.longitud}}
                                     </address>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">                                                              
@@ -109,10 +116,10 @@
                             </div>
                         </div>
                         <div class="panel-body text-center">
-                            {% if editar is defined %}
-                                <a href="javascript:void(0);" class="btn btn-primary btn-block" onclick="ingresoSedeSucursal('{{info}}')">Modificar</a>
+                            {% if editar %}
+                                <a href="javascript:void(0);" class="btn btn-primary btn-block" onclick="ingresoSedeSucursal('{{datos.info}}')" data-toggle="modal" data-target="#modal">Modificar</a>
                             {% else %} 
-                                <a href="javascript:void(0);" class="btn btn-success btn-block" onclick="ingresoSedeSucursal('{{info}}')">Registrar</a>
+                                <a href="javascript:void(0);" class="btn btn-success btn-block" onclick="ingresoSedeSucursal('{{datos.info}}')" data-toggle="modal" data-target="#modal">Registrar</a>
                             {% endif %} 
                         </div><!-- /.panel-heading -->
                     </div>
@@ -128,7 +135,6 @@
 <script>
 
     var ingresoSedeSucursal = function (info){
-        botonForm = $(bot); 
         $.ajax({
             type: 'post',
             url: Routing.generate('sie_university_sede_update', {'info': info}),
@@ -148,7 +154,7 @@
     };
 
 
-
+    {% if datos.latitud != "" %}
     mapboxgl.accessToken = 'pk.eyJ1IjoianVybGFuIiwiYSI6ImNqd3RkNjZjYzAxd2k0MGw1a3A4dmJuZjIifQ.hcnCGlBc18MaYfIFG22P-Q'; // Nuestro Token de acceso
     var map = new mapboxgl.Map({
         container: 'map', // id del contenedor
@@ -156,7 +162,19 @@
         center: [{{datos.latitud}},{{datos.longitud}}], // Posición inicial
         zoom: 13 // Zoom inicial
     });
+    {% endif %}
 
+    var ingresoSedeGestion = function (ges){
+        var formGestion = $('#form_gestion');
+        var formulario = $('#form')[0];
+        formGestion.val(ges);
+        if (formGestion.val() == ""){
+          alert("Debe seleccionar una gestión válida");
+          return false;
+        }  
+        formulario.submit();      
+        return true;
+    };
 
 </script>
 {% endblock %}
