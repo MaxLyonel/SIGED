@@ -84,10 +84,10 @@ class SedeController extends Controller
             $fax = "";
             $casilla = "";
             $sitio = "";
-            $departamento = 0;
-            $provincia = 0;
-            $municipio = 0;
-            $comunidad = 0;
+            $departamento = -1;
+            $provincia = -1;
+            $municipio = -1;
+            $comunidad = -1;
             $latitud = "";
             $longitud = "";
             $zona = "";
@@ -127,7 +127,6 @@ class SedeController extends Controller
             'titulo' => $titulo,
             'subtitulo' => $subtitulo,
             'gestiones' => $gestiones,
-            'info' => $info,
             'datos' => $datos,
             'editar' => $editar
         ));
@@ -272,13 +271,13 @@ class SedeController extends Controller
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
 
-        $sedeId = $request->get('sede');
-        if($sedeId != ""){
-            $sedeId = base64_decode($sedeId);
+        $info = $request->get('info');
+        if($info != ""){
+            $info = json_decode(base64_decode($info), true);
         }
 
-        $gestion = $gestionActual;
-        $info = base64_encode(json_encode(array('sedeId'=>$sedeId, 'gestion'=>$gestion)));
+        $sedeId = $info['sedeId'];
+        $gestionId = $info['gestionId'];
 
         $id_usuario = $this->session->get('userId');
         $estado = true; 
@@ -287,20 +286,23 @@ class SedeController extends Controller
         if($id_usuario == ""){             
             $estado = false;   
             $msg = "Su sesión finalizo, ingrese nuevamente";      
-            //return $response->setData(array('estado' => $estado, 'msg' => $msg));
+            return $response->setData(array('estado' => $estado, 'msg' => $msg));
         }
 
         if(!$this->tuisionSede($sedeId,$id_usuario)){            
             $estado = false;
             $msg = 'No esta como usuario en la sede seleccionada, comuniquese con su administrador';
-            //return $response->setData(array('estado' => $estado, 'msg' => $localidadmsg));
+            return $response->setData(array('estado' => $estado, 'msg' => $msg));
         }
+
+
         
         $em = $this->getDoctrine()->getManager();
-        $sedeSucursalEntity = $em->getRepository('SieAppWebBundle:UnivSedeSucursal')->findBy(array('univSede'=>$sedeId, 'gestionTipo'=>$gestion,));
+        $sedeSucursalEntity = $em->getRepository('SieAppWebBundle:UnivSedeSucursal')->findBy(array('univSede'=>$sedeId, 'gestionTipo'=>$gestionId));
         //dump($sedeSucursalEntity, $sedeSucursalEntity[0]->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo());die;
         if (count($sedeSucursalEntity) > 0){
             $sedeSucursalArray = $sedeSucursalEntity[0];
+            $sedeSucursalId = $sedeSucursalArray->getId();
             $telefono = $sedeSucursalArray->getTelefono1();
             $celular = $sedeSucursalArray->getTelefono2();
             $referenciaCelular = $sedeSucursalArray->getReferenciaTelefono2();
@@ -310,65 +312,7 @@ class SedeController extends Controller
             $casilla = $sedeSucursalArray->getCasilla();
             $sitio = $sedeSucursalArray->getSitioWeb();
             $departamento = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
-            $provincia = $sedeSucursalArray->getUnivSede()->$sedeSucursalEntity = $em->getRepository('SieAppWebBundle:UnivSedeSucursal')->findBy(array('univSede'=>$sedeId, 'gestionTipo'=>$gestion,));
-            //dump($sedeSucursalEntity, $sedeSucursalEntity[0]->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo());die;
-            if (count($sedeSucursalEntity) > 0){
-                $sedeSucursalArray = $sedeSucursalEntity[0];
-                $telefono = $sedeSucursalArray->getTelefono1();
-                $celular = $sedeSucursalArray->getTelefono2();
-                $referenciaCelular = $sedeSucursalArray->getReferenciaTelefono2();
-                $correo = $sedeSucursalArray->getEmail();
-                $inicioCalendarioAcademico = $sedeSucursalArray->getInicioCalendarioAcademico();
-                $fax = $sedeSucursalArray->getFax();
-                $casilla = $sedeSucursalArray->getCasilla();
-                $sitio = $sedeSucursalArray->getSitioWeb();
-                $departamento = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
-                $provincia = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getLugarTipo()->getId();
-                $municipio = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getId();
-                $comunidad = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getId();
-                $latitud = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getCordx();
-                $longitud = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getCordy();
-                $zona = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getZona();
-                $direccion = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getDireccion();
-            } else {
-                $telefono = "";
-                $celular = "";
-                $referenciaCelular = "";
-                $correo = "";
-                $inicioCalendarioAcademico = "";
-                $fax = "";
-                $casilla = "";
-                $sitio = "";
-                $departamento = "";
-                $provincia = "";
-                $municipio = "";
-                $comunidad = "";
-                $latitud = "";
-                $longitud = "";
-                $zona = "";
-                $direccion = "";
-            }
-    
-            $datos = array(
-                'info'=>$info,
-                'telefono'=>$telefono,
-                'celular'=>$celular,
-                'referenciaCelular'=>$referenciaCelular,
-                'correo'=>$correo,
-                'inicioCalendarioAcademico'=>$inicioCalendarioAcademico->format('d-m-Y'),
-                'fax'=>$fax,
-                'casilla'=>$casilla,
-                'sitio'=>$sitio,
-                'departamento'=>array('lugar'=>array(), 'id'=>$departamento),
-                'provincia'=>array('lugar'=>array(), 'id'=>$provincia),
-                'municipio'=>array('lugar'=>array(), 'id'=>$municipio),
-                'comunidad'=>array('lugar'=>array(), 'id'=>$comunidad),
-                'latitud'=>$latitud,
-                'longitud'=>$longitud,
-                'zona'=>$zona,
-                'direccion'=>$direccion
-            );
-    getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getLugarTipo()->getId();
+            $provincia = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getLugarTipo()->getId();
             $municipio = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getId();
             $comunidad = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getId();
             $latitud = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getCordx();
@@ -376,23 +320,26 @@ class SedeController extends Controller
             $zona = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getZona();
             $direccion = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getDireccion();
         } else {
+            $sedeSucursalId = 0;
             $telefono = "";
             $celular = "";
             $referenciaCelular = "";
             $correo = "";
-            $inicioCalendarioAcademico = "";
+            $inicioCalendarioAcademico = $fechaActual;
             $fax = "";
             $casilla = "";
             $sitio = "";
-            $departamento = "";
-            $provincia = "";
-            $municipio = "";
-            $comunidad = "";
+            $departamento = -1;
+            $provincia = -1;
+            $municipio = -1;
+            $comunidad = -1;
             $latitud = "";
             $longitud = "";
             $zona = "";
             $direccion = "";
         }
+
+        $info = base64_encode(json_encode(array('sedeId'=>$sedeId,'gestionId'=>$gestionId,'sedeSucursalId'=>$sedeSucursalId)));
 
         $datos = array(
             'info'=>$info,
