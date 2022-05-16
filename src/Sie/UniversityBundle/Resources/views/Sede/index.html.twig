@@ -137,7 +137,7 @@
     var ingresoSedeSucursal = function (info){
         $.ajax({
             type: 'post',
-            url: Routing.generate('sie_university_sede_update', {'info': info}),
+            url: Routing.generate('sie_university_sede_form', {'info': info}),
             beforeSend: function () {
                 $("#modalBody").empty();
                 $("#modalBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
@@ -155,14 +155,16 @@
 
 
     {% if datos.latitud != "" %}
-    mapboxgl.accessToken = 'pk.eyJ1IjoianVybGFuIiwiYSI6ImNqd3RkNjZjYzAxd2k0MGw1a3A4dmJuZjIifQ.hcnCGlBc18MaYfIFG22P-Q'; // Nuestro Token de acceso
-    var map = new mapboxgl.Map({
-        container: 'map', // id del contenedor
-        style: 'mapbox://styles/mapbox/streets-v9', // localización del mapa de estilo
-        center: [{{datos.latitud}},{{datos.longitud}}], // Posición inicial
-        zoom: 13 // Zoom inicial
-    });
+        mapboxgl.accessToken = 'pk.eyJ1IjoianVybGFuIiwiYSI6ImNqd3RkNjZjYzAxd2k0MGw1a3A4dmJuZjIifQ.hcnCGlBc18MaYfIFG22P-Q'; // Nuestro Token de acceso
+        var map = new mapboxgl.Map({
+            container: 'map', // id del contenedor
+            style: 'mapbox://styles/mapbox/streets-v9', // localización del mapa de estilo
+            center: [{{datos.latitud}},{{datos.longitud}}], // Posición inicial
+            zoom: 13 // Zoom inicial
+        });
+        new mapboxgl.Marker().setLngLat([{{datos.latitud}},{{datos.longitud}}]).addTo(map);
     {% endif %}
+
 
     var ingresoSedeGestion = function (ges){
         var formGestion = $('#form_gestion');

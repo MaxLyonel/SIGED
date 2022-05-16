@@ -48,6 +48,9 @@ class SedeController extends Controller
             $gestionId = $gestionActual;
         }        
 
+
+        $this->session->set('sedeId', $sedeId);
+        
         $entityUnivSedeActual = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
         $titulo = $entityUnivSedeActual->getUnivUniversidad()->getUniversidad();
         $subtitulo = $entityUnivSedeActual->getSede();
@@ -266,7 +269,7 @@ class SedeController extends Controller
     // PARAMETROS: datos
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function updateAction(Request $request) {
+    public function formAction(Request $request) {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
@@ -333,10 +336,10 @@ class SedeController extends Controller
             $provincia = -1;
             $municipio = -1;
             $comunidad = -1;
-            $latitud = "";
-            $longitud = "";
+            $latitud = "-16.290154";
+            $longitud = "-63.588653";
             $zona = "";
-            $direccion = "";
+            $direccion = ""; 	
         }
 
         $info = base64_encode(json_encode(array('sedeId'=>$sedeId,'gestionId'=>$gestionId,'sedeSucursalId'=>$sedeSucursalId)));
@@ -367,11 +370,143 @@ class SedeController extends Controller
         //dump($datos);die;
         //dump($sedeId,$info, $formSedeSucursal);die;
         $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
-        $sedeDetalle = array('nombre'=>$entityUnivSede->getSede(),'resolucionMinisterial'=>$entityUnivSede->getResolucionMinisterial(),'decretoSupremo'=>$entityUnivSede->getResolucionSuprema(),'naturalezaJuridica'=>$entityUnivSede->getNaturalezaJuridica(),'estado'=>'');
+        $sedeDetalle = array(
+            'nombre'=>$entityUnivSede->getSede(),
+            'resolucionMinisterial'=>$entityUnivSede->getResolucionMinisterial(),
+            'decretoSupremo'=>$entityUnivSede->getResolucionSuprema(),
+            'naturalezaJuridica'=>$entityUnivSede->getNaturalezaJuridica(),
+            'estado'=>'',
+            'latitud'=>$latitud,
+            'longitud'=>$longitud
+        );
 
         $arrayFormulario = array('estado'=>$estado, 'msg'=>$msg, 'titulo' => "Modificación de Sede / Sub Sede", 'form'=>$formSedeSucursal, 'sedeDetalle'=>$sedeDetalle);
                 
-        return $this->render('SieUniversityBundle:Sede:update.html.twig', $arrayFormulario);
+        return $this->render('SieUniversityBundle:Sede:form.html.twig', $arrayFormulario);
+
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que visualiza el formulario para guardar o modificar la asignacion del maestro
+    // PARAMETROS: datos
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function updateAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+
+        $info = $request->get('info');
+        dump($info);die;
+        if($info != ""){
+            $info = json_decode(base64_decode($info), true);
+        }
+
+        $sedeId = $info['sedeId'];
+        $gestionId = $info['gestionId'];
+
+        $id_usuario = $this->session->get('userId');
+        $estado = true; 
+        $msg = "";
+
+        if($id_usuario == ""){             
+            $estado = false;   
+            $msg = "Su sesión finalizo, ingrese nuevamente";      
+            return $response->setData(array('estado' => $estado, 'msg' => $msg));
+        }
+
+        if(!$this->tuisionSede($sedeId,$id_usuario)){            
+            $estado = false;
+            $msg = 'No esta como usuario en la sede seleccionada, comuniquese con su administrador';
+            return $response->setData(array('estado' => $estado, 'msg' => $msg));
+        }
+
+
+        
+        $em = $this->getDoctrine()->getManager();
+        $sedeSucursalEntity = $em->getRepository('SieAppWebBundle:UnivSedeSucursal')->findBy(array('univSede'=>$sedeId, 'gestionTipo'=>$gestionId));
+        //dump($sedeSucursalEntity, $sedeSucursalEntity[0]->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo());die;
+        if (count($sedeSucursalEntity) > 0){
+            $sedeSucursalArray = $sedeSucursalEntity[0];
+            $sedeSucursalId = $sedeSucursalArray->getId();
+            $telefono = $sedeSucursalArray->getTelefono1();
+            $celular = $sedeSucursalArray->getTelefono2();
+            $referenciaCelular = $sedeSucursalArray->getReferenciaTelefono2();
+            $correo = $sedeSucursalArray->getEmail();
+            $inicioCalendarioAcademico = $sedeSucursalArray->getInicioCalendarioAcademico();
+            $fax = $sedeSucursalArray->getFax();
+            $casilla = $sedeSucursalArray->getCasilla();
+            $sitio = $sedeSucursalArray->getSitioWeb();
+            $departamento = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
+            $provincia = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getLugarTipo()->getId();
+            $municipio = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getId();
+            $comunidad = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getId();
+            $latitud = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getCordx();
+            $longitud = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getCordy();
+            $zona = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getZona();
+            $direccion = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getDireccion();
+        } else {
+            $sedeSucursalId = 0;
+            $telefono = "";
+            $celular = "";
+            $referenciaCelular = "";
+            $correo = "";
+            $inicioCalendarioAcademico = $fechaActual;
+            $fax = "";
+            $casilla = "";
+            $sitio = "";
+            $departamento = -1;
+            $provincia = -1;
+            $municipio = -1;
+            $comunidad = -1;
+            $latitud = "-16.290154";
+            $longitud = "-63.588653";
+            $zona = "";
+            $direccion = ""; 	
+        }
+
+        $info = base64_encode(json_encode(array('sedeId'=>$sedeId,'gestionId'=>$gestionId,'sedeSucursalId'=>$sedeSucursalId)));
+
+        $datos = array(
+            'info'=>$info,
+            'telefono'=>$telefono,
+            'celular'=>$celular,
+            'referenciaCelular'=>$referenciaCelular,
+            'correo'=>$correo,
+            'inicioCalendarioAcademico'=>$inicioCalendarioAcademico->format('d-m-Y'),
+            'fax'=>$fax,
+            'casilla'=>$casilla,
+            'sitio'=>$sitio,
+            'departamento'=>array('lugar'=>array(), 'id'=>$departamento),
+            'provincia'=>array('lugar'=>array(), 'id'=>$provincia),
+            'municipio'=>array('lugar'=>array(), 'id'=>$municipio),
+            'comunidad'=>array('lugar'=>array(), 'id'=>$comunidad),
+            'latitud'=>$latitud,
+            'longitud'=>$longitud,
+            'zona'=>$zona,
+            'direccion'=>$direccion
+        );
+
+        $routing = "";
+        $formSedeSucursal = $this->getFormSedeSucursal($routing, $datos);
+
+        //dump($datos);die;
+        //dump($sedeId,$info, $formSedeSucursal);die;
+        $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
+        $sedeDetalle = array(
+            'nombre'=>$entityUnivSede->getSede(),
+            'resolucionMinisterial'=>$entityUnivSede->getResolucionMinisterial(),
+            'decretoSupremo'=>$entityUnivSede->getResolucionSuprema(),
+            'naturalezaJuridica'=>$entityUnivSede->getNaturalezaJuridica(),
+            'estado'=>'',
+            'latitud'=>$latitud,
+            'longitud'=>$longitud
+        );
+
+        $arrayFormulario = array('estado'=>$estado, 'msg'=>$msg, 'titulo' => "Modificación de Sede / Sub Sede", 'form'=>$formSedeSucursal, 'sedeDetalle'=>$sedeDetalle);
+                
+        return $this->render('SieUniversityBundle:Sede:form.html.twig', $arrayFormulario);
 
     }
 
