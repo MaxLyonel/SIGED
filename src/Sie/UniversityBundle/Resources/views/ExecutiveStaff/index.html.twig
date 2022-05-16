@@ -632,7 +632,8 @@
                     return false;
                 },
                 clearDataPerson: function(){
-                	this.dataPerson = {
+                    this.dataPerson = [];
+                	/*this.dataPerson = {
                             cargo:"",
                             carnet:"",
                             casilla:"",
@@ -661,7 +662,7 @@
                             ratificacion_anio_ini:"",
                             ref:"",
                             telefono:"",                
-                    };
+                    };*/
 
                 },
                 validateSegip: function(){
@@ -790,9 +791,6 @@
 
                 registerNewPersonStaff: function(yearchoose){
 
-
-
-
                     if (typeof this.informe != 'object') {
                         Swal.fire(
                         'Adjuntar Documentos',
@@ -820,10 +818,15 @@
                             data.append('informe', this.informe);
                             // data.append('yearchoose', yearchoose);
                             // data.append('sedeId', this.sedeId);
-                                                        
+                            this.arrRegisteredStaff = [];                          
                              axios.post(Routing.generate('staff_savestaff'), data)
                             .then(response => {
                                 if (response.status == 200) {
+                                    $('#modalPerson').modal('hide');
+                                    this.swgetinfostaff = response.data.swgetinfostaff;
+                                    this.arrRegisteredStaff = response.data.arrRegisteredStaff;
+                                    this.yearSelected = yearchoose; 
+                                    this.closeit();
                                     // this.showbuttonPDF = false;
                                     // this.studentHistModId = false;
                                     // this.studentId = false;
