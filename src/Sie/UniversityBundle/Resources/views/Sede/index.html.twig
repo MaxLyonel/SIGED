@@ -104,7 +104,7 @@
                                         <i class="fa fa-map-signs"></i> <strong>Provincia: </strong>{{datos.provincia.lugar}}<br>
                                         <i class="fa fa-map-marker"></i> <strong>Municipio: </strong>{{datos.municipio.lugar}}<br>
                                         <i class="fa fa-map-pin"></i> <strong>Comunidad: </strong>{{datos.comunidad.lugar}}<br>
-                                        <i class="fa fa-map-o"></i> <strong>Zona: </strong>{{datos.correo}}<br>
+                                        <i class="fa fa-map-o"></i> <strong>Zona: </strong>{{datos.zona}}<br>
                                         <i class="fa fa-ticket"></i> <strong>Dirección: </strong>{{datos.fax}}<br>
                                         <i class="fa fa-map"></i> <strong>Latitud: </strong>{{datos.latitud}}<br>
                                         <i class="fa fa-map"></i> <strong>Longitud: </strong>{{datos.longitud}}
@@ -135,6 +135,10 @@
 <script>
 
     var ingresoSedeSucursal = function (info){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
         $.ajax({
             type: 'post',
             url: Routing.generate('sie_university_sede_form', {'info': info}),
@@ -167,6 +171,10 @@
 
 
     var ingresoSedeGestion = function (ges){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
         var formGestion = $('#form_gestion');
         var formulario = $('#form')[0];
         formGestion.val(ges);

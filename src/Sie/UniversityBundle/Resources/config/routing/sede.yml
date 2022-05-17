@@ -12,6 +12,12 @@ sie_university_sede_form:
     options:
         expose: true
 
+sie_university_sede_update:
+    path:     /update
+    defaults: { _controller: SieUniversityBundle:Sede:update }
+    options:
+        expose: true
+
 sie_university_sede_lista_provincia:
     path:     /lista/provincia
     defaults: { _controller: SieUniversityBundle:Sede:listaProvincia }
@@ -26,8 +32,3 @@ sie_university_sede_lista_comunidad:
     path:     /lista/comunidad
     defaults: { _controller: SieUniversityBundle:Sede:listaComunidad }
     methods:  [GET]
-
-sie_university_sede_update:
-    path:     /update
-    defaults: { _controller: SieUniversityBundle:Sede:update }
-    methods:  [POST]
