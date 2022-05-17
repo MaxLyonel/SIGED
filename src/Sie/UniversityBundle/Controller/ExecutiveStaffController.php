@@ -299,11 +299,114 @@ class ExecutiveStaffController extends Controller{
             $response->setData($arrResponse);        
             return $response;            
             
-  
-
-
-        die;
     }
+
+    public function deletePersonalAction(Request $request){
+
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+
+        $objPerson = $em->getRepository('SieAppWebBundle:UnivAutoridadUniversidad')->find($request->get('id'));
+
+        $em->remove($objPerson);
+
+        // $em->persist($objPerson);
+        $em->flush();
+        
+        $this->baseData['yearSelected'] = $request->get('yearSelected');
+
+        $arrRegisteredStaff = $this->get('univfunctions')->getAllStaff($this->baseData);
+
+        // check if the staffs exists
+        if(sizeof($arrRegisteredStaff)>0){
+
+        }else{
+            $arrRegisteredStaff = array();
+        }
+
+        $arrResponse = array(
+            'swgetinfostaff'           => true,
+            'arrRegisteredStaff'       => $arrRegisteredStaff,
+            // 'swperson'                 => $swperson,
+        );
+        // dump($arrResponse);die;
+        $response->setStatusCode(200);
+        $response->setData($arrResponse);        
+        return $response;          
+
+    }
+
+    public function editPersonalAction(Request $request){
+
+        $response = new JsonResponse();
+        $em = $this->getDoctrine()->getManager();
+        // get the personal sede info
+        $objPersonalStaff = $em->getRepository('SieAppWebBundle:UnivAutoridadUniversidad')->find($request->get('id'));
+        // dump(($objPersonalStaff->getPersona()->getId()));
+        $objPerson = $em->getRepository('SieAppWebBundle:Persona')->find($objPersonalStaff->getPersona()->getId());
+
+        
+        // dump($objPersonalStaff->getGestionNombramiento());
+        // dump($objPerson);
+        // die;
+
+
+        // build the array personal staff data 
+        $arrPerson = array(
+            
+            "carnet" => $objPerson->getCarnet(),
+            "complemento" => $objPerson->getComplemento(),
+            "fecNac" => $objPerson->getFechaNacimiento()->format('d-m-Y'),
+            "materno" => $objPerson->getMaterno(),
+            "nombre" => $objPerson->getNombre(),
+            "paterno" => $objPerson->getPaterno(),
+            
+            "casilla" => $objPersonalStaff->getCasilla(),         
+            "descripcion" => $objPersonalStaff->getFormaciondescripcion(),
+            "documentos_acad" => $objPersonalStaff->getDocumentosAcad(),
+            "email" => $objPersonalStaff->getEmail(),
+            "cargo" => $objPersonalStaff->getUnivCargoJerarquicoTipo(),
+            "fax" => $objPersonalStaff->getFax(),
+            "fecha_registro_firma" => $objPersonalStaff->getFax(),
+            // "formacion" => $objPersonalStaff->getFormaciondescripcion(),
+            "formaciondescripcion" => $objPersonalStaff->getFormaciondescripcion(),
+            "gestion_nombramiento_id" => $objPersonalStaff->getGestionNombramiento()->getId(),
+            "ratificacion_anio_fin" => $objPersonalStaff->getRatificacionAnioFin(),
+            "ratificacion_anio_ini" => $objPersonalStaff->getRatificacionAnioIni(),
+            "ref" => $objPersonalStaff->getRef(),
+            "telefono" => $objPersonalStaff->getTelefono(),
+        );
+        
+
+        // $em->persist($objPerson);
+        // $em->flush();
+        
+        $this->baseData['yearSelected'] = $request->get('yearSelected');
+        //$arrRegisteredStaff = $this->get('univfunctions')->getAllStaff($this->baseData);
+        $arrPosition = $this->get('univfunctions')->getPosition();
+        $arrTraining = $this->get('univfunctions')->getTraining();
+        // check if the staffs exists
+        // if(sizeof($arrRegisteredStaff)>0){
+
+        // }else{
+        //     $arrRegisteredStaff = array();
+        // }
+          $arrResponse = array(
+                'answer'                      => true,
+                'arrPersonEdit'                   => $arrPerson,
+                'arrPosition'                 => $arrPosition,
+                'arrTraining'                 => $arrTraining,
+                'swperson'                    => true,
+                'existsPersonStaffRegistered' => false,
+          );
+          // dump($arrResponse);die;
+          $response->setStatusCode(200);
+          $response->setData($arrResponse);        
+          return $response;         
+
+    }
+
+
 
 
 
