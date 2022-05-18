@@ -32,3 +32,9 @@ sie_university_sede_lista_comunidad:
     path:     /lista/comunidad
     defaults: { _controller: SieUniversityBundle:Sede:listaComunidad }
     methods:  [GET]
+
+sie_university_sede_reporte_docente_administrativo:
+    path:     /reporte/docenteAdministrativo
+    defaults: { _controller: SieUniversityBundle:Sede:reporteDocenteAdministrativo }
+    options:
+        expose: true
