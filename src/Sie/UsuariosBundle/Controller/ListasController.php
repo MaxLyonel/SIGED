@@ -16,7 +16,7 @@ class ListasController extends Controller
      */
     public function __construct() {
         $this->session = new Session();
-        $this->arrUserAllow = array(5609814,3625644,5062963,4284063,5727128,4300231,1314301,3295554,1897494);
+        $this->arrUserAllow = array(5609814,3625644,5062963,8335918,5727128,4300231,1314301,3295554,1897494);
     }
 
     public function listassegunrolAction(Request $request) {
