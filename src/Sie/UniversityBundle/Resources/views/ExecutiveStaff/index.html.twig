@@ -160,6 +160,19 @@
     background-color:#e5e7e9;
 }
 
+
+.modal { 
+    position: fixed; 
+    top: 3%; 
+    right: 3%; 
+    left: 3%; 
+    width: auto; 
+    margin: 0; 
+}
+.modal-body { 
+    height: 60%; 
+}
+
     </style>
 
     <div class="header-content">
@@ -221,6 +234,7 @@
 				                <div class="panel-heading container-fluid">
 				                    <h3 class="panel-title"> <i class="fa fa-file"></i> Personal Ejecutivo ${yearSelected}</h3>
 				                     <a class="btn btn-primary yearOld" data-toggle="modal" href='#modalPerson' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Nuevo Personal ${yearSelected}</a>							        			                    
+                                     {# <a class="btn btn-primary yearOld" data-toggle="modal" href='#modaldetails' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Nuevo Personal ${yearSelected}</a> #}                                                                    
 				                </div>
 				                <div class="panel-body">
 				                    <div class="row">
@@ -254,7 +268,7 @@
                                                           <td>                                                    
                                                            {# @click="editPersonal(registeredStaff.id, yearSelected)"     #}
 
-                                                            <a class="btn btn-success" data-toggle="modal" href='#modalEditPerson' > <i class="fa fa-edit" aria-hidden="true" @click="editPersonal(registeredStaff.id, yearSelected)"></i></a>                                                                                 
+                                                            <a class="btn btn-success" {# data-toggle="modal" href='#modalEditPerson' #} > <i class="fa fa-edit" aria-hidden="true" @click="editPersonal(registeredStaff.id, yearSelected)"></i></a>                                                                                 
                                                             
                                                             <a class="btn btn-danger" href="#" aria-label="Delete" @click="deletePersonal(registeredStaff.id, yearSelected )">
                                                               <i class="fa fa-trash-o" aria-hidden="true"></i>
@@ -291,6 +305,26 @@
 
     </div>
 
+    <div id="modaldetails" class="modal fade" role="dialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog  modal-lg" role="document">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Offer Details</h4>
+          </div>
+          <div class="modal-body">
+          <p>Ipsum lorem....</p>
+          </div>      
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+
+      </div>
+    </div>    
         <div class="modal fade" id="modalPerson">
             <div class="modal-dialog" style="width:800px">
                 <div class="modal-content">
@@ -455,7 +489,7 @@
 
 
 
-    					                              <div class="col-sm-3">
+    					                              <div class="col-sm-6">
     					                              <label for="formaciondescripcion">Formacion descripcion</label>
                                                           <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"  v-model="dataPerson.formaciondescripcion"></textarea>
     					                              </div>
@@ -468,11 +502,11 @@
 
     					                            <div class="row">
     					                              <div class="col-sm-3">
-    					                              <label for="gestion_nombramiento_id">Gestion Nombramiento_id</label>
+    					                              <label for="gestion_nombramiento_id">Gestion Nombramiento</label>
     					                              <input type="text" class="form-control" placeholder="gestion_nombramiento_id" v-model="dataPerson.gestion_nombramiento_id" >
     					                              </div>
     					                              <div class="col-sm-3">
-    					                              <label for="ratificacion_anio_ini">Ratificacion_anio_inicio</label>
+    					                              <label for="ratificacion_anio_ini">Ratificacion anio inicio</label>
     					                                  <input type="text" class="form-control" placeholder="ratificacion_anio_ini"  autocomplete="off" v-model="dataPerson.ratificacion_anio_ini">
     					                              </div>
 
@@ -538,26 +572,26 @@
 
                             
                               
-                                <div class="panel panel-warning">
+                                <div class="panel panel-warning" v-if="swpersonedit">
                                     <div class="panel-heading">
                                         <div class="panel-title">
                                         </div>
                                     </div>
                                         <div class="panel-body">
-                                          <h4>Datos de la Busqueda krlos ${dataPersonEdit.length}</h4>
+                                          <h4>Datos de la Persona </h4>
                                             <form role="form" class="formatk" >
                                                 <div class="row">
                                                   <div class="col-sm-4">
                                                   <label for="paterno">Paterno</label>
-                                                  <input type="text" class="form-control" placeholder="Paterno" v-model="dataPersonEdit.paterno" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swperson'>
+                                                  <input type="text" class="form-control" placeholder="Paterno" v-model="dataPersonEdit.paterno" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swpersonedit'>
                                                   </div>
                                                   <div class="col-sm-4">
                                                   <label for="materno">Materno</label>
-                                                      <input type="text" class="form-control" placeholder="Materno" v-model="dataPersonEdit.materno" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swperson'>
+                                                      <input type="text" class="form-control" placeholder="Materno" v-model="dataPersonEdit.materno" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swpersonedit'>
                                                   </div>
                                                   <div class="col-sm-4">
                                                   <label for="Nombre(s)">Nombre(s)</label>
-                                                      <input type="text" class="form-control" placeholder="Nombre(s)" v-model="dataPersonEdit.nombre" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swperson'>
+                                                      <input type="text" class="form-control" placeholder="Nombre(s)" v-model="dataPersonEdit.nombre" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swpersonedit'>
                                                   </div>
                                                 </div>
                                                 </br>  
@@ -565,11 +599,11 @@
                                                 <div class="row">
                                                   <div class="col-sm-6">
                                                   <label for="ci">C. I.</label>
-                                                  <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataPersonEdit.carnet" v-bind:readonly='swperson'>
+                                                  <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataPersonEdit.carnet" v-bind:readonly='swpersonedit'>
                                                   </div>
                                                   <div class="col-sm-6">
                                                   <label for="complemento(s)">Complemento</label>
-                                                      <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataPersonEdit.complemento" v-bind:readonly='swperson'>
+                                                      <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataPersonEdit.complemento" v-bind:readonly='swpersonedit'>
                                                   </div>
 
                                                 
@@ -578,7 +612,7 @@
                                                 <div class="row">
                                                     <div class="col-sm-6">
                                                         <label for="fechanac">F. Nacimiento</label>
-                                                        <input type="input" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="dd-mm-aaaa" v-model="dataPersonEdit.fecNac" v-bind:readonly='swperson'>
+                                                        <input type="input" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="dd-mm-aaaa" v-model="dataPersonEdit.fecNac" v-bind:readonly='swpersonedit'>
                                                     </div>
                                                     {# <div class="col-sm-6" v-if='!swperson'>
                                                         <label for="genero">G&eacute;nero</label>
@@ -592,13 +626,13 @@
                                                 {# data Personal University #}
 
                                                 
-                                                    <div v-if="swperson">
+                                                    
                                                         <div class="row">
 
                                                           <div class="col-sm-6">
                                                           <label for="telefono">Cargo</label>
                                                             <select name="arrGenero" id="idarrGenero" class="custom-select form-control" v-model="dataPersonEdit.cargo">  
-                                                              <option v-for=" training in DBTraining " :value="training.id">${training.cargo}</option>
+                                                              <option v-for=" (training, key) in DBTraining " :key="key" :value="training.id" v-text="training.cargo"></option>
                                                               
                                                             </select>
                                                           </div>
@@ -606,7 +640,7 @@
                                                           <div class="col-sm-6">
                                                           <label for="ci">Formacion</label>
                                                             <select name="arrGenero" id="idarrGenero" class="custom-select form-control" v-model="dataPersonEdit.formacion">  
-                                                              <option v-for=" position in DBPosition" :value="position.id">${position.cargo}</option>
+                                                              <option v-for=" (position, key) in DBPosition" :value="position.id" :key="key" v-text="position.cargo"></option>
                                                             </select>
                                                           </div>
 
@@ -681,13 +715,13 @@
                                                         <div {# v-if="!swperson" #}>
                                                             <div class="row">
                                                               <div class="col-sm-12">
-                                                                <button v-on:click.prevent="registerNewPersonStaff(yearSelected)" type="button" class="btn btn-success"><i class="fa fa-book"></i>Actualizar </button>
-                                                                <button v-on:click="closeit" type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>                                                              
+                                                                <button v-on:click.prevent="saveEditPersonal()" type="button" class="btn btn-success"><i class="fa fa-book"></i>Actualizar </button>
+                                                                <button v-on:click="cancelEdit" type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>                                                              
                                                               </div>
                                                             </div> 
                                                         </div>                                              
 
-                                                    </div>
+                                                    
                                                 
 
                                         
@@ -722,20 +756,7 @@
 
                 justificacion: '',
                 informe: '',
-                flujoTipo: '',
-                formularioEnviado: false,
                 urlreporte: '',
-                respuestaIdTramite: '',
-                
-                actualEstadomatricula: '',
-                nuevoEstadomatricula: '',
-                estadosMatricula: [],
-                promedioGeneral: '',
-                nuevoPromedioGeneral: '',
-
-                checkInforme: false,
-                checkCuaderno: false,
-                checkFormulario: false,
 
                 DBsearch: [],
                 dataPerson: {
@@ -775,6 +796,7 @@
                 arrOperative:[],
                 answer: false,
                 swperson: false,                
+                swpersonedit: false,                
                 swsegip: false,                
                 yearSelected:0,
                 buscandoall: false,
@@ -881,6 +903,9 @@
                         .then(response => {
                             this.swperson = response.data.swperson;
                             this.swsegip = response.data.swsegip;
+                            if(this.swperson){
+                                this.dataPerson.newperson = this.swperson;
+                            }
                             this.disabledbutton = response.data.disabledbutton;
                         })
                         .catch(e = {
@@ -1106,12 +1131,14 @@
                 editPersonal: function(id, yearSelected){
                     this.buscando = true;
                     this.dataPersonEdit = [];
+                    this.swpersonedit = false;
+                    $('#modalEditPerson').modal('show');
                     // this.closeit();
-                            this.personalData = [];                          
-                             axios.post(Routing.generate('staff_editPersonal', {id: id, yearSelected: yearSelected}))
+                            // this.personalData = [];                          
+                             axios.post(Routing.generate('staff_editPersonal', {id: id, yearSelected: yearSelected, sedeId: this.sedeId}))
                             .then(response => {
                                 if (response.status == 200) {
-                                    $('#modalPerson').modal('hide');
+                                    
                                     // this.swgetinfostaff = response.data.swgetinfostaff;
                                     // this.arrRegisteredStaff = response.data.arrRegisteredStaff;
                                     // this.yearSelected = yearchoose; 
@@ -1120,7 +1147,7 @@
                                     // console.log(response.data.answerSegip);
                                     this.dataPersonEdit = response.data.arrPersonEdit;
 
-                                    this.swperson   = response.data.swperson;
+                                    this.swpersonedit   = response.data.swpersonedit;
                                     this.answer   = response.data.answer;
                                     this.existsPersonStaffRegistered   = response.data.existsPersonStaffRegistered;
                                     this.DBTraining = response.data.arrPosition;
@@ -1140,6 +1167,79 @@
 
                 },
 
+
+                saveEditPersonal: function(){
+
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                        'Adjuntar Documentos',
+                        'Debe adjuntar documentos academicos, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+                    }                    
+
+                    Swal.fire({
+                        title: 'Actualizar datos del Personal?',
+                        text: "esta seguro de realizar la actulizacion",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.value) {
+                            var data = new FormData();
+                            data.append('datos', JSON.stringify(this.dataPersonEdit));
+                            data.append('informe', this.informe);
+                            // data.append('yearchoose', yearchoose);
+                            // data.append('sedeId', this.sedeId);
+                            this.arrRegisteredStaff = [];                          
+                             axios.post(Routing.generate('staff_saveEditPersonal'), data)
+                            .then(response => {
+                                if (response.status == 200) {
+                                    $('#modalEditPerson').modal('hide');
+                                    this.swgetinfostaff = response.data.swgetinfostaff;
+                                    this.arrRegisteredStaff = response.data.arrRegisteredStaff;
+                                    this.yearSelected = yearchoose; 
+                                    this.cancelEdit();
+                                    // this.showbuttonPDF = false;
+                                    // this.studentHistModId = false;
+                                    // this.studentId = false;
+                                    // if(response.data.showbuttonPDF){
+                                    //    this.showbuttonPDF = response.data.showbuttonPDF;
+                                    //    this.studentHistModId = response.data.studentHistModId;
+                                    //    this.studentId = response.data.studentId;
+                                    //    this.urlreport = response.data.urlreport;
+                                    // }
+                                    console.log(response.data.answerSegip);
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                }
+                                if( response.status == 202){
+                                    this.respuesta = response.data;
+                                }
+                                this.buscando = false;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                this.buscando = false;
+                            });
+
+                            
+                        }
+                    })                   
+
+                },                
+
+                cancelEdit: function(){
+                    this.dataPersonEdit = [];
+                    this.swperson   = false;
+                    this.answer   = false;                    
+                    this.DBTraining = [];
+                    this.DBPosition = [];
+                    $('#modalEditPerson').modal('hide');
+                },
 
             }
         });

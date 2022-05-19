@@ -102,3 +102,9 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             router: "@router"
+
+    univfunctions:
+        class: Sie\UniversityBundle\Services\Univfunctions
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"

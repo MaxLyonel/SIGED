@@ -32,6 +32,12 @@ staff_savestaff:
     path:     /savestaff
     defaults: { _controller: SieUniversityBundle:ExecutiveStaff:savestaff }
     options:
+        expose: true    
+
+staff_saveEditPersonal:
+    path:     /saveEditPersonal
+    defaults: { _controller: SieUniversityBundle:ExecutiveStaff:saveEditPersonal }
+    options:
         expose: true        
 
 staff_deletePersonal:

@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
 use Sie\AppWebBundle\Entity\UnivAutoridadUniversidad;
+use Sie\AppWebBundle\Entity\Persona;
 
 
 class ExecutiveStaffController extends Controller{
@@ -105,6 +106,7 @@ class ExecutiveStaffController extends Controller{
 	          'expedidoId2' =>'',
 	          'personId'    =>'',
 	          'foreign'    =>'',
+              'newperson'    =>false,
         );
         if($objPerson){
         	$swperson=true;
@@ -122,6 +124,7 @@ class ExecutiveStaffController extends Controller{
 	          'expedidoId2'  =>$objPerson->getExpedido()->getId(),
 	          'personId'    =>$objPerson->getId(),  
 	          'foreign'    =>'',     		
+              'newperson'    =>false,
         	);
         }
 
@@ -190,7 +193,7 @@ class ExecutiveStaffController extends Controller{
         $em = $this->getDoctrine()->getManager();
         $jsonData = $request->get('datos');
         $arrData = json_decode($jsonData,true);
-        
+
         // check if the file exists
         if(isset($_FILES['informe'])){
                 $file = $_FILES['informe'];
@@ -232,50 +235,14 @@ class ExecutiveStaffController extends Controller{
             }else{
                 $informe = null;
                 $archivador = 'empty';
-            }        
+            }
 
-            $arrData["personId"] = $arrData["personId"];
-            $arrData["cargo"] = $arrData["cargo"];
-            $arrData["formacion"] = $arrData["formacion"];
-            $arrData["ref"] = $arrData["ref"];
-            $arrData["telefono"] = $arrData["telefono"];
-            $arrData["fax"] = $arrData["fax"];
-            $arrData["casilla"] = $arrData["casilla"];
-            $arrData["email"] = $arrData["email"];
-            $arrData["descripcion"] = $arrData["descripcion"];
-            $arrData["formaciondescripcion"] = $arrData["formaciondescripcion"];
-            $arrData["gestion_nombramiento_id"] = $arrData["gestion_nombramiento_id"];
-            $arrData["ratificacion_anio_ini"] = $arrData["ratificacion_anio_ini"];
-            $arrData["ratificacion_anio_fin"] = $arrData["ratificacion_anio_fin"];
-            $arrData["fecha_registro_firma"] = $arrData["fecha_registro_firma"];
-            $arrData["yearchoose"] = $arrData["yearchoose"];
-            $arrData["sedeId"]     = $arrData["sedeId"];            
+            if($arrData['newperson'] == true){
+                $newPerson = $this->saveNewPerson($arrData);
+                $arrData['personId'] = $newPerson->getId();
+            }
 
-            $entity = new UnivAutoridadUniversidad();
-
-            $entity->setRef($arrData["ref"]);
-            $entity->setTelefono($arrData["telefono"]);
-            $entity->setFax($arrData["fax"]);
-            $entity->setCasilla($arrData["casilla"]);
-            $entity->setEmail($arrData["email"]);
-            $entity->setFormaciondescripcion($arrData["formaciondescripcion"]);
-            $entity->setDocumentosAcad('up here');
-            $entity->setRatificacionAnioIni($arrData["ratificacion_anio_ini"]);
-            $entity->setRatificacionAnioFin($arrData["ratificacion_anio_fin"]);
-            
-            $entity->setFechaRegistroFirma(new \DateTime($arrData["fecha_registro_firma"]));
-            $entity->setFechaCreacion(new \DateTime('now'));
-
-
-            $entity->setGestionNombramiento($em->getRepository('SieAppWebBundle:GestionTipo')->find($arrData["gestion_nombramiento_id"]));
-            $entity->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($arrData["personId"]));
-            $entity->setUnivFormacionTipo($em->getRepository('SieAppWebBundle:UnivFormacionTipo')->find($arrData["formacion"]));
-            $entity->setUnivCargoJerarquicoTipo($em->getRepository('SieAppWebBundle:UnivCargoJerarquicoTipo')->find($arrData["cargo"]));
-            $entity->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($arrData["yearchoose"]));
-            $entity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($arrData["sedeId"]));
-
-            $em->persist($entity);
-            $em->flush();
+            $registerProcess = $this->saveUpdatePersonalInfo($arrData, 0);
 
 
             $this->baseData['yearSelected'] = $arrData["yearchoose"];
@@ -299,6 +266,93 @@ class ExecutiveStaffController extends Controller{
             $response->setData($arrResponse);        
             return $response;            
             
+    }
+
+    private function saveUpdatePersonalInfo($arrData,$flag){
+
+        $em = $this->getDoctrine()->getManager();
+        $arrData["personId"] = $arrData["personId"];
+        $arrData["cargo"] = $arrData["cargo"];
+        $arrData["formacion"] = $arrData["formacion"];
+        $arrData["ref"] = $arrData["ref"];
+        $arrData["telefono"] = $arrData["telefono"];
+        $arrData["fax"] = $arrData["fax"];
+        $arrData["casilla"] = $arrData["casilla"];
+        $arrData["email"] = $arrData["email"];
+        // $arrData["descripcion"] = $arrData["descripcion"];
+        $arrData["formaciondescripcion"] = $arrData["formaciondescripcion"];
+        $arrData["gestion_nombramiento_id"] = $arrData["gestion_nombramiento_id"];
+        $arrData["ratificacion_anio_ini"] = $arrData["ratificacion_anio_ini"];
+        $arrData["ratificacion_anio_fin"] = $arrData["ratificacion_anio_fin"];
+        $arrData["fecha_registro_firma"] = $arrData["fecha_registro_firma"];
+        $arrData["yearchoose"] = $arrData["yearchoose"];
+        
+
+        if($flag){
+            $entity = $em->getRepository('SieAppWebBundle:UnivAutoridadUniversidad')->find($arrData["personId"]);
+            $entity->setFechaActualizacion(new \DateTime('now'));
+        }else{
+
+            $entity = new UnivAutoridadUniversidad();
+            $arrData["sedeId"]     = $arrData["sedeId"];
+            $entity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($arrData["sedeId"]));
+            $entity->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($arrData["personId"]));
+        }
+
+        $entity->setRef($arrData["ref"]);
+        $entity->setTelefono($arrData["telefono"]);
+        $entity->setFax($arrData["fax"]);
+        $entity->setCasilla($arrData["casilla"]);
+        $entity->setEmail($arrData["email"]);
+        $entity->setFormaciondescripcion($arrData["formaciondescripcion"]);
+        $entity->setDocumentosAcad('up here');
+        $entity->setRatificacionAnioIni($arrData["ratificacion_anio_ini"]);
+        $entity->setRatificacionAnioFin($arrData["ratificacion_anio_fin"]);        
+        $entity->setFechaRegistroFirma(new \DateTime($arrData["fecha_registro_firma"]));
+        $entity->setFechaCreacion(new \DateTime('now'));
+        $entity->setGestionNombramiento($em->getRepository('SieAppWebBundle:GestionTipo')->find($arrData["gestion_nombramiento_id"]));
+        
+        $entity->setUnivFormacionTipo($em->getRepository('SieAppWebBundle:UnivFormacionTipo')->find($arrData["formacion"]));
+        $entity->setUnivCargoJerarquicoTipo($em->getRepository('SieAppWebBundle:UnivCargoJerarquicoTipo')->find($arrData["cargo"]));
+        $entity->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($arrData["yearchoose"]));
+        
+
+        $em->persist($entity);
+        $em->flush();        
+
+        return $entity;
+
+    }
+
+    private function saveNewPerson($data){
+        // create db conexion
+        $em = $this->getDoctrine()->getManager();
+        // create new person object
+        $newpersona = new Persona();            
+        $newpersona->setPaterno(mb_strtoupper($data['paterno'], "utf-8"));
+        $newpersona->setMaterno(mb_strtoupper($data['materno'], "utf-8"));    
+        $newpersona->setNombre(mb_strtoupper($data['nombre'], "utf-8"));    
+        $newpersona->setCarnet($data['carnet']);  
+        $newpersona->setComplemento(mb_strtoupper($data['complemento'], "utf-8"));
+        $newpersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->find(0));
+        $newpersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
+        $newpersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadoCivilTipo')->findOneById(0));
+
+        $newpersona->setFechaNacimiento(new \DateTime($data['fecNac']));            
+        $newpersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($data['generoId']));
+        $newpersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
+        $newpersona->setRda('0');
+        $newpersona->setActivo('1');
+        $newpersona->setSegipId('1');            
+        $newpersona->setEsVigente('1');
+        $newpersona->setCountEdit('1');
+        $newpersona->setEsvigenteApoderado('1');
+        $em->persist($newpersona);
+        $em->flush();
+
+        return $newpersona;
+
+
     }
 
     public function deletePersonalAction(Request $request){
@@ -346,37 +400,41 @@ class ExecutiveStaffController extends Controller{
         $objPerson = $em->getRepository('SieAppWebBundle:Persona')->find($objPersonalStaff->getPersona()->getId());
 
         
-        // dump($objPersonalStaff->getGestionNombramiento());
-        // dump($objPerson);
+        // dump($objPersonalStaff->getUnivFormacionTipo()->getId());
+        // dump($objPersonalStaff->getUnivCargoJerarquicoTipo()->getId());
+        // // dump($objPerson);
         // die;
 
 
         // build the array personal staff data 
         $arrPerson = array(
-            
+            "ref" => $objPersonalStaff->getRef(),
             "carnet" => $objPerson->getCarnet(),
-            "complemento" => $objPerson->getComplemento(),
-            "fecNac" => $objPerson->getFechaNacimiento()->format('d-m-Y'),
-            "materno" => $objPerson->getMaterno(),
-            "nombre" => $objPerson->getNombre(),
-            "paterno" => $objPerson->getPaterno(),
-            
-            "casilla" => $objPersonalStaff->getCasilla(),         
-            "descripcion" => $objPersonalStaff->getFormaciondescripcion(),
-            "documentos_acad" => $objPersonalStaff->getDocumentosAcad(),
-            "email" => $objPersonalStaff->getEmail(),
-            "cargo" => $objPersonalStaff->getUnivCargoJerarquicoTipo(),
             "fax" => $objPersonalStaff->getFax(),
-            "fecha_registro_firma" => $objPersonalStaff->getFax(),
-            // "formacion" => $objPersonalStaff->getFormaciondescripcion(),
-            "formaciondescripcion" => $objPersonalStaff->getFormaciondescripcion(),
-            "gestion_nombramiento_id" => $objPersonalStaff->getGestionNombramiento()->getId(),
+            "nombre" => $objPerson->getNombre(),
+            "materno" => $objPerson->getMaterno(),            
+            "paterno" => $objPerson->getPaterno(),
+            "email" => $objPersonalStaff->getEmail(),
+            "personId" => $objPersonalStaff->getId(),            
+            "casilla" => $objPersonalStaff->getCasilla(),
+            "complemento" => $objPerson->getComplemento(),
+            "telefono" => $objPersonalStaff->getTelefono(),            
+            "documentos_acad" => $objPersonalStaff->getDocumentosAcad(),
+            "descripcion" => $objPersonalStaff->getFormaciondescripcion(),
+            "fecNac" => $objPerson->getFechaNacimiento()->format('d-m-Y'),
+            "formacion" => $objPersonalStaff->getUnivFormacionTipo()->getId(),            
+            "cargo" => $objPersonalStaff->getUnivCargoJerarquicoTipo()->getId(),
             "ratificacion_anio_fin" => $objPersonalStaff->getRatificacionAnioFin(),
             "ratificacion_anio_ini" => $objPersonalStaff->getRatificacionAnioIni(),
-            "ref" => $objPersonalStaff->getRef(),
-            "telefono" => $objPersonalStaff->getTelefono(),
+            "formaciondescripcion" => $objPersonalStaff->getFormaciondescripcion(),
+            "gestion_nombramiento_id" => $objPersonalStaff->getGestionNombramiento()->getId(),
+            "fecha_registro_firma" => $objPersonalStaff->getFechaRegistroFirma()->format('d-m-Y'),
+            "yearchoose" => $request->get("yearSelected"),
+            "sedeId"     => $request->get("sedeId"),
+                        
+
         );
-        
+        // dump($arrPerson);die;
 
         // $em->persist($objPerson);
         // $em->flush();
@@ -396,13 +454,47 @@ class ExecutiveStaffController extends Controller{
                 'arrPersonEdit'                   => $arrPerson,
                 'arrPosition'                 => $arrPosition,
                 'arrTraining'                 => $arrTraining,
-                'swperson'                    => true,
+                'swpersonedit'                    => true,
                 'existsPersonStaffRegistered' => false,
           );
           // dump($arrResponse);die;
           $response->setStatusCode(200);
           $response->setData($arrResponse);        
           return $response;         
+
+    }   
+
+    public function saveEditPersonalAction(Request $request){
+        // ini vars to update process
+        $response = new JsonResponse();
+        $jsonData = $request->get('datos');
+        $arrData = json_decode($jsonData, true);
+        
+        // update the personal info
+        $registerProcess = $this->saveUpdatePersonalInfo($arrData, 1);
+
+        // update personal information
+            $this->baseData['yearSelected'] = $arrData["yearchoose"];
+            $this->baseData['sedeId'] = $arrData["sedeId"];
+
+            $arrRegisteredStaff = $this->get('univfunctions')->getAllStaff($this->baseData);
+
+            // check if the staffs exists
+            if(sizeof($arrRegisteredStaff)>0){
+
+            }else{
+                $arrRegisteredStaff = array();
+            }
+
+            $arrResponse = array(
+                'swgetinfostaff'           => true,
+                'arrRegisteredStaff'       => $arrRegisteredStaff,
+                // 'swperson'                 => $swperson,
+            );
+            // dump($arrResponse);die;
+            $response->setStatusCode(200);
+            $response->setData($arrResponse);        
+            return $response;  
 
     }
 
