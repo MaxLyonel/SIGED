@@ -1992,7 +1992,7 @@ class Notas{
             //if($nivel == 11 or $nivel == 1 or $nivel == 403){
             if(($nivel == 11 or $nivel == 1 or $nivel == 403) ){
                 
-                if ($gestion == 2021) {
+                if ($gestion == 2022) {
                     for ($i=$inicio; $i <=$fin; $i++) { 
                         $swCloseOperative = false;
                         if($this->em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa'=>$sie, 'gestion'=>$gestion, "$arrConsolidation[$i]"=> 1))){
@@ -2039,7 +2039,7 @@ class Notas{
                 }
 
                 // VERIFICAMOS SI EL OPERATIVO ES MAYOR O IGUAL A 4 PARA CARGAR LA NOTA CUALITATIVA ANUAL
-                if (($operativo >= 3 and $gestion<2020 ) or ($gestion == 2021)) {
+                if (($operativo >= 3 and $gestion<2020 ) or ($gestion == 2022)) {
                     // Para inicial
                     $existe = false;
                     //dump($cualitativas);die;

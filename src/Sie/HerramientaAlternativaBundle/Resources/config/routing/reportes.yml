@@ -62,6 +62,10 @@ herramienta_alter_reporte_edudiv_som_est:
     path:     /reportEst/{dataInfo}
     defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEst }
 
+herramienta_alter_reporte_edudiv_som_estex:
+    path:     /reportEstEX/{dataInfo}
+    defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEstEX }
+
 herramienta_alter_reporte_edudiv_som_espex:
     path:     /reportEspEX/{dataInfo}
     defaults: { _controller: SieHerramientaAlternativaBundle:Reportes:reportEspEX }
