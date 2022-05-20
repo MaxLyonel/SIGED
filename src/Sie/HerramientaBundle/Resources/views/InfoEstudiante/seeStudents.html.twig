@@ -357,7 +357,7 @@
                                         {% if swRegisterCalifications %}
                                             {% if imprimirLibreta == 'false'  or   imprimirLibreta == false %}{##}                                            
                                                 {% if gestion >= 2021 and data.estadomatriculaId in [4,5,11,55,58] %}
-                                                    {#
+                                                    
                                                     
                                                     {% if gestion >= 2021 and nivel == 13 and grado >= 5 and app.session.get('acceso_total') %}
                                                         <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones ddd">
@@ -375,11 +375,8 @@
                                                             </div>
                                                         {% else %}
                                                         {% endif %}   
-                                                        
-
-
                                                     {% endif %}
-                                                    #}
+                                                    
 
                                                     {# ingrementado el boton de descargar libreta #}
                                                     {# aqui linreta #}
@@ -426,11 +423,11 @@
                                                                 </div> #}
                                                             {% else %}                                                            
                                                              
-                                                                {# <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
-                                                                    <button type="button" class="btn btn-circle btn-danger " disabled="true" data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
+                                                                <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones._.">
+                                                                    <button type="button" class="btn btn-circle btn-danger " data-target=".bs-example-modal-table" onclick="getNotas2021('{{infoUe}}','{{jsnInfoStudent}}',{{data.eInsId}});" >
                                                                         <i class="fa fa-list"></i>
                                                                     </button>
-                                                                </div> #}
+                                                                </div> 
                                                             {% endif %}
                                                             
                                                         {% endif %}

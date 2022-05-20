@@ -4991,7 +4991,7 @@ die;/*
                     break;
             }
         }else{
-            if( $igestion != 2021){
+            if( $igestion != 2021 and $igestion != 2022){
                 $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
                 $query->execute();        
                 $resultado = $query->fetchAll();              
