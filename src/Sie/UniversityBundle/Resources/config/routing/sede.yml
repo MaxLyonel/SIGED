@@ -38,3 +38,9 @@ sie_university_sede_reporte_docente_administrativo:
     defaults: { _controller: SieUniversityBundle:Sede:reporteDocenteAdministrativo }
     options:
         expose: true
+
+sie_university_sede_reporte_docente_administrativo_save:
+    path:     /reporte/docenteAdministrativo/save
+    defaults: { _controller: SieUniversityBundle:Sede:reporteDocenteAdministrativoSave }
+    options:
+        expose: true
