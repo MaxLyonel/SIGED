@@ -6,6 +6,7 @@ namespace Sie\UniversityBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Security\Core\SecurityContext;
 
 class DefaultController extends Controller
 {
@@ -30,6 +31,13 @@ class DefaultController extends Controller
         $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $id_usuario));
 
         $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findBy(array('usuario' => $id_usuario));
+
+        if (count($entityUnivSede)<=0){
+            return $this->render('SieAppWebBundle:Login:login4.html.twig',array(
+                'last_username'=>$this->get('request')->getSession()->get(SecurityContext::LAST_USERNAME),
+                'error'=>array('message'=>'¡El usuario no se encuenta registrado para acceder al presente sistema!')
+            ));            
+        }
         $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('usuario' => $id_usuario, 'univSedeTipo' => 1));
         //dump($entityUnivSede);die;
         return $this->render('SieUniversityBundle:Default:index.html.twig', array(

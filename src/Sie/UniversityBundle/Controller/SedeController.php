@@ -7,6 +7,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityRepository;
+use Sie\AppWebBundle\Entity\UnivSedeSucursal;
+use Sie\AppWebBundle\Entity\UnivJurisdiccionGeografica;
+use Sie\AppWebBundle\Entity\UnivUniversidadSedeDocenteAdm;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -48,6 +51,9 @@ class SedeController extends Controller
             $gestionId = $gestionActual;
         }        
 
+
+        $this->session->set('sedeId', $sedeId);
+
         $entityUnivSedeActual = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
         $titulo = $entityUnivSedeActual->getUnivUniversidad()->getUniversidad();
         $subtitulo = $entityUnivSedeActual->getSede();
@@ -88,8 +94,8 @@ class SedeController extends Controller
             $provincia = -1;
             $municipio = -1;
             $comunidad = -1;
-            $latitud = "";
-            $longitud = "";
+            $latitud = "-63.588653";
+            $longitud = "-16.290154";
             $zona = "";
             $direccion = "";
         }
@@ -121,14 +127,30 @@ class SedeController extends Controller
                 ->setMaxResults(2)
                 ->getQuery();
         $gestiones = $query->getResult();
+
+/*
+        $entityDocAdm = $em->getRepository('SieAppWebBundle:UnivUniversidadSedeDocenteAdm');
+        $query = $entityDocAdm->createQueryBuilder('usda')
+                ->orderBy('usda.fechaActualizacion', 'DESC')
+                ->where('usda.gestionTipo = :gestionId')
+                ->andWhere('usda.univSede = :sedeId')
+                ->setParameter('gestionId', $gestionId)
+                ->setParameter('sedeId', $sedeId)
+                ->setMaxResults(1);
+        $docentesAdministrativos = $query->getQuery()->getResult();
+*/
+
         
+        $cantidadDocentesAdministrativos = $this->cantidadSedeDocenteAdministrativo($sedeId,$gestionId);
+
         return $this->render('SieUniversityBundle:Sede:index.html.twig', array(
             'sede' => $entityUnivSedeActual,
             'titulo' => $titulo,
             'subtitulo' => $subtitulo,
             'gestiones' => $gestiones,
             'datos' => $datos,
-            'editar' => $editar
+            'editar' => $editar,
+            'repDocentesAdministrativos' => $cantidadDocentesAdministrativos
         ));
     }
 
@@ -182,11 +204,11 @@ class SedeController extends Controller
         ->add('telefono', 'text', array('label' => 'Nro. de Teléfono', 'required' => false, 'attr' => array('value' => $datos['telefono'], 'autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}', 'placeholder' => '########')))
         ->add('celular', 'text', array('label' => 'Nro. de Celular', 'required' => false, 'attr' => array('value' => $datos['celular'], 'autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}', 'placeholder' => '########')))
         ->add('referenciaCelular', 'text', array('label' => 'Referencia de celular', 'required' => false, 'attr' => array('value' => $datos['referenciaCelular'], 'autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}', 'placeholder' => '########')))
-        ->add('correo', 'text', array('label' => 'Correo Electrónico', 'required' => false, 'attr' => array('value'=>$datos['correo'],'autocomplete' => 'off', 'class' => 'form-control jemail')))
+        ->add('correo', 'email', array('label' => 'Correo Electrónico', 'required' => false, 'attr' => array('value'=>$datos['correo'],'autocomplete' => 'off', 'class' => 'form-control jemail')))
         ->add('inicioCalendarioAcademico', 'text', array('label' => 'Inicio calendario académico (Ej.: 01-01-2022)', 'invalid_message' => 'campo obligatorio', 'attr' => array('value' => $datos['inicioCalendarioAcademico'], 'style' => 'text-transform:uppercase', 'placeholder' => 'DD-MM-YYYY' , 'maxlength' => 10, 'required' => true)))
         ->add('fax','text',array('label'=>'Fax','required'=>false,'data'=>$datos['fax'],'disabled'=>false,'attr'=>array('class'=>'form-control jnumbers','autocomplete'=>'off','maxlength'=>'10')))
         ->add('casilla','text',array('label'=>'Casilla','required'=>false,'data'=>$datos['casilla'],'disabled'=>false,'attr'=>array('class'=>'form-control jnumbers','maxlength'=>'8','autocomplete'=>'off')))        
-        ->add('sitioWeb', 'text', array('label' => 'Sitio Web', 'invalid_message' => 'campo obligatorio', 'attr' => array('value'=>$datos['sitio'], 'style' => 'text-transform:uppercase', 'placeholder' => 'Sitio Web' , 'maxlength' => 10, 'required' => true)))
+        ->add('sitioWeb', 'url', array('label' => 'Sitio Web', 'invalid_message' => 'campo obligatorio', 'attr' => array('value'=>$datos['sitio'], 'style' => 'text-transform:uppercase', 'placeholder' => 'Sitio Web' , 'maxlength' => 100, 'required' => true)))
         ->add('departamento', 'choice', array('label' => 'Departamento', 'choices' => $datos['departamento']['lugar'], 'data' => $datos['departamento']['id'], 'empty_value' => 'Seleccione Departamento', 'attr' => array('class' => 'form-control', 'onchange' => 'listarProvincia(this.value)', 'required' => true)))
         ->add('provincia', 'choice', array('label' => 'Provincia', 'choices' => $datos['provincia']['lugar'], 'data' => $datos['provincia']['id'], 'empty_value' => 'Seleccione Provincia', 'attr' => array('class' => 'form-control', 'onchange' => 'listarMunicipio(this.value)', 'required' => true)))
         ->add('municipio', 'choice', array('label' => 'Municipio', 'choices' => $datos['municipio']['lugar'], 'data' => $datos['municipio']['id'], 'empty_value' => 'Seleccione Municipio', 'attr' => array('class' => 'form-control', 'onchange' => 'listarComunidad(this.value)', 'required' => true)))
@@ -266,10 +288,11 @@ class SedeController extends Controller
     // PARAMETROS: datos
     // AUTOR: RCANAVIRI
     //****************************************************************************************************
-    public function updateAction(Request $request) {
+    public function formAction(Request $request) {
         date_default_timezone_set('America/La_Paz');
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = date_format($fechaActual,'Y');
+        $response = new JsonResponse();
 
         $info = $request->get('info');
         if($info != ""){
@@ -332,11 +355,11 @@ class SedeController extends Controller
             $departamento = -1;
             $provincia = -1;
             $municipio = -1;
-            $comunidad = -1;
-            $latitud = "";
-            $longitud = "";
+            $comunidad = -1;            
+            $latitud = "-63.588653";
+            $longitud = "-16.290154";
             $zona = "";
-            $direccion = "";
+            $direccion = ""; 	
         }
 
         $info = base64_encode(json_encode(array('sedeId'=>$sedeId,'gestionId'=>$gestionId,'sedeSucursalId'=>$sedeSucursalId)));
@@ -367,12 +390,272 @@ class SedeController extends Controller
         //dump($datos);die;
         //dump($sedeId,$info, $formSedeSucursal);die;
         $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
-        $sedeDetalle = array('nombre'=>$entityUnivSede->getSede(),'resolucionMinisterial'=>$entityUnivSede->getResolucionMinisterial(),'decretoSupremo'=>$entityUnivSede->getResolucionSuprema(),'naturalezaJuridica'=>$entityUnivSede->getNaturalezaJuridica(),'estado'=>'');
+        $sedeDetalle = array(
+            'nombre'=>$entityUnivSede->getSede(),
+            'resolucionMinisterial'=>$entityUnivSede->getResolucionMinisterial(),
+            'decretoSupremo'=>$entityUnivSede->getResolucionSuprema(),
+            'naturalezaJuridica'=>$entityUnivSede->getNaturalezaJuridica(),
+            'estado'=>'',
+            'latitud'=>$latitud,
+            'longitud'=>$longitud
+        );
 
         $arrayFormulario = array('estado'=>$estado, 'msg'=>$msg, 'titulo' => "Modificación de Sede / Sub Sede", 'form'=>$formSedeSucursal, 'sedeDetalle'=>$sedeDetalle);
                 
-        return $this->render('SieUniversityBundle:Sede:update.html.twig', $arrayFormulario);
+        return $this->render('SieUniversityBundle:Sede:form.html.twig', $arrayFormulario);
 
     }
 
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que visualiza el formulario para guardar o modificar la asignacion del maestro
+    // PARAMETROS: datos
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function updateAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        $response = new JsonResponse();
+
+        $form = $request->get('form');
+        $em = $this->getDoctrine()->getManager();
+
+        $info = $form['info'];
+        if($info != ""){
+            $info = json_decode(base64_decode($info), true);
+        }
+
+        $sedeId = $info['sedeId'];
+        $gestionId = $info['gestionId'];
+        $sedeSucursalId = $info['sedeSucursalId'];
+
+        $id_usuario = $this->session->get('userId');
+        $estado = true; 
+        $msg = "";
+
+        if($id_usuario == ""){             
+            $estado = false;   
+            $msg = "Su sesión finalizo, ingrese nuevamente";      
+            return $response->setData(array('estado' => $estado, 'msg' => $msg));
+        }
+
+        if(!$this->tuisionSede($sedeId,$id_usuario)){            
+            $estado = false;
+            $msg = 'No esta como usuario en la sede seleccionada, comuniquese con su administrador';
+            return $response->setData(array('estado' => $estado, 'msg' => $msg));
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {        
+            $sedeSucursalEntity = $em->getRepository('SieAppWebBundle:UnivSedeSucursal')->findBy(array('id'=>$sedeSucursalId, 'univSede'=>$sedeId, 'gestionTipo'=>$gestionId));
+            if(count($sedeSucursalEntity) <= 0){             
+                $sedeSucursalEntity = new UnivSedeSucursal();
+                $sedeSucursalEntity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($sedeId));
+                $sedeSucursalEntity->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestionId));
+                $sedeSucursalEntity->setFechaRegistro(new \DateTime('now'));
+            } else {
+                $sedeSucursalEntity = $sedeSucursalEntity[0];
+            }
+            $sedeSucursalEntity->setTelefono1($form['telefono']);
+            $sedeSucursalEntity->setTelefono2($form['celular']);
+            $sedeSucursalEntity->setReferenciaTelefono2($form['referenciaCelular']);
+            $sedeSucursalEntity->setEmail($form['correo']);
+            $sedeSucursalEntity->setInicioCalendarioAcademico(new \DateTime($form['inicioCalendarioAcademico']));    
+            $sedeSucursalEntity->setFax($form['fax']);
+            $sedeSucursalEntity->setCasilla($form['casilla']);
+            $sedeSucursalEntity->setSitioWeb($form['sitioWeb']); 
+            $sedeSucursalEntity->setEstadoinstitucionTipo($em->getRepository('SieAppWebBundle:EstadoinstitucionTipo')->find(10));
+            $sedeSucursalEntity->setFechaModificacion(new \DateTime('now'));
+            $em->persist($sedeSucursalEntity);
+
+            $sedeEntity = $em->getRepository('SieAppWebBundle:UnivSede')->find($sedeId);
+            $univJuridicciongeograficaEntity = $sedeEntity->getUnivJuridicciongeografica();
+            if(count($univJuridicciongeograficaEntity) <= 0){             
+                $univJuridicciongeograficaEntity = new UnivJurisdiccionGeografica();
+                $univJuridicciongeograficaEntity->setFechaRegistro(new \DateTime('now'));
+            } 
+            $univJuridicciongeograficaEntity->setLugarTipoLocalidad2012($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['comunidad']));
+            $univJuridicciongeograficaEntity->setObs("");
+            $univJuridicciongeograficaEntity->setCordx($form['longitud']);
+            $univJuridicciongeograficaEntity->setCordy($form['latitud']);
+            $univJuridicciongeograficaEntity->setDireccion($form['direccion']);
+            $univJuridicciongeograficaEntity->setZona($form['zona']);
+            $univJuridicciongeograficaEntity->setFechaModificacion(new \DateTime('now'));
+            $em->persist($univJuridicciongeograficaEntity);
+
+            if(count($sedeEntity->getUnivJuridicciongeografica()) <= 0){             
+                $sedeEntity->setUnivJuridicciongeografica($univJuridicciongeograficaEntity);
+                $sedeEntity->setFechaModificacion(new \DateTime('now'));
+                $em->persist($sedeEntity);
+            } 
+
+            $em->flush();
+            $em->getConnection()->commit();
+            $msg  = 'Datos registrados correctamente';
+            return $response->setData(array('estado' => true, 'msg' => $msg));
+        } catch (\Doctrine\ORM\NoResultException $ex) {
+            $em->getConnection()->rollback();
+            $msg  = 'Error al realizar el registro, intente nuevamente';
+            return $response->setData(array('estado' => false, 'msg' => $msg));
+        }       
+    }
+
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que visualiza el formulario para guardar o modificar la asignacion del maestro
+    // PARAMETROS: datos
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function reporteDocenteAdministrativoAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        $response = new JsonResponse();
+
+        $info = $request->get('info');
+        if($info != ""){
+            $info = json_decode(base64_decode($info), true);
+        }
+
+        $sedeId = $info['sedeId'];
+        $gestionId = $info['gestionId'];
+
+        $id_usuario = $this->session->get('userId');
+        $estado = true; 
+        $msg = "";
+
+        if($id_usuario == ""){             
+            $estado = false;   
+            $msg = "Su sesión finalizo, ingrese nuevamente";      
+            return $response->setData(array('estado' => $estado, 'msg' => $msg));
+        }
+
+        if(!$this->tuisionSede($sedeId,$id_usuario)){            
+            $estado = false;
+            $msg = 'No esta como usuario en la sede seleccionada, comuniquese con su administrador';
+            return $response->setData(array('estado' => $estado, 'msg' => $msg));
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->getConnection()->prepare('
+            select coalesce(usda.cantidad,0) as cantidad, est.* from (select * from univ_universidad_sede_docente_adm where univ_sede_id = :sede_id and gestion_tipo_id = :gestion_id) as usda
+            RIGHT JOIN (
+            select ct.id as cargo_tipo_id, ct.cargo, gt.id as genero_tipo_id, gt.genero 
+            from univ_cargo_tipo as ct 
+            cross join genero_tipo as gt
+            ) as est on est.cargo_tipo_id = usda.univ_cargo_tipo_id and est.genero_tipo_id = usda.genero_tipo_id
+            order by est.cargo_tipo_id, est.genero_tipo_id
+        ');
+        $query->bindValue(':sede_id', $sedeId);
+        $query->bindValue(':gestion_id', $gestionId);
+        $query->execute();
+        $universidadSedeDocenteAdmEntity = $query->fetchAll();
+
+        $array = array();
+        foreach ($universidadSedeDocenteAdmEntity as $dato) {
+            $info = base64_encode(json_encode(array('sedeId'=>$sedeId,'gestionId'=>$gestionId,'cargoId'=>$dato['cargo_tipo_id'], 'generoId'=>$dato['genero_tipo_id'])));
+            $array[$dato['cargo']][$dato['genero']] = array('cantidad'=>$dato['cantidad'], 'info'=>$info);
+        }  
+
+        $arrayFormulario = array('estado'=>$estado, 'msg'=>$msg, 'titulo' => "Modificación de cantidad de Docentres / Administrativos", 'datos'=>$array);
+                
+        return $this->render('SieUniversityBundle:Sede:formDocAdm.html.twig', $arrayFormulario);
+
+    }
+
+
+    public function reporteDocenteAdministrativoSaveAction(Request $request) {
+        date_default_timezone_set('America/La_Paz');
+        $fechaActual = new \DateTime(date('Y-m-d'));
+        $gestionActual = date_format($fechaActual,'Y');
+        $response = new JsonResponse();
+
+        $form = $request->get('form');
+        $em = $this->getDoctrine()->getManager();
+
+        $id_usuario = $this->session->get('userId');
+        $estado = true; 
+        $msg = "";
+
+        if($id_usuario == ""){             
+            $estado = false;   
+            $msg = "Su sesión finalizo, ingrese nuevamente";      
+            return $response->setData(array('estado' => $estado, 'msg' => $msg));
+        }
+       
+        $em = $this->getDoctrine()->getManager();
+        $cantidadDocentesAdministrativos = 0;
+
+        $em->getConnection()->beginTransaction();
+        try {     
+            $sedeId = 0;
+            $gestionId = 0;
+            foreach ($form as $clave => $valor) {
+                $info = json_decode(base64_decode($clave), true);
+                $cantidad = $valor;
+                $sedeId = $info['sedeId'];
+                $gestionId = $info['gestionId'];
+                $cargoId = $info['cargoId'];
+                $generoId = $info['generoId'];
+
+                if(!$this->tuisionSede($sedeId,$id_usuario)){            
+                    $estado = false;
+                    $msg = 'No esta como usuario en la sede seleccionada, comuniquese con su administrador';
+                    $em->getConnection()->rollback();
+                    return $response->setData(array('estado' => $estado, 'msg' => $msg));
+                }
+
+                $UniversidadDocenteAdministrativoEntity = $em->getRepository('SieAppWebBundle:UnivUniversidadSedeDocenteAdm')->findBy(array('univSede'=>$sedeId, 'gestionTipo'=>$gestionId, 'generoTipo'=>$generoId, 'univCargoTipo'=>$cargoId));
+                if(count($UniversidadDocenteAdministrativoEntity) <= 0){             
+                    $UniversidadDocenteAdministrativoEntity = new UnivUniversidadSedeDocenteAdm();
+                    $UniversidadDocenteAdministrativoEntity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($sedeId));
+                    $UniversidadDocenteAdministrativoEntity->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestionId));
+                    $UniversidadDocenteAdministrativoEntity->setFechaCreacion(new \DateTime('now'));
+                } else {
+                    $UniversidadDocenteAdministrativoEntity = $UniversidadDocenteAdministrativoEntity[0];
+                }
+                $UniversidadDocenteAdministrativoEntity->setCantidad($cantidad);
+                $UniversidadDocenteAdministrativoEntity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoId));
+                $UniversidadDocenteAdministrativoEntity->setUnivCargoTipo($em->getRepository('SieAppWebBundle:UnivCargoTipo')->find($cargoId));
+                $UniversidadDocenteAdministrativoEntity->setFechaActualizacion(new \DateTime('now'));
+                $em->persist($UniversidadDocenteAdministrativoEntity);
+            }
+            $em->flush();
+            $em->getConnection()->commit();
+            $msg  = 'Datos registrados correctamente';
+            $cantidadDocentesAdministrativos = $this->cantidadSedeDocenteAdministrativo($sedeId,$gestionId);
+           
+            return $response->setData(array('estado' => true, 'msg' => $msg, 'cantidad' => $cantidadDocentesAdministrativos));
+        } catch (\Doctrine\ORM\NoResultException $ex) {
+            $em->getConnection()->rollback();
+            $msg  = 'Error al realizar el registro, intente nuevamente';
+            return $response->setData(array('estado' => false, 'msg' => $msg, 'cantidad' => $cantidadDocentesAdministrativos));
+        }       
+    }
+
+
+    public function cantidadSedeDocenteAdministrativo($sedeId,$gestionId){    
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare('
+            select sum(coalesce(usda.cantidad,0)) as cantidad from (select * from univ_universidad_sede_docente_adm where univ_sede_id = :sede_id and gestion_tipo_id = :gestion_id) as usda
+            RIGHT JOIN (
+            select ct.id as cargo_tipo_id, ct.cargo, gt.id as genero_tipo_id, gt.genero 
+            from univ_cargo_tipo as ct 
+            cross join genero_tipo as gt
+            ) as est on est.cargo_tipo_id = usda.univ_cargo_tipo_id and est.genero_tipo_id = usda.genero_tipo_id
+        ');
+        $query->bindValue(':sede_id', $sedeId);
+        $query->bindValue(':gestion_id', $gestionId);
+        $query->execute();
+        $docentesAdministrativos = $query->fetchAll();
+
+        if (count($docentesAdministrativos) > 0){
+            $docentesAdministrativos = $docentesAdministrativos[0]['cantidad'];
+        }       
+        return $docentesAdministrativos;  
+    }
 }

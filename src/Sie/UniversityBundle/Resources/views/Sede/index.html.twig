@@ -62,7 +62,7 @@
     {% set nombre = "" %}
   {% endif %}  
     <div class="row">
-        <div class="col-lg-3 col-md-3 col-sm-4">    
+        <div class="col-lg-2 col-md-2 col-sm-4 col-sx-12">    
             <form name="form" id="form" role="form" action="{{ path('sie_university_sede_index') }}" method="POST" onsubmit="return verificaCampos()">
                 <input type="hidden" name="_token" value="{{ csrf_token('gestiones') }}">
                 <input type="hidden" id="form_sede" name="form[sede]" value="{{sede.id|base64_encode}}">  
@@ -80,16 +80,16 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="col-lg-9 col-md-9 col-sm-8">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12">
-                    <div class="panel shadow">
-                        <div class="panel-heading text-center p-3 mb-2 bg-teal text-white">
-                            <h4><span>{{ datos.gestion }}</span></h4>
-                            <div class="clearfix"></div>
-                        </div><!-- /.panel-heading -->
-                        <div class="panel-sub-heading">
-                            <div class="row inner-all">
+        <div class="col-lg-10 col-md-10 col-sm-8 col-sx-12">
+            <div class="panel shadow">
+                <div class="panel-heading text-center p-3 mb-2 bg-teal text-white">
+                    <h4><span>{{ datos.gestion }}</span></h4>
+                    <div class="clearfix"></div>
+                </div><!-- /.panel-heading -->
+                <div class="panel-sub-heading">                            
+                    <div class="row inner-all">
+                        <div class="col-lg-9 col-md-9 col-sm-8 col-sx-12">                         
+                            <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <address>
                                         <i class="fa fa-phone"></i> <strong>Teléfono: </strong>{{datos.telefono}}<br>
@@ -104,8 +104,8 @@
                                         <i class="fa fa-map-signs"></i> <strong>Provincia: </strong>{{datos.provincia.lugar}}<br>
                                         <i class="fa fa-map-marker"></i> <strong>Municipio: </strong>{{datos.municipio.lugar}}<br>
                                         <i class="fa fa-map-pin"></i> <strong>Comunidad: </strong>{{datos.comunidad.lugar}}<br>
-                                        <i class="fa fa-map-o"></i> <strong>Zona: </strong>{{datos.correo}}<br>
-                                        <i class="fa fa-ticket"></i> <strong>Dirección: </strong>{{datos.fax}}<br>
+                                        <i class="fa fa-map-o"></i> <strong>Zona: </strong>{{datos.zona}}<br>
+                                        <i class="fa fa-ticket"></i> <strong>Dirección: </strong>{{datos.direccion}}<br>
                                         <i class="fa fa-map"></i> <strong>Latitud: </strong>{{datos.latitud}}<br>
                                         <i class="fa fa-map"></i> <strong>Longitud: </strong>{{datos.longitud}}
                                     </address>
@@ -113,15 +113,36 @@
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">                                                              
                                     <div id="map"></div>
                                 </div>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">   
+                                    {% if editar %}
+                                        <a href="javascript:void(0);" class="btn btn-primary btn-block" onclick="ingresoSedeSucursal('{{datos.info}}')" data-toggle="modal" data-target="#modal">Modificar datos referenciales</a>
+                                    {% else %} 
+                                        <a href="javascript:void(0);" class="btn btn-success btn-block" onclick="ingresoSedeSucursal('{{datos.info}}')" data-toggle="modal" data-target="#modal">Registrar datos referenciales</a>
+                                    {% endif %} 
+                                </div>
                             </div>
                         </div>
-                        <div class="panel-body text-center">
-                            {% if editar %}
-                                <a href="javascript:void(0);" class="btn btn-primary btn-block" onclick="ingresoSedeSucursal('{{datos.info}}')" data-toggle="modal" data-target="#modal">Modificar</a>
-                            {% else %} 
-                                <a href="javascript:void(0);" class="btn btn-success btn-block" onclick="ingresoSedeSucursal('{{datos.info}}')" data-toggle="modal" data-target="#modal">Registrar</a>
-                            {% endif %} 
-                        </div><!-- /.panel-heading -->
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-sx-12">                      
+                            <div class="row  inner-all">                        
+                                <div class="panel text-center rounded shadow">
+                                    <div class="panel-body bg-warning rounded">
+                                            {% if repDocentesAdministrativos is empty %}
+                                                {% set cantDocentesAdministrativos = 0 %}
+                                            {% else %}
+                                                {% set cantDocentesAdministrativos = repDocentesAdministrativos %}
+                                            {% endif %}
+                                            <h5 class="media-heading">DOCENTES / ADMINISTRATIVOS</h5>
+                                            <p class="text-muted h6 mt-0">por año</p>
+                                            <div style="height:60px">
+                                                <h3 class="text-strong mb-0" id="cantDocAdm">{{cantDocentesAdministrativos}}</h3>
+                                                <p class="text-muted">personas</p> 
+                                            </div>
+                                            <a class="btn btn-warning btn-alt btn-large" onclick="ingresoSedeSucursalRepDocAdm('{{datos.info}}')" data-toggle="modal" data-target="#modal">Modificar reporte</a>                 
+                                        
+                                    </div><!-- /.panel-body -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -135,9 +156,13 @@
 <script>
 
     var ingresoSedeSucursal = function (info){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
         $.ajax({
             type: 'post',
-            url: Routing.generate('sie_university_sede_update', {'info': info}),
+            url: Routing.generate('sie_university_sede_form', {'info': info}),
             beforeSend: function () {
                 $("#modalBody").empty();
                 $("#modalBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
@@ -155,16 +180,22 @@
 
 
     {% if datos.latitud != "" %}
-    mapboxgl.accessToken = 'pk.eyJ1IjoianVybGFuIiwiYSI6ImNqd3RkNjZjYzAxd2k0MGw1a3A4dmJuZjIifQ.hcnCGlBc18MaYfIFG22P-Q'; // Nuestro Token de acceso
-    var map = new mapboxgl.Map({
-        container: 'map', // id del contenedor
-        style: 'mapbox://styles/mapbox/streets-v9', // localización del mapa de estilo
-        center: [{{datos.latitud}},{{datos.longitud}}], // Posición inicial
-        zoom: 13 // Zoom inicial
-    });
+        mapboxgl.accessToken = 'pk.eyJ1IjoianVybGFuIiwiYSI6ImNqd3RkNjZjYzAxd2k0MGw1a3A4dmJuZjIifQ.hcnCGlBc18MaYfIFG22P-Q'; // Nuestro Token de acceso
+        var map = new mapboxgl.Map({
+            container: 'map', // id del contenedor
+            style: 'mapbox://styles/mapbox/streets-v9', // localización del mapa de estilo
+            center: [{{datos.latitud}},{{datos.longitud}}], // Posición inicial
+            zoom: 13 // Zoom inicial
+        });
+        new mapboxgl.Marker().setLngLat([{{datos.latitud}},{{datos.longitud}}]).addTo(map);
     {% endif %}
 
+
     var ingresoSedeGestion = function (ges){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
         var formGestion = $('#form_gestion');
         var formulario = $('#form')[0];
         formGestion.val(ges);
@@ -174,6 +205,30 @@
         }  
         formulario.submit();      
         return true;
+    };
+
+
+    var ingresoSedeSucursalRepDocAdm = function (info){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('sie_university_sede_reporte_docente_administrativo', {'info': info}),
+            beforeSend: function () {
+                $("#modalBody").empty();
+                $("#modalBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {      
+                $("#modalBody").empty();  
+                $("#modalBody").html(data);                  
+            },
+            error: function(error){          
+                $("#modalBody").empty();           
+                $("#modalBody").append('<div class="text-center">Error</div>');   
+            },
+        });     
     };
 
 </script>
