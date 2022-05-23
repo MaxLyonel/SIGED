@@ -193,7 +193,7 @@ class ExecutiveStaffController extends Controller{
         $em = $this->getDoctrine()->getManager();
         $jsonData = $request->get('datos');
         $arrData = json_decode($jsonData,true);
-
+        $arrData['pathDirectory'] = '';
         // check if the file exists
         if(isset($_FILES['informe'])){
                 $file = $_FILES['informe'];
@@ -212,7 +212,7 @@ class ExecutiveStaffController extends Controller{
                     mkdir($directorio, 0775, true);
                 }
 
-                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataUniversity/' .date('Y').'/krlos';
+                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataUniversity/' .date('Y').'/'.$arrData['sedeId'];
                 if (!file_exists($directoriomove)) {
                     mkdir($directoriomove, 0775, true);
                 }
@@ -223,7 +223,7 @@ class ExecutiveStaffController extends Controller{
                     $response->setStatusCode(500);
                     return $response;
                 }
-
+                $arrData['pathDirectory'] = 'uploads/archivos/dataUniversity/' .date('Y').'/'.$arrData['sedeId'].'/'.$new_name;
                 // CREAMOS LOS DATOS DE LA IMAGEN
                 $informe = array(
                     'name' => $name,
@@ -232,10 +232,10 @@ class ExecutiveStaffController extends Controller{
                     'size' => $size,
                     'new_name' => $new_name
                 );
-            }else{
+        }else{
                 $informe = null;
                 $archivador = 'empty';
-            }
+        }
 
             if($arrData['newperson'] == true){
                 $newPerson = $this->saveNewPerson($arrData);
@@ -287,16 +287,19 @@ class ExecutiveStaffController extends Controller{
         $arrData["fecha_registro_firma"] = $arrData["fecha_registro_firma"];
         $arrData["yearchoose"] = $arrData["yearchoose"];
         
-
         if($flag){
             $entity = $em->getRepository('SieAppWebBundle:UnivAutoridadUniversidad')->find($arrData["personId"]);
             $entity->setFechaActualizacion(new \DateTime('now'));
+            if($arrData['pathDirectory']){
+                $entity->setDocumentosAcad($arrData['pathDirectory']);
+            }
         }else{
 
             $entity = new UnivAutoridadUniversidad();
             $arrData["sedeId"]     = $arrData["sedeId"];
             $entity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($arrData["sedeId"]));
             $entity->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($arrData["personId"]));
+            $entity->setDocumentosAcad($arrData['pathDirectory']);
         }
 
         $entity->setRef($arrData["ref"]);
@@ -305,7 +308,7 @@ class ExecutiveStaffController extends Controller{
         $entity->setCasilla($arrData["casilla"]);
         $entity->setEmail($arrData["email"]);
         $entity->setFormaciondescripcion($arrData["formaciondescripcion"]);
-        $entity->setDocumentosAcad('up here');
+        
         $entity->setRatificacionAnioIni($arrData["ratificacion_anio_ini"]);
         $entity->setRatificacionAnioFin($arrData["ratificacion_anio_fin"]);        
         $entity->setFechaRegistroFirma(new \DateTime($arrData["fecha_registro_firma"]));
@@ -470,6 +473,54 @@ class ExecutiveStaffController extends Controller{
         $jsonData = $request->get('datos');
         $arrData = json_decode($jsonData, true);
         
+
+        // check if the file exists
+        if(isset($_FILES['informe'])){
+                $file = $_FILES['informe'];
+
+                $type = $file['type'];
+                $size = $file['size'];
+                $tmp_name = $file['tmp_name'];
+                $name = $file['name'];
+                $extension = explode('.', $name);
+                $extension = $extension[count($extension)-1];
+                $new_name = date('YmdHis').'.'.$extension;
+
+                // GUARDAMOS EL ARCHIVO
+                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataUniversity/' .date('Y');
+                if (!file_exists($directorio)) {
+                    mkdir($directorio, 0775, true);
+                }
+
+                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataUniversity/' .date('Y').'/'.$arrData['sedeId'];
+                if (!file_exists($directoriomove)) {
+                    mkdir($directoriomove, 0775, true);
+                }
+
+                $archivador = $directoriomove.'/'.$new_name;
+                //unlink($archivador);
+                if(!move_uploaded_file($tmp_name, $archivador)){
+                    $response->setStatusCode(500);
+                    return $response;
+                }
+                $arrData['pathDirectory'] = 'uploads/archivos/dataUniversity/' .date('Y').'/'.$arrData['sedeId'].'/'.$new_name;
+                // CREAMOS LOS DATOS DE LA IMAGEN
+                $informe = array(
+                    'name' => $name,
+                    'type' => $type,
+                    'tmp_name' => 'nueva_ruta',
+                    'size' => $size,
+                    'new_name' => $new_name
+                );
+        }else{
+                $informe = null;
+                $archivador = 'empty';
+        } 
+        if($informe){
+            $arrData['pathDirectory'] = 'uploads/archivos/dataUniversity/' .date('Y').'/'.$arrData['sedeId'].'/'.$new_name;
+        }else{
+            $arrData['pathDirectory'] = '';
+        }
         // update the personal info
         $registerProcess = $this->saveUpdatePersonalInfo($arrData, 1);
 

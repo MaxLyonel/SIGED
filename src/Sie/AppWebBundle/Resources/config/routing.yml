@@ -1,3 +1,11 @@
+sie_app_web_gralstaff:
+    resource: "@SieAppWebBundle/Resources/config/routing/univautoridaduniversidad.yml"
+    prefix:   /gralstaff
+
+sie_app_web_univconsolidation:
+    resource: "@SieAppWebBundle/Resources/config/routing/univregistroconsolidacion.yml"
+    prefix:   /univconsolidation
+
 sie_app_web_uealtademanda:
     resource: "@SieAppWebBundle/Resources/config/routing/preinsinstitucioneducativacursocupo.yml"
     prefix:   /uealtademanda

@@ -252,7 +252,7 @@
         											      <th scope="col">Nombre(s)</th>
         											      <th scope="col">Formacion</th>
         											      <th scope="col">Cargo</th>
-                                                          <th scope="col">Option</th>
+                                                          <th scope="col" colspan="3" ></th>
         											    </tr>
         											  </thead>
         											  <tbody>
@@ -265,15 +265,19 @@
         											      <td>${registeredStaff.nombre}</td>
         											      <td>${registeredStaff.formacion}</td>
         											      <td>${registeredStaff.cargo}</td>
-                                                          <td>                                                    
-                                                           {# @click="editPersonal(registeredStaff.id, yearSelected)"     #}
-
-                                                            <a class="btn btn-success" {# data-toggle="modal" href='#modalEditPerson' #} > <i class="fa fa-edit" aria-hidden="true" @click="editPersonal(registeredStaff.id, yearSelected)"></i></a>                                                                                 
-                                                            
-                                                            <a class="btn btn-danger" href="#" aria-label="Delete" @click="deletePersonal(registeredStaff.id, yearSelected )">
+                                                          <td style="width: 73px;">                                                    
+                                                            <a style="border-radius: 10px;" class="btn btn-success btn" href="#" aria-label="Edit" @click="editPersonal(registeredStaff.id, yearSelected )">
+                                                              <i class="fa fa-pencil fa-1x" aria-hidden="true"></i>
+                                                            </a>                                                           
+                                                            {# ${registeredStaff.id}      #}
+                                                            </td>
+                                                            <td>
+                                                                <a style="border-radius: 10px;" class="btn btn-danger btn" href="#" aria-label="Delete" @click="deletePersonal(registeredStaff.id, yearSelected )">
                                                               <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                                            </a>                                                                                                            
-                                                            ${registeredStaff.id}
+                                                            </a>                                                             
+                                                            </td>
+                                                            <td>
+                                                                <a style="border-radius: 10px;" class="btn btn-primary btn" @click="downloadTemplateFile(registeredStaff.documentos_acad)"> <i class="fa fa-file-pdf-o fa-1x"></i></a>                                                            
                                                             </td>
         											      
         											    </tr>						  
@@ -1171,12 +1175,13 @@
                 saveEditPersonal: function(){
 
                     if (typeof this.informe != 'object') {
-                        Swal.fire(
+                        this.informe = '';
+                        /*Swal.fire(
                         'Adjuntar Documentos',
                         'Debe adjuntar documentos academicos, puede ser un archivo de imagen o PDF',
                         'warning'
                         );
-                        return;
+                        return;*/
                     }                    
 
                     Swal.fire({
@@ -1239,6 +1244,11 @@
                     this.DBTraining = [];
                     this.DBPosition = [];
                     $('#modalEditPerson').modal('hide');
+                },
+
+                downloadTemplateFile: function (urldoc){
+                    window.open('../../'+urldoc, '_blank');                
+
                 },
 
             }
