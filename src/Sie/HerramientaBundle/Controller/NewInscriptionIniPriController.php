@@ -1077,6 +1077,7 @@ class NewInscriptionIniPriController extends Controller
 					                $estudiante->setSegipId(1);
 				                }else{
 				                	$estudiante->setComplemento('');
+                          				$estudiante->setCarnetIdentidad('');
 				                	$estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
 				                }
 				                
