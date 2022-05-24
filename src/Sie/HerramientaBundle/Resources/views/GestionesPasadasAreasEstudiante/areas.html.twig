@@ -47,18 +47,22 @@
 </div>
 <h5 class="pull-left"><i class="fa fa-fw fa-list" aria-hidden="true" style="padding-top: 10px; padding-bottom: 10px;"></i> Áreas de la/el Estudiante</h5>
 <div class="btn-group pull-right" style="padding-top: 10px; padding-bottom: 10px;">
-    <button type="button" class="btn btn-facebook dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-        Agregar área <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu" style="width: 480px;">
-        {% if areasAsignar|length > 0 %}
-            {% for area in areasAsignar %}                
-                <li><button onclick="agregarArea({{esGestionVigente}}, {{area.icoId}},{{inscripcionid}},{{estudianteid}},{{gestion}})" class="btn-link">{{area.atId}} - {{area.asignatura}}</button></li>
-            {% endfor %}
-        {% else %}
-            <li style="margin:5px;" class="text-danger"><strong>No hay áreas disponibles para adicionar</strong></li>
-        {% endif %}
-    </ul>
+    {% if gestion == app.session.get('currentyear') %}
+        <button type="button" class="btn btn-facebook dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+            Agregar área <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right animated flipInX" role="menu" style="width: 480px;">
+        
+            {% if areasAsignar|length > 0 %}
+                {% for area in areasAsignar %}                
+                    <li><button onclick="agregarArea({{esGestionVigente}}, {{area.icoId}},{{inscripcionid}},{{estudianteid}},{{gestion}})" class="btn-link">{{area.atId}} - {{area.asignatura}}</button></li>
+                {% endfor %}
+            {% else %}
+                <li style="margin:5px;" class="text-danger"><strong>No hay áreas disponibles para adicionar</strong></li>
+            {% endif %}
+
+        </ul>
+    {% endif %}    
 </div>
 <div class="row">
     <div class="col-md-12">
@@ -74,21 +78,23 @@
                 <tbody>
                     {% for areaEstudiante in areasEstudiante %}
                         <tr>
-                            <td>{{areaEstudiante.atId}}</td>
-                            <td>{{areaEstudiante.asignatura}}</td>
+                            <td {% if areaEstudiante.atId in [1038, 1039]  %} style="border:2px solid MediumSeaGreen; background-color:#6ECF86;" {% endif %}>{{areaEstudiante.atId}}</td>
+                            <td  {% if areaEstudiante.atId in [1038, 1039] %} style="border:2px solid MediumSeaGreen; background-color:#6ECF86;" {% endif %}>{{areaEstudiante.asignatura}}</td>
                             <td class="text-center">
-                                {% if esGestionVigente == 0 %}
-                                    <button onclick="eliminarArea({{esGestionVigente}}, {{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-times"></i> Eliminar</button>
-                                    <button class="btn btn-success btn-xs" onclick="abrirFormCalificaciones({{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})"><i class="fa fa-edit"></i> Calificaciones</button>
-                                    <div class="arrow-before" style="display:none; margin-left:10px;" id="calificaciones_before_{{areaEstudiante.eaId}}"></div>
-                                    <div class="arrow-after" style="display:none;margin-left:10px;" id="calificaciones_after_{{areaEstudiante.eaId}}"></div>
-                                        <div id="calificaciones_{{areaEstudiante.eaId}}" style="display:none; position:absolute; z-index:5; margin-left:-500px; border:2px solid #00B1E1; box-shadow: 7px 7px 4px #0095BD;" class="divCalificaciones">
-                                    </div>
-                                {% else %}
-                                    {% if areaEstudiante.atId in [1038, 1039] %}
+                                {% if gestion == app.session.get('currentyear') %}
+                                    {% if esGestionVigente == 0 %}
                                         <button onclick="eliminarArea({{esGestionVigente}}, {{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-times"></i> Eliminar</button>
+                                        <button class="btn btn-success btn-xs" onclick="abrirFormCalificaciones({{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})"><i class="fa fa-edit"></i> Calificaciones</button>
+                                        <div class="arrow-before" style="display:none; margin-left:10px;" id="calificaciones_before_{{areaEstudiante.eaId}}"></div>
+                                        <div class="arrow-after" style="display:none;margin-left:10px;" id="calificaciones_after_{{areaEstudiante.eaId}}"></div>
+                                            <div id="calificaciones_{{areaEstudiante.eaId}}" style="display:none; position:absolute; z-index:5; margin-left:-500px; border:2px solid #00B1E1; box-shadow: 7px 7px 4px #0095BD;" class="divCalificaciones">
+                                        </div>
+                                    {% else %}
+                                        {% if areaEstudiante.atId in [1038, 1039] %}
+                                            <button onclick="eliminarArea({{esGestionVigente}}, {{areaEstudiante.eaId}},{{inscripcionid}},{{estudianteid}},{{gestion}})" class="btn btn-danger btn-xs"><i class="fa fa-fw fa-times"></i> Eliminar</button>
+                                        {% endif %}
                                     {% endif %}
-                                {% endif %}
+                            {% endif %}                                
                             </td>
                         </tr>
                     {% endfor %}
