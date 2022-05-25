@@ -49,6 +49,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
     }
 //Director
     public function indexAction (Request $request) {
+        //dump('ok'); die;
         $id_Institucion =  $request->getSession()->get('ie_id');
         $gestion =  $request->getSession()->get('currentyear');
         //$flujotipo = $request->get('id');
@@ -107,13 +108,25 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare("SELECT count(institucioneducativa_humanistico_tecnico.id) as cantidad FROM institucioneducativa_humanistico_tecnico 
             WHERE institucioneducativa_humanistico_tecnico_tipo_id  = 1 and grado_tipo_id in (5,6)
-            and institucioneducativa_id = $id_institucion AND gestion_tipo_id = $gestion");
+            and institucioneducativa_id = $id_institucion 
+            AND gestion_tipo_id = $gestion");
         $query->execute();
         $valida_ue = $query->fetch();
         $ue_autorizada = 0;
-        if($id_institucion == '40730065'){
+        $a = array(40730065,40730314,61880077,61880180,51880001,51880019,61880156,61880174,51880003,61880147,61880182);
+        if (in_array($id_institucion, $a)) {
+            $ue_autorizada = 0;
+          /*  dump(id_institucion);
+            dump($estado);*/
+        }else{
             $ue_autorizada = 1;
         }
+        /*dump($estado);
+        die;*/
+
+        /*if($id_institucion == '40730065'){
+            $ue_autorizada = 1;
+        }*/
         if((int)$valida_ue['cantidad']==0 or  $ue_autorizada == 0 ){
             $estado = 0; // La Unidad Educativa no plena para los grados(5-6) y no puede hacer la solicitud
         }else{
