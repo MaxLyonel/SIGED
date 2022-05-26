@@ -886,7 +886,7 @@ class InboxController extends Controller {
                       ->add('gestion', 'hidden', array('data' => $data['gestion']))
                       ->add('sie', 'hidden', array('data' => $this->unidadEducativa))//81880091
       ;
-      $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block', 'onclick'=>'closeOperativoInscription()')));
+      $form =$form->add('next', 'button', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-secondary btn-md btn-block', 'disabled'=>true, 'onclick'=>'closeOperativoInscription()')));
       $form = $form->getForm();
       return $form;
   }
@@ -1744,11 +1744,27 @@ class InboxController extends Controller {
       $periodo = 0;
 
       $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
-
-      $query = $em->getConnection()->prepare('select * from sp_validacion_regular_inscripcion_ig_web(:gestion, :sie, :valor)');
+      //get the operativo number
+      $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
+      // check the operative to find the correct vars
+      switch ($operativo) {
+        case 1:
+        case 2:
+          $opeTrim = $operativo + 5;
+          $dbFunction = 'sp_validacion_regular_web2022_mg';
+          break;
+        
+        default:
+          $opeTrim = 0;
+          $dbFunction = 'sp_validacion_regular_inscripcion_ig_web';
+          break;
+      }
+      
+      // $operativo = ($operativo < 1)?1:$operativo;
+      $query = $em->getConnection()->prepare('select * from '.$dbFunction.'(:gestion, :sie, :valor)');
       $query->bindValue(':gestion', $form['gestion']);
       $query->bindValue(':sie', $form['sie']);      
-      $query->bindValue(':valor','0');      
+      $query->bindValue(':valor',$opeTrim);      
       $query->execute();
       $inconsistencia = $query->fetchAll();
       //dump($this->session->get('pathSystem'));die;
@@ -1757,6 +1773,7 @@ class InboxController extends Controller {
       }
 
       if($observation){ 
+        $this->session->set('donwloadLibreta', false);              
         return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
           'inconsistencia' => $inconsistencia,
           'objObsQA' => $objObsQA,
@@ -1788,10 +1805,21 @@ class InboxController extends Controller {
             $registroConsol->setBan(1);
             $registroConsol->setEsonline('t');
             $registroConsol->setInstitucioneducativaTipoId(1);
+
+          }else{
+            $fieldOpe = 'setBim' .$operativo;
+            $registroConsol->$fieldOpe(2);
+          }
             $em->persist($registroConsol);
             $em->flush();
             $em->getConnection()->commit();
-          }
+
+            // get the flag to show the donwload libreta option
+            if($operativo+1 == $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']))
+              $this->session->set('donwloadLibreta', true);
+            else
+              $this->session->set('donwloadLibreta', false);              
+
           return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
             'observation' => false,
             'norow' => false,
