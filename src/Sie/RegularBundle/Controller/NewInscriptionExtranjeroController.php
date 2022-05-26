@@ -966,6 +966,7 @@ class NewInscriptionExtranjeroController extends Controller{
 			                $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
 			                $estudiante->setSegipId(1);
 		                }else{
+                      			$estudiante->setCarnetIdentidad('');
 		                	$estudiante->setComplemento('');
 		                	$estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
 		                }
