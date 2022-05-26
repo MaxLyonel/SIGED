@@ -104,7 +104,7 @@
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo de Inscripción">
                         <div class="caption text-center">
-                            <h4>Cerrar Operativo</h4>
+                            <h4>Cerrar Operativo Inscripción {{data.gestion}}</h4>
                             <div class="thumbnail-action">
                                 {{form_start(closeOperativoInscriptionform, { 'attr':{'id':'formCloseOperativoInscription' }} )}}
                                     {{form_widget(closeOperativoInscriptionform.next)}}
@@ -264,7 +264,7 @@
         };*/
 
          var closeOperativoInscription = function(){
-            return false;
+            
             if(confirm('¿Está segura/o de cerrar el operativo de INSCRIPCIÓN?')){
                 formData = $('#formCloseOperativoInscription').serialize();
                 $.ajax({
