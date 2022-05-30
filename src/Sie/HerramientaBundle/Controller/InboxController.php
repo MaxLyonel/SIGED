@@ -1747,20 +1747,19 @@ class InboxController extends Controller {
       //get the operativo number
       $operativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
       // check the operative to find the correct vars
-      // switch ($operativo) {
-      //   case 1:
-      //   case 2:
-      //     $opeTrim = $operativo + 5;
-      //     $dbFunction = 'sp_validacion_regular_web2022_mg';
-      //     break;
+      switch ($operativo) {
+        case 1:
+        case 2:
+          $opeTrim = $operativo + 5;
+          $dbFunction = 'sp_validacion_regular_web2022_mg';
+          break;
         
-      //   default:
-      //     $opeTrim = 0;
-      //     $dbFunction = 'sp_validacion_regular_inscripcion_ig_web';
-      //     break;
-      // }
-      $opeTrim = 0;
-      $dbFunction = 'sp_validacion_regular_inscripcion_ig_web';
+        default:
+          $opeTrim = 0;
+          $dbFunction = 'sp_validacion_regular_inscripcion_ig_web';
+          break;
+      }
+      
       // $operativo = ($operativo < 1)?1:$operativo;
       $query = $em->getConnection()->prepare('select * from '.$dbFunction.'(:gestion, :sie, :valor)');
       $query->bindValue(':gestion', $form['gestion']);
@@ -1808,18 +1807,18 @@ class InboxController extends Controller {
             $registroConsol->setInstitucioneducativaTipoId(1);
 
           }else{
-            // $fieldOpe = 'setBim' .$operativo;
-            // $registroConsol->$fieldOpe(2);
+            $fieldOpe = 'setBim' .$operativo;
+            $registroConsol->$fieldOpe(2);
           }
             $em->persist($registroConsol);
             $em->flush();
             $em->getConnection()->commit();
 
             // get the flag to show the donwload libreta option
-            // if($operativo+1 == $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']))
-            //   $this->session->set('donwloadLibreta', true);
-            // else
-            //   $this->session->set('donwloadLibreta', false);              
+            if($operativo+1 == $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']))
+              $this->session->set('donwloadLibreta', true);
+            else
+              $this->session->set('donwloadLibreta', false);              
 
           return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(
             'observation' => false,

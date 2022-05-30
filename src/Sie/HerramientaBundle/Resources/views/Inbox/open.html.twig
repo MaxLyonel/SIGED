@@ -102,9 +102,9 @@
                  {% if  data.gestion==app.session.get('currentyear') %}
                  <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
-                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo de Inscripción">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
                         <div class="caption text-center">
-                            <h4>Cerrar Operativo Inscripción {{data.gestion}}</h4>
+                            <h4>Cerrar Operativo</h4>
                             <div class="thumbnail-action">
                                 {{form_start(closeOperativoInscriptionform, { 'attr':{'id':'formCloseOperativoInscription' }} )}}
                                     {{form_widget(closeOperativoInscriptionform.next)}}
