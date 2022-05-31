@@ -783,7 +783,7 @@ class InboxController extends Controller {
           'infoMaestroform' => $this->InfoStudentForm('herramienta_info_maestro_index', 'Personal Docente',$data)->createView(),
           'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
           'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo',$data)->createView(),
-          'closeOperativoInscriptionform' => $this->CloseOperativoInscriptionForm('herramienta_inbox_close_operativo_inscription', 'Cerrar Operativo Inscripción',$data)->createView(),
+          'closeOperativoInscriptionform' => $this->CloseOperativoInscriptionForm('herramienta_inbox_close_operativo_inscription', 'Cerrar Operativo ',$data)->createView(),
           'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
           'data'=>$dataInfo,
           'tuicion'=>$tuicion,
