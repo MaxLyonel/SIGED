@@ -775,15 +775,16 @@ class InboxController extends Controller {
            $trimestre=0; 
           /*codigo sie no existe*/ 
         }
-        //dump($this->session->get('pathSystem')); die; sieHerramientaBundle
         
+        //dump($this->session->get('pathSystem')); die; sieHerramientaBundle
+        $arrLabelToClose = array('0'=>'Inscriptions','1'=>'1er. Trim.','2'=>'2do. Trim.','3'=>'3er. Trim.');
         return $this->render($this->session->get('pathSystem') . ':Inbox:open.html.twig', array(
           'uEducativaform' => $this->InfoStudentForm('herramienta_ieducativa_index', 'Unidad Educativa', $data)->createView(),
           'personalAdmform' => $this->InfoStudentForm('herramienta_info_personal_adm_index', 'Personal Administrativo',$data)->createView(),
           'infoMaestroform' => $this->InfoStudentForm('herramienta_info_maestro_index', 'Personal Docente',$data)->createView(),
           'infotStudentform' => $this->InfoStudentForm('herramienta_info_estudiante_index', 'Estudiantes',$data)->createView(),
           'mallaCurricularform' => $this->InfoStudentForm('herramienta_change_paralelo_sie_index', 'Cambio de Paralelo',$data)->createView(),
-          'closeOperativoInscriptionform' => $this->CloseOperativoInscriptionForm('herramienta_inbox_close_operativo_inscription', 'Cerrar Operativo ',$data)->createView(),
+          'closeOperativoInscriptionform' => $this->CloseOperativoInscriptionForm('herramienta_inbox_close_operativo_inscription', 'Cerrar Operativo '. $arrLabelToClose[$this->get('funciones')->obtenerOperativo($ieducativa,$data['gestion'])],$data)->createView(),
           'closeOperativoform' => $this->CloseOperativoForm('herramienta_mallacurricular_index', 'Cerrar Operativo',$data)->createView(),
           'data'=>$dataInfo,
           'tuicion'=>$tuicion,
