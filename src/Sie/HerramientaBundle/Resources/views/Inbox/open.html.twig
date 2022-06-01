@@ -265,7 +265,7 @@
 
          var closeOperativoInscription = function(){
             
-            if(confirm('¿Está segura/o de cerrar el operativo de INSCRIPCIÓN?')){
+            if(confirm('¿Está segura/o de {{ data.messageope }} ?')){
                 formData = $('#formCloseOperativoInscription').serialize();
                 $.ajax({
                     type: 'post',
