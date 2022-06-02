@@ -500,4 +500,60 @@ class UnivUniversidadCarrera
     {
         return $this->univSede;
     }
+    /**
+     * @var string
+     */
+    private $univFacultad;
+
+    /**
+     * @var integer
+     */
+    private $esSiesu;
+
+
+    /**
+     * Set univFacultad
+     *
+     * @param string $univFacultad
+     * @return UnivUniversidadCarrera
+     */
+    public function setUnivFacultad($univFacultad)
+    {
+        $this->univFacultad = $univFacultad;
+    
+        return $this;
+    }
+
+    /**
+     * Get univFacultad
+     *
+     * @return string 
+     */
+    public function getUnivFacultad()
+    {
+        return $this->univFacultad;
+    }
+
+    /**
+     * Set esSiesu
+     *
+     * @param integer $esSiesu
+     * @return UnivUniversidadCarrera
+     */
+    public function setEsSiesu($esSiesu)
+    {
+        $this->esSiesu = $esSiesu;
+    
+        return $this;
+    }
+
+    /**
+     * Get esSiesu
+     *
+     * @return integer 
+     */
+    public function getEsSiesu()
+    {
+        return $this->esSiesu;
+    }
 }

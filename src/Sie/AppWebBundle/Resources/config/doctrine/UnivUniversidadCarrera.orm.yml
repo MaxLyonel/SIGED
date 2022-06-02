@@ -89,6 +89,20 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        univFacultad:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: univ_facultad
+        esSiesu:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            default: '0'
+            column: es_siesu
     manyToOne:
         univModalidadEnsenanzaTipo:
             targetEntity: UnivModalidadEnsenanzaTipo
