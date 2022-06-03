@@ -14,3 +14,6 @@ uni_university_sede:
     resource: "@SieUniversityBundle/Resources/config/routing/sede.yml"
     prefix:   /uni/sede
 
+uni_maininfouni:
+    resource: "@SieUniversityBundle/Resources/config/routing/maininfouni.yml"
+    prefix:   /uni/maininfouni

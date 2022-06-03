@@ -27,13 +27,22 @@ class ExecutiveStaffController extends Controller{
     public function __construct() {
 
         $this->session = new Session();
-        $this->baseData = array('sedeId' => 64,  'userId' => 13820843);
+        $this->baseData = array('sedeId' => $this->session->get('sedeId'),  'userId' => $this->session->get('userId'));
+    }
+    /** krlos
+     * the method to decrypt
+     */
+    private function kdecrypt($data){
+        $data = hex2bin($data);
+        return unserialize($data);
     }
 
-    public function indexAction(){        
+    public function indexAction(Request $request){        
+        $form = $request->get('form');
         
+        $data = ($this->kdecrypt($form['data']));
         return $this->render('SieUniversityBundle:ExecutiveStaff:index.html.twig', array(
-                'sedeId' => $this->baseData['sedeId']
+                'sedeId' => $data['sedeId']
             ));    
     }
 

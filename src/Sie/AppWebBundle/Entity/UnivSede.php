@@ -114,6 +114,9 @@ class UnivSede
      */
     private $estadoinstitucionTipo;
 
+    public function __toString(){
+        return $this->sede;
+    }
 
     /**
      * Get id
