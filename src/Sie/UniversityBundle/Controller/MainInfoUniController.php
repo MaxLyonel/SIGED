@@ -43,7 +43,7 @@ class MainInfoUniController extends Controller{
             'enablePersonalStaffOption' => $enablePersonalStaffOption,
             'uni_staff'          		=> $this->buildOptionUni('staff_index', 'Personal Ejecutivo', $data)->createView(),
             'uni_infosede'       		=> $this->buildOptionUni('sie_university_sede_index', 'Informacion Sede/sub Sede Central', $data)->createView(),
-            'uni_statisticssede' 		=> $this->buildOptionUni('staff_index', 'Estadisitica Sede/sub Sede Central', $data)->createView(),
+            'uni_statisticssede' 		=> $this->buildOptionUni('sie_university_sede_docenteadministrativo_index', 'Estadisitica Sede/sub Sede Central', $data)->createView(),
             'uni_statistics'     		=> $this->buildOptionUni('carreras_index', 'Estadisticas', $data)->createView(),
 
             ));    
