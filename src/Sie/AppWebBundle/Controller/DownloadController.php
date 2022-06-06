@@ -704,7 +704,7 @@ class DownloadController extends Controller {
             if( !in_array($this->session->get('roluser'), array(7,8,10)) ){
                 $operativo = $operativo - 1;
             }
-            if($gestion == 2021){
+            if($gestion == 2021 or $gestion == 2022){
                 switch ($nivel) {
                     case 11: $reporte = 'reg_est_LibretaEscolar_inicial_v5_rcm.rptdesign'; break;
                     case 12: $reporte = 'reg_est_LibretaEscolar_primaria_v5_rcm.rptdesign'; break;
@@ -797,7 +797,7 @@ class DownloadController extends Controller {
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'libreta_' . $rude . '_' . $gestion . '.pdf'));
         
-        if($gestion == 2021){
+        if($gestion == 2021 or $gestion == 2022){
                 $response->setContent(file_get_contents($this->container->getParameter('urlreportweb').$reporte.'&inscripid=' . $idInscripcion .'&codue=' . $sie .'&lk=' . $link . '&trimestre=9&&__format=pdf&'));
         }else{
 

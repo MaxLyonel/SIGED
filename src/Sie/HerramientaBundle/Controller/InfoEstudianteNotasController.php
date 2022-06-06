@@ -53,7 +53,7 @@ class InfoEstudianteNotasController extends Controller {
         $nivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
         $grado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
 
-        $tipoNota = $this->get('notas')->getTipoNota($sie,$gestion,$nivel,$grado);
+        $tipoNota = $this->get('notas')->getTipoNota($sie,$gestion,$nivel,$grado,'');
 
         if($tipoNota == 'Bimestre'){
             // Obtenemos el tipo de unidad educativa y el operativo

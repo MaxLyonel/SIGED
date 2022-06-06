@@ -1776,7 +1776,7 @@ class ReporteController extends Controller {
             /*
              * Recupera datos del formulario
              */
-            $codigoArea = $request->get('codigo');
+            $codigoArea = $request->get('codigo'); 
             $rolUsuario = $request->get('rol');
         } else {
             $codigoArea = 0;
@@ -1795,11 +1795,11 @@ class ReporteController extends Controller {
         $entityEstadisticaCarreras = $this->buscaEstadisticaCarrerasInstitutosTecnicosAreaRol($codigoArea,$rolUsuario,$entityEstadistica['cant_total']?$entityEstadistica['cant_total']:0);
         //dump($entityEstadisticaCarreras);die;
         if($rolUsuario <> 9){
-            $chartTecnicosTecnologicos = $this->chartDonut3dInformacionGeneral($entityEstadistica,"Institutos Técnicos y/o Tecnológicos",$gestionActual,12,"chartContainerTecnicoTecnologico");
-            $chartArea = $this->chartPie($entityEstadistica,"Institutos Técnicos y/o Tecnológicos segun Área Geográfica",$gestionProcesada,1,"chartContainerArea");
-            $chartDependencia = $this->chartColumnInformacionGeneral($entityEstadistica,"Institutos Técnicos y/o Tecnológicos según Dependencia",$gestionActual,12,"chartContainerDependencia");
-            $chartSede = $this->chartPie($entityEstadistica,"Institutos Técnicos y/o Tecnológicos segun Sede",$gestionProcesada,2,"chartContainerSede");
-            $chartCarreras = $this->chartColumnInformacionGeneral($entityEstadisticaCarreras,"Frecuencia de Carreras segun los Institutos Técnicos y/o Tecnológicos",$gestionActual,13,"chartContainerCarreras");
+            $chartTecnicosTecnologicos = $this->chartDonut3dInformacionGeneral($entityEstadistica,"Institutos Técnicos y/o Tecnológicos y/o Artísticos",$gestionActual,12,"chartContainerTecnicoTecnologico");
+            $chartArea = $this->chartPie($entityEstadistica,"Institutos Técnicos y/o Tecnológicos y/o Artísticos segun Área Geográfica",$gestionProcesada,1,"chartContainerArea");
+            $chartDependencia = $this->chartColumnInformacionGeneral($entityEstadistica,"Institutos Técnicos y/o Tecnológicos y/o Artísticos según Dependencia",$gestionActual,12,"chartContainerDependencia");
+            $chartSede = $this->chartPie($entityEstadistica,"Institutos Técnicos y/o Tecnológicos y/o Artísticos segun Sede",$gestionProcesada,2,"chartContainerSede");
+            $chartCarreras = $this->chartColumnInformacionGeneral($entityEstadisticaCarreras,"Frecuencia de Carreras segun los Institutos Técnicos y/o Tecnológicos y/o Artísticos",$gestionActual,13,"chartContainerCarreras");
         }else{
             $chartTecnicosTecnologicos = $this->chartDonut3dInformacionGeneral($entityEstadistica,"Carreras y/o Cursos",$gestionActual,13,"chartContainerTecnicoTecnologico");
             $chartArea = '';
@@ -2210,7 +2210,7 @@ class ReporteController extends Controller {
             LEFT JOIN lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
             LEFT JOIN lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
             LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
-            WHERE inst.institucioneducativa_tipo_id IN (7,8,9) 
+            WHERE inst.institucioneducativa_tipo_id IN (7,8,9,11,12,13) 
             AND inst.estadoinstitucion_tipo_id = 10
             AND inst.institucioneducativa_acreditacion_tipo_id = 2
             group by lt4.codigo, lt4.lugar
@@ -2229,7 +2229,7 @@ class ReporteController extends Controller {
             LEFT JOIN lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
             LEFT JOIN lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
             LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
-            WHERE inst.institucioneducativa_tipo_id IN (7,8,9) 
+            WHERE inst.institucioneducativa_tipo_id IN (7,8,9,11,12,13) 
             AND inst.estadoinstitucion_tipo_id = 10
             AND inst.institucioneducativa_acreditacion_tipo_id = 2
             AND lt4.codigo = '". $area ."'
@@ -2644,14 +2644,17 @@ class ReporteController extends Controller {
             sum(case ie.institucioneducativa_tipo_id when 7 then 1 else 0 end) as cant_tecnica,
             sum(case ie.institucioneducativa_tipo_id when 8 then 1 else 0 end) as cant_tecnologica,
             sum(case ie.institucioneducativa_tipo_id when 9 then 1 else 0 end) as cant_tt,
-            sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 else 0 end) as cant_institutos,count(*) as cant_total,
+            sum(case ie.institucioneducativa_tipo_id when 11 then 1 else 0 end) as cant_cca,
+            sum(case ie.institucioneducativa_tipo_id when 12 then 1 else 0 end) as cant_ifa,
+            sum(case ie.institucioneducativa_tipo_id when 13 then 1 else 0 end) as cant_ebi,
+            sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 when 11 then 1 when 12 then 1 when 13 then 1 else 0 end) as cant_institutos,count(*) as cant_total,
             sum(case when s.institucioneducativa_id=s.sede then 1 else 0 end) as cant_sede,
             sum(case when s.institucioneducativa_id<>s.sede then 1 else 0 end) as cant_subsede
             FROM ttec_institucioneducativa_sede s
             INNER JOIN institucioneducativa AS ie on s.institucioneducativa_id=ie.id
             INNER JOIN jurisdiccion_geografica AS jurg ON ie.le_juridicciongeografica_id = jurg.id
             LEFT JOIN lugar_tipo AS lt ON lt.id = jurg.lugar_tipo_id_localidad
-            WHERE ie.institucioneducativa_tipo_id IN (7,8,9) 
+            WHERE ie.institucioneducativa_tipo_id IN (7,8,9,11,12,13) 
             AND ie.estadoinstitucion_tipo_id = 10
             AND ie.institucioneducativa_acreditacion_tipo_id = 2");    
         } 
@@ -2669,7 +2672,10 @@ class ReporteController extends Controller {
             sum(case ie.institucioneducativa_tipo_id when 7 then 1 else 0 end) as cant_tecnica,
             sum(case ie.institucioneducativa_tipo_id when 8 then 1 else 0 end) as cant_tecnologica,
             sum(case ie.institucioneducativa_tipo_id when 9 then 1 else 0 end) as cant_tt,
-            sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 else 0 end) as cant_institutos,count(*) as cant_total,
+            sum(case ie.institucioneducativa_tipo_id when 11 then 1 else 0 end) as cant_cca,
+            sum(case ie.institucioneducativa_tipo_id when 12 then 1 else 0 end) as cant_ifa,
+            sum(case ie.institucioneducativa_tipo_id when 13 then 1 else 0 end) as cant_ebi,
+            sum(case ie.institucioneducativa_tipo_id when 7 then 1 when 8 then 1 when 9 then 1 when 11 then 1 when 12 then 1 when 13 then 1 else 0 end) as cant_institutos,count(*) as cant_total,
             sum(case when s.institucioneducativa_id=s.sede then 1 else 0 end) as cant_sede,
             sum(case when s.institucioneducativa_id<>s.sede then 1 else 0 end) as cant_subsede
             FROM ttec_institucioneducativa_sede s
@@ -2680,7 +2686,7 @@ class ReporteController extends Controller {
             LEFT JOIN lugar_tipo AS lt2 ON lt2.id = lt1.lugar_tipo_id
             LEFT JOIN lugar_tipo AS lt3 ON lt3.id = lt2.lugar_tipo_id
             LEFT JOIN lugar_tipo AS lt4 ON lt4.id = lt3.lugar_tipo_id
-            WHERE ie.institucioneducativa_tipo_id IN (7,8,9) 
+            WHERE ie.institucioneducativa_tipo_id IN (7,8,9,11,12,13) 
             AND ie.estadoinstitucion_tipo_id = 10
             AND ie.institucioneducativa_acreditacion_tipo_id = 2
             AND lt4.codigo='". $area ."'");  
@@ -3345,10 +3351,17 @@ class ReporteController extends Controller {
                 $pointLabel = "Unidades Educativas";
                 break;
             case 12:
-                $datosTemp = "{name: 'Técnicos', y: ".round(((100*$entity['cant_tecnica'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_tecnica']."}, {name: 'Tecnológicos', y: ".round(((100*$entity['cant_tecnologica'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_tecnologica']."}, {name: 'Técnico Tecnológicos', y: ".round(((100*$entity['cant_tt'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_tt']."},";
+                $datosTemp = "{name: 'Técnicos', y: ".round(((100*$entity['cant_tecnica'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_tecnica']."}, 
+                              {name: 'Tecnológicos', y: ".round(((100*$entity['cant_tecnologica'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_tecnologica']."},
+                              {name: 'Técnico Tecnológicos', y: ".round(((100*$entity['cant_tt'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_tt']."},
+                              {name: 'Centros Capacitación Artistica', y: ".round(((100*$entity['cant_cca'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_cca']."},
+                              {name: 'Formación Artística', y: ".round(((100*$entity['cant_ifa'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_cca']."},
+                              {name: 'Escuelas Bolivianas Interculturales', y: ".round(((100*$entity['cant_ebi'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_ebi']."},
+                              ";
                 $pointLabel = "Institutos";
                 $nameseries = 'Técnicos y/o Tecnológicos';
                 break;
+                
             case 13:
                 $datosTemp = "{name: 'Carreras', y: ".round(((100*$entity['cant_carreras'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_carreras']."}, {name: 'Cursos', y: ".round(((100*$entity['cant_cursos'])/(($entity['cant_total']==0) ? 1:$entity['cant_total'])),1).", label: ".$entity['cant_cursos']."},";
                 $pointLabel = "";
@@ -4168,7 +4181,7 @@ class ReporteController extends Controller {
             $codigoArea = 0;
             $rol = 0;
         }
-
+        //dump($codigoArea);die;
         $em = $this->getDoctrine()->getManager();
 
         $arch = 'MinEdu_InstitutosTecnicosTecnologicos_'.date('YmdHis').'.pdf';

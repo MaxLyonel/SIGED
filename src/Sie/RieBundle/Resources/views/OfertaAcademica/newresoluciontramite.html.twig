@@ -9,8 +9,8 @@
     </div>
 
     <ol class="breadcrumb breadcrumb-bg-cyan">
-        <li><a href="{{path('cap_list', {'idRie': institucion.getId()})}}">Listado de Institutos</a></li>
-        <li><a href="{{path('cap_list', {'idRie': institucion.getId()})}}">Listado de Carreras</a></li>
+        <li><a href="{{path('oac_list', {'idRie': institucion.getId()})}}">Listado de Institutos</a></li>
+        <li><a href="{{path('oac_list', {'idRie': institucion.getId()})}}">Listado de Carreras</a></li>
         <li class="active">Nuevo</li>
     </ol>
 
@@ -19,7 +19,7 @@
             <div class="card">
                 <div class="header bg-blue-grey">
                     <h2>
-                        Edita Resolución Ministerial
+                        Nueva Resolución Ministerial
                     </h2>
                 </div>
                 <div class="body">
@@ -37,15 +37,20 @@
                                 <div class="form-line">
                                     {{form_widget(form.ttecAreaFormacion)}}  
                                 </div>
-                            </div>                            
+                            </div>
 
                             <label class="form-label">{{form_label(form.ttecCarreraTipo)}}</label>
                             <div class="form-group">
                                 <div class="form-line">
                                     {{form_widget(form.ttecCarreraTipo)}}  
                                 </div>
-                            </div>
-
+                            </div>                            
+                            <label class="form-label pull-left col-blue">{{form_label(form.operacion) }}</label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    {{form_widget(form.operacion, {'attr':{'onchange':'cargarDetalle()'}}) }}
+                                </div>
+                            </div>   
                             <label class="form-label">{{form_label(form.resolucion)}}</label>
                             <div class="form-group">
                                 <div class="form-line">
@@ -58,41 +63,49 @@
                                 <div class="form-line">
                                     {{form_widget(form.fechaResolucion) }}
                                 </div>
-                            </div>   
+                            </div>    
 
-                            <label class="form-label">{{form_label(form.nivelTipo)}}</label>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    {{form_widget(form.nivelTipo,{'attr':{'onchange':'cargarTiempoEstudio()'}}) }}
-                                </div>
-                            </div>                                                                                                                 
+                              <div class="form-group col-lg-6 col-md-12" id="nivelTipo" style="display:none" >
+                                <label class="form-label">{{form_label(form.nivelTipo )}}</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        {{form_widget(form.nivelTipo ) }}
+                                    </div>
+                                </div>                                                                                                             
+                            </div>                                                                                                             
 
-                            <label class="form-label">{{form_label(form.regimenEstudio)}}</label>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    {{form_widget(form.regimenEstudio,{'attr':{'onchange':'cargarTiempoEstudio()'}}) }}
-                                </div>
+                            <div class="form-group col-lg-6 col-md-12" id="regimenEstudio" style="display:none" >
+                                <label class="form-label">{{form_label(form.regimenEstudio)}}</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        {{form_widget(form.regimenEstudio , {'attr':{'onchange':'cargarTiempoEstudio()'}}) }}
+                                    </div>
+                                </div>                                                                                    
+                            </div>                                                                                    
+                            <div class="form-group col-lg-6 col-md-12" id="tiempoEstudio" style="display:none" >
+                                <label class="form-label">{{form_label(form.tiempoEstudio)}}</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        {{form_widget(form.tiempoEstudio) }}
+                                    </div>
+                                </div>                                                                                    
                             </div>                                                                                    
 
-                            <label class="form-label">{{form_label(form.tiempoEstudio)}}</label>
-                            <div class="form-group">
+                            <div class="form-group col-lg-6 col-md-12" id="cargaHoraria" style="display:none" >
+                                <label class="form-label">{{form_label(form.cargaHoraria)}}</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        {{form_widget(form.cargaHoraria) }}
+                                    </div>
+                                </div>                                                                                    
+                            </div> 
+                            <label class="form-label">{{form_label(form.descripcion)}}</label>
+                             <div class="form-group">
                                 <div class="form-line">
-                                    {{form_widget(form.tiempoEstudio) }}
-                                </div>
-                            </div>                                                                                    
-
-                            <label class="form-label">{{form_label(form.cargaHoraria)}}</label>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    {{form_widget(form.cargaHoraria) }}
-                                </div>
-                            </div>                                                                                    
-                            <label class="form-label pull-left col-blue">{{form_label(form.operacion)}}</label>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    {{form_widget(form.operacion) }}
-                                </div>
-                            </div>                                                                                    
+								    {{form_widget(form.descripcion) }}                               
+                                </div>                                                                                   
+                            </div>                                                                                   
+                                                                                                             
                         </fieldset>
                             {{ form_widget(form.guardar,{ 'attr':{'class': 'btn btn-primary btn-lg m-l-15 waves-effect'} }) }}
                             <a href="{{path('oac_list', {'idRie': institucion.getId()})}}" class="btn btn-danger btn-lg m-l-15 waves-effect">Cancelar</a>
@@ -110,11 +123,12 @@
     <script>
         
         function cargarTiempoEstudio(){
+                        
             nivel = $("#form_nivelTipo").val();
             regimen = $("#form_regimenEstudio").val();
             //TS = 500; TM=501; C=502
             //Anual = 1; Semestral=2; modular = 3
-
+            
             //TecSup ; Anual
             if(nivel == 500 && regimen == 1)
             {
@@ -153,7 +167,20 @@
                 $("#form_tiempoEstudio").append('<option value="6">6</option>');
                 $("#form_tiempoEstudio").selectpicker('refresh');
             }
+
+             if(nivel == 500 && regimen == 4)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").append('<option value="4">4</option>');
+                $("#form_tiempoEstudio").append('<option value="5">5</option>');
+                $("#form_tiempoEstudio").append('<option value="6">6</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }
             
+
             //TecMed ; Anual
             if(nivel == 501 && regimen == 1)
             {
@@ -182,6 +209,19 @@
                 $("#form_tiempoEstudio").empty();
                 $("#form_tiempoEstudio").selectpicker('refresh');
                 $("#form_tiempoEstudio").append('<option value="1">1</option>');
+                $("#form_tiempoEstudio").append('<option value="2">2</option>');
+                $("#form_tiempoEstudio").append('<option value="3">3</option>');
+                $("#form_tiempoEstudio").append('<option value="4">4</option>');
+                $("#form_tiempoEstudio").append('<option value="5">5</option>');
+                $("#form_tiempoEstudio").append('<option value="6">6</option>');
+                $("#form_tiempoEstudio").selectpicker('refresh');
+            }    
+
+             //TecMed ; Modular
+            if(nivel == 501 && regimen == 4)
+            {
+                $("#form_tiempoEstudio").empty();
+                $("#form_tiempoEstudio").selectpicker('refresh');
                 $("#form_tiempoEstudio").append('<option value="2">2</option>');
                 $("#form_tiempoEstudio").append('<option value="3">3</option>');
                 $("#form_tiempoEstudio").append('<option value="4">4</option>');
@@ -228,6 +268,25 @@
 
         }
 
+        function cargarDetalle() {
+            operacion = $("#form_operacion").val();
+
+            if(operacion =='RECTIFICACION'){
+                 $("#nivelTipo").show();
+                 $("#regimenEstudio").show();
+                 $("#tiempoEstudio").show();
+                 $("#cargaHoraria").show();
+                
+
+            }
+            else{
+                $("#nivelTipo").hide();
+                 $("#regimenEstudio").hide();
+                 $("#tiempoEstudio").hide();
+                 $("#cargaHoraria").hide();
+            }
+            
+        }
 
     </script>
 
