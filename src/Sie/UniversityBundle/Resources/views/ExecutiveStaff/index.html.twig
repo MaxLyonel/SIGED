@@ -183,7 +183,7 @@
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="#">Universidad</a>
+                    <a href="{{path('maininfouni_index')}}">Registro de Información</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li class="active">Personal Ejecutivo</li>
@@ -384,7 +384,7 @@
                                         
                                         
                                         
-                                        <button v-on:click.prevent="lookforperson(yearSelected)" type="button" id="form_button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar </button>
+                                        <button v-on:click.prevent="lookforperson(yearSelected)" type="button" id="form_button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar main </button>
                                         <button v-on:click="closeit" type="button" id="form_button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>
                                       </div>
                                   </div>
@@ -480,7 +480,7 @@
                                                     <div class="row">
 
                                                       <div class="col-sm-6">
-                                                      <label for="telefono">Cargo</label>
+                                                      <label for="Cargo">Cargo</label>
                                                         <select name="arrGenero" id="idarrGenero" class="" v-model="dataPerson.cargo">  
                                                           <option v-for=" training in DBTraining " :value="training.id">${training.cargo}</option>
                                                           
@@ -488,7 +488,7 @@
                                                       </div>
 
                                                       <div class="col-sm-6">
-                                                      <label for="ci">Formacion</label>
+                                                      <label for="Formacion">Formación</label>
                                                         <select name="arrGenero" id="idarrGenero" class="" v-model="dataPerson.formacion">  
                                                           <option v-for=" position in DBPosition" :value="position.id">${position.cargo}</option>
                                                         </select>
@@ -520,8 +520,8 @@
     					                            <div class="row">
 
                                                       <div class="col-sm-3">
-                                                      <label for="complemento(s)">email</label>
-                                                          <input type="text" class="form-control" placeholder="email"  autocomplete="off" v-model="dataPerson.email">
+                                                      <label for="email(s)">email</label>
+                                                          <input type="text" class="form-control" style="text-transform: lowercase;" placeholder="email"  autocomplete="off" v-model="dataPerson.email">
                                                       </div>
 
     					                              {# <div class="col-sm-3">
@@ -545,20 +545,20 @@
     					                            <div class="row">
     					                              <div class="col-sm-3">
     					                              <label for="gestion_nombramiento_id">Gestión Nombramiento</label>
-    					                              <input type="text" class="form-control" placeholder="gestion_nombramiento_id" v-model="dataPerson.gestion_nombramiento_id" >
+    					                              <input type="text" class="form-control" placeholder="AAAA" v-model="dataPerson.gestion_nombramiento_id" >
     					                              </div>
     					                              <div class="col-sm-3">
     					                              <label for="ratificacion_anio_ini">Ratificación año inicio</label>
-    					                                  <input type="text" class="form-control" placeholder="ratificacion_anio_ini"  autocomplete="off" v-model="dataPerson.ratificacion_anio_ini">
+    					                                  <input type="text" class="form-control" placeholder="AAAA"  autocomplete="off" v-model="dataPerson.ratificacion_anio_ini">
     					                              </div>
 
     					                              <div class="col-sm-3">
     					                              <label for="ratificacion_anio_fin">Ratificación año fin</label>
-    					                                  <input type="text" class="form-control" id="form_ratificacion_anio_fin"placeholder="ratificacion_anio_fin" v-model="dataPerson.ratificacion_anio_fin">
+    					                                  <input type="text" class="form-control" id="form_ratificacion_anio_fin"placeholder="AAAA" v-model="dataPerson.ratificacion_anio_fin">
     					                              </div>
     					                              <div class="col-sm-3" >
     					                              <label for="fecha_registro_firma">Fecha registro firma</label>
-    					                                <input type="text" class="form-control" id="form_idfecnac" placeholder="fecha_registro_firma" v-model="dataPerson.fecha_registro_firma">
+    					                                <input type="text" class="form-control" id="form_idfecnac" placeholder="dd-mm-aaaa" v-model="dataPerson.fecha_registro_firma">
     					                              </div>
     					                            </div>
 
@@ -669,16 +669,16 @@
                                                         <div class="row">
 
                                                           <div class="col-sm-6">
-                                                          <label for="telefono">Cargo</label>
-                                                            <select name="arrGenero" id="idarrGenero" class="custom-select form-control" v-model="dataPersonEdit.cargo">  
+                                                          <label for="Cargo">Cargo</label>
+                                                            <select name="arrGenero" id="idarrGenero" class="" v-model="dataPersonEdit.cargo">  
                                                               <option v-for=" (training, key) in DBTraining " :key="key" :value="training.id" v-text="training.cargo"></option>
                                                               
                                                             </select>
                                                           </div>
 
                                                           <div class="col-sm-6">
-                                                          <label for="ci">Formacion</label>
-                                                            <select name="arrGenero" id="idarrGenero" class="custom-select form-control" v-model="dataPersonEdit.formacion">  
+                                                          <label for="Formacion">Formación</label>
+                                                            <select name="arrGenero" id="idarrGenero" class="" v-model="dataPersonEdit.formacion">  
                                                               <option v-for=" (position, key) in DBPosition" :value="position.id" :key="key" v-text="position.cargo"></option>
                                                             </select>
                                                           </div>
@@ -709,8 +709,8 @@
                                                         <div class="row">
 
                                                           <div class="col-sm-3">
-                                                          <label for="complemento(s)">email</label>
-                                                              <input type="text" class="form-control" placeholder="email"  autocomplete="off" v-model="dataPersonEdit.email">
+                                                          <label for="email(s)">email</label>
+                                                              <input type="text" class="form-control" style="text-transform: lowercase;" placeholder="email"  autocomplete="off" v-model="dataPersonEdit.email">
                                                           </div>
 
                                                           {# <div class="col-sm-3">
@@ -1013,9 +1013,17 @@
                     this.DBTraining = [];
                     this.DBPosition = [];
                     this.swperson = false;
+                    this.answer = false;
                     this.existsPersonStaffRegistered = false;
 
+
                     this.clearDataPerson();
+
+                    if(typeof(this.DBsearch.cibuscar)  === 'undefined'){
+                        this.respuesta = 'Debe ingresar un CI válido';
+                        this.buscando = false;
+                        return;
+                    }                    
 
                     if (this.DBsearch.cibuscar.length == 0) {
                         this.respuesta = 'Debe ingresar un CI válido';
@@ -1023,7 +1031,7 @@
                         return;
                     }
 
-                    if (this.DBsearch.cibuscar.length < 6) {
+                    if (this.DBsearch.cibuscar.length < 4) {
                         this.respuesta = 'El CI ingresado no es válido';
                         this.buscando = false;
                         return;
@@ -1031,6 +1039,31 @@
                     if(typeof(this.DBsearch.complementoval)  === 'undefined'){
                     	this.DBsearch.complementoval = '';
                     }
+                    if(typeof(this.DBsearch.fecNac)  === 'undefined'){
+                        this.respuesta = 'Debe ingresar Fecha de Nacimiento';
+                        this.buscando = false;
+                        return;
+                    }
+                    if(typeof(this.DBsearch.nombre)  === 'undefined'){
+                        this.respuesta = 'Debe ingresar Nombre(s)';
+                        this.buscando = false;
+                        return;
+                    }   
+
+                    if(typeof(this.DBsearch.paterno)  === 'undefined' && typeof(this.DBsearch.materno)  === 'undefined'){
+                        this.respuesta = 'Debe ingresar Apellido(s)';
+                        this.buscando = false;
+                        return;
+                    }else{
+                        if(typeof(this.DBsearch.paterno)  === 'undefined'){
+                            this.DBsearch.paterno = '';
+                        }                        
+                        if(typeof(this.DBsearch.materno)  === 'undefined'){
+                            this.DBsearch.materno = '';
+                        }
+                    }                                     
+
+                    
                     this.DBsearch.yearchoose = yearchoose;
                     this.DBsearch.sedeId = this.sedeId;
                     axios.get(Routing.generate('staff_lookforperson', this.DBsearch))
