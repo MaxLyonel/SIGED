@@ -1,8 +1,9 @@
+<link rel="stylesheet" href="{{asset('css/kcssformat.css')}}">
 <style>
     #mapMarker { top:0; bottom:0; width:100%; height: 300px; }
 </style>
 <div class="row"> 
-    <div class="col-lg-12 col-md-12">
+    <div class="col-lg-12 col-md-12 alert alert-warning">
         {% if sedeDetalle is defined %}
             {% set nombre = sedeDetalle.nombre %}
             {% set resolucionMinisterial = sedeDetalle.resolucionMinisterial %}
@@ -63,19 +64,19 @@
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
                             {{ form_label(form.departamento) }}
-                            {{ form_widget(form.departamento, { 'attr': {'class': 'form-control'} }) }}
+                            {{ form_widget(form.departamento) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
                             {{ form_label(form.provincia) }}
-                            {{ form_widget(form.provincia, { 'attr': {'class': 'form-control'} }) }}
+                            {{ form_widget(form.provincia ) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
                             {{ form_label(form.municipio) }}
-                            {{ form_widget(form.municipio, { 'attr': {'class': 'form-control'} }) }}
+                            {{ form_widget(form.municipio) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
                             {{ form_label(form.comunidad) }}
-                            {{ form_widget(form.comunidad, { 'attr': {'class': 'form-control'} }) }}
+                            {{ form_widget(form.comunidad ) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
                             {{ form_label(form.zona) }}
@@ -85,14 +86,14 @@
                             {{ form_label(form.direccion) }}
                             {{ form_widget(form.direccion, { 'attr': {'class': 'form-control'} }) }}
                         </div>   
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12 mb-10">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12 mb-10 alert alert-info">
                             <div id="mapMarker"></div>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5 alert alert-info">
                             {{ form_label(form.latitud) }}
                             {{ form_widget(form.latitud, { 'attr': {'class': 'form-control'} }) }}
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5 alert alert-info">
                             {{ form_label(form.longitud) }}
                             {{ form_widget(form.longitud, { 'attr': {'class': 'form-control'} }) }}
                         </div>
