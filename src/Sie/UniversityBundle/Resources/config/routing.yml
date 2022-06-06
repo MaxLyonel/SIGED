@@ -17,3 +17,7 @@ uni_university_sede:
 uni_maininfouni:
     resource: "@SieUniversityBundle/Resources/config/routing/maininfouni.yml"
     prefix:   /uni/maininfouni
+
+uni_carreras:
+    resource: "@SieUniversityBundle/Resources/config/routing/carreras.yml"
+    prefix:   /uni/carreras
