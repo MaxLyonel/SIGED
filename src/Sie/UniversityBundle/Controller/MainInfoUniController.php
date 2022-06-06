@@ -40,7 +40,7 @@ class MainInfoUniController extends Controller{
             'uni_staff'          => $this->buildOptionUni('staff_index', 'Personal Ejecutivo', $data)->createView(),
             'uni_infosede'       => $this->buildOptionUni('staff_index', 'Informacion Sede/sub Sede Central', $data)->createView(),
             'uni_statisticssede' => $this->buildOptionUni('staff_index', 'Estadisitica Sede/sub Sede Central', $data)->createView(),
-            'uni_statistics'     => $this->buildOptionUni('staff_index', 'Estadisticas', $data)->createView(),
+            'uni_statistics'     => $this->buildOptionUni('carreras_index', 'Estadisticas', $data)->createView(),
             ));    
     }
 

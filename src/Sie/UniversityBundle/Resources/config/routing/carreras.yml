@@ -1,0 +1,25 @@
+carreras_index:
+    path:     /
+    defaults: { _controller: "SieUniversityBundle:Carreras:index" }
+
+carreras_info:
+    path:     /info
+    defaults: { _controller: "SieUniversityBundle:Carreras:info" }
+
+carreras_new:
+    path:     /new
+    defaults: { _controller: "SieUniversityBundle:Carreras:new" }
+    options:
+        expose: true
+
+carreras_edit:
+    path:     /edit
+    defaults: { _controller: "SieUniversityBundle:Carreras:edit" }
+    options:
+        expose: true
+
+carreras_delete:
+    path:     /delete
+    defaults: { _controller: "SieUniversityBundle:Carreras:delete" }
+    options:
+        expose: true
