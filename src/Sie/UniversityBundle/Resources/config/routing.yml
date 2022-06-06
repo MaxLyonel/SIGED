@@ -2,9 +2,9 @@ sie_university_homepage:
     path:     /homepage
     defaults: { _controller: SieUniversityBundle:Default:index }
 
-sie_university_operativo:
-    path:     /operativo
-    defaults: { _controller: SieUniversityBundle:Default:operativo }
+sie_university_menu:
+    path:     /menu
+    defaults: { _controller: SieUniversityBundle:Default:menu }
 
 uni_staff:
     resource: "@SieUniversityBundle/Resources/config/routing/executivestaff.yml"
