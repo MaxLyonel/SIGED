@@ -465,7 +465,7 @@
                                                     </div>
                                                       <div class="col-sm-12" v-if="swsegip">
                                                         <div class="alert alert-danger" role="alert">
-                                                            validacion segip: Los datos registrados no coinciden...
+                                                            ${messagevalidatesegip}
                                                         </div>
                                                       </div>
                                                 </div>
@@ -796,6 +796,7 @@
                 justificacion: '',
                 informe: '',
                 urlreporte: '',
+                messagevalidatesegip: '',
 
                 DBsearch: [],
                 dataPerson: {
@@ -937,11 +938,18 @@
                     this.swperson = false;
                     this.swsegip = false;
                     this.disabledbutton = false;
+                    this.messagevalidatesegip = ''
+
+                    if(typeof(this.dataPerson.complementoval)  === 'undefined'){
+                        this.dataPerson.complementoval = '';
+                    }
+
                     
                     axios.get(Routing.generate('staff_validateDataSegip',this.dataPerson))
                         .then(response => {
                             this.swperson = response.data.swperson;
                             this.swsegip = response.data.swsegip;
+                            this.messagevalidatesegip = response.data.messagevalidatesegip;
                             if(this.swperson){
                                 this.dataPerson.newperson = this.swperson;
                             }

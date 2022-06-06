@@ -33,14 +33,19 @@ class MainInfoUniController extends Controller{
      * @return type obj form
      */    
     public function indexAction(){
-    	$data = bin2hex(serialize($this->baseData));
+    	$em      = $this->getDoctrine()->getManager();
+    	$data    = bin2hex(serialize($this->baseData));
+    	$objSede = $em->getRepository('SieAppWebBundle:UnivSede')->find($this->baseData['sedeId']);
+    	$enablePersonalStaffOption = ($objSede->getUnivSedeTipo()->getId()==1)?true:false;
+
         return $this->render('SieUniversityBundle:MainInfoUni:index.html.twig', array(
 
-            'tuicion' => true,
-            'uni_staff'          => $this->buildOptionUni('staff_index', 'Personal Ejecutivo', $data)->createView(),
-            'uni_infosede'       => $this->buildOptionUni('staff_index', 'Informacion Sede/sub Sede Central', $data)->createView(),
-            'uni_statisticssede' => $this->buildOptionUni('staff_index', 'Estadisitica Sede/sub Sede Central', $data)->createView(),
-            'uni_statistics'     => $this->buildOptionUni('carreras_index', 'Estadisticas', $data)->createView(),
+            'tuicion'                   => true,
+            'enablePersonalStaffOption' => $enablePersonalStaffOption,
+            'uni_staff'          		=> $this->buildOptionUni('staff_index', 'Personal Ejecutivo', $data)->createView(),
+            'uni_infosede'       		=> $this->buildOptionUni('staff_index', 'Informacion Sede/sub Sede Central', $data)->createView(),
+            'uni_statisticssede' 		=> $this->buildOptionUni('staff_index', 'Estadisitica Sede/sub Sede Central', $data)->createView(),
+            'uni_statistics'     		=> $this->buildOptionUni('carreras_index', 'Estadisticas', $data)->createView(),
             ));    
     }
 

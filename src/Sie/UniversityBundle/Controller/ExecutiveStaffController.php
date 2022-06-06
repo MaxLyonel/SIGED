@@ -66,7 +66,7 @@ class ExecutiveStaffController extends Controller{
 		    'arrRegisteredStaff'       => $arrRegisteredStaff,
 		    // 'swperson'                 => $swperson,
 		);
-		// dump($arrResponse);die;
+		
 		$response->setStatusCode(200);
 		$response->setData($arrResponse);        
 		return $response;
@@ -96,7 +96,7 @@ class ExecutiveStaffController extends Controller{
     	$em = $this->getDoctrine()->getManager();
         //get infor about person        
         $objPerson = $this->getPersonInfo($request->get('cibuscar'), $request->get('paterno'), $request->get('materno'), $request->get('nombre'), $request->get('fecNac'), $request->get('complementoval')   );  
-        // dump($objPerson);die;
+        
         // check if the person was in sede
         $existsPersonStaffRegistered = false;
         if(sizeof($objPerson)>0){
@@ -156,7 +156,7 @@ class ExecutiveStaffController extends Controller{
 	            'swperson'                    => $swperson,
                 'existsPersonStaffRegistered' => $existsPersonStaffRegistered,
 	      );
-	      // dump($arrResponse);die;
+	      
 	      $response->setStatusCode(200);
 	      $response->setData($arrResponse);        
 	      return $response;
@@ -170,7 +170,7 @@ class ExecutiveStaffController extends Controller{
           $arrResponse = array(             
             'arrOperative' => $arrOperative,
           );
-          // dump($arrResponse);die;
+          
           $response->setStatusCode(200);
           $response->setData($arrResponse);        
           return $response;        
@@ -179,7 +179,7 @@ class ExecutiveStaffController extends Controller{
     public function validateDataSegipAction(Request $request){
 
         $response = new JsonResponse();             
-
+        $message ='';
         
         $arrParametros = array(
             'complemento'=>mb_strtoupper($request->get('complemento'), 'utf-8'),
@@ -191,24 +191,25 @@ class ExecutiveStaffController extends Controller{
         if($request->get('extranjero') == 1){
             $arrParametros['extranjero'] = 'e';
         }      
-        dump($request->get('carnet'));
-        dump($arrParametros);
+        
         // get info segip
         $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $request->get('carnet'),$arrParametros,'prod', 'academico');
-        dump($answerSegip);die;
+
         if($answerSegip){
-            $objPerson = $this->getPersonInfo($request->get('cibuscar'), $request->get('paterno'), $request->get('materno'), $request->get('nombre'), $request->get('fecNac'), $request->get('complementoval')   );
+            $objPerson = $this->getPersonInfo($request->get('carnet'), $request->get('paterno'), $request->get('materno'), $request->get('nombre'), $request->get('fecNac'), $request->get('complementoval')   );
+
             if($objPerson){
-                $message = 'Persona ya se encuentra regsitrado';
+                $message = 'Persona ya se encuentra regsitrad@';
                 $answerSegip=false;
             }
         }else{
             $message = 'validacion segip: Los datos registrados no coinciden';
         }
-        
+
           $arrResponse = array(
                 'swperson' => $answerSegip,
                 'swsegip'  => !$answerSegip,
+                'messagevalidatesegip'  => $message,
                 'disabledbutton'  => true,
           );        
 
@@ -292,7 +293,7 @@ class ExecutiveStaffController extends Controller{
                 'arrRegisteredStaff'       => $arrRegisteredStaff,
                 // 'swperson'                 => $swperson,
             );
-            // dump($arrResponse);die;
+            
             $response->setStatusCode(200);
             $response->setData($arrResponse);        
             return $response;            
@@ -417,7 +418,7 @@ class ExecutiveStaffController extends Controller{
             'arrRegisteredStaff'       => $arrRegisteredStaff,
             // 'swperson'                 => $swperson,
         );
-        // dump($arrResponse);die;
+        
         $response->setStatusCode(200);
         $response->setData($arrResponse);        
         return $response;          
@@ -430,15 +431,8 @@ class ExecutiveStaffController extends Controller{
         $em = $this->getDoctrine()->getManager();
         // get the personal sede info
         $objPersonalStaff = $em->getRepository('SieAppWebBundle:UnivAutoridadUniversidad')->find($request->get('id'));
-        // dump(($objPersonalStaff->getPersona()->getId()));
-        $objPerson = $em->getRepository('SieAppWebBundle:Persona')->find($objPersonalStaff->getPersona()->getId());
-
         
-        // dump($objPersonalStaff->getUnivFormacionTipo()->getId());
-        // dump($objPersonalStaff->getUnivCargoJerarquicoTipo()->getId());
-        // // dump($objPerson);
-        // die;
-
+        $objPerson = $em->getRepository('SieAppWebBundle:Persona')->find($objPersonalStaff->getPersona()->getId());
 
         // build the array personal staff data 
         $arrPerson = array(
@@ -468,7 +462,7 @@ class ExecutiveStaffController extends Controller{
                         
 
         );
-        // dump($arrPerson);die;
+        
 
         // $em->persist($objPerson);
         // $em->flush();
@@ -491,7 +485,7 @@ class ExecutiveStaffController extends Controller{
                 'swpersonedit'                    => true,
                 'existsPersonStaffRegistered' => false,
           );
-          // dump($arrResponse);die;
+          
           $response->setStatusCode(200);
           $response->setData($arrResponse);        
           return $response;         
@@ -573,7 +567,7 @@ class ExecutiveStaffController extends Controller{
                 'arrRegisteredStaff'       => $arrRegisteredStaff,
                 // 'swperson'                 => $swperson,
             );
-            // dump($arrResponse);die;
+            
             $response->setStatusCode(200);
             $response->setData($arrResponse);        
             return $response;  
