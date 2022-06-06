@@ -47,7 +47,7 @@ oac_list_resolucion:
 
 oac_new_resolucion:
     path:     /newresolucion
-    defaults: { _controller: SieRieBundle:OfertaAcademica:newresolucion } 
+    defaults: { _controller: SieRieBundle:OfertaAcademica:newresoluciontramite } 
     methods:  POST                 
 
 oac_create_resolucion:

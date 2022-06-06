@@ -796,6 +796,7 @@ LIMIT ?';
             case 'SieEspecialBundle':
                 # code...
                 $typeSystem = 3;
+                break;
             case 'SiePermanenteBundle':
                 # code...
                 $typeSystem = 4;

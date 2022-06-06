@@ -1807,7 +1807,7 @@ class Notas{
                     if($this->session->get('ue_modular') == true and $nivel == 13){
                         $operativo = 3;
                         $fin = 3;
-                        if( in_array($gestion, array(2020,2021)) ){
+                        if( in_array($gestion, array(2020,2021,2022)) ){
                             $inicio = 6;
                             $fin = 8;
                         }                        
@@ -1992,7 +1992,7 @@ class Notas{
             //if($nivel == 11 or $nivel == 1 or $nivel == 403){
             if(($nivel == 11 or $nivel == 1 or $nivel == 403) ){
                 
-                if ($gestion == 2021) {
+                if ($gestion == 2022) {
                     for ($i=$inicio; $i <=$fin; $i++) { 
                         $swCloseOperative = false;
                         if($this->em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa'=>$sie, 'gestion'=>$gestion, "$arrConsolidation[$i]"=> 1))){
@@ -2039,7 +2039,7 @@ class Notas{
                 }
 
                 // VERIFICAMOS SI EL OPERATIVO ES MAYOR O IGUAL A 4 PARA CARGAR LA NOTA CUALITATIVA ANUAL
-                if (($operativo >= 3 and $gestion<2020 ) or ($gestion == 2021)) {
+                if (($operativo >= 3 and $gestion<2020 ) or ($gestion == 2022)) {
                     // Para inicial
                     $existe = false;
                     //dump($cualitativas);die;
@@ -4991,7 +4991,7 @@ die;/*
                     break;
             }
         }else{
-            if( $igestion != 2021){
+            if( $igestion != 2021 and $igestion != 2022){
                 $query = $this->em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
                 $query->execute();        
                 $resultado = $query->fetchAll();              

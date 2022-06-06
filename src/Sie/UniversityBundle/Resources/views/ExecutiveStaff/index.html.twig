@@ -404,7 +404,10 @@
 			                        </div>
 			                    </div>
 			                        <div class="panel-body">
-			                          <h4>Datos de la Busqueda</h4>
+                                        <div class="alert alert-info" role="alert">
+                                          Datos de la Busqueda
+                                        </div>
+			                          
 			                        	<form role="form" class="formatk">
 				                            <div class="row">
 				                              <div class="col-sm-4">
@@ -469,7 +472,8 @@
                                                         </div>
                                                       </div>
                                                 </div>
-                                            </div>                                              
+                                            </div>    
+                                            </form>                                          
 											{# data Personal University #}
 
                                             <div class="alert alert-warning" role="alert" v-if="existsPersonStaffRegistered">
@@ -477,6 +481,12 @@
                                             </div>
                                             <div v-else>
     											<div v-if="swperson">
+                                                </br>
+                                                <div class="alert alert-success" role="alert">
+                                                  Completar Información
+                                                </div>
+                                                
+                                                <form role="form" class="formatk">
                                                     <div class="row">
 
                                                       <div class="col-sm-6">
@@ -617,7 +627,9 @@
                                         </div>
                                     </div>
                                         <div class="panel-body">
-                                          <h4>Datos de la Persona </h4>
+                                            <div class="alert alert-info" role="alert">
+                                              Datos de la Persona
+                                            </div>                                        
                                             <form role="form" class="formatk" >
                                                 <div class="row">
                                                   <div class="col-sm-4">
@@ -661,10 +673,13 @@
                                                         </select>
                                                     </div> #}
                                                 </div>
-                                             
+                                                </form>
                                                 {# data Personal University #}
-
-                                                
+                                                </br>
+                                                <div class="alert alert-success" role="alert">
+                                                  Información Universidad a modificar
+                                                </div>                                                  
+                                                <form role="form" class="formatk">
                                                     
                                                         <div class="row">
 
