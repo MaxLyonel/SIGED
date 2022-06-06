@@ -172,10 +172,13 @@
                         <ul class="nav navbar-nav navbar-left">
 
                             <!-- Start sidebar shrink -->
-                            <li class="navbar-minimize">https://www.youtube.com/watch?v=bBz0h-vptSI
+                            <li class="navbar-minimize">
                             <!-- Start form search -->
-                            <li class="navbar-search">
-                                
+                            <li class="navbar-search header-content" style="padding: 13px 13px; background: transparent; border-bottom: 0px;">
+                                <h2 style="color: #fff;">                                   
+                                    {{ app.session.get('sede') }}
+                                    <span style="color: #fff;"> {{app.session.get('subsede')}} </span>                                    
+                                </h2>
                             </li>
                         </ul><!-- /.navbar-left -->
                         <!--/ End left navigation -->

@@ -40,27 +40,35 @@ class SedeController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $form = $request->get('form');
-        if(isset($form['sede'])){
-            $sedeId = base64_decode($form['sede']);
+        if(isset($form['gestion'])){
+            $gestionId = ($form['gestion']);
+        } else {
+            $gestionId = $gestionActual-1;
+        }  
+        //dump($gestionId,$form);die;
+        $data = (unserialize(hex2bin($form['data'])));
+        $form = $data;
+        //dump($form);die;
+        if(isset($form['sedeId'])){
+            $sedeId = ($form['sedeId']);
         } else {
             $sedeId = 0;
-        }
-        if(isset($form['gestion'])){
-            $gestionId = base64_decode($form['gestion']);
-        } else {
-            $gestionId = $gestionActual;
-        }        
+        }      
 
 
-        $this->session->set('sedeId', $sedeId);
+        // $this->session->set('sedeId', $sedeId);
 
         $entityUnivSedeActual = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
         $titulo = $entityUnivSedeActual->getUnivUniversidad()->getUniversidad();
         $subtitulo = $entityUnivSedeActual->getSede();
 
+        // $this->session->set('sede', $titulo);
+        // $this->session->set('subsede', $subtitulo);
+
         $sedeSucursalEntity = $em->getRepository('SieAppWebBundle:UnivSedeSucursal')->findBy(array('univSede'=>$sedeId, 'gestionTipo'=>$gestionId));
         
         $info = base64_encode(json_encode(array('sedeId'=>$sedeId,'gestionId'=>$gestionId)));
+        $info = bin2hex(serialize(array('sedeId'=>$sedeId,'gestionId'=>$gestionId)));
 
         if (count($sedeSucursalEntity) > 0){
             $editar = true;
@@ -101,7 +109,7 @@ class SedeController extends Controller
         }
 
         $datos = array(
-            'info'=>$info,
+            'data'=>$info,
             'telefono'=>$telefono,
             'celular'=>$celular,
             'referenciaCelular'=>$referenciaCelular,
@@ -121,6 +129,7 @@ class SedeController extends Controller
             'gestion'=>$gestionId
         );
         
+/*        
         $entity = $em->getRepository('SieAppWebBundle:GestionTipo');
         $query = $entity->createQueryBuilder('gt')
                 ->orderBy('gt.id', 'DESC')
@@ -128,7 +137,6 @@ class SedeController extends Controller
                 ->getQuery();
         $gestiones = $query->getResult();
 
-/*
         $entityDocAdm = $em->getRepository('SieAppWebBundle:UnivUniversidadSedeDocenteAdm');
         $query = $entityDocAdm->createQueryBuilder('usda')
                 ->orderBy('usda.fechaActualizacion', 'DESC')
@@ -140,7 +148,12 @@ class SedeController extends Controller
         $docentesAdministrativos = $query->getQuery()->getResult();
 */
 
-        
+        $univRegistroConsolidacionEntity = $em->getRepository('SieAppWebBundle:UnivRegistroConsolidacion')->findBy(array('univSede' => $sedeId),array('gestionTipo'=>'DESC'));
+        $gestiones = array();
+        foreach ($univRegistroConsolidacionEntity as $registro) {
+            $gestiones[] = $registro->getGestionTipo();       
+        }
+
         $cantidadDocentesAdministrativos = $this->cantidadSedeDocenteAdministrativo($sedeId,$gestionId);
 
         return $this->render('SieUniversityBundle:Sede:index.html.twig', array(
@@ -152,6 +165,7 @@ class SedeController extends Controller
             'editar' => $editar,
             'repDocentesAdministrativos' => $cantidadDocentesAdministrativos
         ));
+
     }
 
 
@@ -200,7 +214,7 @@ class SedeController extends Controller
         $datos['comunidad']['lugar'] = $localidadArray;
         
         $form = $this->createFormBuilder($datos)
-        ->add('info', 'hidden', array('label' => 'Info', 'attr' => array('value' => $datos['info'])))
+        ->add('data', 'hidden', array('label' => 'Info', 'attr' => array('value' => $datos['data'])))
         ->add('telefono', 'text', array('label' => 'Nro. de Teléfono', 'required' => false, 'attr' => array('value' => $datos['telefono'], 'autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}', 'placeholder' => '########')))
         ->add('celular', 'text', array('label' => 'Nro. de Celular', 'required' => false, 'attr' => array('value' => $datos['celular'], 'autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}', 'placeholder' => '########')))
         ->add('referenciaCelular', 'text', array('label' => 'Referencia de celular', 'required' => false, 'attr' => array('value' => $datos['referenciaCelular'], 'autocomplete' => 'off', 'class' => 'form-control jcell', 'pattern' => '[0-9]{8}', 'placeholder' => '########')))
@@ -294,9 +308,15 @@ class SedeController extends Controller
         $gestionActual = date_format($fechaActual,'Y');
         $response = new JsonResponse();
 
-        $info = $request->get('info');
+        // $info = $request->get('info');
+        // if($info != ""){
+        //     $info = json_decode(base64_decode($info), true);
+        // }
+
+        //dump($request->get('data'));die;
+        $info = $request->get('data');
         if($info != ""){
-            $info = json_decode(base64_decode($info), true);
+            $info = unserialize(hex2bin($info));
         }
 
         $sedeId = $info['sedeId'];
@@ -363,9 +383,10 @@ class SedeController extends Controller
         }
 
         $info = base64_encode(json_encode(array('sedeId'=>$sedeId,'gestionId'=>$gestionId,'sedeSucursalId'=>$sedeSucursalId)));
+        $info = bin2hex(serialize(array('sedeId'=>$sedeId,'gestionId'=>$gestionId,'sedeSucursalId'=>$sedeSucursalId)));
 
         $datos = array(
-            'info'=>$info,
+            'data'=>$info,
             'telefono'=>$telefono,
             'celular'=>$celular,
             'referenciaCelular'=>$referenciaCelular,
@@ -421,10 +442,15 @@ class SedeController extends Controller
         $form = $request->get('form');
         $em = $this->getDoctrine()->getManager();
 
-        $info = $form['info'];
+        // $info = $form['info'];
+        // if($info != ""){
+        //     $info = json_decode(base64_decode($info), true);
+        // }
+
+        $info = $form['data'];
         if($info != ""){
-            $info = json_decode(base64_decode($info), true);
-        }
+            $info = unserialize(hex2bin($info));
+        }        
 
         $sedeId = $info['sedeId'];
         $gestionId = $info['gestionId'];
@@ -515,10 +541,15 @@ class SedeController extends Controller
         $gestionActual = date_format($fechaActual,'Y');
         $response = new JsonResponse();
 
-        $info = $request->get('info');
+        // $info = $request->get('info');
+        // if($info != ""){
+        //     $info = json_decode(base64_decode($info), true);
+        // }
+
+        $info = $request->get('data');
         if($info != ""){
-            $info = json_decode(base64_decode($info), true);
-        }
+            $info = unserialize(hex2bin($info));
+        }  
 
         $sedeId = $info['sedeId'];
         $gestionId = $info['gestionId'];
@@ -557,8 +588,9 @@ class SedeController extends Controller
 
         $array = array();
         foreach ($universidadSedeDocenteAdmEntity as $dato) {
-            $info = base64_encode(json_encode(array('sedeId'=>$sedeId,'gestionId'=>$gestionId,'cargoId'=>$dato['cargo_tipo_id'], 'generoId'=>$dato['genero_tipo_id'])));
-            $array[$dato['cargo']][$dato['genero']] = array('cantidad'=>$dato['cantidad'], 'info'=>$info);
+            //$info = base64_encode(json_encode(array('sedeId'=>$sedeId,'gestionId'=>$gestionId,'cargoId'=>$dato['cargo_tipo_id'], 'generoId'=>$dato['genero_tipo_id'])));
+            $info = bin2hex(serialize(array('sedeId'=>$sedeId,'gestionId'=>$gestionId,'cargoId'=>$dato['cargo_tipo_id'], 'generoId'=>$dato['genero_tipo_id'])));
+            $array[$dato['cargo']][$dato['genero']] = array('cantidad'=>$dato['cantidad'], 'data'=>$info);
         }  
 
         $arrayFormulario = array('estado'=>$estado, 'msg'=>$msg, 'titulo' => "Modificación de cantidad de Docentres / Administrativos", 'datos'=>$array);
@@ -595,7 +627,9 @@ class SedeController extends Controller
             $sedeId = 0;
             $gestionId = 0;
             foreach ($form as $clave => $valor) {
-                $info = json_decode(base64_decode($clave), true);
+                //$info = json_decode(base64_decode($clave), true);
+               
+                $info = unserialize(hex2bin($clave));
                 $cantidad = $valor;
                 $sedeId = $info['sedeId'];
                 $gestionId = $info['gestionId'];
