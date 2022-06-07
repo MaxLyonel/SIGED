@@ -59,8 +59,11 @@ class SedeController extends Controller
         // $this->session->set('sedeId', $sedeId);
 
         $entityUnivSedeActual = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
-        $titulo = $entityUnivSedeActual->getUnivUniversidad()->getUniversidad();
-        $subtitulo = $entityUnivSedeActual->getSede();
+        //$titulo = $entityUnivSedeActual->getUnivUniversidad()->getUniversidad();
+        //$subtitulo = $entityUnivSedeActual->getSede();
+
+        $titulo = "Reporte";
+        $subtitulo = "Ubicación geográfica";
 
         // $this->session->set('sede', $titulo);
         // $this->session->set('subsede', $subtitulo);
