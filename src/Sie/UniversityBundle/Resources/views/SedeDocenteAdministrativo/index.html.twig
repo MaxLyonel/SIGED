@@ -126,16 +126,20 @@
                                                             </tr>
                                                         </tfoot>              
                                                         <tbody>
+                                                            {% set x = 0 %}
                                                             {% for key1, dat1 in datos %}
+                                                                {% set x = x + 1 %}
                                                                 <tr>
                                                                     {% if loop.first %}
                                                                     {% else %}
                                                                         <td>
                                                                             <label>{{key1}}</label>
                                                                         </td>
+                                                                        {% set y = 0 %}
                                                                         {% for key2, dat2 in dat1 %}
+                                                                            {% set y = y + 1 %}
                                                                             <td style="text-align:center;">
-                                                                                <input type="number" id="form_{{dat2.data}}" name="form[{{dat2.data}}]" min="0" max="10000" value="{{dat2.cantidad}}" class="form-control">
+                                                                                <input type="number" id="form_{{dat2.data}}" name="form[{{dat2.data}}]" min="0" max="10000" value="{{dat2.cantidad}}" class="form-control clase{{y}}" onclick="calculaTotales()" oninput="calculaTotales()">
                                                                             </td>
                                                                         {% endfor %}  
                                                                     {% endif %}
@@ -143,18 +147,18 @@
                                                             {% endfor %}
                                                             {% for key1, dat1 in datos %}
                                                                 {% if loop.first %}
-                                                                    <!--
                                                                     <tr>
                                                                         <td style="text-align:left; background-color: #EEEEEE;">
                                                                             <label>{{key1}}</label>
                                                                         </td> 
+                                                                        {% set y = 0 %}
                                                                         {% for key2, dat2 in dat1 %}
+                                                                            {% set y = y + 1 %}
                                                                             <td style="text-align:left; background-color: #EEEEEE;">
-                                                                                <strong>&nbsp;&nbsp;&nbsp;&nbsp;{{dat2}}</strong>
+                                                                                <strong id="clase{{y}}_total">&nbsp;&nbsp;&nbsp;&nbsp;{{dat2}}</strong>
                                                                             </td>
                                                                         {% endfor %} 
                                                                     </tr>
-                                                                    -->
                                                                 {% endif %}
                                                             {% endfor %}
                                                         </tbody>
@@ -193,6 +197,33 @@
         return true;
     };
 
+    var calculaTotales = function (){
+        // var masculinos = document.getElementsByName('masculino[]');
+        // var femeninos = document.getElementsByName('femenino[]');
+        var cantidadMasculino = 0;
+        var cantidadFemenino = 0;
+        // for (var i=0; i < masculinos.length; i++){
+            // cantidadMasculino = parseInt(cantidadMasculino) + parseInt(masculinos[i].value);
+        // }
+        // for (var i=0; i < femeninos.length; i++){
+            // cantidadFemenino = parseInt(cantidadFemenino) + parseInt(femeninos[i].value);
+        // }
+        // $('#total_masculino').html(cantidadMasculino);
+        // $('#total_femenino').html(cantidadFemenino);
+
+        $('.clase1').each(function(i,obj){
+            cantidadMasculino = parseInt(cantidadMasculino) + parseInt(obj.value);
+        });
+
+        $('.clase2').each(function(i,obj){
+            cantidadFemenino = parseInt(cantidadFemenino) + parseInt(obj.value);
+        });
+
+        $('#clase1_total').html(cantidadMasculino);
+        $('#clase2_total').html(cantidadFemenino);
+    };
+
+
     $('#form_guardar').on("click", function(){
         var peticion;
         if (peticion && peticion.readyState != 4) {
@@ -212,7 +243,7 @@
 
         $.ajax({
             type: 'post',
-            url: Routing.generate('sie_university_sede_reporte_docente_administrativo_save'),
+            url: Routing.generate('sie_university_sede_docente_administrativo_save'),
             data: formData,
             processData: false,
             contentType: false,
