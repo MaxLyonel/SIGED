@@ -328,7 +328,7 @@ class SedeController extends Controller
 
         if($id_usuario == ""){             
             $estado = false;   
-            $msg = "Su sesión finalizo, ingrese nuevamente";      
+            $msg = "Su sesión finalizo, ingrese nuevamente";     
             return $response->setData(array('estado' => $estado, 'msg' => $msg));
         }
 
@@ -422,7 +422,7 @@ class SedeController extends Controller
         );
 
         $arrayFormulario = array('estado'=>$estado, 'msg'=>$msg, 'titulo' => "Modificación de Sede / Sub Sede", 'form'=>$formSedeSucursal, 'sedeDetalle'=>$sedeDetalle);
-                
+        $response->setStatusCode(200);
         return $this->render('SieUniversityBundle:Sede:form.html.twig', $arrayFormulario);
 
     }

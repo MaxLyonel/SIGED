@@ -64,12 +64,7 @@
     {% set nombre = "" %}
   {% endif %}  
     <div class="row">
-        <div class="col-lg-2 col-md-2 col-sm-4 col-sx-12">    
-            <form name="form" id="form" role="form" action="{{ path('sie_university_sede_index') }}" method="POST" onsubmit="return verificaCampos()">
-                <input type="hidden" name="_token" value="{{ csrf_token('gestiones') }}">
-                <input type="hidden" id="form_gestion" name="form[gestion]" value="">  
-                <input type="hidden" id="form_data" name="form[data]" value="{{datos.data}}">                 
-            </form>            
+        <div class="col-lg-2 col-md-2 col-sm-4 col-sx-12">              
             <ul class="nav nav-pills nav-stacked nav-email rounded">
                 {% for gestion in gestiones %}
                     {% set id = gestion.id %}
@@ -81,6 +76,11 @@
                     </li>
                 {% endfor %}
             </ul>
+            <form name="form" id="form" role="form" action="{{ path('sie_university_sede_index') }}" method="POST" onsubmit="return verificaCampos()">
+                <input type="hidden" name="_token" value="{{ csrf_token('gestiones') }}">
+                <input type="hidden" id="form_gestion" name="form[gestion]" value="">  
+                <input type="hidden" id="form_data" name="form[data]" value="{{datos.data}}">                 
+            </form>  
         </div>
         <div class="col-lg-10 col-md-10 col-sm-8 col-sx-12">
             <div class="panel shadow panel-danger">
@@ -158,35 +158,35 @@
 {% block javascripts%}
 {{parent()}}
 <script>
-
-    var ingresoSedeSucursal = function (data){
+    
+    var ingresoSedeSucursal = function (datos){
         var peticion;
         if (peticion && peticion.readyState != 4) {
             peticion.abort();
         }
         $.ajax({
             type: 'post',
-            url: Routing.generate('sie_university_sede_form', {'data': data}),
+            url: Routing.generate('sie_university_sede_form', {'data': datos}),
             beforeSend: function () {
                 $("#modalBody").empty();
-                $("#modalBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                $("#modalBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="img-responsive" /></div>');
             },
             success: function (data) {      
                 $("#modalBody").empty();  
-                $("#modalBody").html(data);                  
+                $("#modalBody").html(data);
             },
             error: function(error){          
                 $("#modalBody").empty();           
                 $("#modalBody").append('<div class="text-center">Error</div>');   
             },
-        });     
+        });    
     };
 
 
     {% if datos.latitud != "" %}
         mapboxgl.accessToken = 'pk.eyJ1IjoianVybGFuIiwiYSI6ImNqd3RkNjZjYzAxd2k0MGw1a3A4dmJuZjIifQ.hcnCGlBc18MaYfIFG22P-Q'; // Nuestro Token de acceso
         var map = new mapboxgl.Map({
-            container: 'map', // id del contenedor
+            container: 'map', // id del contenedormsg
             style: 'mapbox://styles/mapbox/streets-v9', // localización del mapa de estilo
             center: [{{datos.latitud}},{{datos.longitud}}], // Posición inicial
             zoom: 13 // Zoom inicial
