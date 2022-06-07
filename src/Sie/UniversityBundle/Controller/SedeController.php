@@ -59,8 +59,11 @@ class SedeController extends Controller
         // $this->session->set('sedeId', $sedeId);
 
         $entityUnivSedeActual = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
-        $titulo = $entityUnivSedeActual->getUnivUniversidad()->getUniversidad();
-        $subtitulo = $entityUnivSedeActual->getSede();
+        //$titulo = $entityUnivSedeActual->getUnivUniversidad()->getUniversidad();
+        //$subtitulo = $entityUnivSedeActual->getSede();
+
+        $titulo = "Reporte";
+        $subtitulo = "Ubicación geográfica";
 
         // $this->session->set('sede', $titulo);
         // $this->session->set('subsede', $subtitulo);
@@ -328,7 +331,7 @@ class SedeController extends Controller
 
         if($id_usuario == ""){             
             $estado = false;   
-            $msg = "Su sesión finalizo, ingrese nuevamente";      
+            $msg = "Su sesión finalizo, ingrese nuevamente";     
             return $response->setData(array('estado' => $estado, 'msg' => $msg));
         }
 
@@ -422,7 +425,7 @@ class SedeController extends Controller
         );
 
         $arrayFormulario = array('estado'=>$estado, 'msg'=>$msg, 'titulo' => "Modificación de Sede / Sub Sede", 'form'=>$formSedeSucursal, 'sedeDetalle'=>$sedeDetalle);
-                
+        $response->setStatusCode(200);
         return $this->render('SieUniversityBundle:Sede:form.html.twig', $arrayFormulario);
 
     }

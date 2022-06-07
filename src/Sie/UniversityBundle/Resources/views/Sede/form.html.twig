@@ -15,7 +15,7 @@
             {% set decretoSupremo = "" %}
             {% set naturalezaJuridica = "" %}
         {% endif %}    
-        <h3>{{ nombre }}</h3>
+        <h3 style="margin-top:0px;">{{ nombre }}</h3>
         <h5><i class="fa fa-university fa-muted fa-fw"></i> R.M.:  {{ resolucionMinisterial }}</h5>
         <p><i class="fa fa-building-o fa-muted fa-fw"></i> D.S.: {{ decretoSupremo }}</p>
         <p><i class="fa fa-code-fork fa-muted fa-fw"></i> N.J.: {{ naturalezaJuridica }}</p>
@@ -25,7 +25,7 @@
     {% if form is defined %}
         <div class="col-lg-12 col-md-12" id="maestroNuevo">
             <div class="tile orange style="height: auto;">
-                {{form_start(form, {'attr': {'role': "form", 'id': "formSedeSucursal"} } )}}
+                {{form_start(form, {'attr': {'role': "form", 'id': "formSedeSucursal", 'style': "padding:5px; margin-top:0px; margin-bottom:0px;"} } )}}
                     {{ form_widget(form.data) }}
                     <div class="row"> 
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
@@ -62,6 +62,8 @@
                             {{ form_label(form.sitioWeb) }}
                             {{ form_widget(form.sitioWeb, { 'attr': {'class': 'form-control'} }) }}
                         </div>
+                    </div>
+                    <div class="row"> 
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
                             {{ form_label(form.departamento) }}
                             {{ form_widget(form.departamento) }}
@@ -115,9 +117,7 @@
         autoclose: true,
         todayHighlight: true,
         format: 'dd-mm-yyyy',
-		language: 'es',
-        //endDate: '2022',
-        //startDate: '1800',
+		language: 'es'
     });
 
     mapboxgl.accessToken = 'pk.eyJ1IjoianVybGFuIiwiYSI6ImNqd3RkNjZjYzAxd2k0MGw1a3A4dmJuZjIifQ.hcnCGlBc18MaYfIFG22P-Q'; // Nuestro Token de acceso
@@ -137,7 +137,7 @@
         $('#form_longitud').val(lngLat.lng);
     }
 
-    //marker = new mapboxgl.Marker();
+   
     marker = new mapboxgl.Marker().setLngLat([{{sedeDetalle.latitud}},{{sedeDetalle.longitud}}]).addTo(mapMarker);
     mapMarker.on('click',add_marker.bind(this));
     
