@@ -9,10 +9,10 @@
         <ol class="breadcrumb">
             <li>
                 <i class="fa fa-home"></i>
-                <a href="{{path('principal_web')}}">Inicio</a>
+                <a href="#">Principal</a>
                 <i class="fa fa-angle-right"></i>
             </li>
-            <li class="active">Menú Principal</li>
+            <li class="active">Registro de Información</li>
         </ol>
     </div>
 </div>
@@ -23,6 +23,7 @@
 
     {% if tuicion %}
         <div class="row">
+        	{% if enablePersonalStaffOption == 1 %}
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
                     <img src="{{asset('img/uni_staff.png')}}" alt="">
@@ -36,6 +37,7 @@
                     </div>
                 </div>
             </div>
+        	{% endif %}
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
                     <img src="{{asset('img/uni_infosede.png')}}" alt="">
@@ -49,6 +51,7 @@
                     </div>
                 </div>
             </div>
+        	{% if enablePersonalStaffOption == 1 %}
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
                     <img src="{{asset('img/uni_statisticssede.png')}}" alt="">
@@ -62,6 +65,7 @@
                     </div>
                 </div>
             </div>
+        	{% endif %}
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
                     <img src="{{asset('img/uni_statistics.png')}}" alt="">

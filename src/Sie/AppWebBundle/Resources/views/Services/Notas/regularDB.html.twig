@@ -12,7 +12,7 @@
 
 {% if notas.cuantitativas|length > 0 %}
 
-    {% if notas.gestion == 2021 and notas.nivel == 11 %}
+    {% if notas.gestion == 2022 and notas.nivel == 11 %}
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-bordered cf" style="backgroud:#FFFFFF">
@@ -62,7 +62,7 @@
                                                         <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
                                                         <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
                                                         <p class="text-justify">
-                                                            <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="20" cols="50" style="resize:vertical; max-height: 270px; text-transform:uppercase" maxlength="250" minlength="16">{{c.notaCualitativa}}</textarea>
+                                                            <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="20" cols="50" style="resize:vertical; max-height: 270px; text-transform:uppercase" maxlength="300" minlength="200">{{c.notaCualitativa}}</textarea>
                                                         </p>
                                                     {% else %}
                                                         <p class="text-justify">
@@ -94,7 +94,7 @@
                                                         <input type="hidden" name="idEstudianteNotaCualitativa[]" value="{{c.idEstudianteNotaCualitativa}}">
                                                         <input type="hidden" name="idNotaTipoCualitativa[]" value="{{c.idNotaTipo}}">
                                                         <p class="text-justify">
-                                                            <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="3" cols="50" style="resize:vertical; max-height: 270px; text-transform:uppercase" maxlength="400" minlength="16">{{c.notaCualitativa}}</textarea>
+                                                            <textarea class="form-control jnumbersletters notaCualitativa" name="notaCualitativa[]" rows="3" cols="50" style="resize:vertical; max-height: 270px; text-transform:uppercase" maxlength="300" minlength="200">{{c.notaCualitativa}}</textarea>
                                                         </p>
                                                     {% else %}
                                                         <p class="text-justify">

@@ -33,14 +33,23 @@ class MainInfoUniController extends Controller{
      * @return type obj form
      */    
     public function indexAction(){
-    	$data = bin2hex(serialize($this->baseData));
-        return $this->render('SieUniversityBundle:MainInfoUni:index.html.twig', array(
+    	$em      = $this->getDoctrine()->getManager();
+    	$data    = bin2hex(serialize($this->baseData));
+    	$objSede = $em->getRepository('SieAppWebBundle:UnivSede')->find($this->baseData['sedeId']);
+        $enablePersonalStaffOption = ($objSede->getUnivSedeTipo()->getId()==1)?true:false;
+        
+        if (!isset($this->baseData['sedeId'])) {
+            return $this->redirect($this->generateUrl('login'));
+        }
 
-            'tuicion' => true,
-            'uni_staff'          => $this->buildOptionUni('staff_index', 'Personal Ejecutivo', $data)->createView(),
-            'uni_infosede'       => $this->buildOptionUni('staff_index', 'Informacion Sede/sub Sede Central', $data)->createView(),
-            'uni_statisticssede' => $this->buildOptionUni('staff_index', 'Estadisitica Sede/sub Sede Central', $data)->createView(),
-            'uni_statistics'     => $this->buildOptionUni('carreras_index', 'Estadisticas', $data)->createView(),
+        return $this->render('SieUniversityBundle:MainInfoUni:index.html.twig', array(
+            'tuicion'                   => true,
+            'enablePersonalStaffOption' => $enablePersonalStaffOption,
+            'uni_staff'          		=> $this->buildOptionUni('staff_index', 'Personal Ejecutivo', $data)->createView(),
+            'uni_infosede'       		=> $this->buildOptionUni('sie_university_sede_index', 'Informacion Sede/sub Sede Central', $data)->createView(),
+            'uni_statisticssede' 		=> $this->buildOptionUni('sie_university_sede_docenteadministrativo_index', 'Estadisitica Sede/sub Sede Central', $data)->createView(),
+            'uni_statistics'     		=> $this->buildOptionUni('carreras_index', 'Estadisticas', $data)->createView(),
+
             ));    
     }
 
