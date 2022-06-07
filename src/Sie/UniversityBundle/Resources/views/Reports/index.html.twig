@@ -1,0 +1,450 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+    
+    <style type="text/css">
+        [v-cloak]{
+            display: none;
+        }
+        .buscador{
+            margin-top: -20px;
+            /* background: #E4E4E4; */
+            padding: 10px;
+        }
+        .encabezado{
+            padding: 5px;
+            /* font-weight: bold; */
+        }
+        .estudiante{
+            padding: 10px;
+            background: #EEEEEE;
+            text-align: center;
+            font-weight: bold;
+            font-size: 17px;
+        }
+        .jupper{
+            text-transform: uppercase;
+        }
+        input[type='text']{
+            /* background: #000000; */
+            text-transform: uppercase;
+            color: #000000 !important;
+        }
+        .select-nota:hover{
+            /* border-color: #60AA5D; */
+            background: #EAFBF1;
+            color: #009900;
+        }
+        .seleccionado{
+            background: #B8F1CA !important;
+        }
+        .headtabla{
+            background: #717171 !important;
+            color: #FFFFFF;
+            border-bottom: none !important;
+        }
+        .check{
+            /* background: #EEEEEE; */
+            /* margin-right: 30px; */
+        }
+        h5{
+            font-weight: bold;
+        }
+        .cajaPromedio{
+            font-weight: bold; 
+            /* background:#DDDDDD; */
+            background:#EAEAEA !important;
+        }
+        .cajaNota{
+            cursor: pointer;
+        }
+
+        .include{
+            margin: 20px;
+        }
+        .titulo{
+            padding: 5px;
+        }
+        .tachado{
+            text-decoration: line-through;
+            /* color: #D5956E; */
+            /* color:  #D51528; */
+            color:  #555555;
+            opacity: 0.4;
+            /* display: none; */
+        }
+        /* nota seleccionada */
+        .notaNueva{
+            /* color: #1EB480; */
+            /* color: #7B7DA7; */
+            font-size: 1.2em;
+        }
+        .notaNuevaAprobado{
+            /* color: #1EB480; */
+            color: #5CA813;
+            font-size: 1.2em;
+        }
+        .notaNuevaReprobado{
+            /* color: #1EB480; */
+            color: #E62220;
+            font-size: 1.2em;
+        }
+        input[type=”file”]#image {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+        label[for="image"] {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            background-color: #14A1DA;
+            display: inline-block;
+            transition: all .5s;
+            cursor: pointer;
+            padding: 5px 20px !important;
+            width: fit-content;
+            text-align: center;
+        }
+        .vistaModificaciones{
+            float: right;
+            font-size: 1.2em;
+        }
+        textarea{
+            resize: vertical;
+        }
+    </style>
+    <style type="text/css">
+        .requisitos{
+            background: #EEEEEE;
+            padding: 5px;
+            padding-left: 50px;
+            box-shadow: 4px 4px #DDDDDD;
+            margin-bottom: 15px;
+        }
+        .requisitos > .checkbox > label{
+            color: #2A3271;
+            font-size: 1.2rem !important;
+        }
+    </style>
+    <style type="text/css">
+        .row > div{
+          /*background: #f2f2f2;*/
+          padding: 2px;
+          border: 0px solid grey;
+        }
+
+        *{box-sizing:border-box;}
+
+        .formatk{
+            width:750px;
+            padding:16px;
+            border-radius:10px;
+            margin:auto;
+            background-color:#e5e7e9 ;
+        }
+        .formatyears {
+            width:200px;
+            padding:16px;
+            border-radius:10px;
+            margin:auto;
+            background-color:#e5e7e9;
+        }
+        .formatallstaff{
+            width:100%;
+            padding:16px;
+            border-radius:10px;
+            margin:auto;
+            background-color:#e5e7e9;
+        }
+
+
+        .modal { 
+            position: fixed; 
+            top: 3%; 
+            right: 3%; 
+            left: 3%; 
+            width: auto; 
+            margin: 0; 
+        }
+        .modal-body { 
+            height: 60%; 
+        }
+    </style>
+    <link rel="stylesheet" href="{{asset('css/kcssformat.css')}}">
+    
+
+    <div class="header-content">
+        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Universidad <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Reportes</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Reporte General</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="include animated fadeIn">
+
+    </div>
+    <div id="app">
+    <div v-cloak>
+        <div class="body-content animated fadeIn">
+
+
+            {# star tthis is the new #}
+
+
+            <div class="panel panel-primary" >
+                <div class="panel-heading yearOld">
+                    <h3 class="panel-title"> <i class="fa fa-file"></i> Reporte General ${yearSelected}</h3>
+                </div>
+                <div class="panel-body">
+
+                     <div class="row">
+                        <div class="col-sm-2">
+                            <div class="formatyears">
+                                <table class="table ">
+                                  <thead class="thead-dark">
+                                    <tr>
+                                      <th scope="col">#</th>
+                                      <th scope="col">Gestion</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr v-for="(operative, index) in arrOperative">
+                                      <th scope="row">${index+1}</th>
+                                      <td>  <a href='#' v-on:click.prevent="getAllReports(operative.gestion_tipo_id)">${operative.gestion_tipo_id}</a></td>
+                                    </tr>                         
+                                  </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-sm-10">
+
+                            <div v-if="buscandoall" class="text-center">
+                                <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                            </div>
+                            <div class="panel panel-default" v-if="swgetinfostaff">
+                                <div class="panel-heading container-fluid">
+                                    <h3 class="panel-title"> <i class="fa fa-file"></i> Reporte General ${yearSelected}</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <div class="formatallstaff">
+                                                <div class="table-responsive">
+                                                    <table class="table" v-if="datareports.length>0" border="0">
+                                                      <thead class="thead-dark">
+                                                        <tr>
+                                                          <th scope="col">#</th>
+                                                          <th scope="col">Reporte</th>
+                                                          
+                                                        </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                        <tr v-for=" (reports, index) in datareports ">
+                                                          <th scope="row">${index + 1}</th>
+                                                              <td>
+                                                                <div class="panel-body">
+                                                                    
+                                                                    
+                                                                        <a v-bind:href="reports.urlreporte" target="_blank"><b> <i class="fa fa-file-pdf-o fa-1x"></i> Descargar Reporte General</b></a>
+                                                                    
+                                                                </div>
+                                                              </td>
+                                                        </tr>                         
+                                                      </tbody>
+                                                    </table>    
+                                                </div>
+                                            </div>
+                                            <div class="text-center">
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                         
+                        </div>
+                     </div>
+                </div>
+
+
+            {# end this is the new #}
+
+
+
+        </div>
+
+
+
+    </div>
+
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script>
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                
+                buscando: false,
+                respuesta: '',
+
+                datos: [],
+
+                justificacion: '',
+                informe: '',
+                urlreporte: '',
+                messagevalidatesegip: '',
+
+                DBsearch: [],
+                dataPerson: {
+                            cargo:"",
+                            carnet:"",
+                            casilla:"",
+                            complemento:"",
+                            descripcion:"",
+                            documentos_acad:"",
+                            email:"",
+                            expedido:"",
+                            expedidoId:"",
+                            expedidoId2:"",
+                            extranjero:"",
+                            fax:"",
+                            fecNac:"",
+                            fecha_registro_firma:"",
+                            foreign:"",
+                            formacion:"",
+                            formaciondescripcion:"",
+                            genero:"",
+                            generoId:"",
+                            gestion_nombramiento_id:"",
+                            materno:"",
+                            nombre:"",
+                            paterno:"",
+                            personId:"",
+                            ratificacion_anio_fin:"",
+                            ratificacion_anio_ini:"",
+                            ref:"",
+                            telefono:"",                
+                },
+                dataPersonEdit: [],
+                DBTraining: [],
+                DBPosition: [],
+                datareports: [],
+                arrOperative:[],
+                answer: false,
+                swperson: false,                
+                swpersonedit: false,                
+                swsegip: false,                
+                yearSelected:0,
+                buscandoall: false,
+                disabledbutton: false,
+                swgetinfostaff: false,
+                sedeId: {{ sedeId }},
+                existsPersonStaffRegistered: false,
+
+                
+
+            },
+            mounted(){
+                this.getAllOperative(this.sedeId);
+            },
+            methods: {
+
+                getAllOperative: function(sedeId){
+                    
+                    axios.get(Routing.generate('reports_getAllOperative',{ sedeId: sedeId}))
+                        .then(response => {
+                            this.arrOperative = response.data.arrOperative;
+                        })
+                        .catch(e = {
+
+                        });                    
+                },
+  
+                getAllReports: function(inyear){
+                    
+                    this.swgetinfostaff = false;
+                    this.yearSelected = 0;
+                    this.buscandoall = true;
+                    this.datareports = [];
+                    axios.get(Routing.generate('reports_getAllReports', { year: inyear }))
+                    .then(response => {
+                        if (response.status == 200) {
+
+                            this.swgetinfostaff = response.data.swgetinfostaff;
+                            this.datareports = response.data.datareports;
+                            this.yearSelected = inyear;
+                       
+
+                            $('[data-toggle="tooltip"]').tooltip();
+                        }
+                        if( response.status == 202){
+                            this.respuesta = response.data;
+                        }
+
+                        this.buscandoall = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.buscandoall = false;
+                    });
+
+                    
+                    
+                },
+
+            }
+        });
+
+        // $(document).ready(function(){
+        //     $('[data-toggle="tooltip"]').tooltip();
+        //     $('[data-toggle="popover"]').popover();
+        //     // $("td").focus();
+        //     console.log('adsfadsfsadf');
+        // });
+
+        $(".jnumbersletters").keypress(function (key) {
+            var key = key || window.event;
+            var k = key.charCode || key.keyCode;
+            if ((k < 97 || k > 122)//letras minusculas
+                && (k < 65 || k > 90) //letras mayusculas
+                && (k < 48 || k > 57) //NUmeros
+                // && (k != 13) //ENTER
+                && (k != 8) //retroceso
+                && (k != 9) //tab
+                && (k != 241) //ñ
+                 && (k != 209) //Ñ
+                 && (k != 32) //espacio
+                 && (k != 225) //á
+                 && (k != 233) //é
+                 && (k != 237) //í
+                 && (k != 243) //ó
+                 && (k != 250) //ú
+                 && (k != 193) //Á
+                 && (k != 201) //É
+                 && (k != 205) //Í
+                 && (k != 211) //Ó
+                 && (k != 218) //Ú
+                 && (k != 44) //coma ,
+                 && (k != 46) //punto .
+                )
+                return false;
+        });
+
+    </script>
+{% endblock %}

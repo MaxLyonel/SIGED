@@ -25,3 +25,7 @@ uni_maininfouni:
 uni_carreras:
     resource: "@SieUniversityBundle/Resources/config/routing/carreras.yml"
     prefix:   /uni/carreras
+
+uni_reports:
+    resource: "@SieUniversityBundle/Resources/config/routing/reports.yml"
+    prefix:   /uni/reports    
