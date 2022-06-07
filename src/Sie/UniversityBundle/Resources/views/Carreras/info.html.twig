@@ -15,16 +15,23 @@
             border-radius:10px;
             margin:auto;
             background-color:#e5e7e9;
-        }
+            }
+        .formatyearsform {            
+            padding:16px;
+            border-radius:10px;
+            margin:auto;
+            background-color:#e5e7e9;
+            }
         .formatallstaff{
             width:100%;
             padding:16px;
             border-radius:10px;
             margin:auto;
             background-color:#e5e7e9;
-        }
-    </style>
-    <!-- Start page header -->
+            }
+        </style>
+        <!-- Start page header -->
+        <link rel="stylesheet" href="{{asset('css/kcssformat.css')}}">
     <div class="header-content fixed-top">
         <h2>
             <i class="fa fa-home"></i>
@@ -103,13 +110,13 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {% for key, entity in gestiones %}
+                                                        {% for  entity in gestiones %}
                                                         <tr>                                                            
-                                                            <td class="text-center"> {{ key + 1 }} </td>
+                                                            <td class="text-center"></td>
                                                            
                                                             <td> 
                                                                
-                                                                <a href="{{ path('carreras_info',  {'carrera_id':100, 'gestion' :  entity.gestionTipo.id}) }}"  data-toggle="tooltip" data-placement="top" data-original-title="Ver Estadisticas" >{{ entity.gestionTipo.id }}</a>
+                                                                <a href="{{ path('carreras_info',  {'carrera_id':100, 'gestion' :  entity.gestion_tipo_id}) }}"  data-toggle="tooltip" data-placement="top" data-original-title="Ver Estadisticas" >{{ entity.gestion_tipo_id }}</a>
                                                             </td>
 
                                                             
@@ -354,7 +361,7 @@
                                                             {% endif %}
                                                             <td>
                                                                 {% if entity.id != 0 %}
-                                                                <button class="btn btn-info" onclick="updateCargos('{{ entity.id }}', 'cf{{ key + 1 }}');">
+                                                                <button class="btn btn-info" onclick="updateMatriculaTipo('{{ entity.id }}', 'cf{{ key + 1 }}');">
                                                                     <i class="fa fa-edit"></i>
                                                                 </button>
                                                                 {% endif %}
@@ -446,17 +453,17 @@
                         <strong>MODIFICAR DATOS DE ESTUDIANTES</strong>
                     </div>
     
-                    <form action="project-issue-tracker.html#">
-                        <div class="form-body no-padding">
+                    <form action="project-issue-tracker.html#" class="formatyearsform">
+                        <div >
 
-                            <input type="text" id="registro_id" name="registro_id" value="">
-                            <input type="text" id="fila" name="fila" value="">
+                            <input type="hidden" id="registro_id" name="registro_id" value="">
+                            <input type="hidden" id="fila" name="fila" value="">
     
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label for="fecha_apertura">Género</label>
                                     <select name="genero_id" id="genero_id"
-                                        class="custom-select js-example-basic-multiple form-control">
+                                        class="">
                                         {% for c in generos %}
                                         <option value="{{ c.id }}">{{c.descripcion}}</option>
                                         {% endfor %}
@@ -470,7 +477,7 @@
                                 <div class="col-sm-12">
                                     <label for="nivel">Periodo Académico</label>
                                     <select name="periodo_id" id="periodo_id"
-                                        class="custom-select js-example-basic-multiple form-control">
+                                        class="">
                                         {% for c in periodos %}
                                         <option value="{{ c.id }}">{{c.descripcion}}</option>
                                         {% endfor %}
@@ -483,7 +490,7 @@
                             <div class="row">
                                 <div class="col-sm-12">
                                     <label for="nivel">Cantidad de Estudiantes</label>
-                                    <input type="numeric" class="form-control" id="cantidad" placeholder="" maxlength="5">
+                                    <input type="text" class="form-control" id="cantidad" placeholder="" maxlength="5">
                                 </div>
                             </div>
     
@@ -512,13 +519,13 @@
                         <strong>REGISTRAR DATOS DE DOCENTES</strong>
                     </div>
 
-                    <form action="project-issue-tracker.html#">
+                    <form action="project-issue-tracker.html#" class="formatyearsform">
                         <div class="form-body no-padding">
 
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="fecha_apertura">Género</label>
-                                <select name="arrNivel" id="genero_id2" class="custom-select js-example-basic-multiple form-control">
+                                <select name="arrNivel" id="genero_id2" >
                                 {% for c in generos %}
                                     <option value="{{ c.id }}" >{{c.descripcion}}</option>
                                 {% endfor %}
@@ -531,7 +538,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="nivel">Periodo Académico</label>                                  
-                                <select name="arrNivel" id="periodo_id2" class="custom-select js-example-basic-multiple form-control">
+                                <select name="arrNivel" id="periodo_id2" >
                                 {% for c in periodos %}
                                     <option value="{{ c.id }}" >{{c.descripcion}}</option>
                                 {% endfor %}
@@ -544,9 +551,83 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="fecha_apertura">Tipo Cargo</label>
-                                <select name="arrNivel" id="nivel" class="custom-select js-example-basic-multiple form-control">
+                                <select name="arrNivel" id="nivel" >
                                 {% for c in cargos %}
                                     <option value="{{ c.id }}" >{{c.cargo}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <br>
+                        
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="nivel">Cantidad</label>                                  
+                                <input type="text" class="form-control" id="cantidad2" placeholder=""  maxlength="5" >
+                            </div>
+                        </div>
+                        
+                        <br>
+                            
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-theme" onclick="updateInfo2();">Grabar</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
+    <div id="modal-matriculas" class="modal modal-success fade bs-example-modal-lg2" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <!--div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">REGISTRO DE ESTUDIANTES</h4>
+                </div-->
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <strong>REGISTRAR DATOS TIPO DE MATRICULA</strong>
+                    </div>
+
+                    <form action="project-issue-tracker.html#" class="formatyearsform">
+                        <div class="form-body no-padding">
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="fecha_apertura">Género</label>
+                                <select name="arrNivel" id="genero_id2" >
+                                {% for c in generos %}
+                                    <option value="{{ c.id }}" >{{c.descripcion}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="nivel">Periodo Académico</label>                                  
+                                <select name="arrNivel" id="periodo_id2" >
+                                {% for c in periodos %}
+                                    <option value="{{ c.id }}" >{{c.descripcion}}</option>
+                                {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="fecha_apertura">Tipo Matriculas</label>
+                                <select name="arrNivel" id="nivel" >
+                                {% for c in matriculasestado %}
+                                    <option value="{{ c.id }}" >{{c.estadomatricula}}</option>
                                 {% endfor %}
                                 </select>
                             </div>
@@ -573,7 +654,6 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div>
-
 
    
 
@@ -620,6 +700,18 @@
         document.getElementById("fila").value = fila;*/
 
         $("#modal-cargos").modal('show');
+    }
+
+    function updateMatriculaTipo(id, fila) {
+        console.log(id, fila);
+
+        document.getElementById("registro_id").setAttribute('value', id);
+        document.getElementById("fila").setAttribute('value', fila);
+        /*
+        document.getElementById("registro_id").value = id;
+        document.getElementById("fila").value = fila;*/
+
+        $("#modal-matriculas").modal('show');
     }
 
 
