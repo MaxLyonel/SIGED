@@ -39,6 +39,7 @@ class ControlCalidadController extends Controller {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
+
         $currentyear = $this->session->get('currentyear');
         $roluserlugarid = $this->session->get('roluserlugarid');
         $em = $this->getDoctrine()->getManager();
@@ -155,14 +156,12 @@ class ControlCalidadController extends Controller {
                 break;
         }
 
-        //$gestiones = $query->getResult();
-        $gestiones = array(0=>array('id'=>2021));
+        $gestiones = $query->getResult();
 
         return $this->render('SieRegularBundle:ControlCalidad:index.html.twig', array(
                     'entidades' => $entidades,
                     'gestiones' => $gestiones,
-                    // 'currentyear' => $currentyear,
-                    'currentyear' => '2021',
+                    'currentyear' => $currentyear,
                     'lugar_tipo_id' => $usuario_lugar->getId()
         ));
     }
