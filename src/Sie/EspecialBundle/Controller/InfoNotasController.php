@@ -61,13 +61,13 @@ class InfoNotasController extends Controller {
             $seguimiento = false;
 
             $estadosMatricula = null;
-
-            
+            //dump($discapacidad);die;
+            //dump($operativo);die;
             switch ($discapacidad) {
                 case 1: // Auditiva
                         //if($nivel != 405){
                         $progserv = $cursoEspecial->getEspecialProgramaTipo()->getId();
-                        //dump($progserv);dump($nivel);die;
+                       // dump($progserv);dump($nivel);die;
                         if($nivel == 403 or $nivel == 404 or ($nivel == 411 and $progserv == 19)){//Verificar el seguimiento para 19
 
                             if($progserv == 19) {
@@ -82,7 +82,7 @@ class InfoNotasController extends Controller {
                                 }
 
                             } else{
-
+                                //$operativo = 1; se forzo porque aun no habia registro de operativo
                                 $notas = $this->get('notas')->regularEspecial($idInscripcion,$operativo);
 
                                 if($notas['tipoNota'] == 'Trimestre'){
@@ -93,6 +93,7 @@ class InfoNotasController extends Controller {
                                     else
                                         $template = 'regular';
                                 }
+                                
                                 $actualizarMatricula = true;
                                 if(in_array($nivel, array(1,11,403))){
                                     $actualizarMatricula = false;
@@ -194,7 +195,6 @@ class InfoNotasController extends Controller {
                         break;
                 case 4: // Fisico -motora
                 case 6: //Dificultades en el aprendizaje
-                case 7: // Talento extraordinario
                     if($gestion >2019){
                         $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
                         $template = 'especialSeguimiento';
@@ -206,6 +206,17 @@ class InfoNotasController extends Controller {
                     }
                     
                     break;
+                case 7: // Talento extraordinario
+                    if($gestion >2019){
+                        $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
+                        $template = 'especialTalento';
+                        $actualizarMatricula = false;
+                        $seguimiento = true;
+                            if($operativo >= 3 or $gestion < $gestionActual){
+                                $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78,79))); //--
+                           }
+                    }
+                     break;
                 case 8: // Sordeceguera
                         break;
 
@@ -214,8 +225,9 @@ class InfoNotasController extends Controller {
                 case 100: // Modalidad Indirecta
                         break;
             }
-            //dump($vista);
-          //dump($notas);die;
+            //dump($template); die;
+          // dump($notas);die;
+           //dump($estadosMatricula);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
                     'notas'=>$notas,
@@ -241,7 +253,7 @@ class InfoNotasController extends Controller {
 
     public function createUpdateAction(Request $request){ 
         try {
-            
+            //dump($request); die;
             $idInscripcion = $request->get('idInscripcion');
             $discapacidad = $request->get('discapacidad');
             $em = $this->getDoctrine()->getManager();

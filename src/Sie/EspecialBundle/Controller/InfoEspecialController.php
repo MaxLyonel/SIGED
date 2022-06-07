@@ -220,6 +220,86 @@ class InfoEspecialController extends Controller{
       ;
   }  
 
+  public function closeOperativoAntesAction (Request $request){
+    //crete conexion DB
+    $em = $this->getDoctrine()->getManager();
+    $em->getConnection()->beginTransaction();
+    //get the values
+    $form = $request->get('form');
+    //dump($form);die;
+
+    //get the current operativo
+    $objOperativo = $this->get('funciones')->obtenerOperativo($form['sie'],$form['gestion']);
+
+    //update the close operativo to registro consolido table
+   
+    $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array(
+        'unidadEducativa' => $form['sie'], 
+        'gestion' => $form['gestion']
+      ));
+
+    $periodo = $this->operativo($form['sie'], $form['gestion']);
+
+    if(!$registroConsol){
+        $rconsol = new RegistroConsolidacion();
+        $rconsol->setTipo(1);
+        $rconsol->setGestion($form['gestion']);
+        $rconsol->setUnidadEducativa($form['sie']);
+        $rconsol->setTabla('**');
+        $rconsol->setIdentificador('**');
+        $rconsol->setCodigo('**');
+        $rconsol->setDescripcionError('Consolidado exitosamente!!');
+        $rconsol->setFecha(new \DateTime("now"));
+        $rconsol->setusuario('0');
+        $rconsol->setConsulta('**');
+        $rconsol->setBim1('0');
+        $rconsol->setBim2('0');
+        $rconsol->setBim3('0');
+        $rconsol->setBim4('0');
+        $rconsol->setPeriodoId(1);
+        $rconsol->setSubCea(0);
+        $rconsol->setBan(1);
+        $rconsol->setEsonline('t');
+        $rconsol->setInstitucioneducativaTipoId(4);
+        $em->persist($rconsol);
+        $em->flush();
+        $em->getConnection()->commit();
+    }
+    $inconsistencia = null;
+    //$periodo = 3;
+   // $registroConsol->setBim1('2');
+   // $registroConsol->setBim2('2');
+   // $registroConsol->setBim3('2');
+
+   // $em->persist($registroConsol);
+   // $em->flush();
+
+    $query = $em->getConnection()->prepare('select * from sp_validacion_especial_web(:igestion_id, :icod_ue, :ibimestre)');
+    $query->bindValue(':igestion_id', $form['gestion']);
+    $query->bindValue(':icod_ue', $form['sie']);
+    $query->bindValue(':ibimestre', $periodo);
+    $query->execute();
+    $inconsistencia = $query->fetchAll();
+    
+    if(!$inconsistencia and $periodo > 0) {
+        $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
+        $registroConsol->setFecha(new \DateTime("now"));
+        
+        switch ($periodo) {
+            case 1: $registroConsol->setBim1('2'); break;
+            case 2: $registroConsol->setBim2('2'); break;
+            case 3: $registroConsol->setBim3('2'); break;
+          //  case 4: $registroConsol->setBim4('2'); break;
+        }
+        
+        //$em->persist($registroConsol);
+        $em->flush();
+        $em->getConnection()->commit();
+    }
+    //dump($form,$inconsistencia,$periodo);die;
+    return $this->render($this->session->get('pathSystem') . ':InfoEspecial:list_inconsistencia.html.twig', array('inconsistencia' => $inconsistencia, 'institucion' =>  $form['sie'], 'gestion' => $form['gestion'], 'periodo' => $periodo));
+  }
+
   public function closeOperativoAction (Request $request){
       //crete conexion DB
       $em = $this->getDoctrine()->getManager();
@@ -240,7 +320,15 @@ class InfoEspecialController extends Controller{
 
       $periodo = $this->operativo($form['sie'], $form['gestion']);
 
-      if(!$registroConsol){
+      $inconsistencia = null;
+      $query = $em->getConnection()->prepare('select * from sp_validacion_especial_web(:igestion_id, :icod_ue, :ibimestre)');
+      $query->bindValue(':igestion_id', $form['gestion']);
+      $query->bindValue(':icod_ue', $form['sie']);
+      $query->bindValue(':ibimestre', $periodo);
+      $query->execute();
+      $inconsistencia = $query->fetchAll();
+//dump($inconsistencia);die;
+      if(!$registroConsol && !$inconsistencia){
           $rconsol = new RegistroConsolidacion();
           $rconsol->setTipo(1);
           $rconsol->setGestion($form['gestion']);
@@ -265,7 +353,7 @@ class InfoEspecialController extends Controller{
           $em->flush();
           $em->getConnection()->commit();
       }
-      $inconsistencia = null;
+   
       //$periodo = 3;
      // $registroConsol->setBim1('2');
      // $registroConsol->setBim2('2');
@@ -274,12 +362,7 @@ class InfoEspecialController extends Controller{
      // $em->persist($registroConsol);
      // $em->flush();
 
-      $query = $em->getConnection()->prepare('select * from sp_validacion_especial_web(:igestion_id, :icod_ue, :ibimestre)');
-      $query->bindValue(':igestion_id', $form['gestion']);
-      $query->bindValue(':icod_ue', $form['sie']);
-      $query->bindValue(':ibimestre', $periodo);
-      $query->execute();
-      $inconsistencia = $query->fetchAll();
+    /*
       
       if(!$inconsistencia and $periodo > 0) {
           $registroConsol = $em->getRepository('SieAppWebBundle:RegistroConsolidacion')->findOneBy(array('unidadEducativa' => $form['sie'], 'gestion' => $form['gestion']));
@@ -295,7 +378,7 @@ class InfoEspecialController extends Controller{
           //$em->persist($registroConsol);
           $em->flush();
           $em->getConnection()->commit();
-      }
+      }*/
       //dump($form,$inconsistencia,$periodo);die;
       return $this->render($this->session->get('pathSystem') . ':InfoEspecial:list_inconsistencia.html.twig', array('inconsistencia' => $inconsistencia, 'institucion' =>  $form['sie'], 'gestion' => $form['gestion'], 'periodo' => $periodo));
     }
