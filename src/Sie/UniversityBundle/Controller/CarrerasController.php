@@ -120,6 +120,11 @@ class CarrerasController extends Controller
         
         $gestiones = $em->getRepository('SieAppWebBundle:UnivRegistroConsolidacion')->findAll();      
 
+        $arrData = array('sedeId'=> 64);
+        //$arrData = array('sedeId'=> $request->get(64));
+        $gestiones = $this->get('univfunctions')->getAllOperative($arrData);
+        //dump($gestiones); die;
+
         $generos = $em->getRepository('SieAppWebBundle:UnivClaGenero')->findAll();   
 
         if($nro_periodos == 1) {
@@ -129,6 +134,7 @@ class CarrerasController extends Controller
         }
 
         $matriculas = $em->getRepository('SieAppWebBundle:UnivMatriculaNacionalidadBecaTipo')->findAll();      
+        $matriculasestado = $em->getRepository('SieAppWebBundle:UnivEstadomatriculaTipo')->findAll();      
         $cargos = $em->getRepository('SieAppWebBundle:UnivCargoTipo')->findAll();      
 
 
@@ -145,6 +151,26 @@ class CarrerasController extends Controller
             'total2' => 0
         );
         $fila2 = array(
+            'id' => 6,
+            'matricula' => "MATRICULADOS NACIONALES",
+            'm1'  => 15,
+            'f1'  => 1,
+            'total1' => 16,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
+        $fila4 = array(
+            'id' => 6,
+            'matricula' => "OTRAS BECAS",
+            'm1'  => 15,
+            'f1'  => 1,
+            'total1' => 16,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
+        $fila5 = array(
             'id' => 6,
             'matricula' => "ESTUDIANTES CON BECAS SOCIALES",
             'm1'  => 15,
@@ -167,6 +193,8 @@ class CarrerasController extends Controller
 
         array_push($filas, $fila);
         array_push($filas, $fila2);
+        array_push($filas, $fila4);
+        array_push($filas, $fila5);
         array_push($filas, $fila3);
 
 
@@ -250,7 +278,7 @@ class CarrerasController extends Controller
             'f2'  => 0,
             'total2' => 0
         );
-        $fila4 = array(   
+        /*$fila4 = array(   
             'id' => 0,
             'matricula' => "TOTALES",        
             'm1'  => 20,
@@ -259,12 +287,12 @@ class CarrerasController extends Controller
             'm2'  => 0,
             'f2'  => 0,
             'total2' => 0
-        );
+        );*/
 
         array_push($tipo_matricula_array, $fila);
         array_push($tipo_matricula_array, $fila2);
         array_push($tipo_matricula_array, $fila3);
-        array_push($tipo_matricula_array, $fila4);
+        //array_push($tipo_matricula_array, $fila4);
 
 
        
@@ -288,7 +316,8 @@ class CarrerasController extends Controller
             'gestiones' => $gestiones,                     
             'generos' => $generos,                     
             'periodos' => $periodos,                     
-            'matriculas' => $matriculas,                     
+            'matriculas' => $matriculas,  
+            'matriculasestado' => $matriculasestado,
             'cargos' => $cargos,  
             'data' => $data
 
