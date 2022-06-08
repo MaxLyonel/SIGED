@@ -148,10 +148,22 @@
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
                                                             {% endif %}
+
+                                                            {% if entity.esSiesu == 0 %}
+
                                                             <button  style="border-radius: 10px;" class="btn btn-info"
-                                                                onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}');">
+                                                                onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1);">
                                                                 <i class="fa fa-edit"></i>
                                                             </button>
+
+                                                            {% else %}
+
+                                                            <button  style="border-radius: 10px;" class="btn btn-warning"
+                                                                onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',0);">
+                                                                <i class="fa fa-eye"></i>
+                                                            </button>
+
+                                                            {% endif %}
                                                         </td>
 
                                                         <td>
@@ -595,7 +607,7 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                     Cancelar
                     </button>
-                    <button type="submit" class="btn btn-theme">
+                    <button id="btn_save_edit" type="submit" class="btn btn-theme">
                     Grabar
                     </button>
                     </div>
@@ -629,8 +641,12 @@
         $(".fecha").inputmask({ "alias": "dd-mm-yyyy" });
     });
 
-    function updateCarrera(id, carrera, resolucion, fecha_apertura, duracion, duracion_anios, nivel_academico_id, modalidad_id, grado_id, regimen_id){
+    function updateCarrera(id, carrera, resolucion, fecha_apertura, duracion, duracion_anios, nivel_academico_id, modalidad_id, grado_id, regimen_id, sw){
 
+        /*
+        sw = 0 es editar
+        sw = 1 es ver
+        */
         console.log(fecha_apertura);
 
         document.getElementById("carrera_id").value = id;
@@ -645,7 +661,12 @@
         $('#edit_nivel_academico_id').val(nivel_academico_id);
         $('#edit_modalidad_id').val(modalidad_id);
         $('#edit_grado_id').val(grado_id);
-        $('#edit_regimen_id').val(regimen_id);        
+        $('#edit_regimen_id').val(regimen_id);  
+        
+        if(sw == 0){
+            var button = document.getElementById("btn_save_edit");
+            button.style.display = "none";
+        }
 
         $("#modal-edit").modal('show');
     
