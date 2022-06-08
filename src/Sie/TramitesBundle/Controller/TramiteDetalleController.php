@@ -1829,6 +1829,7 @@ class TramiteDetalleController extends Controller {
                 
                 $token = $request->get('_token');
                 if (!$this->isCsrfTokenValid('imprimir', $token)) {
+                    $em->getConnection()->rollback();
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
                     return $this->redirectToRoute('tramite_detalle_certificado_tecnico_impresion_lista');
                 }
@@ -1855,6 +1856,7 @@ class TramiteDetalleController extends Controller {
                             break;
                     }
                 } else {
+                    $em->getConnection()->rollback();
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error, no se enviarion tramites para procesar, intente nuevamente'));
                     return $this->redirectToRoute('tramite_detalle_certificado_tecnico_impresion_lista');
                 }
@@ -1936,9 +1938,9 @@ class TramiteDetalleController extends Controller {
                                 }
 
                                 $msg = array('0'=>true, '1'=>$participante);
-                                $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva);
-                                
-                                // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
+
+                                //$msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva);                                
+                                $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId, $mallaNueva);
 
                                 $documentoController = new documentoController();
                                 $documentoController->setContainer($this->container);
@@ -1993,6 +1995,7 @@ class TramiteDetalleController extends Controller {
                     $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => $messageCorrecto));
                 }
                 if($messageError!=""){
+                    $em->getConnection()->rollback();
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $messageError));
                 }
             } catch (\Doctrine\ORM\NoResultException $exc) {
