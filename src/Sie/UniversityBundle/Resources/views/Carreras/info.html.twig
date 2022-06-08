@@ -43,7 +43,7 @@
                     {{ subtitulo }}
                 {% endif %}
             </span>
-        </h2>
+        </h2> 
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">
                 Usted esta aquí:
@@ -69,7 +69,7 @@
         <div class="row">
             <div class="panel">
                 <div class="panel-heading">
-                    <h3 class="mt-0 text-primary">
+                   {##  <h3 class="mt-0 text-primary">
                         <strong>
                             {{ central.universidad }}
                         </strong>
@@ -77,22 +77,30 @@
                     <h4 class="mt-0 text-info">
                         {{ central.abreviacion }}
                     </h3>
+                    ##}
                 </div>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="col-md-9">
+                        <div class="panel panel-primary">
+
+                            <div class="panel-heading yearOld">
+                                <h3 class="panel-title"> <i class="fa fa-file"></i> CARRERA: {{ entity.carrera }} - {{ entity.getUnivNivelAcademicoTipo.getDescripcion()}}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-11">
                             <div class="panel panel-primary">
 
-                                <div class="panel-heading yearOld">
-                                    <h3 class="panel-title"> <i class="fa fa-file"></i> CARRERA: {{ entity.carrera }} - {{ entity.getUnivNivelAcademicoTipo.getDescripcion()}}</h3>
-                                </div>
+                               
 
                                 
                                 <div class="panel-body">
 
                                     <div class="row">
 
-                                        <div class="col-md-3">
+                                        <div class="col-md-2">
 
                                             <div class="table-responsive mb-20">
                                             
@@ -101,18 +109,18 @@
                                                 </div>
                                                 <div class="formatyears">
                                                 <table class="table table-bordered">
-                                                    <thead>
+                                                    <thead class="thead-dark">
                                                         <tr>
-                                                            <th class="text-center">#</th>
-                                                            <th>Gestión</th>
+                                                            <th scope="col">#</th>
+                                                            <th scope="col">Gestión</th>
                                                             
                                                            
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         {% for  entity in gestiones %}
-                                                        <tr>                                                            
-                                                            <td class="text-center"></td>
+                                                        <tr scope="row">                                                            
+                                                            <td class="text-center">1</td>
                                                            
                                                             <td> 
                                                                
@@ -129,7 +137,7 @@
                                     
                                         </div>
 
-                                        <div class="col-md-9">
+                                        <div class="col-md-10">
 
                                             {##<div class="alert alert-info">
                                                 <strong>REGISTRO DE ESTUDIANTES POR GENERO EN LA GESTION Y PERIODO</strong>
@@ -410,6 +418,11 @@
                             <!-- /.panel-body -->
                             </div>
                         </div>
+
+                        <div class="col-md-1">
+                        </div>
+
+                        {## 
                         <div class="col-md-3">
                             <div class="panel panel-info">
                                 <div class="panel-heading yearOld">
@@ -429,6 +442,8 @@
                             <!-- /.panel-body -->
                             </div>
                         </div>
+                        ##}
+
                     </div>
                 </div>
             </div>

@@ -23,10 +23,54 @@ class CarrerasController extends Controller
      */
     public function __construct() {
         $this->session = new Session();
+        $this->baseData = array('sedeId' => $this->session->get('sedeId'),  'userId' => $this->session->get('userId'));
+    }
+
+    private function kdecrypt($data){
+        $data = hex2bin($data);
+        return unserialize($data);
     }
 
     public function indexAction(Request $request)
     {
+       
+        $form = $request->get('form');
+        
+        $data = ($this->kdecrypt($form['data']));
+
+        //dump($data); die;
+        // univalle sede central = 62
+        
+        $sedeId = $data['sedeId'];
+        $userId = $data['userId'];
+
+
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();  
+        
+        //contadores
+
+        $query = "select count(*) from univ_universidad_carrera where univ_sede_id = " . $sedeId;
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $total_carreras = $po[0]['count'];
+
+        $query = "select count(*) from univ_universidad_carrera where univ_sede_id = " . $sedeId . " and univ_nivel_academico_tipo_id = 1";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $total_carreras_pre = $po[0]['count'];
+
+        $query = "select count(*) from univ_universidad_carrera where univ_sede_id = " . $sedeId . " and univ_nivel_academico_tipo_id = 2";
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $total_carreras_post = $po[0]['count'];
+
        
         
         $fechaActual = new \DateTime(date('Y-m-d'));
@@ -37,13 +81,12 @@ class CarrerasController extends Controller
             return $this->redirect($this->generateUrl('login'));
         }
 
-        $em = $this->getDoctrine()->getManager();
+       
         $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $id_usuario));
 
         $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findBy(array('usuario' => $id_usuario));
-        
-        //TODO: JALAR DE LA SESION ?
-        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findById(43);
+               
+        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findById($sedeId);
 
         $entityPregrado = $em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->findById(1);    
         $entityPostgrado = $em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->findById(2);    
@@ -70,7 +113,10 @@ class CarrerasController extends Controller
             'modalidad' => $modalidad,           
             'grado_academico' => $grado_academico,           
             'regimen_estudios' => $regimen_estudios,           
-            'periodo_academico' => $periodo_academico,           
+            'periodo_academico' => $periodo_academico,   
+            'total_carreras' => $total_carreras,
+            'total_carreras_pre' => $total_carreras_pre,
+            'total_carreras_post' => $total_carreras_post
 
         ));
         
@@ -97,7 +143,9 @@ class CarrerasController extends Controller
         $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findBy(array('usuario' => $id_usuario));
 
         //TODO: JALAR DE LA SESION ?
-        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findById(43);
+        $sedeId = $this->session->get('sedeId');
+
+        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findById($sedeId); //43
 
         $carreraEntity = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->find($carrera_id); 
         $periodos = $carreraEntity->getUnivRegimenEstudiosTipo()->getId();
@@ -120,7 +168,7 @@ class CarrerasController extends Controller
         
         $gestiones = $em->getRepository('SieAppWebBundle:UnivRegistroConsolidacion')->findAll();      
 
-        $arrData = array('sedeId'=> 64);
+        $arrData = array('sedeId'=> $sedeId);
         //$arrData = array('sedeId'=> $request->get(64));
         $gestiones = $this->get('univfunctions')->getAllOperative($arrData);
         //dump($gestiones); die;
@@ -183,9 +231,9 @@ class CarrerasController extends Controller
         $fila3 = array(   
             'id' => 0,
             'matricula' => "TOTALES",        
-            'm1'  => 20,
-            'f1'  => 7,
-            'total1' => 27,
+            'm1'  => 50,
+            'f1'  => 9,
+            'total1' => 37,
             'm2'  => 0,
             'f2'  => 0,
             'total2' => 0
@@ -233,9 +281,9 @@ class CarrerasController extends Controller
         $fila4 = array(   
             'id' => 0,
             'matricula' => "TOTALES",        
-            'm1'  => 20,
-            'f1'  => 7,
-            'total1' => 27,
+            'm1'  => 35,
+            'f1'  => 8,
+            'total1' => 43,
             'm2'  => 0,
             'f2'  => 0,
             'total2' => 0
@@ -331,9 +379,11 @@ class CarrerasController extends Controller
         date_default_timezone_set('America/La_Paz');
         $response = new JsonResponse();
         
-        //dump($request); die;
-        //TODO: esto de donde ?
-        $sedeId = 43;
+       
+        //$sedeId = 43;
+
+        $sedeId = $this->session->get('sedeId');
+
         $nivel_academico_id = $request->get('nivel_academico_id');
         $modalidad_id = $request->get('modalidad_id');
         $regimen_id = $request->get('regimen_id');

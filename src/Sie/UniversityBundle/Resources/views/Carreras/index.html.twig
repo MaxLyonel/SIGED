@@ -47,7 +47,7 @@
     <div class="body-content animated fadeIn">        
         <div class="row">
             <div class="panel">
-                <div class="panel-heading">
+                {## <div class="panel-heading">
                     <h3 class="mt-0 text-primary">
                         <strong>
                             {{ central.universidad }}
@@ -56,7 +56,7 @@
                     <h4 class="mt-0 text-info">
                         {{ central.abreviacion }}
                     </h3>
-                </div>
+                </div>##}
                 <div class="panel panel-primary">
                     <div class="panel-heading yearOld">
                         <h3 class="panel-title"> <i class="fa fa-file"></i> ADMINISTRACION DE CARRERAS</h3>
@@ -239,20 +239,24 @@
                         </div>
                         <div class="col-md-3">
                             <div class="panel panel-info">
+
+                                <br>
                               
-                                <div class="panel-heading yearOld">
+                                {## <div class="panel-heading yearOld">
                                     <h3 class="panel-title">
                                         Panel Info
                                                                             
                                     </h3>
-                                </div>
+                                </div>##}
                                 <!-- /.panel-heading -->
                                 <div class="panel-body">
+                                {## 
                                 <div style=" text-align: center;">
                                     <i class="fa fa-institution fa-lg"></i>
                                 </div>
                                 <h3>{{ central.universidad }}</h3>
                                 <h4> Sede: La Paz </h4>
+                                ##}
 
                                     <div class="row  inner-all">                        
                                 <div class="panel text-center rounded shadow">
@@ -260,7 +264,7 @@
                                            
                                         <h5 class="media-heading">Carreras</h5>                                        
                                         <div style="height:60px">
-                                            <h3 class="text-strong mb-0" id="cantDocAdm">23</h3>
+                                            <h3 class="text-strong mb-0" id="cantDocAdm">{{ total_carreras }}</h3>
                                             <p class="text-muted">TOTAL GENERAL</p> 
                                         </div>
                                             
@@ -271,7 +275,7 @@
                                     
                                         <h5 class="media-heading">Carreras</h5>
                                         <div style="height:60px">
-                                            <h3 class="text-strong mb-0" id="cantDocAdm">19</h3>
+                                            <h3 class="text-strong mb-0" id="cantDocAdm"> {{ total_carreras_pre }}</h3>
                                             <p class="text-muted">TOTAL PREGRADO</p>
                                         </div>
                                     
@@ -282,7 +286,7 @@
                                     
                                         <h5 class="media-heading">Carreras</h5>
                                         <div style="height:60px">
-                                            <h3 class="text-strong mb-0" id="cantDocAdm">4</h3>
+                                            <h3 class="text-strong mb-0" id="cantDocAdm"> {{ total_carreras_post }}</h3>
                                             <p class="text-muted">TOTAL POSTGRADO</p>
                                         </div>
                                     
