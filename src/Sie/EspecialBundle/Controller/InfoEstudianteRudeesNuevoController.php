@@ -3577,13 +3577,17 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		//dump($porciones);die;
         $dirProv = $porciones[3];
         $dirMun = $porciones[4];
-        //dump($codue,$rude,$gestion,$eins ,$dirProv,$dirMun);die;
+       //dump($codue,$rude,$gestion,$eins ,$dirProv,$dirMun);die;
         //get the values of report
         //create the response object to down load the file
         $response = new Response();
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'RUDE_' .$rude. '_' .$gestion. '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rude2017.rptdesign&codue=' . $codue .'&rude='. $rude .'&gestion=' . $gestion .'&eins='. $eins .'&dirMun='. $dirMun .'&dirProv='. $dirProv . '&&__format=pdf&'));
+		if ($gestion<2022){
+        	$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rude2017.rptdesign&codue=' . $codue .'&rude='. $rude .'&gestion=' . $gestion .'&eins='. $eins .'&dirMun='. $dirMun .'&dirProv='. $dirProv . '&&__format=pdf&'));
+		}else{
+        	$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rudeEs2022.rptdesign&codue=' . $codue .'&rude='. $rude .'&gestion=' . $gestion .'&eins='. $eins .'&dirMun='. $dirMun .'&dirProv='. $dirProv . '&&__format=pdf&'));
+		}
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');
