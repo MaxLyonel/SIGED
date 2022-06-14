@@ -342,7 +342,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 										->where('dt.id in (:ids)')
 										->setParameter('ids', $this->obtenerCatalogo($rude, 'discapacidad_tipo'));
 							},
-							'empty_value' => 'Seleccionar...',
+							'empty_value' => 'Seleccione',
 							'required' => true,
 							'data'=>($discapacidadEstudiante)?$discapacidadEstudiante->getDiscapacidadTipo():'',
 							'mapped'=>false
@@ -972,10 +972,11 @@ class InfoEstudianteRudeesNuevoController extends Controller
 									//->setParameter('ids', $this->obtenerCatalogo($rude, 'discapacidad_tipo'));
 									->setParameter('ids', $this->obtenerCatalogoTipoDiscapacidad() );
 						},
+						'required'=>false,
 						'empty_value' => 'Seleccionar...',						
 						'data'=>$em->getReference('SieAppWebBundle:DiscapacidadTipo', $discapacidad0),						
 						'mapped'=>false,
-						'required'=>false
+						
 					))
 					->add('discapacidad1', 'entity', array(
 						'class' => 'SieAppWebBundle:DiscapacidadTipo',
@@ -1741,7 +1742,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 								->setParameter('ids', $this->obtenerCatalogoDiscapacidadOrigen() );
 					},
 					'empty_value' => 'Seleccionar...',
-					'required' => true,
+					'required' => false,
 					'data'=>($discapacidadOrigen_rude)?$discapacidadOrigen_rude->getDiscapacidadOrigenTipo():'',
 					'mapped'=>false
 				))
@@ -2003,7 +2004,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 	{
 		$form = $request->get('form');
 		
-		//dump($form);
+		
 		//dump($form['esEducacionEnCasa']);
 		$em = $this->getDoctrine()->getManager();
 		$rude = $em->getRepository('SieAppWebBundle:Rude')->findOneById($form['id']);
@@ -2016,14 +2017,19 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$em->remove($discapacidadOrigen_rude);
 			$em->flush();
 		}
+		
+		if(isset($form['discapacidadOrigen'])){
 		// CREAMOS LOS DATOS DEL ORIGEN DE LA DISCAPACIDAD
-		$discapacidadOrigen_new = new RudeDiscapcidadOrigen();
-		$discapacidadOrigen_new->setRude($rude);
-		$discapacidadOrigen_new->setFechaRegistro(new \DateTime('now'));
-		$discapacidadOrigen_new->setFechaModificacion(new \DateTime('now'));
-		$discapacidadOrigen_new->setDiscapacidadOrigenTipo($em->getRepository('SieAppWebBundle:DiscapacidadOrigenTipo')->find($form['discapacidadOrigen']));
-		$em->persist($discapacidadOrigen_new);
-		$em->flush();		
+			if($form['discapacidadOrigen']!=""){
+				$discapacidadOrigen_new = new RudeDiscapcidadOrigen();
+				$discapacidadOrigen_new->setRude($rude);
+				$discapacidadOrigen_new->setFechaRegistro(new \DateTime('now'));
+				$discapacidadOrigen_new->setFechaModificacion(new \DateTime('now'));
+				$discapacidadOrigen_new->setDiscapacidadOrigenTipo($em->getRepository('SieAppWebBundle:DiscapacidadOrigenTipo')->find($form['discapacidadOrigen']));
+				$em->persist($discapacidadOrigen_new);
+				$em->flush();		
+			}
+		}
 		//4.1.2
 		$rude->setEsEducacionEnCasa($form['esEducacionEnCasa']);
 		
@@ -2043,22 +2049,23 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		
 		// CREAMOS LOS DATOS DEL GRADO DE LA DISCAPACIDAD 
 		//dump($form);die;
-		$discapacidadGrado_new = new RudeDiscapacidadGrado();
-		$discapacidadGrado_new->setRude($rude);
-		$discapacidadGrado_new->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
-		if($form['discapacidad']==2||$form['discapacidad']==5||$form['discapacidad']==4){//INTELECTUAL FISICO/MOTORA MULTIPLE
-			$discapacidadGrado_new->setDiscapacidadOtroGrado($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['gradoDiscapacidad']));
-			$discapacidadGrado_new->setGradoOtro($form['otroGrado']?$form['otroGrado']:'');
+		if(isset($form['discapacidad'])){
+			$discapacidadGrado_new = new RudeDiscapacidadGrado();
+			$discapacidadGrado_new->setRude($rude);
+			$discapacidadGrado_new->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
+			if($form['discapacidad']==2||$form['discapacidad']==5||$form['discapacidad']==4){//INTELECTUAL FISICO/MOTORA MULTIPLE
+				$discapacidadGrado_new->setDiscapacidadOtroGrado($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['gradoDiscapacidad']));
+				$discapacidadGrado_new->setGradoOtro($form['otroGrado']?$form['otroGrado']:'');
 
-		}else{
-			$discapacidadGrado_new->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find($form['gradoDiscapacidad']));
-		}		
-		$discapacidadGrado_new->setPorcentaje($form['porcentaje']);
-		$discapacidadGrado_new->setFechaRegistro(new \DateTime('now'));
-		$discapacidadGrado_new->setFechaModificacion(new \DateTime('now'));
-		$em->persist($discapacidadGrado_new);
-		$em->flush();
-	
+			}else{
+				$discapacidadGrado_new->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find($form['gradoDiscapacidad']));
+			}		
+			$discapacidadGrado_new->setPorcentaje($form['porcentaje']);
+			$discapacidadGrado_new->setFechaRegistro(new \DateTime('now'));
+			$discapacidadGrado_new->setFechaModificacion(new \DateTime('now'));
+			$em->persist($discapacidadGrado_new);
+			$em->flush();
+		}
 		//4.2 
 		// ELIMINAMOS LOS DATOS DE LA DIFICULTAD DE APRENDIZAJE
 		$dificultadAprendizaje_rude = $em->getRepository('SieAppWebBundle:RudeDificultadAprendizaje')->findBy(array('rude'=>$rude->getId()));
@@ -2499,9 +2506,9 @@ class InfoEstudianteRudeesNuevoController extends Controller
 
 		// dump($datos['tipoApoderado']);die;
 		$tipoApoderado = $datos['tipoApoderado'];
-
+		//dump($tipoApoderado);
 		$em = $this->getDoctrine()->getManager();
-
+		
 		// DEFINICION DE GENEROS POR TIPO DE APODERADO
 		if (in_array(1, $tipoApoderado)) {
 			$generos = [1];
@@ -2512,7 +2519,8 @@ class InfoEstudianteRudeesNuevoController extends Controller
 				$generos = [1,2];
 			}            
 		}
-		
+		$generos = [1,2];
+		//dump($generos);die;
 
 		$form = $this->createFormBuilder($datos)
 					->add('idInscripcion', 'hidden', array('data' => $idInscripcion,'mapped'=>false))
