@@ -326,6 +326,26 @@ class CarrerasController extends Controller
             'f2'  => 0,
             'total2' => 0
         );
+        $fila4 = array(
+            'id' => 6,
+            'matricula' => "DESERCION",
+            'm1'  => 15,
+            'f1'  => 1,
+            'total1' => 16,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
+        $fila4 = array(
+            'id' => 6,
+            'matricula' => "TITULADO",
+            'm1'  => 15,
+            'f1'  => 1,
+            'total1' => 16,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
         /*$fila4 = array(   
             'id' => 0,
             'matricula' => "TOTALES",        
@@ -340,7 +360,8 @@ class CarrerasController extends Controller
         array_push($tipo_matricula_array, $fila);
         array_push($tipo_matricula_array, $fila2);
         array_push($tipo_matricula_array, $fila3);
-        //array_push($tipo_matricula_array, $fila4);
+        array_push($tipo_matricula_array, $fila4);
+        array_push($tipo_matricula_array, $fila5);
 
 
        
