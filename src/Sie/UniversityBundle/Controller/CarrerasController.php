@@ -309,7 +309,7 @@ class CarrerasController extends Controller
         );
         $fila2 = array(
             'id' => 6,
-            'matricula' => "MATRICULADO NACIONAL: ANTIGUO",
+            'matricula' => "MATRICULADO EXTRANJERO: NUEVO",
             'm1'  => 15,
             'f1'  => 1,
             'total1' => 16,
@@ -319,7 +319,7 @@ class CarrerasController extends Controller
         );
         $fila3 = array(
             'id' => 6,
-            'matricula' => "NACIONAL: EGRESADO",
+            'matricula' => "MATRICULADO NACIONAL: ANTIGUO",
             'm1'  => 15,
             'f1'  => 1,
             'total1' => 16,
@@ -329,7 +329,7 @@ class CarrerasController extends Controller
         );
         $fila4 = array(
             'id' => 6,
-            'matricula' => "NACIONAL: DESERCION",
+            'matricula' => "MATRICULADO EXTRANJERO: ANTIGUO",
             'm1'  => 10,
             'f1'  => 1,
             'total1' => 11,
@@ -339,7 +339,7 @@ class CarrerasController extends Controller
         );
         $fila5 = array(
             'id' => 6,
-            'matricula' => "NACIONAL: TITULADO",
+            'matricula' => "NACIONAL: EGRESADO",
             'm1'  => 15,
             'f1'  => 1,
             'total1' => 16,
@@ -349,7 +349,7 @@ class CarrerasController extends Controller
         );
         $fila6 = array(
             'id' => 6,
-            'matricula' => "EXTRANJERO: TITULADO",
+            'matricula' => "EXTRANJERO: EGRESADO",
             'm1'  => 15,
             'f1'  => 1,
             'total1' => 16,
@@ -359,7 +359,37 @@ class CarrerasController extends Controller
         );
         $fila7 = array(
             'id' => 6,
-            'matricula' => "EXTRANJERO: EGRESADO",
+            'matricula' => "NACIONAL: TITULADO",
+            'm1'  => 5,
+            'f1'  => 1,
+            'total1' => 6,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
+        $fila8 = array(
+            'id' => 6,
+            'matricula' => "EXTRANJERO: TITULADO",
+            'm1'  => 5,
+            'f1'  => 1,
+            'total1' => 6,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
+        $fila9 = array(
+            'id' => 6,
+            'matricula' => "NACIONAL: DESERCION",
+            'm1'  => 5,
+            'f1'  => 1,
+            'total1' => 6,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
+        $fila10 = array(
+            'id' => 6,
+            'matricula' => "EXTRANJERO: DESERCION",
             'm1'  => 5,
             'f1'  => 1,
             'total1' => 6,
@@ -385,6 +415,9 @@ class CarrerasController extends Controller
         array_push($tipo_matricula_array, $fila5);
         array_push($tipo_matricula_array, $fila6);
         array_push($tipo_matricula_array, $fila7);
+        array_push($tipo_matricula_array, $fila8);
+        array_push($tipo_matricula_array, $fila9);
+        array_push($tipo_matricula_array, $fila10);
 
 
        
