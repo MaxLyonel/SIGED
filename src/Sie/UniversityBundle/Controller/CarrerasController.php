@@ -188,6 +188,7 @@ class CarrerasController extends Controller
 
         //datos estudiantes por genero
         $filas = array();
+        
         $fila = array(
             'id' => 5,
             'matricula' => "MATRICULADOS EXTRANJEROS",
