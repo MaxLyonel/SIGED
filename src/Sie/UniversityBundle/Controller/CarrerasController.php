@@ -188,8 +188,8 @@ class CarrerasController extends Controller
 
         //datos estudiantes por genero
         $filas = array();
-        
-        $fila = array(
+
+        /*$fila = array(
             'id' => 5,
             'matricula' => "MATRICULADOS EXTRANJEROS",
             'm1'  => 5,
@@ -208,7 +208,7 @@ class CarrerasController extends Controller
             'm2'  => 0,
             'f2'  => 0,
             'total2' => 0
-        );
+        );*/
         $fila4 = array(
             'id' => 6,
             'matricula' => "OTRAS BECAS",
@@ -240,8 +240,8 @@ class CarrerasController extends Controller
             'total2' => 0
         );
 
-        array_push($filas, $fila);
-        array_push($filas, $fila2);
+        /*array_push($filas, $fila);
+        array_push($filas, $fila2);*/
         array_push($filas, $fila4);
         array_push($filas, $fila5);
         array_push($filas, $fila3);
@@ -299,7 +299,7 @@ class CarrerasController extends Controller
         $tipo_matricula_array = array();
         $fila = array(
             'id' => 5,
-            'matricula' => "MATRICULADO",
+            'matricula' => "MATRICULADO NACIONAL: NUEVO",
             'm1'  => 5,
             'f1'  => 6,
             'total1' => 11,
@@ -309,7 +309,7 @@ class CarrerasController extends Controller
         );
         $fila2 = array(
             'id' => 6,
-            'matricula' => "MATRICULADO NUEVO",
+            'matricula' => "MATRICULADO NACIONAL: ANTIGUO",
             'm1'  => 15,
             'f1'  => 1,
             'total1' => 16,
@@ -319,7 +319,7 @@ class CarrerasController extends Controller
         );
         $fila3 = array(
             'id' => 6,
-            'matricula' => "EGRESADO",
+            'matricula' => "NACIONAL: EGRESADO",
             'm1'  => 15,
             'f1'  => 1,
             'total1' => 16,
@@ -329,7 +329,17 @@ class CarrerasController extends Controller
         );
         $fila4 = array(
             'id' => 6,
-            'matricula' => "DESERCION",
+            'matricula' => "NACIONAL: DESERCION",
+            'm1'  => 10,
+            'f1'  => 1,
+            'total1' => 11,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
+        $fila5 = array(
+            'id' => 6,
+            'matricula' => "NACIONAL: TITULADO",
             'm1'  => 15,
             'f1'  => 1,
             'total1' => 16,
@@ -337,12 +347,22 @@ class CarrerasController extends Controller
             'f2'  => 0,
             'total2' => 0
         );
-        $fila4 = array(
+        $fila6 = array(
             'id' => 6,
-            'matricula' => "TITULADO",
+            'matricula' => "EXTRANJERO: TITULADO",
             'm1'  => 15,
             'f1'  => 1,
             'total1' => 16,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
+        $fila7 = array(
+            'id' => 6,
+            'matricula' => "EXTRANJERO: EGRESADO",
+            'm1'  => 5,
+            'f1'  => 1,
+            'total1' => 6,
             'm2'  => 0,
             'f2'  => 0,
             'total2' => 0
@@ -363,6 +383,8 @@ class CarrerasController extends Controller
         array_push($tipo_matricula_array, $fila3);
         array_push($tipo_matricula_array, $fila4);
         array_push($tipo_matricula_array, $fila5);
+        array_push($tipo_matricula_array, $fila6);
+        array_push($tipo_matricula_array, $fila7);
 
 
        
