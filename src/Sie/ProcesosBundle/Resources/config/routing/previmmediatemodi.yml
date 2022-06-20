@@ -69,6 +69,11 @@ previmmediatemodi_recepcion_verifica_ueducativa:
   defaults:
     { _controller: SieProcesosBundle:PrevImmediateModi:recepcionVerificaDistrito }
 
+previmmediatemodi_recepcion_verifica_distrito:
+    path:     /krecepcionaVerificaDistritonew
+    defaults: { _controller: SieProcesosBundle:PrevImmediateModi:recepcionVerificaDistritoNew }
+
+
 previmmediatemodi_deriva_distrito:
   path: /derivaDistritoone
   defaults:

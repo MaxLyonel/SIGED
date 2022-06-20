@@ -871,21 +871,60 @@ class PrevImmediateModiController extends Controller{
     /**
      * Recepcion y despliegue del formulario del distrito
      * @param  integer idTramite    id del tramite
-     * @return vista                formulario de recepcion distrito
+     * @return vista                formulario de recepcion UE
      */
     public function recepcionVerificaDistritoAction(Request $request){
+
+        $idTramite = $request->get('id');
+        $em = $this->getDoctrine()->getManager();
+
+        $aprobarDistrito = $this->verificarBimestreAnterior($idTramite);
+//dump($this->historial($idTramite));die;
+        return $this->render('SieProcesosBundle:PrevImmediateModi:formularioVistaUE.html.twig', array(
+            'idTramite'=>$idTramite,
+            'historial'=>$this->historial($idTramite),
+            'aprobarDistrito'=>$aprobarDistrito
+        ));
+    }
+
+    /**
+     * Recepcion y despliegue del formulario del distrito
+     * @param  integer idTramite    id del tramite
+     * @return vista                formulario de recepcion distrito
+     */
+    public function recepcionVerificaDistritoNewAction(Request $request){
         $idTramite = $request->get('id');
         $em = $this->getDoctrine()->getManager();
 
         $aprobarDistrito = $this->verificarBimestreAnterior($idTramite);
 
-        return $this->render('SieProcesosBundle:PrevImmediateModi:formularioVistaDistrito.html.twig', array(
+        return $this->render('SieProcesosBundle:PrevImmediateModi:formularioVistaDepartamento.html.twig', array(
             'idTramite'=>$idTramite,
             'historial'=>$this->historial($idTramite),
             'aprobarDistrito'=>$aprobarDistrito
         ));
-    }    
+    }          
+    private function getTramite($tramite_id)
+    {
+        $em         = $this->getDoctrine()->getManager();
+        $db         = $em->getConnection();
 
+        $tramite= null;
+        $tramite_id=is_numeric($tramite_id)?$tramite_id:-1;
+        $query = '
+            select t1.id as tramite_id, t2.id as tramite_detalle_id, t3.id as solicitud_tramite, t3.datos,t1.flujo_tipo_id,t1.tramite_tipo,to_char(t1.fecha_tramite,\'DD/MM/YYYY\') as fecha_tramite
+            from tramite t1
+            INNER JOIN tramite_detalle t2 on  (t2.id::INT) = (t1.tramite::INT)
+            INNER JOIN wf_solicitud_tramite t3 on (t3.tramite_detalle_id::INT)=(t2.tramite_detalle_id::INT)
+            --INNER JOIN wf_solicitud_tramite t3 on (t3.tramite_detalle_id::INT)=(t2.id::INT)
+            where t1.id=?
+            limit 1';
+        $stmt = $db->prepare($query);
+        $params = array($tramite_id);
+        $stmt->execute($params);
+        $tramite=$stmt->fetch();
+        return $tramite;
+    }
     /**
      * derivacion del formulario de distrito
      * @param  Request $request datos formulario distrito
@@ -912,7 +951,9 @@ class PrevImmediateModiController extends Controller{
                     return $this->redirectToRoute('tramite_add_mod_cal_recepcion_verifica_departamento', array('id'=>$idTramite, 'tipo'=>'idtramite'));
                 }
             }
-            dump($idTramite);die;
+            $tramite= $this->getTramite($idTramite);
+            //dump($tramite);
+            //die;
             /*=====  End of VERIFICACION  ======*/
 
             $procedente = $request->get('procedente');
@@ -923,6 +964,8 @@ class PrevImmediateModiController extends Controller{
             $finalizar = $request->get('finalizar');
 
             $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
+            //dump($tramite);
+            
             $flujoTipo = $tramite->getFlujoTipo()->getId();
             $sie = $tramite->getInstitucioneducativa()->getId();
             $gestion = $tramite->getGestionId();
@@ -932,10 +975,11 @@ class PrevImmediateModiController extends Controller{
 
             // OBTENEMOS LA TAREA ACTUAL Y SIGUIENTE
             $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
+           
             $tareaActual = '';
             $tareaSiguienteSi = '';
             $tareaSiguienteNo = '';
-            foreach ($tarea as $t) {
+            /*foreach ($tarea as $t) {
                 $tareaActual = $t['tarea_actual'];
                 if ($t['condicion'] == 'SI') {
                     $tareaSiguienteSi = $t['tarea_siguiente'];
@@ -943,8 +987,9 @@ class PrevImmediateModiController extends Controller{
                 if ($t['condicion'] == 'NO') {
                     $tareaSiguienteNo = $t['tarea_siguiente'];
                 }
-            }
-
+            }*/
+            $tareaActual = $tarea['tarea_actual'];
+            $tareaSiguienteSi = $tarea['tarea_siguiente'];
             // VERIFICAMOS SI EXISTE EL INFORME
             if(isset($_FILES['informe'])){
                 $file = $_FILES['informe'];
@@ -1015,122 +1060,7 @@ class PrevImmediateModiController extends Controller{
             );
 
             // VERIFICAMOS SI EL TRAMITE ES PROCEDENTE PARA REGISTRAR LA VERIFICACION DE GESTION Y BIMESTRE
-            if ($procedente == 'SI') {
-                $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
-                    $this->session->get('userId'),
-                    $tareaSiguienteSi,
-                    $idTramite
-                );
-                // VERIFICAMOS SI EL DISTRITO PUEDE APROBAR
-                $aprobarDistrito = ($this->verificarBimestreAnterior($idTramite))?'SI':'NO';
-
-                // ARMAMOS EL ARRAY DE DATOS QUE SE GUARDARA EN FORMATO JSON
-                $datos = json_encode(array(
-                    'sie'=>$sie,
-                    'finalizar'=>$finalizar,
-                    'observacion'=>$observacion
-                ), JSON_UNESCAPED_UNICODE);
-
-                $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
-                    $this->session->get('userId'),
-                    $this->session->get('roluser'),
-                    $flujoTipo,
-                    $tareaSiguienteSi,
-                    'institucioneducativa',
-                    $sie,
-                    $observacion,
-                    $aprobarDistrito,
-                    $idTramite,
-                    $datos,
-                    '',
-                    $lugarTipo['lugarTipoIdDistrito']
-                );
-
-                /*----------  VERIFICAMOS SI EL DISTRITO APRUEBA LA MODIFICACION  ----------*/
-
-                if ($aprobarDistrito == 'SI') {
-
-                    // OBTENEMOS EL ID DE LA TAREA SIGUIENTE
-                    $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
-                    $tareaActual = '';
-                    $tareaSiguienteSi = '';
-                    foreach ($tarea as $t) {
-                        $tareaActual = $t['tarea_actual'];
-                        if ($t['condicion'] == 'SI') {
-                            $tareaSiguienteSi = $t['tarea_siguiente'];
-                        }
-                    }
-
-                    // RECIBIMOS EL TRAMITE
-                    $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
-                        $this->session->get('userId'),
-                        $tareaSiguienteSi,
-                        $idTramite
-                    );
-                    
-                    /*----------  MODIFICAMOS LAS CALIFICACIONES EN EL SISTEMA  ----------*/
-
-                    $this->modificarCalificacionesSIE($idTramite);
-
-                    /*----------  FIN MODIFICACION DE CALIFICACIONES EN EL SIE  ----------*/
-
-                    // ARMAMOS EL ARRAY DE DATOS QUE SE GUARDARA EN FORMATO JSON
-                    $datos = json_encode(array(
-                        'sie'=>$sie,
-                        'aprobarDistrito'=>$aprobarDistrito,
-                        'observacion'=>$observacion
-                    ), JSON_UNESCAPED_UNICODE);
-
-                    // ENVIAMOS EL TRAMITE
-                    $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
-                        $this->session->get('userId'),
-                        $this->session->get('roluser'),
-                        $flujoTipo,
-                        $tareaSiguienteSi,
-                        'institucioneducativa',
-                        $sie,
-                        $observacion,
-                        $aprobarDistrito,
-                        $idTramite,
-                        $datos,
-                        '',
-                        $lugarTipo['lugarTipoIdDistrito']
-                    );
-                }
-
-            }
-
-            // VERIFICAR SI EL TRAMITE NO ES PROCEDENTE PARA REGISTRAR LA TAREA DE OBSERVACION
-            if ($procedente == 'NO') {
-
-                $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
-                    $this->session->get('userId'),
-                    $tareaSiguienteNo,
-                    $idTramite
-                );
-
-                $datos = json_encode(array(
-                    'sie'=>$sie,
-                    'finalizar'=>$finalizar,
-                    'observacion'=>$observacion
-                ), JSON_UNESCAPED_UNICODE);
-
-                $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
-                    $this->session->get('userId'),
-                    $this->session->get('roluser'),
-                    $flujoTipo,
-                    $tareaSiguienteNo,
-                    'institucioneducativa',
-                    $sie,
-                    $observacion,
-                    $finalizar,
-                    $idTramite,
-                    $datos,
-                    '',
-                    $lugarTipo['lugarTipoIdDistrito']
-                );
-            }
-
+ 
             $em->getConnection()->commit();
 
             $request->getSession()
