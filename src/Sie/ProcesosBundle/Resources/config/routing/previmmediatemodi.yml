@@ -86,10 +86,10 @@ previmmediatemodi_recepcion_verifica_departamento:
   defaults:
     { _controller: SieProcesosBundle:PrevImmediateModi:recepcionVerificaDepartamento }
 
-previmmediatemodi_deriva_departamento:
-  path: /derivaDepartamentoone
+previmmediatemodi_deriva_veri_distrito:
+  path: /derivaVerificaDistrito
   defaults:
-    { _controller: SieProcesosBundle:PrevImmediateModi:derivaDepartamento }
+    { _controller: SieProcesosBundle:PrevImmediateModi:derivaVerificaDistrito }
 
 tramite_modificacion_calificaciones_acta_imprimir:
   path: /actaImprimirone
