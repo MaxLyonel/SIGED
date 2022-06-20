@@ -124,9 +124,26 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 $estudiantesEfectivos = $query->getResult();
                 $cantidadEfectivos2021 = $estudiantesEfectivos[0]['cantidadEfectivos'];
 
+                $arrMounth = array(
+                    '01' => 'Enero', 
+                    '02' => 'Febrero', 
+                    '03' => 'Marzo', 
+                    '04' => 'Abril', 
+                    '05' => 'Mayo', 
+                    '06' => 'Junio', 
+                    '07' => 'Julio', 
+                    '08' => 'Agosto', 
+                    '09' => 'Septiembre', 
+                    '10' => 'Octubre', 
+                    '11' => 'Noviembre', 
+                    '12' => 'Diciembre', 
+                );
+
                 return $this->render('SieHerramientaBundle:InstitucioneducativaAccesoInternet:result.html.twig', array(
                     'institucion' => $institucion,
                     'gestion' => $gestion,
+                    'numberweek' => date('W'),
+                    'munbermounth' => $this->getMonthkk(date('m')),
                     'form' => $this->formAccesoInternet($institucion->getId(), $gestion)->createView(),
                     'cantidadEfectivos2020' => $cantidadEfectivos2020,
                     'cantidadEfectivos2021' => $cantidadEfectivos2021
@@ -200,61 +217,61 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 'attr' => array('title'=>"Adjuntar protocolo de bioseguridad",'accept'=>"application/pdf",
                 'class'=>'form-control')
             ))
-            ->add('enfermoF2020', 'text', array(
-                'data' => 0,
-                'required' => false,
-                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
-            ))
+            // ->add('enfermoF2020', 'text', array(
+            //     'data' => 0,
+            //     'required' => false,
+            //     'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
+            // ))
             ->add('enfermoF2021', 'text', array(
                 'data' => 0,
                 'required' => false,
                 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
             ))
-            ->add('fallecidoF2020', 'text', array(
-                'data' => 0,
-                'required' => false,
-                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
-            ))
+            // ->add('fallecidoF2020', 'text', array(
+            //     'data' => 0,
+            //     'required' => false,
+            //     'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
+            // ))
             ->add('fallecidoF2021', 'text', array(
                 'data' => 0,
                 'required' => false,
                 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
             ))
-            ->add('sinSintomasF2020', 'text', array(
-                'data' => 0,
-                'required' => false,
-                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
-            ))
+            // ->add('sinSintomasF2020', 'text', array(
+            //     'data' => 0,
+            //     'required' => false,
+            //     'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
+            // ))
             ->add('sinSintomasF2021', 'text', array(
                 'data' => 0,
                 'required' => false,
                 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
             ))
-            ->add('enfermoM2020', 'text', array(
-                'data' => 0,
-                'required' => false,
-                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
-            ))
+            // ->add('enfermoM2020', 'text', array(
+            //     'data' => 0,
+            //     'required' => false,
+            //     'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
+            // ))
             ->add('enfermoM2021', 'text', array(
                 'data' => 0,
                 'required' => false,
                 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
             ))
-            ->add('fallecidoM2020', 'text', array(
-                'data' => 0,
-                'required' => false,
-                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
-            ))
+            // ->add('fallecidoM2020', 'text', array(
+            //     'data' => 0,
+            //     'required' => false,
+            //     'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
+            // ))
             ->add('fallecidoM2021', 'text', array(
                 'data' => 0,
                 'required' => false,
                 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
             ))
-            ->add('sinSintomasM2020', 'text', array(
-                'data' => 0,
-                'required' => false,
-                'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
-            ))
+            // ->add('sinSintomasM2020', 'text', array(
+            //     'data' => 0,
+            //     'required' => false,
+            //     'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{1,4}', 'maxlength' => '4', 'autocomplete' => 'off', 'onkeypress' => 'return validarNumero(event);')
+            // ))
             ->add('sinSintomasM2021', 'text', array(
                 'data' => 0,
                 'required' => false,
@@ -417,12 +434,21 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 $nuevoIEE = new institucioneducativaEstudianteEstadosalud();
                 $nuevoIEE->setInstitucioneducativa($institucion);
                 $nuevoIEE->setGestionTipo($gestion);
-                $nuevoIEE->setSinSintomasF2020(intval($form['sinSintomasF2020']));
-                $nuevoIEE->setSinSintomasM2020(intval($form['sinSintomasM2020']));
-                $nuevoIEE->setEnfermoF2020(intval($form['enfermoF2020']));
-                $nuevoIEE->setEnfermoM2020(intval($form['enfermoM2020']));
-                $nuevoIEE->setFallecidoF2020(intval($form['fallecidoF2020']));
-                $nuevoIEE->setFallecidoM2020(intval($form['fallecidoM2020']));
+                // $nuevoIEE->setSinSintomasF2020(intval($form['sinSintomasF2020']));
+                // $nuevoIEE->setSinSintomasM2020(intval($form['sinSintomasM2020']));
+                // $nuevoIEE->setEnfermoF2020(intval($form['enfermoF2020']));
+                // $nuevoIEE->setEnfermoM2020(intval($form['enfermoM2020']));
+                // $nuevoIEE->setFallecidoF2020(intval($form['fallecidoF2020']));
+                // $nuevoIEE->setFallecidoM2020(intval($form['fallecidoM2020']));
+
+                $nuevoIEE->setSinSintomasF2020(intval(0));
+                $nuevoIEE->setSinSintomasM2020(intval(0));
+                $nuevoIEE->setEnfermoF2020(intval(0));
+                $nuevoIEE->setEnfermoM2020(intval(0));
+                $nuevoIEE->setFallecidoF2020(intval(0));
+                $nuevoIEE->setFallecidoM2020(intval(0));
+
+
                 $nuevoIEE->setSinSintomasF2021(intval($form['sinSintomasF2021']));
                 $nuevoIEE->setSinSintomasM2021(intval($form['sinSintomasM2021']));                
                 $nuevoIEE->setEnfermoF2021(intval($form['enfermoF2021']));
@@ -445,7 +471,9 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     'iai' => $iai_fin,
                     'internetDatos' => $internetDatos_fin,
                     'tvDatos' => $tvDatos_fin,
-                    'estudianteSalud' => $estudianteSalud_fin
+                    'estudianteSalud' => $estudianteSalud_fin,
+                    'numberweek' => date('W'),
+                    'munbermounth' => $this->getMonthkk(date('m')),
                 ));
             } else {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa.');
@@ -455,6 +483,27 @@ class InstitucioneducativaAccesoInternetController extends Controller {
             $this->get('session')->getFlashBag()->add('noSearch', 'La unidad educativa no se encuentra registrada.');
             return $this->redirect($this->generateUrl('ie_acceso_internet_index'));
         }
+    }
+
+    private function getMonthkk($nummounth){
+
+                $arrMounth = array(
+                    '01' => 'Enero', 
+                    '02' => 'Febrero', 
+                    '03' => 'Marzo', 
+                    '04' => 'Abril', 
+                    '05' => 'Mayo', 
+                    '06' => 'Junio', 
+                    '07' => 'Julio', 
+                    '08' => 'Agosto', 
+                    '09' => 'Septiembre', 
+                    '10' => 'Octubre', 
+                    '11' => 'Noviembre', 
+                    '12' => 'Diciembre', 
+                );
+
+        return $arrMounth[$nummounth];
+
     }
 
     public function impresionDDJJAction(Request $request) {
@@ -658,7 +707,9 @@ class InstitucioneducativaAccesoInternetController extends Controller {
             'internetDatos' => $internetDatos_fin,
             'tvDatos' => $tvDatos_fin,
             'estudianteSalud' => $estudianteSalud_fin,
-            'institucion' => $institucion
+            'institucion' => $institucion,
+            'numberweek' => date('W'),
+            'munbermounth' => $this->getMonthkk(date('m')),            
         ));
     }
 }
