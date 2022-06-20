@@ -344,7 +344,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 										->setParameter('ids', $this->obtenerCatalogo($rude, 'discapacidad_tipo'));
 							},
 							'empty_value' => 'Seleccione',
-							'required' => true,
+							'required' => false,
 							'data'=>($discapacidadEstudiante)?$discapacidadEstudiante->getDiscapacidadTipo():'',
 							'mapped'=>false
 						))
@@ -356,7 +356,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 										->setParameter('ids', $gradosArray);
 							},
 							'empty_value' => 'Seleccionar...',
-							'required' => true,
+							'required' => false,
 							'data'=>($discapacidadEstudiante)?$discapacidadEstudiante->getGradoDiscapacidadTipo():''
 						))
 					->add('departamentoNacimiento', 'hidden', array('data'=>$departamentoNacimiento->getLugar()))
@@ -1756,7 +1756,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 								->setParameter('ids', $this->obtenerCatalogoTipoDiscapacidad() );
 					},
 					'empty_value' => 'Seleccionar...',					
-					'required' => true,					
+					'required' => false,					
 					'data'=>isset($discapacidadTipoGradoPorcentaje_rude)?$discapacidadTipoGradoPorcentaje_rude->getDiscapacidadTipo():'',
 					'mapped'=>false
 				))
@@ -1768,7 +1768,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 							->setParameter('ids', $gradosArray);
 				},
 				'empty_value' => 'Seleccionar...',					
-				'required' => true,
+				'required' => false,
 				'data'=>$dataGrado,
 				'mapped'=>false,
 				
@@ -1777,7 +1777,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 				'required'=>false,
 				'data'=>($discapacidadTipoGradoPorcentaje_rude)?$discapacidadTipoGradoPorcentaje_rude->getGradoOtro():'',))		
 			->add('porcentaje', 'text', array(
-				'required' => true, 
+				'required' => false, 
 				'data'=>($discapacidadTipoGradoPorcentaje_rude)?$discapacidadTipoGradoPorcentaje_rude->getPorcentaje():'',
 				'mapped'=>false, 
 				'max_length'=> 3,
@@ -2051,21 +2051,24 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		// CREAMOS LOS DATOS DEL GRADO DE LA DISCAPACIDAD 
 		//dump($form);die;
 		if(isset($form['discapacidad'])){
-			$discapacidadGrado_new = new RudeDiscapacidadGrado();
-			$discapacidadGrado_new->setRude($rude);
-			$discapacidadGrado_new->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
-			if($form['discapacidad']==2||$form['discapacidad']==5||$form['discapacidad']==4){//INTELECTUAL FISICO/MOTORA MULTIPLE
-				$discapacidadGrado_new->setDiscapacidadOtroGrado($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['gradoDiscapacidad']));
-				$discapacidadGrado_new->setGradoOtro($form['otroGrado']?$form['otroGrado']:'');
+			if($form['discapacidad']!=""){
+				$discapacidadGrado_new = new RudeDiscapacidadGrado();
+				$discapacidadGrado_new->setRude($rude);
+				$discapacidadGrado_new->setDiscapacidadTipo($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['discapacidad']));
+				if($form['discapacidad']==2||$form['discapacidad']==5||$form['discapacidad']==4){//INTELECTUAL FISICO/MOTORA MULTIPLE
+					$discapacidadGrado_new->setDiscapacidadOtroGrado($em->getRepository('SieAppWebBundle:DiscapacidadTipo')->find($form['gradoDiscapacidad']));
+					$discapacidadGrado_new->setGradoOtro($form['otroGrado']?$form['otroGrado']:'');
 
-			}else{
-				$discapacidadGrado_new->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find($form['gradoDiscapacidad']));
-			}		
-			$discapacidadGrado_new->setPorcentaje($form['porcentaje']);
-			$discapacidadGrado_new->setFechaRegistro(new \DateTime('now'));
-			$discapacidadGrado_new->setFechaModificacion(new \DateTime('now'));
-			$em->persist($discapacidadGrado_new);
-			$em->flush();
+				}else{
+					$discapacidadGrado_new->setGradoDiscapacidadTipo($em->getRepository('SieAppWebBundle:GradoDiscapacidadTipo')->find($form['gradoDiscapacidad']));
+				}		
+				if($form['porcentaje']!="")
+					$discapacidadGrado_new->setPorcentaje($form['porcentaje']);
+				$discapacidadGrado_new->setFechaRegistro(new \DateTime('now'));
+				$discapacidadGrado_new->setFechaModificacion(new \DateTime('now'));
+				$em->persist($discapacidadGrado_new);
+				$em->flush();
+			}
 		}
 		//4.2 
 		// ELIMINAMOS LOS DATOS DE LA DIFICULTAD DE APRENDIZAJE
@@ -2756,9 +2759,9 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			return false;
 	}
 
-	public function saveFormApoderadoAction(Request $request)
+	public function saveFormApoderadoEspecialAction(Request $request)
 	{
-		
+			
 		/*
 		 //////////////////////////////////////////////////////////////////////////
 		 /////////////////// Registro de apoderado PADRE, MADRE Y TUTOR  /////////////////
@@ -3360,6 +3363,8 @@ class InfoEstudianteRudeesNuevoController extends Controller
 			$rude->setRegistroFinalizado(7);
 		}
 
+		$em->flush();
+
 		$response = new JsonResponse();
 		return $response->setData([
 			'status'=>200,
@@ -3586,7 +3591,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		//dump($porciones);die;
         $dirProv = $porciones[3];
         $dirMun = $porciones[4];
-       //dump($codue,$rude,$gestion,$eins ,$dirProv,$dirMun);die;
+      // dump($codue,$rude,$gestion,$eins ,$dirProv,$dirMun);die;
         //get the values of report
         //create the response object to down load the file
         $response = new Response();
