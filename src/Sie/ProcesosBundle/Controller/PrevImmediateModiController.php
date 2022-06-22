@@ -1541,7 +1541,7 @@ class PrevImmediateModiController extends Controller{
             }else{
                 $request->getSession()
                     ->getFlashBag()
-                    ->add('exito', "El Tramite ". $idTramite ." fue enviado exitosamente");
+                    ->add('exito', "El Tramite ". $idTramite ." fue finalizado exitosamente");
             }
 
             $em->getConnection()->commit();
