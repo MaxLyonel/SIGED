@@ -418,6 +418,8 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		$estudiante->setLibro($form['libro']);
 		$estudiante->setPartida($form['partida']);
 		$estudiante->setFolio($form['folio']);
+		$estudiante->setCarnetIbc($form['carnetIbc']);
+		$estudiante->setCarnetCodepedis($form['carnetCodepedis']);
 		
 		
 		$rude->setTieneDiscapacidad($tieneDiscapacidad);
