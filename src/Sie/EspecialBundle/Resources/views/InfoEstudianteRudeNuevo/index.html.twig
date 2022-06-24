@@ -2180,7 +2180,7 @@
     function validarTieneDiscapacidad(){
         if($('#form_tieneDiscapacidad_1').is(':checked')){
             $('#form_carnetIbc').val('');
-            $('#form_carnetIbc').removeAttr('required');
+           // $('#form_carnetIbc').removeAttr('required');
             //$('#form_discapacidad').val('');
            // $('#form_discapacidad').removeAttr('required');
             //$('#form_gradoDiscapacidad').val('');
@@ -2188,7 +2188,7 @@
 
             $('#fieldsetDiscapacidad').attr('disabled','disabled');
         }else{
-            $('#form_carnetIbc').attr('required','required');
+            //$('#form_carnetIbc').attr('required','required');
           //  $('#form_discapacidad').attr('required','required');
            // $('#form_gradoDiscapacidad').attr('required','required');
 
