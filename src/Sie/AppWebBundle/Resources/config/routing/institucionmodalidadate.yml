@@ -1,0 +1,33 @@
+InstitucionModalidadAte_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:InstitucionModalidadAte:index }
+
+InstitucionModalidadAte_getMainInfo:
+    path:     /buscar
+    defaults: { _controller: SieAppWebBundle:InstitucionModalidadAte:getMainInfo }
+    options:
+         expose: true
+
+InstitucionModalidadAte_getDistrito:
+    path:     /getDistrito
+    defaults: { _controller: SieAppWebBundle:InstitucionModalidadAte:getDistritomain }
+    options:
+         expose: true         
+
+InstitucionModalidadAte_getAllUE:
+    path:     /getAllUE
+    defaults: { _controller: SieAppWebBundle:InstitucionModalidadAte:getAllUE }
+    options:
+         expose: true         
+
+InstitucionModalidadAte_registerUEModality:
+    path:     /registerUEModality
+    defaults: { _controller: SieAppWebBundle:InstitucionModalidadAte:registerUEModality }
+    options:
+         expose: true
+         
+InstitucionModalidadAte_saveUEModality:
+    path:     /saveUEModality
+    defaults: { _controller: SieAppWebBundle:InstitucionModalidadAte:saveUEModality }
+    options:
+         expose: true         
