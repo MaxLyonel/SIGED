@@ -687,6 +687,13 @@ class InfoStudentsController extends Controller {
             $em->remove($element);
         }
         $em->flush();
+
+        //borrando rude
+        $rudes = $em->getRepository('SieAppWebBundle:Rude')->findBy(array('estudianteInscripcion' => $estInsId ));
+        foreach ($rudes as $element) {
+            $em->remove($element);
+        }
+        $em->flush();
         //paso 7 borrando apoderados
         // $objEstudianteInscripcionSocioeconomicoRegular = $em->getRepository('SieAppWebBundle:EstudianteInscripcionSocioeconomicoRegular')->findOneBy(array('estudianteInscripcion' => $estInsId ));
         // if($objEstudianteInscripcionSocioeconomicoRegular){
