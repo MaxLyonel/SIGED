@@ -372,6 +372,7 @@ class InstitucionModalidadAteController extends Controller{
         $params = array($userId,$userRol);
         $stmt->execute($params);
         $user=$stmt->fetch();
+
         return $user;
     }
 
@@ -423,52 +424,36 @@ class InstitucionModalidadAteController extends Controller{
           group by cod_dis,des_dis,institucioneducativa_id,institucioneducativa,dependencia";*/
 
         $query ="
-            select 
-            institucioneducativa_id_target,
-            institucioneducativa,
-            dependencia,
-            (select count(*)
-			from (
-			select c.id, count(i.trimestre_semestre)
-			from institucioneducativa_curso  c
-				inner join turno_tipo d on  d.id = c.turno_tipo_id
-					inner join nivel_tipo e on e.id = c.nivel_tipo_id 
-						inner join ciclo_tipo f on f.id = c.ciclo_tipo_id 
-						INNER JOIN grado_tipo g on g.id = c.grado_tipo_id
-							INNER JOIN paralelo_tipo h on h.id = c.paralelo_tipo_id
-								left JOIN institucioneducativa_curso_textos_educativos i on i.institucioneducativa_curso_id = c.id
-			where institucioneducativa_id = institucioneducativa_id_target and gestion_tipo_id = ? 
-			group by c.id
-			having count(i.trimestre_semestre)>=1
-			) as tmp) as cursos_registrados,
-			(select count(distinct c.id)
-			from institucioneducativa_curso  c
-				inner join turno_tipo d on  d.id = c.turno_tipo_id
-					inner join nivel_tipo e on e.id = c.nivel_tipo_id 
-						inner join ciclo_tipo f on f.id = c.ciclo_tipo_id 
-						INNER JOIN grado_tipo g on g.id = c.grado_tipo_id
-							INNER JOIN paralelo_tipo h on h.id = c.paralelo_tipo_id
-								left JOIN institucioneducativa_curso_textos_educativos i on i.institucioneducativa_curso_id = c.id
-			where institucioneducativa_id = institucioneducativa_id_target and gestion_tipo_id = ?) as nro_cursos
-            from 
-            (
-              select distinct e.codigo as cod_dis,e.lugar as des_dis,c.id as institucioneducativa_id_target,c.institucioneducativa,(select dependencia from dependencia_tipo where id=c.dependencia_tipo_id ) as dependencia
-              from (institucioneducativa c 
-                  inner join jurisdiccion_geografica d on c.le_juridicciongeografica_id=d.id
-                    inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id)
-              where c.estadoinstitucion_tipo_id=10 and c.institucioneducativa_acreditacion_tipo_id=1 and orgcurricular_tipo_id=1 
-            ) a
-          where 
-          cod_dis = ?
-          and substring(cod_dis,1,1) = ?
-          group by cod_dis,des_dis,institucioneducativa_id_target,institucioneducativa,dependencia
+ 				select * from lugar_tipo  where codigo = ?
         ";
 
         $stmt = $db->prepare($query);
-        $params = array($gestion,$gestion,$distrito,$departamento);
+        $params = array($distrito);
+        $stmt->execute($params);
+        $distritoInfo=$stmt->fetchAll();  
+        
+
+        $query ="
+				select a.id as institucioneducativa_id_target,a.institucioneducativa,(select dependencia from dependencia_tipo where id=a.dependencia_tipo_id) as dependencia
+				,fecha1,fecha2,fecha3
+				from institucioneducativa a
+				inner join (
+				select  institucioneducativa_id
+				,split_part(string_agg(fecha_registro::varchar||'('||(select modalidad_atencion from modalidad_atencion_tipo where id=modalidad_atencion_tipo_id)||')', '|' Order By institucioneducativa_id,fecha_registro),'|',1) as fecha1
+				,split_part(string_agg(fecha_registro::varchar||'('||(select modalidad_atencion from modalidad_atencion_tipo where id=modalidad_atencion_tipo_id)||')', '|' Order By institucioneducativa_id,fecha_registro),'|',2) as fecha2
+				,split_part(string_agg(fecha_registro::varchar||'('||(select modalidad_atencion from modalidad_atencion_tipo where id=modalidad_atencion_tipo_id)||')', '|' Order By institucioneducativa_id,fecha_registro),'|',3) as fecha3
+				from institucioneducativa_modalidad_atencion 
+				where fecha_registro between (fecha_registro-3) and current_date
+				group by institucioneducativa_id) b on a.id=b.institucioneducativa_id
+					inner join jurisdiccion_geografica d on a.le_juridicciongeografica_id=d.id
+				                    inner join lugar_tipo e on e.lugar_nivel_id=7 and d.lugar_tipo_id_distrito=e.id
+				where e.id=?
+        ";
+
+        $stmt = $db->prepare($query);
+        $params = array($distritoInfo[0]['id']);
         $stmt->execute($params);
         $tmp=$stmt->fetchAll();
-
 
         if(!$tmp)
         {

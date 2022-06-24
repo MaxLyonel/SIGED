@@ -158,6 +158,9 @@
 						      <th scope="col">Sie</th>
 						      <th scope="col">Unidad Educativa</th>
 						      <th scope="col">Tipo</th>
+						      <th scope="col">Fecha</th>
+						      <th scope="col">Fecha</th>
+						      <th scope="col">Fecha</th>
 						      {# <th scope="col">Total cursos</th> #}
 						      {# <th scope="col">Cursos registrados</th> #}
 						      <th scope="col" width="5%">Option</th>
@@ -169,6 +172,9 @@
 						      <td>${institution.institucioneducativa_id_target}</td>
 						      <td>${institution.institucioneducativa}</td>
 						      <td>${institution.dependencia}</td>
+						      <td style="background-color:#CCEEFF;">${institution.fecha1}</td>
+						      <td style="background-color:#CCEEFF;;">${institution.fecha2}</td>
+						      <td style="background-color:#CCEEFF;;">${institution.fecha3}</td>
 						      <td class="text-right">
 						      	{# <a class="btn btn-primary" > <i class="fa fa-book"  @click.prevent="registerUEModality(DBRegisterData, institution.institucioneducativa_id_target)" ></i> Registrar mod</a> #}
 	                            <a style="border-radius: 10px;" class="btn btn-primary btn" href="#" aria-label="Edit" @click="registerUEModality(DBRegisterData, institution.institucioneducativa_id_target )">
