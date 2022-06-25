@@ -1,0 +1,544 @@
+{% extends 'layoutRegular.html.twig' %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+
+        [v-cloak]{
+            display: none;
+        }
+        .readData{
+            background-color: lightblue;
+            color:  #000;
+            opacity: 0.8;
+         
+
+        }
+		.jupper{
+			text-transform: uppercase;
+		}   
+        .modal { 
+            position: fixed; 
+            top: 3%; 
+            right: 3%; 
+            left: 3%; 
+            width: auto; 
+            margin: 0; 
+        }
+        .modal-body { 
+            height: 60%; 
+        }
+
+		.cajaUE { 
+		font-family: sans-serif; 
+		font-size: 22px; 
+		font-weight: 500; 
+		color: #ffffff; 
+		background:#5670a4;
+		padding: 20px;
+		 }        		     
+
+    </style>
+
+{% endblock %}
+{% block contentoption %}
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i> Registro de Modalidad por Unidad Educativa <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="#">Registro</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active"></li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <!-- /.row -->
+<div id="app" v-cloak>
+    <div class="modal fade" id="modalEstudianteTwo" data-backdrop="static">
+        <div class="modal-dialog" style="width:800px">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Registrar </h4>
+                </div>
+                <div class="modal-body">
+           
+             
+
+                </div>
+            </div>
+        </div>
+    </div> 
+
+      <div class="body-content animated fadeIn">
+            <div class="row">
+              <div class="col-xs-12 col-lg-12">
+
+
+                <div class="panel panel-default">
+					<div class="panel-body ">
+						<div class="col-md-12 p-3">
+							<div class="col-sm-12">
+								<i class="fa fa-search"></i> Presionando el boton <strong>"Buscar"</strong> se desplegará el listado de las Unidades Educativas y además la información de si registro.
+								{# <p><mark>Solo se considera un registro completo del curso si registro 2 Trimestres</mark></p> #}
+							</div>
+							<form method="POST" id="form-mostrar-resultados-reporte-salud" {# onsubmit="mostrarResultadosReporte(this); return false;" #}>
+							  <div class="form-row">
+
+								<div class="form-group col-md-3 col-sm-6 ">
+									<select class="form-control" name="gestion" id="gestion">
+										<option v-text="gestion" value="gestion"></option>
+									</select>
+								</div>
+
+								<div class="form-group col-md-3 col-sm-6 ">
+									<select  class="form-control" v-model="DBRegisterData.deptoSelected" name="departamento" id="departamento"  required="" autocomplete="off" @change="getDistritos(DBRegisterData.deptoSelected)">
+										<option v-for="(depto, index) in DBdepartamentos"  :key="depto.codigo" :value="depto.codigo" v-text="depto.depto"></option>
+									</select>
+								</div>
+
+								<div class="form-group col-md-3 col-sm-6 ">
+								  <select v-if="DBdepartamentos.length>1" class="form-control select-distrito" v-model="DBRegisterData.distritoSelected" name="distrito" id="distrito" autocomplete="off">
+								  	<option v-for="(distrito, index) in DBdistritos" :key="distrito.id" :value="distrito.id" v-text="distrito.distrito" ></option>
+								  </select>
+								  <select v-else class="form-control select-distrito" v-model="DBRegisterData.distritoSelected" name="distrito" id="distrito" autocomplete="off">
+								  
+								  	<option v-for="(distrito, index) in DBdistritosuser" :key="distrito.id" :value="distrito.id" v-text="distrito.distrito" ></option>
+								  </select>								  
+								</div>
+
+								
+								<div class="form-group col-md-3 col-sm-6 ">
+									<button v-on:click.prevent="getAllUE(DBRegisterData)" type="button" class="btn btn-primary"><i class="fa fa-book"></i>Buscar </button>	
+
+					                <div class="col-xs-12 col-lg-12" v-if="buscando">
+					                    <div  class="text-center">
+					                        <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+					                    </div>              
+					                </div>																	
+								</div>
+							  </div>
+							</form>
+						</div>
+					</div>
+                </div>
+
+                            
+              </div>
+            </div>
+          
+
+            <div class="row">
+
+                {# <div v-if="buscando" class="text-center">
+                    <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                </div>  #}           
+
+
+                <div class="col-xs-12 col-lg-12" v-if="answerResponse">
+
+					<div class="alert alert-primary" role="alert">
+					  Resultado de la Busqueda...
+					</div>                
+
+
+					<div class="table-responsive">
+						<table class="table table-striped table-condensed table-hover">
+						  <thead class="thead-dark">
+						    <tr>
+						      <th scope="col">#</th>
+						      <th scope="col">Sie</th>
+						      <th scope="col">Unidad Educativa</th>
+						      <th scope="col">Tipo</th>
+						      <th scope="col">Fecha</th>
+						      <th scope="col">Fecha</th>
+						      <th scope="col">Fecha</th>
+						      {# <th scope="col">Total cursos</th> #}
+						      {# <th scope="col">Cursos registrados</th> #}
+						      <th scope="col" width="5%">Option</th>
+						    </tr>
+						  </thead>
+						  <tbody>
+						 	<tr v-for="(institution, index) in DBUEs">
+						      <th scope="row" >${index+1}</th>
+						      <td>${institution.institucioneducativa_id_target}</td>
+						      <td>${institution.institucioneducativa}</td>
+						      <td>${institution.dependencia}</td>
+						      <td style="background-color:#CCEEFF;">${institution.fecha1}</td>
+						      <td style="background-color:#CCEEFF;;">${institution.fecha2}</td>
+						      <td style="background-color:#CCEEFF;;">${institution.fecha3}</td>
+						      <td class="text-right">
+						      	{# <a class="btn btn-primary" > <i class="fa fa-book"  @click.prevent="registerUEModality(DBRegisterData, institution.institucioneducativa_id_target)" ></i> Registrar mod</a> #}
+	                            <a style="border-radius: 10px;" class="btn btn-primary btn" href="#" aria-label="Edit" @click="registerUEModality(DBRegisterData, institution.institucioneducativa_id_target )">
+	                              <i class="fa fa-pencil fa-1x" aria-hidden="true"> Registro Modalidad</i>
+	                            </a>						      	
+						      </td>
+						    </tr>
+						  </tbody>
+						</table>
+					</div>                
+                </div>
+            </div>
+
+      </div>
+
+        <div class="modal fade" id="modalPerson">
+        {# <div id="modalPerson" class="modal modal-success fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true"> #}
+            <div class="modal-dialog" style="width:800px">
+                <div class="modal-content">
+                    <div class="modal-header ">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"> <i class="fa fa-search"></i> Registrar modalidad</h4>
+                    </div>
+                    <div class="modal-body">  
+
+                     <div class="cajaUE">${DBinstitucionE.sie} - ${DBinstitucionE.unidadEducativa}</div></br>
+						<p>Registro de la Modalidades de Atención Educativa</p>
+                     <ul>
+                     	<li>MODALIDAD PRESENCIAL. Implica la presencia física de las y los estudiantes, personal docente y administrativo, que interactúan en el desarrollo del proceso de aprendizaje en el espacio de la unidad educativa.</li>
+                     	<li>MODALIDAD SEMIPRESENCIAL. Es la alternancia de las modalidades presencial y a distancia, desarrollando los procesos de aprendizaje en la unidad educativa y el domicilio.</li>
+                     	<li>MODALIDAD A DISTANCIA. Los procesos de aprendizaje se desarrollan con el apoyo de recursos y herramientas tecnológicas de información y comunicación. Esta modalidad no requiere la presencia física de las y los estudiantes.</li>
+                     </ul>
+                     <p>En caso de cambio de la Modalidades de Atención Educativa seleccion un valor y REGISTRE </p>
+
+
+						<form class="row g-3">
+						 
+						  <div class="col-auto">
+							<select  class="form-control"  autocomplete="off" v-model="DBRegisterData.modalidadSelected">
+								<option v-for="(modali, index) in DBModalidad"  :key="modali.id" :value="modali.id" v-text="modali.modalidad"></option>
+							</select>
+						  </div>
+						  </br>
+						  <div v-if="DBRegisterData.modalidadSelected">
+							  <div class="col-auto"  style="  border: 2px solid black;
+								  outline: #CCEEFF solid 10px;
+								  margin: auto;  
+								  padding: 20px;
+								  text-align: center;
+								  width: 500px;">
+								<strong > <span v-for="mod in DBModalidad" v-if="mod.id == DBRegisterData.modalidadSelected">Fecha: ${ today }</br>Modalidad: ${ mod.modalidad }</span></strong>
+								</br>
+
+							  </div>
+								
+							  <div class="col-auto">
+							    {# <button type="button" class="btn btn-primary mb-3">Guardar</button> #}
+	                            <button v-on:click.prevent="saveUEModality(DBRegisterData, )" type="button" class="btn btn-success"><i class="fa fa-book"></i>Actualizar </button>
+	                            {# <button v-on:click="cancelEdit" type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>                                                              						     #}
+
+							  </div>
+							</div>
+						</form>	
+
+					<div class="table-responsive" v-if="answerHistory">
+						<table class="table table-striped table-condensed table-hover">
+						  <thead class="thead-dark">
+						    <tr>
+						      <th scope="col">#</th>
+						      <th scope="col">Fecha</th>
+						      <th scope="col">Unidad Modalidad</th>
+						      
+						    </tr>
+						  </thead>
+						  <tbody>
+						 	<tr v-for="(uemodalidad, index) in DBHistoryModalidad">
+						      <th scope="row" >${index+1}</th>
+						      <td>${uemodalidad.fecha}</td>
+						      <td>${uemodalidad.modalidad}</td>
+						    </tr>
+						  </tbody>
+						</table>
+					</div> 											                   
+
+
+				
+
+                    </div>
+                </div>
+            </div>
+        </div>       
+ </div>
+
+
+
+
+
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script type="text/javascript">
+    // $("#form_idfecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+  </script>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+    <script src="{{asset('js/inputmask.js')}}"></script>
+    <script type="text/javascript">
+// $("#fecnac").inputmask({ "alias": "dd-mm-yyyy", 'placeholder':'dd-mm-aaaa' });
+    
+
+
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+
+            data: {
+
+              	checked:false,
+              	opcion: 1,
+              	opcionreqdomi: 0,
+              	swattach:false,
+              	swresponse:false,
+              	swCompleteRequest:false,
+				
+              	buscando:false,
+              	documentocartaSolicitud:'',
+              	documentocarnet:'',
+              	documentoidoneidad:'',
+              	documentofotcopiaRM:'',
+				is_readonly : false, 
+
+				userRol : {{rol}},				
+				DBRegisterData:{},
+				DBdistritos:{},
+				DBdistritosuser:{},
+				DBUEs:{},
+				DBdepartamentos:{},
+				DBModalidad:[],
+				DBinstitucionE:[],
+				DBHistoryModalidad:[],
+				gestion:'',
+				today:'',
+				deptoSelected:'',
+				selected:'A',
+				sieSelected:'',
+				answerResponse:false,
+				answerHistory:false,
+
+			    /*options: [
+			      { text: 'One', value: 'A' },
+			      { text: 'Two', value: 'B' },
+			      { text: 'Three', value: 'C' }
+			    ]				*/
+
+
+
+            
+            },
+            mounted(){
+                this.getMainInfo(this.userRol);
+            },            
+            methods: {
+             
+             getMainInfo: function(userRol){
+                    
+                    axios.get(Routing.generate('InstitucionModalidadAte_getMainInfo',{ userRol: userRol}))
+                        .then(response => {
+                            this.userRol = response.data.rol;
+                            this.gestion = response.data.currentyear;
+                            this.DBdistritosuser = response.data.distritos;
+                            this.DBdepartamentos = response.data.departamentos;                            
+                            
+                        })
+                        .catch(e = {
+
+                        });                    
+                },
+              getDistritos: function(deptoSelected){
+                    axios.get(Routing.generate('InstitucionModalidadAte_getDistrito',{ deptoSelected: this.DBRegisterData.deptoSelected}))
+                        .then(response => {
+                            this.DBdistritos = response.data.distritos;
+                            
+                        })
+                        .catch(e = {
+
+                        });    
+              },
+              getAllUE: function(DBRegisterData){
+              	this.answerHistory = false;
+              	this.buscando = true;
+              	this.answerResponse = false;
+              	
+                    axios.post(Routing.generate('InstitucionModalidadAte_getAllUE', {sendDepto:this.DBRegisterData.deptoSelected, sendDistrito:this.DBRegisterData.distritoSelected, gestion:this.gestion}))
+                        .then(response => {
+                            this.DBUEs = response.data.arrUEs;
+                            this.answerResponse = response.data.answerResponse;
+                            this.DBModalidad = response.data.arrModalidad;
+                            this.today = response.data.today;
+                            
+                        })
+                        .catch(e = {
+
+                        });  
+					this.buscando = false;                          
+              },
+              registerUEModality: function(DBRegisterData, sie){
+
+              	this.answerHistory = false;
+              	this.DBinstitucionE ='';
+              	// this.DBRegisterData.modalidadSelected = false;
+              	$('#modalPerson').modal('show');
+ 				this.sieSelected  = sie;
+
+                    axios.post(Routing.generate('InstitucionModalidadAte_registerUEModality', {sendDepto:this.DBRegisterData.deptoSelected, sendDistrito:this.DBRegisterData.distritoSelected, gestion:this.gestion, sie:this.sieSelected, modalidad:this.DBRegisterData.modalidadSelected}))
+                        .then(response => {
+                            // this.DBUEs = response.data.arrUEs;
+                            this.answerHistory = response.data.answerHistory;
+                            this.DBHistoryModalidad = response.data.historyModalidad;
+                            this.DBinstitucionE = response.data.arrInstitucionE;
+                            this.today = response.data.today;
+                            
+                        })
+                        .catch(e = {
+
+                        });   				
+
+
+              },
+              saveUEModality: function(DBRegisterData){ 
+              	// console.log('save krlos');
+                    axios.post(Routing.generate('InstitucionModalidadAte_saveUEModality', {sendDepto:this.DBRegisterData.deptoSelected, sendDistrito:this.DBRegisterData.distritoSelected, gestion:this.gestion, sie:this.sieSelected, modalidad:this.DBRegisterData.modalidadSelected}))
+                        .then(response => {
+                            // this.DBUEs = response.data.arrUEs;
+                            this.answerHistory = response.data.answerHistory;
+                            this.DBHistoryModalidad = response.data.historyModalidad;
+                            this.today = response.data.today;
+                            
+                        })
+                        .catch(e = {
+
+                        });   
+              },
+              enterDataRequest: function(){
+              	this.swattach=false;
+              	this.buscando = true;
+
+              	this.documentocartaSolicitud='',
+              	this.documentocarnet='',
+              	this.documentoidoneidad='';
+              	this.documentofotcopiaRM='';
+
+                if(this.swresponse ){
+
+	              	if(this.opcionreqdomi == 3 || this.opcionreqdomi == 4){
+	              		
+	              		if(this.dataPlataforma.dataDominio.dominio==''){
+	              			Swal.fire(
+		                      'Aviso',
+		                      'Debe registrar el dominio',
+		                      'error'
+		                  	)
+		                  	this.swattach =false; 
+	              			this.buscando =false;
+		                  	return;
+
+	              		}
+	              	}
+	              	//if(this.opcion == 2){
+	              		
+					if(this.opcionreqdomi==0){
+						Swal.fire(
+							'Aviso',
+							'Debe seleccionar la plataforma',
+							'error'
+						)
+						this.swattach =false; 
+						this.buscando =false;
+						return;
+					}
+	              	//}
+
+                    Swal.fire({
+                        title: 'Realizar Actualización?',
+                        text: "esta seguro de realizar el REGISTRO",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                      if (result.value) {  	              	
+
+		              	this.dataPlataforma.dataDominio.plataforma = this.checked;
+		              	this.dataPlataforma.dataDominio.opcion = this.opcion;
+		              	this.dataPlataforma.dataDominio.opcionreqdomi = this.opcionreqdomi;
+						Swal.fire({
+		    		  		title:'Procesando',
+		    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-refresh fa-spin"></i> Espere un momento</div> ',
+		    		  		type:'info',
+		    		  		showConfirmButton: false,
+	    				});		              	
+		                axios.post(Routing.generate('plataforma_enterDataRequest', this.dataPlataforma))
+		                .then(response => {
+		                  
+		                  if (response.status == 200) {
+		                  	Swal.close();
+		                  	this.swattach = response.data.swattach;
+				            this.buscando =false; 
+
+		                  }
+		                 this.buscando=false;
+		                })
+		                .catch(e => {
+		                  Swal.fire(
+		                      'Aviso',
+		                      'No se pudo realizar la Busqueda',
+		                      'error'
+		                  )
+		                  
+		                }); 
+
+						}
+                    })	
+                    this.buscando= false;	                		              	
+
+            	
+
+             	
+
+                }else{
+                	 Swal.fire(
+	                      'Aviso',
+	                      'No se pudo realizar el Registro, por favor podria completar la Información solicitada',
+	                      'error'
+	                  )
+                	 this.buscando = false;
+                	 return;
+
+
+                }
+               
+        
+              },
+            
+
+           
+
+            },
+            // mounted(){
+            //     var selector = document.getElementById("fecnac");
+            //     Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "mm-yyyy-dd", inputEventOnly: true}).mask(selector);
+            // }
+        });
+
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $("td").focus();
+        });        
+
+
+    </script>
+{%endblock%}
