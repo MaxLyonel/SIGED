@@ -55,7 +55,7 @@ Sie\AppWebBundle\Entity\InstitucioneducativaEstudianteEstadosalud:
             comment: ''
             column: sin_sintomas_f_2021
         fechaRegistro:
-            type: datetime
+            type: date
             nullable: true
             comment: ''
             column: fecha_registro
