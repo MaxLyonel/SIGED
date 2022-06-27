@@ -81,12 +81,12 @@ class InstitucioneducativaAccesoInternetController extends Controller {
             $aTuicion = $query->fetchAll();
 
             if ($aTuicion[0]['get_ue_tuicion']) {
-                $iai = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'esactivo' => true));
+                /*$iai = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'esactivo' => true));
 
                 if($iai) {
                     $this->get('session')->getFlashBag()->add('newError', 'La Institución Educativa ya realizó el reporte de información.');
                     return $this->redirect($this->generateUrl('ie_acceso_internet_index', array('iaiid' => $iai->getId())));
-                }
+                }*/
                 
                 $estadosArray = [4,5,11,22,28,55,57,58,70,71,72,73];
 
@@ -139,6 +139,8 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     '12' => 'Diciembre', 
                 );
 
+                $objRegHealth = $em->getRepository('SieAppWebBundle:InstitucioneducativaEstudianteEstadosalud')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));   
+                
                 return $this->render('SieHerramientaBundle:InstitucioneducativaAccesoInternet:result.html.twig', array(
                     'institucion' => $institucion,
                     'gestion' => $gestion,
@@ -146,7 +148,8 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     'munbermounth' => $this->getMonthkk(date('m')),
                     'form' => $this->formAccesoInternet($institucion->getId(), $gestion)->createView(),
                     'cantidadEfectivos2020' => $cantidadEfectivos2020,
-                    'cantidadEfectivos2021' => $cantidadEfectivos2021
+                    'cantidadEfectivos2021' => $cantidadEfectivos2021,
+                    'objRegHealth' => $objRegHealth,
                 ));
             } else {
                 $this->get('session')->getFlashBag()->add('noTuicion', 'No tiene tuición sobre la unidad educativa.');
@@ -283,6 +286,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
     }
 
     public function saveAction(Request $request) {
+
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
         
@@ -332,14 +336,14 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 $tvDatos = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoTvDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
                 $estudianteSalud = $em->getRepository('SieAppWebBundle:InstitucioneducativaEstudianteEstadosalud')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));                
 
-                if($iai) {
+                /*if($iai) {
                     if($iai->getEsactivo()) {
                         $this->get('session')->getFlashBag()->add('newError', 'La Institución Educativa ya realizó el reporte de información.');
                         return $this->redirect($this->generateUrl('ie_acceso_internet_index'));
                     }
                     $em->remove($iai);
                     $em->flush();
-                }
+                }*/
 
                 foreach ($internetDatos as $key => $value) {
                     $em->remove($value);
@@ -431,9 +435,29 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     $em->flush();
                 }
 
-                $nuevoIEE = new institucioneducativaEstudianteEstadosalud();
-                $nuevoIEE->setInstitucioneducativa($institucion);
-                $nuevoIEE->setGestionTipo($gestion);
+
+                $repository = $em->getRepository('SieAppWebBundle:institucioneducativaEstudianteEstadosalud');
+                $query = $repository->createQueryBuilder('iema')
+                        ->where('iema.institucioneducativa = :institucion')
+                        ->andWhere('iema.fechaRegistro = :fechaRegistro')
+                        ->andWhere('iema.gestionTipo = :gestion')
+                        ->setParameter('institucion', $sie)
+                        ->setParameter('gestion', $gestion)
+                        ->setParameter('fechaRegistro', new \DateTime('now'))
+                        // ->setParameter('fechaNacimiento', new \DateTime($formulario['fecha']))
+                        ->getQuery();
+
+                $objHealthToday = $query->getResult();                   
+                
+                if($objHealthToday){
+                    $nuevoIEE = $em->getRepository('SieAppWebBundle:institucioneducativaEstudianteEstadosalud')->find($objHealthToday->getId());
+                }else{
+                    $nuevoIEE = new institucioneducativaEstudianteEstadosalud();
+                    $nuevoIEE->setInstitucioneducativa($institucion);
+                    $nuevoIEE->setGestionTipo($gestion);
+
+                }
+
                 // $nuevoIEE->setSinSintomasF2020(intval($form['sinSintomasF2020']));
                 // $nuevoIEE->setSinSintomasM2020(intval($form['sinSintomasM2020']));
                 // $nuevoIEE->setEnfermoF2020(intval($form['enfermoF2020']));
