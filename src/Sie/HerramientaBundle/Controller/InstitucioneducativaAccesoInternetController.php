@@ -557,7 +557,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
     public function seguimientoAction(Request $request) {
         $this->session = $request->getSession();
         $id_usuario = $this->session->get('userId');
-        
+        return $this->redirect($this->generateUrl('principal_web'));
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
