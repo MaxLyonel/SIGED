@@ -355,10 +355,10 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                     $em->flush();
                 }
 
-                if($estudianteSalud) {
+                /*if($estudianteSalud) {
                     $em->remove($estudianteSalud);
                     $em->flush();
-                }
+                }*/
                 
                 $nuevoIAI = new InstitucioneducativaAccesoInternet();
                 $nuevoIAI->setInstitucioneducativa($institucion);
@@ -449,13 +449,14 @@ class InstitucioneducativaAccesoInternetController extends Controller {
 
                 $objHealthToday = $query->getResult();                   
                 
-                if($objHealthToday){
+                if(sizeof($objHealthToday)>0){
                     $nuevoIEE = $em->getRepository('SieAppWebBundle:institucioneducativaEstudianteEstadosalud')->find($objHealthToday->getId());
+                    
                 }else{
                     $nuevoIEE = new institucioneducativaEstudianteEstadosalud();
-                    $nuevoIEE->setInstitucioneducativa($institucion);
-                    $nuevoIEE->setGestionTipo($gestion);
-
+                    $nuevoIEE->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($institucion) );
+                    $nuevoIEE->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestion) );
+                    
                 }
 
                 // $nuevoIEE->setSinSintomasF2020(intval($form['sinSintomasF2020']));
