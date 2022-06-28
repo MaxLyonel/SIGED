@@ -166,7 +166,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="text-center">
-                                <h3>FORMULARIO DE ADICIÓN Y/O MODIFICACIÓN DE CALIFICACIONES</h3>
+                                <h3>FORMULARIO DE MODIFICACIÓN DE CALIFICACIONES</h3>
                                 <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
                             </div>
                             <a class="btn btn-primary yearOld" data-toggle="modal" href='#modalEstudiante' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Buscar estudiante </a>
@@ -798,6 +798,7 @@
                     });
                 },
                 agregarNota: function(idEstudianteNota, asignatura, bimestre, nota, idNota, idFila, idNotaTipo, idEstudianteAsignatura, gestion){
+                    //console.log(nota);return false;
                     if (idNotaTipo != 5 && idNotaTipo != 6 && idNotaTipo != 7 && idNotaTipo != 8 && idNotaTipo != 9 && idNotaTipo != 11 || gestion == 2021) {
 
                         var index = this.filas.indexOf(idFila);
