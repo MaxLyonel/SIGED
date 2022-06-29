@@ -1,12 +1,13 @@
 {% extends 'layoutUniversity.html.twig' %}
-{## % extends 'layoutRegular.html.twig' % ##}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+{% endblock %}
 {% block contentBread %}
     <i class="fa fa-angle-right"></i>
     <a href="#">
         Sedes
-                    
-            
-    </a>
+    </a>   
 {% endblock %}
 {% block contentoption %}
     
@@ -24,21 +25,15 @@
             </span>
         </h2>
         <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">
-                Usted esta aquí:
-                                            
-                            
-            </span>
-            <ol class="breadcrumb">
-                <li>
-                    <i class="fa fa-home"></i>
-                    <a href="{{ path('sie_university_homepage') }}">
-                        Inicio
-                                                                    
-                                            
-                    </a>
-                </li>
-            </ol>
+        <span class="label">Usted esta aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('maininfouni_index')}}">Registro de Información</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Administracion de Carreras</li>
+        </ol>
         </div>
     <!-- /.breadcrumb-wrapper -->
     </div>
@@ -87,7 +82,7 @@
                                     <li class="active">
                                         <a href="component-tabsaccordion.html#tab2-1" data-toggle="tab">                                            
                                             <div>
-                                                <span class="text-strong">Nivel Académico: PREGRADO</span>                                           
+                                                <span class="text-strong">PREGRADO</span>                                           
                                             </div>
                                         </a>
                                     </li>
@@ -95,7 +90,7 @@
                                     <li>
                                         <a href="component-tabsaccordion.html#tab2-2" data-toggle="tab">                                            
                                             <div>
-                                                <span class="text-strong">Nivel Académico: POSTGRADO</span>                                            
+                                                <span class="text-strong">POSTGRADO</span>                                            
                                             </div>
                                         </a>
                                     </li>
@@ -111,86 +106,86 @@
                                     <div class="tab-pane fade in active" id="tab2-1">
 
                                     
-                                        <button class="btn btn-m btn-primary yearOld" data-toggle="modal" data-target=".bs-example-modal-lg">
+                                        <button class="btn btn-m btn-primary yearOld" onclick="showModalNew(1)">
                                             Adicionar Carrera                       
                                         </button>
                                         <hr>
                                     
                                        
 
-                                            <div class="formatyears">
-                                            <table class="table table-bordered table-striped cf dataTable">
-                                                <thead class="cf">
-                                                    <tr>
-                                                        
-                                                        <th width="60%">
-                                                            Nombre Carrera                                      
-                                                        </th>
-                                                       
-                                                        <th width="10%">
-                                                            Acciones                                     
-                                                        </th>
-                                                        <th width="20%" align="center">
-                                                            Datos                                            
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                {% for key, entity in carreras %}
-                                                    <tr>
-                                                        
-                                                        <td>
-                                                            {{ entity.carrera }}
-                                                        </td>
+                                        <div class="formatyears">
+                                        <table id="tbl-pregrado" class="table table-bordered table-hover cf dataTable table-primary">
+                                            <thead class="cf">
+                                                <tr>
                                                     
-                                                        <td>
-                                                            {% if entity.esSiesu == 0 %}
-                                                            <button  style="border-radius: 10px;" class="btn btn-danger" onclick="deleteCarrera('{{ entity.id }}');">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                            {% endif %}
+                                                    <th width="60%">
+                                                        Nombre Carrera                                      
+                                                    </th>
+                                                    
+                                                    <th width="10%">
+                                                        Acciones                                     
+                                                    </th>
+                                                    <th width="20%" align="center">
+                                                        Datos                                            
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            {% for key, entity in carreras %}
+                                                <tr>
+                                                    
+                                                    <td>
+                                                        {{ entity.carrera |trim }}
+                                                    </td>
+                                                
+                                                    <td>
+                                                        {% if entity.esSiesu == 0 %}
+                                                        <button  style="border-radius: 10px;" class="btn btn-danger" onclick="deleteCarrera('{{ entity.id }}');">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                        {% endif %}
 
-                                                            {% if entity.esSiesu == 0 %}
+                                                        {% if entity.esSiesu == 0 %}
 
-                                                            <button  style="border-radius: 10px;" class="btn btn-info"
-                                                                onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1);">
-                                                                <i class="fa fa-edit"></i>
-                                                            </button>
+                                                        <button  style="border-radius: 10px;" class="btn btn-info"
+                                                            onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1);">
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
 
-                                                            {% else %}
+                                                        {% else %}
 
-                                                            <button  style="border-radius: 10px;" class="btn btn-warning"
-                                                                onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',0);">
-                                                                <i class="fa fa-eye"></i>
-                                                            </button>
+                                                        <button  style="border-radius: 10px;" class="btn btn-warning"
+                                                            onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',0);">
+                                                            <i class="fa fa-eye"></i>
+                                                        </button>
 
-                                                            {% endif %}
-                                                        </td>
+                                                        {% endif %}
+                                                    </td>
 
-                                                        <td>
+                                                    <td>
 
-                                                            <a href="{{ path('carreras_info',  {'carrera_id':entity.id, 'gestion' : 2022}) }}" class="btn btn-success" data-toggle="tooltip" data-placement="top"
-                                                                data-original-title="Ver Estadisticas">Ver Estadisticas</a>
+                                                        <a href="{{ path('carreras_info',  {'carrera_id':entity.id, 'gestion' : 2022}) }}" class="btn btn-success" data-toggle="tooltip" data-placement="top"
+                                                            data-original-title="Ver Estadisticas">Ver Estadisticas</a>
 
-                                                          
-                                                            
-                                                        </td>
-                                                    </tr>
-                                                {% endfor %}
-                                            </table>
-                                            </div>
+                                                        
+                                                        
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                        </div>
                                       
                                         
                                     </div>
 
                                     <div class="tab-pane fade " id="tab2-2">
 
-                                        <button  class="btn btn-m btn-primary yearOld" data-toggle="modal" data-target=".bs-example-modal-lg">
+                                        <button  class="btn btn-m btn-primary yearOld" onclick="showModalNew(2)">
                                             Adicionar Carrera                       
                                         </button>
                                         <hr>
 
                                             <div class="table-responsive">
-                                                <table class="table table-bordered table-striped cf2 dataTable">
+                                                <table id="tbl-postgrado" class="table table-bordered table-hover cf dataTable table-primary">
                                                     <thead class="cf">
                                                         <tr>
                                                             
@@ -210,18 +205,31 @@
                                                         <tr>
                                                             
                                                             <td>
-                                                                {{ entity.carrera }}
+                                                                {{ entity.carrera |trim }}
                                                             </td>
                                                         
                                                             <td>
                                                                 {% if entity.esSiesu == 0 %}                                                                   
-                                                                    <button class="btn btn-danger"  onclick="deleteCarrera('{{ entity.id }}');">
+                                                                    <button style="border-radius: 10px;" class="btn btn-danger"  onclick="deleteCarrera('{{ entity.id }}');">
                                                                         <i class="fa fa-trash"></i>
                                                                     </button>
                                                                 {% endif %}
-                                                                    <button class="btn btn-info" onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}');">
-                                                                        <i class="fa fa-edit"></i>
+
+                                                                {% if entity.esSiesu == 0 %}
+
+                                                                <button  style="border-radius: 10px;" class="btn btn-info"
+                                                                    onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',0);">
+                                                                    <i class="fa fa-edit"></i>
+                                                                </button>
+
+                                                                {% else %}
+
+                                                                    <button style="border-radius: 10px;" class="btn btn-warning" 
+                                                                        onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1);">
+                                                                        <i class="fa fa-eye"></i>
                                                                     </button>
+
+                                                                {% endif %}
                                                             </td>
                                                             <td>
                                                                 <a href="{{ path('carreras_info', {'carrera_id':entity.id, 'gestion' : 2022}) }}" class="btn btn-success" data-toggle="tooltip" data-placement="top"
@@ -322,15 +330,15 @@
     </div>
     <!-- /.row -->
    
-    <div id="modal-assign" class="modal modal-success fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+    <div id="modal-new" class="modal modal-success fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     &times;
                     </button>
-                    <h4 class="modal-title">
-                    Nueva Carrera
+                    <h4 id="titulo" class="modal-title">
+                    
                     </h4>
                 </div>
                 <form action="{{ path('carreras_new') }}" method="post">
@@ -352,14 +360,14 @@
                                 <input type="text" class="form-control" id="area_conocimiento" name="area_conocimiento" placeholder="" maxlength="15">
                             </div>
                         </div>
-                        <div class="row">
+                        {#<div class="row">
                             <div class="col-sm-12">
                                 <label for="resolucion">
                                 Resolución
                                 </label>
                                 <input type="text" class="form-control" id="resolucion" name="resolucion" placeholder="" maxlength="15">
                             </div>
-                        </div>
+                        </div>#}
                         <div class="row">
                             <div class="col-sm-6">
                                 <label for="fecha_apertura">
@@ -367,6 +375,15 @@
                                 </label>
                                 <input type="text" class="form-control fecha" id="fecha_apertura" name="fecha_apertura" placeholder="" maxlength="15">
                             </div>
+                            <input type="hidden"  id="nivel_academico_id" name="nivel_academico_id" value="">
+                            <div class="col-sm-6">
+                                <label for="resolucion">
+                                Resolución
+                                </label>
+                                <input type="text" class="form-control" id="resolucion" name="resolucion" placeholder="" maxlength="15">
+                            </div>
+                            
+                            {# 
                             <div class="col-sm-6">
                                 <label for="nivel">
                                 Nivel Académico
@@ -379,6 +396,7 @@
                                 {% endfor %}
                                 </select>
                             </div>
+                            #}
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
@@ -474,8 +492,8 @@
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     &times;
                     </button>
-                    <h4 class="modal-title">
-                    Editar Carrera
+                    <h4 id="titulo-edit" class="modal-title">
+                    
                     </h4>
                 </div>
                 <form action="{{ path('carreras_edit') }}" method="post">
@@ -629,6 +647,8 @@
     {{ parent() }}
     <script>
 
+   
+
     var ingresoSede = function (sede){
         var formSede = $('#form_sede');
         var formulario = $('#form')[0];
@@ -639,7 +659,23 @@
 
     $(function(){
         $(".fecha").inputmask({ "alias": "dd-mm-yyyy" });
+        $('#tbl-pregrado').DataTable();
+        $('#tbl-postgrado').DataTable();
     });
+
+    function showModalNew(nivel_id) {
+        console.log(nivel_id);
+
+        if(nivel_id == 1){
+            $("#titulo").html('Nueva Carrera PREGRADO');
+        }else{
+            $("#titulo").html('Nueva Carrera POSTGRADO');
+        }
+
+        document.getElementById("nivel_academico_id").setAttribute('value', nivel_id);
+        
+        $("#modal-new").modal('show');
+    }
 
     function updateCarrera(id, carrera, resolucion, fecha_apertura, duracion, duracion_anios, nivel_academico_id, modalidad_id, grado_id, regimen_id, sw){
 
@@ -649,8 +685,13 @@
         */
         console.log(fecha_apertura);
 
-        document.getElementById("carrera_id").value = id;
+        if(sw == 0){
+            $("#titulo-edit").html('Editar Carrera');
+        }else{
+            $("#titulo-edit").html('Ver Datos Carrera');
+        }
 
+        document.getElementById("carrera_id").value = id;
         document.getElementById("edit_carrera").value = carrera;
         document.getElementById("edit_resolucion").value = resolucion;
         document.getElementById("edit_fecha_apertura").value = fecha_apertura;
@@ -663,9 +704,31 @@
         $('#edit_grado_id').val(grado_id);
         $('#edit_regimen_id').val(regimen_id);  
         
-        if(sw == 0){
+        if(sw == 1){
+
+            document.getElementById("edit_carrera").readOnly = true;
+            document.getElementById("edit_resolucion").readOnly = true;
+            document.getElementById("edit_fecha_apertura").readOnly = true;
+            document.getElementById("edit_duracion").readOnly = true;
+            document.getElementById("edit_duracion_anios").readOnly = true;
+            $('#edit_modalidad_id').prop('disabled', true);
+            $('#edit_grado_id').prop('disabled', true);
+            $('#edit_regimen_id').prop('disabled', true);
+
+
             var button = document.getElementById("btn_save_edit");
             button.style.display = "none";
+        }else{
+
+            document.getElementById("edit_carrera").readOnly = false;
+            document.getElementById("edit_resolucion").readOnly = false;
+            document.getElementById("edit_fecha_apertura").readOnly = false;
+            document.getElementById("edit_duracion").readOnly = false;
+            document.getElementById("edit_duracion_anios").readOnly = false;
+            $('#edit_modalidad_id').prop('disabled', false);
+            $('#edit_grado_id').prop('disabled', false);
+            $('#edit_regimen_id').prop('disabled', false);
+
         }
 
         $("#modal-edit").modal('show');

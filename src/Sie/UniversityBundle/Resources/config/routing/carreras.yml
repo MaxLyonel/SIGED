@@ -23,3 +23,21 @@ carreras_delete:
     defaults: { _controller: "SieUniversityBundle:Carreras:delete" }
     options:
         expose: true
+
+carrera_estadistica_becas_save:
+    path:     /estats/becas/save
+    defaults: { _controller: SieUniversityBundle:Carreras:statsBecasSave }
+    options:
+        expose: true
+
+carrera_estadistica_matriculas_save:
+    path:     /estats/matriculas/save
+    defaults: { _controller: SieUniversityBundle:Carreras:statsMatriculasSave }
+    options:
+        expose: true
+
+carrera_estadistica_cargos_save:
+    path:     /estats/cargos/save
+    defaults: { _controller: SieUniversityBundle:Carreras:statsCargosSave }
+    options:
+        expose: true

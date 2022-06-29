@@ -29,6 +29,10 @@
             margin:auto;
             background-color:#e5e7e9;
             }
+        form {
+            padding: 0 !important; 
+            margin: 0 0 !important; 
+        }
         </style>
         <!-- Start page header -->
         <link rel="stylesheet" href="{{asset('css/kcssformat.css')}}">
@@ -46,18 +50,21 @@
         </h2> 
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">
-                Usted esta aquí:
-                            
+                Usted esta aquí:                            
             </span>
             <ol class="breadcrumb">
-                <li>
-                    <i class="fa fa-home"></i>
-                    <a href="{{ path('sie_university_homepage') }}">
-                        Inicio
-                                            
-                    </a>
-                </li>
-            </ol>
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('maininfouni_index')}}">Registro de Información</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="{{path('carreras_index')}}">Carreras</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Administracion de Carreras - Estadisticas</li>
+        </ol>
         </div>
     <!-- /.breadcrumb-wrapper -->
     </div>
@@ -68,16 +75,7 @@
         
         <div class="row">
             <div class="panel">
-                <div class="panel-heading">
-                   {##  <h3 class="mt-0 text-primary">
-                        <strong>
-                            {{ central.universidad }}
-                        </strong>
-                    </h3>
-                    <h4 class="mt-0 text-info">
-                        {{ central.abreviacion }}
-                    </h3>
-                    ##}
+                <div class="panel-heading">                   
                 </div>
                 <div class="panel-body">
                     <div class="row">
@@ -92,9 +90,6 @@
                     <div class="row">
                         <div class="col-md-11">
                             <div class="panel panel-primary">
-
-                               
-
                                 
                                 <div class="panel-body">
 
@@ -124,7 +119,7 @@
                                                            
                                                             <td> 
                                                                
-                                                                <a href="{{ path('carreras_info',  {'carrera_id':100, 'gestion' :  entity.gestion_tipo_id}) }}"  data-toggle="tooltip" data-placement="top" data-original-title="Ver Estadisticas" >{{ entity.gestion_tipo_id }}</a>
+                                                                <a href="{{ path('carreras_info',  {'carrera_id':carrera_id, 'gestion' :  entity.gestion_tipo_id}) }}"  data-toggle="tooltip" data-placement="top" data-original-title="Ver Estadisticas" >{{ entity.gestion_tipo_id }}</a>
                                                             </td>
 
                                                             
@@ -139,180 +134,103 @@
 
                                         <div class="col-md-10">
 
-                                            {##<div class="alert alert-info">
-                                                <strong>REGISTRO DE ESTUDIANTES POR GENERO EN LA GESTION Y PERIODO</strong>
-                                            </div>##}
-                                            
-
                                             <div class="alert alert-info fa-2xs">
                                                 <span class="alert-icon"><i class="fa fa-user"></i></span>
                                                 <div class="notification-info">
                                                     <ul class="clearfix notification-meta">
-                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE ESTUDIANTES POR GENERO EN LA GESTION Y PERIODO</strong></a></span></li>
+                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE ESTUDIANTES SEGUN TIPO DE BECA POR GENERO EN LA GESTION Y PERIODO</strong></a></span></li>
                                                         <li class="pull-right notification-sender" id="label_gestion_est"><strong>{{ gestion_id }}</strong></li>
                                                     </ul>                                                    
                                                 </div>
                                             </div>
+                                            <div class="messagebecas" id="messagebecas"></div>
 
-                                          
                                             <div class="formatallstaff">
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                <tr>
-                                                    <th rowspan="2">TIPO DE BECA</th>
-                                                    <th colspan="3">1er. Periodo</th>
+                                                <form name="form" method="post" role="form" id="formBecas">
+                                                    <table id="table1" class="table table-bordered">
+                                                        <thead>
+                                                        <tr>
+                                                            <th width="50%" style="text-align:center" rowspan="2"><strong>TIPO DE BECA</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>1er. Periodo</strong></th>
 
-                                                    {% if data.periodos == 2 %}
-                                                        <th colspan="3">2do. Periodo</th>
-                                                    {% endif %}
-                                                   
-                                                    <th >Acciones</th>
-                                                </tr>
-                                                <tr>
-                                                    <th>M</th>
-                                                    <th>F</th>
-                                                    <th>Total</th>
-                                                    {% if data.periodos == 2 %}
-                                                        <th>M</th>
-                                                        <th>F</th>
-                                                        <th>Total</th>
-                                                    {% endif %}
-                                                    <th></th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                {% for key, entity in data.array_estudiantes %}
-                                                <tr>
-                                                    <td> {{ entity.matricula }}</td>
-
-                                                    <td class="success" id="af{{ key + 1 }}c1">{{ entity.m1 }}</td>
-                                                    <td class="success" id="af{{ key + 1 }}c2">{{ entity.f1 }}</td>
-                                                    <td class="success" id="af{{ key + 1 }}c3">{{ entity.total1 }}</td>
-
-                                                    {% if data.periodos == 2 %}
-
-                                                        <td class="success" id="af{{ key + 1 }}c4">{{ entity.m2 }}</td>
-                                                        <td class="success" id="af{{ key + 1 }}c5">{{ entity.f2 }}</td>
-                                                        <td class="success" id="af{{ key + 1 }}c6">{{ entity.total2 }}</td>
-
-                                                    {% endif %}
-                                                    <td>
-                                                        {% if entity.id != 0 %}
-                                                            <button class="btn btn-info"
-                                                                onclick="updateEstudiantes('{{ entity.id }}', 'af{{ key + 1 }}');">
-                                                                <i class="fa fa-edit"></i>
-                                                            </button>
-                                                        {% endif %}
-                                                    </td>
-                                                    {## 
-                                                    <td>
-                                                        <a href="#" style="border-radius: 10px;" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a>
-                                                    </td>
-                                                    ##}
-                                                </tr>
-                                                {% endfor %}
-                                               
-                                                </tbody>
-                                                
-                                                {## <tfoot>
-                                                    <tr>
-                                                        <th>TOTALES</th>
-                                                        <th>120</th>
-                                                        <th>50</th>
-                                                        <th>170</th>
+                                                            {% if data.periodos == 2 %}
+                                                                <th colspan="2" style="text-align:center"><strong>2do. Periodo</strong></th>
+                                                            {% endif %}                                                
                                                         
-                                                    </tr>
-                                                </tfoot>
-                                                ##}
-                                                
-                                            </table>
-                                            </div>
-
-                                            <hr>
-
-                                            <div class="alert alert-success fa-2xs">
-                                                <span class="alert-icon"><i class="fa fa-users"></i></span>
-                                                <div class="notification-info">
-                                                    <ul class="clearfix notification-meta">
-                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE DOCENTES POR GENERO EN LA
-                                                                        GESTION Y PERIODO</strong></a></span></li>
-                                                        <li class="pull-right notification-sender" id="label_gestion_est"><strong>{{ gestion_id }}</strong></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-
-                                            <div class="formatallstaff">
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th rowspan="2">TIPO CARGO</th>
-                                                            <th colspan="3">1er. Periodo</th>
-                                            
-                                                            {% if data.periodos == 2 %}
-                                                            <th colspan="3">2do. Periodo</th>
-                                                            {% endif %}
-                                            
-                                                            <th>Acciones</th>
                                                         </tr>
                                                         <tr>
-                                                            <th>M</th>
-                                                            <th>F</th>
-                                                            <th>Total</th>
+                                                            <th style="text-align:center"><strong>Masculino</strong></th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                        
                                                             {% if data.periodos == 2 %}
-                                                            <th>M</th>
-                                                            <th>F</th>
-                                                            <th>Total</th>
+                                                                <th style="text-align:center"><strong>Masculino</strong></th>
+                                                                <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            
                                                             {% endif %}
-                                                            <th></th>
+                                                        
                                                         </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for key, entity in data.array_cargos %}
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for key, entity in data.array_estudiantes %}
                                                         <tr>
                                                             <td> {{ entity.matricula }}</td>
-                                            
-                                                            <td class="success" id="bf{{ key + 1 }}c1">{{ entity.m1 }}</td>
-                                                            <td class="success" id="bf{{ key + 1 }}c2">{{ entity.f1 }}</td>
-                                                            <td class="success" id="bf{{ key + 1 }}c3">{{ entity.total1 }}</td>
-                                            
+
+                                                            <td class="success" id="af{{ key + 1 }}c1">
+                                                                <input type="number" min="0" max="9999" id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]" class="form-control clase1" value="{{ entity.m1 }}" onclick="calculaTotales()" oninput="calculaTotales()"/>
+                                                            </td>
+                                                            <td class="success" id="af{{ key + 1 }}c2">
+                                                                <input type="number" min="0" max="9999" id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]" class="form-control clase2" value="{{ entity.f1 }}" onclick="calculaTotales()" oninput="calculaTotales()"/>
+                                                            </td>
+                                                        
                                                             {% if data.periodos == 2 %}
-                                            
-                                                            <td class="success" id="bf{{ key + 1 }}c4">{{ entity.m2 }}</td>
-                                                            <td class="success" id="bf{{ key + 1 }}c5">{{ entity.f2 }}</td>
-                                                            <td class="success" id="bf{{ key + 1 }}c6">{{ entity.total2 }}</td>
-                                            
+
+                                                                <td class="warning" id="af{{ key + 1 }}c4">
+                                                                    <input type="number" min="0" max="9999" id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]" class="form-control" value="{{ entity.m2 }}"/>
+                                                                </td>
+                                                                <td class="warning" id="af{{ key + 1 }}c5">
+                                                                    <input type="number" min="0" max="9999" id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]" class="form-control" value="{{ entity.f2 }}"/>
+                                                                </td>
+                                                            
                                                             {% endif %}
-                                                            <td>
-                                                                {% if entity.id != 0 %}
-                                                                <button class="btn btn-info" onclick="updateCargos('{{ entity.id }}', 'bf{{ key + 1 }}');">
-                                                                    <i class="fa fa-edit"></i>
-                                                                </button>
-                                                                {% endif %}
-                                                            </td>
-                                                            {##
-                                                            <td>
-                                                                <a href="#" style="border-radius: 10px;" class="btn btn-primary btn-xs" data-toggle="tooltip"
-                                                                    data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a>
-                                                            </td>
-                                                            ##}
+                                                        
                                                         </tr>
                                                         {% endfor %}
-                                            
-                                                    </tbody>
-                                            
-                                                    {## <tfoot>
-                                                        <tr>
+
+                                                       
+                                                        <tr>                                                                
                                                             <th>TOTALES</th>
-                                                            <th>120</th>
-                                                            <th>50</th>
-                                                            <th>170</th>
-                                            
+                                                            {% if data.periodos == 1 %}
+                                                            <th id= "total1" >{{ totales1[0].m1}}</th>
+                                                            <th id= "total2">{{ totales1[0].f1}}</th>
+                                                            {% else %}
+                                                            <th id= "total1">{{ totales1[0].m1}}</th>
+                                                            <th id= "total2">{{ totales1[0].f1}}</th>
+                                                            <th>{{ totales1[0].m2}}</th>
+                                                            <th>{{ totales1[0].f2}}</th>
+                                                            {% endif %}
+                                                            
+                                                            
                                                         </tr>
-                                                    </tfoot>
-                                                    ##}
-                                            
-                                                </table>
+                                                      
+
+                                                        <tr>
+                                                            <td>   </td>
+                                                            {% if data.periodos == 1 %}
+                                                            <td colspan="2"> <a href="#" class="btn btn-success btn-block" id="form_save_becas">Guardar</a> </td>
+                                                            {% else %}
+                                                            <td colspan="4"> <a href="#" class="btn btn-success btn-block" id="form_save_becas">Guardar</a> </td>
+                                                            {% endif %}
+                                                        </tr>
+                                                    
+                                                        </tbody>
+                                                        
+                                                        
+                                                        
+                                                        
+                                                    </table>
+                                                </form> 
                                             </div>
+
 
                                             <hr>
 
@@ -320,85 +238,172 @@
                                                 <span class="alert-icon"><i class="fa fa-file"></i></span>
                                                 <div class="notification-info">
                                                     <ul class="clearfix notification-meta">
-                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE MATRICULADOS POR GENERO EN LA
+                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE ESTUDIANTES POR TIPO DE MATRICULA Y GENERO EN LA
                                                                         GESTION Y PERIODO</strong></a></span></li>
                                                         <li class="pull-right notification-sender" id="label_gestion_est"><strong>{{ gestion_id }}</strong></li>
                                                     </ul>
                                                 </div>
                                             </div>
                                             
+                                            <div class="messagematriculas" id="messagematriculas"></div>
                                             <div class="formatallstaff">
-                                                <table class="table table-bordered">
-                                                    <thead>
-                                                        <tr>
-                                                            <th rowspan="2">TIPO MATRICULA</th>
-                                                            <th colspan="3">1er. Periodo</th>
-                                            
-                                                            {% if data.periodos == 2 %}
-                                                            <th colspan="3">2do. Periodo</th>
-                                                            {% endif %}
-                                            
-                                                            <th>Acciones</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>M</th>
-                                                            <th>F</th>
-                                                            <th>Total</th>
-                                                            {% if data.periodos == 2 %}
-                                                            <th>M</th>
-                                                            <th>F</th>
-                                                            <th>Total</th>
-                                                            {% endif %}
-                                                            <th></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {% for key, entity in data.array_tipo_matricula %}
-                                                        <tr>
-                                                            <td> {{ entity.matricula }}</td>
-                                            
-                                                            <td class="success" id="cf{{ key + 1 }}c1">{{ entity.m1 }}</td>
-                                                            <td class="success" id="cf{{ key + 1 }}c2">{{ entity.f1 }}</td>
-                                                            <td class="success" id="cf{{ key + 1 }}c3">{{ entity.total1 }}</td>
-                                            
-                                                            {% if data.periodos == 2 %}
-                                            
-                                                            <td class="success" id="cf{{ key + 1 }}c4">{{ entity.m2 }}</td>
-                                                            <td class="success" id="cf{{ key + 1 }}c5">{{ entity.f2 }}</td>
-                                                            <td class="success" id="cf{{ key + 1 }}c6">{{ entity.total2 }}</td>
-                                            
-                                                            {% endif %}
-                                                            <td>
-                                                                {% if entity.id != 0 %}
-                                                                <button class="btn btn-info" onclick="updateMatriculaTipo('{{ entity.id }}', 'cf{{ key + 1 }}');">
-                                                                    <i class="fa fa-edit"></i>
-                                                                </button>
+                                                <form name="formMatriculas" method="post"  id="formMatriculas">
+                                                    <table id ="table2"  class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="50%" rowspan="2" style="text-align:center"><strong>TIPO MATRICULA</strong></th>
+                                                                <th colspan="2" style="text-align:center"><strong>1er. Periodo</strong></th>
+                                                
+                                                                {% if data.periodos == 2 %}
+                                                                <th style="text-align:center" colspan="2"><strong>2do. Periodo</strong></th>
+                                                                {% endif %}                                            
+                                                            
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="text-align:center"><strong>Masculino</strong></th>
+                                                                <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            
+                                                                {% if data.periodos == 2 %}
+                                                                    <th style="text-align:center"><strong>Masculino</strong></th>
+                                                                    <th style="text-align:center"><strong>Femenino</strong></th>                                                          
                                                                 {% endif %}
-                                                            </td>
-                                                            {##
-                                                            <td>
-                                                                <a href="#" style="border-radius: 10px;" class="btn btn-primary btn-xs" data-toggle="tooltip"
-                                                                    data-placement="top" data-original-title="Edit"><i class="fa fa-pencil"></i></a>
-                                                            </td>
-                                                            ##}
-                                                        </tr>
-                                                        {% endfor %}
-                                            
-                                                    </tbody>
-                                            
-                                                    {## <tfoot>
-                                                        <tr>
-                                                            <th>TOTALES</th>
-                                                            <th>120</th>
-                                                            <th>50</th>
-                                                            <th>170</th>
-                                            
-                                                        </tr>
-                                                    </tfoot>
-                                                    ##}
-                                            
-                                                </table>
+                                                                
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for key, entity in data.array_tipo_matricula %}
+                                                            <tr>
+                                                                <td> {{ entity.matricula }}</td>
+                                                
+                                                                <td class="success" id="cf{{ key + 1 }}c1">
+                                                                    <input type="number" min="0" max="9999" id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]" class="form-control" value="{{ entity.m1 }}"/>
+                                                                </td>
+                                                                <td class="success" id="cf{{ key + 1 }}c2">
+                                                                    <input type="number" min="0" max="9999" id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]" class="form-control" value="{{ entity.f1 }}"/>
+                                                                </td>
+                                                                                                            
+                                                                {% if data.periodos == 2 %}                                            
+                                                                    <td class="warning" id="cf{{ key + 1 }}c4">
+                                                                        <input type="number" min="0" max="9999" id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]" class="form-control" value="{{ entity.m2 }}"/>
+                                                                    </td>
+                                                                    <td class="warning" id="cf{{ key + 1 }}c5">
+                                                                        <input type="number" min="0" max="9999" id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]" class="form-control" value="{{ entity.f2 }}"/>
+                                                                    </td>        
+                                                                {% endif %}                                                                                                
+                                                                
+                                                            </tr>
+                                                            {% endfor %}
+
+                                                            <tr>
+                                                                <td>   </td>
+                                                                {% if data.periodos == 1 %}
+                                                                <td colspan="2"> <a href="#" class="btn btn-success btn-block" id="form_save_matriculas">Guardar</a> </td>
+                                                                {% else %}
+                                                                <td colspan="4"> <a href="#" class="btn btn-success btn-block" id="form_save_matriculas">Guardar</a> </td>
+                                                                {% endif %}
+                                                            </tr>
+                                                
+                                                        </tbody>
+                                                
+                                                        {## <tfoot>
+                                                            <tr>
+                                                                <th>TOTALES</th>
+                                                                <th>120</th>
+                                                                <th>50</th>
+                                                                <th>170</th>
+                                                
+                                                            </tr>
+                                                        </tfoot>
+                                                        ##}
+                                                
+                                                    </table>
+                                                </form> 
                                             </div>
+
+                                            
+                                            {# solo si es univrsidad indigena #}
+                                            <hr>                                                
+
+                                            <div class="alert alert-danger fa-2xs">
+                                                <span class="alert-icon"><i class="fa fa-users"></i></span>
+                                                <div class="notification-info">
+                                                    <ul class="clearfix notification-meta">
+                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE DOCENTES POR GENERO EN LA
+                                                                        GESTION Y PERIODO (SOLO UNIVERSIDADES INDIGENAS, POLICIALES Y OTROS)</strong></a></span></li>
+                                                        <li class="pull-right notification-sender" id="label_gestion_est"><strong>{{ gestion_id }}</strong></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <div class="messagecargos" id="messagecargos"></div>
+                                            <div class="formatallstaff">
+                                                <form name="formCargos" method="post"  id="formCargos">
+                                                    <table id = "table3" class="table table-bordered">
+                                                        <thead>
+                                                            <tr>
+                                                                <th  width="50%" style="text-align:center" rowspan="2"><strong>TIPO CARGO</strong></th>
+                                                                <th colspan="2" style="text-align:center"><strong>1er. Periodo</strong></th>
+                                                
+                                                                {% if data.periodos == 2 %}
+                                                                <th colspan="2" style="text-align:center"><strong>2do. Periodo</strong></th>
+                                                                {% endif %}                                            
+                                                            
+                                                            </tr>
+                                                            <tr>
+                                                                <th style="text-align:center"><strong>Masculino</strong></th>
+                                                                <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            
+                                                                {% if data.periodos == 2 %}
+                                                                <th style="text-align:center"><strong>Masculino</strong></th>
+                                                                <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            
+                                                                {% endif %}                                                           
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for key, entity in data.array_cargos %}
+                                                            <tr>
+                                                                <td> {{ entity.matricula }}</td>
+                                                
+                                                                <td class="success" id="bf{{ key + 1 }}c1">
+                                                                    <input type="number" min="0" max="9999" onKeyUp="if(parseInt(this.value)>1000){ this.value =1000; return false; }" id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]" class="form-control" value="{{ entity.m1 }}"/>
+                                                                </td>
+                                                                <td class="success" id="bf{{ key + 1 }}c2">
+                                                                    <input type="number" min="0" max="9999"  onfocusout="losesFocus()" id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]" class="form-control" value="{{ entity.f1 }}"/>
+                                                                </td>
+                                                                
+                                                
+                                                                {% if data.periodos == 2 %}
+                                                
+                                                                    <td class="warning" id="bf{{ key + 1 }}c4">
+                                                                        <input type="number" min="0" max="9999" id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]" class="form-control" value="{{ entity.m2 }}"/>
+                                                                    </td>
+                                                                    <td class="warning" id="bf{{ key + 1 }}c5">
+                                                                        <input type="number" min="0" max="9999" id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]" class="form-control" value="{{ entity.f2 }}"/>
+                                                                    </td>
+                                                                    
+                                                
+                                                                {% endif %}                                                                                                                        
+                                                            </tr>
+                                                            {% endfor %}
+
+                                                            <tr>
+                                                                <td>   </td>
+                                                                {% if data.periodos == 1 %}
+                                                                <td colspan="2"> <a href="#" class="btn btn-success btn-block" id="form_save_cargos">Guardar</a> </td>
+                                                                {% else %}
+                                                                <td colspan="4"> <a href="#" class="btn btn-success btn-block" id="form_save_cargos">Guardar</a> </td>
+                                                                {% endif %}
+                                                            </tr>
+                                                
+                                                        </tbody>
+                                                
+                                                        
+                                                
+                                                    </table>
+                                                </form>
+                                            </div>
+                                                    
 
                                         </div>
                                     </div>
@@ -686,6 +691,42 @@
 
     <script>
 
+
+    function calculaTotales(){
+
+        console.log('here');
+       
+        var tm1 = 0;
+        var tf1 = 0;
+
+        var tm2 = 0;
+        var tf2 = 0;
+       
+        $('.clase1').each(function(i,obj){
+            tm1 = parseInt(tm1) + parseInt(obj.value);
+        });
+
+        $('.clase2').each(function(i,obj){
+            tf1 = parseInt(tf1) + parseInt(obj.value);
+        });
+      
+        $('.clase3').each(function(i,obj){
+            tm2 = parseInt(tm2) + parseInt(obj.value);
+        });
+
+        $('.clase4').each(function(i,obj){
+            tf2 = parseInt(tf2) + parseInt(obj.value);
+        });
+        console.log(tm1);
+
+        $('#total1').html(tm1);
+        $('#total2').html(tf1);
+    }
+
+    function losesFocus (){
+        console.log("Focus Lost!");
+    }
+
     var ingresoSede = function (sede){
         var formSede = $('#form_sede');
         var formulario = $('#form')[0];
@@ -845,6 +886,122 @@
     {
         return Math.floor(Math.random() * 101);
     }
+
+    $('#form_save_becas').on("click", function(){
+       
+        var r = confirm("¿Desea guardar el registro?");
+        if (r == false) {
+            return false;
+        }
+        
+        var formulario = document.getElementById("formBecas"); //$('#formBecas');
+        var formData = new FormData(formulario);
+       
+        formData.append('key1', 'value1');
+        console.log(formData);
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('carrera_estadistica_becas_save'),
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {       
+                $("#messagebecas").append('<div class="text-center" id="message"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {                  
+                $('#messagebecas').empty();
+                if(data.estado){ 
+                    $("#messagebecas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');                    
+                } else {
+                    $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');                   
+                }                
+            },
+            error: function(error){    
+                $('#message').empty();   
+                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');                 
+                //boton.show();
+            },
+        }); 
+
+       
+    });
+
+    $('#form_save_matriculas').on("click", function(){
+        console.log('form_save_matriculas');
+       var r = confirm("¿Desea guardar el registro?");
+       if (r == false) {
+           return false;
+       }
+       
+       var formulario = document.getElementById("formMatriculas"); //$('#formBecas');
+       var formData = new FormData(formulario);
+      
+       formData.append('key1', 'value1');
+       console.log(formData);
+       $.ajax({
+           type: 'post',
+           url: Routing.generate('carrera_estadistica_matriculas_save'),
+           data: formData,
+           processData: false,
+           contentType: false,
+           beforeSend: function () {       
+               $("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+           },
+           success: function (data) {                  
+               $('#messagematriculas').empty();
+               if(data.estado){ 
+                   $("#messagematriculas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');                    
+               } else {
+                   $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');                   
+               }                
+           },
+           error: function(error){    
+               $('#message').empty();   
+               $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');                 
+               //boton.show();
+           },
+       });       
+      
+   });
+
+   $('#form_save_cargos').on("click", function(){
+        console.log('form_save_cargos');
+       var r = confirm("¿Desea guardar el registro?");
+       if (r == false) {
+           return false;
+       }
+       
+       var formulario = document.getElementById("formCargos"); //$('#formBecas');
+       var formData = new FormData(formulario);
+      
+       formData.append('key1', 'value1');
+       console.log(formData);
+       $.ajax({
+           type: 'post',
+           url: Routing.generate('carrera_estadistica_cargos_save'),
+           data: formData,
+           processData: false,
+           contentType: false,
+           beforeSend: function () {       
+               $("#messagecargos").append('<div class="text-center" id="message"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+           },
+           success: function (data) {                  
+               $('#messagecargos').empty();
+               if(data.estado){ 
+                   $("#messagecargos").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');                    
+               } else {
+                   $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');                   
+               }                
+           },
+           error: function(error){    
+               $('#message').empty();   
+               $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');                 
+               //boton.show();
+           },
+       }); 
+    });
+
+   
 
 
     </script>
