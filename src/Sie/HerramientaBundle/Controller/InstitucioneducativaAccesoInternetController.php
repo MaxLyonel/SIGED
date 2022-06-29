@@ -450,7 +450,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 $objHealthToday = $query->getResult();                   
                 
                 if(sizeof($objHealthToday)>0){
-                    $nuevoIEE = $em->getRepository('SieAppWebBundle:institucioneducativaEstudianteEstadosalud')->find($objHealthToday->getId());
+                    $nuevoIEE = $em->getRepository('SieAppWebBundle:institucioneducativaEstudianteEstadosalud')->find($objHealthToday[0]->getId());
                     
                 }else{
                     $nuevoIEE = new institucioneducativaEstudianteEstadosalud();
@@ -487,7 +487,7 @@ class InstitucioneducativaAccesoInternetController extends Controller {
                 $iai_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternet')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
                 $internetDatos_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoInternetDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
                 $tvDatos_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaAccesoTvDatos')->findBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
-                $estudianteSalud_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaEstudianteEstadosalud')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion));
+                $estudianteSalud_fin = $em->getRepository('SieAppWebBundle:InstitucioneducativaEstudianteEstadosalud')->findOneBy(array('institucioneducativa' => $institucion, 'gestionTipo' => $gestion, 'fechaRegistro'=> new \DateTime('now') ));
 
                 $this->get('session')->getFlashBag()->add('newOk', 'Registro realizado satisfactoriamente.');
 
