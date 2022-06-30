@@ -324,3 +324,12 @@ sie_app_web_rudeunificationinscription:
 sie_app_web_homonimo:
     resource: "@SieAppWebBundle/Resources/config/routing/homonimo.yml"
     prefix:   /sie/homonimo
+
+sie_app_web_attentionmodality:
+    resource: "@SieAppWebBundle/Resources/config/routing/institucionmodalidadate.yml"
+    prefix:   /sie/attentionmodality
+
+sie_app_web_OpeMonitorHealthseg:
+    resource: "@SieAppWebBundle/Resources/config/routing/opemonitorhealthseg.yml"
+    prefix:   /sie/monitorHealth
+
