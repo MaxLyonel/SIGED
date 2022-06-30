@@ -114,9 +114,43 @@
                             </div>
                             <div class="row text-center">
                                 <div class="col-md-12">
-                                    <h4 class="bg-info"><strong>Reporte de salud de Estudiantes</strong></h4>
+                                    <h4 class="bg-info"><strong>Reporte de salud de Estudiantes </br> {{ "now"|date("d/m/Y") }}</strong></h4>
                                 </div>
                             </div>
+
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">Fecha</th>
+                                  <th scope="col">Enfermo F</th>
+                                  <th scope="col">Enfermo M</th>
+                                  <th scope="col">Sin Sintomas F</th>
+                                  <th scope="col">Sin Sintomas M</th>
+                                  <th scope="col">Fallecido F</th>
+                                  <th scope="col">Fallecido M</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              {% for data in  objRegHealth %}
+                                <tr>
+                                  <th scope="row">1</th>
+                                  <td>{{ data.fechaRegistro|date('d-m-Y') }}</td>
+
+                 
+                                  <td>{{data.enfermoF2021}}</td>
+                                  <td>{{data.enfermoM2021}}</td>
+                                  <td>{{data.sinSintomasF2021}}</td>
+                                  <td>{{data.sinSintomasM2021}}</td>
+                                  <td>{{data.fallecidoF2021}}</td>
+                                  <td>{{data.fallecidoM2021}}</td>
+                                  
+                                </tr>
+                               {% endfor %}
+                               
+                              </tbody>
+                            </table>                            
+
 {#
                             <div class="row well text-center">
                                 <div class="col-md-12">
@@ -175,7 +209,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_sinSintomas2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes sin síntomas de COVID-19 entre 13 y 19 de {{munbermounth}}:</strong></label>
+                                <label for="form_sinSintomas2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes sin síntomas de COVID-19 :</strong></label>
                                 <div class="col-md-1 text-right">
                                     <span class="text-lilac">Mujeres:</span>
                                 </div>
@@ -190,7 +224,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_enfermo2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 entre 13 y 19 de {{munbermounth}}:</strong></label>
+                                <label for="form_enfermo2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 :</strong></label>
                                 <div class="col-md-1 text-right">
                                     <span class="text-lilac">Mujeres:</span>
                                 </div>
@@ -205,7 +239,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_fallecido2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 entre 13 y 19 de {{munbermounth}}:</strong></label>
+                                <label for="form_fallecido2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 :</strong></label>
                                 <div class="col-md-1 text-right">
                                     <span class="text-lilac">Mujeres:</span>
                                 </div>
