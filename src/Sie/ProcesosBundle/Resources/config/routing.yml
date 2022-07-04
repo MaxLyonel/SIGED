@@ -73,7 +73,11 @@ sie_procesos_tramite_certificaciones_permanente:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteCertificacionesPermanente.yml"
     prefix:   /sie/tramite/tramiteCertificacionesPermanente
 
-
 tramite_inscripcion_nivelacion_rezago:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteInscripcionNivelacionRezago.yml"
     prefix:   /sie/tramite/inscripcion/nivelacion/rezago
+
+sie_procesos_tramite_previmmediatemodi:
+    resource: "@SieProcesosBundle/Resources/config/routing/previmmediatemodi.yml"
+    prefix:   /sie/tramite/previmmediatemodi
+
