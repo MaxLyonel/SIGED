@@ -75,7 +75,7 @@ class Notas{
     public function getTipoNotaEsp($sie,$gestion,$nivel,$grado){
 
         if($gestion <= 2012 || $gestion > 2020){
-            if($gestion==2021){
+            if($gestion >= 2021){
                 $tipoNota = 'newTemplateDB';
             }else{
                 $tipoNota = 'Trimestre';
@@ -5752,7 +5752,6 @@ die;/*
             $cont = 0;
 
             $tipoNota = $this->getTipoNotaEsp($sie,$gestion,$nivel,$grado,$discapacidad);
-
 
             // if($tipoNota == 'Bimestre'){
             if( in_array($tipoNota,array('newTemplateDB','Bimestre', 'Etapa') )  ){
