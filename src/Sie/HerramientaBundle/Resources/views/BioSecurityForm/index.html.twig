@@ -1,0 +1,1816 @@
+
+{% extends app.session.get('layout') %}
+{% block stylesheets %}
+    {{parent()}}
+    <style>
+        .higherWider {
+            width:800px;
+            margin-top:100px;
+        }
+        [v-cloak]{
+            display: none;
+        }
+        .tachado{
+            text-decoration: line-through;
+            /* color: #D5956E; */
+            color:  #D51528;
+            opacity: 0.4;
+        }        
+    </style>
+<style type="text/css">
+    .jupper{
+        text-transform: uppercase;
+    }
+    #p_mensaje{
+        padding: 10px;
+        border: 1px dashed #5F62A8;
+        text-align: center;
+        color: #6496BA;
+        background: #E1EBFA;
+    }
+    #m_mensaje{
+        padding: 10px;
+        border: 1px dashed #5F62A8;
+        text-align: center;
+        color: #6496BA;
+        background: #E1EBFA;
+    }
+    #t_mensaje{
+        padding: 10px;
+        border: 1px dashed #5F62A8;
+        text-align: center;
+        color: #6496BA;
+        background: #E1EBFA;
+    }
+
+    .view{
+        border: none;
+        background: none;
+    }
+    .btn-wizard{
+        display: inline-block;
+        padding: 5px 14px;
+        /* background-color: #fff; */
+        border: 1px solid #ddd;
+        border-radius: 15px;
+        /* color: #34495e; */
+        float: right;
+        background-color: #7BB841 !important;
+        color: #FFFFFF !important;
+    }
+
+    .btn-wizard:hover{
+        background-color: #8CD24A !important;
+    }
+
+    .pager button:hover{
+        background: #EBEBEB;
+    }
+    .row{
+        margin-bottom: 2px;
+    }
+
+    .readonly{
+        background: #EEEEEE;
+    }
+    .block-print{
+        /* border: 1px dashed #EE0EE0; */
+        color: #53874C;
+        font-weight: bold;
+        text-align: center;
+        padding: 10px;
+        border-left: 2px solid #E9E9E9;
+        background: #C9EFD1;
+        min-height: 50px;
+    }
+    .block-print:hover{
+        /* color: #71B666; */
+        /* cursor: pointer; */
+    }
+    .close{
+        margin-right: 15px;
+    }
+    .sinCarnet{
+        background: #FFFFFF;
+        color: #8A868B;
+        border: 1px solid #E0D8E3;
+        padding: 4px;
+    }
+
+    input[type=radio]{
+        margin-left: 15px;
+        margin-right: 5px;
+    }
+
+    input[type="text"], input[type="select"]{
+        color: #000000;
+    }
+
+    .chosen-container-single .chosen-single {
+        color: #000000;
+    } 
+
+    .fieldset{
+        /* border: 1px groove #EEEEEE !important; */
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 0 0 1.5em 0 !important;
+        /* -webkit-box-shadow:  0px 0px 0px 0px #EEEEEE; */
+                /* box-shadow:  0px 0px 0px 0px #EEEEEE; */
+        background: #FFFFFF;
+    }
+
+    .legend{
+        color: #327ECA;
+        font-size:  1.2em !important;
+        font-weight: bold !important;
+        text-align: left !important;
+    }
+    .tituloNombre{
+        background:#64CBE2;
+        color:#FFFFFF;
+        padding: 5px;
+        font-weight: bold;
+        text-align: center;
+        font-size: 1.1em;
+    }
+    .separador{
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .validar:invalid {
+        height: 0px !important;
+        opacity: 0 !important;
+        position: absolute !important;
+        display: flex !important;
+    }
+
+    .validar:invalid[multiple] {
+        margin-top: 15px !important;
+    }
+    .panel-footer{
+        margin-top: 10px;
+    }
+    .cortina{
+        background: #7BB5D1;
+        position: absolute;
+        z-index: 1;
+        opacity: 0.4;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding-top: 25%;
+        color: #000000;
+        display: none;
+        cursor: no-drop;
+    }
+</style> 
+
+     
+
+{% endblock %}
+{% block contentoption %}
+
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i>Formulario Bio Seguridad
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('ie_acceso_internet_index')}}">Inicio</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Registro</li>
+            </ol>
+        </div>
+    </div>    
+
+
+
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('warningremoveins') %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong><i class='fa fa-linux'></i></strong> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div class="modal fade in" id="biosegurityform"  tabindex="-1" role="dialog" data-backdrop="static" >
+        <div class="modal-dialog" style="width:800px" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                <br />
+  
+                  <div id="basic-wizard-vertical">
+                    <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin rounded shadow">
+                        <!-- Start tabs heading -->
+                        <div class="panel-heading no-padding col-md-3">
+                            <ul class="nav nav-tabs">
+                                <li>
+                                    <a id="paso1" href="#tab1" data-toggle="tab" aria-expanded="true">
+                                        <div>
+                                            <span><small>1. La Unidad Educativa cuenta con brigada de Recepcion</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li >
+                                    <a id="paso2" href="#tab2" data-toggle="tab">
+                                        <div>
+                                            
+                                            <span><small>2. Cuantas unidades de Brigadas de Recepcion tiene la Unidad Educativa?</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso3" href="#tab3"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>3. Los miembros de la Brigada usan los implementos de Bioseguridad</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso4" href="#tab4"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>4. La Brigada tiene lso implementos necesarios para su labor?</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso5" href="#tab5"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>5. Los estudiantes al momento de ingresar lo hacen aplicando las medidas de Bioseguridad</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso6" href="#tab6"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>6. Las Brigadas de recepcion cumplen las siguientes labores</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso7" href="#tab7"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>7. El personal de la Unidad Educativa aplica las medidas de bioseguridad dentro de la Unidad Educativa</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso8" href="#tab8"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>8. En los ambiestes/espacios educativos (aula o curso) se aplica las medidas de bioseguridad??</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso9" href="#tab9"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>9. En caso de que el numero de estudiantes es mayor al aforo en un curso o aula que hacen cno los estudiantes que no ingresan?</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso10" href="#tab10"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>10. Cada cuanto tiempo se realiza la desinfeccion de la Unidad Educativa</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso11" href="#tab11"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>11. Quien realiza la desinfeccino ?</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso12" href="#tab12"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>12. Para las desinfeccinoes lo provee:</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div><!-- /.panel-heading -->
+                        <!--/ End tabs heading -->
+
+                        <!-- Start tabs content -->
+                        <div class="panel-body col-md-9 tab-content">
+                            <div class="tab-pane fade inner-all " id="tab1">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">1. La Unidad Educativa cuenta con Brigada de Recepcion?</legend>
+                                    <form id="formEstudiante" method="post">
+                                            <section class="row">
+                                              
+                                              <div class="col-md-4 col-md-offset-2">
+                                                <label class="radio">
+                                                <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                              </label>
+                                              </div>
+                                              <div class="col-md-2">
+                                                <label class="radio">
+                                                <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                              </label>
+                                              </div>
+                                            </section>
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                {# <li class="previous"><a href="#" onclick="prev();">Anterior</a></li> #}
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion1">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+
+                            <div class="tab-pane fade inner-all"  id="tab2">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">2. Cuantas unidades de Brigadas de Recepcion tiene la Unidad Educativa?</legend>
+                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+
+                                        <section class="row">
+                                          <div class="col-md-4 col-md-offset-4">
+                                           <input type="text" class="form-control" id="epsPaciente" placeholder="" "eps="" del="" paciente"="" required="">
+                                          </label>
+                                          </div>
+                                        </section>                                    
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+
+                            <div class="tab-pane fade inner-all"  id="tab3">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">3. ¿Los miembros de la Brigada usan los implementos de Bioseguridad?</legend>
+                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+
+                                        <!--  PREGUNTA 3  -->
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Todos usan el barbijo adecuadamente? </p>
+                                          </div>    
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>      
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Usan los barbijos en la parte de la quijada o debajo de ella? </p>
+                                          </div>    
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>      
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Usan mascarillas faciales? </p>
+                                          </div>    
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>      
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Usan el alcohol en gel o al 70%? </p>
+                                          </div>    
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>      
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Mantienen la distancia minima de 1,5 metros de miembro a miembro? </p>
+                                          </div>    
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>      
+                                        </section>
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+                            <div class="tab-pane fade inner-all"  id="tab4">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">4. Cuantas unidades de Brigadas de Recepcion tiene la Unidad Educativa?</legend>
+                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+
+                                      
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Termometro?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Alcohol en gel o al 70%?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Espacio/lugar donde se separa a los casos sospechosos? </p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>                                       
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+                            <div class="tab-pane fade inner-all"  id="tab5">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">5. ¿Los estudiantes al momento de ingresar lo hacen aplicando las medidas de Bioseguridad?</legend>
+                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Ingresan Ordenadamente en fila?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Ingresan de forma desordenada?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <!--  PREGUNTA 11  -->
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Mantienen la distancia de 1,5 metros?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <!--  PREGUNTA 12  -->
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Usan barbijo o mascarilla facial?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Portan el alcohol en gel o al 70%?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Obedecen las instrucciones de la Brigada de Recepcion?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>  
+                                        
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+                            <div class="tab-pane fade inner-all"  id="tab6">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">6. Cuantas unidades de Brigadas de Recepcion tiene la Unidad Educativa?</legend>
+                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Desinfectan las manos con alcohol en gel o al 70%?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Ordenan el ingreso por columna?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <!--  PREGUNTA 11  -->
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Piden mantener la distancia minima de 1,5 metros?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <!--  PREGUNTA 12  -->
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Controlan el uso adecuado de los barbijos?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Controlan que cada estudiante tenga el alcohol en gel o al 70%?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>                                    
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>                            
+                            <div class="tab-pane fade inner-all"  id="tab7">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">7. El personal de la Unidad Educativa aplica las medidas de bioseguridad dentro de la Unidad Educativa?</legend>
+                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Utiliza el barbijo o mascarilla facial en espacios abiertos?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <!--  PREGUNTA 7  -->
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Utiliza el barbijo o mascarilla facial en espacios cerrados?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <!--  PREGUNTA 8  -->
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Utiliza el barbijo o mascarilla facial durante las actividades educativas?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>   
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Porta el alcohol en gel o al 70% de forma personal?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>                                           
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Mantiene distancia minima de 1,5 metros en ambientes cerrados?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>                                           
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Mantiene distancia minima de 1,5 metros en ambientes abiertos?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>                                           
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Mantiene distancia minima de 1,5 metros en actividades educativas?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>                                           
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Mantiene distancia minima de 1,5 metros en actividades educativas recreativas?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+                            <div class="tab-pane fade inner-all"  id="tab8">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">8. En los ambientes o espacios educativos (aula o curso) se aplica las medidas de bioseguridad?</legend>
+                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Cuenta con alcohol en gel o al 70%?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Los pupitres personales o bipersonales mantienen la distancia para que el estudiante tenga una distancia minima de 1,5 metros?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                          </label>
+                                          </div>
+                                        </section>                                    
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div> 
+
+                            <div class="tab-pane fade inner-all"  id="tab9">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">9. En caso de que el numero de estudiantes es mayor al foro en un curso o aula, que hacen con los estudiantes que no ingresan?</legend>
+                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+                                         
+                                        <section class="row">
+                                          <div class="col-md-4 col-md-offset-4">
+                                           <textarea type="" class="form-control" id="epsPaciente" placeholder="" "eps="" del="" paciente"="" required="">
+                                           </textarea>
+                                          </label>
+                                          </div>
+                                        </section>                                    
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+                            <div class="tab-pane fade inner-all"  id="tab10">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">10. Cuantas unidades de Brigadas de Recepcion tiene la Unidad Educativa?</legend>
+                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+
+                                        <section class="row">
+                                          <div class="col-md-12">
+                                            <section class="row">
+                                              <div class="col-md-8">
+                                                <p>En la semana?</p>
+                                              </div>
+                                              <div class="col-md-4">
+                                                <select class="form-control" id="pregunta13">
+                                                <option value="5">1 dia</option>
+                                                <option value="4">2 dias</option>
+                                                <option value="3">3 diasr</option>
+                                                <option value="2">4 dias</option>
+                                                <option value="1">5 dias</option>
+                                                <option value="0">no se hace</option>
+                                              </select>
+                                              </div>
+                                        </section>                                  
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>                            
+                            <div class="tab-pane fade inner-all"  id="tab11">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">11. Quien realiza la desinfeccion?</legend>
+                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+
+                                        <section class="row">
+                                          <div class="col-md-12">
+                                            <section class="row">
+                                              
+                                              <div class="col-md-10">
+                                                <select class="form-control" id="pregunta13">
+                                                <option value="5">Municipio</option>
+                                                <option value="4">SEDES</option>
+                                                <option value="3">Empresa Privada</option>
+                                                <option value="3">Padres de Familia</option>
+                                                <option value="2">Otro</option>
+                                              </select>
+                                              </div>
+                                        </section>                                    
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+                            <div class="tab-pane fade inner-all"  id="tab12">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">12. Para la desinfeccion lo provee?</legend>
+                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+
+                                        <section class="row">
+                                          <div class="col-md-12">
+                                            <section class="row">
+                                              <div class="col-md-10">
+                                                <select class="form-control" id="pregunta13">
+                                                <option value="5">Municipio</option>
+                                                <option value="4">SEDES</option>
+                                                <option value="3">Padres de Familia</option>
+                                                <option value="3">ONGs</option>
+                                                <option value="3">Donacion</option>
+                                                <option value="2">Otro</option>
+                                              </select>
+                                              </div>
+                                        </section>                                       
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+
+                            <!--/ End pager -->
+                        </div><!-- /.panel-body -->
+                        <!--/ End tabs content -->
+                    </div><!-- /.panel -->
+                </div>
+                {# end wizard #}
+  
+
+                </div>
+            </div>
+        </div>
+    </div>  
+
+
+
+
+    <!-- /.row -->
+    <div id="app">
+        <div v-cloak>
+            <div class="body-content animated fadeIn">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12">
+                        <div class="panel panel-icon panel-default">
+                            <div class="panel-heading">
+                                <i class="fa fa-search"></i>
+                                <div class="pull-right">
+                                    {# <a href="{{ path('estudiantehistorialmodificacion') }}">Retornar Lista</a> #}
+                                </div>                                        
+                            </div>
+                            <div class="panel-body">
+                                <!-- form to search student -->
+                                <div class="form-group row buscador">                            
+                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                        <input type="text" class="form-control" v-model="datain.sie" maxlength="18" v-on:keyup.enter="" placeholder="Código SIE">
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                        <input type="text" class="form-control" v-model="datain.year" maxlength="18" v-on:keyup.enter="" placeholder="gestion">
+                                    </div>                  
+                                    </br></br>
+                                    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                        <button v-on:click="lookforInfoUE()" type="button" class="btn btn-primary"><i class="fa fa-search"></i> Buscar </button>
+                                    </div>
+                                </div>
+                                <!-- end form to search student -->
+                                                                  
+
+                                <div v-if="buscando" class="text-center">
+                                    <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                                </div>
+                                <!-- && !buscando --> 
+
+                                
+                                <div v-if="swExistinfoUE != ''  ">
+
+                                    <div class="portlet portlet-default">
+                                        <div class="portlet-heading">
+                                            <div class="portlet-title">
+                                                <h4>Datos Unidad Educativa</h4>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="portlet-body">
+                                            <div class="row">
+                                                <div class="col-lg-1"> 
+                                                    Departamento
+                                                </div>       
+                                                <div class="col-lg-4"> 
+                                                    <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.desc_departamento}</div>
+                                                </div>   
+                                                <div class="col-lg-1"> 
+                                                    Provincia
+                                                </div>      
+                                                
+                                                <div class="col-lg-4"> 
+                                                    <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.desc_provincia}</div>
+                                                </div>        
+                                            </div>
+                                            <div class="row">&nbsp;</div> 
+                                            <div class="row">
+                                                <div class="col-lg-1"> 
+                                                    Secc. Municipal
+                                                </div>      
+                                                <div class="col-lg-4"> 
+                                                    <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.desc_seccion}</div>
+                                                </div>   
+                                                <div class="col-lg-1"> 
+                                                    Cantón
+                                                </div>      
+                                                <div class="col-lg-4"> 
+                                                    <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.desc_canton}</div>
+                                                </div>        
+                                            </div>
+                                            <div class="row">&nbsp;</div> 
+                                            <div class="row">
+                                                <div class="col-lg-1"> 
+                                                    Ciudad o Local.
+                                                </div>      
+                                               
+                                                <div class="col-lg-4"> 
+                                                    <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.desc_localidad}</div>
+                                                </div>   
+                                                <div class="col-lg-1"> 
+                                                    Zona
+                                                </div>      
+                                                <div class="col-lg-5"> 
+                                                    <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.zona}</div>
+                                                </div>        
+                                            </div>
+                                            <div class="row">&nbsp;</div> 
+                                            <div class="row">
+                                                <div class="col-lg-2"> 
+                                                    <div class="row">
+                                                        <div class="col-lg-12"> 
+                                                            Código de edificio escolar
+                                                        </div>    
+                                                    </div> 
+                                                    <div class="row">
+                                                        <div class="col-lg-12"> 
+                                                            <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.cod_le_id}</div>
+                                                        </div>    
+                                                    </div> 
+                                                </div>       
+                                                <div class="col-lg-8"> 
+                                                    <div class="row">
+                                                        <div class="col-lg-12"> 
+                                                            Dirección
+                                                        </div>    
+                                                    </div> 
+                                                    <div class="row">
+                                                        <div class="col-lg-12"> 
+                                                            <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.zona}</div>
+                                                        </div>    
+                                                    </div> 
+                                                </div>  
+                                                <div class="col-lg-2"> 
+                                                    <div class="row">
+                                                        <div class="col-lg-12"> 
+                                                            Área
+                                                        </div>    
+                                                    </div> 
+                                                    <div class="row">
+                                                        <div class="col-lg-12"> 
+                                                            <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.desc_area}</div>
+                                                        </div>    
+                                                    </div> 
+                                                </div>     
+                                            </div>
+                                            <div class="row">&nbsp;</div> 
+                                             <div class="row">
+                                                <div class="col-lg-3"> 
+                                                    Director
+                                                </div>      
+                                                <div class="col-lg-3"> 
+                                                    <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.director}</div>
+                                                </div>       
+                                                <div class="col-lg-3"> 
+                                                   C.I. Director
+                                                </div>    
+                                                <div class="col-lg-3">  
+                                                    <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.ci_director}</div>
+                                                </div>    
+                                                                             
+                                            </div>                                              
+                                            <div class="row">
+                                                <div class="col-lg-3"> 
+                                                    Num. Telefono 1
+                                                </div>      
+                                                <div class="col-lg-3"> 
+                                                    <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.telefono1}</div>
+                                                </div>       
+                                                <div class="col-lg-3"> 
+                                                    Num. Telefono 2
+                                                </div>    
+                                                <div class="col-lg-3">  
+                                                    <div style="background-color: #E1F1FF; text-align: center;">${DBInstitucionEdu.telefono2}</div>
+                                                </div>    
+                                                                             
+                                            </div>                        
+                                            <div class="row">&nbsp;</div> 
+                                           
+                                            <!-- /.table-responsive -->
+                                        </div>
+                                    <!-- /.portlet-body -->
+                                     </div> 
+
+
+
+
+
+
+                                   {# end if swExistinfoUE #}
+                                </div>          
+                                <div v-if="swExistinfoUE != ''  ">
+                                    <div class="form-group row pbs">
+                                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                            {# <button v-on:click="lookforInfoUE()" type="button" class="btn btn-primary"><i class="fa fa-edit"></i> Registrar Protocolo Bio-Seguridad </button> #}
+                                             <a class="btn btn-info" data-toggle="modal" href='#biosegurityform'> <i class="fa fa-pencil"></i> Registrar Protocolo Bio-Seguridad</a>
+                                        </div>
+                                    </div> 
+
+                                </div>
+                            </div>
+                        
+
+                        
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>   
+    <script>
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                codigoRude:'',
+                gestion:'',
+                item:'',
+                arraOptionBuscar:'',
+                rudeBuscar:'',
+                optionBuscar:'',
+                studentId:'',
+                studentHistModId:false,
+                urlreport: '',
+                buscando:false,
+                swOne:false,
+                swTwo:false,
+                responseSegip:'',
+                responseFormTwo:'',
+                respuesta:'',
+                dataStudent: {},
+                dataStudentModif: {},                            
+                DBGenero: {},
+                DBPais: {},
+                DBDepto: {},
+                DBProvincia: {},
+                dataModifyToSend:[],
+                archivoAdjunto:'',
+                informe:'',
+                showbuttonPDF:false,
+                swCertification:false,
+                idDetalle: '',
+
+                datain:{sie:{{arrUe.sie}}, year:{{arrUe.gestion}} },
+                DBInstitucionEdu:[],
+                swExistinfoUE:false,
+
+               
+            },
+            methods: {
+                lookforInfoUE: function(){
+                    this.buscando = true;
+                    this.swExistinfoUE = false;
+
+                    axios.get(Routing.generate('appweb_biosecurityform_lookforInfoUE',this.datain ))
+                    .then(response => {
+                        if (response.status == 200) {
+
+                            // this.codigoRude = response.data.codigoRude;
+                            this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+                            this.swExistinfoUE = response.data.swExistinfoUE;
+                        }
+                        if( response.status == 202){
+                            // this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        //this.buscando = false;
+                    });                    
+                    
+                },
+                buscarEstudiante: function(){
+                    this.buscando = true;
+                    this.studentId = false;
+                    this.studentHistModId = false;                    
+                    this.codigoRude = '';
+                    this.estudiante = '';
+                    this.respuesta = '';
+                    this.arraOptionBuscar = '';
+                    this.item = '';
+                    this.informe = '';
+                    this.showbuttonPDF=false;
+                    this.swOne=false;
+                    this.swTwo=false;                    
+
+                  
+
+                    axios.get(Routing.generate('specialmodificationdata_student_lookfor_student', {
+                        codigoRude: this.rudeBuscar,
+                        arraOptionBuscar: this.optionBuscar                        
+                    }))
+                    .then(response => {
+                        if (response.status == 200) {
+
+                            if(response.data.swerror){
+                                this.codigoRude = response.data.codigoRude;
+                                this.estudiante = response.data.estudiante;
+                                this.studentId = response.data.studentId;
+                                this.dataStudent = response.data.student;
+                                this.dataStudentModif = response.data.studentModif;
+                                this.DBGenero = response.data.arrGenero;
+                                this.DBPais = response.data.arrPais;
+                                this.DBDepto = response.data.arrDepto;
+                                this.DBProvincia = response.data.arrProvincia;
+                                this.swCertification = response.data.swCertification;
+                                this.buscando = false;
+                                
+                                /*console.log(this.dataStudent);*/
+                                $('[data-toggle="tooltip"]').tooltip();
+                            }else{
+                                this.codigoRude = '';
+                                this.estudiante = '';
+                                this.studentId = '';
+                                this.dataStudent = '';
+                                this.dataStudentModif = '';
+                                this.DBGenero = '';
+                                this.DBPais = '';
+                                this.DBDepto = '';
+                                this.DBProvincia = '';
+                                
+                                this.buscando = false;
+                                this.respuesta = response.data.message;
+                                this.buscando = false;
+                                this.swCertification = false;
+                                return;
+                            }
+                        }
+                        if( response.status == 202){
+                            this.respuesta = response.data;
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.buscando = false;
+                    });
+                },
+         
+                setDepto: function(){
+                    var me = this;
+                    $.each(this.DBDepto, function (i, value) {
+                        if(me.dataStudentModif.lugarNacTipoId == value.deptoId) {
+                            me.dataStudentModif.lugarNacTipo = value.depto;
+                            /*me.dataModifyToSend.push({'lugarNacTipoId':me.dataStudentModif.lugarNacTipoId});*/
+                        }                        
+                    });  
+                    
+                    if(me.dataStudentModif.paisId == 1 && me.dataStudentModif.lugarNacTipoId>0){
+                         axios.post(Routing.generate('specialmodificationdata_get_provincia', me.dataStudentModif ))
+                            .then(response => {
+                                if (response.status == 200) {
+                                    this.DBProvincia = response.data.arrProvincia;
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                }
+                                if( response.status == 202){
+                                    this.respuesta = response.data;
+                                }
+
+                                this.buscando = false;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                this.buscando = false;
+                            });
+                    }else{
+                        this.DBDepto = '';
+                        this.DBProvincia = '';
+                        me.dataStudentModif.lugarNacTipoId ='';
+                        me.dataStudentModif.lugarProvNacTipoId ='';
+                    }
+
+
+
+
+
+                },
+                setProvincia: function(){
+                    var me = this;
+                    $.each(this.DBProvincia, function (i, value) {
+                        if(me.dataStudentModif.lugarProvNacTipoId == value.provinciaId) {
+                            me.dataStudentModif.lugarProvNacTipo = value.provincia;
+                            me.dataModifyToSend.push({'provinciaId':me.dataStudentModif.lugarProvNacTipoId})
+                        }
+                    });                    
+                },                 
+                               
+
+                registryFormOne: function(){
+                    var sw = false;
+                    this.responseSegip='';
+
+                    if(this.dataStudentModif.carnetIdentidad != this.dataStudent.carnetIdentidad)sw = true;
+                    if(this.dataStudentModif.complemento != this.dataStudent.complemento)sw = true;
+                    if(this.dataStudentModif.fechaNacimiento != this.dataStudent.fechaNacimiento)sw = true;
+                    if(this.dataStudentModif.paterno != this.dataStudent.paterno)sw = true;
+                    if(this.dataStudentModif.materno != this.dataStudent.materno)sw = true;
+                    if(this.dataStudentModif.nombre != this.dataStudent.nombre)sw = true;
+                        
+                    if(sw){
+
+                        axios.get(Routing.generate('specialmodificationdata_val_segip', {
+                            carnet: this.dataStudentModif.carnetIdentidad,
+                            complemento: this.dataStudentModif.complemento,                        
+                            fechaNacimiento: this.dataStudentModif.fechaNacimiento,                        
+                            paterno: this.dataStudentModif.paterno,                        
+                            materno: this.dataStudentModif.materno,                        
+                            nombre: this.dataStudentModif.nombre
+                        }))
+                        .then(response => {
+                            if (response.status == 200) {
+                                this.responseSegip=1;
+                                this.swOne = false;
+                                if(response.data.answerSegip){
+                                    // the data student is correct
+                                    this.responseSegip=2;
+                                    this.swOne = true;
+                                    $('#biosegurityform').modal('hide');
+                                }
+                                console.log(response.data.answerSegip);
+                                $('[data-toggle="tooltip"]').tooltip();
+                            }
+                            if( response.status == 202){
+                                this.respuesta = response.data;
+                            }
+
+                            this.buscando = false;
+                        })
+                        .catch(e => {
+                            console.log(e);
+                            this.buscando = false;
+                        });
+                    }else{
+                        this.responseSegip='';
+                        console.log('no change');
+                        this.responseSegip=3;
+                        this.swOne = false;
+                        // disable button
+                    }
+                    // this.swOne = sw;
+
+
+                },
+                clearSegip: function(){
+                    this.responseSegip='';
+                    this.dataStudentModif.carnetIdentidad = this.dataStudent.carnetIdentidad;
+                    this.dataStudentModif.complemento = this.dataStudent.complemento;
+                    this.dataStudentModif.fechaNacimiento = this.dataStudent.fechaNacimiento;
+                    this.dataStudentModif.paterno = this.dataStudent.paterno;
+                    this.dataStudentModif.materno = this.dataStudent.materno;
+                    this.dataStudentModif.nombre = this.dataStudent.nombre;
+                    this.swOne=false;
+                    $('#biosegurityform').modal('hide');
+
+                },
+                registryFormTwo: function(){
+                    var sw=false;
+                    if(this.dataStudentModif.generoTipo != this.dataStudent.generoTipo)sw = true;
+                    if(this.dataStudentModif.pais != this.dataStudent.pais)sw = true;
+                    if(this.dataStudentModif.lugarNacTipo != this.dataStudent.lugarNacTipo)sw = true;
+                    if(this.dataStudentModif.lugarProvNacTipo != this.dataStudent.lugarProvNacTipo)sw = true;
+                    if(this.dataStudentModif.localidad != this.dataStudent.localidad)sw = true;
+                    if(this.dataStudentModif.oficialia != this.dataStudent.oficialia)sw = true;
+                    if(this.dataStudentModif.libro != this.dataStudent.libro)sw = true;
+                    if(this.dataStudentModif.partida != this.dataStudent.partida)sw = true;
+                    if(this.dataStudentModif.folio != this.dataStudent.folio)sw = true;
+                    if(this.dataStudentModif.pasaporte != this.dataStudent.pasaporte)sw = true;
+
+                    if(sw){
+                        this.swTwo = true;
+                        $('#modalEstudianteTwo').modal('hide');
+                    }else{
+                        this.swTwo = false;
+                        this.responseFormTwo='no existen cambios';
+                    }
+
+                },
+                clearFormTwo: function(){
+
+                    this.dataStudentModif.generoTipo = this.dataStudent.generoTipo;
+                    this.dataStudentModif.pais = this.dataStudent.pais;
+                    this.dataStudentModif.lugarNacTipo = this.dataStudent.lugarNacTipo;
+                    this.dataStudentModif.lugarProvNacTipo = this.dataStudent.lugarProvNacTipo;
+                    this.dataStudentModif.localidad = this.dataStudent.localidad;
+                    this.dataStudentModif.oficialia = this.dataStudent.oficialia;
+                    this.dataStudentModif.libro = this.dataStudent.libro;
+                    this.dataStudentModif.partida = this.dataStudent.partida;
+                    this.dataStudentModif.folio = this.dataStudent.folio;
+                    this.dataStudentModif.pasaporte = this.dataStudent.pasaporte;
+                    this.swTwo = false;
+                    $('#modalEstudianteTwo').modal('hide');
+
+                },
+                updateStudent: function(){
+
+                  
+                    if(this.dataStudentModif.justificativo == ''){
+                        this.respuesta = 'Debe ingresar el Justificativo';
+                        this.buscando = false;
+                        Swal.fire(
+                            'Debe ingresar el Justificativo',
+                            'Campo requerido!',                              
+                            'warning'
+                            );                        
+                        return false;
+                    }
+
+                    /*validate the file attached*/
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                        'Adjuntar Solicitud',
+                        'Debe adjuntar un escaneado de la RA, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+                    }
+                    if(this.swCertification){
+
+                          /*console.log(this.dataStudentModif.resolucionAdm);*/
+                        if(this.dataStudentModif.resolucionAdm == ''){
+                            this.respuesta = 'Debe ingresar la Resolucion ';
+                            this.buscando = false;
+                            Swal.fire(
+                                'Debe ingresar la Resolucion ',
+                                'Campo requerido!',                              
+                                'warning'
+                                );                        
+                            return false;
+                        }
+
+                        if(this.dataStudentModif.fecharesolAdm == ''){
+                        
+                        this.respuesta = 'Debe ingresar la Fecha de Resolucion ';
+                        this.buscando = false;
+                        Swal.fire(
+                              'Debe ingresar la Fecha de Resolucion ',
+                              'Campo requerido!',                              
+                              'warning'
+                            );                        
+                        return false;
+                        }else{
+                            if(!validarFormatoFecha($('#form_fecharesoladm').val())){
+                                Swal.fire(
+                                'Revise formato de Fecha Resolucion  (dd-mm-aaaa)',
+                                'Campo requerido!',                              
+                                'warning'
+                                );  
+                                return false;
+                            }
+                        }
+
+                    }
+                    
+                    Swal.fire({
+                        title: '¿Enviar Cambios?',
+                        text: "esta seguro de realizar los cambios",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.value) {
+                            var data = new FormData();
+                            data.append('datos', JSON.stringify(this.dataStudentModif));
+                            data.append('informe', this.informe);
+                            data.append('idDetalle', this.idDetalle);
+                                                        
+                             axios.post(Routing.generate('specialmodificationdata_update_student'), data)
+                            .then(response => {
+                                if (response.status == 200) {
+                                    this.showbuttonPDF = false;
+                                    this.studentHistModId = false;
+                                    this.studentId = false;
+                                    if(response.data.showbuttonPDF){
+                                       this.showbuttonPDF = response.data.showbuttonPDF;
+                                       this.studentHistModId = response.data.studentHistModId;
+                                       this.studentId = response.data.studentId;
+                                       this.urlreport = response.data.urlreport;
+                                    }
+                                    console.log(response.data.answerSegip);
+                                    $('[data-toggle="tooltip"]').tooltip();
+                                }
+                                if( response.status == 202){
+                                    this.respuesta = response.data;
+                                }
+                                this.buscando = false;
+                            })
+                            .catch(e => {
+                                console.log(e);
+                                this.buscando = false;
+                            });
+
+                            
+                        }
+                    })                   
+
+                },
+              
+              
+            },
+            mounted(){
+                
+            }
+        });
+
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            $("td").focus();
+        });        
+
+
+    function validarFormatoFecha(campo) {
+        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+        if ((campo.match(RegExPattern)) && (campo!='')) {
+                return true;
+        } else {
+                return false;
+        }
+    }    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        var lookforStudent = function () {
+            //get the values
+           var rude = $('#form_codeRude').val();
+           var selectOption = $('#form_arrOption').val();
+            
+            if (rude.length <= 0) {
+                alert("Necesita código RUDE para realizar la busqueda");
+                return false;
+            }
+            if (selectOption == '') {
+                alert("Necesita seleccionar criterio de busqueda");
+                return false;
+            }
+            
+            dataForm = $('#idFormFindStudent').serialize();
+            $.ajax({
+                type: 'post',
+                data: dataForm,
+                url: Routing.generate('specialmodificationdata_student_lookfor_student'),
+                beforeSend: function () {
+                    $("#dataStudent").empty();
+                    $("#dataStudent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#dataStudent").empty();
+                    $("#dataStudent").append(data);
+                },
+                statusCode: {
+                    500: function () {
+
+                    },
+                    404: function () {
+
+                    }
+                }
+            });
+        }
+
+                // formdataId
+        var updateDataStudent = function(){
+            var message = '';
+            if($('#form_resoladm').val()==''){
+                message+= '- Necesita Resolucion Administrativa\n';
+            }
+            if($('#form_fecharesoladm').val()==''){
+                message+= '- Necesita Fecha Resolucion Administrativa\n';
+            }
+            if($('#form_obs').val()==''){
+                message+= '- Necesita registrar justificativo\n';
+            }            
+            if(message){
+                alert(message);
+                return false;
+            }
+            if(!validarFormatoFecha($('#form_fecharesoladm').val())){
+              alert('Revise formato de Fecha Resolucion Administrativa (dd-mm-aaaa)');
+              return false;
+            }
+            
+            var dataForm = $('#formdataStudentId').serialize();
+            if (confirm('¿Esta seguro de realizar el cambio?')) {
+                    $.ajax({
+                        type: 'post',
+                        data: dataForm,
+                        url: Routing.generate('specialmodificationdata_student_updateDataStudent'),
+                        beforeSend: function () {
+                            $("#dataStudent").empty();
+                            $("#dataStudent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            
+                            $("#dataStudent").empty();
+                            $("#dataStudent").append(data);
+                        },
+                        statusCode: {
+                            500: function () {
+
+                            },
+                            404: function () {
+
+                            }
+                        }
+                    });
+            } else {
+              return false;
+            }
+        }
+
+
+    
+
+
+        function dep(es) {
+
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_departamentos_st', {'pais': parseInt(es)}),
+                beforeSend: function () {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+                    /*$("#localidad").empty();*/
+                    $("#div-load").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_departamento").empty();
+                    $("#form_provincia").empty();
+
+                    $.each(data.departamento, function (i, value) {
+                        $("#form_departamento").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }
+
+
+
+        function prov(d) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('search_provincias_st', {'departamento': parseInt(d)}),
+                beforeSend: function () {
+                    $("#form_provincia").empty();
+                    $("#div-load-prov").parent().append('<div class="loading"></div>');
+                },
+                success: function (data) {
+                    $("#form_provincia").empty();
+                    $.each(data.provincia, function (i, value) {
+                        $("#form_provincia").append('<option value="' + i + '">' + value + '</option>');
+                    });
+                    $(".loading").remove();
+                }
+            });
+        }        
+
+
+
+
+    function prev(){
+        var $active = $('.nav-tabs li.active');
+        $active.next().removeClass('disabled');
+        prevTab($active);
+    }
+    function prevTab(elem) {
+        $(elem).prev().find('a[data-toggle="tab"]').click();
+    }
+    function next(){
+        var $active = $('.nav-tabs li.active');
+        $active.next().removeClass('disabled');
+        nextTab($active);
+    }
+    function nextTab(elem) {
+        $(elem).next().find('a[data-toggle="tab"]').click();
+    }
+
+    </script>
+{%endblock%}

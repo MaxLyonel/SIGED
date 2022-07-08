@@ -1,0 +1,11 @@
+appweb_biosecurityform_index:
+    path:    /
+    defaults: { _controller: SieAppWebBundle:BioSecurityForm:index}
+    options:
+         expose: true
+
+appweb_biosecurityform_lookforInfoUE:
+    path:    /lookforInfoUE
+    defaults: { _controller: SieAppWebBundle:BioSecurityForm:lookforInfoUE}
+    options:
+         expose: true         
