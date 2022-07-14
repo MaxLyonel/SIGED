@@ -659,6 +659,16 @@
 		    		this.estudiante.fechaNacimiento = '';
 		    		this.estudiante.nivel = '';
 		    		this.estudiante.grado = '';
+
+		    		this.historyReg = false;
+			        this.historyAlt = false;
+			        this.historyEsp = false;
+			        this.historyPer = false; 		    		
+			        this.historyPer = [];
+			        this.NoProfesional='';
+			        this.noProfesor='';
+			        this.swquestion = false;
+			        this.entidadEspecialidadTipo=[];
 		    	},
 		    	validarFormatoFecha(campo) {
 	    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
