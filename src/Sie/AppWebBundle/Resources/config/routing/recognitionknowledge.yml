@@ -1,0 +1,15 @@
+recognitionknowledge_index:
+  path: /
+  defaults: { _controller: SieAppWebBundle:RecognitionKnowledge:index }
+
+recognitionknowledge_lookforCompetitor:
+    path:     /lookforCompetitor
+    defaults: { _controller: SieAppWebBundle:RecognitionKnowledge:lookforCompetitor }
+    options:
+         expose: true  
+
+recognitionknowledge_infocentro:
+    path:     /infocentro
+    defaults: { _controller: SieAppWebBundle:RecognitionKnowledge:infoCentro }
+    options:
+         expose: true  

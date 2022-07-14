@@ -333,3 +333,8 @@ sie_app_web_OpeMonitorHealthseg:
     resource: "@SieAppWebBundle/Resources/config/routing/opemonitorhealthseg.yml"
     prefix:   /sie/monitorHealth
 
+sie_app_web_recognitionknowledge:
+    resource: "@SieAppWebBundle/Resources/config/routing/recognitionknowledge.yml"
+    prefix:   /sie/recognitionknowledge
+
+
