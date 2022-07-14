@@ -407,10 +407,10 @@
 												<form class="row g-3 needs-validation" novalidate>
 												  <div class="col-md-12">
 												    <label for="validationCustom04" class="form-label">Especialidades</label>
-												    <select class="form-control" id="validationCustom04" required>
-												      <option selected disabled value="">Choose...</option>
-												      <option>...</option>
-												    </select>
+				                                        <select name="arrspe" id="idarrParen" class="custom-select form-control" v-model="estudiante.especialidad" v-on:change="" >  
+				                                          	<option v-for="item in entidadEspecialidadTipo" :value="item.especialidad_id">${ item.especialidad }
+				                                          	</option>
+				                                        </select>
 												    <div class="invalid-feedback">
 												      Please select a valid state.
 												    </div>
@@ -496,6 +496,7 @@
 		        historyEsp:{},
 		        historyPer:{},		    	
 		        sendStudent:{},		
+		        entidadEspecialidadTipo:{},		
 		        swquestion: false,
 		        checkedNames: [],
 		        noProfesor:'no'	,
@@ -536,8 +537,8 @@
 		    		this.swquestion = true;
 			    	axios.get(Routing.generate('recognitionknowledge_infocentro'))
 			    		.then(response => {
-			    			this.niveles = response.data.niveles;
-			    			this.grados = response.data.grados;
+			    			this.entidadEspecialidadTipo = response.data.datos.entidadEspecialidadTipo;			    			
+			    			// this.grados = response.data.grados;
 			    		})
 			    		.catch(e = {
 

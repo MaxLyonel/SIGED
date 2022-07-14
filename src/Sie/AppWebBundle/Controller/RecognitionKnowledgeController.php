@@ -179,18 +179,11 @@ class RecognitionKnowledgeController extends Controller{
   		
   		$entidadEspecialidadTipo = $this->getEspecialidadCentroEducativoTecnica(40730321, $gestionId);
 
-  		dump($entidadEspecialidadTipo);die;
 
         return $response->setData([
             'status'=>'success',
-            'datos'=>array(
-                'statusApoderado'=>'success',
-                'msgApoderado'=>'informacion del participante',
-                'statusEstudiante'=>'success',
-                'sendStudent'=>$sendStudent,
-                'dataInscriptionR'=>$dataInscriptionR,
-                'dataInscriptionA'=>$dataInscriptionA,
-                'dataInscriptionE'=>$dataInscriptionE,
+            'datos'=>array(                
+                'entidadEspecialidadTipo'=>$entidadEspecialidadTipo,
             )
         ]);    	
 
