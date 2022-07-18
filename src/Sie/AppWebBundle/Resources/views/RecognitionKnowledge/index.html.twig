@@ -104,6 +104,13 @@
 					<div class="col-md-8 col-xs-12 col-md-offset-1 caja">
 						<h2 class="titulo">Registro de Reconocimiento de Saberes</h2>
 						<div v-show="!validado" class="contenido">
+							<div class="alert alert-success" role="alert" v-if="swRS">
+								<p>Datos Registrados</p>
+								<p><b>Cod. Rude: ${studentRS.codigoRude} </b></p>
+								<p><b>Participante: ${studentRS.carnet} ${studentRS.complemento} ${studentRS.nombre} ${studentRS.paterno} ${studentRS.materno} </b></p>
+							</div>							
+
+
 							<p class="subtitulo">Formulario de Busqueda</p>
 							<p>Puede realizar la búsqueda por:</p>
 							<div class="row">
@@ -154,6 +161,13 @@
 													<div class="form-group col-md-6">
 														<label>Complemento</label>
 														<input type="text" v-model="estudiante.complemento" class="form-control jupper" maxlength="50" v-on:keypress="alfanumerico">
+													</div>	
+													<div class="form-group col-md-12">
+														<label>Genero</label>
+														<select name="arrgen" id="idarrgen" class="custom-select form-control" v-model="estudiante.genero">
+															<option value="1">MASCULINO</option>
+															<option value="2">FEMENINO</option>
+														</select>
 													</div>													
 												</div>
 												{# <p>Actualmente se encuentra inscrito en:</p>
@@ -373,7 +387,13 @@
 								</div>
 							</div> #}
 							<br/>
-							<div class="botones">
+							<div class="botones" v-if="existRsInsc">
+								<div class="alert alert-danger" role="alert">
+								  Estudiante ya cuenta con Registro de Reconocimiento de Saberes en <strong>${studentSpeciality}</strong>
+								</div>
+								<button type="button" @click="cerrar" class="btn btn-warning">Cancelar</button>
+							</div>
+							<div class="botones" v-else>
 								<button type="button" @click="goquestion" class="btn btn-success">Continuar</button>
 								<button type="button" @click="cerrar" class="btn btn-warning">Cancelar</button>
 							</div>
@@ -405,31 +425,78 @@
 								            </div><!-- /.panel-heading -->                                
 								            <div class="panel-body no-padding" >
 												<form class="row g-3 needs-validation" novalidate>
-												  <div class="col-md-12">
-												    <label for="validationCustom04" class="form-label">Especialidades</label>
-				                                        <select name="arrspe" id="idarrParen" class="custom-select form-control" v-model="estudiante.especialidad" v-on:change="" >  
+													<div class="col-md-12">
+													    <div class="form-check">
+													      <label class="form-check-label" for="">
+													        Alguno de los siguientes documentos
+													      </label>
+							                                <div class="table-responsive">
+								                                <table id="example-table" class="table table-bordered table-hover" aria-describedby="example-table_info" style="font-size:11px">
+								                                    <thead>
+								                                      <tr role="row">
+								                                       <th class="text-center"></th>
+								                                       <th class="text-center"></th>
+								                                      </tr>
+								                                    </thead>
+								                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+																		<tr v-for="item in objDocRequired" :key="item[0]" > 
+																			<td><label class="form-check-label" for="invalidCheck">${item.documento_tipo}</label></td>
+																			<td><input type="checkbox" v-model="estudiante.documentType" :id="item.id" :value="item.id" @change="updateService(item.id, $event)" ></td>
+																		</tr>	
+								                                    </tbody>
+								                                  </table>
+							                                </div>																									      
+													      
+													    </div>
+												  	</div>
+
+													<div class="col-md-8 col-md-offset-2">
+													    <label for="validationCustom04" class="form-label">Sucursal</label>
+				                                        <select name="arrspe" id="idarrParen" class="custom-select form-control" v-model="estudiante.sucursal"  >  
+				                                          	<option v-for="item in objSucursal" :value="item.id">${ item.sucursal_tipo_id }
+				                                          	</option>
+				                                        </select>
+													</div>
+
+													<div class="col-md-8 col-md-offset-2" v-if="estudiante.sucursal">
+													    <label for="validationCustom04" class="form-label">Especialidades</label>
+				                                        <select name="arrspe" id="idarrParen" class="custom-select form-control" v-model="estudiante.especialidad" v-on:change="getlevelAcreditation()" >  
 				                                          	<option v-for="item in entidadEspecialidadTipo" :value="item.especialidad_id">${ item.especialidad }
 				                                          	</option>
 				                                        </select>
-												    <div class="invalid-feedback">
-												      Please select a valid state.
-												    </div>
-												   </div>
+													</div>
+
+													<div class="col-md-12" v-if="entidadAcredition.length">
+													    <div class="form-check">
+													      <label class="form-check-label" for="">
+													        Nivel de Acreditación
+													      </label>
+							                                <div class="table-responsive">
+								                                <table id="example-table" class="table table-bordered table-hover" aria-describedby="example-table_info" style="font-size:11px">
+								                                    <thead>
+								                                      <tr role="row">
+								                                       <th class="text-center"></th>
+								                                       <th class="text-center"></th>
+								                                      </tr>
+								                                    </thead>
+								                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+																		<tr v-for="item in entidadAcredition" :key="item.nivel_id" v-if="item.nivel_id!=3"> 
+																			<td><label class="form-check-label" for="invalidCheck">${item.nivel}</label></td>
+																			<td><input type="checkbox" v-model="estudiante.acredition" :id="item.id" :value="item.id" @change="updateService(item.id, $event)" ></td>
+																		</tr>	
+								                                    </tbody>
+								                                  </table>
+							                                </div>																									      
+													      
+													    </div>
+												  	</div>													
 												  
-												  <div class="col-12">
-												    <div class="form-check">
-												      <label class="form-check-label" for="invalidCheck">
-												        Agree to terms and conditions
-												      </label>
-												      <input class="form-check-input" type="checkbox" value="" id="invalidCheck" required>
-												      <div class="invalid-feedback">
-												        You must agree before submitting.
-												      </div>
-												    </div>
-												  </div>
+
 												  <br/>
-												  <div class="col-12">
-												    <button class="btn btn-primary" type="submit">Submit form</button>
+												  <br/>
+												  <div class="col-md-12" v-if="entidadAcredition.length">
+												    {# <button class="btn btn-primary" type="button">Registrar</button> #}
+												    <button type="button" class="btn btn-primary" @click="saveRecognitionKnowledge">Registrar</button>
 												  </div>
 												</form>						                
 								            </div><!-- /.panel-body -->
@@ -477,6 +544,7 @@
 		    		complemento: ''
 		    	},
 		    	estudiante: {
+		    		id:'',
 		    		codigoRude: '40730151200766989',
 		    		carnet: '',
 		    		complemento: '',
@@ -486,17 +554,30 @@
 		    		fechaNacimiento: '',
 		    		extranjero: '',
 		    		nivel: '',
-		    		grado: ''
+		    		grado: '',
+		    		sucursal: '',
+		    		especialidad: '',
+		    		documentType:[],
+		    		acredition:[],
+		    		dataStudent:[],
 		    	},
 		    	validado: false,
 		    	cortina: false,
+		    	swRS: false,
+		    	existRsInsc: false,
+		    	studentSpeciality: '',
 		    	datos: [],
 		        historyReg:{},
 		        historyAlt:{},
 		        historyEsp:{},
 		        historyPer:{},		    	
 		        sendStudent:{},		
+		        objDocRequired:{},
+		        updateDocs:{},
 		        entidadEspecialidadTipo:{},		
+		        entidadAcredition:{},		
+		        studentRS:{},		
+		        objSucursal:{},		
 		        swquestion: false,
 		        checkedNames: [],
 		        noProfesor:'no'	,
@@ -533,11 +614,84 @@
 		    			this.gradosDisponibles = this.grados;
 		    		}
 		    	},
+			    updateService() {
+			      console.log(this.estudiante);
+			    },
+			    saveRecognitionKnowledge(){
+			    	// this.historyReg = false;
+			     //    this.historyAlt = false;
+			     //    this.historyEsp = false;
+			     //    this.historyPer = false; 		    		
+			     //    this.historyPer = [];
+		    		// this.errores = [];
+		    		// this.entidadAcredition = [];
+		    		// this.datos = [];
+		    		// this.validado = false;
+		    		// this.cortina = true;
+
+                    Swal.fire({
+                        title: '¿Registrar  Datos?',
+                        text: "esta seguro de registrar al Participante",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.value) {		    		
+	    				    		
+				    		axios.post(Routing.generate('recognitionknowledge_saveRecognitionKnowledge', {estudiante: this.estudiante, opcion: this.opcion}))
+				    			.then(response => {
+				    				if (response.data.status === 'error') {
+					    				Swal.fire(
+			    					  		'Aviso',
+			    					  		response.data.msg,
+			    					  		'info'
+			    						)
+				    				}
+
+				    				if (response.data.status == 'success') {
+				    					Swal.close();
+				    					this.datos = response.data.datos;
+				    					this.swRS = this.datos.swRS;
+						                this.studentRS  = this.datos.studentRS;
+				    					this.validado = true;
+				    					this.cerrar();
+				    					
+				    				}
+				    				this.cortina = false;
+				    			})
+				    			.catch(e => {
+				    				Swal.fire(
+		    					  		'Aviso',
+		    					  		'No se pudo realizar la verficación',
+		    					  		'error'
+		    						)
+				    				this.cortina = false;
+				    			});
+                        }
+                    }) 				    			
+			    },
+			    getlevelAcreditation(){
+			    	this.entidadAcredition = [];
+			    	this.estudiante.acredition = [];
+			    	axios.post(Routing.generate('recognitionknowledge_getlevelAcreditation',{specialityId: this.estudiante.especialidad}))
+			    		.then(response => {
+			    			this.entidadAcredition = response.data.datos.entidadAcredition;
+			    		})
+			    		.catch(e = {
+
+			    		});	
+			    },
 		    	goquestion(){
 		    		this.swquestion = true;
+		    		this.entidadAcredition = [];
 			    	axios.get(Routing.generate('recognitionknowledge_infocentro'))
 			    		.then(response => {
+			    			this.objDocRequired = response.data.datos.objDocRequired;			    			
 			    			this.entidadEspecialidadTipo = response.data.datos.entidadEspecialidadTipo;			    			
+			    			this.objSucursal = response.data.datos.objSucursal;			    			
 			    			// this.grados = response.data.grados;
 			    		})
 			    		.catch(e = {
@@ -549,8 +703,13 @@
 			        this.historyAlt = false;
 			        this.historyEsp = false;
 			        this.historyPer = false; 		    		
+			        this.swRS = false; 		    		
+			        this.existRsInsc = false; 		    		
+			        this.studentSpeciality = ''; 		    		
 			        this.historyPer = [];
 		    		this.errores = [];
+		    		this.entidadAcredition = [];
+		    		this.studentRS = [];
 		    		/*if (this.apoderado.carnet == '') {
 		    			this.errores.push('Carnet del apoderado');
 		    		}
@@ -590,7 +749,7 @@
 		    		}*/
 
 		    		// console.log(this.apoderado.carnet);
-		    		console.log(this.estudiante.codigoRude);
+		    		// console.log(this.estudiante.codigoRude);
 
 		    		if (this.errores.length > 0) {
 			    		let texto = '<div class="errores">';
@@ -631,6 +790,9 @@
 				                this.historyAlt  = this.datos.dataInscriptionA;
 				                this.historyEsp  = this.datos.dataInscriptionE;
 				                this.sendStudent  = this.datos.sendStudent;
+				                this.existRsInsc  = this.datos.existRsInsc;
+				                this.studentSpeciality  = this.datos.studentSpeciality;
+				                this.estudiante.dataStudent = this.sendStudent;
 				                
 		    					this.validado = true;
 		    				}
@@ -659,16 +821,27 @@
 		    		this.estudiante.fechaNacimiento = '';
 		    		this.estudiante.nivel = '';
 		    		this.estudiante.grado = '';
+		    		this.estudiante.sucursal = '';
 
 		    		this.historyReg = false;
 			        this.historyAlt = false;
 			        this.historyEsp = false;
-			        this.historyPer = false; 		    		
+			        this.historyPer = false; 		
+			        // this.swRS = false; 	    		
 			        this.historyPer = [];
-			        this.NoProfesional='';
-			        this.noProfesor='';
+			        this.NoProfesional='no';
+			        this.noProfesor='no';
 			        this.swquestion = false;
 			        this.entidadEspecialidadTipo=[];
+			        // this.studentRS=[];
+			        this.entidadAcredition=[];
+			        this.estudiante.documentType=[];
+			        this.estudiante.acredition=[];
+			        this.estudiante.dataStudent=[];
+			        this.estudiante.objSucursal=[];
+			        this.estudiante.especialidad='';
+			        this.existRsInsc = false;
+			        this.studentSpeciality = '';
 		    	},
 		    	validarFormatoFecha(campo) {
 	    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;

@@ -28,22 +28,6 @@ Sie\AppWebBundle\Entity\RsInscripcion:
             generator:
                 strategy: SEQUENCE
     fields:
-        formularioSolicitud:
-            type: boolean
-            nullable: false
-            comment: ''
-            column: formulario_solicitud
-        fotocopiaCi:
-            type: boolean
-            nullable: false
-            comment: ''
-            column: fotocopia_ci
-        rsDocumentoTipoId:
-            type: integer
-            nullable: false
-            unsigned: false
-            comment: ''
-            column: rs_documento_tipo_id
         observacion:
             type: string
             nullable: true

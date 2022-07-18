@@ -15,21 +15,6 @@ class RsInscripcion
     private $id;
 
     /**
-     * @var boolean
-     */
-    private $formularioSolicitud;
-
-    /**
-     * @var boolean
-     */
-    private $fotocopiaCi;
-
-    /**
-     * @var integer
-     */
-    private $rsDocumentoTipoId;
-
-    /**
      * @var string
      */
     private $observacion;
@@ -73,75 +58,6 @@ class RsInscripcion
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set formularioSolicitud
-     *
-     * @param boolean $formularioSolicitud
-     * @return RsInscripcion
-     */
-    public function setFormularioSolicitud($formularioSolicitud)
-    {
-        $this->formularioSolicitud = $formularioSolicitud;
-    
-        return $this;
-    }
-
-    /**
-     * Get formularioSolicitud
-     *
-     * @return boolean 
-     */
-    public function getFormularioSolicitud()
-    {
-        return $this->formularioSolicitud;
-    }
-
-    /**
-     * Set fotocopiaCi
-     *
-     * @param boolean $fotocopiaCi
-     * @return RsInscripcion
-     */
-    public function setFotocopiaCi($fotocopiaCi)
-    {
-        $this->fotocopiaCi = $fotocopiaCi;
-    
-        return $this;
-    }
-
-    /**
-     * Get fotocopiaCi
-     *
-     * @return boolean 
-     */
-    public function getFotocopiaCi()
-    {
-        return $this->fotocopiaCi;
-    }
-
-    /**
-     * Set rsDocumentoTipoId
-     *
-     * @param integer $rsDocumentoTipoId
-     * @return RsInscripcion
-     */
-    public function setRsDocumentoTipoId($rsDocumentoTipoId)
-    {
-        $this->rsDocumentoTipoId = $rsDocumentoTipoId;
-    
-        return $this;
-    }
-
-    /**
-     * Get rsDocumentoTipoId
-     *
-     * @return integer 
-     */
-    public function getRsDocumentoTipoId()
-    {
-        return $this->rsDocumentoTipoId;
     }
 
     /**

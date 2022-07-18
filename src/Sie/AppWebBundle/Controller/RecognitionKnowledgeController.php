@@ -7,7 +7,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\ORM\EntityRepository;
-use Sie\AppWebBundle\Entity\EstudianteNota;
+use Sie\AppWebBundle\Entity\Estudiante;
+use Sie\AppWebBundle\Entity\RsInscripcion;
+use Sie\AppWebBundle\Entity\RsInscripcionAcreditacion;
+use Sie\AppWebBundle\Entity\RsInscripcionDocumento;
 
 class RecognitionKnowledgeController extends Controller{
 
@@ -84,15 +87,12 @@ class RecognitionKnowledgeController extends Controller{
                 break;
         }
 
-//         dump($estudiante);
-// dump(!is_object($estudiante));
-// dump($estudiante);
-// die;
 		$dataInscriptionR = array();
 		$dataInscriptionA = array();
 		$dataInscriptionE = array();
 		$sendStudent = array();
-
+		$existRsInsc = false;
+		$studentSpeciality = '';
         if ($opcion == 1 && (!is_object($estudianteObj)))  {
             return $response->setData([
                 'status'=>'error',
@@ -124,22 +124,31 @@ class RecognitionKnowledgeController extends Controller{
             $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $estudianteObj->getCodigoRude() . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
             $query->execute();
             
-        $dataInscription = $query->fetchAll();
-        
-        foreach ($dataInscription as $key => $inscription) {
-            switch ($inscription['institucioneducativa_tipo_id_raep']) {
-                case '1':
-                    $dataInscriptionR[$key] = $inscription;
-                    break;
-                case '2':
-                    $dataInscriptionA[$key] = $inscription;
-                    break;
-                case '4':
-                    $dataInscriptionE[$key] = $inscription;
-                    break;
-                case '5':
-                    break;
-            }
+	        $dataInscription = $query->fetchAll();
+	        
+	        foreach ($dataInscription as $key => $inscription) {
+	            switch ($inscription['institucioneducativa_tipo_id_raep']) {
+	                case '1':
+	                    $dataInscriptionR[$key] = $inscription;
+	                    break;
+	                case '2':
+	                    $dataInscriptionA[$key] = $inscription;
+	                    break;
+	                case '4':
+	                    $dataInscriptionE[$key] = $inscription;
+	                    break;
+	                case '5':
+	                    break;
+	        }
+	        // get the RS inscription
+	        $objstudentRsInscription = $em->getRepository('SieAppWebBundle:RsInscripcion')->findOneBy(array('estudiante'=>$estudianteObj->getId()));
+	        if(sizeof($objstudentRsInscription)>0){
+	        	// set exist rs inscription on student choose
+	        	$existRsInsc = true;
+	        	// get Speciality
+	        	$studentSpeciality = $em->getRepository('SieAppWebBundle:SuperiorEspecialidadTipo')->find($objstudentRsInscription->getSuperiorInstitucioneducativaAcreditacion()->getId())->getEspecialidad();
+
+	        }
         }
 
         $dataInscriptionR = (sizeof($dataInscriptionR)>0)?$dataInscriptionR:false;
@@ -147,6 +156,7 @@ class RecognitionKnowledgeController extends Controller{
         $dataInscriptionE = (sizeof($dataInscriptionE)>0)?$dataInscriptionE:false;
         // $dataInscriptionP = (sizeof($dataInscriptionP)>0)?$dataInscriptionP:false;
 
+            $sendStudent['id'] = $estudianteObj->getId();
             $sendStudent['codigoRude'] = $estudianteObj->getCodigoRude();
             $sendStudent['paterno'] = $estudianteObj->getPaterno();
             $sendStudent['materno'] = $estudianteObj->getMaterno();
@@ -155,7 +165,6 @@ class RecognitionKnowledgeController extends Controller{
             $sendStudent['complemento'] = $estudianteObj->getComplemento();
             $sendStudent['fechaNacimiento'] = $estudianteObj->getFechaNacimiento()->format('m-d-Y');        	
         }
-
 
         return $response->setData([
             'status'=>'success',
@@ -167,26 +176,246 @@ class RecognitionKnowledgeController extends Controller{
                 'dataInscriptionR'=>$dataInscriptionR,
                 'dataInscriptionA'=>$dataInscriptionA,
                 'dataInscriptionE'=>$dataInscriptionE,
+                'existRsInsc'=>$existRsInsc,
+                'studentSpeciality'=>$studentSpeciality,
             )
         ]);
     }  
 
+    //****************************************************************************************************
+    // method description:
+    // fucntion to get the speciality and documents required by SIE and year
+    // parameters: sie, year
+    // AUTOR: krlos
+    //****************************************************************************************************
     public function infoCentroAction(Request $request){
   		$response = new JsonResponse();
 
   		$institucionEducativaId = $this->session->get('ie_id');
   		$gestionId = $this->session->get('currentyear');
   		
-  		$entidadEspecialidadTipo = $this->getEspecialidadCentroEducativoTecnica(40730321, $gestionId);
-
+  		$entidadEspecialidadTipo = $this->getEspecialidadCentroEducativoTecnica($institucionEducativaId, $gestionId);
+  		$objDocRequired = $this->getDocsRequired(array(10,15,16,17,18,19,20));
+  		$objSucursal = $this->getSucursales();
 
         return $response->setData([
             'status'=>'success',
             'datos'=>array(                
                 'entidadEspecialidadTipo'=>$entidadEspecialidadTipo,
+                'objDocRequired'=>$objDocRequired,
+                'objSucursal'=>$objSucursal,
             )
         ]);    	
 
+    }
+
+    //****************************************************************************************************
+    // method description:
+    // fucntion to get the acreditions level by SIE, speciality and year
+    // parameters: sie, speciality and year
+    // AUTOR: krlos
+    //****************************************************************************************************
+    public function getlevelAcreditationAction(Request $request){
+  		$response = new JsonResponse();
+
+  		$institucionEducativaId = $this->session->get('ie_id');
+  		$gestionId = $this->session->get('currentyear');
+  		$specialityId = $request->get('specialityId', null);
+  		
+  		$entidadAcredition = $this->getNivelCentroEducativoTecnica($institucionEducativaId,$gestionId,$specialityId);
+
+        return $response->setData([
+            'status'=>'success',
+            'datos'=>array(                
+                'entidadAcredition'=>$entidadAcredition,
+            )
+        ]);    	
+
+    }
+	
+	public function saveRecognitionKnowledgeAction(Request $request){
+        $response = new JsonResponse();
+        $estudiante = $request->get('estudiante', null);
+        $option = $request->get('opcion', null);
+
+        switch ($option) {
+        	case 1:
+        		# code...
+        		break;
+        	case 3:
+        		# cretae a rude code to the student
+        		// $newStudentData = $this->createNewStudent($estudiante['dataStudent']);
+        		// $estudiante['dataStudent']['id'] = $newStudentData['idStudent'];
+        		// $estudiante['dataStudent']['codigoRude'] = $newStudentData['codigoRude'];
+        		break;
+        	
+        	default:
+        		# code...
+        		break;
+        }
+// dump($estudiante);die;
+        // register RS inscription
+        $swrs = $this->saveRecogKnowledge($estudiante, $option)?true:false;
+
+        return $response->setData([
+            'status'=>'success',
+            'datos'=>array(
+                // 'statusApoderado'=>'success',
+                // 'msgApoderado'=>'informacion del participante',
+                // 'statusEstudiante'=>'success',
+                'swRS'=>$swrs,
+                'studentRS'=>$estudiante['dataStudent'],
+                
+            )
+        ]);		
+	}
+
+	private function saveRecogKnowledge($data, $option){
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+
+		try {
+			if($option == 3){
+				$dataStudent = $data['dataStudent'];
+
+		        $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
+		        $query->bindValue(':sie', $this->session->get('ie_id'));            
+		        $query->bindValue(':gestion', $this->session->get('currentyear'));
+		        $query->execute();
+		        $codigorude = $query->fetchAll();
+
+		        $codigoRude = $codigorude[0]["get_estudiante_nuevo_rude"];  
+
+				$newestudiante = new Estudiante();
+		        // set the new student
+		        $newestudiante->setCodigoRude($codigoRude);               
+		        $newestudiante->setPaterno(mb_strtoupper($dataStudent['paterno'], 'utf-8'));
+		        $newestudiante->setMaterno(mb_strtoupper($dataStudent['materno'], 'utf-8'));
+		        $newestudiante->setNombre(mb_strtoupper($dataStudent['nombre'], 'utf-8'));                        
+		        $newestudiante->setFechaNacimiento(new \DateTime($dataStudent['fechaNacimiento']));            
+		        $newestudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($dataStudent['genero']));
+		        //no Bolivia
+		        $newestudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find(0));
+		        $newestudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
+		        $newestudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
+		        $newestudiante->setLocalidadNac('');    
+		   
+		        $newestudiante->setCarnetIdentidad($dataStudent['carnet']);
+		        $newestudiante->setComplemento(mb_strtoupper($dataStudent['complemento'], 'utf-8'));
+		        $newestudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
+		        $newestudiante->setSegipId(1);
+		   
+		        
+		        $em->persist($newestudiante);
+				$em->flush();
+		        $data['dataStudent']['id'] = $newestudiante->getId();
+        		$data['dataStudent']['codigoRude'] = $newestudiante->getCodigoRude();
+        		
+			}
+
+			$newRsInscription = new RsInscripcion();
+			$newRsInscription->setFechaRegistro(new \DateTime('now'));
+			$newRsInscription->setUsuario($em->getRepository('SieAppWebBundle:Usuario')->find($this->session->get('userId')));
+			$newRsInscription->setSuperiorInstitucioneducativaAcreditacion($em->getRepository('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion')->find($data['especialidad']));
+			$newRsInscription->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($data['sucursal']));
+			$newRsInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($data['dataStudent']['id']));
+            $em->persist($newRsInscription);
+
+            foreach ($data['documentType'] as $value) {
+            	$newDocumentType = new RsInscripcionDocumento();
+            	$newDocumentType->setFechaRegistro(new \DateTime('now'));
+            	$newDocumentType->setUsuarioId($this->session->get('userId'));
+            	$newDocumentType->setDocumentoTipo($em->getRepository('SieAppWebBundle:DocumentoTipo')->find($value));
+            	$newDocumentType->setRsInscripcion($em->getRepository('SieAppWebBundle:RsInscripcion')->find($newRsInscription->getId()));
+            	$em->persist($newDocumentType);
+            }
+
+            foreach ($data['acredition'] as $value) {
+            	$RsInscripcionAcreditacion = new RsInscripcionAcreditacion();
+            	$RsInscripcionAcreditacion->setFechaRegistro(new \DateTime('now'));
+            	$RsInscripcionAcreditacion->setRsInscripcionId($newRsInscription->getId());
+            	$RsInscripcionAcreditacion->setUsuario($em->getRepository('SieAppWebBundle:Usuario')->find($this->session->get('userId')));
+            	$RsInscripcionAcreditacion->setSuperiorAcreditacionTipo($em->getRepository('SieAppWebBundle:SuperiorAcreditacionTipo')->find($value));
+            	$em->persist($RsInscripcionAcreditacion);
+            }
+
+	        $em->flush();  
+			// Try and commit the transaction
+			$em->getConnection()->commit();
+			return true;
+			
+		} catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
+
+
+	}
+
+	private function createNewStudent($dataStudent){
+
+		$em = $this->getDoctrine()->getManager();
+		$em->getConnection()->beginTransaction();
+        $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
+        $query->bindValue(':sie', $this->session->get('ie_id'));            
+        $query->bindValue(':gestion', $this->session->get('currentyear'));
+        $query->execute();
+        $codigorude = $query->fetchAll();
+
+        $codigoRude = $codigorude[0]["get_estudiante_nuevo_rude"];  
+        
+        // set the data person to the student table
+        try {
+			$estudiante = new Estudiante();
+	        // set the new student
+	        $estudiante->setCodigoRude($codigoRude);               
+	        $estudiante->setPaterno(mb_strtoupper($dataStudent['paterno'], 'utf-8'));
+	        $estudiante->setMaterno(mb_strtoupper($dataStudent['materno'], 'utf-8'));
+	        $estudiante->setNombre(mb_strtoupper($dataStudent['nombre'], 'utf-8'));                        
+	        $estudiante->setFechaNacimiento(new \DateTime($dataStudent['fechaNacimiento']));            
+	        $estudiante->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($dataStudent['genero']));
+	        //no Bolivia
+	        $estudiante->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find(0));
+	        $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
+	        $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
+	        $estudiante->setLocalidadNac('');    
+	   
+	        $estudiante->setCarnetIdentidad($dataStudent['carnet']);
+	        $estudiante->setComplemento(mb_strtoupper($dataStudent['complemento'], 'utf-8'));
+	        $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
+	        $estudiante->setSegipId(1);
+	   
+	        
+	        $em->persist($estudiante);
+	        $em->flush();
+	        $em->getConnection()->commit();
+	        $responseData = array('idStudent'=>$estudiante->getId(), 'codigoRude'=>$estudiante->getCodigoRude());
+	        return $responseData;        	
+        	
+        } catch (Exception $ex) {
+            $em->getConnection()->rollback();
+            echo 'Excepción capturada: ', $ex->getMessage(), "\n";
+        }
+
+
+	}
+
+    private function getDocsRequired($data){
+
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("select * from Documento_Tipo where id in (".join(",", $data).") ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;    	
+
+    }
+
+    private function getSucursales(){
+        $em = $this->getDoctrine()->getManager();
+        $queryEntidad = $em->getConnection()->prepare("select id, sucursal_tipo_id from institucioneducativa_sucursal where institucioneducativa_id = ".$this->session->get('ie_id')." and gestion_tipo_id = ".$this->session->get('currentyear')." ");
+        $queryEntidad->execute();
+        $objEntidad = $queryEntidad->fetchAll();
+        return $objEntidad;   	
     }
 
     //****************************************************************************************************
@@ -216,7 +445,7 @@ class RecognitionKnowledgeController extends Controller{
         date_default_timezone_set('America/La_Paz');
         $em = $this->getDoctrine()->getManager();
         $queryEntidad = $em->getConnection()->prepare("
-                select distinct sat.codigo as nivel_id, sat.acreditacion as nivel
+                select distinct sat.codigo as nivel_id, sat.acreditacion as nivel, sat.id 
                 from superior_facultad_area_tipo as sfat
                 inner join superior_especialidad_tipo as sest on sfat.id = sest.superior_facultad_area_tipo_id
                 inner join superior_acreditacion_especialidad as sae on sest.id = sae.superior_especialidad_tipo_id
