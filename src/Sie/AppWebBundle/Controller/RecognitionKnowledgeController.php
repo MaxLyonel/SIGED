@@ -163,7 +163,7 @@ class RecognitionKnowledgeController extends Controller{
             $sendStudent['nombre'] = $estudianteObj->getNombre();
             $sendStudent['carnet'] = $estudianteObj->getCarnetIdentidad();
             $sendStudent['complemento'] = $estudianteObj->getComplemento();
-            $sendStudent['fechaNacimiento'] = $estudianteObj->getFechaNacimiento()->format('m-d-Y');        	
+            $sendStudent['fechaNacimiento'] = $estudianteObj->getFechaNacimiento()->format('d-m-Y');        	
         }
 
         return $response->setData([
