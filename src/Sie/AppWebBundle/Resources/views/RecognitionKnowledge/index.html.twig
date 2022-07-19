@@ -710,19 +710,17 @@
 		    		this.errores = [];
 		    		this.entidadAcredition = [];
 		    		this.studentRS = [];
-		    		/*if (this.apoderado.carnet == '') {
-		    			this.errores.push('Carnet del apoderado');
-		    		}
+		    		
 		    		if (this.opcion == 1) {
 		    			if (this.estudiante.codigoRude == '') {
 		    				this.errores.push('Código Rude');
 		    			}
 		    		}
-		    		if (this.opcion == 2) {
-		    			if (this.estudiante.carnet == '') {
-		    				this.errores.push('Carnet del estudiante');
-		    			}
-		    		}
+		    		// if (this.opcion == 2) {
+		    		// 	if (this.estudiante.carnet == '') {
+		    		// 		this.errores.push('Carnet del estudiante');
+		    		// 	}
+		    		// }
 		    		if (this.opcion == 3) {
 		    			if (this.estudiante.nombre == '') {
 		    				this.errores.push('Nombre');
@@ -740,23 +738,26 @@
 			    				this.errores.push('Formato de fecha no válido');
 			    			}
 			    		}
-			    		if (this.estudiante.nivel == '') {
-		    				this.errores.push('Nivel');
+			    		if (this.estudiante.carnet == '') {
+		    				this.errores.push('carnet');
 		    			}
-		    			if (this.estudiante.grado == '') {
-		    				this.errores.push('Grado');
+		    			if (this.estudiante.complemento == '') {
+		    				this.errores.push('complemento');
 		    			}
-		    		}*/
+		    			if (this.estudiante.genero == '') {
+		    				this.errores.push('genero');
+		    			}		    			
+		    		}
 
 		    		// console.log(this.apoderado.carnet);
 		    		// console.log(this.estudiante.codigoRude);
 
 		    		if (this.errores.length > 0) {
-			    		let texto = '<div class="errores">';
+			    		let texto = '<div class="errores"><ul>';
 			    		$.each(this.errores, function (i, value) {
 	                        texto = texto + '<li>' + value + '</li>';
 	                    });
-	                    texto = texto + '</div>';
+	                    texto = texto + '</ul></div>';
 		    			Swal.fire({
 		    		  		title:'Complete los siguientes datos',
 		    		  		html:texto,
