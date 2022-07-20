@@ -99,7 +99,8 @@ class CarrerasController extends Controller
         
         $niveles = $em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->findAll();       
         $modalidad = $em->getRepository('SieAppWebBundle:UnivModalidadEnsenanzaTipo')->findAll();       
-        $grado_academico = $em->getRepository('SieAppWebBundle:UnivClaGradoAcademico')->findAll();       
+        //$grado_academico = $em->getRepository('SieAppWebBundle:UnivClaGradoAcademico')->findAll();       
+        $grado_academico = $em->getRepository('SieAppWebBundle:UnivgradoAcademicoTipo')->findAll(); 
         $regimen_estudios = $em->getRepository('SieAppWebBundle:UnivregimenEstudiosTipo')->findAll();       
         $periodo_academico = $em->getRepository('SieAppWebBundle:UnivPeriodoAcademicoTipo')->findAll();       
        
@@ -149,6 +150,7 @@ class CarrerasController extends Controller
 
         //TODO: JALAR DE LA SESION ?
         $sedeId = $this->session->get('sedeId');
+        //dump($sedeId); die; 62
 
         $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findById($sedeId); //43
 
