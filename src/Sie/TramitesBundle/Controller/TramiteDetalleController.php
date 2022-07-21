@@ -1654,6 +1654,8 @@ class TramiteDetalleController extends Controller {
                 case 1:
                     if ($institucionEducativaEntity['departamento_codigo'] == "1" or $institucionEducativaEntity['departamento_codigo'] == 1){
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_ch_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
+                    } elseif($institucionEducativaEntity['departamento_codigo'] == "4" or $institucionEducativaEntity['departamento_codigo'] == 4) {
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_or_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
                     } else {
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
                     }
@@ -1661,7 +1663,9 @@ class TramiteDetalleController extends Controller {
                 case 2:
                     if ($institucionEducativaEntity['departamento_codigo'] == "1" or $institucionEducativaEntity['departamento_codigo'] == 1){
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_ch_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
-                    } else {
+                    } elseif($institucionEducativaEntity['departamento_codigo'] == "4" or $institucionEducativaEntity['departamento_codigo'] == 4) {
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
+                    }else {
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
                     }
                     break;
