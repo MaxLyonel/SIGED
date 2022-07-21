@@ -294,7 +294,7 @@ class TextoEducativoController extends Controller
 		//select * from periodo_tipo limit 10
 		$em = $this->getDoctrine()->getManager();
 		$db = $em->getConnection();
-		$gestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id'=>2021));
+		$gestionTipo = $em->getRepository('SieAppWebBundle:GestionTipo')->findOneBy(array('id'=>2022));
 		$institucioneducativaSucursal = $em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->findOneBy(array(
 			'gestionTipo'=>$gestionTipo,
 			'institucioneducativa'=>$institucioneducativa
