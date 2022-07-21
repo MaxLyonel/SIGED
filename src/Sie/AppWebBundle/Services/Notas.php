@@ -7069,7 +7069,7 @@ die;/*
             $estadosPermitidos = array(4);
             $tiposNotasArray = array();
             
-            if ( $subarea == 7 and $gestion > 2019){ //Nueva evaluacion de talento
+            if ( $subarea == 7 and $gestion > 2021){ //Nueva evaluacion de talento
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(10,78,79));
                 $valoraciones = $this->em->getRepository('SieAppWebBundle:EspecialNivelTalento')->findAll();
                 $idNotaTipo = 'Semestral';

@@ -194,7 +194,7 @@ class InfoStudentsController extends Controller {
       }else{
         $arrDataLibreta['calificaciones'] = false;
       }
-       $programasSinNotas = array(26,27); //No esta definido la forma de registro de las notas por tanto calificaciones=0
+       $programasSinNotas = array(26,27,29); //No esta definido la forma de registro de las notas por tanto calificaciones=0
       if(in_array($aInfoUeducativa['ueducativaInfoId']['programaId'], $programasSinNotas)  and $gestion>2020){
           $arrDataLibreta['calificaciones'] = false;
       }
