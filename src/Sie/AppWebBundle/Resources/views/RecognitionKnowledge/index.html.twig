@@ -467,7 +467,7 @@
 													    </div>
 												  	</div>
 
-													<div class="col-md-8 col-md-offset-2">
+													<div class="col-md-8 col-md-offset-2" v-if="swRequired">
 													    <label for="validationCustom04" class="form-label">Sucursal</label>
 				                                        <select name="arrspe" id="idarrParen" class="custom-select form-control" v-model="estudiante.sucursal"  >  
 				                                          	<option v-for="item in objSucursal" :value="item.id">${ item.sucursal_tipo_id }
@@ -511,7 +511,7 @@
 
 												  <br/>
 												  <br/>
-												  <div class="col-md-12" v-if="entidadAcredition.length">
+												  <div class="col-md-12" v-if="entidadAcredition.length && swRequired">
 												    {# <button class="btn btn-primary" type="button">Registrar</button> #}
 												    <button type="button" class="btn btn-primary" @click="saveRecognitionKnowledge">Registrar</button>
 												  </div>
@@ -596,6 +596,7 @@
 		        studentRS:{},		
 		        objSucursal:{},		
 		        swquestion: false,
+		        swRequired: false,
 		        checkedNames: [],
 		        noProfesor:'no'	,
 		        NoProfesional:'no',
@@ -632,11 +633,21 @@
 		    			this.gradosDisponibles = this.grados;
 		    		}
 		    	},
-			    updateService(item, event) {
-			    	this.estudiante.documentType.forEach( (value, index) => {
-			    		console.log(value);
-			    	} );
-			      // console.log(this.estudiante.documentType);
+				updateService(item, event) {
+			    	var arrRequired = [10,15];
+			    	this.swRequired = false;
+			    	const result = arrRequired.every(val => this.estudiante.documentType.includes(val));
+			    	
+			    	if(this.estudiante.documentType.length >=3){
+			    		result1 = true;
+			    	}else{
+			    		result1 = false;
+			    	}
+			    	if(result && result1){
+			    		this.swRequired = true;
+			    	}
+			    	// console.log(result);
+			       console.log(this.estudiante.documentType.length);
 			    },
 			    saveRecognitionKnowledge(){
 			    	// this.historyReg = false;
@@ -724,7 +735,8 @@
 			        this.historyAlt = false;
 			        this.historyEsp = false;
 			        this.historyPer = false; 		    		
-			        this.swRS = false; 		    		
+			        this.swRS = false; 	
+			        this.swRequired = false;	    		
 			        this.existRsInsc = false; 		    		
 			        this.studentSpeciality = ''; 		    		
 			        this.historyPer = [];
@@ -865,6 +877,7 @@
 			        this.estudiante.especialidad='';
 			        this.existRsInsc = false;
 			        this.studentSpeciality = '';
+			        this.swRequired = false;
 		    	},
 		    	validarFormatoFecha(campo) {
 	    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
