@@ -435,7 +435,7 @@
 								        <div class="panel rounded shadow panel-primary">
 								            <div class="panel-heading">
 								                <div class="pull-left">
-								                    <h3 class="panel-title">Formulario de Solicitud </h3>
+								                    <h3 class="panel-title">Documentos Requeridos</h3>
 								                </div>
 								                <div class="pull-right">
 								                </div>
@@ -475,7 +475,7 @@
 				                                        </select>
 													</div>
 
-													<div class="col-md-8 col-md-offset-2" v-if="estudiante.sucursal">
+													<div class="col-md-8 col-md-offset-2" v-if="estudiante.sucursal && swRequired">
 													    <label for="validationCustom04" class="form-label">Especialidades</label>
 				                                        <select name="arrspe" id="idarrParen" class="custom-select form-control" v-model="estudiante.especialidad" v-on:change="getlevelAcreditation()" >  
 				                                          	<option v-for="item in entidadEspecialidadTipo" :value="item.especialidad_id">${ item.especialidad }
@@ -483,7 +483,7 @@
 				                                        </select>
 													</div>
 
-													<div class="col-md-12" v-if="entidadAcredition.length">
+													<div class="col-md-12" v-if="entidadAcredition.length && swRequired">
 													    <div class="form-check">
 													      <label class="form-check-label" for="">
 													        Nivel de Acreditación
@@ -647,7 +647,7 @@
 			    		this.swRequired = true;
 			    	}
 			    	// console.log(result);
-			       console.log(this.estudiante.documentType.length);
+			       // console.log(this.estudiante.documentType.length);
 			    },
 			    saveRecognitionKnowledge(){
 			    	// this.historyReg = false;
@@ -660,6 +660,18 @@
 		    		// this.datos = [];
 		    		// this.validado = false;
 		    		// this.cortina = true;
+
+		    		if (this.estudiante.acredition.length > 1) {
+		    			// good
+		    		}else{
+			    		
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:'seleccionar nivel Acreditación',
+		    		  		type:'warning'
+		    			});
+		    			return false;		    			
+		    		}
 
                     Swal.fire({
                         title: '¿Registrar  Datos?',
