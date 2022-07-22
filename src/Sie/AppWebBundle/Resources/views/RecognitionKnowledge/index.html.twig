@@ -397,23 +397,41 @@
 								<button type="button" @click="goquestion" class="btn btn-success">Continuar</button>
 								<button type="button" @click="cerrar" class="btn btn-warning">Cancelar</button>
 							</div>
+							<br/>
 							<div v-if="swquestion">
 
-								<figure class="text-center">
+								<figure class="text-center" style=" border: 3px solid #428bca;">
 								  <blockquote class="blockquote">
 									<label for="noprofesor"><p class="lead">Participante no es Profesor</p> </label>
 									<input type="checkbox" id="krlos1" value="noProfesor" v-model="noProfesor" true-value="yes" false-value="no">
 									<br/>
 									<label for="noprofesinoal"><p class="lead">Participante no es Profesional</p></label>
 									<input type="checkbox" id="krlos2" value="NoProfesional" v-model="NoProfesional" true-value="yes" false-value="no">	
+									<br/>
+									<label for="noprofesinoal"><p class="lead">Participante no cuenta con certficado Tec. Superior</p></label>
+									<input type="checkbox" id="krlos2" value="noSuperior" v-model="noSuperior" true-value="yes" false-value="no">
 								  </blockquote>
 								  
 								</figure>							
 								</br>
 
 
-								<div class="row" v-if="noProfesor === 'yes' && NoProfesional ==='yes' "> 
+								<div class="row" v-if="noProfesor === 'yes' && NoProfesional ==='yes' && noSuperior ==='yes' "> 
 								    <div class="col-md-12">
+										<figure class="text-center" style=" border: 3px solid #ff5733;">
+										  <blockquote class="blockquote">
+											<label for="noprofesor">
+												<p class="lead">Documentos Requeridos:<br/>
+												Los Items marcado con rojo son requeridos<br/>
+												Por los menos un item marcado con verde		</p> 
+											</label>
+											
+										  </blockquote>
+										  
+										</figure>							
+										</br>								    
+
+
 								        <div class="panel rounded shadow panel-primary">
 								            <div class="panel-heading">
 								                <div class="pull-left">
@@ -427,8 +445,7 @@
 												<form class="row g-3 needs-validation" novalidate>
 													<div class="col-md-12">
 													    <div class="form-check">
-													      <label class="form-check-label" for="">
-													        Alguno de los siguientes documentos
+													      <label class="form-check-label" for="">								        
 													      </label>
 							                                <div class="table-responsive">
 								                                <table id="example-table" class="table table-bordered table-hover" aria-describedby="example-table_info" style="font-size:11px">
@@ -440,7 +457,7 @@
 								                                    </thead>
 								                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
 																		<tr v-for="item in objDocRequired" :key="item[0]" > 
-																			<td><label class="form-check-label" for="invalidCheck">${item.documento_tipo}</label></td>
+																			<td><label :class="[{'alert-danger': (item.id == 10 || item.id == 15)}, {'alert-success':(item.id != 10 && item.id != 15)}]"  class="form-check-label" for="invalidCheck">${item.documento_tipo}</label></td>
 																			<td><input type="checkbox" v-model="estudiante.documentType" :id="item.id" :value="item.id" @change="updateService(item.id, $event)" ></td>
 																		</tr>	
 								                                    </tbody>
@@ -582,6 +599,7 @@
 		        checkedNames: [],
 		        noProfesor:'no'	,
 		        NoProfesional:'no',
+		        noSuperior:'no',
 
 		    },
 		    mounted(){
@@ -614,8 +632,11 @@
 		    			this.gradosDisponibles = this.grados;
 		    		}
 		    	},
-			    updateService() {
-			      console.log(this.estudiante);
+			    updateService(item, event) {
+			    	this.estudiante.documentType.forEach( (value, index) => {
+			    		console.log(value);
+			    	} );
+			      // console.log(this.estudiante.documentType);
 			    },
 			    saveRecognitionKnowledge(){
 			    	// this.historyReg = false;
@@ -832,6 +853,7 @@
 			        this.historyPer = [];
 			        this.NoProfesional='no';
 			        this.noProfesor='no';
+			        this.noSuperior='no';
 			        this.swquestion = false;
 			        this.entidadEspecialidadTipo=[];
 			        // this.studentRS=[];

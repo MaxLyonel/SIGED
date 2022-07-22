@@ -196,7 +196,7 @@ class RecognitionKnowledgeController extends Controller{
   		$gestionId = $this->session->get('currentyear');
   		
   		$entidadEspecialidadTipo = $this->getEspecialidadCentroEducativoTecnica($institucionEducativaId, $gestionId);
-  		$objDocRequired = $this->getDocsRequired(array(10,15,16,17,18,19,20));
+  		$objDocRequired = $this->getDocsRequired(array(10,15,16,17,18,19,20,21));
   		$objSucursal = $this->getSucursales();
 
         return $response->setData([
