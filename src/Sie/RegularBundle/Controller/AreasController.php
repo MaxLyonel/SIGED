@@ -810,6 +810,25 @@ class AreasController extends Controller {
                 }
             }
         }
+        
+        //dcastillo 2406
+        //caso rzoraide areas para un modular que no tiene habilitado secundaria
+        
+        if($nivelautorizado == 0){     
+            //si es modular
+            $sql = "select count(*) as es_modular
+            from institucioneducativa_humanistico_tecnico iht 
+            where iht.institucioneducativa_humanistico_tecnico_tipo_id = 3
+            and gestion_tipo_id = 2021
+            and institucioneducativa_id = '" . $form['idInstitucion'] . "'";
+            
+            $statement = $em->getConnection()->prepare($sql);
+            $statement->execute();
+            $result = $statement->fetchAll();            
+            if( $nivelautorizado = $result[0]['es_modular'] == 1) {
+                $nivelautorizado == 1;
+            }
+        }
 
                 
         $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneBy(array(
