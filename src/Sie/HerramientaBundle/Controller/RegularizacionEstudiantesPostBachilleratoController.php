@@ -513,7 +513,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 			$nivel = '-1';
 		}
 
-		if( in_array($request_gestion,range(2009,2020)) )
+		if( in_array($request_gestion,range(2009,2021)) )
 		{
 			$niveles_por_gestion=array();
 			
@@ -525,7 +525,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 				//con esto nos aseguramos que solo sea de secundaria
 				$niveles_por_gestion=[3];
 			}
-			else if( in_array($request_gestion,range(2011,2020)) )
+			else if( in_array($request_gestion,range(2011,2021)) )
 			{
 				//lo haces de esta manera por que no este momento del trámite no tenemos mas datos
 				//$niveles_por_gestion=[11,12,13];
@@ -646,7 +646,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 			$grado = '-1';
 		}
 
-		if( in_array($request_gestion,range(2009,2020)) )
+		if( in_array($request_gestion,range(2009,2021)) )
 		{
 			$grados_por_nivel=array();
 
@@ -3775,7 +3775,7 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 								//CREAMOS LA NOTAS
 								//insert into estudiante_nota (nota_tipo_id,estudiante_asignatura_id,nota_cuantitativa,nota_cualitativa,usuario_id) values(6,895550836,70,'ESTO ES LA NOTA CUALITATIVA',1);--ADD --POSIBLEMENTE NOTA_TIPO=9
 								$promedioTipo =-1;
-								if((2009<=$gestion && $gestion <=2013 ) || $gestion==2020)
+								if((2009<=$gestion && $gestion <=2013 ) || $gestion>=2020)
 								{
 									$promedioTipo =9;
 								}
@@ -3982,6 +3982,8 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 		            $complementario = "'(6,7)','(6,7,8)','(9)','51'";
 		        }
 		    }
+		} else if($igestion == 2021) {
+		    $complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
 		}
 
 		$query = $em->getConnection()->prepare("select * from sp_genera_evaluacion_estado_estudiante_regular('".$igestion."','".$iinstitucioneducativa_id."','".$inivel_tipo_id."','".$igrado_tipo_id."','".$iturno_tipo_id."','".$iparalelo_tipo_id."','".$icodigo_rude."',".$complementario.")");
@@ -4223,6 +4225,11 @@ class RegularizacionEstudiantesPostBachilleratoController extends Controller
 							$notaAprobacion = 51;
 						}
 					}
+			}
+			else if($gestion == 2021)
+			{
+				//$complementario = "'(1,2,3)','(1,2,3,4,5)','(5)','51'";
+				$notaAprobacion = 51;
 			}
 
 			if($nota<$notaAprobacion)

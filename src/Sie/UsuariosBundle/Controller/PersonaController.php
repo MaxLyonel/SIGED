@@ -20,11 +20,13 @@ use Sie\AppWebBundle\Form\BuscarPersonaType;
 class PersonaController extends Controller
 {
     private $session;
+    public $arrUserAllow;
     /**
      * the class constructor
      */
     public function __construct() {
         $this->session = new Session();
+        $this->arrUserAllow = array(5609814,3625644,5062963,8335918,5727128,4300231,1314301,3295554,1897494);
     }
     
     public function personanewAction($ci, $complemento) {        
@@ -442,7 +444,12 @@ class PersonaController extends Controller
     }
 
     public function apropiacionpersonaAction() {
-
+        
+        if(!($this->session->get('roluser') == 8)){
+            if(!in_array($this->session->get('userName'), $this->arrUserAllow)  ){
+                return $this->redirectToRoute('sie_usuarios_homepage');
+            }
+        }       
         $formBuscarPersona = $this->createForm(new BuscarPersonaType(array('opcion'=>1)), null, array('action' => $this->generateUrl('sie_usuario_persona_buscar_carnet'), 'method' => 'POST',));
 
         return $this->render('SieUsuariosBundle:Default:usuariocarnet.html.twig', array(           

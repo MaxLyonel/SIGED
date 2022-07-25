@@ -1,0 +1,377 @@
+{% extends 'layoutHerramienta.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+
+    <link href="{{asset('css/bootstrap-fileupload.min.css')}}" rel="stylesheet">
+    <link href="{{asset('css/bootstrap-fileupload.css')}}" rel="stylesheet">
+
+{% endblock %}
+
+
+
+{% block contentoption %}
+
+
+    <!-- Start page header -->
+    <div class="header-content">
+        <h2><i class="fa fa-globe animated flip"></i> Inicio de actividades <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aqui:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-globe"></i>
+                    <a href="#">
+                    Buscar inicio de actividades
+                    </a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Index</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <!--/ End page header -->
+
+    <div class="body-content animated fadeIn">
+
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <!-- Start widget newsletter -->
+                    <div class="panel text-center rounded shadow">
+                        <div class="panel-body bg-lilac rounded">
+                            <!--<div class="inner-all">-->
+                            {% set dept = (departamento_nom is defined)? departamento_nom:'' %}
+                            {% set distr = (distrito_nom is defined)? distrito_nom:'' %}
+                                <h4 class="text-uc"><b> 
+                                    {% if dept|length >0%}
+                                    Departamento: {{dept}} 
+                                    {% endif %}
+                                    /
+                                    {% if distr|length >0%}
+                                    Distrito: {{distr}} </b>
+                                    {% endif %}
+                                </h4>
+                            <!--</div>-->
+                        </div><!-- /.panel-body -->
+                    </div><!-- /.panel -->
+                    <!--/ End widget newsletter -->
+                </div>
+            </div>
+
+        <div class="row">
+
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                <div class="panel shadow">
+
+                <form  role="form" action="{{path(url_form)}}" method="post">
+                    <input type="hidden" name="_departamento" value="{{departamento}}">
+                    <input type="hidden" name="_distrito" value="{{distrito}}">
+                    <input type="hidden" name="_gestion" class="hidden-gestion" value="{{ gestion }}">
+                    <input type="hidden" name="_mes" class="hidden-mes" value="{{ mes }}">
+
+                      <div class="row" style="padding: 5px 7px 5px 7px;">
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="form-gestion">Seleccione la gestión</label>
+                            <select class="form-control select-gestion" id="select-gestion" >
+                              <option value='{{"now"|date("Y")}}'>{{"now"|date("Y")}}</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                          <div class="form-group">
+                            <label for="form-mes">Seleccione el mes</label>
+                            {% set meses={'1':'Enero','2':'Febrero','3':'Marzo','4':'Abril','5':'Mayo','6':'Junio','7':'Julio','8':'Agosto','9':'Septiembre','10':'Octubre','11':'Noviembre','12':'Diciembre'} %}
+                            <select class="form-control select-mes" id="select-mes" >
+                                {% for i,m in meses %}
+                                    {% if i == mes|number_format %}
+                                        <option value="{{i}}" selected>{{m}}</option>
+                                    {% else %}
+                                        <option value="{{i}}">{{m}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-6"><button type="submit" class="btn btn-primary" >Buscar</button></div>
+                      </div>
+                </form>
+                </div>
+
+                <div class="panel shadow">
+                        <div class="panel-heading">
+                            <div class="pull-left">
+                                <h3 class="panel-title"><i class="fa fa-tasks"></i> {{etiqueta}}</h3>
+                            </div>   
+                            <div class="pull-right"> 
+                            </div>
+                            <div class="clearfix"></div>
+                        </div><!-- /.panel-heading -->
+                        <div style="display: block; min-height: 500px;" class="panel-body">
+                                <span class="text-primary pull-right"><b>{{datos|length}}</b></span><span class="text-primary"><b>Total</b></span>
+                                <div class="progress progress-xs">
+                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                    </div>
+                                </div><!-- /.progress -->   
+                                {% for d in datos %}
+                                    {% set departamento = (d.departamento_id is defined)? d.departamento_id:-1 %}
+                                    {% set distrito = (d.distrito_id is defined)? d.distrito_id:-1 %}
+                                    {% set ue = (d.ue_id is defined)? d.ue_id:-1 %}
+
+                                    {% set id = (d.ue_id is defined)? d.ue_id: (d.distrito_id is defined)? d.distrito_id:(d.departamento_id is defined)? d.departamento_id: -1 %}
+                                    {% set nombre = (ue!=-1)? d.ue_nom: (distrito!=-1)? d.distrito_nom:(departamento!=-1)? d.departamento_nom: -1 %}
+                                    
+                                <form name="form" role="form" action="{{ (url=='#')? '#':path(url) }}" method="POST"> 
+                                    <input type="hidden" name="_departamento" value="{{departamento}}">
+                                    <input type="hidden" name="_distrito" value="{{distrito}}">
+                                    <input type="hidden" name="_ue" value="{{ue}}">
+                                    <input type="hidden" name="_gestion" class="hidden-gestion" value="{{ gestion }}">
+                                    <input type="hidden" name="_mes" class="hidden-mes" value="{{ mes }}">
+
+                                    {% if url!='#' %}
+                                        {% set subtotal= d.inicio~'/'~d.total %}
+                                    <button type="submit" id="submit-{{id}}" style="display:none;"></button>
+                                    {% else %}
+                                        {% set subtotal=(d.inicio==1)?'Inicio':'<span class="text-danger">No inicio</span>' %}
+                                    {% endif %}
+
+                                    <a href="javascript:;" class="text-inverse" style="text-decoration:none;" onclick="$('#submit-{{id}}').click();">
+                                         <span class="pull-right" style="width:50px; text-align:right">
+                                            <b><small>{{subtotal|raw}}</small></b>
+                                         </span>
+                                         <span class="">{{nombre}}</span>
+                                    </a>
+
+                                    <div class="progress progress-xs" style="width: 100%;">
+                                        {% if d.total>0 %}
+                                        {% set porcentaje = (d.inicio*100)/d.total %}
+                                        {% else %}
+                                        {% set porcentaje = 0 %}
+                                        {% endif %}
+                                            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{{porcentaje}}" aria-valuemin="0" aria-valuemax="100" style="width: {{porcentaje}}%"></div>
+                                    </div><!-- /.progress -->
+                                </form> 
+                                {% endfor %}
+
+                        </div><!-- /.panel-body -->
+                        <div class="panel-footer">
+                        </div>
+                </div>
+            </div>
+
+            <!---Graficos del lado derecho-->
+            <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+                {% if url=='#' %}
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div class="table-responsive">
+                              <table class="table table-condensed">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Unidad educativa</th>
+                                    <th>Inicio actividad</th>
+                                    <th>Helada</th>
+                                    <th>Granizada</th>
+                                    <th>Sismo</th>
+                                    <th>Riada</th>
+                                    <th>Deslizamiento</th>
+                                    <th>Sequia</th>
+                                    <th>Incendio</th>
+                                    <th>Inundación</th>
+                                    <th>Otros</th>
+                                    <th>Riesgo sanitario</th>
+                                    <th>Sin riesgo</th>
+                                </tr>
+                                {% set iniciaron=1 %}
+                                {% set i=1 %}
+                                {% for ue in datos %}
+                                    {% if ue.inicio==0 %}
+                                    <tr>
+                                        {% set iniciaron=0 %}
+                                        {% set bg_color= (ue.inicio==1)?'bg-success':'bg-danger' %}
+                                        <th>{{i}}</th>
+                                        <td>{{ue.ue_nom}}</td>
+                                        <td class='text-center'>{{(ue.inicio==1)?'<span class="label label-success">Si</span>':'<span class="label label-danger">No</span>'}}</td>
+                                        <td class="{{(ue.helada==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.granizada==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.sismo==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.riada==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.deslizamiento==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.sequia==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.incendio==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.inundacion==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.otros==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.riesgo_sanitario==1)?'bg-primary':''}}"> </td>
+                                        <td class="{{(ue.sin_riesgo==1)?'bg-primary':''}}"> </td>
+                                    </tr>
+                                    {% set i = i+1 %}
+                                    {% endif %}
+                                {% endfor %}
+                                    {% if iniciaron==1 %}
+                                    <tr>
+                                        <td colspan="15">Todas la unidades educativas iniciaron actividades</td>
+                                    </tr>
+                                    {% endif %}
+
+                              </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div id="inicio"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="panel panel-default shadow">
+                            <div id="riesgos"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts%}
+    {{parent()}}
+
+<script>
+
+    var mostrarResultadosReporte=function (form)
+    {
+        var formData = $(form).serialize();
+
+        $.ajax({
+                type: 'post',
+                url: Routing.generate('siged_mostrar_resultados_reporte_modalidad_atencion'),
+                data: formData,
+                beforeSend: function () {
+                    $(".div-mostrar-resultados-reporte-modalidad-atencion").empty();
+                    $(".div-mostrar-resultados-reporte-modalidad-atencion").html("<div style='text-align:center'><img src='{{asset('img/loading.gif')}}'></div>");
+                },
+                success: function (data)
+                {
+                    $(".div-mostrar-resultados-reporte-modalidad-atencion").empty();
+                    $(".div-mostrar-resultados-reporte-modalidad-atencion").html(data);
+                    $('#dataTable-modalidad').DataTable( {});
+                    
+                },
+                error: function (data) {
+                    $(".div-mostrar-resultados-reporte-modalidad-atencion").empty();
+                    $(".div-mostrar-resultados-reporte-modalidad-atencion").append('<div class="alert alert-danger"><i class="glyphicon glyphicon-exclamation-sign"></i> No hay conexion con el servidor</div>');
+                }
+            });
+    }
+
+
+Highcharts.chart('inicio', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Inicio de actividades'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>  ({point.label:,.0f} E.U.)'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: 
+    {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %  ({point.label:.0f} Unidades Educativas)'
+            }
+        }
+    },
+    series: [{
+        name: 'Inicio actividades',
+        colorByPoint: true,
+        data:{{highcharts['inicio']|raw }}
+    }]
+});
+
+Highcharts.chart('riesgos', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Riesgos que presenta las unidades educativas'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b> ({point.label:.0f} Unidades Educativas)'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} % ({point.label:.0f} Unidades Educativas)'
+            }
+        }
+    },
+    series: [{
+        name: 'Porcentaje',
+        colorByPoint: true,
+        data:{{highcharts['riesgos']|raw }}
+    }]
+});
+
+$(function ()
+{
+    $('.select-gestion').on('change',function()
+    {
+        var gestion=this.value;
+        var inputs_gestion=$('.hidden-gestion');
+        $.each(inputs_gestion,function(index, ele)
+        {
+            $(ele).val(gestion);
+        });
+    });
+    $('.select-mes').on('change',function()
+    {
+        var mes=this.value;
+        var inputs_mes=$('.hidden-mes');
+        $.each(inputs_mes,function(index, ele)
+        {
+            $(ele).val(mes);
+        });
+    });
+});
+
+</script>
+{% endblock %}
+
+
+
+

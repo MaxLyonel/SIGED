@@ -77,7 +77,7 @@ class CursosLargosController extends Controller {
 
                 $sinfoUeducativa = serialize(array(
                     'ueducativaInfo' => array('subarea' => $uEducativa['subarea'],'programa' => $uEducativa['programa'], 'cursolargo' => $uEducativa['cursolargo'], 'acreditacion' => $uEducativa['acreditacion'], 'paralelo' => $uEducativa['paralelo'],
-                    'ueducativaInfoId' => array('subareaid' => $uEducativa['subareaid'],'programaid' => $uEducativa['programaid'], 'cursolargoid' => $uEducativa['cursolargoid'], 'acreditacionid' => $uEducativa['acreditacionid'], 'iecid' => $uEducativa['iecid'], 'paraleloId' => $uEducativa['paraleloid'],'esabierto'=> $uEducativa['esabierto'])
+                    'ueducativaInfoId' => array('subareaid' => $uEducativa['subareaid'],'programaid' => $uEducativa['programaid'], 'cursolargoid' => $uEducativa['cursolargoid'], 'acreditacionid' => $uEducativa['acreditacionid'], 'iecid' => $uEducativa['iecid'], 'iecId' => $uEducativa['iecid'], 'paraleloId' => $uEducativa['paraleloid'],'esabierto'=> $uEducativa['esabierto'])
                 )));
 
                 $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['programa']][$uEducativa['cursolargo']] [$uEducativa['acreditacion']][$uEducativa['paralelo']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto'], 'iecId'=> $uEducativa['iecid']);

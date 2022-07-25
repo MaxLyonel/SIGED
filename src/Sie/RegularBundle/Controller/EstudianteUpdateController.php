@@ -219,6 +219,7 @@ class EstudianteUpdateController extends Controller {
                         'form_mode1' => $form_mode1,
                         'form_mode2' => $form_mode2,
                         'form_mode3' => $form_mode3,
+                        'form_mode4' => null,
                         'm1' => $m1,
                         'm2' => $m2,
                         'm3' => $m3
@@ -1089,7 +1090,20 @@ class EstudianteUpdateController extends Controller {
                                 $oldDataStudent,
                                 'SIGED',
                                 json_encode(array( 'file' => basename(__FILE__, '.php'), 'function' => __FUNCTION__ ))
-        );      
+        );   
+
+          // get the student with observatino info
+          $objStudentObs =  $em->getRepository('SieAppWebBundle:ValidacionProceso')->getNacFechaAndGeneroInfo($entity->getCodigoRude(), $this->session->get('yearQA')-1);
+          //opdate observation
+          foreach ($objStudentObs as $key => $value) {
+              //get observation values  to update
+              $objValidationProcessUpdate = $em->getRepository('SieAppWebBundle:ValidacionProceso')->find($value->getId());
+              $objValidationProcessUpdate->setEsActivo('t');
+              $em->persist($objValidationProcessUpdate);
+              $em->flush();
+
+          }
+
         // $this->session->getFlashBag()->add('okUpdate', 'Datos Modificados Correctamente');
         // return $this->redirect($this->generateUrl('sie_estudiantes'));
             if($resultSegip == 1){

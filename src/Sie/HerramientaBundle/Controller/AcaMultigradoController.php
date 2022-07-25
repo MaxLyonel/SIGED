@@ -536,10 +536,12 @@ class AcaMultigradoController extends Controller {
           return new JsonResponse(array('mensaje'=>$message, 'typeMessage'=>$typeMessage));
 
         }
-        // $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneById($arrDataMultigrado['idDetalle']);
-        // $vproceso->setEsActivo('t');
-        // $em->persist($vproceso);
-        // $em->flush();
+        $vproceso = $em->getRepository('SieAppWebBundle:ValidacionProceso')->findOneBy(array('llave' => $arrDataMultigrado['sie'],'gestionTipo'=> $arrDataMultigrado['gestion'], 'esActivo'=>'false' ));
+        if($vproceso){
+          $vproceso->setEsActivo('t');
+          $em->persist($vproceso);
+          $em->flush();
+        }
         if($flagError){
           $em->getConnection()->rollback();
         }else{

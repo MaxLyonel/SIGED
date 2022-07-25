@@ -47,6 +47,8 @@
                                         <th>Cod. RIE</th>
                                         <th>Denominación</th>
                                         <th>Depto.</th>                                        
+                                        <th>Dependencia</th>                                        
+                                        <th>Tipo</th>                                        
                                     </tr>
                                 </thead>
                                 
@@ -61,7 +63,16 @@
                                             </td>
                                             <td>{{ entity.institucioneducativa.id }}</td>
                                             <td>{{ entity.institucioneducativa.institucioneducativa }}</td>                                            
-                                            <td>{{ entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>                                                                                        
+                                            <td>{{ entity.institucioneducativa.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.lugar }}</td>     
+                                            <td>{{ entity.institucioneducativa.dependenciaTipo.dependencia }}</td>   
+                                             <td> {% if entity.institucioneducativa.id == entity.sede %}
+                                                    SEDE
+                                                {% else %}   
+                                                    <label data-toggle="tooltip" data-placement="top" title="Sede:{{entity.sede }}">
+                                                    SUBSEDE
+                                                    <label>
+                                                {% endif %}                                                          
+                                            </td>                                                                     
                                         </tr>
                                     {% endfor %}
                                 </tbody>

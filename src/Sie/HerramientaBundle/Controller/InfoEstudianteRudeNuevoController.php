@@ -2243,10 +2243,10 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     if(isset($form['extranjero']))
                         $arrayDatosPersona['extranjero'] = 'extranjero';
                     
-                    $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $arrayDatosPersona, 'prod', 'academico');
+                    /*$personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $arrayDatosPersona, 'prod', 'academico');
 
                     if($personaValida)//verificamos que se persona valida por segip
-                    {
+                    {*/
                         // REGISTRAMOS LOS DATOS DE LA PERSONA
                         $nuevaPersona = new Persona();
                         //$nuevaPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaMaterno')->find(98));
@@ -2281,15 +2281,13 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         $em->persist($nuevaPersona);
                         $em->flush();
                         $idPersona = $nuevaPersona->getId();
-                    }
-                    else
-                    {
+                    /*}else{
                         $response = new JsonResponse();
                         return $response->setData([
                             'status'=>404,
                             'msg'=>'Los datos no son validos según SEGIP.'
                         ]);
-                    }
+                    }*/
                 }
             }
             else

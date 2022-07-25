@@ -1,0 +1,32 @@
+Sie\AppWebBundle\Entity\EspecialNivelTalento:
+    type: entity
+    table: especial_nivel_talento
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        nivelTalento:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+            column: nivel_talento
+        vigente:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: true
+        sigla:
+            type: string
+            nullable: true
+            length: 3
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

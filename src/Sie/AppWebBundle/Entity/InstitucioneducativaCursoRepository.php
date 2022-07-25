@@ -162,6 +162,21 @@ class InstitucioneducativaCursoRepository extends EntityRepository
     }    
 
     public function getListStudentPerCourseTodoInscriptionAlter($ie_id, $ie_gestion, $ie_subcea, $per_id_cod, $realLevel, $setCodigo, $satCodigo, $paralelo, $turno) {
+
+        if($setCodigo.$satCodigo >= 21){
+            if($setCodigo.$satCodigo == 21){
+                $setCodigo = 1;
+                $satCodigo = 2;
+            }else{
+                $satCodigo = $satCodigo -1;
+            }
+        }else{
+            if($setCodigo.$satCodigo == 11){
+            }else{
+                $satCodigo = $satCodigo -1;
+            }
+        }
+
         $qb = $this->getEntityMAnager()->createQueryBuilder();//echo "$ie_id, $ie_gestion, $ie_subcea, $per_id_cod, $realLevel";
         $qb
 

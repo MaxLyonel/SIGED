@@ -36,7 +36,7 @@
             <div class="card">
                 <div class="header bg-blue-grey">
                     <h2>
-                        {{entity.id}}  - {{entity.institucioneducativa}} 
+                        {{entity.id}}  - {{entity.institucioneducativa}} - {{entity.dependenciaTipo.dependencia}}
                     </h2>
                 </div>
 
@@ -44,7 +44,7 @@
                     <div class="row">
                         <div class="col-lg-12 col-md-6 col-sm-12 col-xs-12 text-right">
                         {# % abierto caso regularizacion certiicados 
-                            if app.session.get('roluser') == 7 and esAcreditado == false and entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %#}
+                            if app.session.get('roluser') == 7 and esAcreditado == false and entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario % #}
                         {% if app.session.get('roluser') == 7  and entity.leJuridicciongeografica.lugarTipoLocalidad.lugarTipo.lugarTipo.lugarTipo.lugarTipo.codigo == lugarUsuario %}
                             <form action="{{path('historico_new')}}" method="post" style="display:inline-block">
                                 <input type="hidden" name="idRie" value="{{entity.id}}">

@@ -433,13 +433,14 @@ class AreasController extends Controller {
             $em->getConnection()->beginTransaction();
 
             $query = $em->createQuery(
-                            'SELECT DISTINCT iec.id,pt.paralelo,ser.servicio,pro.programa
+                            'SELECT DISTINCT iec.id,pt.paralelo,ser.servicio,pro.programa, mo.id as momento_id, mo.momento
                     FROM SieAppWebBundle:InstitucioneducativaCursoEspecial iece
                     JOIN iece.institucioneducativaCurso iec
                     JOIN iec.institucioneducativa ie
                     JOIN iec.paraleloTipo pt
                     JOIN iece.especialServicioTipo ser
                     JOIN iece.especialProgramaTipo pro
+                    JOIN iece.especialMomentoTipo mo
                     WHERE ie.id = :id
                     AND iec.gestionTipo = :gestion
                     AND iec.turnoTipo = :turno
@@ -457,11 +458,15 @@ class AreasController extends Controller {
                     ->setParameter('programa', array(100)); //antes 17?
 
             $paralelos = $query->getResult();
+
 //dump($paralelos);die;
             $paralelosArray = array();
 
             for ($i = 0; $i < count($paralelos); $i++) {
-                $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'] . '/' . $paralelos[$i]['servicio'] . '/' . $paralelos[$i]['programa'];
+                $momento_visual='';
+                if( $paralelos[$i]['momento_id']!='')
+                    $momento_visual='-'.$paralelos[$i]['momento'];
+                $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'] . '/' . $paralelos[$i]['servicio'] . '/' . $paralelos[$i]['programa'].' '.$momento_visual;
             }
             $em->getConnection()->commit();
             $response = new JsonResponse();
@@ -492,6 +497,7 @@ class AreasController extends Controller {
             $institucionCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->find($idCurso);
             $institucionCursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso' => $institucionCurso));
             $idarea = $institucionCursoEspecial->getEspecialAreaTipo()->getId();
+            $idmomento = $institucionCursoEspecial->getEspecialMomentoTipo()->getId();
             if($idarea == 2 or $idarea == 4){
                 $esvisual = true;
             }else{
@@ -503,7 +509,7 @@ class AreasController extends Controller {
             $programaServicio = null;
             $progSer = null;
             //dump($idNivel); dump($idCurso); dump($idarea); die;
-
+            $todasLasAsignaturas = 'SI';
             switch($idNivel){
                 case 400: //Independencia personal 
                 case 401: switch ($grado) { //Independencia personal 1
@@ -606,6 +612,7 @@ class AreasController extends Controller {
                                     ->getResult();
                                     break;
                                  case 12:
+                                    $todasLasAsignaturas = 'NO';
                                     if ($this->session->get('idGestion') < 2021) {
                                         $asignaturas = $em->createQuery(
                                                 'SELECT at
@@ -658,7 +665,7 @@ class AreasController extends Controller {
                                             FROM SieAppWebBundle:AsignaturaTipo at
                                             WHERE at.id IN (:ids)
                                             ORDER BY at.id ASC'
-                                    )->setParameter('ids',array(32833, 32834, 1018, 1016)) //32832
+                                    )->setParameter('ids',array(32836, 32837, 32838, 1018, 1016)) //32832
                                     ->getResult();
                                     break;
                                 case 23: //---
@@ -679,7 +686,41 @@ class AreasController extends Controller {
                                     )->setParameter('ids',array(458,459,482,483))
                                     ->getResult();
                                      break;
-                                case 28: //---
+                                case 26: //--- VISULA MULTIPLE
+                                    $asignaturas = $em->createQuery(
+                                        'SELECT at
+                                        FROM SieAppWebBundle:AsignaturaTipo at
+                                        WHERE at.id IN (:ids)
+                                        ORDER BY at.id ASC'
+                                    )->setParameter('ids',array(4))
+                                    ->getResult();
+                                    $programaServicio = $institucionCursoEspecial->getEspecialProgramaTipo()->getPrograma();
+                                    $esvisual = true;
+                                    $progSer = "Programa";
+
+                                    if ($idmomento==1) {
+                                        $asignaturas = $em->createQuery(
+                                            'SELECT at
+                                            FROM SieAppWebBundle:AsignaturaTipo at
+                                            WHERE at.id IN (:ids)
+                                            ORDER BY at.id ASC'
+                                        )->setParameter('ids',array(32832,3185,32833))
+                                        ->getResult();
+                                    }
+                                    if ($idmomento==2) {
+                                        $asignaturas = $em->createQuery(
+                                            'SELECT at
+                                            FROM SieAppWebBundle:AsignaturaTipo at
+                                            WHERE at.id IN (:ids)
+                                            ORDER BY at.id ASC'
+                                        )->setParameter('ids',array(482,32834,32835))
+                                        ->getResult();
+                                        
+                                    }
+                                        
+
+                                 break;
+                                case 28: //---atención temprana
                                         $asignaturas = $em->createQuery(
                                             'SELECT at
                                             FROM SieAppWebBundle:AsignaturaTipo at
@@ -688,6 +729,15 @@ class AreasController extends Controller {
                                     )->setParameter('ids',array(993,994,995))
                                     ->getResult();
                                  break;
+                                 case 29: //---
+                                    $asignaturas = $em->createQuery(
+                                        'SELECT at
+                                        FROM SieAppWebBundle:AsignaturaTipo at
+                                        WHERE at.id IN (:ids)
+                                        ORDER BY at.id ASC'
+                                )->setParameter('ids',array(479,492))
+                                ->getResult();
+                             break;
                                 default:
                                     $asignaturas = $em->createQuery(
                                             'SELECT at
@@ -760,6 +810,7 @@ class AreasController extends Controller {
 
 
                 case 12:   //Primaria
+                    
                      $asignaturas = $em->createQuery(
                                     'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
@@ -774,11 +825,9 @@ class AreasController extends Controller {
                       $rasignaturas = $em->createQuery(
                             'SELECT at
                                     FROM SieAppWebBundle:AsignaturaTipo at
-                                    WHERE at.asignaturaNivel = :idNivel
-                                    AND at.id IN (:ids)
+                                    WHERE at.id IN (:ids)
                                     ORDER BY at.id ASC'
-                                    )->setParameter('idNivel', 12)
-                                    ->setParameter('ids',array(1011,1012,1013,1014,1015,1016,1017,1018,1019))
+                                    )->setParameter('ids',array(464,1012,1013,1014,1015,1016,1017,1018,1019))
                                     ->getResult();
                             $asignaturas = array();
                             foreach ($rasignaturas as $item) {
@@ -898,7 +947,7 @@ class AreasController extends Controller {
                            ->getResult();
             $em->getConnection()->commit();
            //dump($areasArray);die;
-            return $this->render('SieEspecialBundle:Areas:listaAreas.html.twig', array('areasNivel' => $areasArray, 'maestros' => $maestros,'esvisual'=>$esvisual,'progSer'=>$progSer));
+            return $this->render('SieEspecialBundle:Areas:listaAreas.html.twig', array('areasNivel' => $areasArray, 'maestros' => $maestros,'esvisual'=>$esvisual,'progSer'=>$progSer, 'todasLasAsignaturas'=>$todasLasAsignaturas));
         } catch (Exception $ex) {
             //$em->getConnection()->rollback();
         }
@@ -923,10 +972,12 @@ class AreasController extends Controller {
 
             if ($form['nivel'] != 405) { /**405 formacion tecnica */
                 $curso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findOneById($form['paralelo']);
+               
                 $gestion = $curso->getGestionTipo()->getId();
-
+                $cursoEspecial = '';
                 if ($curso) {
                     $idCurso = $curso->getId();
+                    $cursoEspecial = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoEspecial')->findOneBy(array('institucioneducativaCurso'=>$idCurso));
                     $mensaje = '';
                 } else {
                     $mensaje = "No hay asignaturas";
@@ -998,11 +1049,12 @@ class AreasController extends Controller {
                 }
                 
                 $areasCurso = $array;
-                
+               // dump($cursoEspecial);die;
                 $em->getConnection()->commit();
                 return $this->render('SieEspecialBundle:Areas:listaAreasCurso.html.twig', array(
                             'areasCurso' => $areasCurso,
                             'curso' => $curso,
+                            'cursoEspecial' => $cursoEspecial,
                             'mensaje' => $mensaje,
                             'esvisual' => $esvisual,
                             'progSer' => $progSer,
@@ -1238,6 +1290,7 @@ class AreasController extends Controller {
             return $this->render('SieEspecialBundle:Areas:listaAreasCurso.html.twig', array(
                     'areasCurso'    => $areasCurso, 
                     'curso'         => $curso, 
+                    'cursoEspecial'         => $cursoEspecial, 
                     'mensaje'       => '',
                     'esvisual'      => $esvisual,
                     'progSer'       => $progSer,

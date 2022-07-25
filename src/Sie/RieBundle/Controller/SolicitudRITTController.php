@@ -55,6 +55,7 @@ class SolicitudRITTController extends Controller {
         $TramiteController->setContainer($this->container);
         // public function tramiteTarea($tarea_ant,$tarea_actual,$flujotipo,$usuario,$rol)
         $lista = $TramiteController->tramiteTareaRitt(22,22,5,$id_usuario,$id_rol);
+        
         return $this->render('SieRieBundle:SolicitudRITT:index.html.twig',array('listaTramites'=>$lista['tramites']));
     }
     public  function guardaTramiteAction(Request $request){
@@ -322,6 +323,11 @@ class SolicitudRITTController extends Controller {
         //dump($this->container->getParameter('urlreportweb'));
         //dump($idTramite);die;
         $entityDocumento = $em->getRepository('SieAppWebBundle:Documento')->findOneBy(array('tramite'=>$idTramite));
+
+        $obs = $entityDocumento->getObs();
+        $entityDocumento->setObs( $obs.' reimpreso '.date('YmdHis')) ;
+        $em->persist($entityDocumento);
+        $em->flush();
 
         $arch = 'CERTIFICADO_'.$idRie.'_' . date('YmdHis') . '.pdf';
         $response = new Response();

@@ -593,6 +593,10 @@ class StudentsInscriptionsController extends Controller {
         'nombre'=>$nombre,
         'fecha_nacimiento'=>$fecNac
       );
+      if($request->get('extranjero') == 1){
+        $arrParametros['extranjero'] = 'e';
+      }   
+      
       // get info segip
       $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
       // check if the data person is true
@@ -638,8 +642,9 @@ class StudentsInscriptionsController extends Controller {
               }else{//no Bolivia
                   $estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
                   $estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
-                  $estudiante->setLocalidadNac('');
+                  //$estudiante->setLocalidadNac('');
               }
+
               $estudiante->setSegipId(1);
               $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
               $em->persist($estudiante);

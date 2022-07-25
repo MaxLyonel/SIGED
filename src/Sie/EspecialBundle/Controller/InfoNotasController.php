@@ -61,13 +61,13 @@ class InfoNotasController extends Controller {
             $seguimiento = false;
 
             $estadosMatricula = null;
-
-            
+            //dump($discapacidad);die;
+            //dump($operativo);die;
             switch ($discapacidad) {
                 case 1: // Auditiva
                         //if($nivel != 405){
                         $progserv = $cursoEspecial->getEspecialProgramaTipo()->getId();
-                        //dump($progserv);dump($nivel);die;
+                       // dump($progserv);dump($nivel);die;
                         if($nivel == 403 or $nivel == 404 or ($nivel == 411 and $progserv == 19)){//Verificar el seguimiento para 19
 
                             if($progserv == 19) {
@@ -82,7 +82,7 @@ class InfoNotasController extends Controller {
                                 }
 
                             } else{
-
+                                //$operativo = 1; se forzo porque aun no habia registro de operativo
                                 $notas = $this->get('notas')->regularEspecial($idInscripcion,$operativo);
 
                                 if($notas['tipoNota'] == 'Trimestre'){
@@ -93,6 +93,7 @@ class InfoNotasController extends Controller {
                                     else
                                         $template = 'regular';
                                 }
+                                
                                 $actualizarMatricula = true;
                                 if(in_array($nivel, array(1,11,403))){
                                     $actualizarMatricula = false;
@@ -194,7 +195,6 @@ class InfoNotasController extends Controller {
                         break;
                 case 4: // Fisico -motora
                 case 6: //Dificultades en el aprendizaje
-                case 7: // Talento extraordinario
                     if($gestion >2019){
                         $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
                         $template = 'especialSeguimiento';
@@ -206,6 +206,17 @@ class InfoNotasController extends Controller {
                     }
                     
                     break;
+                case 7: //  o extraordinario
+                    if($gestion >2019){
+                        $notas = $this->get('notas')->especial_seguimiento($idInscripcion,$operativo);
+                        $template = 'especialTalento';
+                        $actualizarMatricula = false;
+                        $seguimiento = true;
+                            if($operativo >= 3 or $gestion < $gestionActual){
+                                $estadosMatricula = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(10,78,79))); //--
+                           }
+                    }
+                     break;
                 case 8: // Sordeceguera
                         break;
 
@@ -214,8 +225,9 @@ class InfoNotasController extends Controller {
                 case 100: // Modalidad Indirecta
                         break;
             }
-            //dump($vista);
-          //dump($notas);die;
+            //dump($template); die;
+          // dump($notas);die;
+           //dump($estadosMatricula);die;
             if($notas){
                 return $this->render('SieEspecialBundle:InfoNotas:notas.html.twig',array(
                     'notas'=>$notas,
@@ -241,7 +253,7 @@ class InfoNotasController extends Controller {
 
     public function createUpdateAction(Request $request){ 
         try {
-            
+            //dump($request); die;
             $idInscripcion = $request->get('idInscripcion');
             $discapacidad = $request->get('discapacidad');
             $em = $this->getDoctrine()->getManager();
@@ -412,7 +424,7 @@ class InfoNotasController extends Controller {
         $arrInfoUe = unserialize($request->get('infoUe'));
         $arrInfoStudent = json_decode($request->get('infoStudent'),true);
 
-        //dump($request);die;
+       // dump($request);die;
         $sie = $arrInfoUe['requestUser']['sie'];
         $estInsId = $arrInfoStudent['estInsId'];
         $areaEspecialId = $arrInfoUe['ueducativaInfoId']['areaEspecialId'];
@@ -447,6 +459,14 @@ class InfoNotasController extends Controller {
                 //dump($arrInfoStudent['estInsId']);die;
                 $archivo = "esp_est_LibretaEscolar_Intelectual_Multiple_v1_pvc.rptdesign";
                 $nombre = 'libreta_especial_intelectual_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
+                $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
+                $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
+                $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie .'&lk='. $link . '&&__format=pdf&';
+                break;
+            case 7: //talento
+                //dump($arrInfoStudent['estInsId']);die;
+                $archivo = "esp_est_LibretaEscolar_Talento.rptdesign";
+                $nombre = 'libreta_especial_talento_' . $arrInfoUe['requestUser']['sie'] . '_' . $arrInfoUe['ueducativaInfoId']['nivelId'] . '_' . $arrInfoUe['requestUser']['gestion'] . '.pdf';
                 $data = $arrInfoStudent['estInsId'] .'|'. $arrInfoStudent['codigoRude'] .'|'.$arrInfoUe['requestUser']['sie'].'|'.$arrInfoUe['requestUser']['gestion'].'|'.$arrInfoUe['ueducativaInfoId']['nivelId'].'|'.$arrInfoUe['ueducativaInfoId']['turnoId'].'|'.$arrInfoUe['ueducativaInfoId']['paraleloId'].'|'.$arrInfoStudent['estInsEspId'];
                 $link = 'http://libreta.minedu.gob.bo/lib/'.$this->getLinkEncript($data);
                 $report = $this->container->getParameter('urlreportweb') . $archivo . '&inscripid=' . $estInsId . '&codue=' . $sie .'&lk='. $link . '&&__format=pdf&';

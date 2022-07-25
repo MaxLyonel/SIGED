@@ -262,6 +262,9 @@ class AreasController extends Controller {
             //sacamos solo los PERMITIDOS segun RUE para esa UE
             $sw_nivel_primario = false;
             $sw_nivel_inicial = false;
+            //para las modulares
+            $sw_nivel_secundario = false;
+
             $RAW_QUERY = "SELECT
                 nivel_tipo.id, 
                 nivel_tipo.nivel, 
@@ -282,6 +285,12 @@ class AreasController extends Controller {
             $nivelesArray = array();
             for ($i = 0; $i < count($niveles); $i++) {
                 $nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
+
+                //para el caso modulares
+                if($niveles[$i]['id'] == 13){
+                    //esta UE tiene habilitada Primaria Comunitaria Vocacional
+                    $sw_nivel_secundario = true;
+                }
                 
                 //para el caso multigrado
                 if($niveles[$i]['id'] == 12){
@@ -295,13 +304,47 @@ class AreasController extends Controller {
 
             }
 
+
+            /**
+             * dcastillo 03052022
+             * si la ue no tiene habilitado secundaria, preguntamos si es modular, si es se aumenta al array
+             */
+
+            $es_modular = false;
+            $paralelosArray = array();           
+          
+            //no tiene  habilitado secundaria, vemos si es modular
+            $sql = "select count(*) as es_modular
+            from institucioneducativa_humanistico_tecnico iht 
+            where iht.institucioneducativa_humanistico_tecnico_tipo_id = 3
+            and gestion_tipo_id = 2021
+            and institucioneducativa_id = '" . $institucion . "'";
+            
+            $statement = $em->getConnection()->prepare($sql);
+            $statement->execute();
+            $result = $statement->fetchAll();
+            
+            $es_modular_result = $result;
+            $es_modular_result[0]['es_modular'];
+            if($es_modular_result[0]['es_modular'] != 0){
+                $es_modular = true;
+            }
+
+            if($sw_nivel_secundario == false and $es_modular == true){
+                    $nivelesArray[13] = 'Secundaria Comunitaria Productiva';
+                    $paralelosArray[1] = 'A';
+            }
+
+            
+
+
+
             /**
              * dcastillo 2302: si tiene nivel primario, se adiciona nivel inicial y solo paralelo A
              * solo si es publico caso mULTIGRADOS
              */
 
              $sw_habilita_multigrado= false;
-
              //vemos si la ue tiene al menos un multigrado en primaria gestion 2022 en la tabla 
              //institucioneducativa_curso, campo multigrado en nivel_tipo_id = primaria
              $RAW_QUERY = '
@@ -344,9 +387,14 @@ class AreasController extends Controller {
             }
            
             //TODOS
-            
+
+            //dump(sizeof($paralelosArray)); die;
+            if(sizeof($paralelosArray) == 0)
+            {
+                      
             if( $sw_habilita_multigrado == false){
                 // como estaba incialmente antes de multigrado
+               
                 if($dependencia_tipo_id != 3 ){
 
                     if($this->session->get('roluser') == 9 )
@@ -396,8 +444,9 @@ class AreasController extends Controller {
 
                 }
             }else{
+                
 
-                if($this->session->get('roluser') == 9 )
+                if($this->session->get('roluser') == 9 ) // es director
                 {
                     if($dependencia_tipo_id != 3 ){
                         // es fiscal y similares y ademas
@@ -416,20 +465,35 @@ class AreasController extends Controller {
                 
                 if($this->session->get('roluser') == 7 or $this->session->get('roluser') == 8 or $this->session->get('roluser') == 10)
                 {
-                    $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
-                    $statement = $em->getConnection()->prepare($RAW_QUERY);
-                    $statement->execute();
-                    $result = $statement->fetchAll();
-                    $paralelos = $result;
-                    $paralelosArray = array();
-                    for ($i = 0; $i < count($paralelos); $i++) {
-                        $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                    
+                    if($es_modular == true){
+                        $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) = 1;';
+                        $statement = $em->getConnection()->prepare($RAW_QUERY);
+                        $statement->execute();
+                        $result = $statement->fetchAll();
+                        $paralelos = $result;
+                        $paralelosArray = array();
+                        for ($i = 0; $i < count($paralelos); $i++) {
+                            $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                        }
+                    }else{
+
+                        $RAW_QUERY = 'SELECT * FROM paralelo_tipo where  CAST (id AS INTEGER) <= 26;';
+                        $statement = $em->getConnection()->prepare($RAW_QUERY);
+                        $statement->execute();
+                        $result = $statement->fetchAll();
+                        $paralelos = $result;
+                        $paralelosArray = array();
+                        for ($i = 0; $i < count($paralelos); $i++) {
+                            $paralelosArray[$paralelos[$i]['id']] = $paralelos[$i]['paralelo'];
+                        }
                     }
 
                 }
 
             }
-            
+
+            }
             
             /*if( $dependencia_tipo_id == 3) { 
                 // es privada
@@ -1242,8 +1306,10 @@ class AreasController extends Controller {
 
         $em = $this->getDoctrine()->getManager();      
         $query = $em->getConnection()->prepare("select * FROM sp_crea_nuevo_curso('$gestion_id', '$institucion_id', '$turno_id', '$nivel_id', '$grado_id','$paralelo_id') ");
+        //dump($query); die;
         $query->execute();
         $valor= $query->fetchAll();
+
         //dump($valor[0]['sp_crea_nuevo_curso']); die;
         
         /*$RAW_QUERY = 'SELECT * FROM turno_tipo where id not in (0,10,11);';            
@@ -1254,6 +1320,7 @@ class AreasController extends Controller {
 
 
         $res= $valor[0]['sp_crea_nuevo_curso'];
+       
         $response = new JsonResponse();
         return $response->setData(array('exito'=>$res,'mensaje'=>''));
        

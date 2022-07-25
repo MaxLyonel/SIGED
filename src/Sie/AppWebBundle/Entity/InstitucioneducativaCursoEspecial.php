@@ -83,7 +83,15 @@ class InstitucioneducativaCursoEspecial
      */
     private $especialServicioTipo;
 
-
+ /**
+     * @var \EspecialMomentoTipo
+     *
+     * @ORM\ManyToOne(targetEntity="EspecialMomentoTipo")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="especial_momento_tipo_id", referencedColumnName="id")
+     * })
+     */
+    private $especialMomentoTipo;
 
     /**
      * Get id
@@ -259,5 +267,28 @@ class InstitucioneducativaCursoEspecial
     public function getEspecialModalidadTipo()
     {
         return $this->especialModalidadTipo;
+    }
+
+      /**
+     * Set especialMomentoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EspecialMomentoTipo $especialMomentoTipo
+     * @return InstitucioneducativaCursoEspecial
+     */
+    public function setEspecialMomentoTipo(\Sie\AppWebBundle\Entity\EspecialMomentoTipo $especialMomentoTipo = null)
+    {
+        $this->especialMomentoTipo = $especialMomentoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get especialMomentoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EspecialMomentoTipo 
+     */
+    public function getEspecialMomentoTipo()
+    {
+        return $this->especialMomentoTipo;
     }
 }

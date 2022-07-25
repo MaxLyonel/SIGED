@@ -52,6 +52,10 @@ class DefaultController extends Controller
         if (!isset($id_usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
+        $arrRolAllow = array(7,8);
+        if(!in_array($this->session->get('roluser'), $arrRolAllow)){
+            return $this->redirectToRoute('principal_web');
+        }
         
         /////APODERADO////
 //        if ($this->session->get('roluser') == '3'){
@@ -678,10 +682,34 @@ class DefaultController extends Controller
             $form_x = $request->get('sie_usuarios_form');
 
             $multiple = $form_x['rolTipo'];
-                        
+       
             $lugids = explode(",", $data['lugtipids']);
             $i = 0;
             
+            // here the validation by krlos idusuario
+            if($form_x['idusuario']){
+                $idsrol = $em->getRepository('SieAppWebBundle:RolRolesAsignacion')->getFindByNotUserRolesId($this->session->get('roluser'),  $form_x['idusuario']);
+
+                $allowRols = array();
+                foreach ($idsrol as $value) {
+                    $allowRols[] = $value['id'];
+                }
+                
+                $swUpdate = true;
+                while (($valSend = current($multiple)) !== FALSE && $swUpdate) {
+                    if(in_array($valSend, $allowRols) ){
+                        $swUpdate=true;
+                    }else{
+                        $swUpdate=false;
+                    }
+                    next($multiple);
+                }
+                if(!$swUpdate){
+                    return $response->setData(array('accion' => $data['accion'], 'mensaje' => 'Proceso detenido! se ha detectado inconsistencia de datos!'));
+                }                
+            }
+            // end here the validation by krlos idusuario
+
             foreach ($multiple as $value)
             {
                 $rolTipo = $this->getDoctrine()->getRepository('SieAppWebBundle:RolTipo')->find($value);
@@ -749,6 +777,11 @@ class DefaultController extends Controller
     }
     
     public function userroleditAction($usuarioid) {
+        $arrRolAllow = array(8);
+        
+        if(!in_array($this->session->get('roluser'), $arrRolAllow)){
+            die('Lo sentimos... temporalmente fuera de servicio...');
+        }        
         $em = $this->getDoctrine()->getManager();        
         
         //LEYENDO ROLES QUE PUEDE CREAR EL USUARIO

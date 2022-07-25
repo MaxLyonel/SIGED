@@ -98,9 +98,16 @@
                                     </div>
                                     <div class="form-group col-lg-6 col-md-12" id= "divprograma">
                                         {{form_label(form.programa)}}
-                                        {{form_widget(form.programa) }}
+                                        {{form_widget(form.programa ,{ 'attr':{'onchange':'listarMomentos()'}  }) }}
                                         <div class="help-block with-errors"></div>
                                     </div>
+
+                                    <div class="form-group col-lg-6 col-md-12" id= "divmomento"  style="display:none">
+                                        {{form_label(form.momento)}}
+                                        {{form_widget(form.momento ) }}
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                    
                                     <div class="form-group col-lg-6 col-md-12">
                                         <label for="form_paralelo" class="required" id="idparalelo">Paralelo</label>
                                         {# {{form_label(form.paralelo)}} #}
@@ -301,6 +308,19 @@
                     dropdown("#form_servicio");
                 }
             });
+        }
+
+          function listarMomentos() {
+            var area = $('#form_area').val();
+            var nivel = $('#form_nivel').val();
+            var grado = $('#form_grado').val();
+            var modalidad = $('#form_modalidad').val();
+            var programa = $('#form_programa').val();
+            if(programa == 26 && area==2){ // Solo para visual y programa multiple: hab momentos
+                $("#divmomento").show();
+            }else{
+                $("#divmomento").hide();
+            }
         }
 
         function listarProgramas() {

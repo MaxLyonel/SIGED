@@ -74,7 +74,7 @@ class TramiteEstadisticaController extends Controller {
 		if ($request->isMethod('POST')) {
 			$gestion = $request->get('gestion');
 			$lugarNivel = base64_decode($request->get('nivel'));
-			$lugar = base64_decode($request->get('codigo'));	
+			$lugar = base64_decode($request->get('codigo'));
 		} else {
 			$gestion = $gestionActual;
 			$entidadUsuarioRol = $defaultTramiteController->getUserRoles($id_usuario);	
@@ -86,7 +86,7 @@ class TramiteEstadisticaController extends Controller {
 			} else {
 				$this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Su usuario no esta autorizado para acceder al sistema, comuniquese con su Técnico SIE y verifique los roles de acceso'));
             	return $this->redirect($this->generateUrl('tramite_homepage'));
-			}	
+			}
 		}
 		
 		$entidad = $this->buscaDipHumGestionEgreso($lugarNivel,$lugar,$gestion);

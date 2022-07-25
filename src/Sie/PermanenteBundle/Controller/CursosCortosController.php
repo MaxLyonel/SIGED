@@ -91,7 +91,7 @@ class CursosCortosController extends Controller {
 
                 $sinfoUeducativa = serialize(array(
                     'ueducativaInfo' => array( 'subarea' => $uEducativa['subarea'], 'cursocorto' => $uEducativa['cursocorto'],
-                    'ueducativaInfoId' => array('subareaId' => $uEducativa['subareaid'], 'cursocortoid' => $uEducativa['cursocortoid'], 'iecid' => $uEducativa['iecid'],'esabierto'=> $uEducativa['esabierto'])
+                    'ueducativaInfoId' => array('subareaId' => $uEducativa['subareaid'], 'cursocortoid' => $uEducativa['cursocortoid'], 'iecId' => $uEducativa['iecid'],'iecid' => $uEducativa['iecid'],'esabierto'=> $uEducativa['esabierto'])
                 )));
 
                 $aInfoUnidadEductiva[$uEducativa['esabierto']][$uEducativa['subarea']][$uEducativa['cursocorto']] [$uEducativa['iecid']] = array('infoUe' => $sinfoUeducativa, 'esabierto'=>$uEducativa['esabierto'], 'iecId'=> $uEducativa['iecid']);
