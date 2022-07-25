@@ -457,7 +457,7 @@
 								                                    </thead>
 								                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
 																		<tr v-for="item in objDocRequired" :key="item[0]" > 
-																			<td><label :class="[{'alert-danger': (item.id == 10 || item.id == 15)}, {'alert-success':(item.id != 10 && item.id != 15)}]"  class="form-check-label" for="invalidCheck">${item.documento_tipo}</label></td>
+																			<td><label :class="[{'alert-danger': (item.id == 10 || item.id == 15 || item.id == 16)}, {'alert-success':(item.id != 10 && item.id != 15 && item.id != 16)}]"  class="form-check-label" for="invalidCheck">${item.documento_tipo}</label></td>
 																			<td><input type="checkbox" v-model="estudiante.documentType" :id="item.id" :value="item.id" @change="updateService(item.id, $event)" ></td>
 																		</tr>	
 								                                    </tbody>
@@ -634,11 +634,11 @@
 		    		}
 		    	},
 				updateService(item, event) {
-			    	var arrRequired = [10,15];
+			    	var arrRequired = [10,15,16];
 			    	this.swRequired = false;
 			    	const result = arrRequired.every(val => this.estudiante.documentType.includes(val));
 			    	
-			    	if(this.estudiante.documentType.length >=3){
+			    	if(this.estudiante.documentType.length >=4){
 			    		result1 = true;
 			    	}else{
 			    		result1 = false;
