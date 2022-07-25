@@ -201,6 +201,14 @@
 
     </div>
 
+
+
+
+
+
+    <!-- /.row -->
+    <div id="app">
+
     <div class="modal fade in" id="biosegurityform"  tabindex="-1" role="dialog" data-backdrop="static" >
         <div class="modal-dialog" style="width:800px" role="document">
             <div class="modal-content">
@@ -315,13 +323,13 @@
                                               
                                               <div class="col-md-4 col-md-offset-2">
                                                 <label class="radio">
-                                                <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
-                                              </label>
+                                                    <input type="radio" name="pregunta1" id="pregunta1a" :value="true" v-model="swquestion1"> Si
+                                                </label>
                                               </div>
                                               <div class="col-md-2">
                                                 <label class="radio">
-                                                <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
-                                              </label>
+                                                    <input type="radio" name="pregunta1" id="preguntab" :value="false" v-model="swquestion1"> No
+                                                </label>
                                               </div>
                                             </section>
                                         <div class="panel-footer no-bg">
@@ -330,6 +338,11 @@
                                                 <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion1">Guardar y continuar</button></li>
                                             </ul>
                                         </div>
+                                        <p>${swquestion1}</p>
+                                        <div v-if="swquestion1" style="background: yellow">
+                                          <p>Hide / Show block</p>
+
+                                        </div>                                        
                                     </form>
                                 </fieldset>
                             </div>
@@ -1015,13 +1028,7 @@
                 </div>
             </div>
         </div>
-    </div>  
-
-
-
-
-    <!-- /.row -->
-    <div id="app">
+    </div>      
         <div v-cloak>
             <div class="body-content animated fadeIn">
                 <div class="row">
@@ -1253,6 +1260,7 @@
                 showbuttonPDF:false,
                 swCertification:false,
                 idDetalle: '',
+                swquestion1:null,
 
                 datain:{sie:{{arrUe.sie}}, year:{{arrUe.gestion}} },
                 DBInstitucionEdu:[],
