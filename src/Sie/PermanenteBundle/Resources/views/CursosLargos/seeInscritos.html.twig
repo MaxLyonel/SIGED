@@ -84,19 +84,20 @@
                       {% if  cursolargo[0].esabierto ==true %}
  
                                 <div class="row">
-                                  
+                                  {% if swInscription %}
                                     <div class="col-sm-4">
                                         <button type="button" class="btn btn-inverse btn-stroke" data-toggle="modal" data-target=".bs-example-modal-table" data-backdrop="static" onclick="doInscriptionsCL('{{infoUe}}');" >
                                             <i class="fa fa-user"></i> Inscripci&oacute;n con CI
                                         </button>
                                     </div>
-                                  
+                                  {% endif %}
+                                  {% if swCalification %}
                                     <div class="col-sm-4">
                                         <button type="button" class="btn btn-inverse btn-stroke"  data-dismiss="modal" onclick="saveModuloLote('{{ infoUe }}');" > 
                                             <i class="fa fa-edit"></i>Asignar modulos
                                          </button>
-                                    
                                     </div>
+                                  {% endif %}
                                     <div class="col-sm-4">
                                            <a href="{{path('permanente_reporte_participantes_curso_largo', { infoUe: infoUe })}}" class="btn btn-inverse btn-stroke"><i class="fa fa-print"></i> Imprimir Lista</a>
                                     </div>
@@ -372,10 +373,15 @@
                                                                   {# FIN APODERADO BONO FAMILIA #}
 
 
-                                                                  <li><a href="#"  type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudent('{{infoUe}}', '{{jsnInfoStudent}}');">Modulos</a></li>
-                                                                  <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasCL('{{infoUe}}', '{{jsnInfoStudent}}');">Notas</a> </li>
-                                                                  <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeal('{{objStudents.idestins}}');">Rudeal</a> </li>
-                                                                  <li><a href="#" onclick="removeInscriptionStudentCL({{ objStudents.idcurso }},{{ objStudents.idestins }},'{{infoUe}}');">Eliminar</a></li>
+                                                                  {% if swInscription %}
+                                                                    <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeal('{{objStudents.idestins}}');">Rudeal</a> </li>
+                                                                    <li><a href="#" onclick="removeInscriptionStudentCL({{ objStudents.idcurso }},{{ objStudents.idestins }},'{{infoUe}}');">Eliminar</a></li>
+                                                                  {% endif %}
+
+                                                                  {% if swCalification %}
+                                                                    <li><a href="#"  type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="addModulosToStudent('{{infoUe}}', '{{jsnInfoStudent}}');">Modulos</a></li>
+                                                                    <li> <a href="#" type="link" data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotasCL('{{infoUe}}', '{{jsnInfoStudent}}');">Notas</a> </li>
+                                                                  {% endif %}                                                                  
 
                                                                   {#<li class="divider"></li>#}
                                                                   {#<li><a href="#">Separated link</a></li>#}
