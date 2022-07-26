@@ -1,0 +1,49 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>SistemaTipo list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Sistema</th>
+                <th>Obs</th>
+                <th>Abreviatura</th>
+                <th>Bundle</th>
+                <th>Url</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('sistematipo_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.sistema }}</td>
+                <td>{{ entity.obs }}</td>
+                <td>{{ entity.abreviatura }}</td>
+                <td>{{ entity.bundle }}</td>
+                <td>{{ entity.url }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('sistematipo_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('sistematipo_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('sistematipo_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}
