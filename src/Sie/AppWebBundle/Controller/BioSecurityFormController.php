@@ -227,10 +227,62 @@ class BioSecurityFormController extends Controller{
 
 	}
 	public function saveQuestion2Action(Request $request){
-
+		// get vars send
 		$answer2 = $request->get('answer2', null);
+		// create ini var
+		$em = $this->getDoctrine()->getManager();
+		$sie = ($request->get('sie'));
+		$numWeek = date('W');
+		$currentyear = $this->currentyear;
+		// check if exists data to the SIE
+		$objBioInstitucioneducativaBioseguridad = $em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridad')->findOneBy(array('gestionTipo'=>$currentyear, 'semana'=> $numWeek, 'institucioneducativa' => $sie ));
+		
+		// if(!$objBioInstitucioneducativaBioseguridad){
+		// 	$objBioInstitucioneducativaBioseguridad = new BioInstitucioneducativaBioseguridad();
+		// 	$objBioInstitucioneducativaBioseguridad->setFechaRegistro(new \DateTime('now'));
+		// }else{
+		// 	$objBioInstitucioneducativaBioseguridad->setFechaModificacion(new \DateTime('now'));
+		// }
+		// $objBioInstitucioneducativaBioseguridad->setSemana($numWeek);
+		// $objBioInstitucioneducativaBioseguridad->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($currentyear));
+		// $objBioInstitucioneducativaBioseguridad->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
 
-		dump($answer2);die;
+		// $em->persist($objBioInstitucioneducativaBioseguridad);
+		$objBioCuestionarioTipo = $em->getRepository('SieAppWebBundle:BioCuestionarioTipo')->findBy(array('bioClasificadorPreguntaTipo' => 2 ));
+
+		if($objBioCuestionarioTipo){
+
+
+			ksort($answer2);
+			$currentKey = key($answer2);
+			$numQuestionOne = $em->getRepository('SieAppWebBundle:BioCuestionarioBrigadaTipo')->findAll();
+			foreach ($objBioCuestionarioTipo as $value) {
+
+				$objBioInstitucioneducativaBioseguridadPreguntas = $em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridadPreguntas')->findOneBy(array(
+					'bioInstitucioneducativaBioseguridad'=>$objBioInstitucioneducativaBioseguridad->getId(),
+					'bioCuestionarioTipo'=>$value->getId()
+				));
+				// check if exist sub question to question 1
+				if(!$objBioInstitucioneducativaBioseguridadPreguntas){
+					$objBioInstitucioneducativaBioseguridadPreguntas = new BioInstitucioneducativaBioseguridadPreguntas();
+					$objBioInstitucioneducativaBioseguridadPreguntas->setBioInstitucioneducativaBioseguridad($em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridad')->find($$objBioInstitucioneducativaBioseguridad->getId()));
+					$objBioInstitucioneducativaBioseguridadPreguntas->setBioCuestionarioTipo($em->getRepository('SieAppWebBundle:BioCuestionarioTipo')->find($value->getId()));
+				}else{
+
+				}
+				$objBioInstitucioneducativaBioseguridadPreguntas->setRespSiNo(($answer2[$currentKey]=='SI')?true:false);
+				$em->persist($objBioInstitucioneducativaBioseguridadPreguntas);
+
+				next($answer2);
+				$currentKey = key($answer2);
+			}			
+
+
+		}else{}
+		
+		$em->flush();
+		dump($answer2);
+		die;
 
 	}
 	public function saveQuestion3Action(Request $request){

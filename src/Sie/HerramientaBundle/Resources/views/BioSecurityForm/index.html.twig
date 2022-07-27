@@ -632,12 +632,12 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="q2.1" id="q2.1" value="SI" v-model="answer2.answertwoone"> Si
+                                            <input type="radio" name="q2.1" id="q2.1" value="SI" v-model="answer2.a21"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="q2.1" id="q2.1" value="NO" v-model="answer2.answertwoone"> No
+                                            <input type="radio" name="q2.1" id="q2.1" value="NO" v-model="answer2.a21"> No
                                           </label>
                                           </div>
                                         </section>
@@ -647,12 +647,12 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="q2.2" id="q2.2" value="SI" v-model="answer2.answertwotwo"> Si
+                                            <input type="radio" name="q2.2" id="q2.2" value="SI" v-model="answer2.a22"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="q2.2" id="q2.2" value="NO" v-model="answer2.answertwotwo"> No
+                                            <input type="radio" name="q2.2" id="q2.2" value="NO" v-model="answer2.a22"> No
                                           </label>
                                           </div>
                                         </section>
@@ -663,12 +663,12 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="q2.3" id="q2.3" value="SI" v-model="answer2.answertwothree"> Si
+                                            <input type="radio" name="q2.3" id="q2.3" value="SI" v-model="answer2.a23"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="q2.3" id="q2.3" value="NO" v-model="answer2.answertwothree"> No
+                                            <input type="radio" name="q2.3" id="q2.3" value="NO" v-model="answer2.a23"> No
                                           </label>
                                           </div>
                                         </section>
@@ -678,12 +678,12 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="q2.4" id="q2.4" value="SI" v-model="answer2.answertwofour"> Si
+                                            <input type="radio" name="q2.4" id="q2.4" value="SI" v-model="answer2.a24"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="q2.4" id="q2.4" value="NO" v-model="answer2.answertwofour"> No
+                                            <input type="radio" name="q2.4" id="q2.4" value="NO" v-model="answer2.a24"> No
                                           </label>
                                           </div>
                                         </section>
@@ -693,12 +693,12 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="q2.5" id="q2.5" value="SI" v-model="answer2.answertwofive"> Si
+                                            <input type="radio" name="q2.5" id="q2.5" value="SI" v-model="answer2.a25"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="q2.5" id="q2.5" value="NO" v-model="answer2.answertwofive"> No
+                                            <input type="radio" name="q2.5" id="q2.5" value="NO" v-model="answer2.a25"> No
                                           </label>
                                           </div>
                                         </section>  
@@ -1356,7 +1356,7 @@
                 },
                 saveQuestion2: function (){
                     
-                    axios.post(Routing.generate('appweb_biosecurityform_saveQuestion2',{answer2: this.answer2} ))
+                    axios.post(Routing.generate('appweb_biosecurityform_saveQuestion2',{answer2: this.answer2, sie: this.datain.sie} ))
                     .then(response => {
                         if (response.status == 200) {                            
                             /*this.DBInstitucionEdu = response.data.DBInstitucionEdu;
