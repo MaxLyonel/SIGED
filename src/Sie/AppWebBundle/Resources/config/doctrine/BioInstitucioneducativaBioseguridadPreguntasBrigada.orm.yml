@@ -1,0 +1,61 @@
+Sie\AppWebBundle\Entity\BioInstitucioneducativaBioseguridadPreguntasBrigada:
+    type: entity
+    table: bio_institucioneducativa_bioseguridad_preguntas_brigada
+    indexes:
+        IDX_B2CB40DB6974892F:
+            columns:
+                - bio_cuestionario_brigada_tipo_id
+        IDX_B2CB40DB8AEF27F4:
+            columns:
+                - bio_institucioneducativa_bioseguridad_preguntas_id
+    uniqueConstraints:
+        bio_institucioneducativa_bioseguridad_preguntas_brigada_key:
+            columns:
+                - bio_institucioneducativa_bioseguridad_preguntas_id
+                - bio_cuestionario_brigada_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        respSiNo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: resp_si_no
+        respVarios:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: resp_varios
+        cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+    manyToOne:
+        bioCuestionarioBrigadaTipo:
+            targetEntity: BioCuestionarioBrigadaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bio_cuestionario_brigada_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        bioInstitucioneducativaBioseguridadPreguntas:
+            targetEntity: BioInstitucioneducativaBioseguridadPreguntas
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bio_institucioneducativa_bioseguridad_preguntas_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

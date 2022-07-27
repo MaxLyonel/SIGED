@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityRepository;
 use Sie\AppWebBundle\Controller\DefaultController as DefaultCont;
 use Sie\AppWebBundle\Entity\EstudianteHistorialModificacion; 
+use Sie\AppWebBundle\Entity\BioInstitucioneducativaBioseguridad; 
+use Sie\AppWebBundle\Entity\BioInstitucioneducativaBioseguridadPreguntas; 
+use Sie\AppWebBundle\Entity\BioInstitucioneducativaBioseguridadPreguntasBrigada; 
 
 class BioSecurityFormController extends Controller{
     public $session;
@@ -132,6 +135,146 @@ class BioSecurityFormController extends Controller{
             return $ueEntity;
 
 
-	}    
+	}
+
+	public function saveQuestion1Action(Request $request){
+		// ini vars
+		$em = $this->getDoctrine()->getManager();
+		// get the vars send
+		$answer1 = $request->get('answer1', null);
+		$sie = ($request->get('sie'));
+		$numWeek = date('W');
+		$currentyear = $this->currentyear;
+		// check if exists data to the SIE
+		$objBioInstitucioneducativaBioseguridad = $em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridad')->findOneBy(array('gestionTipo'=>$currentyear, 'semana'=> $numWeek, 'institucioneducativa' => $sie ));
+
+		if(!$objBioInstitucioneducativaBioseguridad){
+			$objBioInstitucioneducativaBioseguridad = new BioInstitucioneducativaBioseguridad();
+			$objBioInstitucioneducativaBioseguridad->setFechaRegistro(new \DateTime('now'));
+		}else{
+			$objBioInstitucioneducativaBioseguridad->setFechaModificacion(new \DateTime('now'));
+		}
+		$objBioInstitucioneducativaBioseguridad->setSemana($numWeek);
+		$objBioInstitucioneducativaBioseguridad->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($currentyear));
+		$objBioInstitucioneducativaBioseguridad->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
+
+		$em->persist($objBioInstitucioneducativaBioseguridad);
+		
+		
+		// check if exists data to question 1
+		$objBioInstitucioneducativaBioseguridadPreguntas = $em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridadPreguntas')->findOneBy(array('bioInstitucioneducativaBioseguridad' => $objBioInstitucioneducativaBioseguridad->getId(), 'bioCuestionarioTipo' => 1 ));
+		if(!$objBioInstitucioneducativaBioseguridadPreguntas){
+			$objBioInstitucioneducativaBioseguridadPreguntas = new BioInstitucioneducativaBioseguridadPreguntas();
+			$objBioInstitucioneducativaBioseguridadPreguntas->setFechaRegistro(new \DateTime('now'));
+			$objBioInstitucioneducativaBioseguridadPreguntas->setBioInstitucioneducativaBioseguridad($em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridad')->find($objBioInstitucioneducativaBioseguridad->getId()));
+			$objBioInstitucioneducativaBioseguridadPreguntas->setBioCuestionarioTipo($em->getRepository('SieAppWebBundle:BioCuestionarioTipo')->find(1));
+		}else{
+			$objBioInstitucioneducativaBioseguridadPreguntas->setFechaModificacion(new \DateTime('now'));
+		}
+		$em->persist($objBioInstitucioneducativaBioseguridadPreguntas);
+		
+
+		// to save sub question 1.2 - 1.4
+		$answerSW1 = $answer1['swquestion1'];		
+		unset($answer1['swquestion1']);
+		
+
+		if($answerSW1 =='false'){
+			// delete sub questions answers one 
+			$objBioInstitucioneducativaBioseguridadPreguntasBrigada = $em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridadPreguntasBrigada')->findBy(array(
+					'bioInstitucioneducativaBioseguridadPreguntas'=>$objBioInstitucioneducativaBioseguridadPreguntas->getId(),
+				));
+			if($objBioInstitucioneducativaBioseguridadPreguntasBrigada){
+				foreach ($objBioInstitucioneducativaBioseguridadPreguntasBrigada as $value) {					
+					$em->remove($value);
+				}
+				$em->flush();
+			}
+
+		}else{
+			$numBrigada = $answer1['answeroneone'];
+			unset($answer1['answeroneone']);
+			
+			ksort($answer1);
+			$currentKey = key($answer1);
+			$numQuestionOne = $em->getRepository('SieAppWebBundle:BioCuestionarioBrigadaTipo')->findAll();
+			foreach ($numQuestionOne as $value) {
+				$objBioInstitucioneducativaBioseguridadPreguntasBrigada = $em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridadPreguntasBrigada')->findOneBy(array(
+					'bioInstitucioneducativaBioseguridadPreguntas'=>$objBioInstitucioneducativaBioseguridadPreguntas->getId(),
+					'bioCuestionarioBrigadaTipo'=>$value->getId()
+				));
+				// check if exist sub question to question 1
+				if(!$objBioInstitucioneducativaBioseguridadPreguntasBrigada){
+					$objBioInstitucioneducativaBioseguridadPreguntasBrigada = new BioInstitucioneducativaBioseguridadPreguntasBrigada();
+					$objBioInstitucioneducativaBioseguridadPreguntasBrigada->setBioInstitucioneducativaBioseguridadPreguntas($em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridadPreguntas')->find($objBioInstitucioneducativaBioseguridadPreguntas->getId()));
+					$objBioInstitucioneducativaBioseguridadPreguntasBrigada->setBioCuestionarioBrigadaTipo($em->getRepository('SieAppWebBundle:BioCuestionarioBrigadaTipo')->find($value->getId()));
+				}else{
+
+				}
+				$objBioInstitucioneducativaBioseguridadPreguntasBrigada->setRespSiNo(($answer1[$currentKey]=='SI')?true:false);
+				$em->persist($objBioInstitucioneducativaBioseguridadPreguntasBrigada);
+
+				next($answer1);
+				$currentKey = key($answer1);
+			}
+
+			
+
+		}
+
+		$em->flush();
+		die;
+
+	}
+	public function saveQuestion2Action(Request $request){
+
+		$answer2 = $request->get('answer2', null);
+
+		dump($answer2);die;
+
+	}
+	public function saveQuestion3Action(Request $request){
+
+		$answer3 = $request->get('answer3', null);
+
+		dump($answer3);die;
+
+	}
+	public function saveQuestion4Action(Request $request){
+
+		$answer4 = $request->get('answer4', null);
+
+		dump($answer4);die;
+
+	}
+	public function saveQuestion5Action(Request $request){
+
+		$answer5 = $request->get('answer5', null);
+
+		dump($answer5);die;
+
+	}
+	public function saveQuestion6Action(Request $request){
+
+		$answer6 = $request->get('answer6', null);
+
+		dump($answer6);die;
+
+	}
+	public function saveQuestion7Action(Request $request){
+
+		$answer7 = $request->get('answer7', null);
+
+		dump($answer7);die;
+
+	}
+	public function saveQuestion8Action(Request $request){
+
+		$answer8 = $request->get('answer8', null);
+
+		dump($answer8);die;
+
+	}
+
 
 }

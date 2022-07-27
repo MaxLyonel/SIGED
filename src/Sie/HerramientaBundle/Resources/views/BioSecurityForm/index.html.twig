@@ -254,7 +254,7 @@
                                     </a>
                                 </li> #}
                                 <li>
-                                    <a id="paso5" href="#tab5"  data-toggle="tab" >
+                                    <a id="paso2" href="#tab5"  data-toggle="tab" >
                                         <div>
                                             <span><small>2. Los estudiantes al momento de ingresar lo hacen aplicando las medidas de Bioseguridad</small></span>
                                         </div>
@@ -268,42 +268,42 @@
                                     </a>
                                 </li> #}
                                 <li>
-                                    <a id="paso7" href="#tab7"  data-toggle="tab" >
+                                    <a id="paso3" href="#tab7"  data-toggle="tab" >
                                         <div>
                                             <span><small>3. El personal de la Unidad Educativa aplica las medidas de bioseguridad dentro de la Unidad Educativa</small></span>
                                         </div>
                                     </a>
                                 </li>
                                 <li>
-                                    <a id="paso8" href="#tab8"  data-toggle="tab" >
+                                    <a id="paso4" href="#tab8"  data-toggle="tab" >
                                         <div>
                                             <span><small>4. En los ambiestes/espacios educativos (aula o curso) se aplica las medidas de bioseguridad??</small></span>
                                         </div>
                                     </a>
                                 </li>
                                 <li>
-                                    <a id="paso9" href="#tab9"  data-toggle="tab" >
+                                    <a id="paso5" href="#tab9"  data-toggle="tab" >
                                         <div>
                                             <span><small>5. En caso de que el numero de estudiantes es mayor al aforo en un curso o aula que hacen cno los estudiantes que no ingresan?</small></span>
                                         </div>
                                     </a>
                                 </li>
                                 <li>
-                                    <a id="paso10" href="#tab10"  data-toggle="tab" >
+                                    <a id="paso6" href="#tab10"  data-toggle="tab" >
                                         <div>
                                             <span><small>6. Cada cuanto tiempo se realiza la desinfeccion de la Unidad Educativa</small></span>
                                         </div>
                                     </a>
                                 </li>
                                 <li>
-                                    <a id="paso11" href="#tab11"  data-toggle="tab" >
+                                    <a id="paso7" href="#tab11"  data-toggle="tab" >
                                         <div>
                                             <span><small>7. Quien realiza la desinfeccino ?</small></span>
                                         </div>
                                     </a>
                                 </li>
                                 <li>
-                                    <a id="paso12" href="#tab12"  data-toggle="tab" >
+                                    <a id="paso8" href="#tab12"  data-toggle="tab" >
                                         <div>
                                             <span><small>8. Para las desinfeccinoes lo provee:</small></span>
                                         </div>
@@ -316,7 +316,7 @@
                         <!-- Start tabs content -->
                         <div class="panel-body col-md-9 tab-content">
                             <div class="tab-pane fade inner-all " id="tab1">
-                                <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+                                <form id="formDireccion" >
                                     <fieldset class="fieldset">
                                         <legend class="legend">1. La Unidad Educativa cuenta con Brigada de Recepcion?</legend>
                                     
@@ -324,26 +324,26 @@
                                               
                                               <div class="col-md-4 col-md-offset-2">
                                                 <label class="radio">
-                                                    <input type="radio" name="pregunta1" id="pregunta1a" :value="true" v-model="swquestion1"> Si
+                                                    <input type="radio" name="pregunta1" id="pregunta1a" :value="true" v-model="answer1.swquestion1"> Si
                                                 </label>
                                               </div>
                                               <div class="col-md-2">
                                                 <label class="radio">
-                                                    <input type="radio" name="pregunta1" id="preguntab" :value="false" v-model="swquestion1"> No
+                                                    <input type="radio" name="pregunta1" id="preguntab" :value="false" v-model="answer1.swquestion1"> No
                                                 </label>
                                               </div>
                                             </section>
 
                                         {# <p>${swquestion1}</p> #}
                                         {# start section one question #}
-                                        <div v-if="swquestion1" style="background: #0000">
+                                        <div v-if="answer1.swquestion1" style="background: #0000">
                                           
 
                                              <fieldset class="fieldset">
                                                 <legend class="legend">1.1. Cuantas unidades de Brigadas de Recepcion tiene la Unidad Educativa?</legend>
                                                     <section class="row">
                                                       <div class="col-md-4 col-md-offset-4">
-                                                       <input type="text" class="form-control" id="epsPaciente" placeholder="" required="">
+                                                       <input type="text" class="form-control" id="q1.1" placeholder="" required="" v-model="answer1.answeroneone">
                                                       </label>
                                                       </div>
                                                     </section>                                    
@@ -357,12 +357,12 @@
                                                       </div>    
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.2.1" id="q1.2.1" value="SI" v-model="answer1.a121"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.2.1" id="q1.2.1" value="NO" v-model="answer1.a121"> No
                                                       </label>
                                                       </div>      
                                                     </section>
@@ -372,12 +372,12 @@
                                                       </div>    
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.2.2" id="q1.2.2" value="SI" v-model="answer1.a122"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.2.2" id="q1.2.2" value="NO" v-model="answer1.a122"> No
                                                       </label>
                                                       </div>      
                                                     </section>
@@ -387,12 +387,12 @@
                                                       </div>    
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.2.3" id="q1.2.3" value="SI" v-model="answer1.a123"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.2.3" id="q1.2.3" value="NO" v-model="answer1.a123"> No
                                                       </label>
                                                       </div>      
                                                     </section>
@@ -402,12 +402,12 @@
                                                       </div>    
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.2.4" id="q1.2.4" value="SI" v-model="answer1.a124"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.2.4" id="q1.2.4" value="NO" v-model="answer1.a124"> No
                                                       </label>
                                                       </div>      
                                                     </section>
@@ -417,12 +417,12 @@
                                                       </div>    
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.2.5" id="q1.2.5" value="SI" v-model="answer1.a125"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.2.5" id="q1.2.5" value="NO" v-model="answer1.a125"> No
                                                       </label>
                                                       </div>      
                                                     </section>
@@ -436,12 +436,12 @@
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.3.1" id="q1.3.1" value="SI" v-model="answer1.a131"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.3.1" id="q1.3.1" value="NO" v-model="answer1.a131"> No
                                                       </label>
                                                       </div>
                                                     </section>
@@ -451,12 +451,12 @@
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.3.2" id="q1.3.2" value="SI" v-model="answer1.a132"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.3.2" id="q1.3.2" value="NO" v-model="answer1.a132"> No
                                                       </label>
                                                       </div>
                                                     </section>
@@ -466,12 +466,12 @@
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.3.3" id="q1.3.3" value="SI" v-model="answer1.a133"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.3.3" id="q1.3.3" value="NO" v-model="answer1.a133"> No
                                                       </label>
                                                       </div>
                                                     </section>                                       
@@ -486,17 +486,17 @@
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.4.1" id="q1.4.1" value="SI" v-model="answer1.a141"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.4.1" id="q1.4.1" value="NO" v-model="answer1.a141"> No
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="medias"> A medias
+                                                        <input type="radio" name="q1.4.1" id="q1.4.1" value="medias" v-model="answer1.a141"> A medias
                                                       </label>
                                                       </div>                                                      
                                                     </section>
@@ -506,17 +506,17 @@
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.4.2" id="q1.4.2" value="SI" v-model="answer1.a142"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.4.2" id="q1.4.2" value="NO" v-model="answer1.a142"> No
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="medias"> A medias
+                                                        <input type="radio" name="q1.4.2" id="q1.4.2" value="medias" v-model="answer1.a142"> A medias
                                                       </label>
                                                       </div>                                                                                                            
                                                     </section>
@@ -527,17 +527,17 @@
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.4.3" id="q1.4.3" value="SI" v-model="answer1.a143"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.4.3" id="q1.4.3" value="NO" v-model="answer1.a143"> No
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="medias"> A medias
+                                                        <input type="radio" name="q1.4.3" id="q1.4.3" value="medias" v-model="answer1.a143"> A medias
                                                       </label>
                                                       </div>                                                                                                            
                                                     </section>
@@ -548,17 +548,17 @@
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.4.4" id="q1.4.4" value="SI" v-model="answer1.a144"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.4.4" id="q1.4.4" value="NO" v-model="answer1.a144"> No
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="medias"> A medias
+                                                        <input type="radio" name="q1.4.4" id="q1.4.4" value="medias" v-model="answer1.a144"> A medias
                                                       </label>
                                                       </div>                                                                                                            
                                                     </section>
@@ -568,17 +568,17 @@
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                                        <input type="radio" name="q1.4.5" id="q1.4.5" value="SI" v-model="answer1.a145"> Si
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                                        <input type="radio" name="q1.4.5" id="q1.4.5" value="NO" v-model="answer1.a145"> No
                                                       </label>
                                                       </div>
                                                       <div class="col-md-2">
                                                         <label class="radio">
-                                                        <input type="radio" name="pregunta1" id="preguntab" value="medias"> A medias
+                                                        <input type="radio" name="q1.4.5" id="q1.4.5" value="medias" v-model="answer1.a145"> A medias
                                                       </label>
                                                       </div>                                                                                                            
                                                     </section>
@@ -586,7 +586,7 @@
  
 
                                         </div>
-                                        <div v-if="swquestion1 == false">
+                                        <div v-if="answer1.swquestion1 == false">
 
                                             <fieldset class="fieldset">
                                                 <legend class="legend">1.1. Por que?</legend>
@@ -595,9 +595,9 @@
                                                       <div class="col-md-12">
                                                         <section class="row">
                                                           <div class="col-md-10">
-                                                            <select class="form-control" id="pregunta13">
-                                                            <option value="5">Unidad Educativa en modalidad Virtual</option>
-                                                            <option value="4">Unidad Educativa no presenta</option>
+                                                            <select class="form-control" id="pregunta11" v-model="answer1.nooneone">
+                                                                <option value="1">Unidad Educativa en modalidad Virtual</option>
+                                                                <option value="2">Unidad Educativa no presenta</option>
                                                           </select>
                                                           </div>
                                                     </section>                                       
@@ -624,7 +624,7 @@
                             <div class="tab-pane fade inner-all"  id="tab5">
                                 <fieldset class="fieldset">
                                     <legend class="legend">2. ¿Los estudiantes al momento de ingresar lo hacen aplicando las medidas de Bioseguridad?</legend>
-                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+                                    <form id="formDireccion" >
 
                                         <section class="row">
                                           <div class="col-md-6">
@@ -632,12 +632,12 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" name="q2.1" id="q2.1" value="SI" v-model="answer2.answertwoone"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" name="q2.1" id="q2.1" value="NO" v-model="answer2.answertwoone"> No
                                           </label>
                                           </div>
                                         </section>
@@ -647,12 +647,12 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" name="q2.2" id="q2.2" value="SI" v-model="answer2.answertwotwo"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" name="q2.2" id="q2.2" value="NO" v-model="answer2.answertwotwo"> No
                                           </label>
                                           </div>
                                         </section>
@@ -663,12 +663,12 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" name="q2.3" id="q2.3" value="SI" v-model="answer2.answertwothree"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" name="q2.3" id="q2.3" value="NO" v-model="answer2.answertwothree"> No
                                           </label>
                                           </div>
                                         </section>
@@ -678,12 +678,12 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" name="q2.4" id="q2.4" value="SI" v-model="answer2.answertwofour"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" name="q2.4" id="q2.4" value="NO" v-model="answer2.answertwofour"> No
                                           </label>
                                           </div>
                                         </section>
@@ -693,12 +693,12 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" name="q2.5" id="q2.5" value="SI" v-model="answer2.answertwofive"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" name="q2.5" id="q2.5" value="NO" v-model="answer2.answertwofive"> No
                                           </label>
                                           </div>
                                         </section>  
@@ -707,7 +707,7 @@
                                         <div class="panel-footer no-bg">
                                             <ul class="pager wizard no-margin">
                                                 <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion2">Guardar y continuar</button></li>
                                             </ul>
                                         </div>
                                     </form>
@@ -716,7 +716,7 @@
                             <div class="tab-pane fade inner-all"  id="tab7">
                                 <fieldset class="fieldset">
                                     <legend class="legend">3. El personal de la Unidad Educativa aplica las medidas de bioseguridad dentro de la Unidad Educativa?</legend>
-                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+                                    <form id="formDireccion" >
 
                                         <section class="row">
                                           <div class="col-md-6">
@@ -724,17 +724,17 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" name="q3.1" id="q3.1" value="SI" v-model="answer3.answerthreeone"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" name="q3.1" id="q3.1" value="NO" v-model="answer3.answerthreeone"> No
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No todos
+                                            <input type="radio" name="q3.1" id="q3.1" value="notodos" v-model="answer3.answerthreeone"> No todos
                                           </label>
                                           </div>
                                         </section>
@@ -745,17 +745,17 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" name="q3.2" id="q3.2" value="SI" v-model="answer3.answerthreetwo"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" name="q3.2" id="q3.2" value="NO" v-model="answer3.answerthreetwo"> No
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No todos
+                                            <input type="radio" name="q3.2" id="q3.2" value="notodos" v-model="answer3.answerthreetwo"> No todos
                                           </label>
                                           </div>                                          
                                         </section>
@@ -766,17 +766,17 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" name="q3.3" id="q3.3" value="SI"  v-model="answer3.answerthreethree"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" name="q3.3" id="q3.3" value="NO"  v-model="answer3.answerthreethree"> No
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No todos
+                                            <input type="radio" name="q3.3" id="q3.3" value="notodos"  v-model="answer3.answerthreethree"> No todos
                                           </label>
                                           </div>                                          
                                         </section>   
@@ -786,17 +786,17 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" name="q3.4" id="q3.4" value="NO" value="SI" v-model="answer3.answerthreefour"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" name="q3.4" id="q3.4" value="NO" value="NO" v-model="answer3.answerthreefour"> No
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No todos
+                                            <input type="radio" name="q3.4" id="q3.4" value="notodos" value="NO" v-model="answer3.answerthreefour"> No todos
                                           </label>
                                           </div>                                          
                                         </section>                                           
@@ -806,17 +806,17 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" name="q3.5" id="q3.5" value="SI" v-model="answer3.answerthreefive"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" name="q3.5" id="q3.5" value="NO" v-model="answer3.answerthreefive"> No
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No todos
+                                            <input type="radio" name="q3.5" id="q3.5" value="notodos" v-model="answer3.answerthreefive"> No todos
                                           </label>
                                           </div>                                          
                                         </section>                                           
@@ -826,17 +826,17 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" name="q3.6" id="q3.6" value="SI" v-model="answer3.answerthreesix"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" name="q3.6" id="q3.6" value="NO" v-model="answer3.answerthreesix"> No
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No todos
+                                            <input type="radio" name="q3.6" id="q3.6" value="notodos" v-model="answer3.answerthreesix"> No todos
                                           </label>
                                           </div>                                          
                                         </section>                                           
@@ -846,17 +846,17 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" value="si" name="q3.7" id="q3.7"  v-model="answer3.answerthreeseven"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" value="NO" name="q3.7" id="q3.7"  v-model="answer3.answerthreeseven"> No
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No todos
+                                            <input type="radio" value="notodos" name="q3.7" id="q3.7"  v-model="answer3.answerthreeseven"> No todos
                                           </label>
                                           </div>                                          
                                         </section>                                           
@@ -866,17 +866,17 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" value="SI" name="q3.8" id="q3.8"  v-model="answer3.answerthreeeight"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" value="NO" name="q3.8" id="q3.8"  v-model="answer3.answerthreeeight"> No
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No todos
+                                            <input type="radio" value="notodos" name="q3.8" id="q3.8"  v-model="answer3.answerthreeeight"> No todos
                                           </label>
                                           </div>                                          
                                         </section>
@@ -884,7 +884,7 @@
                                         <div class="panel-footer no-bg">
                                             <ul class="pager wizard no-margin">
                                                 <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion3">Guardar y continuar</button></li>
                                             </ul>
                                         </div>
                                     </form>
@@ -893,7 +893,7 @@
                             <div class="tab-pane fade inner-all"  id="tab8">
                                 <fieldset class="fieldset">
                                     <legend class="legend">4. En los ambientes o espacios educativos (aula o curso) se aplica las medidas de bioseguridad?</legend>
-                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+                                    <form id="formDireccion" >
 
                                         <section class="row">
                                           <div class="col-md-6">
@@ -901,12 +901,12 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" value="SI" name="q4.1" id="q4.1"  v-model="answer4.answerfourone"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" value="NO" name="q4.1" id="q4.1"  v-model="answer4.answerfourone"> No
                                           </label>
                                           </div>
                                         </section>
@@ -916,12 +916,12 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="pregunta1a" value="SI"> Si
+                                            <input type="radio" value="SI" name="q4.2" id="q4.2"  v-model="answer4.answerfourtwo"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="pregunta1" id="preguntab" value="NO"> No
+                                            <input type="radio" value="NO" name="q4.2" id="q4.2"  v-model="answer4.answerfourtwo"> No
                                           </label>
                                           </div>
                                         </section>                                    
@@ -929,7 +929,7 @@
                                         <div class="panel-footer no-bg">
                                             <ul class="pager wizard no-margin">
                                                 <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion4">Guardar y continuar</button></li>
                                             </ul>
                                         </div>
                                     </form>
@@ -939,11 +939,11 @@
                             <div class="tab-pane fade inner-all"  id="tab9">
                                 <fieldset class="fieldset">
                                     <legend class="legend">5. En caso de que el numero de estudiantes es mayor al foro en un curso o aula, que hacen con los estudiantes que no ingresan?</legend>
-                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+                                    <form id="formDireccion" >
                                          
                                         <section class="row">
                                           <div class="col-md-4 col-md-offset-4">
-                                           <textarea type="" class="form-control" id="epsPaciente" placeholder="" required="">
+                                           <textarea type="" class="form-control" style="width: 296px; height: 84px;" id="epsPaciente" placeholder="" required=""  v-model="answer5.fiveone">
                                            </textarea>
                                           </label>
                                           </div>
@@ -952,7 +952,7 @@
                                         <div class="panel-footer no-bg">
                                             <ul class="pager wizard no-margin">
                                                 <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion5">Guardar y continuar</button></li>
                                             </ul>
                                         </div>
                                     </form>
@@ -961,7 +961,7 @@
                             <div class="tab-pane fade inner-all"  id="tab10">
                                 <fieldset class="fieldset">
                                     <legend class="legend">6. Cuantas unidades de Brigadas de Recepcion tiene la Unidad Educativa?</legend>
-                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+                                    <form id="formDireccion" >
 
                                         <section class="row">
                                           <div class="col-md-12">
@@ -970,7 +970,7 @@
                                                 <p>En la semana?</p>
                                               </div>
                                               <div class="col-md-4">
-                                                <select class="form-control" id="pregunta13">
+                                                <select class="form-control" id="q6.1" v-model="answer6.answersixone">
                                                 <option value="5">1 dia</option>
                                                 <option value="4">2 dias</option>
                                                 <option value="3">3 dias</option>
@@ -984,7 +984,7 @@
                                         <div class="panel-footer no-bg">
                                             <ul class="pager wizard no-margin">
                                                 <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion6">Guardar y continuar</button></li>
                                             </ul>
                                         </div>
                                     </form>
@@ -993,14 +993,14 @@
                             <div class="tab-pane fade inner-all"  id="tab11">
                                 <fieldset class="fieldset">
                                     <legend class="legend">7. Quien realiza la desinfeccion?</legend>
-                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+                                    <form id="formDireccion" >
 
                                         <section class="row">
                                           <div class="col-md-12">
                                             <section class="row">
                                               
                                               <div class="col-md-10">
-                                                <select class="form-control" id="pregunta13">
+                                                <select class="form-control" id="pregunta13" v-model="answer7.answersevenone">
                                                 <option value="5">Municipio</option>
                                                 <option value="4">SEDES</option>
                                                 <option value="3">Empresa Privada</option>
@@ -1013,7 +1013,7 @@
                                         <div class="panel-footer no-bg">
                                             <ul class="pager wizard no-margin">
                                                 <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion7">Guardar y continuar</button></li>
                                             </ul>
                                         </div>
                                     </form>
@@ -1022,13 +1022,13 @@
                             <div class="tab-pane fade inner-all"  id="tab12">
                                 <fieldset class="fieldset">
                                     <legend class="legend">8. Para la desinfeccion lo provee?</legend>
-                                    <form id="formDireccion" onsubmit="saveFormDireccion(); return false;">
+                                    <form id="formDireccion" >
 
                                         <section class="row">
                                           <div class="col-md-12">
                                             <section class="row">
                                               <div class="col-md-10">
-                                                <select class="form-control" id="pregunta13">
+                                                <select class="form-control" id="pregunta13" v-model="answer8.answereigthone">
                                                 <option value="5">Municipio</option>
                                                 <option value="4">SEDES</option>
                                                 <option value="3">Padres de Familia</option>
@@ -1042,7 +1042,7 @@
                                         <div class="panel-footer no-bg">
                                             <ul class="pager wizard no-margin">
                                                 <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
-                                                <li class="next"><button class="btn-wizard" type="submit">Guardar y continuar</button></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion8">Guardar y continuar</button></li>
                                             </ul>
                                         </div>
                                     </form>
@@ -1277,26 +1277,28 @@
                 buscando:false,
                 swOne:false,
                 swTwo:false,
-                responseSegip:'',
-                responseFormTwo:'',
+                // responseSegip:'',
+                // responseFormTwo:'',
                 respuesta:'',
-                dataStudent: {},
-                dataStudentModif: {},                            
-                DBGenero: {},
-                DBPais: {},
-                DBDepto: {},
-                DBProvincia: {},
-                dataModifyToSend:[],
                 archivoAdjunto:'',
                 informe:'',
                 showbuttonPDF:false,
                 swCertification:false,
                 idDetalle: '',
                 swquestion1:null,
-
                 datain:{sie:{{arrUe.sie}}, year:{{arrUe.gestion}} },
                 DBInstitucionEdu:[],
                 swExistinfoUE:false,
+
+                question1:{},
+                answer1:{},
+                answer2:{},
+                answer3:{},
+                answer4:{},
+                answer5:{},
+                answer6:{},
+                answer7:{},
+                answer8:{},
 
                
             },
@@ -1326,6 +1328,217 @@
                     });                    
                     
                 },
+                saveQuestion1: function (){
+                    
+                    axios.post(Routing.generate('appweb_biosecurityform_saveQuestion1',{answer1: this.answer1, sie: this.datain.sie} ))
+                    .then(response => {
+                        if (response.status == 200) {                            
+                            /*this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+                            this.swExistinfoUE = response.data.swExistinfoUE;*/
+
+                            $('#cortina').css('display','none');
+                            $('#paso2').parent('li').removeClass('disabled');
+                            $('#paso2').attr('data-toggle','tab');
+                            $('#paso2').click();     
+
+                        }
+                        if( response.status == 202){
+                            // this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        //this.buscando = false;
+                    });                      
+                },
+                saveQuestion2: function (){
+                    
+                    axios.post(Routing.generate('appweb_biosecurityform_saveQuestion2',{answer2: this.answer2} ))
+                    .then(response => {
+                        if (response.status == 200) {                            
+                            /*this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+                            this.swExistinfoUE = response.data.swExistinfoUE;*/
+
+                            $('#cortina').css('display','none');
+                            $('#paso3').parent('li').removeClass('disabled');
+                            $('#paso3').attr('data-toggle','tab');
+                            $('#paso3').click();     
+
+                        }
+                        if( response.status == 202){
+                            // this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        //this.buscando = false;
+                    });                      
+                },
+                saveQuestion3: function (){
+                    
+                    axios.post(Routing.generate('appweb_biosecurityform_saveQuestion3',{answer3: this.answer3} ))
+                    .then(response => {
+                        if (response.status == 200) {                            
+                            /*this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+                            this.swExistinfoUE = response.data.swExistinfoUE;*/
+
+                            $('#cortina').css('display','none');
+                            $('#paso4').parent('li').removeClass('disabled');
+                            $('#paso4').attr('data-toggle','tab');
+                            $('#paso4').click();     
+
+                        }
+                        if( response.status == 202){
+                            // this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        //this.buscando = false;
+                    });                      
+                },
+
+                saveQuestion4: function (){
+                    
+                    axios.post(Routing.generate('appweb_biosecurityform_saveQuestion4',{answer4: this.answer4} ))
+                    .then(response => {
+                        if (response.status == 200) {                            
+                            /*this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+                            this.swExistinfoUE = response.data.swExistinfoUE;*/
+
+                            $('#cortina').css('display','none');
+                            $('#paso5').parent('li').removeClass('disabled');
+                            $('#paso5').attr('data-toggle','tab');
+                            $('#paso5').click();     
+
+                        }
+                        if( response.status == 202){
+                            // this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        //this.buscando = false;
+                    });                      
+                },
+
+                saveQuestion5: function (){
+                    
+                    axios.post(Routing.generate('appweb_biosecurityform_saveQuestion5',{answer5: this.answer5} ))
+                    .then(response => {
+                        if (response.status == 200) {                            
+                            /*this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+                            this.swExistinfoUE = response.data.swExistinfoUE;*/
+
+                            $('#cortina').css('display','none');
+                            $('#paso6').parent('li').removeClass('disabled');
+                            $('#paso6').attr('data-toggle','tab');
+                            $('#paso6').click();     
+
+                        }
+                        if( response.status == 202){
+                            // this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        //this.buscando = false;
+                    });                      
+                },
+
+                saveQuestion6: function (){
+                    
+                    axios.post(Routing.generate('appweb_biosecurityform_saveQuestion6',{answer6: this.answer6} ))
+                    .then(response => {
+                        if (response.status == 200) {                            
+                            /*this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+                            this.swExistinfoUE = response.data.swExistinfoUE;*/
+
+                            $('#cortina').css('display','none');
+                            $('#paso7').parent('li').removeClass('disabled');
+                            $('#paso7').attr('data-toggle','tab');
+                            $('#paso7').click();     
+
+                        }
+                        if( response.status == 202){
+                            // this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        //this.buscando = false;
+                    });                      
+                },
+
+                saveQuestion7: function (){
+                    
+                    axios.post(Routing.generate('appweb_biosecurityform_saveQuestion7',{answer7: this.answer7} ))
+                    .then(response => {
+                        if (response.status == 200) {                            
+                            /*this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+                            this.swExistinfoUE = response.data.swExistinfoUE;*/
+
+                            $('#cortina').css('display','none');
+                            $('#paso8').parent('li').removeClass('disabled');
+                            $('#paso8').attr('data-toggle','tab');
+                            $('#paso8').click();     
+
+                        }
+                        if( response.status == 202){
+                            // this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        //this.buscando = false;
+                    });                      
+                },
+
+                saveQuestion8: function (){
+                    
+                    axios.post(Routing.generate('appweb_biosecurityform_saveQuestion8',{answer8: this.answer8} ))
+                    .then(response => {
+                        if (response.status == 200) {                            
+                            /*this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+                            this.swExistinfoUE = response.data.swExistinfoUE;*/
+
+                        }
+                        if( response.status == 202){
+                            // this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        //this.buscando = false;
+                    });                      
+                },
+
+
+
                 buscarEstudiante: function(){
                     this.buscando = true;
                     this.studentId = false;
@@ -1393,268 +1606,12 @@
                         this.buscando = false;
                     });
                 },
-         
-                setDepto: function(){
-                    var me = this;
-                    $.each(this.DBDepto, function (i, value) {
-                        if(me.dataStudentModif.lugarNacTipoId == value.deptoId) {
-                            me.dataStudentModif.lugarNacTipo = value.depto;
-                            /*me.dataModifyToSend.push({'lugarNacTipoId':me.dataStudentModif.lugarNacTipoId});*/
-                        }                        
-                    });  
-                    
-                    if(me.dataStudentModif.paisId == 1 && me.dataStudentModif.lugarNacTipoId>0){
-                         axios.post(Routing.generate('specialmodificationdata_get_provincia', me.dataStudentModif ))
-                            .then(response => {
-                                if (response.status == 200) {
-                                    this.DBProvincia = response.data.arrProvincia;
-                                    $('[data-toggle="tooltip"]').tooltip();
-                                }
-                                if( response.status == 202){
-                                    this.respuesta = response.data;
-                                }
+                opclear: function(anwserit){
 
-                                this.buscando = false;
-                            })
-                            .catch(e => {
-                                console.log(e);
-                                this.buscando = false;
-                            });
-                    }else{
-                        this.DBDepto = '';
-                        this.DBProvincia = '';
-                        me.dataStudentModif.lugarNacTipoId ='';
-                        me.dataStudentModif.lugarProvNacTipoId ='';
-                    }
+                    this.answer1=[];
 
+                },         
 
-
-
-
-                },
-                setProvincia: function(){
-                    var me = this;
-                    $.each(this.DBProvincia, function (i, value) {
-                        if(me.dataStudentModif.lugarProvNacTipoId == value.provinciaId) {
-                            me.dataStudentModif.lugarProvNacTipo = value.provincia;
-                            me.dataModifyToSend.push({'provinciaId':me.dataStudentModif.lugarProvNacTipoId})
-                        }
-                    });                    
-                },                 
-                               
-
-                registryFormOne: function(){
-                    var sw = false;
-                    this.responseSegip='';
-
-                    if(this.dataStudentModif.carnetIdentidad != this.dataStudent.carnetIdentidad)sw = true;
-                    if(this.dataStudentModif.complemento != this.dataStudent.complemento)sw = true;
-                    if(this.dataStudentModif.fechaNacimiento != this.dataStudent.fechaNacimiento)sw = true;
-                    if(this.dataStudentModif.paterno != this.dataStudent.paterno)sw = true;
-                    if(this.dataStudentModif.materno != this.dataStudent.materno)sw = true;
-                    if(this.dataStudentModif.nombre != this.dataStudent.nombre)sw = true;
-                        
-                    if(sw){
-
-                        axios.get(Routing.generate('specialmodificationdata_val_segip', {
-                            carnet: this.dataStudentModif.carnetIdentidad,
-                            complemento: this.dataStudentModif.complemento,                        
-                            fechaNacimiento: this.dataStudentModif.fechaNacimiento,                        
-                            paterno: this.dataStudentModif.paterno,                        
-                            materno: this.dataStudentModif.materno,                        
-                            nombre: this.dataStudentModif.nombre
-                        }))
-                        .then(response => {
-                            if (response.status == 200) {
-                                this.responseSegip=1;
-                                this.swOne = false;
-                                if(response.data.answerSegip){
-                                    // the data student is correct
-                                    this.responseSegip=2;
-                                    this.swOne = true;
-                                    $('#biosegurityform').modal('hide');
-                                }
-                                console.log(response.data.answerSegip);
-                                $('[data-toggle="tooltip"]').tooltip();
-                            }
-                            if( response.status == 202){
-                                this.respuesta = response.data;
-                            }
-
-                            this.buscando = false;
-                        })
-                        .catch(e => {
-                            console.log(e);
-                            this.buscando = false;
-                        });
-                    }else{
-                        this.responseSegip='';
-                        console.log('no change');
-                        this.responseSegip=3;
-                        this.swOne = false;
-                        // disable button
-                    }
-                    // this.swOne = sw;
-
-
-                },
-                clearSegip: function(){
-                    this.responseSegip='';
-                    this.dataStudentModif.carnetIdentidad = this.dataStudent.carnetIdentidad;
-                    this.dataStudentModif.complemento = this.dataStudent.complemento;
-                    this.dataStudentModif.fechaNacimiento = this.dataStudent.fechaNacimiento;
-                    this.dataStudentModif.paterno = this.dataStudent.paterno;
-                    this.dataStudentModif.materno = this.dataStudent.materno;
-                    this.dataStudentModif.nombre = this.dataStudent.nombre;
-                    this.swOne=false;
-                    $('#biosegurityform').modal('hide');
-
-                },
-                registryFormTwo: function(){
-                    var sw=false;
-                    if(this.dataStudentModif.generoTipo != this.dataStudent.generoTipo)sw = true;
-                    if(this.dataStudentModif.pais != this.dataStudent.pais)sw = true;
-                    if(this.dataStudentModif.lugarNacTipo != this.dataStudent.lugarNacTipo)sw = true;
-                    if(this.dataStudentModif.lugarProvNacTipo != this.dataStudent.lugarProvNacTipo)sw = true;
-                    if(this.dataStudentModif.localidad != this.dataStudent.localidad)sw = true;
-                    if(this.dataStudentModif.oficialia != this.dataStudent.oficialia)sw = true;
-                    if(this.dataStudentModif.libro != this.dataStudent.libro)sw = true;
-                    if(this.dataStudentModif.partida != this.dataStudent.partida)sw = true;
-                    if(this.dataStudentModif.folio != this.dataStudent.folio)sw = true;
-                    if(this.dataStudentModif.pasaporte != this.dataStudent.pasaporte)sw = true;
-
-                    if(sw){
-                        this.swTwo = true;
-                        $('#modalEstudianteTwo').modal('hide');
-                    }else{
-                        this.swTwo = false;
-                        this.responseFormTwo='no existen cambios';
-                    }
-
-                },
-                clearFormTwo: function(){
-
-                    this.dataStudentModif.generoTipo = this.dataStudent.generoTipo;
-                    this.dataStudentModif.pais = this.dataStudent.pais;
-                    this.dataStudentModif.lugarNacTipo = this.dataStudent.lugarNacTipo;
-                    this.dataStudentModif.lugarProvNacTipo = this.dataStudent.lugarProvNacTipo;
-                    this.dataStudentModif.localidad = this.dataStudent.localidad;
-                    this.dataStudentModif.oficialia = this.dataStudent.oficialia;
-                    this.dataStudentModif.libro = this.dataStudent.libro;
-                    this.dataStudentModif.partida = this.dataStudent.partida;
-                    this.dataStudentModif.folio = this.dataStudent.folio;
-                    this.dataStudentModif.pasaporte = this.dataStudent.pasaporte;
-                    this.swTwo = false;
-                    $('#modalEstudianteTwo').modal('hide');
-
-                },
-                updateStudent: function(){
-
-                  
-                    if(this.dataStudentModif.justificativo == ''){
-                        this.respuesta = 'Debe ingresar el Justificativo';
-                        this.buscando = false;
-                        Swal.fire(
-                            'Debe ingresar el Justificativo',
-                            'Campo requerido!',                              
-                            'warning'
-                            );                        
-                        return false;
-                    }
-
-                    /*validate the file attached*/
-                    if (typeof this.informe != 'object') {
-                        Swal.fire(
-                        'Adjuntar Solicitud',
-                        'Debe adjuntar un escaneado de la RA, puede ser un archivo de imagen o PDF',
-                        'warning'
-                        );
-                        return;
-                    }
-                    if(this.swCertification){
-
-                          /*console.log(this.dataStudentModif.resolucionAdm);*/
-                        if(this.dataStudentModif.resolucionAdm == ''){
-                            this.respuesta = 'Debe ingresar la Resolucion ';
-                            this.buscando = false;
-                            Swal.fire(
-                                'Debe ingresar la Resolucion ',
-                                'Campo requerido!',                              
-                                'warning'
-                                );                        
-                            return false;
-                        }
-
-                        if(this.dataStudentModif.fecharesolAdm == ''){
-                        
-                        this.respuesta = 'Debe ingresar la Fecha de Resolucion ';
-                        this.buscando = false;
-                        Swal.fire(
-                              'Debe ingresar la Fecha de Resolucion ',
-                              'Campo requerido!',                              
-                              'warning'
-                            );                        
-                        return false;
-                        }else{
-                            if(!validarFormatoFecha($('#form_fecharesoladm').val())){
-                                Swal.fire(
-                                'Revise formato de Fecha Resolucion  (dd-mm-aaaa)',
-                                'Campo requerido!',                              
-                                'warning'
-                                );  
-                                return false;
-                            }
-                        }
-
-                    }
-                    
-                    Swal.fire({
-                        title: '¿Enviar Cambios?',
-                        text: "esta seguro de realizar los cambios",
-                        type: 'question',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Si, proceder',
-                        cancelButtonText: 'Cancelar'
-                    }).then((result) => {
-                        if (result.value) {
-                            var data = new FormData();
-                            data.append('datos', JSON.stringify(this.dataStudentModif));
-                            data.append('informe', this.informe);
-                            data.append('idDetalle', this.idDetalle);
-                                                        
-                             axios.post(Routing.generate('specialmodificationdata_update_student'), data)
-                            .then(response => {
-                                if (response.status == 200) {
-                                    this.showbuttonPDF = false;
-                                    this.studentHistModId = false;
-                                    this.studentId = false;
-                                    if(response.data.showbuttonPDF){
-                                       this.showbuttonPDF = response.data.showbuttonPDF;
-                                       this.studentHistModId = response.data.studentHistModId;
-                                       this.studentId = response.data.studentId;
-                                       this.urlreport = response.data.urlreport;
-                                    }
-                                    console.log(response.data.answerSegip);
-                                    $('[data-toggle="tooltip"]').tooltip();
-                                }
-                                if( response.status == 202){
-                                    this.respuesta = response.data;
-                                }
-                                this.buscando = false;
-                            })
-                            .catch(e => {
-                                console.log(e);
-                                this.buscando = false;
-                            });
-
-                            
-                        }
-                    })                   
-
-                },
-              
               
             },
             mounted(){

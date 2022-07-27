@@ -8,4 +8,52 @@ appweb_biosecurityform_lookforInfoUE:
     path:    /lookforInfoUE
     defaults: { _controller: SieAppWebBundle:BioSecurityForm:lookforInfoUE}
     options:
-         expose: true         
+         expose: true
+
+appweb_biosecurityform_saveQuestion1:
+    path:    /saveQuestion1
+    defaults: { _controller: SieAppWebBundle:BioSecurityForm:saveQuestion1}
+    options:
+         expose: true
+
+appweb_biosecurityform_saveQuestion2:
+    path:    /saveQuestion2
+    defaults: { _controller: SieAppWebBundle:BioSecurityForm:saveQuestion2}
+    options:
+         expose: true
+
+appweb_biosecurityform_saveQuestion3:
+    path:    /saveQuestion3
+    defaults: { _controller: SieAppWebBundle:BioSecurityForm:saveQuestion3}
+    options:
+         expose: true
+
+appweb_biosecurityform_saveQuestion4:
+    path:    /saveQuestion4
+    defaults: { _controller: SieAppWebBundle:BioSecurityForm:saveQuestion4}
+    options:
+         expose: true
+
+appweb_biosecurityform_saveQuestion5:
+    path:    /saveQuestion5
+    defaults: { _controller: SieAppWebBundle:BioSecurityForm:saveQuestion5}
+    options:
+         expose: true
+
+appweb_biosecurityform_saveQuestion6:
+    path:    /saveQuestion6
+    defaults: { _controller: SieAppWebBundle:BioSecurityForm:saveQuestion6}
+    options:
+         expose: true
+
+appweb_biosecurityform_saveQuestion7:
+    path:    /saveQuestion7
+    defaults: { _controller: SieAppWebBundle:BioSecurityForm:saveQuestion7}
+    options:
+         expose: true
+
+appweb_biosecurityform_saveQuestion8:
+    path:    /saveQuestion8
+    defaults: { _controller: SieAppWebBundle:BioSecurityForm:saveQuestion8}
+    options:
+         expose: true

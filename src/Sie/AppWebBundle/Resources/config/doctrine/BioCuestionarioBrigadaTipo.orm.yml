@@ -1,0 +1,34 @@
+Sie\AppWebBundle\Entity\BioCuestionarioBrigadaTipo:
+    type: entity
+    table: bio_cuestionario_brigada_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        bioClasificadorPreguntaBrig:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: bio_clasificador_pregunta_brig
+        bioPreguntasBrigada:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: bio_preguntas_brigada
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }
