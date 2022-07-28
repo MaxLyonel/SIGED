@@ -39,6 +39,11 @@ Sie\AppWebBundle\Entity\BioInstitucioneducativaBioseguridad:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        mes:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
     manyToOne:
         gestionTipo:
             targetEntity: GestionTipo

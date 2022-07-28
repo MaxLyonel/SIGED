@@ -164,4 +164,32 @@ class BioInstitucioneducativaBioseguridad
     {
         return $this->institucioneducativa;
     }
+    /**
+     * @var integer
+     */
+    private $mes;
+
+
+    /**
+     * Set mes
+     *
+     * @param integer $mes
+     * @return BioInstitucioneducativaBioseguridad
+     */
+    public function setMes($mes)
+    {
+        $this->mes = $mes;
+    
+        return $this;
+    }
+
+    /**
+     * Get mes
+     *
+     * @return integer 
+     */
+    public function getMes()
+    {
+        return $this->mes;
+    }
 }

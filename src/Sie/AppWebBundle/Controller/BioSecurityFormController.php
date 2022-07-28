@@ -14,11 +14,16 @@ use Sie\AppWebBundle\Entity\EstudianteHistorialModificacion;
 use Sie\AppWebBundle\Entity\BioInstitucioneducativaBioseguridad; 
 use Sie\AppWebBundle\Entity\BioInstitucioneducativaBioseguridadPreguntas; 
 use Sie\AppWebBundle\Entity\BioInstitucioneducativaBioseguridadPreguntasBrigada; 
+// use \Datetime;
+use DateTime;
+use DatePeriod;
+use DateInterval;
 
 class BioSecurityFormController extends Controller{
     public $session;
     public $currentyear;
     public $userlogged;
+    public $mounth;
      /**
      * the class constructor
      */
@@ -27,6 +32,7 @@ class BioSecurityFormController extends Controller{
         $this->session = new Session();
         $this->currentyear = $this->session->get('currentyear');
         $this->userlogged = $this->session->get('userId');
+        $this->mounth = array('nothing','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre');
     }
 
     public function indexAction(Request $request){
@@ -34,8 +40,6 @@ class BioSecurityFormController extends Controller{
         $rolUsuario = $this->session->get('roluser');
 
       	$em = $this->getDoctrine()->getManager();
-
-
                 
         //validation if the user is logged
         // if (!isset($id_usuario)) {
@@ -49,6 +53,9 @@ class BioSecurityFormController extends Controller{
       		$objInstitucionEdu = $em->getRepository('SieAppWebBundle:Institucioneducativa')->find($this->session->get('ie_id'));
       		$arrUe['sie']=$objInstitucionEdu->getId();
       		$arrUe['gestion']=$this->session->get('currentyear');
+      		$arrUe['mounth']= $this->mounth[date('n')];
+      		$arrUe['week']=date('W');
+
       	}
 
 
@@ -67,17 +74,76 @@ class BioSecurityFormController extends Controller{
         $gestion = $request->get('year');
 
     	$DBInstitucionEdu = $this->getInfoUeInformation($gestion, $sie);
-
+    	$objectoBioInstitucion = $this->getBioInstitucionEdu($gestion, $sie);
+    
     	// dump($DBInstitucionEdu);die;
         
         $response->setStatusCode(200);
         
         $response->setData(array(
         	'DBInstitucionEdu'=>$DBInstitucionEdu[0], 
+        	'objectoBioInstitucion'=>$objectoBioInstitucion, 
         	'swExistinfoUE' => sizeof(($DBInstitucionEdu)>0)?true:false,
         ));
        
         return $response;      	
+    }
+
+	private function get_dates($year = 0, $week = 0){
+
+		$nuevaFecha = mktime(0,0,0,date('m'),date('d'),date('Y')); 
+		$diaDeLaSemana = date("w", $nuevaFecha);
+		$nuevaFecha = $nuevaFecha - ($diaDeLaSemana*24*3600); 
+		$fecha1=date ("Y-m-d",$nuevaFecha);		
+		$fecha7=date ("Y-m-d",($nuevaFecha+6*24*3600));
+		return [$fecha1, $fecha7];
+		
+		// date_default_timezone_set('America/La_Paz');
+		// // dump($year, $week);die;
+	 //    // Se crea objeto DateTime del 1/enero del año ingresado
+	 //    $fecha = DateTime::createFromFormat('Y-m-d', $year . '-1-2');
+	 //    dump($fecha);
+	 //    $w = $fecha->format('W'); // Número de la semana
+	 //    dump($w, $week);die;
+	 //    // Se agrega semanas hasta igualar
+	 //    while ($week > $w) {
+	 //        $fecha->add(DateInterval::createfromdatestring('+1 week'));
+	 //        $w = $fecha->format('W');
+	 //    }
+	 //    // Ahora $fecha pertenece a la semana buscada
+	 //    // Se debe obtener el primer y el último día
+
+	 //    // Si $fecha no es el primer día de la semana, se restan días
+	 //    if ($fecha->format('N') > 1) {
+	 //        $format = '-' . ($fecha->format('N') - 1) . ' day';
+	 //        $fecha->add(DateInterval::createfromdatestring($format));
+	 //    }
+	 //    // Ahora $fecha es el primer día de esa semana
+
+	 //    // Se clona la fecha en $fecha2 y se le agrega 6 días
+	 //    $fecha2 = clone($fecha);
+	 //    $fecha2->add(DateInterval::createfromdatestring('+6 day'));
+
+	 //    // Devuelve un array con ambas fechas
+	 //    return [$fecha, $fecha2];   
+	}    
+
+    private function getBioInstitucionEdu($gestion, $sie){
+    	$em = $this->getDoctrine()->getManager();
+
+    	$query = $em->getConnection()->prepare("
+    		select *
+    		from Bio_Institucioneducativa_Bioseguridad ibio
+    		inner join institucioneducativa inst on (ibio.institucioneducativa_id = inst.id)
+    		where ibio.gestion_tipo_id = ".$gestion." and ibio.institucioneducativa_id = ".$sie." ");
+    	$query->execute();
+        $objectoBioInstitucion = $query->fetchAll();		
+
+        
+    	
+    	// $objectoBioInstitucion = $em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridad')->findBy(array('gestionTipo'=>$gestion, 'institucioneducativa'=>$sie));
+
+    	return (sizeof($objectoBioInstitucion)>0)?$objectoBioInstitucion:false;
     }
 
 	private function getInfoUeInformation($ges, $sie){
@@ -144,6 +210,7 @@ class BioSecurityFormController extends Controller{
 		$answer1 = $request->get('answer1', null);
 		$sie = ($request->get('sie'));
 		$numWeek = date('W');
+		$nummount = date('m');
 		$currentyear = $this->currentyear;
 		// check if exists data to the SIE
 		$objBioInstitucioneducativaBioseguridad = $em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridad')->findOneBy(array('gestionTipo'=>$currentyear, 'semana'=> $numWeek, 'institucioneducativa' => $sie ));
@@ -155,6 +222,7 @@ class BioSecurityFormController extends Controller{
 			$objBioInstitucioneducativaBioseguridad->setFechaModificacion(new \DateTime('now'));
 		}
 		$objBioInstitucioneducativaBioseguridad->setSemana($numWeek);
+		$objBioInstitucioneducativaBioseguridad->setMes($nummount);
 		$objBioInstitucioneducativaBioseguridad->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($currentyear));
 		$objBioInstitucioneducativaBioseguridad->setInstitucioneducativa($em->getRepository('SieAppWebBundle:Institucioneducativa')->find($sie));
 
@@ -171,6 +239,11 @@ class BioSecurityFormController extends Controller{
 		}else{
 			$objBioInstitucioneducativaBioseguridadPreguntas->setFechaModificacion(new \DateTime('now'));
 		}
+		$objBioInstitucioneducativaBioseguridadPreguntas->setRespSiNo($answer1['swquestion1']);
+		if($answer1['swquestion1'] =='false'){
+			$objBioInstitucioneducativaBioseguridadPreguntas->setPregTexto($answer1['nooneone']);
+		}
+
 		$em->persist($objBioInstitucioneducativaBioseguridadPreguntas);
 		
 
@@ -589,6 +662,7 @@ class BioSecurityFormController extends Controller{
 		// get vars send
 		$answer8 = $request->get('answer8', null);
 		// create ini var
+		$response = new JsonResponse();
 		$em = $this->getDoctrine()->getManager();
 		$sie = ($request->get('sie'));
 		$numWeek = date('W');
@@ -640,8 +714,17 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer8);
-		die;
+
+		$objectoBioInstitucion = $this->getBioInstitucionEdu($currentyear, $sie);
+
+        $response->setStatusCode(200);
+        
+        $response->setData(array(        	
+        	'objectoBioInstitucion'=>$objectoBioInstitucion, 
+        ));
+       
+        return $response;  		
+
 
 	}
 

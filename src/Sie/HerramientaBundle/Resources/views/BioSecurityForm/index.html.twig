@@ -214,7 +214,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title"></h4>
+                    <h4 class="modal-title legend">Registro Formulario Bioseguridad gestión: ${datain.year} - Mes: ${datain.mounth} - Semana: ${datain.week}</h4>
+                    <h5 class="modal-title">Registro Quincenal de la información</h5>
                 </div>
                 <div class="modal-body">
                 <br />
@@ -227,7 +228,7 @@
                                 <li>
                                     <a id="paso1" href="#tab1" data-toggle="tab" aria-expanded="true">
                                         <div>
-                                            <span><small>1. La Unidad Educativa cuenta con brigada de Recepcion</small></span>
+                                            <span><small>1. La Unidad Educativa cuenta con brigada de Recepción</small></span>
                                         </div>
                                     </a>
                                 </li>
@@ -284,21 +285,21 @@
                                 <li>
                                     <a id="paso5" href="#tab9"  data-toggle="tab" >
                                         <div>
-                                            <span><small>5. En caso de que el numero de estudiantes es mayor al aforo en un curso o aula que hacen cno los estudiantes que no ingresan?</small></span>
+                                            <span><small>5. En caso de que el n&uacute;mero de estudiantes es mayor al aforo en un curso o aula que hacen con los estudiantes que no ingresan?</small></span>
                                         </div>
                                     </a>
                                 </li>
                                 <li>
                                     <a id="paso6" href="#tab10"  data-toggle="tab" >
                                         <div>
-                                            <span><small>6. Cada cuanto tiempo se realiza la desinfeccion de la Unidad Educativa</small></span>
+                                            <span><small>6. Cada cuanto tiempo se realiza la desinfecci&oacute;n de la Unidad Educativa</small></span>
                                         </div>
                                     </a>
                                 </li>
                                 <li>
                                     <a id="paso7" href="#tab11"  data-toggle="tab" >
                                         <div>
-                                            <span><small>7. Quien realiza la desinfeccino ?</small></span>
+                                            <span><small>7. Quien realiza la desinfecci&oacute;n ?</small></span>
                                         </div>
                                     </a>
                                 </li>
@@ -318,7 +319,7 @@
                             <div class="tab-pane fade inner-all " id="tab1">
                                 <form id="formDireccion" >
                                     <fieldset class="fieldset">
-                                        <legend class="legend">1. La Unidad Educativa cuenta con Brigada de Recepcion?</legend>
+                                        <legend class="legend">1. La Unidad Educativa cuenta con Brigada de Recepci&oacute;n?</legend>
                                     
                                             <section class="row">
                                               
@@ -494,11 +495,11 @@
                                                         <input type="radio" name="q1.4.1" id="q1.4.1" value="NO" v-model="answer1.a141"> No
                                                       </label>
                                                       </div>
-                                                      <div class="col-md-2">
+                                                      {# <div class="col-md-2">
                                                         <label class="radio">
                                                         <input type="radio" name="q1.4.1" id="q1.4.1" value="medias" v-model="answer1.a141"> A medias
                                                       </label>
-                                                      </div>                                                      
+                                                      </div>                                                       #}
                                                     </section>
                                                     <section class="row">
                                                       <div class="col-md-6">
@@ -514,11 +515,11 @@
                                                         <input type="radio" name="q1.4.2" id="q1.4.2" value="NO" v-model="answer1.a142"> No
                                                       </label>
                                                       </div>
-                                                      <div class="col-md-2">
+                                                      {# <div class="col-md-2">
                                                         <label class="radio">
                                                         <input type="radio" name="q1.4.2" id="q1.4.2" value="medias" v-model="answer1.a142"> A medias
                                                       </label>
-                                                      </div>                                                                                                            
+                                                      </div>                                                                                                      #}       
                                                     </section>
                                                     <!--  PREGUNTA 11  -->
                                                     <section class="row">
@@ -535,11 +536,11 @@
                                                         <input type="radio" name="q1.4.3" id="q1.4.3" value="NO" v-model="answer1.a143"> No
                                                       </label>
                                                       </div>
-                                                      <div class="col-md-2">
+                                                      {# <div class="col-md-2">
                                                         <label class="radio">
                                                         <input type="radio" name="q1.4.3" id="q1.4.3" value="medias" v-model="answer1.a143"> A medias
                                                       </label>
-                                                      </div>                                                                                                            
+                                                      </div>                                                                                                      #}       
                                                     </section>
                                                     <!--  PREGUNTA 12  -->
                                                     <section class="row">
@@ -556,11 +557,11 @@
                                                         <input type="radio" name="q1.4.4" id="q1.4.4" value="NO" v-model="answer1.a144"> No
                                                       </label>
                                                       </div>
-                                                      <div class="col-md-2">
+                                                      {# <div class="col-md-2">
                                                         <label class="radio">
                                                         <input type="radio" name="q1.4.4" id="q1.4.4" value="medias" v-model="answer1.a144"> A medias
                                                       </label>
-                                                      </div>                                                                                                            
+                                                      </div>                                                                                                      #}       
                                                     </section>
                                                     <section class="row">
                                                       <div class="col-md-6">
@@ -576,11 +577,11 @@
                                                         <input type="radio" name="q1.4.5" id="q1.4.5" value="NO" v-model="answer1.a145"> No
                                                       </label>
                                                       </div>
-                                                      <div class="col-md-2">
+                                                      {# <div class="col-md-2">
                                                         <label class="radio">
                                                         <input type="radio" name="q1.4.5" id="q1.4.5" value="medias" v-model="answer1.a145"> A medias
                                                       </label>
-                                                      </div>                                                                                                            
+                                                      </div>                                                                                                      #}       
                                                     </section>
                                             </fieldset>                                            
  
@@ -596,8 +597,8 @@
                                                         <section class="row">
                                                           <div class="col-md-10">
                                                             <select class="form-control" id="pregunta11" v-model="answer1.nooneone">
-                                                                <option value="1">Unidad Educativa en modalidad Virtual</option>
-                                                                <option value="2">Unidad Educativa no presenta</option>
+                                                                <option value="Unidad Educativa en modalidad Virtual">Unidad Educativa en modalidad Virtual</option>
+                                                                <option value="Unidad Educativa no tiene">Unidad Educativa no tiene</option>
                                                           </select>
                                                           </div>
                                                     </section>                                       
@@ -732,11 +733,11 @@
                                             <input type="radio" name="q3.1" id="q3.1" value="NO" v-model="answer3.a31"> No
                                           </label>
                                           </div>
-                                          <div class="col-md-2">
+                                          {# <div class="col-md-2">
                                             <label class="radio">
                                             <input type="radio" name="q3.1" id="q3.1" value="notodos" v-model="answer3.a31"> No todos
                                           </label>
-                                          </div>
+                                          </div> #}
                                         </section>
                                         <!--  PREGUNTA 7  -->
                                         <section class="row">
@@ -753,11 +754,11 @@
                                             <input type="radio" name="q3.2" id="q3.2" value="NO" v-model="answer3.a32"> No
                                           </label>
                                           </div>
-                                          <div class="col-md-2">
+                                          {# <div class="col-md-2">
                                             <label class="radio">
                                             <input type="radio" name="q3.2" id="q3.2" value="notodos" v-model="answer3.a32"> No todos
                                           </label>
-                                          </div>                                          
+                                          </div>                                           #}
                                         </section>
                                         <!--  PREGUNTA 8  -->
                                         <section class="row">
@@ -774,11 +775,11 @@
                                             <input type="radio" name="q3.3" id="q3.3" value="NO"  v-model="answer3.a33"> No
                                           </label>
                                           </div>
-                                          <div class="col-md-2">
+                                          {# <div class="col-md-2">
                                             <label class="radio">
                                             <input type="radio" name="q3.3" id="q3.3" value="notodos"  v-model="answer3.a33"> No todos
                                           </label>
-                                          </div>                                          
+                                          </div>                                           #}
                                         </section>   
                                         <section class="row">
                                           <div class="col-md-6">
@@ -786,7 +787,7 @@
                                           </div>
                                           <div class="col-md-2">
                                             <label class="radio">
-                                            <input type="radio" name="q3.4" id="q3.4" value="NO" value="SI" v-model="answer3.a34"> Si
+                                            <input type="radio" name="q3.4" id="q3.4" value="SI" value="SI" v-model="answer3.a34"> Si
                                           </label>
                                           </div>
                                           <div class="col-md-2">
@@ -794,11 +795,11 @@
                                             <input type="radio" name="q3.4" id="q3.4" value="NO" value="NO" v-model="answer3.a34"> No
                                           </label>
                                           </div>
-                                          <div class="col-md-2">
+                                          {# <div class="col-md-2">
                                             <label class="radio">
                                             <input type="radio" name="q3.4" id="q3.4" value="notodos" value="NO" v-model="answer3.a34"> No todos
                                           </label>
-                                          </div>                                          
+                                          </div>                                           #}
                                         </section>                                           
                                         <section class="row">
                                           <div class="col-md-6">
@@ -814,11 +815,11 @@
                                             <input type="radio" name="q3.5" id="q3.5" value="NO" v-model="answer3.a35"> No
                                           </label>
                                           </div>
-                                          <div class="col-md-2">
+                                          {# <div class="col-md-2">
                                             <label class="radio">
                                             <input type="radio" name="q3.5" id="q3.5" value="notodos" v-model="answer3.a35"> No todos
                                           </label>
-                                          </div>                                          
+                                          </div>                                           #}
                                         </section>                                           
                                         <section class="row">
                                           <div class="col-md-6">
@@ -834,11 +835,11 @@
                                             <input type="radio" name="q3.6" id="q3.6" value="NO" v-model="answer3.a36"> No
                                           </label>
                                           </div>
-                                          <div class="col-md-2">
+                                          {# <div class="col-md-2">
                                             <label class="radio">
                                             <input type="radio" name="q3.6" id="q3.6" value="notodos" v-model="answer3.a36"> No todos
                                           </label>
-                                          </div>                                          
+                                          </div>                                           #}
                                         </section>                                           
                                         <section class="row">
                                           <div class="col-md-6">
@@ -854,11 +855,11 @@
                                             <input type="radio" value="NO" name="q3.7" id="q3.7"  v-model="answer3.a37"> No
                                           </label>
                                           </div>
-                                          <div class="col-md-2">
+                                          {# <div class="col-md-2">
                                             <label class="radio">
                                             <input type="radio" value="notodos" name="q3.7" id="q3.7"  v-model="answer3.a37"> No todos
                                           </label>
-                                          </div>                                          
+                                          </div>                                           #}
                                         </section>                                           
                                         <section class="row">
                                           <div class="col-md-6">
@@ -874,11 +875,11 @@
                                             <input type="radio" value="NO" name="q3.8" id="q3.8"  v-model="answer3.a38"> No
                                           </label>
                                           </div>
-                                          <div class="col-md-2">
+                                          {# <div class="col-md-2">
                                             <label class="radio">
                                             <input type="radio" value="notodos" name="q3.8" id="q3.8"  v-model="answer3.a38"> No todos
                                           </label>
-                                          </div>                                          
+                                          </div>                                           #}
                                         </section>
                                         
                                         <div class="panel-footer no-bg">
@@ -960,7 +961,7 @@
                             </div>
                             <div class="tab-pane fade inner-all"  id="tab10">
                                 <fieldset class="fieldset">
-                                    <legend class="legend">6. Cuantas unidades de Brigadas de Recepcion tiene la Unidad Educativa?</legend>
+                                    <legend class="legend">6. Cada cuanto tiempo se realiza la desinfecci&oacute;n de la Unidad Educativa?</legend>
                                     <form id="formDireccion" >
 
                                         <section class="row">
@@ -1076,10 +1077,10 @@
                                 <!-- form to search student -->
                                 <div class="form-group row buscador">                            
                                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <input type="text" class="form-control" v-model="datain.sie" maxlength="18" v-on:keyup.enter="" placeholder="Código SIE">
+                                        <input type="text" class="form-control" v-model="datain.sie" maxlength="18" v-on:keyup.enter="" placeholder="Código SIE" disabled="true">
                                     </div>
                                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                        <input type="text" class="form-control" v-model="datain.year" maxlength="18" v-on:keyup.enter="" placeholder="gestion">
+                                        <input type="text" class="form-control" v-model="datain.year" maxlength="18" v-on:keyup.enter="" placeholder="gestion" disabled="true">
                                     </div>                  
                                     </br></br>
                                     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
@@ -1241,9 +1242,56 @@
                                             {# <button v-on:click="lookforInfoUE()" type="button" class="btn btn-primary"><i class="fa fa-edit"></i> Registrar Protocolo Bio-Seguridad </button> #}
                                              <a class="btn btn-info" data-toggle="modal" href='#biosegurityform'> <i class="fa fa-pencil"></i> Registrar Protocolo Bio-Seguridad</a>
                                         </div>
-                                    </div> 
-
+                                    </div>
                                 </div>
+
+
+                                <div class="col-xs-12 col-lg-12" v-if="objectoBioInstitucion.length > 0">
+
+                                    <div class="alert alert-primary" role="alert">
+                                      Registro Formulario Bioseguridad
+                                    </div>                
+
+
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-condensed table-hover">
+                                          <thead class="thead-dark">
+                                            <tr>
+                                              <th scope="col">#</th>
+                                              <th scope="col">Sie</th>
+                                              <th scope="col">Unidad Educativa</th>
+                                              <th scope="col">Mes/Gestion</th>
+                                              <th scope="col">Num. Semana</th>
+                                              {# <th scope="col">Total cursos</th> #}
+                                              {# <th scope="col">Cursos registrados</th> #}
+                                              <th scope="col" width="5%">Opci&oacute;n</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr v-for="(institution, index) in objectoBioInstitucion">
+                                              <th scope="row" >${index+1}</th>
+                                              <td>${institution.institucioneducativa_id}</td>
+                                              <td>${institution.institucioneducativa}</td>
+                                              <td>${institution.mes}/${institution.gestion_tipo_id}</td>                                              
+                                              <td>${institution.semana}</td>
+                                             {#  <td style="background-color:#CCEEFF;">${institution.fecha1}</td>
+                                              <td style="background-color:#CCEEFF;;">${institution.fecha2}</td>
+                                              <td style="background-color:#CCEEFF;;">${institution.fecha3}</td> #}
+                                              <td class="text-right">
+
+                                                <a class="btn btn-primary" > <i class="fa fa-file-pdf-o"></i></a>
+                                                {# <a style="border-radius: 10px;" class="btn btn-primary btn" href="#" aria-label="Edit" @click="registerUEModality(DBRegisterData, institution.institucioneducativa_id_target )">
+                                                  <i class="fa fa-pencil fa-1x" aria-hidden="true"> Registro Modalidad</i>
+                                                </a>  #}                               
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                    </div>                
+                                </div>
+
+
+
                             </div>
                         
 
@@ -1286,8 +1334,9 @@
                 swCertification:false,
                 idDetalle: '',
                 swquestion1:null,
-                datain:{sie:{{arrUe.sie}}, year:{{arrUe.gestion}} },
+                datain:{sie:{{arrUe.sie}}, year:{{arrUe.gestion}}, mounth:'{{arrUe.mounth}}', week:{{arrUe.week}}},
                 DBInstitucionEdu:[],
+                objectoBioInstitucion:[],
                 swExistinfoUE:false,
 
                 question1:{},
@@ -1299,6 +1348,7 @@
                 answer6:{},
                 answer7:{},
                 answer8:{},
+                arrmount:['nothing','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
 
                
             },
@@ -1306,6 +1356,7 @@
                 lookforInfoUE: function(){
                     this.buscando = true;
                     this.swExistinfoUE = false;
+                    this.objectoBioInstitucion = [];
 
                     axios.get(Routing.generate('appweb_biosecurityform_lookforInfoUE',this.datain ))
                     .then(response => {
@@ -1313,6 +1364,8 @@
 
                             // this.codigoRude = response.data.codigoRude;
                             this.DBInstitucionEdu = response.data.DBInstitucionEdu;
+                            this.objectoBioInstitucion = response.data.objectoBioInstitucion;
+
                             this.swExistinfoUE = response.data.swExistinfoUE;
                         }
                         if( response.status == 202){
@@ -1522,6 +1575,8 @@
                         if (response.status == 200) {                            
                             /*this.DBInstitucionEdu = response.data.DBInstitucionEdu;
                             this.swExistinfoUE = response.data.swExistinfoUE;*/
+                            $('#biosegurityform').modal('hide');
+                            this.objectoBioInstitucion = response.data.objectoBioInstitucion;
 
                         }
                         if( response.status == 202){
