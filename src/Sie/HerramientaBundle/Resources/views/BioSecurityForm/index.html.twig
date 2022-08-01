@@ -1002,6 +1002,833 @@
                                               
                                               <div class="col-md-10">
                                                 <select class="form-control" id="q7.1" v-model="answer7.a71">
+                                                <option value="3">Municipio</option>
+                                                <option value="4">SEDES</option>
+                                                <option value="2">Empresa Privada</option>
+                                                <option value="1">Padres de Familia</option>
+                                                <option value="5">Otro</option>
+                                              </select>
+                                              </div>
+                                        </section>                                    
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion7">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+                            <div class="tab-pane fade inner-all"  id="tab12">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">8. Para la desinfeccion lo provee?</legend>
+                                    <form id="formDireccion" >
+
+                                        <section class="row">
+                                          <div class="col-md-12">
+                                            <section class="row">
+                                              <div class="col-md-10">
+                                                <select class="form-control" id="q81" v-model="answer8.a81">
+                                                <option value="3">Municipio</option>
+                                                <option value="4">SEDES</option>
+                                                <option value="1">Padres de Familia</option>
+                                                <option value="5">ONGs</option>
+                                                <option value="2">Donacion</option>
+                                                <option value="6">Otro</option>
+                                              </select>
+                                              </div>
+                                        </section>                                       
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion8">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+
+                            <!--/ End pager -->
+                        </div><!-- /.panel-body -->
+                        <!--/ End tabs content -->
+                    </div><!-- /.panel -->
+                </div>
+                {# end wizard #}
+  
+
+                </div>
+            </div>
+        </div>
+    </div> 
+
+    <div class="modal fade in" id="biosegurityformview"  tabindex="-1" role="dialog" data-backdrop="static" >
+        <div class="modal-dialog" style="width:800px" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    {# <h4 class="modal-title legend">Registro Formulario Bioseguridad gestión: ${datain.year} - Mes: ${datain.mounth} - Semana: ${datain.week}</h4> #}
+                    <h5 class="modal-title">Registro Quincenal de la información</h5>
+                </div>
+                <div class="modal-body">
+                <br />
+  
+                  <div id="basic-wizard-vertical">
+                    <div class="panel panel-tab panel-tab-double panel-tab-vertical row no-margin rounded shadow">
+                        <!-- Start tabs heading -->
+                        <div class="panel-heading no-padding col-md-3">
+                            <ul class="nav nav-tabs">
+                                <li>
+                                    <a id="paso20" href="#tab20" data-toggle="tab" aria-expanded="true">
+                                        <div>
+                                            <span><small>1. La Unidad Educativa cuenta con brigada de Recepción</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a id="paso21" href="#tab21"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>2. Los estudiantes al momento de ingresar lo hacen aplicando las medidas de Bioseguridad</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                               
+                                <li>
+                                    <a id="paso22" href="#tab22"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>3. El personal de la Unidad Educativa aplica las medidas de bioseguridad dentro de la Unidad Educativa</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso23" href="#tab23"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>4. En los ambiestes/espacios educativos (aula o curso) se aplica las medidas de bioseguridad??</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso24" href="#tab24"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>5. En caso de que el n&uacute;mero de estudiantes es mayor al aforo en un curso o aula que hacen con los estudiantes que no ingresan?</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso25" href="#tab25"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>6. Cada cuanto tiempo se realiza la desinfecci&oacute;n de la Unidad Educativa</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso26" href="#tab26"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>7. Quien realiza la desinfecci&oacute;n ?</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a id="paso27" href="#tab27"  data-toggle="tab" >
+                                        <div>
+                                            <span><small>8. Para las desinfeccinoes lo provee:</small></span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div><!-- /.panel-heading -->
+                        <!--/ End tabs heading -->
+
+                        <!-- Start tabs content -->
+                        <div class="panel-body col-md-9 tab-content">
+                            <div class="tab-pane fade inner-all " id="tab20">
+                                <form id="formDireccion" >
+                                    <fieldset class="fieldset">
+                                        <legend class="legend">1. La Unidad Educativa cuenta con Brigada de Recepci&oacute;n?</legend>
+                                    
+                                            <section class="row">
+                                              
+                                              <div class="col-md-4 col-md-offset-2">
+                                                <label class="radio">
+                                                    <input type="radio" name="pregunta1" id="pregunta1a" :value="true" v-model="answer1.swquestion1"> Si
+                                                </label>
+                                              </div>
+                                              <div class="col-md-2">
+                                                <label class="radio">
+                                                    <input type="radio" name="pregunta1" id="preguntab" :value="false" v-model="answer1.swquestion1"> No
+                                                </label>
+                                              </div>
+                                            </section>
+
+                                        {# <p>${swquestion1}</p> #}
+                                        {# start section one question #}
+                                        <div v-if="answer1.swquestion1" style="background: #0000">
+                                          
+
+                                             <fieldset class="fieldset">
+                                                <legend class="legend">1.1. Cuantas unidades de Brigadas de Recepcion tiene la Unidad Educativa?</legend>
+                                                    <section class="row">
+                                                      <div class="col-md-4 col-md-offset-4">
+                                                       <input type="text" class="form-control" id="q1.1" placeholder="" required="" v-model="answer1.answeroneone">
+                                                      </label>
+                                                      </div>
+                                                    </section>                                    
+                                            </fieldset>
+                                            
+                                            <fieldset class="fieldset">
+                                                <legend class="legend">1.2. ¿Los miembros de la Brigada usan los implementos de Bioseguridad?</legend>
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Todos usan el barbijo adecuadamente? </p>
+                                                      </div>    
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.2.1" id="q1.2.1" value="SI" v-model="answer1.a121"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.2.1" id="q1.2.1" value="NO" v-model="answer1.a121"> No
+                                                      </label>
+                                                      </div>      
+                                                    </section>
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Usan los barbijos en la parte de la quijada o debajo de ella? </p>
+                                                      </div>    
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.2.2" id="q1.2.2" value="SI" v-model="answer1.a122"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.2.2" id="q1.2.2" value="NO" v-model="answer1.a122"> No
+                                                      </label>
+                                                      </div>      
+                                                    </section>
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Usan mascarillas faciales? </p>
+                                                      </div>    
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.2.3" id="q1.2.3" value="SI" v-model="answer1.a123"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.2.3" id="q1.2.3" value="NO" v-model="answer1.a123"> No
+                                                      </label>
+                                                      </div>      
+                                                    </section>
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Usan el alcohol en gel o al 70%? </p>
+                                                      </div>    
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.2.4" id="q1.2.4" value="SI" v-model="answer1.a124"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.2.4" id="q1.2.4" value="NO" v-model="answer1.a124"> No
+                                                      </label>
+                                                      </div>      
+                                                    </section>
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Mantienen la distancia minima de 1,5 metros de miembro a miembro? </p>
+                                                      </div>    
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.2.5" id="q1.2.5" value="SI" v-model="answer1.a125"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.2.5" id="q1.2.5" value="NO" v-model="answer1.a125"> No
+                                                      </label>
+                                                      </div>      
+                                                    </section>
+                                            </fieldset>
+                                            
+                                            <fieldset class="fieldset">
+                                                <legend class="legend">1.3. La Brigada tiene los implementos necesarios para su labor??</legend>
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Termometro?</p>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.3.1" id="q1.3.1" value="SI" v-model="answer1.a131"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.3.1" id="q1.3.1" value="NO" v-model="answer1.a131"> No
+                                                      </label>
+                                                      </div>
+                                                    </section>
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Alcohol en gel o al 70%?</p>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.3.2" id="q1.3.2" value="SI" v-model="answer1.a132"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.3.2" id="q1.3.2" value="NO" v-model="answer1.a132"> No
+                                                      </label>
+                                                      </div>
+                                                    </section>
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Espacio/lugar donde se separa a los casos sospechosos? </p>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.3.3" id="q1.3.3" value="SI" v-model="answer1.a133"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.3.3" id="q1.3.3" value="NO" v-model="answer1.a133"> No
+                                                      </label>
+                                                      </div>
+                                                    </section>                                       
+                                            </fieldset>
+                                            
+                                            <fieldset class="fieldset">
+                                                <legend class="legend">1.4. Las Brigadas de recepcion cumplen las siguientes labores?</legend>
+
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Desinfectan las manos con alcohol en gel o al 70%?</p>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.1" id="q1.4.1" value="SI" v-model="answer1.a141"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.1" id="q1.4.1" value="NO" v-model="answer1.a141"> No
+                                                      </label>
+                                                      </div>
+                                                      {# <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.1" id="q1.4.1" value="medias" v-model="answer1.a141"> A medias
+                                                      </label>
+                                                      </div>                                                       #}
+                                                    </section>
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Ordenan el ingreso por columna?</p>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.2" id="q1.4.2" value="SI" v-model="answer1.a142"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.2" id="q1.4.2" value="NO" v-model="answer1.a142"> No
+                                                      </label>
+                                                      </div>
+                                                      {# <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.2" id="q1.4.2" value="medias" v-model="answer1.a142"> A medias
+                                                      </label>
+                                                      </div>                                                                                                      #}       
+                                                    </section>
+                                                    <!--  PREGUNTA 11  -->
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Piden mantener la distancia minima de 1,5 metros?</p>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.3" id="q1.4.3" value="SI" v-model="answer1.a143"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.3" id="q1.4.3" value="NO" v-model="answer1.a143"> No
+                                                      </label>
+                                                      </div>
+                                                      {# <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.3" id="q1.4.3" value="medias" v-model="answer1.a143"> A medias
+                                                      </label>
+                                                      </div>                                                                                                      #}       
+                                                    </section>
+                                                    <!--  PREGUNTA 12  -->
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Controlan el uso adecuado de los barbijos?</p>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.4" id="q1.4.4" value="SI" v-model="answer1.a144"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.4" id="q1.4.4" value="NO" v-model="answer1.a144"> No
+                                                      </label>
+                                                      </div>
+                                                      {# <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.4" id="q1.4.4" value="medias" v-model="answer1.a144"> A medias
+                                                      </label>
+                                                      </div>                                                                                                      #}       
+                                                    </section>
+                                                    <section class="row">
+                                                      <div class="col-md-6">
+                                                        <p>¿Controlan que cada estudiante tenga el alcohol en gel o al 70%?</p>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.5" id="q1.4.5" value="SI" v-model="answer1.a145"> Si
+                                                      </label>
+                                                      </div>
+                                                      <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.5" id="q1.4.5" value="NO" v-model="answer1.a145"> No
+                                                      </label>
+                                                      </div>
+                                                      {# <div class="col-md-2">
+                                                        <label class="radio">
+                                                        <input type="radio" name="q1.4.5" id="q1.4.5" value="medias" v-model="answer1.a145"> A medias
+                                                      </label>
+                                                      </div>                                                                                                      #}       
+                                                    </section>
+                                            </fieldset>                                            
+ 
+
+                                        </div>
+                                        <div v-if="answer1.swquestion1 == false">
+
+                                            <fieldset class="fieldset">
+                                                <legend class="legend">1.1. Por que?</legend>
+
+                                                    <section class="row">
+                                                      <div class="col-md-12">
+                                                        <section class="row">
+                                                          <div class="col-md-10">
+                                                            <select class="form-control" id="pregunta11" v-model="answer1.nooneone">
+                                                                <option value="Unidad Educativa en modalidad Virtual">Unidad Educativa en modalidad Virtual</option>
+                                                                <option value="Unidad Educativa no tiene">Unidad Educativa no tiene</option>
+                                                          </select>
+                                                          </div>
+                                                    </section>                                       
+                                                
+                                            </fieldset>                                        
+                                            
+                                        </div>
+                                        {# end section one question #}                                        
+
+
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                {# <li class="previous"><a href="#" onclick="prev();">Anterior</a></li> #}
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion1">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>                                        
+                                        
+                                        
+                                    </fieldset>
+                                </form>
+                            </div>
+
+
+                            <div class="tab-pane fade inner-all"  id="tab21">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">2. ¿Los estudiantes al momento de ingresar lo hacen aplicando las medidas de Bioseguridad?</legend>
+                                    <form id="formDireccion" >
+
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Ingresan Ordenadamente en fila?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q2.1" id="q2.1" value="SI" v-model="answer2.a21"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q2.1" id="q2.1" value="NO" v-model="answer2.a21"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Mantienen la distancia de 1,5 metros?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q2.2" id="q2.2" value="SI" v-model="answer2.a22"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q2.2" id="q2.2" value="NO" v-model="answer2.a22"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <!--  PREGUNTA 12  -->
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Usan barbijo o mascarilla facial?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q2.3" id="q2.3" value="SI" v-model="answer2.a23"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q2.3" id="q2.3" value="NO" v-model="answer2.a23"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Portan el alcohol en gel o al 70%?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q2.4" id="q2.4" value="SI" v-model="answer2.a24"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q2.4" id="q2.4" value="NO" v-model="answer2.a24"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Obedecen las instrucciones de la Brigada de Recepcion?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q2.5" id="q2.5" value="SI" v-model="answer2.a25"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q2.5" id="q2.5" value="NO" v-model="answer2.a25"> No
+                                          </label>
+                                          </div>
+                                        </section>  
+                                        
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion2">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>                           
+                            <div class="tab-pane fade inner-all"  id="tab22">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">3. El personal de la Unidad Educativa aplica las medidas de bioseguridad dentro de la Unidad Educativa?</legend>
+                                    <form id="formDireccion" >
+
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Utiliza el barbijo o mascarilla facial en espacios abiertos?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.1" id="q3.1" value="SI" v-model="answer3.a31"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.1" id="q3.1" value="NO" v-model="answer3.a31"> No
+                                          </label>
+                                          </div>
+                                          {# <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.1" id="q3.1" value="notodos" v-model="answer3.a31"> No todos
+                                          </label>
+                                          </div> #}
+                                        </section>
+                                        <!--  PREGUNTA 7  -->
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Utiliza el barbijo o mascarilla facial en espacios cerrados?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.2" id="q3.2" value="SI" v-model="answer3.a32"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.2" id="q3.2" value="NO" v-model="answer3.a32"> No
+                                          </label>
+                                          </div>
+                                          {# <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.2" id="q3.2" value="notodos" v-model="answer3.a32"> No todos
+                                          </label>
+                                          </div>                                           #}
+                                        </section>
+                                        <!--  PREGUNTA 8  -->
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Utiliza el barbijo o mascarilla facial durante las actividades educativas?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.3" id="q3.3" value="SI"  v-model="answer3.a33"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.3" id="q3.3" value="NO"  v-model="answer3.a33"> No
+                                          </label>
+                                          </div>
+                                          {# <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.3" id="q3.3" value="notodos"  v-model="answer3.a33"> No todos
+                                          </label>
+                                          </div>                                           #}
+                                        </section>   
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Porta el alcohol en gel o al 70% de forma personal?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.4" id="q3.4" value="SI" value="SI" v-model="answer3.a34"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.4" id="q3.4" value="NO" value="NO" v-model="answer3.a34"> No
+                                          </label>
+                                          </div>
+                                          {# <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.4" id="q3.4" value="notodos" value="NO" v-model="answer3.a34"> No todos
+                                          </label>
+                                          </div>                                           #}
+                                        </section>                                           
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Mantiene distancia minima de 1,5 metros en ambientes cerrados?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.5" id="q3.5" value="SI" v-model="answer3.a35"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.5" id="q3.5" value="NO" v-model="answer3.a35"> No
+                                          </label>
+                                          </div>
+                                          {# <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.5" id="q3.5" value="notodos" v-model="answer3.a35"> No todos
+                                          </label>
+                                          </div>                                           #}
+                                        </section>                                           
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Mantiene distancia minima de 1,5 metros en ambientes abiertos?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.6" id="q3.6" value="SI" v-model="answer3.a36"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.6" id="q3.6" value="NO" v-model="answer3.a36"> No
+                                          </label>
+                                          </div>
+                                          {# <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" name="q3.6" id="q3.6" value="notodos" v-model="answer3.a36"> No todos
+                                          </label>
+                                          </div>                                           #}
+                                        </section>                                           
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Mantiene distancia minima de 1,5 metros en actividades educativas?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" value="si" name="q3.7" id="q3.7"  v-model="answer3.a37"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" value="NO" name="q3.7" id="q3.7"  v-model="answer3.a37"> No
+                                          </label>
+                                          </div>
+                                          {# <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" value="notodos" name="q3.7" id="q3.7"  v-model="answer3.a37"> No todos
+                                          </label>
+                                          </div>                                           #}
+                                        </section>                                           
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Mantiene distancia minima de 1,5 metros en actividades educativas recreativas?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" value="SI" name="q3.8" id="q3.8"  v-model="answer3.a38"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" value="NO" name="q3.8" id="q3.8"  v-model="answer3.a38"> No
+                                          </label>
+                                          </div>
+                                          {# <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" value="notodos" name="q3.8" id="q3.8"  v-model="answer3.a38"> No todos
+                                          </label>
+                                          </div>                                           #}
+                                        </section>
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion3">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+                            <div class="tab-pane fade inner-all"  id="tab23">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">4. En los ambientes o espacios educativos (aula o curso) se aplica las medidas de bioseguridad?</legend>
+                                    <form id="formDireccion" >
+
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Cuenta con alcohol en gel o al 70%?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" value="SI" name="q4.1" id="q4.1"  v-model="answer4.a41"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" value="NO" name="q4.1" id="q4.1"  v-model="answer4.a41"> No
+                                          </label>
+                                          </div>
+                                        </section>
+                                        <section class="row">
+                                          <div class="col-md-6">
+                                            <p>¿Los pupitres personales o bipersonales mantienen la distancia para que el estudiante tenga una distancia minima de 1,5 metros?</p>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" value="SI" name="q4.2" id="q4.2"  v-model="answer4.a42"> Si
+                                          </label>
+                                          </div>
+                                          <div class="col-md-2">
+                                            <label class="radio">
+                                            <input type="radio" value="NO" name="q4.2" id="q4.2"  v-model="answer4.a42"> No
+                                          </label>
+                                          </div>
+                                        </section>                                    
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion4">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div> 
+
+                            <div class="tab-pane fade inner-all"  id="tab24">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">5. En caso de que el numero de estudiantes es mayor al foro en un curso o aula, que hacen con los estudiantes que no ingresan?</legend>
+                                    <form id="formDireccion" >
+                                         
+                                        <section class="row">
+                                          <div class="col-md-4 col-md-offset-4">
+                                           <textarea type="" class="form-control" style="width: 296px; height: 84px;" id="epsPaciente" placeholder="" required=""  v-model="answer5.a51">
+                                           </textarea>
+                                          </label>
+                                          </div>
+                                        </section>                                    
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion5">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>
+                            <div class="tab-pane fade inner-all"  id="tab25">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">6. Cada cuanto tiempo se realiza la desinfecci&oacute;n de la Unidad Educativa?</legend>
+                                    <form id="formDireccion" >
+
+                                        <section class="row">
+                                          <div class="col-md-12">
+                                            <section class="row">
+                                              <div class="col-md-8">
+                                                <p>En la semana?</p>
+                                              </div>
+                                              <div class="col-md-4">
+                                                <select class="form-control" id="q6.1" v-model="answer6.a61">
+                                                <option value="1">1 dia</option>
+                                                <option value="2">2 dias</option>
+                                                <option value="3">3 dias</option>
+                                                <option value="4">4 dias</option>
+                                                <option value="5">5 dias</option>
+                                                <option value="0">no se hace</option>
+                                              </select>
+                                              </div>
+                                        </section>                                  
+                                        
+                                        <div class="panel-footer no-bg">
+                                            <ul class="pager wizard no-margin">
+                                                <li class="previous"><a href="#" onclick="prev();">Anterior</a></li>
+                                                <li class="next"><button class="btn-wizard" type="button" @click.prevent="saveQuestion6">Guardar y continuar</button></li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </fieldset>
+                            </div>                            
+                            <div class="tab-pane fade inner-all"  id="tab26">
+                                <fieldset class="fieldset">
+                                    <legend class="legend">7. Quien realiza la desinfeccion?</legend>
+                                    <form id="formDireccion" >
+
+                                        <section class="row">
+                                          <div class="col-md-12">
+                                            <section class="row">
+                                              
+                                              <div class="col-md-10">
+                                                <select class="form-control" id="q7.1" v-model="answer7.a71">
                                                 <option value="Municipio">Municipio</option>
                                                 <option value="SEDES">SEDES</option>
                                                 <option value="EmpresaPrivada">Empresa Privada</option>
@@ -1020,7 +1847,7 @@
                                     </form>
                                 </fieldset>
                             </div>
-                            <div class="tab-pane fade inner-all"  id="tab12">
+                            <div class="tab-pane fade inner-all"  id="tab27">
                                 <fieldset class="fieldset">
                                     <legend class="legend">8. Para la desinfeccion lo provee?</legend>
                                     <form id="formDireccion" >
@@ -1061,7 +1888,8 @@
                 </div>
             </div>
         </div>
-    </div>      
+    </div> 
+
         <div v-cloak>
             <div class="body-content animated fadeIn">
                 <div class="row">
@@ -1279,11 +2107,15 @@
                                               <td style="background-color:#CCEEFF;;">${institution.fecha3}</td> #}
                                               <td class="text-right">
 
-                                                <a class="btn btn-primary" > <i class="fa fa-file-pdf-o"></i></a>
+                                                <a class="" > <i class="fa fa-file-pdf-o"></i></a>
+                                                {# <a class="" data-toggle="modal" href='#biosegurityformview'> <i class="fa fa-eye"></i></a> #}
                                                 {# <a style="border-radius: 10px;" class="btn btn-primary btn" href="#" aria-label="Edit" @click="registerUEModality(DBRegisterData, institution.institucioneducativa_id_target )">
                                                   <i class="fa fa-pencil fa-1x" aria-hidden="true"> Registro Modalidad</i>
                                                 </a>  #}                               
                                               </td>
+                                              {# <td class="text-right">
+                                                <a class="" > <i class="fa fa-eye"></i></a>
+                                              </td> #}
                                             </tr>
                                           </tbody>
                                         </table>
