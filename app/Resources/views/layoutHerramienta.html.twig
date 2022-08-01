@@ -300,7 +300,7 @@
                                 <li><a href="{{ path('opemonitorhealthseg_index')}}">Seguimiento</a></li>
                                 
                                 {% if app.session.get('roluser') in [9] %}
-                                    <li><a href="{{ path('appweb_biosecurityform_index')}}">Formulario Bio Seguridad</a></li>
+                                    <li><a href="{{ path('appweb_biosecurityform_index')}}">Formulario Bioseguridad</a></li>
                                 {% else %}
                                     <li><a href="{{ path('monitorbioform_index')}}">Formulario Bio Seguridad</a></li>
                                 {% endif %}
