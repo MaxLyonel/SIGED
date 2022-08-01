@@ -9,6 +9,7 @@
                     <th>Distrito</th>
                     <th>SIE</th>
                     <th>Institución Educativa</th>
+					 <th>RUDE</th>
                     <th>Trim. 1</th>
                     <th>Trim. 2</th>
                     <th>Trim. 3</th>
@@ -24,6 +25,7 @@
                     <th>Distrito</th>
                     <th>SIE</th>
                     <th>Institución Educativa</th>
+                    <th>RUDE</th>
                     <th>Trim. 1</th>
                     <th>Trim. 2</th>
                     <th>Trim. 3</th>
@@ -40,6 +42,7 @@
                 		<td>{{registro.distrito}}</td>
                 		<td>{{registro.codigo_sie}}</td>
                 		<td>{{registro.institucioneducativa}}</td>
+                		<td><span class="label label-{% if registro.rude == 'NO' %}danger{% else %}success{% endif %}">{{registro.rude}}</span></td>
                 		<td><span class="label label-{% if registro.bim1 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim1}}</span></td>
                 		<td><span class="label label-{% if registro.bim2 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim2}}</span></td>
                 		<td><span class="label label-{% if registro.bim3 == 'NO' %}danger{% else %}success{% endif %}">{{registro.bim3}}</span></td>
