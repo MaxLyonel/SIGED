@@ -357,3 +357,7 @@ sie_app_web_OpeMonitorHealthseg:
     resource: "@SieAppWebBundle/Resources/config/routing/opemonitorhealthseg.yml"
     prefix:   /sie/monitorHealth
 
+sie_app_web_biosecurityform:
+    resource: "@SieAppWebBundle/Resources/config/routing/biosecurityform.yml"
+    prefix:   /sie/biosecurityform
+
