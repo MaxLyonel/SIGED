@@ -298,8 +298,14 @@
                             <ul>
                                 <li><a href="{{ path('ie_acceso_internet_index')}}">Registro</a></li>
                                 <li><a href="{{ path('opemonitorhealthseg_index')}}">Seguimiento</a></li>
-                                <li><a href="{{ path('appweb_biosecurityform_index')}}">Formulario Bio Seguridad</a></li>
+                                
+                                {% if app.session.get('roluser') in [9] %}
+                                    <li><a href="{{ path('appweb_biosecurityform_index')}}">Formulario Bio Seguridad</a></li>
+                                {% else %}
+                                    <li><a href="{{ path('monitorbioform_index')}}">Formulario Bio Seguridad</a></li>
+                                {% endif %}
                                 {# <li><a href="{{ path('InstitucionModalidadAte_index')}}">Registro Modalidad por UE</a></li> #}
+
                             </ul>
                         </li>
                     {% endif %}
