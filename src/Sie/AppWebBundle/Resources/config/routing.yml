@@ -361,3 +361,6 @@ sie_app_web_biosecurityform:
     resource: "@SieAppWebBundle/Resources/config/routing/biosecurityform.yml"
     prefix:   /sie/biosecurityform
 
+sie_app_web_monitorbioform:
+    resource: "@SieAppWebBundle/Resources/config/routing/monitorbioform.yml"
+    prefix:   /sie/monitorbioform
