@@ -354,7 +354,6 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer2);
 		die;
 
 	}
@@ -414,7 +413,7 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer3);
+		
 		die;
 
 	}
@@ -474,7 +473,7 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer4);
+		
 		die;
 	}
 	public function saveQuestion5Action(Request $request){
@@ -533,7 +532,7 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer5);
+		
 		die;
 
 	}
@@ -593,7 +592,6 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer6);
 		die;
 
 	}
@@ -653,7 +651,7 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer7);
+		
 		die;
 
 	}
