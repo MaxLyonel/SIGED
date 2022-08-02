@@ -208,6 +208,7 @@ class BioSecurityFormController extends Controller{
 		$em = $this->getDoctrine()->getManager();
 		// get the vars send
 		$answer1 = $request->get('answer1', null);
+        dump()
 		$sie = ($request->get('sie'));
 		$numWeek = date('W');
 		$nummount = date('m');
@@ -242,7 +243,9 @@ class BioSecurityFormController extends Controller{
 		$objBioInstitucioneducativaBioseguridadPreguntas->setRespSiNo($answer1['swquestion1']);
 		if($answer1['swquestion1'] =='false'){
 			$objBioInstitucioneducativaBioseguridadPreguntas->setPregTexto($answer1['nooneone']);
-		}
+		}else{
+            $objBioInstitucioneducativaBioseguridadPreguntas->setPregTexto($answer1['answeroneone']);
+        }
 
 		$em->persist($objBioInstitucioneducativaBioseguridadPreguntas);
 		
