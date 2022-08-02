@@ -208,7 +208,7 @@ class BioSecurityFormController extends Controller{
 		$em = $this->getDoctrine()->getManager();
 		// get the vars send
 		$answer1 = $request->get('answer1', null);
-        dump()
+
 		$sie = ($request->get('sie'));
 		$numWeek = date('W');
 		$nummount = date('m');
