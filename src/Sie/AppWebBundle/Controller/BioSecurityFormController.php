@@ -208,6 +208,7 @@ class BioSecurityFormController extends Controller{
 		$em = $this->getDoctrine()->getManager();
 		// get the vars send
 		$answer1 = $request->get('answer1', null);
+
 		$sie = ($request->get('sie'));
 		$numWeek = date('W');
 		$nummount = date('m');
@@ -356,7 +357,6 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer2);
 		die;
 
 	}
@@ -416,7 +416,7 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer3);
+		
 		die;
 
 	}
@@ -476,7 +476,7 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer4);
+		
 		die;
 	}
 	public function saveQuestion5Action(Request $request){
@@ -535,7 +535,7 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer5);
+		
 		die;
 
 	}
@@ -595,7 +595,6 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer6);
 		die;
 
 	}
@@ -655,7 +654,7 @@ class BioSecurityFormController extends Controller{
 		}else{}
 		
 		$em->flush();
-		dump($answer7);
+		
 		die;
 
 	}
