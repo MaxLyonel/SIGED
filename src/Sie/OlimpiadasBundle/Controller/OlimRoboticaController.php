@@ -19,6 +19,7 @@ Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
 class OlimRoboticaController extends Controller{
 
     public function indexaction(Request $request){
+        
         $form = $this->createFormulario();
         $form->handleRequest($request);
         $sie = -1;
