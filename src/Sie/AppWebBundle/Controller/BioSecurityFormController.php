@@ -585,6 +585,7 @@ class BioSecurityFormController extends Controller{
 
 				}
 				$objBioInstitucioneducativaBioseguridadPreguntas->setPregTexto(($answer6[$currentKey]));
+				$objBioInstitucioneducativaBioseguridadPreguntas->setBioTiempoDesinfeccionTipo($em->getRepository('SieAppWebBundle:BioTiempoDesinfeccionTipo')->find($answer6[$currentKey]));
 				$em->persist($objBioInstitucioneducativaBioseguridadPreguntas);
 
 				next($answer6);
@@ -644,6 +645,7 @@ class BioSecurityFormController extends Controller{
 
 				}
 				$objBioInstitucioneducativaBioseguridadPreguntas->setPregTexto(($answer7[$currentKey]));
+				$objBioInstitucioneducativaBioseguridadPreguntas->setBioDesinfeccionRealizadaTipo($em->getRepository('SieAppWebBundle:BioDesinfeccionRealizadaTipo')->find($answer7[$currentKey]));
 				$em->persist($objBioInstitucioneducativaBioseguridadPreguntas);
 
 				next($answer7);
@@ -705,6 +707,7 @@ class BioSecurityFormController extends Controller{
 
 				}
 				$objBioInstitucioneducativaBioseguridadPreguntas->setPregTexto(($answer8[$currentKey]));
+				$objBioInstitucioneducativaBioseguridadPreguntas->setBioDesinfeccionProveeTipo($em->getRepository('SieAppWebBundle:BioDesinfeccionProveeTipo')->find($answer8[$currentKey]));
 				$em->persist($objBioInstitucioneducativaBioseguridadPreguntas);
 
 				next($answer8);
