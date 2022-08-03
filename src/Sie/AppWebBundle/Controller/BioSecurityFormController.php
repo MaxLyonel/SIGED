@@ -803,12 +803,12 @@ class BioSecurityFormController extends Controller{
 		        // dump($data['option']);
 		        // dump($objectAnswer);
 		        foreach ($objectAnswer as $value) {
-		        	$answer1['vi'.$value['bio_cuestionario_tipo_id']] = ($data['option']>=5)?$value['preg_texto']:[($value['resp_si_no'])?'SI':'NO'];
+		        	$answer1['vi'.$value['bio_cuestionario_tipo_id']] = ($data['option']>=5)?$value['preg_texto']:(($value['resp_si_no'])?'SI':'NO');
 		        }			
 		        // dump($objectAnswer);die;			
 				break;
 		}
-		// dump($answer1);die;
+		
 		
         $response->setStatusCode(200);
         
