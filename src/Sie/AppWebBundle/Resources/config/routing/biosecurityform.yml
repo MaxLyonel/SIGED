@@ -57,3 +57,9 @@ appweb_biosecurityform_saveQuestion8:
     defaults: { _controller: SieAppWebBundle:BioSecurityForm:saveQuestion8}
     options:
          expose: true
+
+appweb_biosecurityform_showAnswer:
+    path:    /showAnswer
+    defaults: { _controller: SieAppWebBundle:BioSecurityForm:showAnswer}
+    options:
+         expose: true

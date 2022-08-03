@@ -242,7 +242,9 @@ class BioSecurityFormController extends Controller{
 		$objBioInstitucioneducativaBioseguridadPreguntas->setRespSiNo($answer1['swquestion1']);
 		if($answer1['swquestion1'] =='false'){
 			$objBioInstitucioneducativaBioseguridadPreguntas->setPregTexto($answer1['nooneone']);
-		}
+		}else{
+            $objBioInstitucioneducativaBioseguridadPreguntas->setPregTexto($answer1['answeroneone']);
+        }
 
 		$em->persist($objBioInstitucioneducativaBioseguridadPreguntas);
 		
@@ -727,6 +729,99 @@ class BioSecurityFormController extends Controller{
 
 
 	}
+
+	public function showAnswerAction(Request $request){
+
+
+		$response = new JsonResponse();
+		$data = $request->get('data', null);
+		$em = $this->getDoctrine()->getManager();
+
+	
+
+		switch ($data['option']) {
+			case 1:
+				# code...
+				$query = "
+		    		select *
+		    		from Bio_Institucioneducativa_Bioseguridad ibio
+		    		inner join Bio_Institucioneducativa_Bioseguridad_preguntas ibiop on (ibio.id = ibiop.bio_institucioneducativa_bioseguridad_id)
+		    		where ibio.gestion_tipo_id = ".$data['year']." and ibio.institucioneducativa_id = ".$data['sie']." and ibio.mes = ".$data['month']." and ibio.semana =".$data['week']." and ibiop.bio_cuestionario_tipo_id=".$data['option'];	
+		    		
+		    	$query = $em->getConnection()->prepare($query);
+		    	$query->execute();
+		        $objectoBioInstitucion = $query->fetchAll();			
+				// dump($objectoBioInstitucion);die;
+		        // {"swquestion1":true,"answeroneone":"2","a121":"SI","a122":"SI","a124":"SI","a123":"SI","a125":"SI","a131":"SI","a132":"SI","a133":"SI","a141":"SI","a142":"SI","a143":"SI","a144":"SI","a145":"SI"}
+		        if(sizeof($objectoBioInstitucion)>0){
+		        	if($objectoBioInstitucion[0]['resp_si_no']){
+		        		$answer1['swquestion1']=$objectoBioInstitucion[0]['resp_si_no'];
+		        		$answer1['answeroneone']=$objectoBioInstitucion[0]['preg_texto'];
+
+		        		$query = "
+			    		select *
+			    		from Bio_Institucioneducativa_Bioseguridad_preguntas_brigada ibiob
+			    		where ibiob.bio_institucioneducativa_bioseguridad_preguntas_id = ".$objectoBioInstitucion[0]['id']." order by bio_cuestionario_brigada_tipo_id ASC";
+			    		// dump($query);
+				    	$query = $em->getConnection()->prepare($query);
+				    	$query->execute();
+				        $objectoBioInstitucionquest = $query->fetchAll();
+				        if(sizeof($objectoBioInstitucionquest)>0){
+				        	foreach ($objectoBioInstitucionquest as $value) {
+				        		$answer1['vi'.$value['bio_cuestionario_brigada_tipo_id']] = ($value['resp_si_no'])?'SI':'NO';
+				        	}
+				        }
+				        
+				        // dump($objectoBioInstitucionquest);die;
+
+			        	// $answer1 =array('swquestion1'=>$objectoBioInstitucion[0]['resp_si_no'], 'nooneone'=>$objectoBioInstitucion[0]['preg_texto']);
+			        }else{
+			        	$answer1 =array('swquestion1'=>$objectoBioInstitucion[0]['resp_si_no'], 'nooneone'=>$objectoBioInstitucion[0]['preg_texto']);
+			        }
+
+		        }else{
+		        	$answer1 = array();
+		        }
+
+				break;
+			// case 2:
+
+			// 	break;
+			
+			default:
+				# code...
+				$objData = $em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridad')->findOneBy(array('institucioneducativa'=>$data['sie'],'semana'=>$data['week']));
+
+
+				$query = "
+		    		select * 
+					from Bio_Institucioneducativa_Bioseguridad_preguntas a 
+					left join bio_cuestionario_tipo bct on (a.bio_cuestionario_tipo_id = bct.id)
+					where  a.Bio_Institucioneducativa_Bioseguridad_id = ".$objData->getId()." and bct.bio_clasificador_pregunta_tipo_id =  ".$data['option'];				
+		    	$query = $em->getConnection()->prepare($query);
+		    	$query->execute();
+		        $objectAnswer = $query->fetchAll();	
+		        // dump($data['option']);
+		        // dump($objectAnswer);
+		        foreach ($objectAnswer as $value) {
+		        	$answer1['vi'.$value['bio_cuestionario_tipo_id']] = ($data['option']>=5)?$value['preg_texto']:[($value['resp_si_no'])?'SI':'NO'];
+		        }			
+		        // dump($objectAnswer);die;			
+				break;
+		}
+		// dump($answer1);die;
+		
+        $response->setStatusCode(200);
+        
+        $response->setData(array(        	
+        	'answer1'=>$answer1, 
+        ));
+       
+        return $response;  			
+	}
+
+	// private function getAnswer
+
 
 
 }
