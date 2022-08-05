@@ -873,10 +873,12 @@ class CursosLargosController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $infoUe = $request->get('infoUe');
         $aInfoUeducativa = unserialize($infoUe);
+
         $aInfoUeducativaCurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId'];
         $idcurso = $aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['iecid'];
         $idacreditacion=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['acreditacionid'];
         $idespecialidad=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['cursolargoid'];
+        $paraleloId=$aInfoUeducativa['ueducativaInfo']['ueducativaInfoId']['paraleloId'];
         $sie= $this->session->get('ie_id');
         $gestion=$this->session->get('ie_gestion');  //dump($idcurso);die;
         try{
@@ -958,6 +960,7 @@ class CursosLargosController extends Controller {
                 $query->execute();
                 $listamodcurso= $query->fetchAll();//dump($listamodcurso); die; 
             }  */
+            
 
             $query = $em->getConnection()->prepare('select  smp.id as idsmp, sest.id as idespecialidad,sest.especialidad,sat.id as idacreditacion, sat.acreditacion, sia.id as idsia, sip.id as idsip,smp.horas_modulo as horas, smt.id as idmodulo,smt.modulo,
                 ieco.id as idieco,iecom.id as idiecom
@@ -971,11 +974,13 @@ class CursosLargosController extends Controller {
                 inner join superior_modulo_tipo smt on smt.id =smp.superior_modulo_tipo_id
                 left JOIN institucioneducativa_curso_oferta ieco on  smp.id = ieco.superior_modulo_periodo_id
                 left JOIN institucioneducativa_curso_oferta_maestro iecom on ieco.id = iecom.institucioneducativa_curso_oferta_id
-                where sat.id =:idacreditacion and sfat.id=40 and sest.id=:idespecialidad and sia.institucioneducativa_id=:sie
+                left JOIN institucioneducativa_curso iec on  ieco.insitucioneducativa_curso_id = iec.id
+                where sat.id =:idacreditacion and sfat.id=40 and sest.id=:idespecialidad and sia.institucioneducativa_id=:sie and iec.paralelo_tipo_id=:paraleloId
                 ORDER BY smp.id ');
                 $query->bindValue(':sie', $sie);
                 $query->bindValue(':idacreditacion', $idacreditacion);
                 $query->bindValue(':idespecialidad', $idespecialidad);
+                $query->bindValue(':paraleloId', $paraleloId);
                 $query->execute();
                 $listamodcurso= $query->fetchAll();
             //dump($listamodcurso); die;       
