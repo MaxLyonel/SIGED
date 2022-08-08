@@ -1,3 +1,27 @@
+# sie_app_web_modulesoperative:
+# resource: "@SieAppWebBundle/Resources/config/routing/modulosoperativo.yml"
+# prefix:   /modulesoperative
+
+sie_app_web_operativesie:
+    resource: "@SieAppWebBundle/Resources/config/routing/operativosietipo.yml"
+    prefix:   /operativesie
+
+sie_app_web_sistematipo:
+    resource: "@SieAppWebBundle/Resources/config/routing/admoperative.yml"
+    prefix:   /admoperative
+
+sie_app_web_sistematipo:
+    resource: "@SieAppWebBundle/Resources/config/routing/sistematipo.yml"
+    prefix:   /sistematipo
+
+sie_app_web_operativesie:
+    resource: "@SieAppWebBundle/Resources/config/routing/operativosietipo.yml"
+    prefix:   /operativesie
+
+sie_app_web_modulotipo:
+    resource: "@SieAppWebBundle/Resources/config/routing/modulotipo.yml"
+    prefix:   /modulotipo
+
 sie_app_web_uealtademanda:
     resource: "@SieAppWebBundle/Resources/config/routing/preinsinstitucioneducativacursocupo.yml"
     prefix:   /uealtademanda
@@ -333,8 +357,15 @@ sie_app_web_OpeMonitorHealthseg:
     resource: "@SieAppWebBundle/Resources/config/routing/opemonitorhealthseg.yml"
     prefix:   /sie/monitorHealth
 
+
 sie_app_web_recognitionknowledge:
     resource: "@SieAppWebBundle/Resources/config/routing/recognitionknowledge.yml"
     prefix:   /sie/recognitionknowledge
 
+sie_app_web_biosecurityform:
+    resource: "@SieAppWebBundle/Resources/config/routing/biosecurityform.yml"
+    prefix:   /sie/biosecurityform
 
+sie_app_web_monitorbioform:
+    resource: "@SieAppWebBundle/Resources/config/routing/monitorbioform.yml"
+    prefix:   /sie/monitorbioform

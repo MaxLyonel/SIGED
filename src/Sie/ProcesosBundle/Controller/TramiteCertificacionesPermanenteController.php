@@ -1371,8 +1371,9 @@ class TramiteCertificacionesPermanenteController extends Controller {
             //$pdf->Cell(0, 0, 'CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9', 0, 1);
             //$pdf->write1DBarcode('CODE 39', 'C39', '', '', '', 18, 0.4, $style, 'N');
             $pdf->Cell(20, 6, '', 0, 0, 'L'); 
-            $pdf->write1DBarcode($datosParticipante[0]['codigoRude'], 'C128C', '', '', '', 13, 0.3, $style, 'N');
-            
+            //$pdf->write1DBarcode($datosParticipante[0]['codigoRude'], 'C128C', '', '', '', 13, 0.3, $style, 'N');
+            $pdf->write1DBarcode($datosParticipante[0]['codigoRude'], 'I25', '', '', '', 13, 0.3, $style, 'N');
+     
             $ci = $datosParticipante[0]['carnetIdentidad'].($datosParticipante[0]['complemento'] == '' ? '' : '-'.$datosParticipante[0]['complemento']).' '.$datosParticipante[0]['sigla']; 
             
             $pdf->SetFont('helvetica', '', 11);
@@ -1410,14 +1411,14 @@ class TramiteCertificacionesPermanenteController extends Controller {
             if($request->get('idnivel')==1 || $request->get('idnivel')==20  ){ // CORRESPONDE A NIVEL BASICO O AUXILIAR                
                 //de 500 horas, desarrollado por el Centro de Educación Permanente:
                 //de 1000 horas, desarrollado por el Centro de Educación Permanente
-                $pdf->Ln(11);
+                $pdf->Ln(10);
                 $contenido='<table border="0" cellpadding="1.5"> ';
                 $contenido.='<tr><td width="10.3%">&nbsp;</td><td  width="79.4%">';
-                $contenido.='<p style="text-align: justify;">Por haber concluido de manera satisfactoria con los Lineamientos Metodol&oacute;gicos del &Aacute;rea de Educaci&oacute;n Permanente del Subsistema de Educación Alternativa y Especial, conforme a la Ley de la Educación N° 070 “Avelino Siñani – Elizardo Pérez”, desarrollado por el Centro de  Educación Alternativa: "'.($request->get('centro') ? $request->get('centro') : '').'"</p>';
+                $contenido.='<p style="text-align: justify;">Por haber logrado de manera satisfactoria los objetos del curso en el marco de los Lineamientos Metodol&oacute;gicos del &Aacute;rea de Educaci&oacute;n Permanente del Subsistema de Educación Alternativa y Especial, conforme a la Ley de la Educación N° 070 “Avelino Siñani – Elizardo Pérez”, desarrollado por el Centro de  Educación Alternativa: "'.($request->get('centro') ? $request->get('centro') : '').'"</p>';
                 $contenido.='</td><td width="10.3%">&nbsp;</td></tr>';
                 $contenido.='</table>';                             
                 $pdf->writeHTML($contenido, true, false, true, false, '');
-                $pdf->Ln(17);
+                $pdf->Ln(16);
                 $pdf->Cell(25, 7, '', 0, 0, 'L');                
                 $mes=$this->ObtenerMes(date('m'));
                 $pdf->Cell(0, 2, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
@@ -1430,16 +1431,16 @@ class TramiteCertificacionesPermanenteController extends Controller {
                 $contenido.='</td><td width="10.3%">&nbsp;</td></tr>';
                 $contenido.='</table>';
                 $pdf->writeHTML($contenido, true, false, true, false, '');
-                $pdf->Ln(17);
+                $pdf->Ln(16);
                 $pdf->Cell(25, 7, '', 0, 0, 'L');                
                 $mes=$this->ObtenerMes(date('m'));
                 $pdf->Cell(0, 2, ($datosCurso['departamento'] ? $datosCurso['departamento'] : '').', '.date('d').' de '.$mes.' de '.date('Y').' ', 0, 1, 'C');
                 $pdf->Ln(5);
                 
             }
-           $pdf->Ln(20);
+           $pdf->Ln(16);
           
-            $pdf->Image('@'.$firmaDDE ,120, 260, 45, 45, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
+            // $pdf->Image('@'.$firmaDDE ,120, 265, 45, 45, 'PNG', '', '', true, 150, '', false, false, 0, false, false, false);
             $firmas='<table cellpadding="0.5" style="font-size: 8px;">';
             $firmas.='<tr><td align="center" width="15%"><br/></td>
             <td align="center" width="36%"><br/><br/><br/><br/>__________________________________<br/>Directora(or) Centro EDUPER<br>'.''.'Sello y Firma</td>

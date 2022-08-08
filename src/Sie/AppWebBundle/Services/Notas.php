@@ -6092,7 +6092,7 @@ die;/*
                                     ->setMaxResults(1)
                                     ->getQuery()
                                     ->getResult();          
-                                    //dump($cualitativas); die;
+                                   // dump($cualitativas); die;
            
             if($cualitativas){
                 if(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] == 78){ //78=CONCLUIDO
@@ -6108,14 +6108,16 @@ die;/*
                     $inicio = 0;
                     $fin = 1;
                     if(in_array(json_decode($cualitativas[0]['notaCualitativa'],true)['estadoEtapa'] , array(79,80))){ //79=PROSIGUE, 80=EXTENDIDO
-                        $etapa = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa']+1;
+                        $etapa = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa']+1; 
                     }else{
-                        $etapa = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'];
+                        $etapa = json_decode($cualitativas[0]['notaCualitativa'],true)['etapa']; 
                     }
+                    //dump($etapa);
                     if($cualitativas[0]['gestion'] == $gestion){
                         $idNotaTipo = $cualitativas[0]['idNotaTipo']+1;
                     }else{
                         $idNotaTipo = 42;
+                        $idNotaTipo = $cualitativas[0]['idNotaTipo']+1;
                     }
                     $etapasArray[0] = array('idNotaTipo'=>$cualitativas[0]['idNotaTipo'],
                                                 'etapa'=>json_decode($cualitativas[0]['notaCualitativa'],true)['etapa'],
@@ -6136,7 +6138,7 @@ die;/*
                                 );
                 $idEstudianteInscripcion = $idInscripcion;
             }
-            
+            //dump($etapasArray);die;
             //dump($cualitativas, $idInscripcion,$gestion,$etapasArray);die;
             $asignaturasC = $this->em->createQueryBuilder()
                                 ->select('at.id, at.area, asit.id as asignaturaId, asit.asignatura, ea.id as estAsigId')
@@ -6154,9 +6156,9 @@ die;/*
                                 ->getResult();
 
             
-          // dump($asignaturasC,$asignaturas);die;
-            if($asignaturas){
-                foreach ($asignaturasC as $key=>$a) {
+           //dump($asignaturasC,$asignaturas);die;
+            if($asignaturas){ 
+                foreach ($asignaturasC as $key=>$a) { 
                     //dump($asignaturas,$a,$key);die;
                     $notasArray[$cont] = array('areaId'=>$a['id'],'area'=>$a['area'],'idAsignatura'=>$a['asignaturaId'],'asignatura'=>$a['asignatura']);
     
@@ -6174,11 +6176,16 @@ die;/*
                                         ->setParameter('nt',$etapasArray[0]['idNotaTipo'])
                                         ->getQuery()
                                         ->getResult();
+                                    //    dump($asignaturasNotas);
+                   // dump($inicio);dump($fin); die;
                     //dump($asignaturasC,$asignaturasNotas);die;
+                    
                     for($i=$inicio;$i<=$fin;$i++){
                         $existe = 'no';
                         foreach ($asignaturasNotas as $an) {
                             $valorNota = $an['notaCualitativa'];
+                            //dump($etapasArray[$i]['idNotaTipo']);
+                            //dump($an['idNotaTipo']);
                             if($etapasArray[$i]['idNotaTipo'] == $an['idNotaTipo']){
                                 $notasArray[$cont]['notas'][] =   array(
                                         'id'=>$cont."-".$etapasArray[$i]['idNotaTipo'],
@@ -6204,23 +6211,25 @@ die;/*
                                                     );
                         }
                     }
-                    
+                   
                     $cont++;
                 }    
+                 //dump($notasArray);
             }
-            
+            //die;
             //dump($notasArray);die;
             $areas = array();
             $areas = $notasArray;
-            //dump($areas);die;
+           //dump($areas);die;
 
             //notas cualitativas
             $arrayCualitativas = array();
 
             ///$cualitativas = $this->em->getRepository('SieAppWebBundle:EstudianteNotaCualitativa')->findBy(array('estudianteInscripcion'=>$idInscripcion),array('notaTipo'=>'ASC'));
-            $existe = false;
-            for($i=$inicio;$i<=$fin;$i++){
-                if($cualitativas and $existe == false){
+            
+            $existe = false; //dump($inicio); dump($fin);die;
+            for($i=$inicio;$i<=$fin;$i++){ 
+                if($cualitativas and $existe == false and $cualitativas[$i]['gestion']<$gestion){ //dump("si");die;
                     $arrayCualitativas[] = array(
                                                 'idInscripcion'=>$cualitativas[0]['idEstudianteInscripcion'],
                                                 'idEstudianteNotaCualitativa'=>$cualitativas[0]['idEstudianteCualitativo'],
@@ -6229,10 +6238,10 @@ die;/*
                                                 'notaTipo'=>$cualitativas[0]['notaTipo']
                                             );
                     $existe = true;
-                }else{
+                }else{ 
                     $existe = false;
                 }
-                if($existe == false){
+                if($existe == false){ //dump($i);die;
                     $arrayCualitativas[] = array(
                                             'idInscripcion'=>$idInscripcion,
                                             'idEstudianteNotaCualitativa'=>'nuevo',
@@ -6240,9 +6249,11 @@ die;/*
                                             'notaCualitativa'=>'',
                                             'notaTipo'=>$this->literal($etapasArray[$i]['idNotaTipo'])['titulo'].' '.$tipoNota
                                         );
+                                         
                 }
+               
             }
-
+            
             $estadosPermitidos = array(0,4,78,79);
             //$estadosPermitidos = array(0);
             //dump($areas);die;
@@ -6255,7 +6266,7 @@ die;/*
             foreach ($tiposNotas as $tn) {
                 $tiposNotasArray[] = array('id'=>$tn->getId(),'nota'=>$tn->getNota(),'descripcion'=>$tn->getDescripcion());
             }
-            
+            //dump($arrayCualitativas);die;
             return array(
                 'cuantitativas'     =>$areas,
                 'cualitativas'      =>$arrayCualitativas,
@@ -7058,7 +7069,7 @@ die;/*
             $estadosPermitidos = array(4);
             $tiposNotasArray = array();
             
-            if ( $subarea == 7 and $gestion > 2019){ //Nueva evaluacion de talento
+            if ( $subarea == 7 and $gestion > 2021){ //Nueva evaluacion de talento
                 $estadosFinales = $this->em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findById(array(10,78,79));
                 $valoraciones = $this->em->getRepository('SieAppWebBundle:EspecialNivelTalento')->findAll();
                 $idNotaTipo = 'Semestral';

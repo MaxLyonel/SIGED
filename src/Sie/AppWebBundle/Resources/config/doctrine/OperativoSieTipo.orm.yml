@@ -1,0 +1,55 @@
+Sie\AppWebBundle\Entity\OperativoSieTipo:
+    type: entity
+    table: operativo_sie_tipo
+    indexes:
+        IDX_35CFAA7934C419BF:
+            columns:
+                - sistema_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        operativo:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        descripcion:
+            type: string
+            nullable: true
+            length: 1500
+            fixed: false
+            comment: ''
+        orden:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        sistemaTipo:
+            targetEntity: SistemaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                sistema_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -162,6 +162,21 @@ class InstitucioneducativaCursoRepository extends EntityRepository
     }    
 
     public function getListStudentPerCourseTodoInscriptionAlter($ie_id, $ie_gestion, $ie_subcea, $per_id_cod, $realLevel, $setCodigo, $satCodigo, $paralelo, $turno) {
+
+        if($setCodigo.$satCodigo >= 21){
+            if($setCodigo.$satCodigo == 21){
+                $setCodigo = 1;
+                $satCodigo = 2;
+            }else{
+                $satCodigo = $satCodigo -1;
+            }
+        }else{
+            if($setCodigo.$satCodigo == 11){
+            }else{
+                $satCodigo = $satCodigo -1;
+            }
+        }
+
         $qb = $this->getEntityMAnager()->createQueryBuilder();//echo "$ie_id, $ie_gestion, $ie_subcea, $per_id_cod, $realLevel";
         $qb
 
@@ -436,6 +451,40 @@ ORDER BY 1
         // dump($qb->getQuery()->getSQL());
         return $qb->getQuery()->getResult();
 
+    }
+
+    public function getNumberOfStudentsAlt($ie_id, $ie_gestion, $ie_subcea, $per_id_cod){
+        // dump($ie_id, $ie_gestion, $ie_subcea, $per_id_cod);die;
+        $estadosArray = [4,5,11,22,28,55,57,58,70,71,72,73];
+         $qb = $this->getEntityMAnager()->createQueryBuilder();
+        $qb
+                ->select('j')
+                ->from('SieAppWebBundle:SuperiorFacultadAreaTipo', 'a')
+                ->innerJoin('SieAppWebBundle:SuperiorEspecialidadTipo', 'b', 'WITH', 'a.id = b.superiorFacultadAreaTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionEspecialidad', 'c', 'WITH', 'b.id = c.superiorEspecialidadTipo')
+                ->innerJoin('SieAppWebBundle:SuperiorAcreditacionTipo', 'd', 'WITH', 'c.superiorAcreditacionTipo = d.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaAcreditacion', 'e', 'WITH', 'e.acreditacionEspecialidad = c.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaSucursal', 'f', 'WITH', 'e.institucioneducativaSucursal = f.id')
+                ->innerJoin('SieAppWebBundle:SuperiorInstitucioneducativaPeriodo', 'g', 'WITH', 'g.superiorInstitucioneducativaAcreditacion = e.id')
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'h', 'WITH', 'h.superiorInstitucioneducativaPeriodo = g.id')
+                
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'i', 'WITH', 'h.id=i.institucioneducativaCurso')
+                ->innerJoin('SieAppWebBundle:Estudiante', 'j', 'WITH', 'i.estudiante=j.id')
+
+
+                ->where('h.institucioneducativa = :sie')
+                ->andwhere('h.gestionTipo = :gestion')
+                ->andwhere('f.sucursalTipo = :sucursal')
+                ->andwhere('f.periodoTipoId = :periodo')
+                ->andwhere('i.estadomatriculaTipo in (:estadomatriculaTipo)')
+
+                ->setParameter('sie', $ie_id)
+                ->setParameter('gestion', $ie_gestion)
+                ->setParameter('sucursal', $ie_subcea)
+                ->setParameter('periodo', $per_id_cod)
+                ->setParameter('estadomatriculaTipo',  $estadosArray)
+        ;
+        return $qb->getQuery()->getResult();              
     }
 
 

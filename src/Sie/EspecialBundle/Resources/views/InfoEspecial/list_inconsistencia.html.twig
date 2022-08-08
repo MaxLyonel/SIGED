@@ -6,15 +6,18 @@
 		<div class="clearfix"></div>
 	</div>
 	<!-- /.panel-heading -->
-	<div class="panel-body no-padding">
+	<div class="panel-body no-padding"> 
+	{% if estado=='' %}
 		{% if inconsistencia %}
 			<div class="alert alert-danger alert-dismissable">
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 				<strong>¡Error!</strong>
-				Se han encontrado inconsistencias, la información no será consolidada para la Institución Educativa:
+				Se han encontrado inconsistencias, la información no será consolidada para el Centro Educativo:
 				{{ institucion }}; Gestión:
 				{{ gestion }}; Operativo:
-				{% if periodo == 0 %}
+				{% if periodo == 100 %}
+					RUDEES
+				{% elseif periodo == 0 %}
 					Inicio de Gestión
 				{% elseif periodo == 1 %}
 					Primer Trimestre
@@ -41,8 +44,10 @@
 			<div class="alert alert-success alert-dismissable">
 				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
 				<strong>¡Bien!</strong>
-				No se han encontrado inconsistencias, la información se ha consolidado exitosamente para la Institución Educativa:
-				{% if periodo == 0 %}
+				No se han encontrado inconsistencias, la información se ha consolidado exitosamente para el Centro Educativo:
+				{% if periodo == 100 %}
+					RUDEES
+				{% elseif periodo == 0 %}
 					Inicio de Gestión
 				{% elseif periodo == 1 %}
 					Primer Trimestre
@@ -57,5 +62,46 @@
 				{% endif %}
 			</div>
 		{% endif %}
+	{% endif %}
+
+	{% if estado=='CON_INSC' %}
+		<div class="alert alert-warning alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<strong>Atención!</strong>
+				Ya cerró el operativo de INSCRIPCIÓN
+				
+			</div>
+	{% endif %}
+	{% if estado=='CON_RUDE' %}
+		<div class="alert alert-warning alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<strong>Atención!</strong>
+				Ya cerró el operativo de RUDEES
+				
+			</div>
+	{% endif %}
+	{% if estado=='SIN_INSC' %}
+		<div class="alert alert-warning alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<strong>Atención!</strong>
+				Debe realizar el operativo de INSCRIPCIÓN
+				
+			</div>
+	{% endif %}
+
+	{% if estado=='SIN_RUDE' %}
+		<div class="alert alert-warning alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<strong>Atención!</strong>
+				Debe completar los RUDEES y realizar el cierre del operativo
+			</div>
+	{% endif %}
+	{% if estado=='CON_BIM1' %}
+		<div class="alert alert-warning alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+				<strong>Atención!</strong>
+				Ya cerró el operativo de 1ER TRIMESTRE
+			</div>
+	{% endif %}
 	</div>
 </div>

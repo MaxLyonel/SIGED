@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\BioTiempoDesinfeccionTipo:
+    type: entity
+    table: bio_tiempo_desinfeccion_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        tiempoDesinfeccion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: tiempo_desinfeccion
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }
