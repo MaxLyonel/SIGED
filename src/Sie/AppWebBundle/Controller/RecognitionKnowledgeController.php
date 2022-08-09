@@ -244,6 +244,8 @@ class RecognitionKnowledgeController extends Controller{
         		# code...
         		break;
         	case 3:
+        		
+        		$estudiante['dataStudent']['genero'] = $estudiante['genero'];
         		# cretae a rude code to the student
         		$newStudentData = $this->createNewStudent($estudiante['dataStudent']);
         		$estudiante['dataStudent']['id'] = $newStudentData['idStudent'];
