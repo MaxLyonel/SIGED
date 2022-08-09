@@ -78,3 +78,6 @@ sie_procesos_tramite_previmmediatemodi:
     resource: "@SieProcesosBundle/Resources/config/routing/previmmediatemodi.yml"
     prefix:   /sie/tramite/previmmediatemodi
 
+sie_procesos_tramite_previmmediatemodiver2:
+    resource: "@SieProcesosBundle/Resources/config/routing/previmmediatemodiver2.yml"
+    prefix:   /sie/tramite/previmmediatemodiver2
