@@ -323,6 +323,7 @@ class RecognitionKnowledgeController extends Controller{
 			$newRsInscription->setInstitucioneducativaSucursal($em->getRepository('SieAppWebBundle:InstitucioneducativaSucursal')->find($data['sucursal']));
 			$newRsInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->find($data['dataStudent']['id']));
             $em->persist($newRsInscription);
+            $em->flush();  
 
             foreach ($data['documentType'] as $value) {
             	$newDocumentType = new RsInscripcionDocumento();
