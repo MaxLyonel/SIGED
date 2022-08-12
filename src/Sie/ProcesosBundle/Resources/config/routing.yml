@@ -81,3 +81,10 @@ sie_procesos_tramite_previmmediatemodi:
     resource: "@SieProcesosBundle/Resources/config/routing/previmmediatemodi.yml"
     prefix:   /sie/tramite/previmmediatemodi
 
+sie_procesos_tramite_regularizacion_historial:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteRegularizacionHistorial.yml"
+    prefix:   /sie/tramite/regularizacionhistorial
+
+sie_procesos_tramite_inclusion_calificacion:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteInclusionCalificacion.yml"
+    prefix:   /sie/tramite/inclusioncalificacion
