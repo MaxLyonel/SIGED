@@ -180,11 +180,38 @@ class PrevImmediateModiVer2Controller extends Controller{
             );
         }
 
+        /////start get dir info
+        if(sizeof($inscripcionesArray)>0){
+	         $query = $em->getConnection()->prepare("
+	         		select pe.* 
+					from maestro_inscripcion mi 
+					inner join persona pe on (mi.persona_id = pe.id)
+					where mi.institucioneducativa_id = ".$inscripcionesArray[0]['sie']." and gestion_tipo_id = ".$inscripcionesArray[0]['gestion']." and cargo_tipo_id in (1,12)
+	            ");
+	            $query->execute();
+
+	            $dirinfo = $query->fetchAll();
+	            if(sizeof($dirinfo)>0){
+			   		$directorNombre = $dirinfo[0]['nombre'].' '.$dirinfo[0]['paterno'].' '.$dirinfo[0]['materno'];
+			        $directorCarnet = $dirinfo[0]['carnet'];
+			        $directorComplemento = $dirinfo[0]['complemento'];
+	            }else{
+			   		$directorNombre = $user->getPersona()->getNombre().' '.$user->getPersona()->getPaterno().' '.$user->getPersona()->getMaterno();
+			        $directorCarnet = ($user->getPersona()->getSegipId() == 1)?$user->getPersona()->getCarnet():'';
+			        $directorComplemento = ($user->getPersona()->getSegipId() == 1)?$user->getPersona()->getComplemento():'';  	            	
+	            }     
+
+        }else{
+
+	   		$directorNombre = $user->getPersona()->getNombre().' '.$user->getPersona()->getPaterno().' '.$user->getPersona()->getMaterno();
+	        $directorCarnet = ($user->getPersona()->getSegipId() == 1)?$user->getPersona()->getCarnet():'';
+	        $directorComplemento = ($user->getPersona()->getSegipId() == 1)?$user->getPersona()->getComplemento():'';        	
+        }
+        /////ebd get dir info
+
         // OBTENEMOS EL DATO DEL DIRECTOR
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $directorNombre = $user->getPersona()->getNombre().' '.$user->getPersona()->getPaterno().' '.$user->getPersona()->getMaterno();
-        $directorCarnet = ($user->getPersona()->getSegipId() == 1)?$user->getPersona()->getCarnet():'';
-        $directorComplemento = ($user->getPersona()->getSegipId() == 1)?$user->getPersona()->getComplemento():'';
+     
 
         $response->setStatusCode(200);
         $response->setData(array(
