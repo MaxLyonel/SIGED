@@ -406,16 +406,27 @@
                                             </div>
                                             <div class="col-md-6 col-sm-6">
                                                 <div class="row form-group">
-                                                    <label class="col-md-4 col-sm-4">Carnet:</label>
+                                                     <div class="row form-group">
+                                                        <label class="col-md-4 col-sm-4"><b>IBC </b>:</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            {{ form_widget(formEstudiante.carnetIbc, {'attr':{'class':'form-control '} , 'value': formEstudiante.carnetIbc.vars.value?formEstudiante.carnetIbc.vars.value:0  }) }} 
+                                                        </div>
+                                                    </div>
+                                                     <div class="row form-group">
+                                                        <label class="col-md-4 col-sm-4"> <b>CODEPEDIS </b>:</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            {{ form_widget(formEstudiante.carnetCodepedis, {'attr':{'class':'form-control '} , 'value': formEstudiante.carnetCodepedis.vars.value?formEstudiante.carnetCodepedis.vars.value:0  }) }} 
+                                                        </div>
+                                                    </div>
+
                                                     <div class="col-md-8 col-sm-8">
+
                                                         {% if formEstudiante.carnetIbc.vars.value|length > 0 %}
                                                             <input type="hidden" id="verificarCarnet" value="0">
                                                             {# {{ form_widget(formEstudiante.carnet, {'attr':{'class':'form-control readonly'} }) }} #}
-                                                            <b>IBC - {{ formEstudiante.carnetIbc.vars.value }}</b>
                                                         {% else %}
                                                             <input type="hidden" id="verificarCarnet" value="1">
                                                             {# {{ form_widget(formEstudiante.carnet, {'attr':{'class':'form-control'} }) }} #}
-                                                            <b>CODEPEDIS - {{ formEstudiante.carnetCodepedis.vars.value }}</b>
                                                         {% endif %}
                                                     </div>
                                                 </div>                                                
@@ -747,6 +758,7 @@
                                     </form>
                                 </fieldset>
                             </div>
+                            {# CARACTERISTICAS PARTICULARES #}
                             <div {% if rude.registroFinalizado == 3 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab4">
                                 <fieldset class="fieldset">
                                     <legend class="legend">IV. CARACTERISTICAS PARTICULARES DE LA O EL ESTUDIANTE</legend>
@@ -788,7 +800,7 @@
                                             <div class="col-md-6 col-sm-6">
                                                 <div class="row form-group">
                                                     <div class="col-md-12 col-sm-12">
-                                                        {{ form_widget(formCaracteristicaParticular.discapacidad, {'attr':{'class':'form-control jupper'} }) }}                                                        
+                                                        {{ form_widget( formCaracteristicaParticular.discapacidad, {'attr':{'class':'form-control jupper'} }) }}                                                        
                                                     </div>
                                                 </div>
                                             </div> 
@@ -1052,7 +1064,7 @@
                                     </form>
                                 </fieldset>
                             </div>
-
+                            {# SAVE FORM INSCRIPCION ACTUAL #}
                             <div {% if rude.registroFinalizado == 4 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab5">
                                 <fieldset class="fieldset">
                                     <legend class="legend">V. DATOS DE INSCRIPCIÓN DE LA GESTIÓN ACTUAL</legend>
@@ -1149,7 +1161,7 @@
                                         {% if areaEspecial== 'Dificultades en el Aprendizaje' %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
-                                                <p><strong>5.5 ATENCION EDUCATIVA EN MODALIDAD INDIRECTA - AREA DIFICULTADES EN EL APRENDIZAJE</strong></p>
+                                                <p><strong>5.5 AREA DIFICULTADES EN EL APRENDIZAJE</strong></p>
                                             </div>
                                              {% if nivel == 'Programas'%}
                                             <div class="col-md-6 col-sm-6">
@@ -1166,7 +1178,7 @@
                                         {% if areaEspecial== 'Fisico-Motora' %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
-                                                <p><strong>5.5 ATENCION EDUCATIVA EN MODALIDAD INDIRECTA - AREA FISICO - MOTORA</strong></p>
+                                                <p><strong>5.5 AREA FISICO - MOTORA</strong></p>
                                             </div>
                                              {% if nivel == 'Programas'%}
                                             <div class="col-md-6 col-sm-6">
@@ -1183,7 +1195,7 @@
                                         {% if areaEspecial== 'Talento Extraordinario' %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
-                                                <p><strong>5.5 ATENCION EDUCATIVA EN MODALIDAD INDIRECTA - AREA TALENTO EXTRAORDINARIO</strong></p>
+                                                <p><strong>5.5 AREA TALENTO EXTRAORDINARIO</strong></p>
                                             </div>
                                              {% if nivel == 'Programas'%}
                                             <div class="col-md-6 col-sm-6">
@@ -1228,6 +1240,7 @@
                                     </form>
                                 </fieldset>
                             </div>
+                            {# SAVE FORM INSCRIPCION ACTUAL #}
                             <div {% if rude.registroFinalizado == 5 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab6">
                                 <fieldset class="fieldset">
                                     <legend class="legend">VI. DATOS DEL PADRE, MADRE O TUTOR(A) DE LA O EL ESTUDIANTE</legend>
@@ -1272,10 +1285,12 @@
                                         </div><!-- /.panel-heading -->
                                         <!--/ End tabs heading -->
                                         <!-- Start tabs content -->
+                                        <!-- save form padre -->
                                         <div class="panel-body">
                                             <div class="tab-content">
                                                 <div class="tab-pane fade active in" id="tab1-11">
                                                     <form id="formPadre" onsubmit="saveFormPadre(); return false;" method="post" {{ form_enctype(formPadre) }}>
+                                                     <input type="text" id="subsistema" name="subsistema" value="especial">
                                                         <div id="p_divTienePadre" style="text-align:center">
                                                             <div class="radio">
                                                                 ¿Registrar datos del padre?&nbsp;&nbsp;
@@ -1485,8 +1500,12 @@
                                                         </div>
                                                     </form>
                                                 </div>
+                                                 <!-- save form madre -->
                                                 <div class="tab-pane fade" id="tab1-12">
                                                     <form id="formMadre" onsubmit="saveFormMadre(); return false;" method="post">
+
+                                                        <input type="text" id="subsistema" name="subsistema" value="especial">
+
                                                         <div id="m_divTieneMadre" style="text-align:center">
                                                             <div class="radio">
                                                                 ¿Registrar datos de la madre?&nbsp;&nbsp;
@@ -1724,8 +1743,10 @@
                                                         </div>
                                                     </form>
                                                 </div>
+                                                 <!-- save form tutor -->
                                                 <div class="tab-pane fade" id="tab1-13">
                                                     <form id="formTutor" onsubmit="saveFormTutor(); return false;" method="post">
+                                                     <input type="text" id="subsistema" name="subsistema" value="especial">
                                                         <div id="t_divTieneTutor" style="text-align:center">
                                                             <div class="radio">
                                                                 ¿Registrar datos del tutor?&nbsp;&nbsp;
@@ -1971,7 +1992,7 @@
                                 {# </div> #}
                             </div>
                             
-                            <div {% if rude.registroFinalizado >= 5 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab7">
+                            <div {% if rude.registroFinalizado >= 6 %} class="tab-pane fade inner-all active in" {% else %} class="tab-pane fade inner-all" {% endif %} id="tab7">
                                 <fieldset class="fieldset">
                                     <legend class="legend">VII. FINALIZAR REGISTRO RUDE ES </legend>
                                     <div class="ml-10">
@@ -2114,9 +2135,6 @@
                     });
                 }
             });
-        }else{
-            $("#form_gradoDiscapacidad").empty();
-            $("#form_gradoDiscapacidad").append('<option value="">Seleccionar...</option>');
         }
     }
 
@@ -2162,17 +2180,17 @@
     function validarTieneDiscapacidad(){
         if($('#form_tieneDiscapacidad_1').is(':checked')){
             $('#form_carnetIbc').val('');
-            $('#form_carnetIbc').removeAttr('required');
+           // $('#form_carnetIbc').removeAttr('required');
             //$('#form_discapacidad').val('');
-            $('#form_discapacidad').removeAttr('required');
+           // $('#form_discapacidad').removeAttr('required');
             //$('#form_gradoDiscapacidad').val('');
-            $('#form_gradoDiscapacidad').removeAttr('required');
+           // $('#form_gradoDiscapacidad').removeAttr('required');
 
             $('#fieldsetDiscapacidad').attr('disabled','disabled');
         }else{
-            $('#form_carnetIbc').attr('required','required');
-            $('#form_discapacidad').attr('required','required');
-            $('#form_gradoDiscapacidad').attr('required','required');
+            //$('#form_carnetIbc').attr('required','required');
+          //  $('#form_discapacidad').attr('required','required');
+           // $('#form_gradoDiscapacidad').attr('required','required');
 
             $('#fieldsetDiscapacidad').removeAttr('disabled');
         }
@@ -2271,11 +2289,11 @@
         var accesos = $('#form_gradoDiscapacidad').val();
         if(accesos==='99'){
             $('#otroGradodiscapacidad').css('display','block');            
-            $('#otroGradodiscapacidad').attr('required','required');
+            //$('#otroGradodiscapacidad').attr('required','required');
         }else{
             $('#otroGradodiscapacidad').val('');
             $('#otroGradodiscapacidad').css('display','none');
-            $('#otroGradodiscapacidad').removeAttr('required');
+           // $('#otroGradodiscapacidad').removeAttr('required');
         }
     }
     $('#form_gradoDiscapacidad').on('change', function(){

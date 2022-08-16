@@ -1,0 +1,33 @@
+opemonitorhealthseg_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:OpeMonitorHealthseg:index }
+
+opemonitorhealthseg_getMainInfo:
+    path:     /buscar
+    defaults: { _controller: SieAppWebBundle:OpeMonitorHealthseg:getMainInfo }
+    options:
+         expose: true
+
+opemonitorhealthseg_getDistrito:
+    path:     /getDistrito
+    defaults: { _controller: SieAppWebBundle:OpeMonitorHealthseg:getDistritomain }
+    options:
+         expose: true         
+
+opemonitorhealthseg_getAllUE:
+    path:     /getAllUE
+    defaults: { _controller: SieAppWebBundle:OpeMonitorHealthseg:getAllUE }
+    options:
+         expose: true         
+
+opemonitorhealthseg_registerUEModality:
+    path:     /registerUEModality
+    defaults: { _controller: SieAppWebBundle:OpeMonitorHealthseg:registerUEModality }
+    options:
+         expose: true
+         
+opemonitorhealthseg_saveUEModality:
+    path:     /saveUEModality
+    defaults: { _controller: SieAppWebBundle:OpeMonitorHealthseg:saveUEModality }
+    options:
+         expose: true         

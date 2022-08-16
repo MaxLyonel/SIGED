@@ -1,0 +1,74 @@
+Sie\AppWebBundle\Entity\RsInscripcionAcreditacion:
+    type: entity
+    table: rs_inscripcion_acreditacion
+    indexes:
+        IDX_3AD9AE49DB38439E:
+            columns:
+                - usuario_id
+        IDX_3AD9AE49CFFBF3DE:
+            columns:
+                - estadomatricula_tipo_id
+        IDX_3AD9AE494E185555:
+            columns:
+                - superior_acreditacion_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        rsInscripcionId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: rs_inscripcion_id
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadomatriculaTipo:
+            targetEntity: EstadomatriculaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadomatricula_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        superiorAcreditacionTipo:
+            targetEntity: SuperiorAcreditacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_acreditacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

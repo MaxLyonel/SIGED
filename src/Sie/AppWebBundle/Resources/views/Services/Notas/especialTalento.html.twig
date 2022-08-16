@@ -15,12 +15,13 @@
             <thead>
                 <tr>
                     <th><b>Periodo</b></th>
-                    <th><b>Actividades o Contenido desarrollados</b></th>
+                    <th><b>Actividades o Contenido desarrollados (Area Talento)</b></th>
                     <th><b>Desempeño</b></th>
                     
                 </tr>
-            </thead            
+            </thead>
             {% if notas.enota == 1 %}
+            
             <tbody>
                 {% for item in notas.cualitativas %}
                 <tr>
@@ -105,7 +106,6 @@
               //if( $("#actividad"+$(this).val()).val().length==0){
                 //  var error1 = true;
               //}
-
             if(error1){
                 mensaje = 'Las Actividades o Contenidos desarrollados deben tener al menos 16 dígitos ';
                 enviar = false;
@@ -116,7 +116,6 @@
             }
 
         });
-
 
         $(".notaCualitativa").each(function (index) {
             if($(this).val().length < 16){

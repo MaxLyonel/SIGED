@@ -1,0 +1,84 @@
+Sie\AppWebBundle\Entity\RsInscripcion:
+    type: entity
+    table: rs_inscripcion
+    indexes:
+        IDX_6BB2F304DB38439E:
+            columns:
+                - usuario_id
+        IDX_6BB2F304AC7B3CA5:
+            columns:
+                - superior_institucioneducativa_acreditacion_id
+        IDX_6BB2F3047A322B24:
+            columns:
+                - institucioneducativa_sucursal_id
+        IDX_6BB2F30459590C39:
+            columns:
+                - estudiante_id
+    uniqueConstraints:
+        idx_rs_inscripcion:
+            columns:
+                - id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        observacion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        fechaRegistro:
+            type: datetime
+            nullable: false
+            comment: ''
+            column: fecha_registro
+        fechaModificación:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificación
+    manyToOne:
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        superiorInstitucioneducativaAcreditacion:
+            targetEntity: SuperiorInstitucioneducativaAcreditacion
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                superior_institucioneducativa_acreditacion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaSucursal:
+            targetEntity: InstitucioneducativaSucursal
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_sucursal_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estudiante:
+            targetEntity: Estudiante
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estudiante_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,39 @@
+monitorbioform_index:
+    path:     /
+    defaults: { _controller: SieAppWebBundle:MonitorBioForm:index }
+
+monitorbioform_getMainInfo:
+    path:     /buscar
+    defaults: { _controller: SieAppWebBundle:MonitorBioForm:getMainInfo }
+    options:
+         expose: true
+
+monitorbioform_getDistrito:
+    path:     /getDistrito
+    defaults: { _controller: SieAppWebBundle:MonitorBioForm:getDistritomain }
+    options:
+         expose: true         
+
+monitorbioform_getAllUE:
+    path:     /getAllUE
+    defaults: { _controller: SieAppWebBundle:MonitorBioForm:getAllUE }
+    options:
+         expose: true         
+
+monitorbioform_registerUEModality:
+    path:     /registerUEModality
+    defaults: { _controller: SieAppWebBundle:MonitorBioForm:registerUEModality }
+    options:
+         expose: true
+         
+monitorbioform_saveUEModality:
+    path:     /saveUEModality
+    defaults: { _controller: SieAppWebBundle:MonitorBioForm:saveUEModality }
+    options:
+         expose: true   
+         
+monitorbioform_showReport:
+    path:     /showReport
+    defaults: { _controller: SieAppWebBundle:MonitorBioForm:showReport }
+    options:
+         expose: true         
