@@ -35,7 +35,8 @@ class DownloadController extends Controller {
     		$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rue_cert_certificadoregular_ue_v1.rptdesign&certificado=' . $certificado . '&&__format=pdf&'));
     	}
     	else {
-    		$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rue_cert_certificadoalternativa_ue_v1.rptdesign&certificado=' . $certificado . '&&__format=pdf&'));
+			//$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rue_cert_certificadoalternativa_ue_v1.rptdesign&certificado=' . $certificado . '&&__format=pdf&'));
+    		$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'rue_cert_certificadoalternativa_ue_v2.rptdesign&certificado=' . $certificado . '&&__format=pdf&'));
     		
     	}
     	$response->setStatusCode(200);
