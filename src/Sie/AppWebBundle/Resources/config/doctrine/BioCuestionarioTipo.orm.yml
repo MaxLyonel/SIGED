@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\BioCuestionarioTipo:
+    type: entity
+    table: bio_cuestionario_tipo
+    indexes:
+        IDX_539B01E398CD228A:
+            columns:
+                - bio_preguntas_tipo_id
+        IDX_539B01E337C75EC8:
+            columns:
+                - bio_clasificador_pregunta_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    manyToOne:
+        bioPreguntasTipo:
+            targetEntity: BioPreguntasTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bio_preguntas_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        bioClasificadorPreguntaTipo:
+            targetEntity: BioClasificadorPreguntaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bio_clasificador_pregunta_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

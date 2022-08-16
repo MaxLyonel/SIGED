@@ -1,0 +1,30 @@
+operativesie:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:OperativoSieTipo:index" }
+
+operativesie_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:OperativoSieTipo:show" }
+
+operativesie_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:OperativoSieTipo:new" }
+
+operativesie_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:OperativoSieTipo:create" }
+    methods:  POST
+
+operativesie_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:OperativoSieTipo:edit" }
+
+operativesie_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:OperativoSieTipo:update" }
+    methods:  [POST, PUT]
+
+operativesie_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:OperativoSieTipo:delete" }
+    methods:  [POST, DELETE]

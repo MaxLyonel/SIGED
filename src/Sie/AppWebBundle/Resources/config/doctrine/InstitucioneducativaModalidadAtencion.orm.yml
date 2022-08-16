@@ -1,0 +1,61 @@
+Sie\AppWebBundle\Entity\InstitucioneducativaModalidadAtencion:
+    type: entity
+    table: institucioneducativa_modalidad_atencion
+    indexes:
+        IDX_80FAFB8AE43F4BE9:
+            columns:
+                - modalidad_atencion_tipo_id
+        IDX_80FAFB8A3AB163FE:
+            columns:
+                - institucioneducativa_id
+    uniqueConstraints:
+        institucioneducativa_modalidad_atencion_key:
+            columns:
+                - institucioneducativa_id
+                - fecha_registro
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+        orgcurricularTipoId:
+            type: smallint
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: orgcurricular_tipo_id
+    manyToOne:
+        modalidadAtencionTipo:
+            targetEntity: ModalidadAtencionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modalidad_atencion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativa:
+            targetEntity: Institucioneducativa
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

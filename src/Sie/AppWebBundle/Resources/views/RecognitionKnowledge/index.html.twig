@@ -1,0 +1,971 @@
+
+{% extends 'layoutHerramientaAlternativa.html.twig' %}
+{% block contentoption %}
+	<style>
+		body{
+			background: #EEEEEE;
+			margin: 0;
+			padding: 0;
+		}
+		[v-cloak]{
+			display: none;
+		}
+		.jupper{
+			text-transform: uppercase;
+		}
+		.titulo{
+			margin-bottom: 15px;
+		}
+		.caja{
+			background: #FFFFFF;
+			padding: 10px;
+			/*width: 500px;*/
+			margin-top: 50px;
+			/*margin-left: auto;*/
+			/*margin-right: auto;*/
+		}
+		.caja h2{
+			text-align: center;
+		}
+		.tab-pane{
+			padding-top: 10px;
+		}
+		.secundario{
+			color:#CCCCCC;
+			font-style: italic;
+			font-size: 0.8em;
+		}
+		.respuesta p{
+			margin-bottom: 10px;
+		}
+		.respuesta h3{
+			text-align: center;
+			margin-bottom: 15px;
+		}
+		.respuesta .botones{
+			text-align: center;
+		}
+		.cortina{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			background: #CCCCCC;
+			opacity: 0.6;
+			z-index: 100;
+			text-align: center;
+			font-size: 1.5em;
+			padding-top: 200px;
+		}
+		.form-control .popover {
+  			width:600px;
+  			height:250px;
+		}
+
+		.popover {
+		  	/*max-width: 700px;*/
+		  	width: 600px;
+		  	background: #EFF7FF;
+		  	color: #11BCFB;
+		}
+		.subtitulo{
+			font-size: 1.2em;
+		}
+	</style>
+
+	<div id="app" v-cloak>
+		<div v-if="cortina" class="cortina">
+			{# <i class="fa fa-refresh fa-spin"></i> Procesando... #}
+		</div>
+	    <div class="header-content">
+	        <h2><i class="fa fa-th-large"></i>Reconocimiento de saberes</h2>
+	        <div class="breadcrumb-wrapper hidden-xs">
+	            <span class="label">Usted esta aquí:</span>
+	            <ol class="breadcrumb">
+	               <li>
+	                    <i class="fa fa-users"></i>
+	                    Reconocimiento de saberes
+	                    <i class="fa fa-angle-right"></i>
+	                </li>
+	                <li>
+	                    <i class="glyphicon glyphicon-cog"></i>
+	                    ***
+	                    <i class="fa fa-angle-right"></i>
+	                </li>
+	                <li>
+	                    ***
+	                    <i class="fa fa-angle-right"></i>
+	                </li>
+	            </ol>
+	        </div><!-- /.breadcrumb-wrapper -->
+	    </div>
+	    <div class="row">
+			<div class="body-content animated fadeIn">
+				<div class="row">
+					<div class="col-md-8 col-xs-12 col-md-offset-1 caja">
+						<h2 class="titulo">Registro de Reconocimiento de Saberes</h2>
+						<div v-show="!validado" class="contenido">
+							<div class="alert alert-success" role="alert" v-if="swRS">
+								<p>Datos Registrados</p>
+								<p><b>Cod. Rude: ${studentRS.codigoRude} </b></p>
+								<p><b class="jupper">Participante: ${studentRS.carnet} ${studentRS.complemento} ${studentRS.nombre} ${studentRS.paterno} ${studentRS.materno} </b></p>
+							</div>							
+
+
+							<p class="subtitulo">Formulario de Busqueda</p>
+							<p>Puede realizar la búsqueda por:</p>
+							<div class="row">
+								<div class="col-md-12">
+									<div role="tabpanel">
+										<!-- Nav tabs -->
+										<ul class="nav nav-tabs" role="tablist">
+											<li role="presentation" :class="{active: opcion == 1}" @click="opcion = 1">
+												<a role="tab" data-toggle="tab">Código Rude</a>
+											</li>
+											
+											<li :class="{active: opcion == 3}" @click="opcion = 3">
+												<a aria-controls="tabcarnet" role="tab" data-toggle="tab">Datos personales</a>
+											</li>
+										</ul>
+										<!-- Tab panes -->
+										<div class="tab-content">
+											<div role="tabpanel" :class="['tab-pane', {active: opcion == 1}]">
+												<div class="row">
+													<div class="form-group col-md-12">
+														<label>Código Rude <i class="fa fa-info-circle" data-toggle="popover" data-placement="top" data-content="El Código Rude lo puede encontrar en la libreta electrónica del estudiante de una gestion pasada" data-trigger="hover"></i> </label>
+														<input type="text" v-model="estudiante.codigoRude" class="form-control jupper" maxlength="17" v-on:keypress="alfanumerico">
+													</div>
+												</div>
+											</div>
+											<div role="tabpanel" :class="['tab-pane', {active: opcion == 3}]">
+												<div class="row">
+													<div class="form-group col-md-6">
+														<label>Nombre(s)</label>
+														<input type="text" v-model="estudiante.nombre" class="form-control jupper" maxlength="70" v-on:keypress="alfabetico">
+													</div>
+													<div class="form-group col-md-6">
+														<label>Apellido paterno</label>
+														<input type="text" v-model="estudiante.paterno" class="form-control jupper" maxlength="50" v-on:keypress="alfabetico">
+													</div>
+													<div class="form-group col-md-6">
+														<label>Apellido materno</label>
+														<input type="text" v-model="estudiante.materno" class="form-control jupper" maxlength="50" v-on:keypress="alfabetico">
+													</div>
+													<div class="form-group col-md-6">
+														<label>Fecha de nacimiento <span class="secundario">( dd-mm-aaaa )</span> </label>
+														<input type="text" v-model="estudiante.fechaNacimiento" class="form-control" maxlength="11" id="fecha" autocomplete="off">
+													</div>
+													<div class="form-group col-md-6">
+														<label>Carnet Identidad</label>
+														<input type="text" v-model="estudiante.carnet" class="form-control jupper" maxlength="70" v-on:keypress="numerico">
+													</div>
+													<div class="form-group col-md-6">
+														<label>Complemento</label>
+														<input type="text" v-model="estudiante.complemento" class="form-control jupper" maxlength="50" v-on:keypress="alfanumerico">
+													</div>	
+													<div class="form-group col-md-12">
+														<label>Genero</label>
+														<select name="arrgen" id="idarrgen" class="custom-select form-control" v-model="estudiante.genero">
+															<option value="1">MASCULINO</option>
+															<option value="2">FEMENINO</option>
+														</select>
+													</div>													
+												</div>
+												{# <p>Actualmente se encuentra inscrito en:</p>
+												<div class="row">
+													<div class="form-group col-md-8">
+														<label>Nivel</label>
+														<select class="form-control jupper" v-model="estudiante.nivel" @change="actualizarGrados()">
+															<option v-for="(nivel, key) in niveles" :key="key" :value="nivel.id" v-text="nivel.nivel"></option>
+														</select>
+													</div>
+													<div class="form-group col-md-4">
+														<label>Grado</label>
+														<select class="form-control jupper" v-model="estudiante.grado">
+															<option v-for="(grado, key) in gradosDisponibles" :key="key" :value="grado.id" v-text="grado.grado"></option>
+														</select>
+													</div>
+												</div> #}
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<br>
+							
+							<div class="col-md-12 text-center">
+								<button type="button" class="btn btn-primary" @click="lookforCompetitor">Buscar</button>
+							</div>
+						</div>
+						<div v-if="validado" class="respuesta">
+							{# start validado #}
+							<div class="alert" :class="[{'alert-success':datos.statusEstudiante == 'success'}, {'alert-warning':datos.statusEstudiante == 'warning'}]">
+								<p>Datos Participante</p>
+								<p><b> ${datos.msgEstudiante} </b></p>
+							</div>
+
+							<div class="row"> 
+							    <div class="col-md-12">
+							        <div class="panel rounded shadow panel-primary">
+							            <div class="panel-heading">
+							                <div class="pull-left">
+							                    <h3 class="panel-title">Información Participante   <strong v-if="sendStudent.codigoRude">- Cod. Rude: ${sendStudent.codigoRude}</strong> </h3>
+							                </div>
+							                <div class="pull-right">
+							                </div>
+							                <div class="clearfix"></div>
+							            </div><!-- /.panel-heading -->                                
+							            <div class="panel-body no-padding">
+							                <div class="col-md-4">
+							                    <div class="media">
+							                        <div class="media-body">
+							                            <h4 class="text-primary">Paterno</h4>
+							                            <p class="email-summary jupper">${sendStudent.paterno}</p>
+							                        </div>
+							                    </div>
+							                </div>
+							                <div class="col-md-4">
+							                    <div class="media">
+							                        <div class="media-body">
+							                            <h4 class="text-primary">Materno</h4>
+							                            <p class="email-summary jupper">${sendStudent.materno}</p>
+							                        </div>
+							                    </div>
+							                </div>
+							                <div class="col-md-4">
+							                    <div class="media">
+							                        <div class="media-body">
+							                            <h4 class="text-primary">Nombre(s)</h4>
+							                            <p class="email-summary jupper">${sendStudent.nombre}</p>
+							                        </div>
+							                    </div>
+							                </div>
+							                <div class="col-md-4">
+							                    <div class="media">
+							                        <div class="media-body">
+							                            <h4 class="text-primary">Carnet Identidad</h4>
+							                            <p class="email-summary">${sendStudent.carnet}</p>
+							                        </div>
+							                    </div>
+							                </div>
+							                <div class="col-md-4">
+							                    <div class="media">
+							                        <div class="media-body">
+							                            <h4 class="text-primary">Complemento</h4>
+							                            <p class="email-summary">${sendStudent.complemento}</p>
+							                        </div>
+							                    </div>
+							                </div>
+							                <div class="col-md-4">
+							                    <div class="media">
+							                        <div class="media-body">
+							                            <h4 class="text-primary">Fecha Nacimiento</h4>
+							                            <p class="email-summary">${sendStudent.fechaNacimiento}</p>
+							                        </div>
+							                    </div>
+							                </div>
+							            </div><!-- /.panel-body -->
+							        </div><!-- /.panel -->
+							    </div>
+							</div>
+
+
+
+
+							<div class="alert" :class="[{'alert-success':datos.statusEstudiante == 'success'}, {'alert-warning':datos.statusEstudiante == 'warning'}]">
+								<p>Historial Participante</p>
+							</div>							
+{# 
+                              <div v-if="historyReg">
+
+                                <h4 align="center" class="text-primary">Educación Regular</h4><hr>
+                                <div class="table-responsive">
+	                                <table id="example-table" class="table table-bordered table-hover" aria-describedby="example-table_info" style="font-size:11px">
+	                                    <thead>
+	                                      <tr role="row">
+	                                       <th class="text-center">Gestión</th>
+	                                       <th class="text-center">SIE</th>
+	                                       <th class="text-center">Unidad Educativa</th>
+	                                       <th class="text-center">Nivel</th>
+	                                       <th class="text-center">Grado</th>
+	                                       <th class="text-center">Paralelo</th>
+	                                       <th class="text-center">Turno</th>
+	                                       <th class="text-center">Estado Matrícula</th>
+	                                      </tr>
+	                                    </thead>
+	                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+	                                      <tr v-for="(historyR, index) in historyReg">
+	                                        <td>${historyR.gestion_tipo_id_raep}</td>
+	                                        <td>${historyR.institucioneducativa_id_raep}</td>
+	                                        <td>${historyR.institucioneducativa_raep}</td>
+	                                        <td>${historyR.nivel_r}</td>
+	                                        <td>${historyR.grado_r}</td>
+	                                        <td>${historyR.paralelo_raep}</td>
+	                                        <td>${historyR.turno_raep}</td>
+	                                        <td class="text-center">${historyR.estadomatricula_fin_r}</td>
+	                                      </tr>
+	                                    </tbody>
+	                                  </table>
+                                </div>
+
+                              </div>
+ #}
+                              <div v-if="historyAlt">
+                                <h4 align="center" class="text-primary">Educación Alternativa</h4><hr>
+                                <div class="table-responsive">
+	                                <table id="example-table" class="table table-bordered table-hover" aria-describedby="example-table_info" style="font-size:11px">
+	                                    <thead>
+	                                      <tr role="row">
+	                                       <th class="text-center">Gestión</th>
+	                                       <th class="text-center">SIE / Subcentro</th>
+	                                       <th class="text-center">Centro</th>
+	                                       <th class="text-center">Periodo</th>
+	                                       <th class="text-center">Acreditación</th>
+	                                       <th class="text-center">Área</th>
+	                                       <th class="text-center">Especialidad</th>
+	                                       <th class="text-center">Paralelo</th>
+	                                       <th class="text-center">Turno</th>
+	                                      </tr>
+	                                    </thead>
+	                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+	                                      <tr v-for="(historyA, index) in historyAlt">
+	                                        <td>${historyA.gestion_tipo_id_raep}</td>
+	                                        <td>${historyA.institucioneducativa_id_raep} - ${historyA.sucursal_tipo_id_a}</td>
+	                                        <td>${historyA.institucioneducativa_raep}</td>
+	                                        <td>${historyA.periodo_raep}</td>
+	                                        <td>${historyA.acreditacion_a}</td>
+	                                        <td>${historyA.facultad_area_a}</td>
+	                                        <td>${historyA.especialidad_a}</td>
+	                                        <td>${historyA.paralelo_raep}</td>
+	                                        <td>${historyA.turno_raep}</td>
+	                                      </tr>
+	                                    </tbody>
+	                                  </table>
+                                </div>
+                              </div>
+
+                              {# <div v-if="historyEsp">
+                                <h4 align="center" class="text-primary">Educación Especial</h4><hr>
+                                <div class="table-responsive">
+	                                <table id="example-table" class="table table-bordered table-hover" aria-describedby="example-table_info" style="font-size:11px">
+	                                    <thead>
+	                                      <tr role="row">
+	                                       <th class="text-center">Gestion</th>
+	                                       <th class="text-center">SIE</th>
+	                                       <th class="text-center">Centro</th>
+	                                       <th class="text-center">Área</th>
+	                                       <th class="text-center">Nivel</th>
+	                                       <th class="text-center">Grado</th>
+	                                       <th class="text-center">Paralelo</th>
+	                                       <th class="text-center">Turno</th>
+	                                       <th class="text-center">Técnico</th>
+	                                      </tr>
+	                                    </thead>
+
+	                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+	                                      <tr v-for="(historyE, index) in historyEsp">
+	                                        <td>${historyE.gestion_tipo_id_raep}</td>
+	                                        <td>${historyE.institucioneducativa_id_raep}</td>
+	                                        <td>${historyE.institucioneducativa_raep}</td>
+	                                        <td>${historyE.area_especial_e}</td>
+	                                        <td>${historyE.nivel_e}</td>
+	                                        <td>${historyE.grado_e}</td>
+	                                        <td>${historyE.paralelo_raep}</td>
+	                                        <td>${historyE.turno_raep}</td>
+	                                        <td>${historyE.tecnica_e}</td>
+	                                      </tr>
+	                                    </tbody>
+	                                  </table>
+                                </div>
+                              </div>							 #}
+
+
+							{# end validadto #}
+							{# <div v-if="datos.msgApoderado != ''">
+								<div class="alert" :class="[{'alert-success':datos.statusApoderado == 'success'},{'alert-warning':datos.statusApoderado == 'warning'}]">
+									<p>Apoderado</p>
+									<p><b> ${datos.msgApoderado} </b></p>
+								</div>
+							</div> #}
+							<br/>
+							<div class="botones" v-if="existRsInsc">
+								<div class="alert alert-danger" role="alert">
+								  Estudiante ya cuenta con Registro de Reconocimiento de Saberes en <strong>${studentSpeciality}</strong>
+								</div>
+								<button type="button" @click="cerrar" class="btn btn-warning">Cancelar</button>
+							</div>
+							<div class="botones" v-else>
+								<button type="button" @click="goquestion" class="btn btn-success">Continuar</button>
+								<button type="button" @click="cerrar" class="btn btn-warning">Cancelar</button>
+							</div>
+							<br/>
+							<div v-if="swquestion">
+
+								<figure class="text-center" style=" border: 3px solid #428bca;">
+								  <blockquote class="blockquote">
+									<label for="noprofesor"><p class="lead">Participante no es Profesor</p> </label>
+									<input type="checkbox" id="krlos1" value="noProfesor" v-model="noProfesor" true-value="yes" false-value="no">
+									<br/>
+									<label for="noprofesinoal"><p class="lead">Participante no es Profesional</p></label>
+									<input type="checkbox" id="krlos2" value="NoProfesional" v-model="NoProfesional" true-value="yes" false-value="no">	
+									<br/>
+									<label for="noprofesinoal"><p class="lead">Participante no cuenta con certficado Tec. Superior</p></label>
+									<input type="checkbox" id="krlos2" value="noSuperior" v-model="noSuperior" true-value="yes" false-value="no">
+								  </blockquote>
+								  
+								</figure>							
+								</br>
+
+
+								<div class="row" v-if="noProfesor === 'yes' && NoProfesional ==='yes' && noSuperior ==='yes' "> 
+								    <div class="col-md-12">
+										<figure class="text-center" style=" border: 3px solid #ff5733;">
+										  <blockquote class="blockquote">
+											<label for="noprofesor">
+												<p class="lead">Documentos Requeridos:<br/>
+												Los Items marcado con rojo son requeridos<br/>
+												Por los menos un item marcado con verde		</p> 
+											</label>
+											
+										  </blockquote>
+										  
+										</figure>							
+										</br>								    
+
+
+								        <div class="panel rounded shadow panel-primary">
+								            <div class="panel-heading">
+								                <div class="pull-left">
+								                    <h3 class="panel-title">Documentos Requeridos</h3>
+								                </div>
+								                <div class="pull-right">
+								                </div>
+								                <div class="clearfix"></div>
+								            </div><!-- /.panel-heading -->                                
+								            <div class="panel-body no-padding" >
+												<form class="row g-3 needs-validation" novalidate>
+													<div class="col-md-12">
+													    <div class="form-check">
+													      <label class="form-check-label" for="">								        
+													      </label>
+							                                <div class="table-responsive">
+								                                <table id="example-table" class="table table-bordered table-hover" aria-describedby="example-table_info" style="font-size:11px">
+								                                    <thead>
+								                                      <tr role="row">
+								                                       <th class="text-center"></th>
+								                                       <th class="text-center"></th>
+								                                      </tr>
+								                                    </thead>
+								                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+																		<tr v-for="item in objDocRequired" :key="item[0]" > 
+																			<td><label :class="[{'alert-danger': (item.id == 10 || item.id == 15 || item.id == 16)}, {'alert-success':(item.id != 10 && item.id != 15 && item.id != 16)}]"  class="form-check-label" for="invalidCheck">${item.documento_tipo}</label></td>
+																			<td><input type="checkbox" v-model="estudiante.documentType" :id="item.id" :value="item.id" @change="updateService(item.id, $event)" ></td>
+																		</tr>	
+								                                    </tbody>
+								                                  </table>
+							                                </div>																									      
+													      
+													    </div>
+												  	</div>
+
+													<div class="col-md-8 col-md-offset-2" v-if="swRequired">
+													    <label for="validationCustom04" class="form-label">Sucursal</label>
+				                                        <select name="arrspe" id="idarrParen" class="custom-select form-control" v-model="estudiante.sucursal"  >  
+				                                          	<option v-for="item in objSucursal" :value="item.id">${ item.sucursal_tipo_id }
+				                                          	</option>
+				                                        </select>
+													</div>
+
+													<div class="col-md-8 col-md-offset-2" v-if="estudiante.sucursal && swRequired">
+													    <label for="validationCustom04" class="form-label">Especialidades</label>
+				                                        <select name="arrspe" id="idarrParen" class="custom-select form-control" v-model="estudiante.especialidad" v-on:change="getlevelAcreditation()" >  
+				                                          	<option v-for="item in entidadEspecialidadTipo" :value="item.especialidad_id">${ item.especialidad }
+				                                          	</option>
+				                                        </select>
+													</div>
+
+													<div class="col-md-12" v-if="entidadAcredition.length && swRequired">
+													    <div class="form-check">
+													      <label class="form-check-label" for="">
+													        Nivel de Acreditación
+													      </label>
+							                                <div class="table-responsive">
+								                                <table id="example-table" class="table table-bordered table-hover" aria-describedby="example-table_info" style="font-size:11px">
+								                                    <thead>
+								                                      <tr role="row">
+								                                       <th class="text-center"></th>
+								                                       <th class="text-center"></th>
+								                                      </tr>
+								                                    </thead>
+								                                    <tbody role="alert" aria-live="polite" aria-relevant="all">
+																		<tr v-for="item in entidadAcredition" :key="item.nivel_id" v-if="item.nivel_id!=3"> 
+																			<td><label class="form-check-label" for="invalidCheck">${item.nivel}</label></td>
+																			<td><input type="checkbox" v-model="estudiante.acredition" :id="item.id" :value="item.id" @change="updateService(item.id, $event)" ></td>
+																		</tr>	
+								                                    </tbody>
+								                                  </table>
+							                                </div>																									      
+													      
+													    </div>
+												  	</div>													
+												  
+
+												  <br/>
+												  <br/>
+												  <div class="col-md-12" v-if="entidadAcredition.length && swRequired">
+												    {# <button class="btn btn-primary" type="button">Registrar</button> #}
+												    <button type="button" class="btn btn-primary" @click="saveRecognitionKnowledge">Registrar</button>
+												  </div>
+												</form>						                
+								            </div><!-- /.panel-body -->
+								        </div><!-- /.panel -->
+								    </div>
+								</div>								
+
+	
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>  		
+	</div>
+
+{% endblock %}   
+{% block javascripts %}
+    {{ parent() }}	
+	<script src="{{asset('webherramienta/assets/global/plugins/bower_components/jquery/dist/jquery.min.js')}}"></script>
+	<script src="{{asset('webherramienta/assets/global/plugins/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+	<script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {'callback': 'fos.Router.setData'}) }}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+	<script src="{{asset('js/inputmask.js')}}"></script>
+	<script>
+		$(function () {
+			
+		})
+
+		var app = new Vue({
+		    delimiters: ['${', '}'],
+		    el: '#app',
+		    data: {
+		    	errores: [],
+		    	opcion: 1,
+		    	niveles: [],
+		    	grados: [],
+		    	gradosDisponibles: [],
+		    	apoderado: {
+		    		carnet: '',
+		    		complemento: ''
+		    	},
+		    	estudiante: {
+		    		id:'',
+		    		codigoRude: '',
+		    		carnet: '',
+		    		complemento: '',
+		    		nombre: '',
+		    		paterno: '',
+		    		materno: '',
+		    		fechaNacimiento: '',
+		    		extranjero: '',
+		    		nivel: '',
+		    		grado: '',
+		    		sucursal: '',
+		    		especialidad: '',
+		    		documentType:[],
+		    		acredition:[],
+		    		dataStudent:[],
+		    	},
+		    	validado: false,
+		    	cortina: false,
+		    	swRS: false,
+		    	existRsInsc: false,
+		    	studentSpeciality: '',
+		    	datos: [],
+		        historyReg:{},
+		        historyAlt:{},
+		        historyEsp:{},
+		        historyPer:{},		    	
+		        sendStudent:{},		
+		        objDocRequired:{},
+		        updateDocs:{},
+		        entidadEspecialidadTipo:{},		
+		        entidadAcredition:{},		
+		        studentRS:{},		
+		        objSucursal:{},		
+		        swquestion: false,
+		        swRequired: false,
+		        checkedNames: [],
+		        noProfesor:'no'	,
+		        NoProfesional:'no',
+		        noSuperior:'no',
+
+		    },
+		    mounted(){
+		    	var selector = document.getElementById("fecha");
+		    	Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "dd-mm-yyyy", inputEventOnly: true}).mask(selector);
+		    	$('[data-toggle="popover"]').popover();
+		    	/*axios.get(Routing.generate('consulta_bono_familia_cargar'))
+		    		.then(response => {
+		    			this.niveles = response.data.niveles;
+		    			this.grados = response.data.grados;
+		    		})
+		    		.catch(e = {
+
+		    		});*/
+		    },
+		    methods: {
+		    	actualizarGrados(){
+		    		if (this.estudiante.nivel == 11) {
+		    			this.estudiante.grado = '1';
+		    			this.gradosDisponibles = [];
+		    			console.log(this.grados);
+		    			let me = this;
+		    			$.each(this.grados, function(index, val) {
+		    				console.log(val);
+		    				if (val.id == 1 || val.id == 2) {
+		    				 	me.gradosDisponibles.push(me.grados[index]);
+		    				}
+		    			});
+		    		}else{
+		    			this.gradosDisponibles = this.grados;
+		    		}
+		    	},
+				updateService(item, event) {
+			    	var arrRequired = [10,15,16];
+			    	this.swRequired = false;
+			    	const result = arrRequired.every(val => this.estudiante.documentType.includes(val));
+			    	
+			    	if(this.estudiante.documentType.length >=4){
+			    		result1 = true;
+			    	}else{
+			    		result1 = false;
+			    	}
+			    	if(result && result1){
+			    		this.swRequired = true;
+			    	}
+			    	// console.log(result);
+			       // console.log(this.estudiante.documentType.length);
+			    },
+			    saveRecognitionKnowledge(){
+			    	// this.historyReg = false;
+			     //    this.historyAlt = false;
+			     //    this.historyEsp = false;
+			     //    this.historyPer = false; 		    		
+			     //    this.historyPer = [];
+		    		// this.errores = [];
+		    		// this.entidadAcredition = [];
+		    		// this.datos = [];
+		    		// this.validado = false;
+		    		// this.cortina = true;
+
+		    		if (this.estudiante.acredition.length > 1) {
+		    			// good
+		    		}else{
+			    		
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:'seleccionar nivel Acreditación',
+		    		  		type:'warning'
+		    			});
+		    			return false;		    			
+		    		}
+
+                    Swal.fire({
+                        title: '¿Registrar  Datos?',
+                        text: "esta seguro de registrar al Participante",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, proceder',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.value) {		    		
+	    				    		
+				    		axios.post(Routing.generate('recognitionknowledge_saveRecognitionKnowledge', {estudiante: this.estudiante, opcion: this.opcion}))
+				    			.then(response => {
+				    				if (response.data.status === 'error') {
+					    				Swal.fire(
+			    					  		'Aviso',
+			    					  		response.data.msg,
+			    					  		'info'
+			    						)
+				    				}
+
+				    				if (response.data.status == 'success') {
+				    					Swal.close();
+				    					this.datos = response.data.datos;
+				    					this.swRS = this.datos.swRS;
+						                this.studentRS  = this.datos.studentRS;
+				    					this.validado = true;
+				    					this.cerrar();
+				    					
+				    				}
+				    				this.cortina = false;
+				    			})
+				    			.catch(e => {
+				    				Swal.fire(
+		    					  		'Aviso',
+		    					  		'No se pudo realizar la verficación',
+		    					  		'error'
+		    						)
+				    				this.cortina = false;
+				    			});
+                        }
+                    }) 				    			
+			    },
+			    getlevelAcreditation(){
+			    	this.entidadAcredition = [];
+			    	this.estudiante.acredition = [];
+			    	axios.post(Routing.generate('recognitionknowledge_getlevelAcreditation',{specialityId: this.estudiante.especialidad}))
+			    		.then(response => {
+			    			this.entidadAcredition = response.data.datos.entidadAcredition;
+			    		})
+			    		.catch(e = {
+
+			    		});	
+			    },
+		    	goquestion(){
+		    		this.swquestion = true;
+		    		this.entidadAcredition = [];
+			    	axios.get(Routing.generate('recognitionknowledge_infocentro'))
+			    		.then(response => {
+			    			this.objDocRequired = response.data.datos.objDocRequired;			    			
+			    			this.entidadEspecialidadTipo = response.data.datos.entidadEspecialidadTipo;			    			
+			    			this.objSucursal = response.data.datos.objSucursal;			    			
+			    			// this.grados = response.data.grados;
+			    		})
+			    		.catch(e = {
+
+			    		});		    		
+		    	},
+		    	lookforCompetitor(){
+			        this.historyReg = false;
+			        this.historyAlt = false;
+			        this.historyEsp = false;
+			        this.historyPer = false; 		    		
+			        this.swRS = false; 	
+			        this.swRequired = false;	    		
+			        this.existRsInsc = false; 		    		
+			        this.studentSpeciality = ''; 		    		
+			        this.historyPer = [];
+		    		this.errores = [];
+		    		this.entidadAcredition = [];
+		    		this.studentRS = [];
+		    		
+		    		if (this.opcion == 1) {
+		    			if (this.estudiante.codigoRude == '') {
+		    				this.errores.push('Código Rude');
+		    			}
+		    		}
+		    		// if (this.opcion == 2) {
+		    		// 	if (this.estudiante.carnet == '') {
+		    		// 		this.errores.push('Carnet del estudiante');
+		    		// 	}
+		    		// }
+		    		if (this.opcion == 3) {
+		    			if (this.estudiante.nombre == '') {
+		    				this.errores.push('Nombre');
+		    			}
+		    			if (this.estudiante.paterno == '') {
+		    				this.errores.push('Apellido paterno');
+		    			}
+		    			if (this.estudiante.materno == '') {
+		    				this.errores.push('Apellido materno');
+		    			}
+		    			if (this.estudiante.fechaNacimiento == '') {
+			    			this.errores.push('Fecha de nacimiento');
+			    		}else{
+			    			if (!this.validarFormatoFecha(this.estudiante.fechaNacimiento)) {
+			    				this.errores.push('Formato de fecha no válido');
+			    			}
+			    		}
+			    		if (this.estudiante.carnet == '') {
+		    				this.errores.push('carnet');
+		    			}
+		    			// if (this.estudiante.complemento == '') {
+		    			// 	this.errores.push('complemento');
+		    			// }
+		    			if (this.estudiante.genero == '') {
+		    				this.errores.push('genero');
+		    			}		    			
+		    		}
+
+		    		// console.log(this.apoderado.carnet);
+		    		// console.log(this.estudiante.codigoRude);
+
+		    		if (this.errores.length > 0) {
+			    		let texto = '<div class="errores"><ul>';
+			    		$.each(this.errores, function (i, value) {
+	                        texto = texto + '<li>' + value + '</li>';
+	                    });
+	                    texto = texto + '</ul></div>';
+		    			Swal.fire({
+		    		  		title:'Complete los siguientes datos',
+		    		  		html:texto,
+		    		  		type:'warning'
+		    			});
+		    			return false;
+		    		}
+		    		this.datos = [];
+		    		this.validado = false;
+		    		this.cortina = true;
+	    			Swal.fire({
+	    		  		title:'Procesando',
+	    		  		html:'<div style="margin-bottom:20px"> <i class="fa fa-search fa-spin"></i> Espere un momento</div> ',
+	    		  		type:'info',
+	    		  		showConfirmButton: false,
+	    			});
+		    		axios.post(Routing.generate('recognitionknowledge_lookforCompetitor', {estudiante: this.estudiante, opcion: this.opcion}))
+		    			.then(response => {
+		    				if (response.data.status === 'error') {
+			    				Swal.fire(
+	    					  		'Aviso',
+	    					  		response.data.msg,
+	    					  		'info'
+	    						)
+		    				}
+
+		    				if (response.data.status == 'success') {
+		    					Swal.close();
+		    					this.datos = response.data.datos;
+				                this.historyReg  = this.datos.dataInscriptionR;
+				                this.historyAlt  = this.datos.dataInscriptionA;
+				                this.historyEsp  = this.datos.dataInscriptionE;
+				                this.sendStudent  = this.datos.sendStudent;
+				                this.existRsInsc  = this.datos.existRsInsc;
+				                this.studentSpeciality  = this.datos.studentSpeciality;
+				                this.estudiante.dataStudent = this.sendStudent;
+				                
+		    					this.validado = true;
+		    				}
+		    				this.cortina = false;
+		    			})
+		    			.catch(e => {
+		    				Swal.fire(
+    					  		'Aviso',
+    					  		'No se pudo realizar la verficación',
+    					  		'error'
+    						)
+		    				this.cortina = false;
+		    			});
+		    	},
+		    	cerrar(){
+		    		this.validado = false;
+		    		this.opcion = 1;
+		    		this.apoderado.carnet = '';
+		    		this.apoderado.complemento = '';
+		    		this.estudiante.codigoRude = '';
+		    		this.estudiante.carnet = '';
+		    		this.estudiante.complemento = '';
+		    		this.estudiante.nombre = '';
+		    		this.estudiante.paterno = '';
+		    		this.estudiante.materno = '';
+		    		this.estudiante.fechaNacimiento = '';
+		    		this.estudiante.nivel = '';
+		    		this.estudiante.grado = '';
+		    		this.estudiante.sucursal = '';
+
+		    		this.historyReg = false;
+			        this.historyAlt = false;
+			        this.historyEsp = false;
+			        this.historyPer = false; 		
+			        // this.swRS = false; 	    		
+			        this.historyPer = [];
+			        this.NoProfesional='no';
+			        this.noProfesor='no';
+			        this.noSuperior='no';
+			        this.swquestion = false;
+			        this.entidadEspecialidadTipo=[];
+			        // this.studentRS=[];
+			        this.entidadAcredition=[];
+			        this.estudiante.documentType=[];
+			        this.estudiante.acredition=[];
+			        this.estudiante.dataStudent=[];
+			        this.estudiante.objSucursal=[];
+			        this.estudiante.especialidad='';
+			        this.existRsInsc = false;
+			        this.studentSpeciality = '';
+			        this.swRequired = false;
+		    	},
+		    	validarFormatoFecha(campo) {
+	    	        var RegExPattern = /^\d{1,2}\-\d{1,2}\-\d{4}$/;
+	    	        if ((campo.match(RegExPattern)) && (campo!='')) {
+	    	            return true;
+	    	        } else {
+	    	            return false;
+	    	        }
+		    	},
+		    	numerico: function(event){
+		    	    var k = event.charCode || event.keyCode;
+		    	    if ((k < 48 || k > 57) //NUmeros
+		    	        && (k != 13) //ENTER
+		    	        && (k != 8) //retroceso
+		    	        && (k != 9) //tab
+		    	    ){
+		    	        event.preventDefault();
+		    	        return false;
+		    	    }
+		    	},
+		    	alfabetico: function(event){
+	                var k = event.charCode || event.keyCode;
+	                if ((k < 97 || k > 122)//letras minusculas
+	                    && (k < 65 || k > 90) //letras mayusculas
+	                    && (k != 13) //ENTER
+	                    && (k != 8) //retroceso
+	                    && (k != 9) //tab
+	                    && (k != 241) //ñ
+	                     && (k != 209) //Ñ
+	                     && (k != 32) //espacio
+	                     && (k != 225) //á
+	                     && (k != 233) //é
+	                     && (k != 237) //í
+	                     && (k != 243) //ó
+	                     && (k != 250) //ú
+	                     && (k != 193) //Á
+	                     && (k != 201) //É
+	                     && (k != 205) //Í
+	                     && (k != 211) //Ó
+	                     && (k != 218) //Ú
+	                     && (k != 44) //coma ,
+	                     && (k != 46) //punto .
+	                ){
+	                	event.preventDefault();
+	                	return false;
+	                }
+	            },
+		    	alfanumerico: function(event){
+	                var k = event.charCode || event.keyCode;
+	                if ((k < 97 || k > 122)//letras minusculas
+	                    && (k < 65 || k > 90) //letras mayusculas
+	                    && (k < 48 || k > 57) //NUmeros
+	                    && (k != 13) //ENTER
+	                    && (k != 8) //retroceso
+	                    && (k != 9) //tab
+	                    && (k != 241) //ñ
+	                     && (k != 209) //Ñ
+	                     && (k != 32) //espacio
+	                     && (k != 225) //á
+	                     && (k != 233) //é
+	                     && (k != 237) //í
+	                     && (k != 243) //ó
+	                     && (k != 250) //ú
+	                     && (k != 193) //Á
+	                     && (k != 201) //É
+	                     && (k != 205) //Í
+	                     && (k != 211) //Ó
+	                     && (k != 218) //Ú
+	                     && (k != 44) //coma ,
+	                     && (k != 46) //punto .
+	                ){
+	                	event.preventDefault();
+	                	return false;
+	                }
+	            },
+		    }
+		});
+	</script>
+{% endblock %} 

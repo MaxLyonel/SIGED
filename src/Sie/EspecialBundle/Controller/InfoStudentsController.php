@@ -185,6 +185,7 @@ class InfoStudentsController extends Controller {
       $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
       $nivelesLibreta = array(400,401,402,408,403,404);
       $programasLibreta = array(7,8,9,12,14,25,15);
+     
       if($gestion >2019 and $nivel <> 405){
         
         $arrDataLibreta['calificaciones'] = true;
@@ -193,7 +194,7 @@ class InfoStudentsController extends Controller {
       }else{
         $arrDataLibreta['calificaciones'] = false;
       }
-       $programasSinNotas = array(26,27); //No esta definido la forma de registro de las notas por tanto calificaciones=0
+       $programasSinNotas = array(19, 26,27,29); //No esta definido la forma de registro de las notas por tanto calificaciones=0
       if(in_array($aInfoUeducativa['ueducativaInfoId']['programaId'], $programasSinNotas)  and $gestion>2020){
           $arrDataLibreta['calificaciones'] = false;
       }
@@ -207,8 +208,11 @@ class InfoStudentsController extends Controller {
         $arrDataLibreta['libreta'] = true;
       }else{
         $arrDataLibreta['libreta'] = false;
-      }      
-     
+      }    
+      //para talento en general  
+      if(($nivel==410 or $nivel==411) and $gestion>2021 and $objArea->getId()==7){
+        $arrDataLibreta['libreta'] = true;
+      }
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
 
       $objRegistroConsolidacion = $em->createQueryBuilder()
@@ -684,6 +688,13 @@ class InfoStudentsController extends Controller {
         //paso 6 borrando apoderados
         $apoderados = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion')->findBy(array('estudianteInscripcion' => $estInsId ));
         foreach ($apoderados as $element) {
+            $em->remove($element);
+        }
+        $em->flush();
+
+        //borrando rude
+        $rudes = $em->getRepository('SieAppWebBundle:Rude')->findBy(array('estudianteInscripcion' => $estInsId ));
+        foreach ($rudes as $element) {
             $em->remove($element);
         }
         $em->flush();
@@ -1538,6 +1549,7 @@ public function checksegipstudentAction(Request $request){
     $arrDataLibreta['nivelId'] = ($aInfoUeducativa['ueducativaInfoId']['nivelId'])?$aInfoUeducativa['ueducativaInfoId']['nivelId']:'';
     $nivelesLibreta = array(400,401,402,408,403,404);
     $programasLibreta = array(7,8,9,12,14,15,25);
+    
     if($gestion >2019 and $nivel <> 405){
       $arrDataLibreta['calificaciones'] = true;
     }elseif(in_array($nivel,$nivelesLibreta ) or ($nivel == 411 and (in_array($aInfoUeducativa['ueducativaInfoId']['programaId'],$programasLibreta)))){
