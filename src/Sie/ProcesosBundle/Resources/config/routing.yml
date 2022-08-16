@@ -88,3 +88,7 @@ sie_procesos_tramite_regularizacion_historial:
 sie_procesos_tramite_inclusion_calificacion:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteInclusionCalificacion.yml"
     prefix:   /sie/tramite/inclusioncalificacion
+
+sie_procesos_tramite_previmmediatemodiver2:
+    resource: "@SieProcesosBundle/Resources/config/routing/previmmediatemodiver2.yml"
+    prefix:   /sie/tramite/previmmediatemodiver2
