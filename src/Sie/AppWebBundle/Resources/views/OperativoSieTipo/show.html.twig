@@ -1,0 +1,59 @@
+{% extends 'layoutPermanente.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{asset('assets/css/tablesorter.css')}}" rel="stylesheet" />
+    <link href="{{asset('filefile/css/bootstrap-fileupload.min.css')}}" rel="stylesheet">
+    <link href="{{asset('filefile/css/bootstrap-fileupload.css')}}" rel="stylesheet">
+{% endblock %}
+
+{% block contentoption%}
+<div class='container'>
+    <h1>OperativoSieTipo</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Operativo</th>
+                <td>{{ entity.operativo }}</td>
+            </tr>
+            <tr>
+                <th>Descripcion</th>
+                <td>{{ entity.descripcion }}</td>
+            </tr>
+            <tr>
+                <th>Orden</th>
+                <td>{{ entity.orden }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{{ entity.fechaRegistro|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Fechamodificacion</th>
+                <td>{{ entity.fechaModificacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('operativesie') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('operativesie_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+</div>
+{% endblock %}
+{% block javascripts %}
+{% endblock %}

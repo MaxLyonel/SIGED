@@ -418,6 +418,8 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		$estudiante->setLibro($form['libro']);
 		$estudiante->setPartida($form['partida']);
 		$estudiante->setFolio($form['folio']);
+		$estudiante->setCarnetIbc($form['carnetIbc']?$form['carnetIbc']:'');
+		$estudiante->setCarnetCodepedis($form['carnetCodepedis']?$form['carnetCodepedis']:'');
 		
 		
 		$rude->setTieneDiscapacidad($tieneDiscapacidad);
@@ -452,7 +454,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 					}
 				}
 
-				$estudiante->setCarnetIbc(isset($form['carnetIbc'])?$form['carnetIbc']:0);
+				$estudiante->setCarnetIbc(isset($form['carnetIbc'])?$form['carnetIbc']:'');
 				$em->flush($estudiante);
 			}else{
 				// Si no titne discapacidad lo eliminamos
@@ -3591,7 +3593,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		//dump($porciones);die;
         $dirProv = $porciones[3];
         $dirMun = $porciones[4];
-      // dump($codue,$rude,$gestion,$eins ,$dirProv,$dirMun);die;
+       // dump($codue,$rude,$gestion,$eins ,$dirProv,$dirMun);die;
         //get the values of report
         //create the response object to down load the file
         $response = new Response();

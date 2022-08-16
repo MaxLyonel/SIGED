@@ -102,3 +102,9 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             router: "@router"
+
+    permafunctions:
+        class: Sie\PermanenteBundle\Services\Permafunctions
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"

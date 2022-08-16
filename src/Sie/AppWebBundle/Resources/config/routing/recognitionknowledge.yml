@@ -1,0 +1,27 @@
+recognitionknowledge_index:
+  path: /
+  defaults: { _controller: SieAppWebBundle:RecognitionKnowledge:index }
+
+recognitionknowledge_lookforCompetitor:
+    path:     /lookforCompetitor
+    defaults: { _controller: SieAppWebBundle:RecognitionKnowledge:lookforCompetitor }
+    options:
+         expose: true  
+
+recognitionknowledge_infocentro:
+    path:     /infocentro
+    defaults: { _controller: SieAppWebBundle:RecognitionKnowledge:infoCentro }
+    options:
+         expose: true   
+
+recognitionknowledge_getlevelAcreditation:
+    path:     /getlevelAcreditation
+    defaults: { _controller: SieAppWebBundle:RecognitionKnowledge:getlevelAcreditation }
+    options:
+         expose: true   
+
+recognitionknowledge_saveRecognitionKnowledge:
+    path:     /saveRecognitionKnowledge
+    defaults: { _controller: SieAppWebBundle:RecognitionKnowledge:saveRecognitionKnowledge }
+    options:
+         expose: true  

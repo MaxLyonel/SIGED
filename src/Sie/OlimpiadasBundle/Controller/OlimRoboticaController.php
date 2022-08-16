@@ -19,6 +19,7 @@ Type::overrideType('datetime', 'Doctrine\DBAL\Types\VarDateTimeType');
 class OlimRoboticaController extends Controller{
 
     public function indexaction(Request $request){
+        
         $form = $this->createFormulario();
         $form->handleRequest($request);
         $sie = -1;
@@ -110,7 +111,7 @@ class OlimRoboticaController extends Controller{
                     ->setParameter('idPersona', $tutor->getId())
                     ->setParameter('gestion', date('Y'))
                     ->setParameter('inscripcion', $inscripcionActual)
-                    ->setParameter('materia', 26)
+                    ->setParameter('materia', 36)
                     ->setMaxResults(1)
                     ->getQuery()
                     ->getResult();
@@ -125,7 +126,7 @@ class OlimRoboticaController extends Controller{
                             ->where('ogp.id = :grupoProyecto')
                             ->andWhere('ogp.materiaTipo = :materia')
                             ->setParameter('grupoProyecto', $grupoProyecto[0]['id'])
-                            ->setParameter('materia', 26)
+                            ->setParameter('materia', 36)
                             ->getQuery()
                             ->getResult();
                     } else {

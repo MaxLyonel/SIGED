@@ -406,16 +406,27 @@
                                             </div>
                                             <div class="col-md-6 col-sm-6">
                                                 <div class="row form-group">
-                                                    <label class="col-md-4 col-sm-4">Carnet:</label>
+                                                     <div class="row form-group">
+                                                        <label class="col-md-4 col-sm-4"><b>IBC </b>:</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            {{ form_widget(formEstudiante.carnetIbc, {'attr':{'class':'form-control '} , 'value': formEstudiante.carnetIbc.vars.value?formEstudiante.carnetIbc.vars.value:0  }) }} 
+                                                        </div>
+                                                    </div>
+                                                     <div class="row form-group">
+                                                        <label class="col-md-4 col-sm-4"> <b>CODEPEDIS </b>:</label>
+                                                        <div class="col-md-8 col-sm-8">
+                                                            {{ form_widget(formEstudiante.carnetCodepedis, {'attr':{'class':'form-control '} , 'value': formEstudiante.carnetCodepedis.vars.value?formEstudiante.carnetCodepedis.vars.value:0  }) }} 
+                                                        </div>
+                                                    </div>
+
                                                     <div class="col-md-8 col-sm-8">
+
                                                         {% if formEstudiante.carnetIbc.vars.value|length > 0 %}
                                                             <input type="hidden" id="verificarCarnet" value="0">
                                                             {# {{ form_widget(formEstudiante.carnet, {'attr':{'class':'form-control readonly'} }) }} #}
-                                                            <b>IBC - {{ formEstudiante.carnetIbc.vars.value }}</b>
                                                         {% else %}
                                                             <input type="hidden" id="verificarCarnet" value="1">
                                                             {# {{ form_widget(formEstudiante.carnet, {'attr':{'class':'form-control'} }) }} #}
-                                                            <b>CODEPEDIS - {{ formEstudiante.carnetCodepedis.vars.value }}</b>
                                                         {% endif %}
                                                     </div>
                                                 </div>                                                
@@ -1150,7 +1161,7 @@
                                         {% if areaEspecial== 'Dificultades en el Aprendizaje' %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
-                                                <p><strong>5.5 ATENCION EDUCATIVA EN MODALIDAD INDIRECTA - AREA DIFICULTADES EN EL APRENDIZAJE</strong></p>
+                                                <p><strong>5.5 AREA DIFICULTADES EN EL APRENDIZAJE</strong></p>
                                             </div>
                                              {% if nivel == 'Programas'%}
                                             <div class="col-md-6 col-sm-6">
@@ -1167,7 +1178,7 @@
                                         {% if areaEspecial== 'Fisico-Motora' %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
-                                                <p><strong>5.5 ATENCION EDUCATIVA EN MODALIDAD INDIRECTA - AREA FISICO - MOTORA</strong></p>
+                                                <p><strong>5.5 AREA FISICO - MOTORA</strong></p>
                                             </div>
                                              {% if nivel == 'Programas'%}
                                             <div class="col-md-6 col-sm-6">
@@ -1184,7 +1195,7 @@
                                         {% if areaEspecial== 'Talento Extraordinario' %}
                                         <div class="row form-group mt-5">
                                             <div class="col-md-6 col-sm-6">
-                                                <p><strong>5.5 ATENCION EDUCATIVA EN MODALIDAD INDIRECTA - AREA TALENTO EXTRAORDINARIO</strong></p>
+                                                <p><strong>5.5 AREA TALENTO EXTRAORDINARIO</strong></p>
                                             </div>
                                              {% if nivel == 'Programas'%}
                                             <div class="col-md-6 col-sm-6">
@@ -2169,7 +2180,7 @@
     function validarTieneDiscapacidad(){
         if($('#form_tieneDiscapacidad_1').is(':checked')){
             $('#form_carnetIbc').val('');
-            $('#form_carnetIbc').removeAttr('required');
+           // $('#form_carnetIbc').removeAttr('required');
             //$('#form_discapacidad').val('');
            // $('#form_discapacidad').removeAttr('required');
             //$('#form_gradoDiscapacidad').val('');
@@ -2177,7 +2188,7 @@
 
             $('#fieldsetDiscapacidad').attr('disabled','disabled');
         }else{
-            $('#form_carnetIbc').attr('required','required');
+            //$('#form_carnetIbc').attr('required','required');
           //  $('#form_discapacidad').attr('required','required');
            // $('#form_gradoDiscapacidad').attr('required','required');
 
