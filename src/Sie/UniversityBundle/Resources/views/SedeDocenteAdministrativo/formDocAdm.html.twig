@@ -1,0 +1,106 @@
+<link rel="stylesheet" href="{{asset('css/kcssformat.css')}}">
+<div class="row"> 
+    <div class="col-lg-12 col-md-12"> 
+        <h3 class="mt-0">{{ titulo }}</h3>
+    </div> 
+</div> 
+<div class="row"> 
+    {% if datos is defined %}
+        <div class="col-lg-12 col-md-12" id="maestroNuevo">
+            <div class="tile orange style="height: auto;">                
+                <div class="row">    
+                    <form name="form" method="post" role="form" id="formDocAdm">
+                        {% set c = 0 %}
+                        <table id="tablaDocAdm" class="table table-default" cellspacing="0">  
+                            <thead>                                
+                                {% for key1, dat1 in datos %}
+                                    {% if loop.first %}
+                                        <tr>
+                                            <th style="text-align:center;">
+                                                {{key1}}
+                                            </th> 
+                                            {% set c = c + 1 %} 
+                                            {% for key2, dat2 in dat1 %}
+                                                {% set c = c + 1 %} 
+                                                <th style="text-align:center;">
+                                                    {{key2}}
+                                                </th>
+                                            {% endfor %} 
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </thead> 
+                            <tfoot>
+                                <tr>
+                                    <th style="text-align:center;" colspan="{{c}}">                                        
+                                        <a href="#" class="btn btn-success btn-block" id="form_guardar">Guardar</a>
+                                    </th>
+                                </tr>
+                            </tfoot>              
+                            <tbody>
+                                {% for key1, dat1 in datos %}
+                                    <tr>
+                                        <td>
+                                            <label>{{key1}}</label>
+                                        </td>
+                                        {% for key2, dat2 in dat1 %}
+                                            <td style="text-align:center;">
+                                                <input type="number" id="form_{{dat2.data}}" name="form[{{dat2.data}}]" min="0" max="10000" value="{{dat2.cantidad}}" class="form-control">
+                                            </td>
+                                        {% endfor %} 
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </form>
+                </div>  
+            </div>
+        </div>
+    {% endif %}
+</div> 
+
+<script>    
+    $('#form_guardar').on("click", function(){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
+        var r = confirm("¿Desea guardar el registro?");
+        if (r == false) {
+            return false;
+        }
+                
+        var cantDocAdm = $('#cantDocAdm');
+        var boton = $(this);
+        boton.hide();
+
+        var formulario = $('#formDocAdm')[0];
+        var formData = new FormData(formulario);
+
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('sie_university_sede_reporte_docente_administrativo_save'),
+            data: formData,
+            processData: false,
+            contentType: false,
+            beforeSend: function () {       
+                $("#formDocAdm").append('<div class="text-center" id="message"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {                                  
+                $('#message').empty();
+                if(data.estado){ 
+                    cantDocAdm.html(data.cantidad);
+                    $("#message").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');                    
+                } else {
+                    $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');
+                    boton.show();
+                }                
+            },
+            error: function(error){    
+                $('#message').empty();   
+                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');                 
+                boton.show();
+            },
+        }); 
+    });
+</script>

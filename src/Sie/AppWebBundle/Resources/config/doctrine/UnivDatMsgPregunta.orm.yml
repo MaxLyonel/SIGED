@@ -1,0 +1,53 @@
+Sie\AppWebBundle\Entity\UnivDatMsgPregunta:
+    type: entity
+    table: univ_dat_msg_pregunta
+    id:
+        id:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        mensaje:
+            type: string
+            nullable: true
+            length: 5255
+            fixed: false
+            comment: ''
+        usuarioId:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: usuario_id
+        fecha:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        hora:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        estado:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        preguntaId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: pregunta_id
+    lifecycleCallbacks: {  }

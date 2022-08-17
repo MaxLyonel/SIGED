@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\UnivRelMenuRol:
+    type: entity
+    table: univ_rel_menu_rol
+    id:
+        menuId:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            id: true
+            column: menu_id
+        rolId:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            id: true
+            column: rol_id
+    lifecycleCallbacks: {  }

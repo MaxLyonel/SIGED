@@ -1,0 +1,205 @@
+Sie\AppWebBundle\Entity\UnivDatHabHabilitacion:
+    type: entity
+    table: univ_dat_hab_habilitacion
+    id:
+        id:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        carreraId:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: carrera_id
+        gestionAcademicaId:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: gestion_academica_id
+        gradoAcademicoId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: grado_academico_id
+        tipoFormularioId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: tipo_formulario_id
+        fechaRegistro:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: fecha_registro
+        usuarioId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: usuario_id
+        citeUniversidad:
+            type: string
+            nullable: true
+            length: 5255
+            fixed: false
+            comment: ''
+            column: cite_universidad
+        tipoObservacionId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: tipo_observacion_id
+        tipoEstadoId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: tipo_estado_id
+        tipoEstudianteId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: tipo_estudiante_id
+        modalidadGraduacionId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: modalidad_graduacion_id
+        formularioObservacion:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: formulario_observacion
+        observacionConvalidacion:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: observacion_convalidacion
+        observacionDbachiller:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: observacion_dbachiller
+        observacionReprobado:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: observacion_reprobado
+        nombreResponsable:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: nombre_responsable
+        cargoResponsable:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: cargo_responsable
+        nombreLlenado:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: nombre_llenado
+        cargoLlenado:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: cargo_llenado
+        detalle:
+            type: string
+            nullable: true
+            length: 55000
+            fixed: false
+            comment: ''
+        hojaRuta:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: hoja_ruta
+        informe:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        tipo:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        fecha:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        estado:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        modalidadCursada:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: modalidad_cursada
+        reporte:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        updatedAt:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: updated_at
+    lifecycleCallbacks: {  }

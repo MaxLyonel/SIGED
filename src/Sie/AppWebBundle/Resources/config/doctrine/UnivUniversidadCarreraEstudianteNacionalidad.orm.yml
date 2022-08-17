@@ -1,0 +1,99 @@
+Sie\AppWebBundle\Entity\UnivUniversidadCarreraEstudianteNacionalidad:
+    type: entity
+    table: univ_universidad_carrera_estudiante_nacionalidad
+    indexes:
+        IDX_714257B6F67BB471:
+            columns:
+                - univ_periodo_academico_tipo_id
+        IDX_714257B6F1431B89:
+            columns:
+                - univ_matricula_nacionalidad_beca_tipo_id
+        IDX_714257B62BCFBA7:
+            columns:
+                - genero_tipo_id
+        IDX_714257B6635334B9:
+            columns:
+                - univ_universidad_carrera_id
+        IDX_714257B6179FF95:
+            columns:
+                - gestion_tipo_id
+    uniqueConstraints:
+        carrera_estudiante_nacionalidadunique_key:
+            columns:
+                - gestion_tipo_id
+                - univ_universidad_carrera_id
+                - genero_tipo_id
+                - univ_periodo_academico_tipo_id
+                - univ_matricula_nacionalidad_beca_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        cantidad:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+        fechaCreacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_creacion
+        fechaActualizacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_actualizacion
+    manyToOne:
+        univPeriodoAcademicoTipo:
+            targetEntity: UnivPeriodoAcademicoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_periodo_academico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univMatriculaNacionalidadBecaTipo:
+            targetEntity: UnivMatriculaNacionalidadBecaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_matricula_nacionalidad_beca_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        generoTipo:
+            targetEntity: GeneroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                genero_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univUniversidadCarrera:
+            targetEntity: UnivUniversidadCarrera
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_universidad_carrera_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
