@@ -1,0 +1,27 @@
+Sie\AppWebBundle\Entity\BioPorqueNoRecepcionTipo:
+    type: entity
+    table: bio_porque_no_recepcion_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        porqueNoRecepcion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: porque_no_recepcion
+        obs:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

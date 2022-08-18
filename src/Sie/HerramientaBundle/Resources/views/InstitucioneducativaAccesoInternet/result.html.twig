@@ -114,16 +114,51 @@
                             </div>
                             <div class="row text-center">
                                 <div class="col-md-12">
-                                    <h4 class="bg-info"><strong>Reporte de salud de Estudiantes</strong></h4>
+                                    <h4 class="bg-info"><strong>Reporte de salud de Estudiantes </br> {{ "now"|date("d/m/Y") }}</strong></h4>
                                 </div>
                             </div>
+
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th scope="col">#</th>
+                                  <th scope="col">Fecha</th>
+                                  <th scope="col">Enfermo F</th>
+                                  <th scope="col">Enfermo M</th>
+                                  <th scope="col">Sin Sintomas F</th>
+                                  <th scope="col">Sin Sintomas M</th>
+                                  <th scope="col">Fallecido F</th>
+                                  <th scope="col">Fallecido M</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              {% for data in  objRegHealth %}
+                                <tr>
+                                  <th scope="row">1</th>
+                                  <td>{{ data.fechaRegistro|date('d-m-Y') }}</td>
+
+                 
+                                  <td>{{data.enfermoF2021}}</td>
+                                  <td>{{data.enfermoM2021}}</td>
+                                  <td>{{data.sinSintomasF2021}}</td>
+                                  <td>{{data.sinSintomasM2021}}</td>
+                                  <td>{{data.fallecidoF2021}}</td>
+                                  <td>{{data.fallecidoM2021}}</td>
+                                  
+                                </tr>
+                               {% endfor %}
+                               
+                              </tbody>
+                            </table>                            
+
+{#
                             <div class="row well text-center">
                                 <div class="col-md-12">
-                                    <h5 class="text-primary">Cantidad de estudiantes en la gestión 2020: <span class="text-danger"><strong>{{cantidadEfectivos2020}}</strong></span> <span class="badge badge-danger"><i class="fa fa-fw fa-info-circle"></i>(La suma de las cantidades en la matriz debe coincidir con este valor)</span></h5>
+                                    <h5 class="text-primary">Cantidad de estudiantes en la gestión 2021: <span class="text-danger"><strong>{{cantidadEfectivos2020}}</strong></span> <span class="badge badge-danger"><i class="fa fa-fw fa-info-circle"></i>(La suma de las cantidades en la matriz debe coincidir con este valor)</span></h5>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_sinSintomas2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2020:</strong></label>
+                                <label for="form_sinSintomas2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2021:</strong></label>
                                 <div class="col-md-1 text-right">
                                     <span class="text-lilac">Mujeres:</span>
                                 </div>
@@ -138,7 +173,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_enfermo2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2020:</strong></label>
+                                <label for="form_enfermo2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2021:</strong></label>
                                 <div class="col-md-1 text-right">
                                     <span class="text-lilac">Mujeres:</span>
                                 </div>
@@ -153,7 +188,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_fallecido2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2020:</strong></label>
+                                <label for="form_fallecido2020" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2021:</strong></label>
                                 <div class="col-md-1 text-right">
                                     <span class="text-lilac">Mujeres:</span>
                                 </div>
@@ -167,13 +202,14 @@
                                     {{ form_widget(form.fallecidoM2020) }}
                                 </div>
                             </div>
+#}
                             <div class="row well text-center">
                                 <div class="col-md-12">
-                                    <h5 class="text-primary">Cantidad de estudiantes en la gestión 2021: <span class="text-danger"><strong>{{cantidadEfectivos2021}}</strong></span> <span class="badge badge-danger"><i class="fa fa-fw fa-info-circle"></i>(La suma de las cantidades en la matriz debe coincidir con este valor)</span></h5>
+                                    <h5 class="text-primary">Cantidad de estudiantesen los ultimos 7 dias de la semana ()  de : <span class="text-danger"><strong>{{cantidadEfectivos2021}}</strong></span> <span class="badge badge-danger"><i class="fa fa-fw fa-info-circle"></i>(La suma de las cantidades en la matriz debe coincidir con este valor)</span></h5>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_sinSintomas2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes sin síntomas de COVID-19 en la gestión 2021:</strong></label>
+                                <label for="form_sinSintomas2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes sin síntomas de COVID-19 :</strong></label>
                                 <div class="col-md-1 text-right">
                                     <span class="text-lilac">Mujeres:</span>
                                 </div>
@@ -188,7 +224,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_enfermo2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 en la gestión 2021:</strong></label>
+                                <label for="form_enfermo2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes enfermos con COVID-19 :</strong></label>
                                 <div class="col-md-1 text-right">
                                     <span class="text-lilac">Mujeres:</span>
                                 </div>
@@ -203,7 +239,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="form_fallecido2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 en la gestión 2021:</strong></label>
+                                <label for="form_fallecido2021" class="col-md-6 control-label"><strong>Cantidad de estudiantes fallecidos por COVID-19 :</strong></label>
                                 <div class="col-md-1 text-right">
                                     <span class="text-lilac">Mujeres:</span>
                                 </div>
@@ -300,14 +336,14 @@
             var total2021 = parseInt($("#form_sinSintomasF2021").val()) + parseInt($("#form_sinSintomasM2021").val()) + parseInt($("#form_enfermoF2021").val()) + parseInt($("#form_enfermoM2021").val()) + parseInt($("#form_fallecidoF2021").val()) + parseInt($("#form_fallecidoM2021").val());
             var sw = false;
             var mensaje = "El formulario contiene los siguientes errores: ";
-
+            /*
             if(total2020 != cantidadEfectivos2020) {
-                mensaje = mensaje + "\n- La suma de casos (" + total2020 + " estudiantes) para la gestión 2020, debe ser igual a la cantidad de estudiantes efectivos en la gestión 2020 (" + cantidadEfectivos2020 + " estudiantes)";
+                mensaje = mensaje + "\n- La suma de casos (" + total2020 + " estudiantes) para la gestión 2021, debe ser igual a la cantidad de estudiantes efectivos en la gestión 2021 (" + cantidadEfectivos2020 + " estudiantes)";
                 sw = true;
             }
-
+            */
             if(total2021 != cantidadEfectivos2021) {
-                mensaje = mensaje + "\n- La suma de casos (" + total2021 + " estudiantes) para la gestión 2021, debe ser igual a la cantidad de estudiantes efectivos en la gestión 2021 (" + cantidadEfectivos2021 + " estudiantes)";
+                mensaje = mensaje + "\n- La suma de casos (" + total2021 + " estudiantes) debe ser igual al total  (" + cantidadEfectivos2021 + " estudiantes)";
                 sw = true;
             }
 

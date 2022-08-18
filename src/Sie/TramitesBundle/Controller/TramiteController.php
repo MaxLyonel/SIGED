@@ -2218,7 +2218,7 @@ class TramiteController extends Controller {
             when (v.institucioneducativa_id in (select institucioneducativa_id from institucioneducativa_humanistico_tecnico where institucioneducativa_humanistico_tecnico_tipo_id = 3 and gestion_tipo_id = date_part('year',current_date)::double precision)) then false
             when (gestion_tipo_id::double precision = date_part('year',current_date)::double precision) then
             case
-            when (gestion_tipo_id::double precision in (2020::double precision,2021::double precision)) then
+            when (gestion_tipo_id::double precision >= 2020::double precision) then
             (t1 is null or t1 = 0)
             else
             (b1 is null or b1 = 0)

@@ -386,6 +386,7 @@ function p_limpiarBuscador(){
 
 function saveFormPadre(){
     var data = $('#formPadre').serialize();
+    var subsistema = $('#subsistema').val();
     // data['actualizar'] = recargar;
     $.ajax({
         url: Routing.generate('info_estudiante_rude_nuevo_save_formApoderado'),
@@ -411,6 +412,13 @@ function saveFormPadre(){
                 //     $('#paso5').attr('data-toggle','tab');
                 //     $('#paso5').click();
                 // }
+                if(subsistema=='especial'){
+                    $('#cortina').css('display','none');
+                    $('#paso7').parent('li').removeClass('disabled');
+                    $('#paso7').attr('data-toggle','tab');
+                    $('#paso7').click();
+                    $('#tabPadre').click();
+                }
             }else{
                 alert(data.msg);
             }

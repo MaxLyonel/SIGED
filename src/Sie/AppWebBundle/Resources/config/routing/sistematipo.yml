@@ -1,0 +1,30 @@
+sistematipo:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:SistemaTipo:index" }
+
+sistematipo_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:SistemaTipo:show" }
+
+sistematipo_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:SistemaTipo:new" }
+
+sistematipo_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:SistemaTipo:create" }
+    methods:  POST
+
+sistematipo_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:SistemaTipo:edit" }
+
+sistematipo_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:SistemaTipo:update" }
+    methods:  [POST, PUT]
+
+sistematipo_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:SistemaTipo:delete" }
+    methods:  [POST, DELETE]

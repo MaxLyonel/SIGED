@@ -1,0 +1,74 @@
+Sie\AppWebBundle\Entity\ModulosOperativo:
+    type: entity
+    table: modulos_operativo
+    indexes:
+        IDX_4B4E4012CB5AFE17:
+            columns:
+                - usuario_id_act
+        IDX_4B4E40127DE0566:
+            columns:
+                - usuario_id_reg
+        IDX_4B4E40129772DAEB:
+            columns:
+                - modulo_tipo_id
+        IDX_4B4E401262521D98:
+            columns:
+                - operativo_sie_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        usuarioAct:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id_act:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuarioReg:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id_reg:
+                    referencedColumnName: id
+            orphanRemoval: false
+        moduloTipo:
+            targetEntity: ModuloTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                modulo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        operativoSieTipo:
+            targetEntity: OperativoSieTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                operativo_sie_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

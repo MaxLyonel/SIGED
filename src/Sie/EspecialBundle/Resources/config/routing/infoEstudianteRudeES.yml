@@ -101,9 +101,9 @@ info_estudiante_rudees_nuevo_save_formConQuienVive:
 #         expose: true
 #
 
-info_estudiante_rude_nuevo_save_formApoderadoEspecial:
-    path:     /saveFormApoderado
-    defaults: { _controller: "SieHerramientaBundle:InfoEstudianteRudeNuevo:saveFormApoderado" }
+info_estudiante_rude_nuevo_save_formApoderado:
+    path:     /saveFormApoderadoEspecial
+    defaults: { _controller: "SieEspecialBundle:InfoEstudianteRudeesNuevo:saveFormApoderadoEspecial" }
     options:
          expose: true
 ## TAB 7

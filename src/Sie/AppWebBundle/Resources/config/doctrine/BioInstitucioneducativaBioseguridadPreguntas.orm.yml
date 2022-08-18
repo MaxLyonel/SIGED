@@ -1,0 +1,121 @@
+Sie\AppWebBundle\Entity\BioInstitucioneducativaBioseguridadPreguntas:
+    type: entity
+    table: bio_institucioneducativa_bioseguridad_preguntas
+    indexes:
+        IDX_33FA417BDC321A11:
+            columns:
+                - bio_institucioneducativa_bioseguridad_id
+        IDX_33FA417B1055DA39:
+            columns:
+                - bio_porque_no_recepcion_tipo_id
+        IDX_33FA417BCFD5112D:
+            columns:
+                - bio_desinfeccion_realizada_tipo_id
+        IDX_33FA417BE6FB020D:
+            columns:
+                - bio_desinfeccion_provee_tipo_id
+        IDX_33FA417BB9246625:
+            columns:
+                - bio_tiempo_desinfeccion_tipo_id
+        IDX_33FA417BB323D017:
+            columns:
+                - bio_cuestionario_tipo_id
+    uniqueConstraints:
+        bio_institucioneducativa_bioseguridad_preguntas_key:
+            columns:
+                - bio_institucioneducativa_bioseguridad_id
+                - bio_cuestionario_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        respSiNo:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: resp_si_no
+        respVarios:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: resp_varios
+        pregTexto:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+            column: preg_texto
+        fechaRegistro:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        bioInstitucioneducativaBioseguridad:
+            targetEntity: BioInstitucioneducativaBioseguridad
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bio_institucioneducativa_bioseguridad_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        bioPorqueNoRecepcionTipo:
+            targetEntity: BioPorqueNoRecepcionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bio_porque_no_recepcion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        bioDesinfeccionRealizadaTipo:
+            targetEntity: BioDesinfeccionRealizadaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bio_desinfeccion_realizada_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        bioDesinfeccionProveeTipo:
+            targetEntity: BioDesinfeccionProveeTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bio_desinfeccion_provee_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        bioTiempoDesinfeccionTipo:
+            targetEntity: BioTiempoDesinfeccionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bio_tiempo_desinfeccion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        bioCuestionarioTipo:
+            targetEntity: BioCuestionarioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                bio_cuestionario_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

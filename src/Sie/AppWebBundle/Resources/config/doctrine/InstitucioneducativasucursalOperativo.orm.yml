@@ -1,0 +1,96 @@
+Sie\AppWebBundle\Entity\InstitucioneducativasucursalOperativo:
+    type: entity
+    table: institucioneducativasucursal_operativo
+    indexes:
+        IDX_B31E4D59CB5AFE17:
+            columns:
+                - usuario_id_act
+        IDX_B31E4D597DE0566:
+            columns:
+                - usuario_id_reg
+        IDX_B31E4D59D030C310:
+            columns:
+                - estadooperativo_tipo_id
+        IDX_B31E4D5962521D98:
+            columns:
+                - operativo_sie_tipo_id
+        IDX_B31E4D597A322B24:
+            columns:
+                - institucioneducativa_sucursal_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaInicio:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_inicio
+        fechaFin:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_fin
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        usuarioAct:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id_act:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuarioReg:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id_reg:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadooperativoTipo:
+            targetEntity: EstadooperativoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estadooperativo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        operativoSieTipo:
+            targetEntity: OperativoSieTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                operativo_sie_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        institucioneducativaSucursal:
+            targetEntity: InstitucioneducativaSucursal
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                institucioneducativa_sucursal_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

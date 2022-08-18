@@ -1648,12 +1648,13 @@ class TramiteDetalleController extends Controller {
                 )
             );            
             $context = stream_context_create($options);
-
-
+            
             switch ($nivel) {
                 case 1:
                     if ($institucionEducativaEntity['departamento_codigo'] == "1" or $institucionEducativaEntity['departamento_codigo'] == 1){
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_ch_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
+                    } elseif($institucionEducativaEntity['departamento_codigo'] == "4" or $institucionEducativaEntity['departamento_codigo'] == 4) {
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_or_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
                     } else {
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_basico_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
                     }
@@ -1661,7 +1662,9 @@ class TramiteDetalleController extends Controller {
                 case 2:
                     if ($institucionEducativaEntity['departamento_codigo'] == "1" or $institucionEducativaEntity['departamento_codigo'] == 1){
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_ch_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
-                    } else {
+                    } elseif($institucionEducativaEntity['departamento_codigo'] == "4" or $institucionEducativaEntity['departamento_codigo'] == 4) {
+                        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_or_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
+                    }else {
                         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') . 'alt_tec_cert_estudiante_auxiliar_v4_rcm.rptdesign&sie='.$sie.'&ges='.$ges.'&esp='.$especialidad.'&niv='.$n.'&sie='.$sie.'&&__format=pdf&',false, $context));
                     }
                     break;
@@ -1829,6 +1832,7 @@ class TramiteDetalleController extends Controller {
                 
                 $token = $request->get('_token');
                 if (!$this->isCsrfTokenValid('imprimir', $token)) {
+                    $em->getConnection()->rollback();
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error al enviar el formulario, intente nuevamente'));
                     return $this->redirectToRoute('tramite_detalle_certificado_tecnico_impresion_lista');
                 }
@@ -1855,6 +1859,7 @@ class TramiteDetalleController extends Controller {
                             break;
                     }
                 } else {
+                    $em->getConnection()->rollback();
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => 'Error, no se enviarion tramites para procesar, intente nuevamente'));
                     return $this->redirectToRoute('tramite_detalle_certificado_tecnico_impresion_lista');
                 }
@@ -1936,9 +1941,9 @@ class TramiteDetalleController extends Controller {
                                 }
 
                                 $msg = array('0'=>true, '1'=>$participante);
-                                $msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva);
-                                
-                                // $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId);
+
+                                //$msgContenido = $tramiteController->getCertTecValidacionInicio($participanteId, $especialidadId, $nivelId, $gestionId, $periodoId, $mallaNueva);                                
+                                $msgContenido = $tramiteController->getCertTecValidacion($participanteId, $especialidadId, $nivelId, $gestionId, $mallaNueva);
 
                                 $documentoController = new documentoController();
                                 $documentoController->setContainer($this->container);
@@ -1993,6 +1998,7 @@ class TramiteDetalleController extends Controller {
                     $this->session->getFlashBag()->set('success', array('title' => 'Correcto', 'message' => $messageCorrecto));
                 }
                 if($messageError!=""){
+                    $em->getConnection()->rollback();
                     $this->session->getFlashBag()->set('danger', array('title' => 'Error', 'message' => $messageError));
                 }
             } catch (\Doctrine\ORM\NoResultException $exc) {

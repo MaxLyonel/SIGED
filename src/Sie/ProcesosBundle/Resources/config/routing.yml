@@ -92,3 +92,7 @@ sie_procesos_tramite_inclusion_calificacion:
 sie_procesos_tramite_modificacion_calificacion_gestion_pasada:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteModificacionCalificacionGestionPasada.yml"
     prefix:   /sie/tramite/modificacion/calificacion/gestion/pasada
+
+sie_procesos_tramite_previmmediatemodiver2:
+    resource: "@SieProcesosBundle/Resources/config/routing/previmmediatemodiver2.yml"
+    prefix:   /sie/tramite/previmmediatemodiver2

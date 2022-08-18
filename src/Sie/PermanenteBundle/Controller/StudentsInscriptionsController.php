@@ -992,7 +992,13 @@ class StudentsInscriptionsController extends Controller {
             $form = $this->createFormBuilder()
                 ->add('matricula', 'choice', array('required' => false, 'choices' => $estadomatriculaArray,  'attr' => array('class' => 'form-control')))
                 ->getForm();
-
+            // get the infor about the operative
+            $swInscription  = $this->getOperativeData($sw=false, $idcurso);
+            $swCalification = false;
+            if(!$swInscription){
+                $swCalification =  $this->getOperativeData(!$swInscription, $idcurso);
+            }
+            
 
             return $this->render('SiePermanenteBundle:CursosLargos:seeInscritos.html.twig', array(
                 'objStudents' => $objStudents,
@@ -1005,6 +1011,8 @@ class StudentsInscriptionsController extends Controller {
                 'existins' => $existins,
                 'infoUe' => $infoUe,
                 'dataUe' => $dataUe,
+                'swInscription' => $swInscription,
+                'swCalification' => $swCalification,                
                 'totalInscritos'=>count($objStudents)
 
             ));
@@ -1013,6 +1021,64 @@ class StudentsInscriptionsController extends Controller {
             echo 'Excepción capturada: ', $ex->getMessage(), "\n";
         }
     }
+
+    private function getOperativeData($sw, $idcurso){
+        
+        $em = $this->getDoctrine()->getManager();
+
+        $institucioncursocorto=$em->getRepository('SieAppWebBundle:PermanenteInstitucioneducativaCursocorto')->findOneBy(array('institucioneducativaCurso'=>$idcurso));
+
+        $today = date('d-m-Y');
+        $swOpe = false;  
+
+        if( sizeof($institucioncursocorto)>0 && $institucioncursocorto->getEsabierto()){
+            $query = $em->getConnection()->prepare('
+                select a.fecha_inicio,a.fecha_fin, sat.acreditacion           
+                FROM institucioneducativa_curso a  
+                inner join superior_institucioneducativa_periodo sip on a.superior_institucioneducativa_periodo_id = sip.id
+                inner join turno_tipo tt on tt.id= a.turno_tipo_id
+                inner join superior_periodo_tipo spt on spt.id  = sip.superior_periodo_tipo_id
+                inner join superior_institucioneducativa_acreditacion sia on sia.id = sip.superior_institucioneducativa_acreditacion_id
+                inner join institucioneducativa ie on ie.id =sia.institucioneducativa_id
+                inner join superior_acreditacion_especialidad sae on sae.id = sia.acreditacion_especialidad_id
+                inner join superior_acreditacion_tipo sat on sat.id = sae.superior_acreditacion_tipo_id
+                inner join superior_especialidad_tipo sespt on sespt.id = sae.superior_especialidad_tipo_id
+                inner join superior_facultad_area_tipo sfat on sfat.id = sespt.superior_facultad_area_tipo_id
+                where  a.nivel_tipo_id= 231 and a.id=:idcurso
+            ');
+            $query->bindValue(':idcurso',$idcurso);
+            $query->execute();
+            $objRequest= $query->fetch();
+          
+                if(sizeof($objRequest)>0){
+                    // get the acreditacion to set months
+                    $monthsInscription  = ($objRequest['acreditacion'] == 'TÉCNICO BÁSICO' || $objRequest[0]['acreditacion'] == 'TÉCNICO AUXILIAR')?3:5;
+                    $monthsNotas  = ($objRequest['acreditacion'] == 'TÉCNICO BÁSICO' || $objRequest[0]['acreditacion'] == 'TÉCNICO AUXILIAR')?4:6;
+                    $f_ini = date('d-m-Y', strtotime($objRequest['fecha_inicio']));
+                    if(!$sw){
+                        $f_limit = date("d-m-Y", strtotime($f_ini."+".$monthsInscription." month") );
+                    }else{
+                        $f_ini = date("d-m-Y", strtotime($f_ini."+".$monthsInscription." month") );
+                        $f_limit = date("d-m-Y", strtotime($f_ini."+".$monthsNotas." month") );
+                    }
+                    //compare the limit ini and end operatvie
+                    if(strtotime($f_ini)<= strtotime($today)  && strtotime($today) <= strtotime($f_limit)){
+                        $swOpe = true;
+                    }
+
+                }else{
+                    // no data
+                }            
+
+        }else{
+            $swOpe = false;
+        }
+
+
+        
+        return(($swOpe));
+
+    }    
 
     public function showHistoryAction(Request $request){
       // ini vars
@@ -1031,7 +1097,7 @@ class StudentsInscriptionsController extends Controller {
         $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
         $query->execute();
         $dataInscription = $query->fetchAll();
-        
+        dump($dataInscription);die;
         foreach ($dataInscription as $key => $inscription) {
             switch ($inscription['institucioneducativa_tipo_id_raep']) {
                 case '1':
