@@ -1,0 +1,123 @@
+{% extends 'layoutUniversity.html.twig' %}
+
+{% block contentoption %}
+
+<div class="header-content">
+    <h2><i class="fa fa-file-o"></i>Información de la Unidad Educativa <span>Menú Principal</span></h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">Estás aquí:</span>
+        <ol class="breadcrumb">
+            <li>
+                <i class="fa fa-home"></i>
+                <a href="#">Principal</a>
+                <i class="fa fa-angle-right"></i>
+            </li>
+            <li class="active">Registro de Información</li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="body-content animated fadeIn">
+
+
+    {% if tuicion %}
+        <div class="row">
+        	{% if enablePersonalStaffOption == 1 %}
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/uni_staff.png')}}" alt="">
+                    <div class="caption text-center">
+                        <h4>Personal Ejecutivo</h4>
+                        <div class="thumbnail-action">
+                            {{form_start(uni_staff)}}
+                                {{form_widget(uni_staff.next)}}
+                            {{form_end(uni_staff)}}                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        	{% endif %}
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/uni_infosede.png')}}" alt="">
+                    <div class="caption text-center">
+                        <h4>Informacion Sede/sub Sede Central</h4>
+                        <div class="thumbnail-action">
+                            {{form_start(uni_infosede)}}
+                                {{form_widget(uni_infosede.next)}}
+                            {{form_end(uni_infosede)}}                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        	{% if enablePersonalStaffOption == 1 %}
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/uni_statisticssede.png')}}" alt="">
+                    <div class="caption text-center">
+                        <h4>Estadisitica Sede Central</h4>
+                        <div class="thumbnail-action">
+                            {{form_start(uni_statisticssede)}}
+                                {{form_widget(uni_statisticssede.next)}}
+                            {{form_end(uni_statisticssede)}}                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        	{% endif %}
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/uni_statistics.png')}}" alt="">
+                    <div class="caption text-center">
+                        <h4>Estadisticas</h4>
+                        <div class="thumbnail-action">
+                            {{form_start(uni_statistics)}}
+                                {{form_widget(uni_statistics.next)}}
+                            {{form_end(uni_statistics)}}                        
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('img/uni_close.png')}}" alt="">
+                    <div class="caption text-center">
+                        <h4>Cerrar Operativo</h4>
+                        <div class="thumbnail-action">
+							<form name="form" method="post" action="">
+                                <button type="button" id="form_next" name="form[next]" class="btn btn-primary btn-md btn-block">Cerrar Operativo</button>
+							</form> 
+                        </div>
+                    </div>
+                </div>
+            </div>            
+            
+        
+
+        </div>
+        <div class="row">
+            <div id="answerClose" style="overflow: scroll; width: 100%; height:300px" class="col-lg-3 col-md-6 col-sm-12 col-xs-12"></div>
+        </div>
+    {% else %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-danger text-center" role="alert">
+                    <h2><i class="fa fa-info-circle"></i></h2>
+                    <h3>¡USUARIO NO AUTORIZADO PARA EL REPORTE DE LA INFORMACIÓN!</h3>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+<script type="text/javascript" src="{{asset('alert/lib/alertify.js')}}"></script>
+<link rel="stylesheet" href="{{asset('alert/themes/alertify.core.css')}}" />
+<link rel="stylesheet" href="{{asset('alert/themes/alertify.default.css')}}" />
+{% endblock %}
+{% block javascripts%}
+    {{parent()}}
+    <script>
+        
+    </script>
+{%endblock%}

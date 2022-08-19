@@ -1,0 +1,87 @@
+Sie\AppWebBundle\Entity\UnivDatUniCarrera:
+    type: entity
+    table: univ_dat_uni_carrera
+    id:
+        id:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        sedeId:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: sede_id
+        carrera:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        resolucion:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        fecha:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        rmApertura:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: rm_apertura
+        fechaApertura:
+            type: string
+            nullable: true
+            length: 5000
+            fixed: false
+            comment: ''
+            column: fecha_apertura
+        gradoAcademicoId:
+            type: string
+            nullable: true
+            length: 5255
+            fixed: false
+            comment: ''
+            column: grado_academico_id
+        duracion:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        colegioId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: colegio_id
+        estado:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        createdAt:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: created_at
+    lifecycleCallbacks: {  }

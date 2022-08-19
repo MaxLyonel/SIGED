@@ -1,0 +1,46 @@
+Sie\AppWebBundle\Entity\UnivDatForEnvio:
+    type: entity
+    table: univ_dat_for_envio
+    id:
+        id:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        observacion:
+            type: string
+            nullable: true
+            length: 2555
+            fixed: false
+            comment: ''
+        fecha:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        usuarioId:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: usuario_id
+        estado:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        hora:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

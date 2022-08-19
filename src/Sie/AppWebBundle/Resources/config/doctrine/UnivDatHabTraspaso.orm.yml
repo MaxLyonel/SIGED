@@ -1,0 +1,98 @@
+Sie\AppWebBundle\Entity\UnivDatHabTraspaso:
+    type: entity
+    table: univ_dat_hab_traspaso
+    id:
+        id:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        planOrigen:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: plan_origen
+        planDestino:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: plan_destino
+        nResolucionPlan:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: n_resolucion_plan
+        nInformePlan:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: n_informe_plan
+        universidadOrigen:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: universidad_origen
+        serieCertificados:
+            type: string
+            nullable: true
+            length: 5000
+            fixed: false
+            comment: ''
+            column: serie_certificados
+        nConvalidacion:
+            type: string
+            nullable: true
+            length: 5255
+            fixed: false
+            comment: ''
+            column: n_convalidacion
+        fechaConvalidacion:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: fecha_convalidacion
+        habilitacionId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: habilitacion_id
+        nInformeTecnico:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: n_informe_tecnico
+        observacion:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        updatedAt:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: updated_at
+    lifecycleCallbacks: {  }

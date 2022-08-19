@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\UnivTipoUniversidad:
+    type: entity
+    table: univ_tipo_universidad
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        tipoUniversidad:
+            type: string
+            nullable: true
+            length: 145
+            fixed: false
+            comment: ''
+            column: tipo_universidad
+    lifecycleCallbacks: {  }

@@ -237,13 +237,13 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="card">
                                         <div class="body">
-											{% if entity.formularios is not empty %}
+											{% if formularios is not empty %}
                                             <!-- Example Tab -->
 											<div class="row">
 												<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 													<!-- Nav tabs -->
 													<ul class="nav nav-tabs tab-nav-right" role="tablist">
-														{% for f in entity.formularios  %}
+														{% for f in formularios  %}
 															{% if loop.index == 1 %}
 																{% set activo = true %}
 															{% else %}
@@ -260,7 +260,7 @@
 
 													<!-- Tab panes -->
 													<div class="tab-content">
-														{% for f in entity.formularios  %}
+														{% for f in formularios  %}
 															{% if loop.index == 1 %}
 																{% set activo = true %}
 															{% else %}
@@ -357,7 +357,7 @@
 														</tr>
 													</tfoot>
 													<tbody>
-														{% for c in entity.certificados %}
+														{% for c in certificados %}
 															<tr>
 																<td>{{ c.nroCertificado }}</td>
 																<td>{{ c.institucioneducativa.id }}</td>
