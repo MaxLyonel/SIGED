@@ -1,0 +1,33 @@
+Sie\AppWebBundle\Entity\UnivTmpCite:
+    type: entity
+    table: univ_tmp_cite
+    id:
+        id:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        numero:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        gestion:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        estado:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

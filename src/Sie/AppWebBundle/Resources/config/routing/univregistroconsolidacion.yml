@@ -1,0 +1,30 @@
+univconsolidation:
+    path:     /
+    defaults: { _controller: "SieAppWebBundle:UnivRegistroConsolidacion:index" }
+
+univconsolidation_show:
+    path:     /{id}/show
+    defaults: { _controller: "SieAppWebBundle:UnivRegistroConsolidacion:show" }
+
+univconsolidation_new:
+    path:     /new
+    defaults: { _controller: "SieAppWebBundle:UnivRegistroConsolidacion:new" }
+
+univconsolidation_create:
+    path:     /create
+    defaults: { _controller: "SieAppWebBundle:UnivRegistroConsolidacion:create" }
+    methods:  POST
+
+univconsolidation_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "SieAppWebBundle:UnivRegistroConsolidacion:edit" }
+
+univconsolidation_update:
+    path:     /{id}/update
+    defaults: { _controller: "SieAppWebBundle:UnivRegistroConsolidacion:update" }
+    methods:  [POST, PUT]
+
+univconsolidation_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "SieAppWebBundle:UnivRegistroConsolidacion:delete" }
+    methods:  [POST, DELETE]

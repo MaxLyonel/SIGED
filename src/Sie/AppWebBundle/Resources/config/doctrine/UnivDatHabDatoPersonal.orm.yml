@@ -1,0 +1,152 @@
+Sie\AppWebBundle\Entity\UnivDatHabDatoPersonal:
+    type: entity
+    table: univ_dat_hab_dato_personal
+    id:
+        id:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        ci:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        complemento:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+        expedidoId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: expedido_id
+        paterno:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        materno:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        nombre:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        generoId:
+            type: string
+            nullable: true
+            length: 5255
+            fixed: false
+            comment: ''
+            column: genero_id
+        nCertificadoNacimiento:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: n_certificado_nacimiento
+        dipInstitucion:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: dip_institucion
+        dipFechaEmision:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: dip_fecha_emision
+        dipNumero:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: dip_numero
+        complementario:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        resolucionDptal:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: resolucion_dptal
+        nPartida:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: n_partida
+        pasaporte:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        paisId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: pais_id
+        visa:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        habilitacionId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: habilitacion_id
+        observacion:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        resolucion:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        updatedAt:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: updated_at
+    lifecycleCallbacks: {  }

@@ -59,6 +59,14 @@ class DefaultController extends Controller {
                 $layout = 'layoutAlternativa.html.twig';
                 $this->session->set('pathSystem', "SieAlternativaBundle");
                 break;
+            case '172.20.196.8:8022':
+            case 'sieuni.sie.gob.bo':
+                $sysname = 'UNIVERSIDADES';
+                $sysporlet = 'blue';
+                $sysbutton = false;
+                $layout = 'layoutUniversity.html.twig';
+                $this->session->set('pathSystem', "SieUniversityBundle");
+                break;
             case '172.20.16.239a':
             // case '172.20.196.7':
                 $sysname = 'Herramienta';
@@ -193,20 +201,26 @@ class DefaultController extends Controller {
                 $layout = 'layoutJuegos.html.twig';
                 $this->session->set('pathSystem', "SieJuegosBundle");
                 break;
-            case '172.20.196.17':                
+            case '172.20.196.11':                
                 // $sysname = 'TRAMITE';
                 // $sysporlet = 'green';
                 // $sysbutton = false;
                 // $layout = 'layoutTramites.html.twig';
                 // $this->session->set('pathSystem', "SieTramitesBundle");
                 // break;
-                $sysname = 'Sistema Siged';
+                // $sysname = 'Sistema Siged';
+                // $sysporlet = 'blue';
+                // $sysbutton = true;
+                // $layout = 'layoutRegular.html.twig';
+                // $this->session->set('pathSystem', "SieRegularBundle");
+                // $this->session->set('sistemaid', 1);
+                // $this->session->set('color', 'blue');
+                // break;
+                $sysname = 'UNIVERSIDADES';
                 $sysporlet = 'blue';
-                $sysbutton = true;
-                $layout = 'layoutRegular.html.twig';
-                $this->session->set('pathSystem', "SieRegularBundle");
-                $this->session->set('sistemaid', 1);
-                $this->session->set('color', 'blue');
+                $sysbutton = false;
+                $layout = 'layoutUniversity.html.twig';
+                $this->session->set('pathSystem', "SieUniversityBundle");
                 break;
                 // $sysname = 'Sistema Académico Educación Regular';
                 // $sysporlet = 'blue';
@@ -645,6 +659,11 @@ class DefaultController extends Controller {
                 $this->session->set('userId2', $user->getId());
                 $this->session->set('currentyear', date('Y'));
 
+
+                
+                if($this->session->get('pathSystem')=='SieUniversityBundle'){
+                    return $this->redirect($this->generateUrl('sie_university_homepage'));
+                }
                 //*************************
                 //*************************
                 //*****CONFIGURACIONES PARA OTROS SUBSISTEMAS
@@ -943,6 +962,7 @@ class DefaultController extends Controller {
                     //dump(count($rolselected));die();
                     if (count($rolselected) === 0) {
                         $this->session->getFlashBag()->add('error', '¡Usted no cuenta registro vigente en la presente gestión! Consulte con su técnico SIE en el módulo Gestión Administrativos.');
+
                         return $this->render('SieAppWebBundle:Login:rolesunidades.html.twig',
                         array(
                             'titulosubsistema' => $this->session->get('sysname'),

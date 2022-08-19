@@ -1,0 +1,7 @@
+maininfouni_index:
+    path:     /
+    defaults: { _controller: SieUniversityBundle:MainInfoUni:index }
+
+# maininfouni_index:
+#     path:     /
+#     defaults: { _controller: SieUniversityBundle:ExecutiveStaff:index }    

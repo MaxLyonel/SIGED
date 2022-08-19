@@ -203,7 +203,7 @@ class RegistroInstitucionEducativaController extends Controller {
                         FROM SieAppWebBundle:NivelTipo tn
 						WHERE tn.id in (:id)
 						ORDER BY tn.id ASC'
-    				)->setParameter('id', array(11,12,405));
+    				)->setParameter('id', array(11,12,232,203,204,205)); //11,12,405
     				$niveles = $query->getResult();
     				$nivelesArray = array();
     				for($i=0;$i<count($niveles);$i++){
@@ -499,9 +499,8 @@ class RegistroInstitucionEducativaController extends Controller {
 
 //         $entity = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRue'));
 //         $estadoActivo = array('1' => 'Si', '0' => 'No');
-
+        //dump($entity->getInstitucioneducativaTipo()->getId());die;
         //carga araas de especial autorizadas
-
         if ($entity->getInstitucioneducativaTipo()->getId() == 1) {
 
         	$query = $em->createQuery(
@@ -553,10 +552,11 @@ class RegistroInstitucionEducativaController extends Controller {
         			);
         			$niveles = $query->getResult();
         			$nivelesArray = array();
+                    
         			for($i=0;$i<count($niveles);$i++){
         				$nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
         			}
-
+                    
         	$query = $em->createQuery(
         			'SELECT DISTINCT tn.id,tn.nivel
                         FROM SieAppWebBundle:InstitucioneducativaNivelAutorizado ien
@@ -590,8 +590,9 @@ class RegistroInstitucionEducativaController extends Controller {
                         FROM SieAppWebBundle:NivelTipo tn
 						WHERE tn.id in (:id)
 						ORDER BY tn.id ASC'
-        			)->setParameter('id', array(11,12,405));
+        			)->setParameter('id', array(11,12,232,203,204,205)); //11,12,405
         			$niveles = $query->getResult();
+                    
         			$nivelesArray = array();
         			for($i=0;$i<count($niveles);$i++){
         				$nivelesArray[$niveles[$i]['id']] = $niveles[$i]['nivel'];
@@ -647,9 +648,9 @@ class RegistroInstitucionEducativaController extends Controller {
                 for($i=0;$i<count($tipos);$i++){
                     $tiposArray[$tipos[$i]['id']] = $tipos[$i]['descripcion'];
                 }
-
+           
         }
-
+       
         $query = $em->createQuery(
             'SELECT DISTINCT dt.id,dt.dependencia
                 FROM SieAppWebBundle:DependenciaTipo dt
@@ -686,7 +687,7 @@ class RegistroInstitucionEducativaController extends Controller {
                         $conveniosArray[$convenios[$i]['id']] = $convenios[$i]['convenio'];
                     }
 
-
+        
 
 //         $areas = $em->getRepository('SieAppWebBundle:AreaEspecialTipo')->findAll();
 //         dump($areasInstitucionArray);die;
@@ -715,6 +716,7 @@ class RegistroInstitucionEducativaController extends Controller {
         ->add('zona', 'text', array('label' => 'Zona', 'data' => $entity->getLeJuridicciongeografica()->getZona(), 'disabled' => true, 'attr' => array('class' => 'form-control')))
         ->add('direccion', 'text', array('label' => 'Direccion', 'data' => $entity->getLeJuridicciongeografica()->getDireccion(), 'disabled' => true, 'attr' => array('class' => 'form-control')))
         ->add('distrito', 'text', array('label' => 'Distrito', 'data' => $entity->getLeJuridicciongeografica()->getDistritoTipo()->getDistrito(), 'disabled' => true, 'attr' => array('class' => 'form-control')))
+        
 
         ->add('guardar', 'submit', array('label' => 'Guardar'));
 
@@ -731,9 +733,10 @@ class RegistroInstitucionEducativaController extends Controller {
             $nivelesInstitucionArray = array();
             $form->add('nivelTipo', 'choice', array('label' => 'Niveles', 'choices'=>$nivelesArray,  'required' => true  , 'multiple' => true,'expanded' => true,'data' => $nivelesInstitucionArray));
         }
+        $formularios = array();
+        $certificados = array();
 
-
-        return $this->render('SieRueBundle:RegistroInstitucionEducativa:edit.html.twig', array('entity' => $entity,'form' => $form->getForm()->createView()));
+        return $this->render('SieRueBundle:RegistroInstitucionEducativa:edit.html.twig', array('entity' => $entity, 'formularios' => $formularios, 'certificados' => $certificados,'form' => $form->getForm()->createView()));
 
 
 

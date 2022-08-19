@@ -1,0 +1,105 @@
+Sie\AppWebBundle\Entity\UnivDatHabAcademico:
+    type: entity
+    table: univ_dat_hab_academico
+    id:
+        id:
+            type: string
+            nullable: false
+            length: 255
+            fixed: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        periodoInicioId:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: periodo_inicio_id
+        gestionInicioId:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: gestion_inicio_id
+        periodoFinId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: periodo_fin_id
+        gestionFinId:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: gestion_fin_id
+        nResolucionCarrera:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: n_resolucion_carrera
+        fechaResolucionCarrera:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: fecha_resolucion_carrera
+        serieCertificadoCarrera:
+            type: string
+            nullable: true
+            length: 5255
+            fixed: false
+            comment: ''
+            column: serie_certificado_carrera
+        serieCertificadoVerano:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: serie_certificado_verano
+        serieHistorial:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: serie_historial
+        fechaHistorial:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: fecha_historial
+        habilitacionId:
+            type: string
+            nullable: true
+            length: 50000
+            fixed: false
+            comment: ''
+            column: habilitacion_id
+        observacion:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+        updatedAt:
+            type: string
+            nullable: true
+            length: 500
+            fixed: false
+            comment: ''
+            column: updated_at
+    lifecycleCallbacks: {  }

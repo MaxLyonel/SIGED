@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\UnivNaturalezajuridicaTipo:
+    type: entity
+    table: univ_naturalezajuridica_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        naturalezajuridica:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -1,0 +1,3 @@
+sedes_index:
+    path:     /
+    defaults: { _controller: SieUniversityBundle:InfoSedes:index }
