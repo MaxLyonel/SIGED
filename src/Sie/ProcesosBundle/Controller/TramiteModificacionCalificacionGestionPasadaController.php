@@ -510,6 +510,7 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
             return $response;
         }
     }
+  
 
     public function formularioImprimirAction(Request $request){
 
@@ -983,7 +984,6 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
                 '',
                 $lugarTipo['lugarTipoIdDistrito']
             );
-
             // VERIFICAMOS SI EL TRAMITE ES PROCEDENTE PARA REGISTRAR LA VERIFICACION DE GESTION Y BIMESTRE
             if ($procedente == 'SI') {
                 // $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
@@ -1073,32 +1073,32 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
             // VERIFICAR SI EL TRAMITE NO ES PROCEDENTE PARA REGISTRAR LA TAREA DE OBSERVACION
             if ($procedente == 'NO') {
 
-                $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
-                    $this->session->get('userId'),
-                    $tareaSiguienteNo,
-                    $idTramite
-                );
+                // $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
+                //     $this->session->get('userId'),
+                //     $tareaSiguienteNo,
+                //     $idTramite
+                // );
 
-                $datos = json_encode(array(
-                    'sie'=>$sie,
-                    'finalizar'=>$finalizar,
-                    'observacion'=>$observacion
-                ), JSON_UNESCAPED_UNICODE);
+                // $datos = json_encode(array(
+                //     'sie'=>$sie,
+                //     'finalizar'=>$finalizar,
+                //     'observacion'=>$observacion
+                // ), JSON_UNESCAPED_UNICODE);
 
-                $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
-                    $this->session->get('userId'),
-                    $this->session->get('roluser'),
-                    $flujoTipo,
-                    $tareaSiguienteNo,
-                    'institucioneducativa',
-                    $sie,
-                    $observacion,
-                    $finalizar,
-                    $idTramite,
-                    $datos,
-                    '',
-                    $lugarTipo['lugarTipoIdDistrito']
-                );
+                // $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                //     $this->session->get('userId'),
+                //     $this->session->get('roluser'),
+                //     $flujoTipo,
+                //     $tareaSiguienteNo,
+                //     'institucioneducativa',
+                //     $sie,
+                //     $observacion,
+                //     $finalizar,
+                //     $idTramite,
+                //     $datos,
+                //     '',
+                //     $lugarTipo['lugarTipoIdDistrito']
+                // );
             }
 
             $em->getConnection()->commit();
@@ -1131,6 +1131,276 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
             'aprobarDistrito'=>false
         ));
     }   
+
+
+
+    /**
+     * derivacion del formulario de distrito
+     * @param  Request $request datos formulario distrito
+     * @return msg              respuesta en formato json
+     */
+    public function distritoSolicitaSaveAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $em->getConnection()->beginTransaction();
+        try {
+
+            $idTramite = $request->get('idTramite');
+
+            /*----------  VERIFICACION  ----------*/
+            // VERIFICAMOS SI EL NUEVO ESTADO ES PROMOVIDO Y POSTERIORMENTE VERIFICAMOS SI EXISTE OTRA INSCRIPCION SIMILAR DEL MISMO NIVEL Y GRADO
+            // PARA EVITAR DOBLE PROMOCION
+            $respuesta = $this->calcularNuevoEstado($idTramite);
+            if ($respuesta['nuevoEstado'] == 5) {
+                $inscripcionSimilar = $this->get('funciones')->existeInscripcionSimilarAprobado($respuesta['idInscripcion']);
+                if ($inscripcionSimilar) {
+                    $request->getSession()
+                            ->getFlashBag()
+                            ->add('errorTAMC', 'El trámite no puede ser aprobado, porque la solicitud modificará el estado de matrícula de la inscripción a promovido, pero el estudiante ya tiene otra inscripción del mismo nivel y grado con estado promovido o efectivo.');
+                    //return $this->redirectToRoute('tramite_modificacion_calificaciones_recepcion_verifica_departamento', array('id'=>$idTramite, 'tipo'=>'idtramite'));
+                    return $this->redirectToRoute('tramite_add_mod_cal_recepcion_verifica_departamento', array('id'=>$idTramite, 'tipo'=>'idtramite'));
+                }
+            }
+            /*=====  End of VERIFICACION  ======*/
+
+            $procedente = $request->get('procedente');
+            $observacion = mb_strtoupper($request->get('observacion'),'UTF-8');
+            
+            $checkSolicitud = $request->get('checkSolicitud');
+            $checkLibreta = $request->get('checkLibreta');
+            $checkCi = $request->get('checkCi');
+            $checkRegistro = $request->get('checkRegistro');
+            $checkFormulario = $request->get('checkFormulario');
+            $finalizar = $request->get('finalizar');
+
+            $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($idTramite);
+            $flujoTipo = $tramite->getFlujoTipo()->getId();
+            $sie = $tramite->getInstitucioneducativa()->getId();
+            $gestion = $tramite->getGestionId();
+
+            // OBTENEMOS EL LUGAR TIPO DEL TRAMITE
+            $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
+
+            // OBTENEMOS LA TAREA ACTUAL Y SIGUIENTE
+            $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
+            $tareaActual = '';
+            $tareaSiguienteSi = '';
+            $tareaSiguienteNo = '';
+            foreach ($tarea as $t) {
+                $tareaActual = $t['tarea_actual'];
+                if ($t['condicion'] == 'SI') {
+                    $tareaSiguienteSi = $t['tarea_siguiente'];
+                }
+                if ($t['condicion'] == 'NO') {
+                    $tareaSiguienteNo = $t['tarea_siguiente'];
+                }
+            }
+
+            // VERIFICAMOS SI EXISTE EL INFORME
+            if(isset($_FILES['informe'])){
+                $file = $_FILES['informe'];
+
+                if ($file['name'] != "") {
+                    $type = $file['type'];
+                    $size = $file['size'];
+                    $tmp_name = $file['tmp_name'];
+                    $name = $file['name'];
+                    $extension = explode('.', $name);
+                    $extension = $extension[count($extension)-1];
+                    $new_name = date('YmdHis').'.'.$extension;
+
+                    // GUARDAMOS EL ARCHIVO
+                    $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/modificacionNotasGestionPasada/' . $sie;
+                    if (!file_exists($directorio)) {
+                        mkdir($directorio, 0777, true);
+                    }
+
+                    $archivador = $directorio.'/'.$new_name;
+                    //unlink($archivador);
+                    if(!move_uploaded_file($tmp_name, $archivador)){
+                        $response->setStatusCode(500);
+                        return $response;
+                    }
+                    
+                    // CREAMOS LOS DATOS DE LA IMAGEN
+                    $informe = array(
+                        'name' => $name,
+                        'type' => $type,
+                        'tmp_name' => 'nueva_ruta',
+                        'size' => $size,
+                        'new_name' => $new_name
+                    );
+                }else{
+                    $informe = null;
+                }
+            }else{
+                $informe = null;
+            }
+
+            // CREAMOS EL ARRAY DE DATOS QUE SE GUARDARA EN FORMATO JSON
+            $datos = json_encode(array(
+                'sie'=>$sie,
+                'procedente'=>$procedente,
+                'finalizar'=>$finalizar,
+                'observacion'=>$observacion,
+                'checkSolicitud'=>($checkSolicitud == null)?false:true,
+                'checkLibreta'=>($checkLibreta == null)?false:true,
+                'checkCi'=>($checkCi == null)?false:true,
+                'checkRegistro'=>($checkRegistro == null)?false:true,
+                'checkFormulario'=>($checkFormulario == null)?false:true,
+                'informe'=>$informe
+            ), JSON_UNESCAPED_UNICODE);
+
+            // ENVIAMOS EL TRAMITE
+            $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                $this->session->get('userId'),
+                $this->session->get('roluser'),
+                $flujoTipo,
+                $tareaActual,
+                'institucioneducativa',
+                $sie,
+                $observacion,
+                $procedente,
+                $idTramite,
+                $datos,
+                '',
+                $lugarTipo['lugarTipoIdDistrito']
+            );
+
+            // VERIFICAMOS SI EL TRAMITE ES PROCEDENTE PARA REGISTRAR LA VERIFICACION DE GESTION Y BIMESTRE
+            if ($procedente == 'SI') {
+                // $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
+                //     $this->session->get('userId'),
+                //     $tareaSiguienteSi,
+                //     $idTramite
+                // );
+                // VERIFICAMOS SI EL DISTRITO PUEDE APROBAR
+                // $aprobarDistrito = ($this->verificarBimestreAnterior($idTramite))?'SI':'NO';
+
+                // ARMAMOS EL ARRAY DE DATOS QUE SE GUARDARA EN FORMATO JSON
+                $datos = json_encode(array(
+                    'sie'=>$sie,
+                    'finalizar'=>$finalizar,
+                    'observacion'=>$observacion
+                ), JSON_UNESCAPED_UNICODE);
+
+                // $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                //     $this->session->get('userId'),
+                //     $this->session->get('roluser'),
+                //     $flujoTipo,
+                //     $tareaSiguienteSi,
+                //     'institucioneducativa',
+                //     $sie,
+                //     $observacion,
+                //     $procedente,//$aprobarDistrito,
+                //     $idTramite,
+                //     $datos,
+                //     '',
+                //     $lugarTipo['lugarTipoIdDistrito']
+                // );
+
+                /*----------  VERIFICAMOS SI EL DISTRITO APRUEBA LA MODIFICACION  ----------*/
+
+                // if ($aprobarDistrito == 'SI') {
+
+                //     // OBTENEMOS EL ID DE LA TAREA SIGUIENTE
+                //     $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
+                //     $tareaActual = '';
+                //     $tareaSiguienteSi = '';
+                //     foreach ($tarea as $t) {
+                //         $tareaActual = $t['tarea_actual'];
+                //         if ($t['condicion'] == 'SI') {
+                //             $tareaSiguienteSi = $t['tarea_siguiente'];
+                //         }
+                //     }
+
+                //     // RECIBIMOS EL TRAMITE
+                //     $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
+                //         $this->session->get('userId'),
+                //         $tareaSiguienteSi,
+                //         $idTramite
+                //     );
+                    
+                //     /*----------  MODIFICAMOS LAS CALIFICACIONES EN EL SISTEMA  ----------*/
+
+                //     //$this->modificarCalificacionesSIE($idTramite);
+
+                //     /*----------  FIN MODIFICACION DE CALIFICACIONES EN EL SIE  ----------*/
+
+                //     // ARMAMOS EL ARRAY DE DATOS QUE SE GUARDARA EN FORMATO JSON
+                //     $datos = json_encode(array(
+                //         'sie'=>$sie,
+                //         'aprobarDistrito'=>$aprobarDistrito,
+                //         'observacion'=>$observacion
+                //     ), JSON_UNESCAPED_UNICODE);
+
+                //     // ENVIAMOS EL TRAMITE
+                //     $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                //         $this->session->get('userId'),
+                //         $this->session->get('roluser'),
+                //         $flujoTipo,
+                //         $tareaSiguienteSi,
+                //         'institucioneducativa',
+                //         $sie,
+                //         $observacion,
+                //         $aprobarDistrito,
+                //         $idTramite,
+                //         $datos,
+                //         '',
+                //         $lugarTipo['lugarTipoIdDistrito']
+                //     );
+                // }
+
+                $request->getSession()
+                ->getFlashBag()
+                ->add('exito', "El Tramite ". $idTramite ." fue enviado exitosamente");
+
+            }
+
+            // VERIFICAR SI EL TRAMITE NO ES PROCEDENTE PARA REGISTRAR LA TAREA DE OBSERVACION
+            if ($procedente == 'NO') {
+
+                // $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
+                //     $this->session->get('userId'),
+                //     $tareaSiguienteNo,
+                //     $idTramite
+                // );
+
+                // $datos = json_encode(array(
+                //     'sie'=>$sie,
+                //     'finalizar'=>$finalizar,
+                //     'observacion'=>$observacion
+                // ), JSON_UNESCAPED_UNICODE);
+
+                // $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                //     $this->session->get('userId'),
+                //     $this->session->get('roluser'),
+                //     $flujoTipo,
+                //     $tareaSiguienteNo,
+                //     'institucioneducativa',
+                //     $sie,
+                //     $observacion,
+                //     $finalizar,
+                //     $idTramite,
+                //     $datos,
+                //     '',
+                //     $lugarTipo['lugarTipoIdDistrito']
+                // );
+
+
+                $request->getSession()
+                ->getFlashBag()
+                ->add('exito', "El Tramite ". $idTramite ." no fue autorizado y finalizado");
+            }
+
+            $em->getConnection()->commit();
+
+
+            return $this->redirectToRoute('wf_tramite_index', array('tipo'=>3));
+
+        } catch (Exception $e) {
+            $em->getConnection()->rollback();
+        }
+    }
 
 
     /**
@@ -1344,44 +1614,50 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
                     );
                 }
 
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', "El Tramite ". $idTramite ." fue enviado exitosamente y finalizado");
+
             }
 
             // VERIFICAR SI EL TRAMITE NO ES PROCEDENTE PARA REGISTRAR LA TAREA DE OBSERVACION
             if ($procedente == 'NO') {
 
-                $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
-                    $this->session->get('userId'),
-                    $tareaSiguienteNo,
-                    $idTramite
-                );
+                // $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
+                //     $this->session->get('userId'),
+                //     $tareaSiguienteNo,
+                //     $idTramite
+                // );
 
-                $datos = json_encode(array(
-                    'sie'=>$sie,
-                    'finalizar'=>$finalizar,
-                    'observacion'=>$observacion
-                ), JSON_UNESCAPED_UNICODE);
+                // $datos = json_encode(array(
+                //     'sie'=>$sie,
+                //     'finalizar'=>$finalizar,
+                //     'observacion'=>$observacion
+                // ), JSON_UNESCAPED_UNICODE);
 
-                $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
-                    $this->session->get('userId'),
-                    $this->session->get('roluser'),
-                    $flujoTipo,
-                    $tareaSiguienteNo,
-                    'institucioneducativa',
-                    $sie,
-                    $observacion,
-                    $finalizar,
-                    $idTramite,
-                    $datos,
-                    '',
-                    $lugarTipo['lugarTipoIdDistrito']
-                );
+                // $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                //     $this->session->get('userId'),
+                //     $this->session->get('roluser'),
+                //     $flujoTipo,
+                //     $tareaSiguienteNo,
+                //     'institucioneducativa',
+                //     $sie,
+                //     $observacion,
+                //     $finalizar,
+                //     $idTramite,
+                //     $datos,
+                //     '',
+                //     $lugarTipo['lugarTipoIdDistrito']
+                // );
+
+                $request->getSession()
+                    ->getFlashBag()
+                    ->add('exito', "El Tramite ". $idTramite ." no fue autorizado");
             }
 
             $em->getConnection()->commit();
 
-            $request->getSession()
-                    ->getFlashBag()
-                    ->add('exito', "El Tramite ". $idTramite ." fue enviado exitosamente");
+            
 
             return $this->redirectToRoute('wf_tramite_index', array('tipo'=>3));
 
@@ -1405,9 +1681,10 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
 
         $historial = $this->historial($idTramite);
 
-        return $this->render('SieProcesosBundle:TramiteInclusionCalificacion:formularioVistaDepartamento.html.twig', array(
+        return $this->render('SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:formularioVistaDepartamento.html.twig', array(
             'idTramite'=>$idTramite,
-            'historial'=>$historial
+            'historial'=>$historial,
+            'aprobarDistrito'=>true
         ));
     }
 
@@ -1448,18 +1725,60 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
 
             $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
 
-            // OBTENEMOS LA TAREA ACTUAL Y SIGUIENTE
-            $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
-            $tareaActual = '';
-            $tareaSiguiente = '';
-            foreach ($tarea as $t) {
-                $tareaActual = $t['tarea_actual'];
-                if ($t['condicion'] == 'SI') {
-                    $tareaSiguiente = $t['tarea_siguiente'];
+
+            // VERIFICAMOS SI EXISTE EL INFORME
+            if(isset($_FILES['informe'])){
+                $file = $_FILES['informe'];
+
+                if ($file['name'] != "") {
+                    $type = $file['type'];
+                    $size = $file['size'];
+                    $tmp_name = $file['tmp_name'];
+                    $name = $file['name'];
+                    $extension = explode('.', $name);
+                    $extension = $extension[count($extension)-1];
+                    $new_name = date('YmdHis').'.'.$extension;
+
+                    // GUARDAMOS EL ARCHIVO
+                    $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/flujos/modificacionNotas/' . $sie;
+                    if (!file_exists($directorio)) {
+                        mkdir($directorio, 0777, true);
+                    }
+
+                    $archivador = $directorio.'/'.$new_name;
+                    //unlink($archivador);
+                    if(!move_uploaded_file($tmp_name, $archivador)){
+                        $response->setStatusCode(500);
+                        return $response;
+                    }
+                    
+                    // CREAMOS LOS DATOS DE LA IMAGEN
+                    $informe = array(
+                        'name' => $name,
+                        'type' => $type,
+                        'tmp_name' => 'nueva_ruta',
+                        'size' => $size,
+                        'new_name' => $new_name
+                    );
+                }else{
+                    $informe = null;
                 }
+            }else{
+                $informe = null;
             }
 
-           
+
+            // OBTENEMOS LA TAREA ACTUAL Y SIGUIENTE
+            $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
+            $tareaActual = $tarea['tarea_actual'];
+            $tareaSiguiente = $tarea['tarea_actual'];
+            // foreach ($tarea as $t) {
+            //     $tareaActual = $t['tarea_actual'];
+            //     if ($t['condicion'] == 'SI') {
+            //         $tareaSiguiente = $t['tarea_siguiente'];
+            //     }
+            // }
+
                 $resAdm = null;
                 $informe = null;
            
@@ -1496,6 +1815,7 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
                     'checkSolicitud'=>($checkSolicitud == null)?false:true,
                     'checkCi'=>($checkCi == null)?false:true,
                     'observacion'=>$observacion,
+                    'informe'=>$informe,
                 ), JSON_UNESCAPED_UNICODE);
             // }
             
@@ -1519,15 +1839,15 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
             // VERIFICAR SI EL TRAMITE ES APROBADO LO RECEPCIONAMOS PARA REGISTRAR LAS CALIFICACIONES
             if ($aprueba == 'SI') {
                 // RECIBIMOS LA SIGUIENTE TAREA
-                $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
-                    $this->session->get('userId'),
-                    $tareaSiguiente,
-                    $idTramite
-                );
+                // $recibirTramite = $this->get('wftramite')->guardarTramiteRecibido(
+                //     $this->session->get('userId'),
+                //     $tareaSiguiente,
+                //     $idTramite
+                // );
 
                 /*----------  MODIFICAMOS LAS CALIFICACIONES EN EL SISTEMA  ----------*/
 
-              //////////////////////////  $this->modificarCalificacionesSIE($idTramite);
+                $this->modificarCalificacionesSIE($idTramite);
 
                 /*----------  FIN MODIFICACION DE CALIFICACIONES EN EL SIE  ----------*/                
                 
@@ -1538,20 +1858,20 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
                 ), JSON_UNESCAPED_UNICODE);
 
                 // NUEVAMENTE ENVIAMOS EL TRAMITE
-                $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
-                    $this->session->get('userId'),
-                    $this->session->get('roluser'),
-                    $flujoTipo,
-                    $tareaSiguiente,
-                    'institucioneducativa',
-                    $sie,
-                    $observacion,
-                    '',
-                    $idTramite,
-                    $datos,
-                    '',
-                    $lugarTipo['lugarTipoIdDistrito']
-                );
+                // $enviarTramite = $this->get('wftramite')->guardarTramiteEnviado(
+                //     $this->session->get('userId'),
+                //     $this->session->get('roluser'),
+                //     $flujoTipo,
+                //     $tareaSiguiente,
+                //     'institucioneducativa',
+                //     $sie,
+                //     $observacion,
+                //     '',
+                //     $idTramite,
+                //     $datos,
+                //     '',
+                //     $lugarTipo['lugarTipoIdDistrito']
+                // );
 
                 $request->getSession()
                         ->getFlashBag()
@@ -1562,7 +1882,7 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
                 
                 $request->getSession()
                     ->getFlashBag()
-                    ->add('exito', "El Tramite ". $idTramite ." fue enviado exitosamente");
+                    ->add('exito', "El Tramite ". $idTramite ." no fue autorizado y finalizado");
             }
 
             $em->getConnection()->commit();
@@ -1856,10 +2176,11 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
         }
     }
 
-    public function requestInsCalYearOldAction(Request $request, $idTramite){
+    public function requestInsCalYearOldAction(Request $request){
 
         $response = new Response();
         $gestion = $this->session->get('currentyear');
+        $idTramite = $request->get('idtramite');
         $codigoQR = 'FICGP'.$idTramite.'|'.$gestion;
 
         $data = $this->session->get('userId').'|'.$gestion.'|'.$idTramite;

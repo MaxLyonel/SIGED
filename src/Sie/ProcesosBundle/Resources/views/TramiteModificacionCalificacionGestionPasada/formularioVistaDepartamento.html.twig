@@ -48,14 +48,14 @@
     </div><!-- /.header-content -->
     <div class="body-content animated fadeIn">
 
-        {% include 'SieProcesosBundle:TramiteInclusionCalificacion:historial.html.twig' with { 'historial': historial} %}
+        {% include 'SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:historial.html.twig' with { 'historial': historial} %}
 
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <h3 class="panel-title"> <i class="fa fa-file"></i>Formulario de revisión de solicitud (Departamental)</h3>
             </div>
             <div class="panel-body">
-                <form id="formDepartamento" action="{{path('tramite_inclusion_calificacion_deriva_departamento')}}" method="post" enctype="multipart/form-data">
+                <form id="formDepartamento" action="{{path('tramite_modificacion_calificacion_gestion_pasada_autoriza_save')}}" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="idTramite" value="{{idTramite}}">
                     <div class="form-group">
                         <label>¿Aprobar trámite?</label>
@@ -73,8 +73,12 @@
                     <div class="form-group">
                         <label>Observación</label>
                         <textarea name="observacion" id="observacion" cols="30" rows="5" class="form-control jupper" required></textarea>
+                    </div>                   
+                    <div class="form-group">
+                        <label>Adjuntar resolución administrativa<i class="ayuda fa fa-question-circle" data-toggle="popover" data-html="true" data-placement="right" data-trigger="hover" data-content="Debe adjuntar un archivo pdf o una imagen, el tamaño del archivo debe ser menor a 2MB"></i> <span class="msgOpcional" style="display:none">(Opcional)</span></label>
+                        <input type="file" name="informe" id="informe" onchange="cargarArchivo(event);">
+                        <br>
                     </div>
-                   
                     <div class="form-group">
                         <a href="{{path('wf_tramite_index', {'tipo':2})}}" type="button" class="btn btn-default">Cancelar</a>
                         <button type="submit" class="btn btn-primary">Guardar</button>
@@ -90,10 +94,44 @@
     {{parent()}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script type="text/javascript">
-      
+      function cargarArchivo(event){
+            var informe = event.target.files[0];
+            var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+            if(!allowedExtensions.exec(event.target.value)){
+                event.target.value = '';
+                Swal.fire(
+                      'Archivo incorrecto!',
+                      'El archivo adjunto debe ser una imagen o un archivo pdf',
+                      'warning'
+                    );
+                return false;
+            }else{
+                var megas = (informe.size / 1024)/1024;
+                if (megas > 2) {
+                    event.target.value = '';
+                    Swal.fire(
+                      'Tamaño no permitido!',
+                      'El archivo debe tener un peso menor a 2 mg',
+                      'warning'
+                    );
+                    return false;
+                }
+            }
+            this.informe = event.target.files[0];
+        }
+
         function submit(e) {
             
             e.preventDefault();
+
+            if ($('#informe').val() == '') {
+                    Swal.fire({
+                      title: 'Adjuntar informe',
+                      text: 'Debe adjuntar el informe técnico para continuar',
+                      type: 'warning'
+                    });
+                    return;
+                }
 
             if($('#aprueba1').is(':checked')){
                 var texto = '';

@@ -21,6 +21,10 @@ tramite_modificacion_calificacion_gestion_pasada_formulario_save:
     options:
         expose: true
 
+tramite_modificacion_calificacion_gestion_pasada_comprobante:
+    path:     /comprobante
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:requestInsCalYearOld }  
+
 # UNIDAD EDUCATIVA
 
 tramite_modificacion_calificacion_gestion_pasada_ue_verifica:
@@ -45,45 +49,14 @@ tramite_modificacion_calificacion_gestion_pasada_solicita_save:
 
 
 # DEPARTAMENTO
-tramite_inclusion_calificacion_verifica_departamento:
-    path:     /kinclusionverificaDepartamento
-    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:recepcionVerificaDepartamento }
+tramite_modificacion_calificacion_gestion_pasada_autoriza:
+    path:     /departamento/autoriza
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:recepcionVerificaDepartamento }
     
-tramite_inclusion_calificacion_deriva_departamento:
-    path:     /kderivaDepartamento
-    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:derivaDepartamento }
+tramite_modificacion_calificacion_gestion_pasada_autoriza_save:
+    path:     /departamento/autoriza/save
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:derivaDepartamento }
 
 
 
-tramite_add_mod_cal_formulario_imprimir:
-    path:     /kformularioImprimir
-    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:formularioImprimir }
 
-
-tramite_add_mod_cal_formulario_vista_imprimir_libreta:
-    path:     /kformularioVistaImprimirLibreta
-    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:formularioVistaImprimirLibreta }
-
-tramite_add_mod_cal_formulario_vista_imprimir_finalizar:
-    path:     /kformularioVistaImprimirFinalizar/{idTramite}
-    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:formularioVistaImprimirFinalizar }
-
-# DISTRITO
-
-tramite_add_mod_cal_recepcion_verifica_distrito:
-    path:     /krecepcionaVerificaDistrito
-    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:recepcionVerificaDistrito }
-
-tramite_add_mod_cal_deriva_distrito:
-    path:     /kderivaDistrito
-    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:derivaDistrito }
-
-
-
-tramite_add_mod_cal_acta_imprimir:
-    path:     /kactaImprimir
-    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:actaImprimir }
-
-tramite_add_mod_download_requet:
-    path:     /famcgp/{idTramite}
-    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:requestInsCalYearOld }  
