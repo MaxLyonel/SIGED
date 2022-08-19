@@ -323,6 +323,86 @@
 											{% endif %}										
                                 		{% endif %}
 	                                {% endif %}
+	                                {% if h.orden == 3 and h.datos != null %} {# distrito educativo #}
+                            	        <div class="row">
+                            	            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            	                <h5><b>Requisitos recepcionados del Distrito Educativo</b></h5>
+                            	                <div class="requisitos">
+                            	                    <div class="checkbox">
+                            	                        <label style="margin-left:-20px;">
+                            	                        	{% if h.datos.checkSolicitud is defined and h.datos.checkSolicitud %}
+                            	                            	<i class="fa fa-check-square" style="color:#3083FA"></i>
+                            								{% else %}
+                            	                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
+                            	                        	{% endif %}
+                            	                            &nbsp;Solicitud de modificacion de calificaciones&nbsp;&nbsp;
+                            	                        </label>
+                            	                    </div>
+                            	                    <div class="checkbox">
+                            	                        <label style="margin-left:-20px;">
+                            	                        	{% if h.datos.checkLibreta is defined and h.datos.checkLibreta %}
+                            	                            	<i class="fa fa-check-square" style="color:#3083FA"></i>
+                            								{% else %}
+                            	                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
+                            	                        	{% endif %}
+                            	                            &nbsp;Libreta de calificaciones
+                            	                        </label>
+                            	                    </div>
+                            	                    <div class="checkbox">
+                            	                        <label style="margin-left:-20px;">
+                            	                        	{% if h.datos.checkCi is defined and h.datos.checkCi %}
+                            	                            	<i class="fa fa-check-square" style="color:#3083FA"></i>
+                            								{% else %}
+                            	                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
+                            	                        	{% endif %}
+                            	                            &nbsp;Cópia de Cédula de Identidad
+                            	                        </label>
+                            	                    </div>
+                            	                </div>
+                            	            </div>
+                            	        </div>
+										<div class="form-group">
+										    <p><b>¿El trámite es procedente?</b></p>
+										    <div class="radio">
+										        <label class="radio-inline">
+										            <input type="radio" value="SI" {% if h.datos.procedente == 'SI' %} checked {% else %} disabled {% endif %}>
+										            Si
+										        </label>
+										        <label class="radio-inline">
+										            <input type="radio" value="NO" {% if h.datos.procedente == 'NO' %} checked {% else %} disabled {% endif %}>
+										            No
+										        </label>
+										    </div>
+										</div>
+										{% if h.datos.procedente == 'NO' %}
+											<div class="form-group" style="background:#E3C5A7; display:none">
+											    <p><b>¿Qué desea hacer con el trámite?</b></p>
+											    <div class="radio">
+											        <label class="radio-inline">
+											            <input type="radio" {% if h.datos.finalizar is defined and h.datos.finalizar == 'NO' %} checked {% else %} disabled {% endif %}>
+											            Devolver trámite a la Unidad Educativa
+											        </label>
+											        <label class="radio-inline">
+											            <input type="radio" {% if h.datos.finalizar is defined and h.datos.finalizar == 'SI' %} checked {% else %} disabled {% endif %}>
+											            Finalizar y cerrar trámite
+											        </label>
+											    </div>
+											</div>
+										{% endif %}
+										{% if aprobarDistrito == false %}
+											<div class="form-group">
+												<p><b>Observación</b></p>
+												{{h.datos.observacion}}
+											</div>
+											{% if h.datos.informe is not null %}
+												<div class="form-group">
+													<p><b>Informe de la Dirección Distrital</b></p>
+													<a href="{{ asset('uploads/archivos/flujos/modificacionNotas/' ~ h.datos.sie ~ '/' ~ h.datos.informe.new_name ) }}" target="_blank"> <b> <i class="fa fa-file-pdf-o fa-2x"></i> Ver informe adjunto </b></a>
+													<br>
+												</div>
+											{% endif %}										
+                                		{% endif %}
+	                                {% endif %}
 									{% if h.orden == 4 and h.datos != null %} {# distrito educativo #}
                             	        <div class="row">
                             	            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">

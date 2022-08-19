@@ -39,6 +39,14 @@ tramite_modificacion_calificacion_gestion_pasada_ue_verifica_save:
 
 # DISTRITO EDUCATIVO
 
+tramite_modificacion_calificacion_gestion_pasada_distrito_verifica:
+    path:     /distrito/verifica
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:distritoVerifica }
+
+tramite_modificacion_calificacion_gestion_pasada_distrito_verifica_save:
+    path:     /distrito/verifica/save
+    defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:distritoVerificaSave }
+
 tramite_modificacion_calificacion_gestion_pasada_solicita:
     path:     /distrito/solicita
     defaults: { _controller: SieProcesosBundle:TramiteModificacionCalificacionGestionPasada:distritoSolicita }
