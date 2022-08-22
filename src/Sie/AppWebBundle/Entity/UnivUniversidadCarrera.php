@@ -14,10 +14,7 @@ class UnivUniversidadCarrera
      */
     private $id;
 
-    /**
-     * @var string
-     */
-    private $univAreaConocimiento;
+   
 
     /**
      * @var string
@@ -99,6 +96,11 @@ class UnivUniversidadCarrera
      */
     private $univSede;
 
+    /**
+     * @var \Sie\AppWebBundle\Entity\UnivAreaConocimientoTipo
+     */
+    private $univAreaConocimientoTipo;
+
 
     /**
      * Get id
@@ -110,28 +112,7 @@ class UnivUniversidadCarrera
         return $this->id;
     }
 
-    /**
-     * Set univAreaConocimiento
-     *
-     * @param string $univAreaConocimiento
-     * @return UnivUniversidadCarrera
-     */
-    public function setUnivAreaConocimiento($univAreaConocimiento)
-    {
-        $this->univAreaConocimiento = $univAreaConocimiento;
     
-        return $this;
-    }
-
-    /**
-     * Get univAreaConocimiento
-     *
-     * @return string 
-     */
-    public function getUnivAreaConocimiento()
-    {
-        return $this->univAreaConocimiento;
-    }
 
     /**
      * Set carrera
@@ -556,11 +537,6 @@ class UnivUniversidadCarrera
     {
         return $this->esSiesu;
     }
-    /**
-     * @var \Sie\AppWebBundle\Entity\UnivAreaConocimientoTipo
-     */
-    private $univAreaConocimientoTipo;
-
 
     /**
      * Set univAreaConocimientoTipo
@@ -568,8 +544,9 @@ class UnivUniversidadCarrera
      * @param \Sie\AppWebBundle\Entity\UnivAreaConocimientoTipo $univAreaConocimientoTipo
      * @return UnivUniversidadCarrera
      */
-    public function setUnivAreaConocimientoTipo(\Sie\AppWebBundle\Entity\UnivAreaConocimientoTipo $univAreaConocimientoTipo = null)
+    public function setUnivAreaConocimientoTipo(\Sie\AppWebBundle\Entity\UnivAreaConocimientoTipo $univAreaConocimientoTipo)
     {
+       
         $this->univAreaConocimientoTipo = $univAreaConocimientoTipo;
     
         return $this;

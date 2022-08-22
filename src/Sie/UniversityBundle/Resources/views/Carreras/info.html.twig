@@ -321,7 +321,7 @@
                                             </div>
 
                                             
-                                            {# solo si es univrsidad indigena 
+                                            {% if es_indigena == 1 %} 
                                             <hr>                                                
 
                                             <div class="alert alert-danger fa-2xs">
@@ -402,7 +402,9 @@
                                                 
                                                     </table>
                                                 </form>
-                                            </div>#}
+                                            </div>
+
+                                            {% endif %}
                                                     
 
                                         </div>

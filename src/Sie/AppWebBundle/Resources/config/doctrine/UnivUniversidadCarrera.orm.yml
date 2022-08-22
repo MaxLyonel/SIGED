@@ -99,13 +99,7 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             comment: ''
             default: '0'
             column: es_siesu
-        univAreaConocimiento:
-            type: string
-            nullable: true
-            length: 255
-            fixed: false
-            comment: ''
-            column: univ_area_conocimiento
+        
     manyToOne:
         univAreaConocimientoTipo:
             targetEntity: UnivAreaConocimientoTipo
