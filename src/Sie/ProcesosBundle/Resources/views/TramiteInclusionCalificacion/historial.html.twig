@@ -252,19 +252,19 @@
                             	            </div>
                             	        </div>
 										<div class="form-group">
-										    <p><b>¿El trámite es procedente?</b></p>
+										    <p><b>¿El trámite fue aprobado?</b></p>
 										    <div class="radio">
 										        <label class="radio-inline">
-										            <input type="radio" value="SI" {% if h.datos.procedente == 'SI' %} checked {% else %} disabled {% endif %}>
+										            <input type="radio" value="SI" {% if h.datos.aprueba == 'SI' %} checked {% else %} disabled {% endif %}>
 										            Si
 										        </label>
 										        <label class="radio-inline">
-										            <input type="radio" value="NO" {% if h.datos.procedente == 'NO' %} checked {% else %} disabled {% endif %}>
+										            <input type="radio" value="NO" {% if h.datos.aprueba == 'NO' %} checked {% else %} disabled {% endif %}>
 										            No
 										        </label>
 										    </div>
 										</div>
-										{% if h.datos.procedente == 'NO' %}
+										{% if h.datos.aprueba == 'NO' %}
 											<div class="form-group" style="background:#E3C5A7; display:none">
 											    <p><b>¿Qué desea hacer con el trámite?</b></p>
 											    <div class="radio">

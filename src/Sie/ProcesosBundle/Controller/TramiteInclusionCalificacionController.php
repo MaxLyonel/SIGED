@@ -88,13 +88,7 @@ class TramiteInclusionCalificacionController extends Controller {
         $rol = $this->session->get('roluser');
         $gestion_actual = $this->session->get('currentyear');
 
-        // VALIDAMOS QUE EL USUARIO QUE ESTA REALIZANDO LA SOLICITUD SEA CON ROL DE DIRECTOR
-        // PARA EVITAR ERRORES CUANDO SE SOBREESCRIBEN LAS SESIONES
-        /*if ($rol != 9) {
-            $response->setStatusCode(202);
-            $response->setData('El usuario actual no tiene rol de Director, cierre sesion e ingrese nuevamente al sistema.');
-            return $response;
-        }*/
+        
 
         $em = $this->getDoctrine()->getManager();
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$codigoRude));
@@ -197,7 +191,7 @@ class TramiteInclusionCalificacionController extends Controller {
         return $response;
     }
 
-    public function buscarCalificacionesAction(Request $request){
+    public function buscarCalificacionesAction(Request $request){ 
         $idInscripcion = $request->get('idInscripcion');
         $idTramite = $request->get('idTramite');
         $flujoTipo = $request->get('flujoTipo');
@@ -231,11 +225,12 @@ class TramiteInclusionCalificacionController extends Controller {
 
         $datos = [];
         $promedioGeneral = ''; // PARA PRIMARIA 2019
-        if(count($tramitePendiente)<=0) {
-            $datos = $this->get('notas')->regularDB($idInscripcion, $operativo);
-            
+      
+        if(count($tramitePendiente)<=0) { 
+        
+            $datos = $this->get('notas')->regular($idInscripcion, $operativo);
             // dump($operativo);
-            // dump($datos['cualitativas']);
+            // dump($datos);
             // die;
             if($datos['gestion'] >= 2019 and $datos['nivel'] == 12){
                 foreach ($datos['cualitativas'] as $key => $value) {
@@ -479,9 +474,10 @@ class TramiteInclusionCalificacionController extends Controller {
             $objStudent = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$datos['codigoRude']));
 
             $response->setStatusCode(200);
+            // TODO el reporte PDF
             $response->setData(array(
                 'idTramite'=>$idTramite,
-                'urlreporte'=> $this->generateUrl('tramite_add_mod_download_requet', array('idTramite'=>$idTramite))
+                'urlreporte'=> $this->generateUrl('tramite_inclusion_calificacion_download_solicitud', array('idTramite'=>$idTramite))
             ));
 
             $em->getConnection()->commit();
@@ -1115,10 +1111,11 @@ class TramiteInclusionCalificacionController extends Controller {
         ));
     }
 
-    public function derivaDepartamentoAction(Request $request){
+    public function guardarVerificacionDepartamentoAction(Request $request){
         try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
+            $tramite = $em->getRepository('SieAppWebBundle:Tramite')->findOneById( $request->get('idTramite'));
 
             $idTramite = $request->get('idTramite');
 
@@ -1160,6 +1157,9 @@ class TramiteInclusionCalificacionController extends Controller {
                 $tareaActual = $t['tarea_actual'];
                 if ($t['condicion'] == 'SI') {
                     $tareaSiguiente = $t['tarea_siguiente'];
+                }
+                if ($t['condicion'] == 'NO') {
+                    $tareaSiguienteNo = $t['tarea_siguiente'];
                 }
             }
 
@@ -1229,9 +1229,9 @@ class TramiteInclusionCalificacionController extends Controller {
                     $idTramite
                 );
 
-                /*----------  MODIFICAMOS LAS CALIFICACIONES EN EL SISTEMA  ----------*/
+                /*----------  TOOD revision MODIFICAMOS LAS CALIFICACIONES EN EL SISTEMA  ----------*/
 
-              //////////////////////////  $this->modificarCalificacionesSIE($idTramite);
+                $this->modificarCalificacionesSIE($idTramite);
 
                 /*----------  FIN MODIFICACION DE CALIFICACIONES EN EL SIE  ----------*/                
                 
@@ -1263,7 +1263,32 @@ class TramiteInclusionCalificacionController extends Controller {
 
             }else{
 
-                
+                $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 3));
+                $tarea_sig = $flujoproceso->getId();
+                $mensaje = $this->get('wftramite')->guardarTramiteRecibido($this->session->get('userId'), $tareaSiguienteNo, $idTramite);
+                if ($mensaje['dato'] == true) {
+                    $msg = $mensaje['msg'];
+                    $observaciones = 'Observación inclusion del trámite INC';
+                    $evaluacion = "NO";
+                    $resultobs  = $this->get('wftramite')->guardarTramiteEnviado(
+                        $this->session->get('userId'),
+                        $this->session->get('roluser'),
+                        $flujoTipo,
+                        $tareaSiguienteNo,
+                        'institucioneducativa',
+                        $sie,
+                        $observacion,
+                        $aprueba,
+                        $idTramite,
+                        $datos,
+                        '',
+                        $lugarTipo['lugarTipoIdDistrito']
+                    );
+                    if ($resultobs['dato'] == true) {
+                        $msg = $resultobs['msg'];
+                    }
+                } 
+
                 $request->getSession()
                     ->getFlashBag()
                     ->add('exito', "El Tramite ". $idTramite ." fue enviado exitosamente");
@@ -1560,17 +1585,18 @@ class TramiteInclusionCalificacionController extends Controller {
         }
     }
 
-    public function requestInsCalYearOldAction(Request $request, $idTramite){
+    public function downloadSolicitudInclusionAction(Request $request, $idTramite){
 
         $response = new Response();
         $gestion = $this->session->get('currentyear');
-        $codigoQR = 'FICGP'.$idTramite.'|'.$gestion;
+        $codigoQR = 'INCAL'.$idTramite.'|'.$gestion;
 
         $data = $this->session->get('userId').'|'.$gestion.'|'.$idTramite;
         //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$idTramite.'_'.$this->session->get('currentyear'). '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_mod_calif_V2_eea.rptdesign&tramite_id='.$idTramite.'&&__format=pdf&'));
+        //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_mod_calif_V2_eea.rptdesign&tramite_id='.$idTramite.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_inclusion_calif_v1.rptdesign&tramite_id='.$idTramite.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

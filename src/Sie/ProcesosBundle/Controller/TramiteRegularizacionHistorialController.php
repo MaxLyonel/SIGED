@@ -1447,7 +1447,8 @@ class TramiteRegularizacionHistorialController extends Controller{
             $tareaActual = $t['tarea_actual'];
             if ($t['condicion'] == 'SI') {
                 $tareaSiguiente = $t['tarea_siguiente'];
-            }
+            } 
+            
         }
             $datos = json_encode(array(
                 'sie'=>$sie,
@@ -1525,6 +1526,9 @@ class TramiteRegularizacionHistorialController extends Controller{
                 if ($t['condicion'] == 'SI') {
                     $tareaSiguiente = $t['tarea_siguiente'];
                 }
+                if ($t['condicion'] == 'NO') {
+                    $tareaSiguienteNo = $t['tarea_siguiente'];
+                }
             }
                 $datos = json_encode(array(
                     'sie'=>$sie,
@@ -1566,8 +1570,8 @@ class TramiteRegularizacionHistorialController extends Controller{
                      'gestionTipo' => $gestionRequest
                  );
               
-                 // TODO esto no funciona por ahora comentar para ver que el flujo funcione
-                //$this->setInscriptionAndCalifications($idTramite, $codigoRude);
+                 // TODO revision
+                $this->setInscriptionAndCalifications($idTramite, $codigoRude);
 
                 /*----------  end do the new inscription and register the califications  ----------*/                
 
@@ -1597,6 +1601,32 @@ class TramiteRegularizacionHistorialController extends Controller{
                         ->add('exito', "El Tramite ". $idTramite ." fue aprobado y finalizado exitosamente");
 
             }else{
+
+                $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 3));
+                $tarea_sig = $flujoproceso->getId();
+                $mensaje = $this->get('wftramite')->guardarTramiteRecibido($this->session->get('userId'), $tareaSiguienteNo, $idTramite);
+                if ($mensaje['dato'] == true) {
+                    $msg = $mensaje['msg'];
+                    $observaciones = 'Observación historial del trámite INC';
+                    $evaluacion = "NO";
+                    $resultobs  = $this->get('wftramite')->guardarTramiteEnviado(
+                        $this->session->get('userId'),
+                        $this->session->get('roluser'),
+                        $flujoTipo,
+                        $tareaSiguienteNo,
+                        'institucioneducativa',
+                        $sie,
+                        $observacion,
+                        $aprueba,
+                        $idTramite,
+                        $datos,
+                        '',
+                        $lugarTipo['lugarTipoIdDistrito']
+                    );
+                    if ($resultobs['dato'] == true) {
+                        $msg = $resultobs['msg'];
+                    }
+                } 
                 $request->getSession()
                     ->getFlashBag()
                     ->add('exito', "El Tramite ". $idTramite ." fue enviado exitosamente");
