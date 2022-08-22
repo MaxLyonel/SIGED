@@ -189,7 +189,8 @@ class CarrerasController extends Controller
         $gestiones = $this->get('univfunctions')->getAllOperative($arrData);
         //dump($gestiones); die;
 
-        $generos = $em->getRepository('SieAppWebBundle:UnivClaGenero')->findAll();   
+        //$generos = $em->getRepository('SieAppWebBundle:UnivClaGenero')->findAll();   
+        $generos = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();   
 
         if($nro_periodos == 1) {
             $periodos = $em->getRepository('SieAppWebBundle:UnivPeriodoAcademicoTipo')->findById(1);     
