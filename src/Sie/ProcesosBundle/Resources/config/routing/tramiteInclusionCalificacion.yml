@@ -20,13 +20,18 @@ tramite_inclusion_calificacion_formulario_save:
     options:
         expose: true
 # DEPARTAMENTO
-tramite_inclusion_calificacion_verifica_departamento:
+# recepcion departamento
+tramite_inclusion_calificacion_verifica_departamento: 
     path:     /kinclusionverificaDepartamento
     defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:recepcionVerificaDepartamento }
-    
-tramite_inclusion_calificacion_deriva_departamento:
+# evalua solicitud SI/NO
+tramite_inclusion_calificacion_guardar_verificacion_departamento:
     path:     /kderivaDepartamento
-    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:derivaDepartamento }
+    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:guardarVerificacionDepartamento }
+
+tramite_inclusion_calificacion_download_solicitud:
+    path:     /fsolinclu/{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:downloadSolicitudInclusion }  
 
 
 
@@ -59,6 +64,3 @@ tramite_add_mod_cal_acta_imprimir:
     path:     /kactaImprimir
     defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:actaImprimir }
 
-tramite_add_mod_download_requet:
-    path:     /famcgp/{idTramite}
-    defaults: { _controller: SieProcesosBundle:TramiteAddModCalification:requestInsCalYearOld }  

@@ -96,3 +96,8 @@ sie_procesos_tramite_modificacion_calificacion_gestion_pasada:
 sie_procesos_tramite_previmmediatemodiver2:
     resource: "@SieProcesosBundle/Resources/config/routing/previmmediatemodiver2.yml"
     prefix:   /sie/tramite/previmmediatemodiver2
+
+sie_procesos_tramite_mod_cal_vigente:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteModCalVigente.yml"
+    prefix:   /sie/tramite/ramiteModCalVigente
+

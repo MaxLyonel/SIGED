@@ -19,7 +19,7 @@
         </div>
         <div class="clearfix"></div>
 	</div>
-	<div class="panel-body" style="display:block">
+	<div class="panel-body" style="display:none">
 		<div class="row">
             <div class="col-md-12">
                 <!-- Start color horizontal tabs -->
@@ -54,7 +54,7 @@
 										<div class="row">
 										    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 										        <div class="text-center">
-										            <h3>FORMULARIO DE INCLUSIÓN DE CALIFICACIONES DE GESTIONES PASADAS</h3>
+										            <h3>FORMULARIO DE MODIFICACIÓN DE CALIFICACIONES GESTIÓN VIGENTE</h3>
 										            <p>(Aplica en Nivel Primaria y  Nivel Secundaria)</p>
 										        </div>
 
@@ -85,7 +85,17 @@
 										        		    </tbody>
 										        		</table>
 										        	</div>
-										        	
+										        	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+										        	    <table class="table table-condensed table-bordered">
+										        	        <thead>
+										        	            <tr><th colspan="4"><b>Datos del Director (Solicitante)</b></th></tr>
+										        	        </thead>
+										        	        <tbody>
+										        	            <tr><th>Nombre</th><td colspan="3">{{h.datos.directorNombre}}</td></tr>
+										        	            <tr><th>Cédula de Identidad</th><td>{{h.datos.directorCarnet}}</td><th>Complemento</th><td>{{h.datos.directorComplemento}}</td></tr>
+										        	        </tbody>
+										        	    </table>
+										        	</div>
 										        	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 										        	    <table class="table table-condensed table-bordered">
 										        	        <thead>
@@ -168,44 +178,44 @@
 										        <div class="row">
 										            <hr>
 										            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-										                <h5><b>Requisitos mínimos presentados </b></h5>
+										                <h5><b>Requisitos mínimos presentados por la Unidad Educativa</b></h5>
 										                <div class="requisitos">
 										                    <div class="checkbox">
 										                        <label style="margin-left:-20px;">
-										                        	{% if h.datos.checkBoletin is defined and h.datos.checkBoletin %}
+										                        	{% if h.datos.checkInforme is defined and h.datos.checkInforme %}
 										                            	<i class="fa fa-check-square" style="color:#3083FA"></i>
 																	{% else %}
 										                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
 										                        	{% endif %}
-										                            &nbsp;Boletín centralizador de la gestión legalizado por la Dirección Departamental 
+										                            &nbsp;Fotocopia Legalizada del cuaderno pedagógico &nbsp;&nbsp;
 
-										                            {% if h.datos.boletin is defined and h.datos.boletin is not null %}
-										                            	<a class="btn btn-primary" href="{{ asset('uploads/archivos/flujos/modificacionNotas/' ~ h.institucioneducativa_id ~ '/' ~ h.datos.boletin.new_name ) }}" target="_blank"> <b> <i class="fa fa-file-pdf-o fa-1x"></i> Ver adjunto </b></a>
+										                            {% if h.datos.informe is defined and h.datos.informe is not null %}
+										                            	<a class="btn btn-primary" href="{{ asset('uploads/archivos/flujos/modificacionNotas/' ~ h.institucioneducativa_id ~ '/' ~ h.datos.informe.new_name ) }}" target="_blank"> <b> <i class="fa fa-file-pdf-o fa-1x"></i> Ver adjunto </b></a>
 										                            {% else %}
-										                            	<span class="text-danger">No se adjunto el boletín</span>
+										                            	<span class="text-danger">No se adjunto </span>
 										                            {% endif %}
 										                        </label>
 										                    </div>
 										                    <div class="checkbox">
 										                        <label style="margin-left:-20px;">
-										                        	{% if h.datos.checkSolicitud is defined and h.datos.checkSolicitud %}
+										                        	{% if h.datos.checkCuaderno is defined and h.datos.checkCuaderno %}
 										                            	<i class="fa fa-check-square" style="color:#3083FA"></i>
 																	{% else %}
 										                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
 										                        	{% endif %}
-										                            &nbsp;Solicitud de inclusión de calificaciones
+										                            &nbsp;Solicitud de modificación de calificaciones
 										                        </label>
 										                    </div>
-										                    <div class="checkbox">
+										                    {# <div class="checkbox">
 										                        <label style="margin-left:-20px;">
-										                        	{% if h.datos.checkCi is defined and h.datos.checkCi %}
+										                        	{% if h.datos.checkFormulario is defined and h.datos.checkFormulario %}
 										                            	<i class="fa fa-check-square" style="color:#3083FA"></i>
 																	{% else %}
 										                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
 										                        	{% endif %}
-										                            &nbsp;Fotocopia de cédula de identidad o certificado de nacimiento
+										                            &nbsp;Formulario de adición y/o modificación de calificaciones
 										                        </label>
-										                    </div>
+										                    </div> #}
 										                </div>
 										            </div>
 										        </div>
@@ -225,7 +235,7 @@
                             								{% else %}
                             	                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
                             	                        	{% endif %}
-                            	                            &nbsp;Informe técnico de la Unidad Educativa &nbsp;&nbsp;
+                            	                            &nbsp;Fotocopia Legalizada del cuaderno pedagógico &nbsp;&nbsp;
                             	                        </label>
                             	                    </div>
                             	                    <div class="checkbox">
@@ -235,7 +245,7 @@
                             								{% else %}
                             	                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
                             	                        	{% endif %}
-                            	                            &nbsp;Registro o cuaderno pedagógico
+                            	                            &nbsp;Solicitud de modificación de calificaciones
                             	                        </label>
                             	                    </div>
                             	                    <div class="checkbox">
@@ -245,26 +255,26 @@
                             								{% else %}
                             	                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
                             	                        	{% endif %}
-                            	                            &nbsp;Formulario de adición y/o modificación de calificaciones
+                            	                            &nbsp;Formulario de modificación de calificaciones gestión vigente
                             	                        </label>
                             	                    </div>
                             	                </div>
                             	            </div>
                             	        </div>
 										<div class="form-group">
-										    <p><b>¿El trámite fue aprobado?</b></p>
+										    <p><b>¿El trámite es procedente?</b></p>
 										    <div class="radio">
 										        <label class="radio-inline">
-										            <input type="radio" value="SI" {% if h.datos.aprueba == 'SI' %} checked {% else %} disabled {% endif %}>
+										            <input type="radio" value="SI" {% if h.datos.procedente == 'SI' %} checked {% else %} disabled {% endif %}>
 										            Si
 										        </label>
 										        <label class="radio-inline">
-										            <input type="radio" value="NO" {% if h.datos.aprueba == 'NO' %} checked {% else %} disabled {% endif %}>
+										            <input type="radio" value="NO" {% if h.datos.procedente == 'NO' %} checked {% else %} disabled {% endif %}>
 										            No
 										        </label>
 										    </div>
 										</div>
-										{% if h.datos.aprueba == 'NO' %}
+										{% if h.datos.procedente == 'NO' %}
 											<div class="form-group" style="background:#E3C5A7; display:none">
 											    <p><b>¿Qué desea hacer con el trámite?</b></p>
 											    <div class="radio">
@@ -303,7 +313,7 @@
                             								{% else %}
                             	                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
                             	                        	{% endif %}
-                            	                            &nbsp;Informe técnico de la Unidad Educativa &nbsp;&nbsp;
+                            	                            &nbsp;Fotocopia Legalizada del cuaderno pedagógico &nbsp;&nbsp;
                             	                        </label>
                             	                    </div>
                             	                    <div class="checkbox">
@@ -313,7 +323,7 @@
                             								{% else %}
                             	                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
                             	                        	{% endif %}
-                            	                            &nbsp;Registro o cuaderno pedagógico
+                            	                            &nbsp;Solicitud de modificacion de calificaciones
                             	                        </label>
                             	                    </div>
                             	                    <div class="checkbox">
@@ -323,7 +333,7 @@
                             								{% else %}
                             	                            	<i class="fa fa-square" style="color:#FFFFFF"></i>
                             	                        	{% endif %}
-                            	                            &nbsp;Formulario de adición y/o modificación de calificaciones
+                            	                            &nbsp;Formulario de modificación de calificaciones gestión vigente
                             	                        </label>
                             	                    </div>
         	                                        <div class="checkbox">
@@ -359,9 +369,9 @@
 											    <p>{{ h.datos.observacion }}</p>
 											</div>
 										{% endif %}
-										{% if h.datos.aprueba is defined and h.datos.aprueba == 'SI' %}
+										{# {% if h.datos.aprueba is defined and h.datos.aprueba == 'SI' %}
 											{% if h.datos.nroResAdm is defined and h.datos.nroResAdm != '' and h.datos.fechaResAdm %}
-												<h5><b>Resolución Administrativa</b> </h5>
+												<h5><b>Resolución Administrativa  OOOOOOOOOOOOOOOOJOOOOOOOOOOOOOOOOOOS</b> </h5>
 												<div class="row">
 												    <div class="form-group col-xs-6 col-sm-6 col-md-6 col-lg-6">
 												        <label>Nro. de R.A.</label>
@@ -380,7 +390,7 @@
 												    <br>
 												</div>
 											{% endif %}
-										{% else %}
+										{% else %} #}
 											{% if h.datos.informe is defined and h.datos.informe is not null %}
 												<div class="form-group">
 												    <p><b>Informe de la dirección Departamental</b></p>
@@ -388,7 +398,7 @@
 												    <br>
 												</div>
 											{% endif %}
-										{% endif %}
+										{# {% endif %} #}
 	                                {% endif %}
 	                                {# {% if h.orden == 4 %}
 										modifica calificaciones sie
