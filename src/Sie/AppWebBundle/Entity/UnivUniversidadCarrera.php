@@ -556,4 +556,32 @@ class UnivUniversidadCarrera
     {
         return $this->esSiesu;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\UnivAreaConocimientoTipo
+     */
+    private $univAreaConocimientoTipo;
+
+
+    /**
+     * Set univAreaConocimientoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\UnivAreaConocimientoTipo $univAreaConocimientoTipo
+     * @return UnivUniversidadCarrera
+     */
+    public function setUnivAreaConocimientoTipo(\Sie\AppWebBundle\Entity\UnivAreaConocimientoTipo $univAreaConocimientoTipo = null)
+    {
+        $this->univAreaConocimientoTipo = $univAreaConocimientoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get univAreaConocimientoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\UnivAreaConocimientoTipo 
+     */
+    public function getUnivAreaConocimientoTipo()
+    {
+        return $this->univAreaConocimientoTipo;
+    }
 }
