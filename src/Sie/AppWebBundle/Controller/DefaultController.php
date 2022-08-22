@@ -60,6 +60,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieAlternativaBundle");
                 break;
             case '172.20.196.8:8022':
+            case 'sieuni.sie.gob.bo':
                 $sysname = 'UNIVERSIDADES';
                 $sysporlet = 'blue';
                 $sysbutton = false;
