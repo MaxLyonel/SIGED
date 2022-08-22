@@ -159,13 +159,14 @@ class CarrerasController extends Controller
 
         $es_indigena = 0;
         $nombre_universidad = $entityUnivSedeCentral[0]->getUnivUniversidad()->getUniversidad();
-        if (strpos($nombre_universidad, 'INDÍGENA') !== true) {       
+         //"UNIVERSIDAD PRIVADA DEL VALLE"
+        if (strpos($nombre_universidad, 'INDÍGENA') !== false) {       
             $es_indigena = 1;
         }
-        if (strpos($nombre_universidad, 'INDIGENA') !== true) {       
+        if (strpos($nombre_universidad, 'INDIGENA') !== false) {       
             $es_indigena = 1;
         }
-
+       
         $carreraEntity = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->find($carrera_id); 
         $periodos = $carreraEntity->getUnivRegimenEstudiosTipo()->getId();
         $nivel_academico =  $carreraEntity->getUnivNivelAcademicoTipo()->getDescripcion();
