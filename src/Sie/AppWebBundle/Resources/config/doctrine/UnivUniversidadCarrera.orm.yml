@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
     type: entity
     table: univ_universidad_carrera
     indexes:
+        IDX_729C05DB7AC73B91:
+            columns:
+                - univ_area_conocimiento_tipo_id
         IDX_729C05DBFDF04187:
             columns:
                 - univ_modalidad_ensenanza_tipo_id
@@ -27,13 +30,6 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             generator:
                 strategy: SEQUENCE
     fields:
-        univAreaConocimiento:
-            type: string
-            nullable: true
-            length: 250
-            fixed: false
-            comment: ''
-            column: univ_area_conocimiento
         carrera:
             type: string
             nullable: true
@@ -103,7 +99,17 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             comment: ''
             default: '0'
             column: es_siesu
+        
     manyToOne:
+        univAreaConocimientoTipo:
+            targetEntity: UnivAreaConocimientoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_area_conocimiento_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         univModalidadEnsenanzaTipo:
             targetEntity: UnivModalidadEnsenanzaTipo
             cascade: {  }

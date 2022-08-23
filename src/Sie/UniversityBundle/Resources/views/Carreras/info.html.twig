@@ -321,7 +321,7 @@
                                             </div>
 
                                             
-                                            {# solo si es univrsidad indigena 
+                                            {% if es_indigena == 1 %} 
                                             <hr>                                                
 
                                             <div class="alert alert-danger fa-2xs">
@@ -402,7 +402,9 @@
                                                 
                                                     </table>
                                                 </form>
-                                            </div>#}
+                                            </div>
+
+                                            {% endif %}
                                                     
 
                                         </div>
@@ -486,7 +488,7 @@
                                     <select name="genero_id" id="genero_id"
                                         class="">
                                         {% for c in generos %}
-                                        <option value="{{ c.id }}">{{c.descripcion}}</option>
+                                        <option value="{{ c.id }}">{{c.genero}}</option>
                                         {% endfor %}
                                     </select>
                                 </div>
@@ -548,7 +550,7 @@
                                 <label for="fecha_apertura">Género</label>
                                 <select name="arrNivel" id="genero_id2" >
                                 {% for c in generos %}
-                                    <option value="{{ c.id }}" >{{c.descripcion}}</option>
+                                    <option value="{{ c.id }}" >{{c.genero}}</option>
                                 {% endfor %}
                                 </select>
                             </div>
@@ -622,7 +624,7 @@
                                 <label for="fecha_apertura">Género</label>
                                 <select name="arrNivel" id="genero_id2" >
                                 {% for c in generos %}
-                                    <option value="{{ c.id }}" >{{c.descripcion}}</option>
+                                    <option value="{{ c.id }}" >{{c.genero}}</option>
                                 {% endfor %}
                                 </select>
                             </div>
