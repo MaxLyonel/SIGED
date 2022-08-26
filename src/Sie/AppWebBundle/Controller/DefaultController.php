@@ -42,7 +42,7 @@ class DefaultController extends Controller {
 
         //settear variables a usar antes de la interfaz login
         switch ($request->server->get('HTTP_HOST')) {
-            case '172.20.196.9:8011':
+            case '172.20.196.13:8011':
             case 'siged.sie.gob.bo':
                 $sysname = 'Sistema Siged';
                 $sysporlet = 'blue';
@@ -52,12 +52,20 @@ class DefaultController extends Controller {
                 $this->session->set('sistemaid', 1);
                 $this->session->set('color', 'blue');
                 break;
-            case '172.20.196.9:8015':
+            case '172.20.196.13:8015':
                 $sysname = 'ALTERNATIVA';
                 $sysporlet = 'green';
                 $sysbutton = false;
                 $layout = 'layoutAlternativa.html.twig';
                 $this->session->set('pathSystem', "SieAlternativaBundle");
+                break;
+            case '172.20.196.13:8025':
+            case 'sieuni.sie.gob.bo':
+                $sysname = 'DEGESTTLA ESTADISTICO';
+                $sysporlet = 'blue';
+                $sysbutton = false;
+                $layout = 'layoutTecnicaEst.html.twig';
+                $this->session->set('pathSystem', "SieTecnicaEstBundle");
                 break;
             case '172.20.196.8:8022':
             case 'sieuni.sie.gob.bo':
@@ -78,7 +86,7 @@ class DefaultController extends Controller {
                 break;
             case 'academico.sie.gob.bo':
             case 'academico.local':
-            case '172.20.196.9:8013':
+            case '172.20.196.13:8013':
             case '172.20.0.53:8013':
                 $sysname = 'Sistema Académico Educación Regular';
                 $sysporlet = 'blue';
@@ -95,7 +103,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutHerramienta.html.twig';
                 $this->session->set('pathSystem', "SieHerramientaBundle");
                 break;
-            case '172.20.196.9:8016':
+            case '172.20.196.13:8016':
             case 'www.herramientaalternativa.local':
             case 'alternativa.sie.gob.bo':
             case 'alternativa.local':
@@ -124,7 +132,7 @@ class DefaultController extends Controller {
                 $this->session->set('pathSystem', "SieHerramientaBundle");
                 $this->session->set('color', 'primary');
                 break;
-            case '172.20.196.9:8014':
+            case '172.20.196.13:8014':
             case 'rue.sie.gob.bo':
             case '172.20.16.224':
                 $sysname = 'RuePublico';
@@ -186,7 +194,7 @@ class DefaultController extends Controller {
                 break;
             case 'certificacionalt.sie.gob.bo':
             case '172.20.17.249':
-            case '172.20.196.9:8020':
+            case '172.20.196.13:8020':
             case '172.20.0.53:8020':
                 $sysname = 'TRAMITES';
                 $sysporlet = 'green';
@@ -248,7 +256,7 @@ class DefaultController extends Controller {
                     $this->session->set('pathSystem', "SieTramitesBundle");
                     break;
             case 'juegos.minedu.gob.bo':
-            case '172.20.196.9:8018':
+            case '172.20.196.13:8018':
                 $sysname = 'JUEGOS';
                 $sysporlet = 'jdp';
                 $sysbutton = false;
@@ -257,7 +265,7 @@ class DefaultController extends Controller {
                 break;
             case 'especial.sie.gob.bo':
             case 'especial.local':
-            case '172.20.196.9:8010':
+            case '172.20.196.13:8010':
             case '172.20.0.53:8010':
                 $sysname = 'Sistema Académico Educación Especial';
                 $sysporlet = 'red';
@@ -287,7 +295,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutDgesttla.html.twig';
                 $this->session->set('pathSystem', "SieDgesttlaBundle");
                 break;
-            case '172.20.196.9:8012':
+            case '172.20.196.13:8012':
                 $sysname = 'PNP';
                 $sysporlet = 'blue';
                 $sysbutton = true;
@@ -302,7 +310,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutRie.html.twig';
                 $this->session->set('pathSystem', "SieRieBundle");
                 break;
-            case '172.20.196.9:8024':
+            case '172.20.196.13:8024':
             case 'www.dgesttla.local':
             case 'dgesttla.sie.gob.bo':
                 $sysname = 'DGESTTLA';
@@ -311,7 +319,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutDgesttla.html.twig';
                 $this->session->set('pathSystem', "SieDgesttlaBundle");
                 break;
-            case '172.20.196.9:8030':
+            case '172.20.196.13:8030':
             // case '172.20.196.7':
             case 'inscripcionocepb.minedu.gob.bo':
             case 'olimpiada.sie.gob.bo':
@@ -321,6 +329,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutOlimpiadas.html.twig';
                 $this->session->set('pathSystem', "SieOlimpiadasBundle");
                 break;
+            case '172.20.196.13:8031':
             case 'procesos.interno.sie.gob.bo':
                 $sysname = 'PROCESOS';
                 $sysporlet = 'blue';
@@ -432,7 +441,7 @@ class DefaultController extends Controller {
 //                $sysbutton = true;
 //                $this->session->set('pathSystem', "SieUsuariosBundle");
 //                break;
-            case '172.20.196.9:8021':
+            case '172.20.196.13:8021':
             case '172.20.0.53:8021':
             case 'infraestructura.local':
                 $sysname = 'INFRAESTRUCTURA';
@@ -441,7 +450,7 @@ class DefaultController extends Controller {
                 $layout = 'layoutInfraestructura.html.twig';
                 $this->session->set('pathSystem', "SieInfraestructuraBundle");
                 break;
-            case '172.20.196.9:8023':
+            case '172.20.196.13:8023':
             case '172.20.0.53:8021':
             // case '172.20.196.7':
             case 'infraestructura.local':
@@ -663,6 +672,10 @@ class DefaultController extends Controller {
                 
                 if($this->session->get('pathSystem')=='SieUniversityBundle'){
                     return $this->redirect($this->generateUrl('sie_university_homepage'));
+                }
+
+                if($this->session->get('pathSystem')=='SieTecnicaEstBundle'){
+                    return $this->redirect($this->generateUrl('sie_tecnicaest_homepage'));
                 }
                 //*************************
                 //*************************
