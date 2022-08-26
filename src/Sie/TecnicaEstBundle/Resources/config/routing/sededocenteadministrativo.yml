@@ -1,0 +1,9 @@
+sie_university_sede_docenteadministrativo_index:
+    path:     /index
+    defaults: { _controller: SieTecnicaEstBundle:SedeDocenteAdministrativo:index }
+
+sie_university_sede_docente_administrativo_save:
+    path:     /save
+    defaults: { _controller: SieTecnicaEstBundle:SedeDocenteAdministrativo:save }
+    options:
+        expose: true

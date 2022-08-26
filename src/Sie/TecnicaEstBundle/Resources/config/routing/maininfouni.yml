@@ -1,0 +1,7 @@
+maininfouni_index:
+    path:     /
+    defaults: { _controller: SieTecnicaEstBundle:MainInfoUni:index }
+
+# maininfouni_index:
+#     path:     /
+#     defaults: { _controller: SieTecnicaEstBundle:ExecutiveStaff:index }    

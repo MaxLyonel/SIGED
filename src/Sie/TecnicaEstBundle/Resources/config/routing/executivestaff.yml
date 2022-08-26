@@ -1,0 +1,54 @@
+
+staff_index:
+    path:     /
+    defaults: { _controller: SieTecnicaEstBundle:ExecutiveStaff:index }
+
+
+staff_getAllStaff:
+    path:     /getAllStaff
+    defaults: { _controller: SieTecnicaEstBundle:ExecutiveStaff:getAllStaff }
+    options:
+        expose: true
+
+staff_lookforperson:
+    path:     /lookforperson
+    defaults: { _controller: SieTecnicaEstBundle:ExecutiveStaff:lookforperson }
+    options:
+        expose: true  
+
+staff_getAllOperative:
+    path:     /getAllOperative
+    defaults: { _controller: SieTecnicaEstBundle:ExecutiveStaff:getAllOperative }
+    options:
+        expose: true  
+
+staff_validateDataSegip:
+    path:     /validateDataSegip
+    defaults: { _controller: SieTecnicaEstBundle:ExecutiveStaff:validateDataSegip }
+    options:
+        expose: true   
+
+staff_savestaff:
+    path:     /savestaff
+    defaults: { _controller: SieTecnicaEstBundle:ExecutiveStaff:savestaff }
+    options:
+        expose: true    
+
+staff_saveEditPersonal:
+    path:     /saveEditPersonal
+    defaults: { _controller: SieTecnicaEstBundle:ExecutiveStaff:saveEditPersonal }
+    options:
+        expose: true        
+
+staff_deletePersonal:
+    path:     /deletePersonal
+    defaults: { _controller: SieTecnicaEstBundle:ExecutiveStaff:deletePersonal }
+    options:
+        expose: true         
+
+staff_editPersonal:
+    path:     /editPersonal
+    defaults: { _controller: SieTecnicaEstBundle:ExecutiveStaff:editPersonal }
+    options:
+        expose: true        
+        

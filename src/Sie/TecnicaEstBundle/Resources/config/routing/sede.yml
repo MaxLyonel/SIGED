@@ -1,0 +1,46 @@
+sie_university_sede_index:
+    path:     /index
+    defaults: { _controller: SieTecnicaEstBundle:Sede:index }
+
+sie_university_sede_home:
+    path:     /home
+    defaults: { _controller: SieTecnicaEstBundle:Sede:home }
+
+sie_university_sede_form:
+    path:     /form
+    defaults: { _controller: SieTecnicaEstBundle:Sede:form }
+    options:
+        expose: true
+
+sie_university_sede_update:
+    path:     /update
+    defaults: { _controller: SieTecnicaEstBundle:Sede:update }
+    options:
+        expose: true
+
+sie_university_sede_lista_provincia:
+    path:     /lista/provincia
+    defaults: { _controller: SieTecnicaEstBundle:Sede:listaProvincia }
+    methods:  [GET]
+
+sie_university_sede_lista_municipio:
+    path:     /lista/municipio
+    defaults: { _controller: SieTecnicaEstBundle:Sede:listaMunicipio }
+    methods:  [GET]
+
+sie_university_sede_lista_comunidad:
+    path:     /lista/comunidad
+    defaults: { _controller: SieTecnicaEstBundle:Sede:listaComunidad }
+    methods:  [GET]
+
+sie_university_sede_reporte_docente_administrativo:
+    path:     /reporte/docenteAdministrativo
+    defaults: { _controller: SieTecnicaEstBundle:Sede:reporteDocenteAdministrativo }
+    options:
+        expose: true
+
+sie_university_sede_reporte_docente_administrativo_save:
+    path:     /reporte/docenteAdministrativo/save
+    defaults: { _controller: SieTecnicaEstBundle:Sede:reporteDocenteAdministrativoSave }
+    options:
+        expose: true
