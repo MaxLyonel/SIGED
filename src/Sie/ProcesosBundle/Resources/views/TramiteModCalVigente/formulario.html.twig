@@ -1,0 +1,399 @@
+
+    
+    <style type="text/css">
+        .jupper{
+            text-transform: uppercase;
+        }
+        [v-cloak]{
+            display: none;
+        }
+        .estudiante{
+            padding: 10px;
+            background: #EEEEEE;
+            text-align: center;
+            font-weight: bold;
+            font-size: 17px;
+        }
+        input[type='text']{
+            /* background: #000000; */
+        }
+        .select-nota:hover{
+            border-color: #ABBDC9;
+            background: #EAFBF1;
+            color: #009900;
+        }
+        .seleccionado{
+            background: #B8F1CA !important;
+        }
+        .headtabla{
+            background: #717171 !important;
+            color: #FFFFFF;
+            border-bottom: none !important;
+        }
+        .check{
+            /* background: #EEEEEE; */
+            /* margin-right: 30px; */
+        }
+        h5{
+            font-weight: bold;
+        }
+    </style>
+
+
+    <div class="alert alert-info">
+    <i class="fa fa-info-circle"></i> Si observa alguna inconsistencia de datos, como ser duplicado de materias o de notas, informe esta situación a las instancias correspondientes antes de realizar la solicitud, para evitar posibles problemas al procesar la solicitud</div>
+    <h4>Cuantitativos <small> (Haga clic sobre la calificación que quiere adicionar y/o modificar)</small> </h4>
+    <table class="table table-bordered" id="tablaNotas" style="background:#FFFFFF">
+        <thead>
+            <tr>
+                <th><small>Área</small></th>
+                {% for n in data.titulosNotas %}
+                    <th align="center"><small>{{n.titulo}}</small></th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in data.cuantitativas %}
+                <tr>
+                    <td data-title="Área">
+                        <small>{{a.asignatura}}</small>
+                    </td>
+                    {% for n in a.notas %}
+                        <td id="{{n.idFila}}" align="center" data-title="{{n.bimestre}}" v-on:click="agregarNota(new String('{{n.idEstudianteNota}}'),new String('{{a.asignatura}}'),new String('{{n.bimestre}}'),new String('{{n.nota}}'),new String('{{n.id}}'),{{n.idFila}},{{n.idNotaTipo}},{{n.idEstudianteAsignatura}})" {% if n.idNotaTipo in [5,6,7,8,9,11] %} style="font-weight: bold; background:#DDDDDD" {% else %} class="select-nota" style="cursor:pointer" {% endif %}  v-bind:style="" >
+                            {% if data.nivel == 11 or data.nivel == 1 or data.nivel == 403 %}
+                                <small>{{n.nota}}</small>
+                            {% else %}
+                                {{n.nota}}
+                            {% endif %}
+                            &nbsp;
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            {% if data.gestion >= 2019 and data.cualitativas|length > 0 and data.nivel != 11 and data.tipoSubsistema != 4 %}
+                <tr>
+                    <td align="center" colspan="5">PROMEDIO ANUAL</td>
+                    {% for c in data.cualitativas %}
+                        <td align="center">
+                                <input type="text" name="notaCualitativa[]" size="2" style="width:50px" maxlength="3" autocomplete="off" readonly="readonly" value="{{c.notaCuantitativa}}" class="form-control input-sm p{{c.idNotaTipo}}" >
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    {% if data.gestion < 2019 or (data.gestion >= 2019 and data.nivel == 11) %}
+        <h4>Cualitativos <small> (Haga clic sobre la valoración que quiere adicionar y/o modificar)</small></h4>
+        {% if data.cualitativas is not empty %}
+            <table class="table table-bordered table-hover cf" id="tablaNotasCualitativas">
+                <thead>
+                <tr class="cf">
+                    <th>Periodo</th>
+                    <th>Valoración</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for c in data.cualitativas %}
+                    <tr>
+                        <td data-title="Área">{{c.notaTipo}}</td>
+                        <td id="{{c.idFila}}" align="center" class="select-nota" style="cursor:pointer" v-on:click="agregarNotaCualitativa(new String('{{c.idEstudianteNotaCualitativa}}'),{{inscripcion.id}},{{c.idNotaTipo}},{{c.idFila}},new String('{{c.notaCualitativa}}'),new String('{{c.notaCuantitativa}}'),new String('{{c.notaTipo}}'),new String('{{c.idEstudianteNotaCualitativa}}'))">
+                            {{c.notaCualitativa}}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            No tiene valoraciones cualitativas...
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum sint quaerat, iusto. Quisquam magnam quae nisi voluptatem fugiat eos mollitia, quaerat quas deserunt aliquid sapiente eaque autem, eligendi excepturi et cumque. Obcaecati placeat unde accusantium error soluta officiis qui animi libero. Omnis delectus a accusamus magni, repudiandae debitis architecto eius?
+        {% endif %}
+    {% endif %}
+
+    <script>
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            methods: {
+
+                buscarEstudiante: function(){
+                    this.buscando = true;
+                    this.codigoRude = '';
+                    this.estudiante = '';
+                    this.inscripciones = '';
+                    this.respuesta = '';
+
+                    this.idInscripcion = '';
+                    this.sie = '';
+                    this.institucioneducativa = '';
+                    this.nivel = '';
+                    this.grado = '';
+                    this.paralelo = '';
+                    this.turno = '';
+                    this.gestion = '';
+
+                    axios.get(Routing.generate('tramite_modificacion_calificaciones_buscar_estudiante', {
+                        codigoRude: this.rudeBuscar,
+                        flujoTipo: this.flujoTipo
+                    }))
+                    .then(response => {
+                        if (response.status == 200) {
+                            this.codigoRude = response.data.codigoRude;
+                            this.estudiante = response.data.estudiante;
+                            this.inscripciones = response.data.inscripciones;
+                            $('[data-toggle="tooltip"]').tooltip();
+                        }
+                        if( response.status == 202){
+                            this.respuesta = response.data;
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.buscando = false;
+                    });
+                },
+                seleccionarInscripcion: function(pos){
+                    this.idInscripcion = this.inscripciones[pos].idInscripcion;
+                    this.sie = this.inscripciones[pos].sie;
+                    this.institucioneducativa = this.inscripciones[pos].institucioneducativa;
+                    this.nivel = this.inscripciones[pos].nivel;
+                    this.grado = this.inscripciones[pos].grado;
+                    this.paralelo = this.inscripciones[pos].paralelo;
+                    this.turno = this.inscripciones[pos].turno;
+                    this.gestion = this.inscripciones[pos].gestion;
+
+                    // CARGAMOS LAS CALIFICACIONES
+                    $.ajax({
+                        url: Routing.generate('tramite_modificacion_calificaciones_buscar_calificaciones', {idInscripcion: this.idInscripcion}),
+                        type: 'get',
+                        beforeSend: function(){
+
+                        },
+                        success: function(data){
+                            $('#calificaciones').empty();
+                            $('#calificaciones').append(data);
+                        },
+                        error: function(data){
+
+                        }
+                    });
+                },
+                agregarNota: function(idEstudianteNota, asignatura, bimestre, nota, idNota, idFila, idNotaTipo, idEstudianteAsignatura){
+                    if (idNotaTipo != 5) {
+                        var nuevaNota = {
+                            idEstudianteNota: idEstudianteNota,
+                            asignatura: asignatura,
+                            bimestre: bimestre,
+                            nota: nota,
+                            notaNueva: '',
+                            idNota: idNota,
+                            idFila: idFila,
+                            idNotaTipo: idNotaTipo,
+                            idEstudianteAsignatura: idEstudianteAsignatura
+                        }
+
+                        var index = this.filas.indexOf(idFila);
+
+                        if(index == -1){
+                            this.notas.push(nuevaNota);
+                            this.filas.push(idFila);
+                            $('#'+idFila).addClass('seleccionado');
+                        }else{
+                            Swal.fire(
+                              'Aviso!',
+                              'La calificación ya fue seleccionada',
+                              'warning'
+                            )
+                        }
+                    }
+                },
+                eliminarNota: function(row){
+                    // this.notas.splice(pos,1);
+                    var index = this.notas.indexOf(row);
+                    this.notas.splice(index, 1);
+                    var index1 = this.filas.indexOf(row.idFila);
+                    this.filas.splice(index1,1);
+
+                    $('#'+row.idFila).removeClass('seleccionado');
+                    console.log(this.filas);
+                },
+                validarNota: function(event){
+                    var k = event.charCode || event.keyCode;
+                    if ((k < 48 || k > 57) //NUmeros
+                        && (k != 13) //ENTER
+                        && (k != 8) //retroceso
+                        && (k != 9) //tab
+                    ){
+                        event.preventDefault();
+                        return false;
+                    }
+                },
+                validarValorNota: function(nota){
+                    // if(nota.notaNueva == ""){ nota.notaNueva = 0; }
+                    if(nota.notaNueva < 0){ nota.notaNueva = 0; }
+                    if(nota.notaNueva > 100){ nota.notaNueva = 100; }
+
+                    if(nota.notaNueva != "" && nota.notaNueva != 0){
+                        nota.notaNueva = Math.round(nota.notaNueva);
+                    }
+                },
+                agregarNotaCualitativa: function(idEstudianteNotaCualitativa,idInscripcion,idNotaTipo,idFila,notaCualitativa,notaCuantitativa,notaTipo,idEstudianteNotaCualitativa){
+                    var nuevaNotaCualitativa = {
+                        idEstudianteNotaCualitativa: idEstudianteNotaCualitativa,
+                        idInscripcion: idInscripcion,
+                        idNotaTipo: idNotaTipo,
+                        idFila: idFila,
+                        notaCualitativa: notaCualitativa,
+                        notaCuantitativa: notaCuantitativa,
+                        bimestre: notaTipo,
+                        notaNuevaCualitativa: ''
+                    }
+
+                    var index = this.filasCualitativas.indexOf(idFila);
+
+                    if(index == -1){
+                        this.notasCualitativas.push(nuevaNotaCualitativa);
+                        this.filasCualitativas.push(idFila);
+                        $('#'+idFila).addClass('seleccionado');
+                    }else{
+                        Swal.fire(
+                          'Aviso!',
+                          'La valoración ya fue seleccionada',
+                          'warning'
+                        )
+                    }
+                },
+                eliminarNotaCualitativa: function(row){
+                    // this.notas.splice(pos,1);
+                    var index = this.notasCualitativas.indexOf(row);
+                    this.notasCualitativas.splice(index, 1);
+                    var index1 = this.filasCualitativas.indexOf(row.idFila);
+                    this.filasCualitativas.splice(index1,1);
+
+                    $('#'+row.idFila).removeClass('seleccionado');
+                    console.log(this.filas);
+                },
+                validarNotaCualitativa: function(){
+                    var key = window.event;
+                    var k = key.charCode || key.keyCode;
+                    if ((k < 48 || k > 57) //NUmeros
+                        && (k != 13) //ENTER
+                        && (k != 8) //retroceso
+                        && (k != 9) //tab
+                    )
+                    return false;
+                },
+                getImage: function(event){
+                    this.archivo = event.target.files[0];
+                },
+                setAcuerdo: function(){
+                    this.acuerdo = !this.acuerdo;
+                },
+                enviarSolicitud: function(){
+                    // VALIDAR NOTAS
+                    var notasValidas = true;
+                    $.each(this.notas, function(index, val) {
+                        if(val.notaNueva == '' || val.notaNueva == 0){
+                            notasValidas = false;
+                            // break;
+                        }
+                    });
+                    if(!notasValidas){
+                        Swal.fire(
+                          'Completar calificación!',
+                          'Las calificaciones no pueden ser vacias o tener valor cero.',
+                          'warning'
+                        );
+                        return;
+                    }
+                    
+                    // VALIDAR NOTAS CUALITATIVAS
+                    var notasCualitativasValidas = true;
+                    var cualitativaMensaje = '';
+                    $.each(this.notasCualitativas, function(index, val) {
+                        if(val.notaNuevaCualitativa.trim() == ''){
+                            cualitativaMensaje = 'Las valoraciones no pueden estar vacias.';
+                            notasCualitativasValidas = false;
+                            // break;
+                        }
+
+                        if(val.notaNuevaCualitativa.trim().length < 15){
+                            cualitativaMensaje = 'Las valoraciones deben tener al menos 15 caracteres.';
+                            notasCualitativasValidas = false;
+                            // break;
+                        }
+                    });
+                    if(!notasCualitativasValidas){
+                        Swal.fire(
+                          'Completar valoración!',
+                          cualitativaMensaje,
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    // VALIDAMOS QUE SE HAYA LLENADO EL JUSTIFICATIVO
+                    if (this.justificacion.trim().length == 0) {
+                        this.$refs.justificacion.focus();
+                        Swal.fire(
+                          'Justificar!',
+                          'Debe justificar el motivo por el que esta realizando la solicitud.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    // VALIDAMOS QUE SE HAYA SELECCIONADO LA IMAGEN DE LA RESOLUCION ADMINISTRATIVA
+                    if (typeof this.archivo != 'object') {
+                        Swal.fire(
+                          'Adjuntar R.M.!',
+                          'Debe adjuntar un escaneado de la Resolución Administrativa.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    // VALIDAMOS SI SELECCIONO EL ACUERDO
+                    if (!this.acuerdo) {
+                        this.$refs.acuerdo.focus();
+                        Swal.fire(
+                          'Validar!',
+                          'Debe declarar que la información enviada es fidedigna.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    $.each(this.notasCualitativas, function(index, val) {
+                        val.notaNuevaCualitativa = val.notaNuevaCualitativa.toUpperCase();
+                    });
+
+
+                    var data = new FormData();
+                    data.append('idInscripcion', this.idInscripcion);
+                    data.append('flujoTipo', this.flujoTipo);
+                    data.append('notas', JSON.stringify(this.notas));
+                    data.append('notasCualitativas', JSON.stringify(this.notasCualitativas));
+                    data.append('justificacion', this.justificacion);
+                    data.append('archivo', this.archivo);
+
+                    axios.post(Routing.generate('tramite_modificacion_calificaciones_formulario_save'), data)
+                    .then(response => {
+                        window.location.href = "{{path('wf_tramite_index')}}";
+                    })
+                    .catch(e => {
+                        Swal.fire(
+                          'Error!',
+                          e,
+                          'danger'
+                        );
+                    });
+                }
+            },
+            mounted(){
+                
+            }
+        });
+
+    </script>

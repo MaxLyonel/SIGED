@@ -104,7 +104,7 @@ class Notas{
         if($gestion>2019 and $discapacidad == 2){
             $tipoNota = 'Etapa';
         }else{
-            if($gestion <= 2012){
+            if($gestion <= 2012 or $gestion >= 2020 ){
                 $tipoNota = 'Trimestre';
             }else{
                 if($gestion >= 2014){
@@ -729,7 +729,7 @@ class Notas{
             
             if($tipoNota == 'Trimestre'){
                 
-                if($gestion == 2020){
+                if($gestion >= 2020){
                     
                     $operativo = ($nivel==11 or ($nivel ==12 && $grado == 1) or ($nivel ==403 && $grado == 1) or ($nivel ==404 && $grado == 1))?1:3;
 
@@ -1785,7 +1785,7 @@ class Notas{
                 $notasArray = array();
                 $cont = 0;
 
-                  switch ($operativo) {
+                    switch ($operativo) {
                         case 0:
                             $inicio = 6;
                             $fin = 0;
