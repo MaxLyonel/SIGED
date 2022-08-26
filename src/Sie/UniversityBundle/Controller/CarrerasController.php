@@ -571,8 +571,8 @@ class CarrerasController extends Controller
             $params = array();
             $stmt->execute($params);
             $data = $stmt->fetchAll();
+            
             for($i = 0; $i < sizeof($data); $i++ ){
-
                 
                 for($j = 1; $j <= $nro_periodos; $j++ ){
 
