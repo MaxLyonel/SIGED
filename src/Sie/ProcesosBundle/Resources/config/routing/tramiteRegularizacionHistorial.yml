@@ -1,0 +1,112 @@
+tramite_regularizacion_historial_index:
+  path: /
+  defaults: { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:index }
+
+tramite_regularizacion_historial_buscar_estudiante:
+  path: /buscarEstudianteone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:buscarEstudiante }
+  options:
+    expose: true
+
+tramite_regularizacion_historial_buscar_calificaciones:
+  path: /buscarCalificacionesone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:buscarCalificaciones }
+  options:
+    expose: true
+
+tramite_regularizacion_historial_formulario_save:
+  path: /formulariosaveone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:formularioSave }
+  options:
+    expose: true
+
+tramite_regularizacion_historial_certificado:
+  path: /certificadoImprimirone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:rptCertificadoNotas }
+
+tramite_regularizacion_historial_formulario_vista_imprimir_libreta:
+  path: /formularioVistaImprimirLibretaone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:formularioVistaImprimirLibreta }
+
+tramite_regularizacion_historial_formulario_vista_imprimir_finalizar:
+  path: /formularioVistaImprimirFinalizarone/{idTramite}
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:formularioVistaImprimirFinalizar }
+
+tramite_regularizacion_historial_loadLevel:
+    path:     /loadLevelHis
+    defaults: { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:loadLevel }
+    options:
+        expose: true    
+
+tramite_regularizacion_historial_loadGrado:
+    path:     /loadGrado
+    defaults: { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:loadGrado }
+    options:
+        expose: true
+
+tramite_regularizacion_historial_loadParalelo:
+    path:     /loadParalelo
+    defaults: { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:loadParalelo }
+    options:
+        expose: true
+
+tramite_regularizacion_historial_loadTurno:
+    path:     /loadTurno
+    defaults: { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:loadTurno }
+    options:
+        expose: true        
+
+# DISTRITO
+
+tramite_regularizacion_historial_recepcion_verifica_distrito:
+  path: /recepcionaVerificaDistritoone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:recepcionVerificaDistrito }
+
+tramite_regularizacion_historial_deriva_distrito:
+  path: /derivaDistritoone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:derivaDistrito }
+
+# DEPARTAMENTO
+
+tramite_regularizacion_historial_recepcion_verifica_departamento:
+  path: /recepcionaVerificaDepartamentoone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:recepcionVerificaDepartamento }
+
+tramite_regularizacion_historial_revision:
+  path: /recepcionaVerificaDepartamentoone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:recepcionVerificaDepartamento }
+
+tramite_regularizacion_historial_observacion:
+  path: /recepcionaVerificaDepartamentoobs
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:recepcionVerificaDepartamento }
+
+
+tramite_regularizacion_historial_deriva_departamento:
+  path: /derivaDepartamentoone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:derivaDepartamento }
+
+tramite_regularizacion_historial_certificado:
+  path: /certificadoImprimirone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:actaImprimir }
+
+tramite_modificacion_calificaciones_acta_imprimir:
+  path: /actaImprimirone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:actaImprimir }
+
+tramite_download_inscriptionScore_yearOld:
+    path:     /ficgp/{{idTramite}
+    defaults: { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:requestInsCalYearOld }  

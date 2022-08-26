@@ -172,7 +172,7 @@ class TramiteAddModCalificationController extends Controller {
                 // 'ruta'=>$this->generateUrl('tramite_modificacion_calificaciones_formulario', array('flujoTipo'=>$flujoTipo,'idInscripcion'=>$value['id']))
             );
         }
-
+        //dump($inscripcionesArray);die;
         // OBTENEMOS EL DATO DEL DIRECTOR
         $user = $this->container->get('security.context')->getToken()->getUser();
         $directorNombre = $user->getPersona()->getNombre().' '.$user->getPersona()->getPaterno().' '.$user->getPersona()->getMaterno();
@@ -419,7 +419,7 @@ class TramiteAddModCalificationController extends Controller {
             if ($idTramite == null) {
                 
                 // OBTENEMOS OPERATIVO ACTUAL Y LO AGREGAMOS AL ARRAY DE DATOS           
-                $data['operativoActual'] = $this->get('funciones')->obtenerOperativo($sieInscripcion,$gestionInscripcion);
+               // $data['operativoActual'] = $this->get('funciones')->obtenerOperativo($sieInscripcion,$gestionInscripcion);
 
                 // REGISTRAMOS UN NUEVO TRAMITE
                 $registroTramite = $this->get('wftramite')->guardarTramiteNuevo(
@@ -437,7 +437,7 @@ class TramiteAddModCalificationController extends Controller {
                     '',//$lugarTipoLocalidad,
                     $lugarTipo['lugarTipoIdDistrito']
                 );
-
+               // dump( $registroTramite);die;
                 if ($registroTramite['dato'] == false) {
                     $response->setStatusCode(500);
                     return $response;
@@ -445,7 +445,7 @@ class TramiteAddModCalificationController extends Controller {
 
                 $idTramite = $registroTramite['idtramite'];
 
-                // $msg = "El Tramite ".$registroTramite['msg']." fue guardado y enviado exitosamente";
+                 $msg = "El Tramite ".$registroTramite['msg']." fue guardado y enviado exitosamente";
 
             }else{
                 // RECUPERAMOS EL OPERATIVO DONDE SE INICIO EL TRAMITE Y LO AGREGAMOS AL ARRAY DE DATOS
