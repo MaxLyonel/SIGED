@@ -473,7 +473,8 @@ class CarrerasController extends Controller
                     $query->bindValue(':genero_tipo_id', 1);
                     $query->bindValue(':univ_estadomatricula_tipo_id', $data[$i]['id']);
                     $query->bindValue(':univ_periodo_academico_tipo_id', $j);
-                    $query->bindValue(':cantidad', rand(10, 80));                
+                    //$query->bindValue(':cantidad', rand(10, 80));                
+                    $query->bindValue(':cantidad', 0);                
                     $query->execute();
 
                     //femeninos
@@ -484,7 +485,8 @@ class CarrerasController extends Controller
                     $query->bindValue(':genero_tipo_id', 2);
                     $query->bindValue(':univ_estadomatricula_tipo_id', $data[$i]['id']);
                     $query->bindValue(':univ_periodo_academico_tipo_id', $j);
-                    $query->bindValue(':cantidad', rand(10, 80));                
+                    //$query->bindValue(':cantidad', rand(10, 80));                
+                    $query->bindValue(':cantidad', 0);                
                     $query->execute();
 
                 }
@@ -527,7 +529,8 @@ class CarrerasController extends Controller
                     $query->bindValue(':genero_tipo_id', 1);
                     $query->bindValue(':univ_matricula_beca_tipo_id', $data[$i]['id']);
                     $query->bindValue(':univ_periodo_academico_tipo_id', $j);
-                    $query->bindValue(':cantidad', rand(10, 70));                
+                    //$query->bindValue(':cantidad', rand(10, 70));                
+                    $query->bindValue(':cantidad', 0);                
                     $query->execute();
 
                     //femeninos
@@ -538,7 +541,8 @@ class CarrerasController extends Controller
                     $query->bindValue(':genero_tipo_id', 2);
                     $query->bindValue(':univ_matricula_beca_tipo_id', $data[$i]['id']);
                     $query->bindValue(':univ_periodo_academico_tipo_id', $j);
-                    $query->bindValue(':cantidad', rand(10, 50));                
+                    //$query->bindValue(':cantidad', rand(10, 50));                
+                    $query->bindValue(':cantidad', 0);                
                     $query->execute();
 
                 }
@@ -567,8 +571,8 @@ class CarrerasController extends Controller
             $params = array();
             $stmt->execute($params);
             $data = $stmt->fetchAll();
+            
             for($i = 0; $i < sizeof($data); $i++ ){
-
                 
                 for($j = 1; $j <= $nro_periodos; $j++ ){
 
@@ -580,7 +584,8 @@ class CarrerasController extends Controller
                     $query->bindValue(':genero_tipo_id', 1);
                     $query->bindValue(':univ_cargo_tipo_id', $data[$i]['id']);
                     $query->bindValue(':univ_periodo_academico_tipo_id', $j);
-                    $query->bindValue(':cantidad', rand(10, 70));                
+                    //$query->bindValue(':cantidad', rand(10, 70));                
+                    $query->bindValue(':cantidad', 0);                
                     $query->execute();
 
                     //femeninos
@@ -591,7 +596,8 @@ class CarrerasController extends Controller
                     $query->bindValue(':genero_tipo_id', 2);
                     $query->bindValue(':univ_cargo_tipo_id', $data[$i]['id']);
                     $query->bindValue(':univ_periodo_academico_tipo_id', $j);
-                    $query->bindValue(':cantidad', rand(10, 50));                
+                    //$query->bindValue(':cantidad', rand(10, 50));                
+                    $query->bindValue(':cantidad', 0);                
                     $query->execute();
 
                 }
