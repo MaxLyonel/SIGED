@@ -86,7 +86,6 @@ class OfertaAcademicaController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($request->get('idRie'));
         $listado = $this->listadoOfertaAcademica($request->get('idRie'));
-        //dump($listado);die;
         //TODO quitar de la lista las carreras eliminadas por el usuario (19042022)
         $esAcreditado = $this->get('dgfunctions')->esAcreditadoRitt($request->get('idRie'));
         $id_lugar = $sesion->get('roluserlugarid');
@@ -636,6 +635,7 @@ class OfertaAcademicaController extends Controller {
     public function listadoOfertaAcademica($idRie){
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();
+
         $query = "SELECT autorizado.id AS id, carrera.id AS idcarrera, carrera.nombre AS carr 
                     FROM ttec_institucioneducativa_carrera_autorizada AS autorizado
                     INNER JOIN ttec_carrera_tipo AS carrera ON autorizado.ttec_carrera_tipo_id = carrera.id 
@@ -647,8 +647,12 @@ class OfertaAcademicaController extends Controller {
         $stmt->execute($params); 
         $listado = $stmt->fetchAll();
 
+
         $list = array();                                  
         foreach($listado as $li){
+            
+            $total_materias = $this->totalMaterias($idRie, $li['idcarrera']);
+
             $query = $em->createQuery('SELECT a
                                          FROM SieAppWebBundle:TtecResolucionCarrera a 
                                         WHERE a.ttecInstitucioneducativaCarreraAutorizada = :idCaAutorizada 
@@ -668,12 +672,35 @@ class OfertaAcademicaController extends Controller {
                                 'tiempoestudio' => ($resolucion) ? $resolucion[0]->getTiempoEstudio():" ",
                                 'regimen' =>  ($resolucion) ? $resolucion[0]->getTtecRegimenEstudioTipo()->getRegimenEstudio():" ",
                                 'cargahoraria' => ($resolucion) ? $resolucion[0]->getCargaHoraria():" ",
-                                'operacion' => ($resolucion) ? $resolucion[0]->getOperacion():" "
+                                'operacion' => ($resolucion) ? $resolucion[0]->getOperacion():" ",
+                                'total' => count($resolucion),
+                                'total_materias' => $total_materias,
                             );
         }                                    
         return $list;
     }  
+    public function totalMaterias($ieducativa_id, $carrera_id){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
 
+        $query = $em->getConnection()->prepare(' select f.id as materia_id
+        from ttec_institucioneducativa_carrera_autorizada a        
+            inner join ttec_resolucion_carrera h on h.ttec_institucioneducativa_carrera_autorizada_id = a.id
+            inner join ttec_regimen_estudio_tipo i on i.id = h.ttec_regimen_estudio_tipo_id            
+            inner join ttec_carrera_tipo b on b.id=a.ttec_carrera_tipo_id
+                inner join institucioneducativa c on a.institucioneducativa_id=c.id
+                    inner join ttec_denominacion_titulo_profesional_tipo d on a.ttec_carrera_tipo_id=d.ttec_carrera_tipo_id
+                        inner join ttec_pensum e on e.ttec_denominacion_titulo_profesional_tipo_id=d.id
+                            inner join ttec_materia_tipo f on e.id=f.ttec_pensum_id
+                                inner join ttec_periodo_tipo g on f.ttec_periodo_tipo_id=g.id                                
+        where a.institucioneducativa_id = :idInstitucion and a.ttec_carrera_tipo_id = :idCarrera');
+
+        $query->bindValue(':idInstitucion', $ieducativa_id);
+        $query->bindValue(':idCarrera', $carrera_id);
+        $query->execute();
+        $materias = $query->fetchAll();
+        return count($materias);
+    }
     /***
      * Obtiene tipos de trámites en el registro
      */
