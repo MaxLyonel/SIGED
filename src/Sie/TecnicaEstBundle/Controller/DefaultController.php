@@ -30,32 +30,32 @@ class DefaultController extends Controller
         $em = $this->getDoctrine()->getManager();
         $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $id_usuario));
 
-        $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findBy(array('usuario' => $id_usuario));
-
-        if (count($entityUnivSede)<=0){
+        $entityEstTecSede = $em->getRepository('SieAppWebBundle:EstTecSede')->findBy(array('usuario' => $id_usuario));
+        
+        if (count($entityEstTecSede)<=0){
             return $this->render('SieAppWebBundle:Login:login4.html.twig',array(
                 'last_username'=>$this->get('request')->getSession()->get(SecurityContext::LAST_USERNAME),
                 'error'=>array('message'=>'¡El usuario no se encuenta registrado para acceder al presente sistema!')
             ));            
         }
 
-        //dump($entityUnivSede);die;
+        // dump($entityEstTecSede);//die;
         $sedes = array();
         $c = 0;
-        foreach ($entityUnivSede as $registro) {
+        foreach ($entityEstTecSede as $registro) {
             $c = $c + 1;
             $sedes[$c]['id'] = bin2hex(serialize($registro->getId()));  
             $sedes[$c]['nombre'] = $registro->getSede();     
-            $sedes[$c]['direccion'] = $registro->getUnivJuridicciongeografica()->getDireccion();        
+            $sedes[$c]['direccion'] = $registro->getEstTecJuridicciongeografica()->getDireccion();        
         }
 
-        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('usuario' => $id_usuario, 'univSedeTipo' => 1));
-        //dump($entityUnivSede);die;
-        return $this->render('SieUniversityBundle:Default:index.html.twig', array(
+        $entityEstTecSedeCentral = $em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('usuario' => $id_usuario));//, 'estTecSedeTipo' => 1));
+        // dump($entityEstTecSedeCentral );die;
+        return $this->render('SieTecnicaEstBundle:Default:index.html.twig', array(
             'usuario' => $entityUsuario,
             'titulo' => "Sedes",
             'sedes' => $sedes,
-            'central' => $entityUnivSedeCentral,
+            'central' => $entityEstTecSedeCentral,
         ));
         // $info = json_decode(base64_decode($request->get('info')), true);
     }
