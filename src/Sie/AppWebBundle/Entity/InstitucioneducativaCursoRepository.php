@@ -117,7 +117,7 @@ class InstitucioneducativaCursoRepository extends EntityRepository
                 ->orderBy('j.paterno, j.materno, j.nombre')
                 ->setParameter('ie_curso_id', $ie_curso_id)
         ;
-
+        dump($ie_curso_id); die;
         $objStudents = $qb->getQuery()->getResult();
 
         for($i=0; $i<count($objStudents);$i++) {
