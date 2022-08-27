@@ -1,6 +1,6 @@
 <?php
 
-namespace Sie\UniversityBundle\Controller;
+namespace Sie\TecnicaEstBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -11,11 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
-use Sie\AppWebBundle\Entity\UnivAutoridadUniversidad;
+use Sie\AppWebBundle\Entity\EstTecAutoridadUniversidad;
 use Sie\AppWebBundle\Entity\Persona;
 
 
-class MainInfoUniController extends Controller{
+class MainInfoTecEstController extends Controller{
     public $session;
     public $idInstitucion;
     public $router;
@@ -35,14 +35,14 @@ class MainInfoUniController extends Controller{
     public function indexAction(){
     	$em      = $this->getDoctrine()->getManager();
     	$data    = bin2hex(serialize($this->baseData));
-    	$objSede = $em->getRepository('SieAppWebBundle:UnivSede')->find($this->baseData['sedeId']);
-        $enablePersonalStaffOption = ($objSede->getUnivSedeTipo()->getId()==1)?true:false;
+    	$objSede = $em->getRepository('SieAppWebBundle:EstTecSede')->find($this->baseData['sedeId']);
+        $enablePersonalStaffOption = ($objSede->getEstTecSedeTipo()->getId()==1)?true:false;
         
         if (!isset($this->baseData['sedeId'])) {
             return $this->redirect($this->generateUrl('login'));
         }
 
-        return $this->render('SieUniversityBundle:MainInfoUni:index.html.twig', array(
+        return $this->render('SieTecnicaEstBundle:MainInfoEstTec:index.html.twig', array(
             'tuicion'                   => true,
             'enablePersonalStaffOption' => $enablePersonalStaffOption,
             'uni_staff'          		=> $this->buildOptionUni('staff_index', 'Personal Ejecutivo', $data)->createView(),

@@ -49,7 +49,7 @@ class DefaultController extends Controller
             $sedes[$c]['direccion'] = $registro->getEstTecJuridicciongeografica()->getDireccion();        
         }
 
-        $entityEstTecSedeCentral = $em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('usuario' => $id_usuario));//, 'estTecSedeTipo' => 1));
+        $entityEstTecSedeCentral = $em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('usuario' => $id_usuario, 'estTecSedeTipo' => 1));
         // dump($entityEstTecSedeCentral );die;
         return $this->render('SieTecnicaEstBundle:Default:index.html.twig', array(
             'usuario' => $entityUsuario,
@@ -65,7 +65,7 @@ class DefaultController extends Controller
     {
         $fechaActual = new \DateTime(date('Y-m-d'));
         $gestionActual = $fechaActual->format('Y');
-        
+       
         $id_usuario = $this->session->get('userId');
         //$response = new JsonResponse();
         $estado = true;
@@ -107,23 +107,23 @@ class DefaultController extends Controller
 
         $this->session->set('sedeId', $sedeId);
 
-        $entityUnivSedeActual = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
-        $titulo = $entityUnivSedeActual->getUnivUniversidad()->getUniversidad();
-        $subtitulo = $entityUnivSedeActual->getSede();
+        $entityEstTecSedeActual = $em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('id' => $sedeId));
+        $titulo = $entityEstTecSedeActual->getEstTecInstituto()->getInstituto();
+        $subtitulo = $entityEstTecSedeActual->getSede();
 
         $this->session->set('sede', $titulo);
         $this->session->set('subsede', $subtitulo);
         
   
-        return $this->redirectToRoute('maininfouni_index');
+        return $this->redirectToRoute('maininfotecest_index');
     }
 
 
     public function tuisionSede($sede, $usuarioId)
     {    
         $em = $this->getDoctrine()->getManager();
-        $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('usuario' => $usuarioId, 'id' => $sede));
-        if (count($entityUnivSede)>0){
+        $entityEstTecSede = $em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('usuario' => $usuarioId, 'id' => $sede));
+        if (count($entityEstTecSede)>0){
             return true;
         } else {
             return false;
@@ -151,17 +151,17 @@ class DefaultController extends Controller
         $gestionId = base64_decode($form['gestion']);
 
         $em = $this->getDoctrine()->getManager();
-        $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findBy(array('usuario' => $id_usuario));
-        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('usuario' => $id_usuario, 'univSedeTipo' => 1));
-        //dump($entityUnivSede);die;
+        $entityEstTecSede = $em->getRepository('SieAppWebBundle:EstTecSede')->findBy(array('usuario' => $id_usuario));
+        $entityEstTecSedeCentral = $em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('usuario' => $id_usuario, 'EstTecSedeTipo' => 1));
+        //dump($entityEstTecSede);die;
 
         if(!$this->tuisionSede($sedeId,$id_usuario)){
             //return $response->setData(array('estado' => false, 'msg' => 'Su sesión finalizo, ingrese nuevamente'));
             $estado = false;
             $msg = 'No esta como usuario en la sede seleccionada, comuniquese con su administrador';
-            return $this->render('SieUniversityBundle:Default:index.html.twig', array(
-                'sedes' => $entityUnivSede,
-                'central' => $entityUnivSedeCentral,
+            return $this->render('SieTecnicaEstBundle:Default:index.html.twig', array(
+                'sedes' => $entityEstTecSede,
+                'central' => $entityEstTecSedeCentral,
                 'msg'=>$msg,
                 'titulo' => "Sucursales"
             ));
@@ -169,20 +169,20 @@ class DefaultController extends Controller
 
         $this->session->set('gestion', $gestionId);
 
-        return $this->render('SieUniversityBundle:Default:index.html.twig', array(
-            'sedes' => $entityUnivSede,
-            'central' => $entityUnivSedeCentral,
+        return $this->render('SieTecnicaEstBundle:Default:index.html.twig', array(
+            'sedes' => $entityEstTecSede,
+            'central' => $entityEstTecSedeCentral,
             'titulo' => "Sucursales"
         ));
 
-        $entityUnivSedeActual = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
-        $titulo = $entityUnivSedeActual->getUnivUniversidad()->getUniversidad();
-        $subtitulo = $entityUnivSedeActual->getSede();
+        $entityEstTecSedeActual = $em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('id' => $sedeId));
+        $titulo = $entityEstTecSedeActual->getEstTecInstituto()->getInstituto();
+        $subtitulo = $entityEstTecSedeActual->getSede();
         //dump($sedeId);die;
         
         
-        return $this->render('SieUniversityBundle:Principal:index.html.twig', array(
-            'sede' => $entityUnivSedeActual,
+        return $this->render('SieTecnicaEstBundle:Principal:index.html.twig', array(
+            'sede' => $entityEstTecSedeActual,
             'titulo' => $titulo,
             'subtitulo' => $subtitulo
         ));        

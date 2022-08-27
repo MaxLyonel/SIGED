@@ -1,6 +1,6 @@
-maininfouni_index:
+maininfotecest_index:
     path:     /
-    defaults: { _controller: SieTecnicaEstBundle:MainInfoUni:index }
+    defaults: { _controller: SieTecnicaEstBundle:MainInfoTecEst:index }
 
 # maininfouni_index:
 #     path:     /
