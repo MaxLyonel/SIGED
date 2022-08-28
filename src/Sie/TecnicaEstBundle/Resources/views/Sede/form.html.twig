@@ -158,7 +158,7 @@
         }
         peticion = $.ajax({
             type: 'GET',
-            url: '{{ path('sie_university_sede_lista_provincia')}}',
+            url: '{{ path('sie_tecest_sede_lista_provincia')}}',
             data: {'departamento': departamento},
             beforeSend: function () {
                 $('#form_provincia').attr('disabled', 'true');
@@ -192,7 +192,7 @@
         }
         peticion = $.ajax({
             type: 'GET',
-            url: '{{ path('sie_university_sede_lista_municipio')}}',
+            url: '{{ path('sie_tecest_sede_lista_municipio')}}',
             data: {'provincia': provincia},
             beforeSend: function () {
                 $('#form_municipio').attr('disabled', 'true');
@@ -224,7 +224,7 @@
         }
         peticion = $.ajax({
             type: 'GET',
-            url: '{{ path('sie_university_sede_lista_comunidad')}}',
+            url: '{{ path('sie_tecest_sede_lista_comunidad')}}',
             data: {'municipio': municipio},
             beforeSend: function () {
                 $('#form_comunidad').attr('disabled', 'true');
@@ -263,7 +263,7 @@
 
         $.ajax({
             type: 'post',
-            url: Routing.generate('sie_university_sede_update'),
+            url: Routing.generate('sie_tecest_sede_update'),
             data: $('#formSedeSucursal').serialize(),
             beforeSend: function () {       
                 $("#formSedeSucursal").append('<div class="text-center" id="message"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');

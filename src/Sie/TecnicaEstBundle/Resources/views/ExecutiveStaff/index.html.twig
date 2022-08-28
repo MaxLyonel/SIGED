@@ -177,13 +177,13 @@
     
 
     <div class="header-content">
-        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Universidad <span></span></h2>
+        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Instituto <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
                 <li>
                     <i class="fa fa-home"></i>
-                    <a href="{{path('maininfouni_index')}}">Registro de Información</a>
+                    <a href="{{path('tecest_maininfotecest_index')}}">Registro de Información</a>
                     <i class="fa fa-angle-right"></i>
                 </li>
                 <li class="active">Personal Ejecutivo</li>
@@ -474,7 +474,7 @@
                                                 </div>
                                             </div>    
                                             </form>                                          
-											{# data Personal University #}
+											{# data Personal Instituto #}
 
                                             <div class="alert alert-warning" role="alert" v-if="existsPersonStaffRegistered">
                                                 Ya existe el registro de esta persona...
@@ -674,10 +674,10 @@
                                                     </div> #}
                                                 </div>
                                                 </form>
-                                                {# data Personal University #}
+                                                {# data Personal Instituto #}
                                                 </br>
                                                 <div class="alert alert-success" role="alert">
-                                                  Información Universidad a modificar
+                                                  Información Instituto a modificar
                                                 </div>                                                  
                                                 <form role="form" class="formatk">
                                                     
@@ -896,7 +896,7 @@
                 },                 
                 getAllOperative: function(sedeId){
                     
-                    axios.get(Routing.generate('staff_getAllOperative',{ sedeId: sedeId}))
+                    axios.get(Routing.generate('tecest_staff_getAllOperative',{ sedeId: sedeId}))
                         .then(response => {
                             this.arrOperative = response.data.arrOperative;
                         })
@@ -960,7 +960,7 @@
                     }
 
                     
-                    axios.get(Routing.generate('staff_validateDataSegip',this.dataPerson))
+                    axios.get(Routing.generate('tecest_staff_validateDataSegip',this.dataPerson))
                         .then(response => {
                             this.swperson = response.data.swperson;
                             this.swsegip = response.data.swsegip;
@@ -983,7 +983,7 @@
 					this.yearSelected = 0;
 					this.buscandoall = true;
 					this.arrRegisteredStaff = [];
-                    axios.get(Routing.generate('staff_getAllStaff', { year: inyear }))
+                    axios.get(Routing.generate('tecest_staff_getAllStaff', { year: inyear }))
                     .then(response => {
                         if (response.status == 200) {
 
@@ -1089,7 +1089,7 @@
                     
                     this.DBsearch.yearchoose = yearchoose;
                     this.DBsearch.sedeId = this.sedeId;
-                    axios.get(Routing.generate('staff_lookforperson', this.DBsearch))
+                    axios.get(Routing.generate('tecest_staff_lookforperson', this.DBsearch))
                     .then(response => {
                         if (response.status == 200) {
                         	
@@ -1145,7 +1145,7 @@
                             // data.append('yearchoose', yearchoose);
                             // data.append('sedeId', this.sedeId);
                             this.arrRegisteredStaff = [];                          
-                             axios.post(Routing.generate('staff_savestaff'), data)
+                             axios.post(Routing.generate('tecest_staff_savestaff'), data)
                             .then(response => {
                                 if (response.status == 200) {
                                     $('#modalPerson').modal('hide');
@@ -1195,7 +1195,7 @@
                         if (result.value) {
                             
                             this.arrRegisteredStaff = [];                          
-                             axios.post(Routing.generate('staff_deletePersonal', {id: id, yearSelected: yearSelected}))
+                             axios.post(Routing.generate('tecest_staff_deletePersonal', {id: id, yearSelected: yearSelected}))
                             .then(response => {
                                 if (response.status == 200) {
                                     $('#modalPerson').modal('hide');
@@ -1230,7 +1230,7 @@
                     $('#modalEditPerson').modal('show');
                     // this.closeit();
                             // this.personalData = [];                          
-                             axios.post(Routing.generate('staff_editPersonal', {id: id, yearSelected: yearSelected, sedeId: this.sedeId}))
+                             axios.post(Routing.generate('tecest_staff_editPersonal', {id: id, yearSelected: yearSelected, sedeId: this.sedeId}))
                             .then(response => {
                                 if (response.status == 200) {
                                     
@@ -1292,7 +1292,7 @@
                             // data.append('yearchoose', yearchoose);
                             // data.append('sedeId', this.sedeId);
                             this.arrRegisteredStaff = [];                          
-                             axios.post(Routing.generate('staff_saveEditPersonal'), data)
+                             axios.post(Routing.generate('tecest_staff_saveEditPersonal'), data)
                             .then(response => {
                                 if (response.status == 200) {
                                     $('#modalEditPerson').modal('hide');

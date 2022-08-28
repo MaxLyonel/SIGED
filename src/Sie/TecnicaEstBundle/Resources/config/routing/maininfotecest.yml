@@ -1,4 +1,4 @@
-maininfotecest_index:
+tecest_maininfotecest_index:
     path:     /
     defaults: { _controller: SieTecnicaEstBundle:MainInfoTecEst:index }
 

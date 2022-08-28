@@ -1,9 +1,9 @@
-sie_tecnica_est_homepage:
-    path:     /homepage
+sie_tecnicaest_homepage:
+    path:     /tecest/homepage
     defaults: { _controller: SieTecnicaEstBundle:Default:index }
 
 sie_tecnica_est_menu:
-    path:     /menu
+    path:     /tecest/menu
     defaults: { _controller: SieTecnicaEstBundle:Default:menu }
 
 tecest_staff:

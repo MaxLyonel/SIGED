@@ -18,7 +18,7 @@ use JMS\Serializer\SerializerBuilder;
  *
  * Email bugs/suggestions to pckrlos@gmail.com
  */
-class Univfunctions {
+class Tecestfunctions {
   protected $em;
   protected $router;
   protected $session;
@@ -40,13 +40,13 @@ class Univfunctions {
   public function getAllStaff($arrData){
 
     $query =       "
-        select aut.id, per.paterno, per.materno, per.nombre, per.carnet, per.complemento,carg.cargo, form.cargo as formacion, aut.gestion_tipo_id, aut.documentos_acad, aut.univ_sede_id
-        from univ_sede as sede
-        inner join univ_autoridad_universidad as aut on (sede.id = aut.univ_sede_id )
+        select aut.id, per.paterno, per.materno, per.nombre, per.carnet, per.complemento,carg.cargo, form.cargo as formacion, aut.gestion_tipo_id, aut.documentos_acad, aut.est_tec_sede_id
+        from est_tec_sede as sede
+        inner join est_tec_autoridad_instituto as aut on (sede.id = aut.est_tec_sede_id )
         inner join persona as per on (aut.persona_id = per.id)
-        inner join univ_cargo_jerarquico_tipo as carg on (aut.univ_cargo_jerarquico_tipo_id = carg.id)
-        inner join univ_formacion_tipo as form on (aut.univ_formacion_tipo_id = form.id)
-        where aut.gestion_tipo_id =  ".$arrData['yearSelected']."  and aut.univ_sede_id = ".$arrData['sedeId']." order by per.paterno, per.materno";
+        inner join est_tec_cargo_jerarquico_tipo as carg on (aut.est_tec_cargo_jerarquico_tipo_id = carg.id)
+        inner join est_tec_formacion_tipo as form on (aut.est_tec_formacion_tipo_id = form.id)
+        where aut.gestion_tipo_id =  ".$arrData['yearSelected']."  and aut.est_tec_sede_id = ".$arrData['sedeId']." order by per.paterno, per.materno";
 
     $query = $this->em->getConnection()->prepare($query);
     
@@ -60,7 +60,7 @@ class Univfunctions {
   public function getAllOperative($arrData){
 
     $query =       "
-        select * from univ_registro_consolidacion where univ_sede_id = ".$arrData['sedeId'] ." and activo is true order by 1";
+        select * from est_tec_registro_consolidacion where est_tec_sede_id = ".$arrData['sedeId'] ." and activo is true order by 1";
 
     $query = $this->em->getConnection()->prepare($query);
     
@@ -84,7 +84,7 @@ class Univfunctions {
   public function getPersonalStaff($arrData){
     
     $query =       "
-        select * from univ_autoridad_universidad where gestion_tipo_id = ".$arrData['yearchoose'] ." and univ_sede_id = ".$arrData['sedeId'] ." and persona_id = ".$arrData['personId'];
+        select * from est_tec_autoridad_instituto where gestion_tipo_id = ".$arrData['yearchoose'] ." and est_tec_sede_id = ".$arrData['sedeId'] ." and persona_id = ".$arrData['personId'];
 
     $query = $this->em->getConnection()->prepare($query);
     
@@ -108,7 +108,7 @@ class Univfunctions {
    */
   public function getPosition(){
     
-    $query = "select * from univ_cargo_jerarquico_tipo order by 1 ";
+    $query = "select * from est_tec_cargo_jerarquico_tipo order by 1 ";
 
     $query = $this->em->getConnection()->prepare($query);
     
@@ -127,7 +127,7 @@ class Univfunctions {
    */
   public function getTraining(){
       
-    $query = " select * from univ_formacion_tipo order by 1 ";
+    $query = " select * from est_tec_formacion_tipo order by 1 ";
 
     $query = $this->em->getConnection()->prepare($query);
     

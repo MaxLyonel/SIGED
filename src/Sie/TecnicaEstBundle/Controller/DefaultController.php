@@ -115,7 +115,7 @@ class DefaultController extends Controller
         $this->session->set('subsede', $subtitulo);
         
   
-        return $this->redirectToRoute('maininfotecest_index');
+        return $this->redirectToRoute('tecest_maininfotecest_index');
     }
 
 

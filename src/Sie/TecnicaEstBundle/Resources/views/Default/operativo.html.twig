@@ -7,7 +7,7 @@
     {% if gestiones is defined  %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12">
-                <form name="form" id="form" role="form" action="{{ path('sie_university_operativo') }}" method="POST" onsubmit="return verificaCampos()">
+                <form name="form" id="form" role="form" action="{{ path('sie_tecest_operativo') }}" method="POST" onsubmit="return verificaCampos()">
                     <input type="hidden" name="_token" value="{{ csrf_token('gestiones') }}">
                     <input type="hidden" id="form_gestion" name="form[gestion]" value="">
                     <input type="hidden" id="form_sede" name="form[sede]" value="{{sede.id|base64_encode }}">                    

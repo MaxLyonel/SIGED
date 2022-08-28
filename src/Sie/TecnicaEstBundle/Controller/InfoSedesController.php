@@ -1,6 +1,6 @@
 <?php
 
-namespace Sie\UniversityBundle\Controller;
+namespace Sie\TecnicaEstBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -8,7 +8,7 @@ class InfoSedesController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('SieUniversityBundle:InfoSedes:index.html.twig', array(
+        return $this->render('SieTecEstBundle:InfoSedes:index.html.twig', array(
                 // ...
             ));    }
 

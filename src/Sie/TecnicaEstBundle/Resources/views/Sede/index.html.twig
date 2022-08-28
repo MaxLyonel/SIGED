@@ -1,4 +1,4 @@
-{% extends 'layoutUniversity.html.twig' %}
+{% extends 'layoutTecnicaEst.html.twig' %}
 
 {% block stylesheets %}
     {{parent()}}
@@ -23,9 +23,9 @@
           <ol class="breadcrumb">
               <li>
                   <i class="fa fa-home"></i>
-                  <a href="{{path('sie_university_homepage')}}">Inicio</a>
+                  <a href="{{path('sie_tecnicaest_homepage')}}">Inicio</a>
                   /
-                  <a href="{{path('maininfouni_index')}}">Menú Principal</a>
+                  <a href="{{path('tecest_maininfotecest_index')}}">Menú Principal</a>
               </li>
           </ol>
       </div><!-- /.breadcrumb-wrapper -->
@@ -76,7 +76,7 @@
                     </li>
                 {% endfor %}
             </ul>
-            <form name="form" id="form" role="form" action="{{ path('sie_university_sede_index') }}" method="POST" onsubmit="return verificaCampos()">
+            <form name="form" id="form" role="form" action="{{ path('sie_tecest_sede_index') }}" method="POST" onsubmit="return verificaCampos()">
                 <input type="hidden" name="_token" value="{{ csrf_token('gestiones') }}">
                 <input type="hidden" id="form_gestion" name="form[gestion]" value="">  
                 <input type="hidden" id="form_data" name="form[data]" value="{{datos.data}}">                 
@@ -166,7 +166,7 @@
         }
         $.ajax({
             type: 'post',
-            url: Routing.generate('sie_university_sede_form', {'data': datos}),
+            url: Routing.generate('sie_tecest_sede_form', {'data': datos}),
             beforeSend: function () {
                 $("#modalBody").empty();
                 $("#modalBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="img-responsive" /></div>');
@@ -219,7 +219,7 @@
         }
         $.ajax({
             type: 'post',
-            url: Routing.generate('sie_university_sede_reporte_docente_administrativo', {'data': data}),
+            url: Routing.generate('sie_tecest_sede_reporte_docente_administrativo', {'data': data}),
             beforeSend: function () {
                 $("#modalBody").empty();
                 $("#modalBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');

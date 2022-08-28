@@ -1,15 +1,15 @@
 <?php
 
-namespace Sie\UniversityBundle\Controller;
+namespace Sie\TecnicaEstBundle\Controller;
 
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Doctrine\ORM\EntityRepository;
-use Sie\AppWebBundle\Entity\UnivSedeSucursal;
-use Sie\AppWebBundle\Entity\UnivJurisdiccionGeografica;
-use Sie\AppWebBundle\Entity\UnivUniversidadSedeDocenteAdm;
+use Sie\AppWebBundle\Entity\EstTecSedeSucursal;
+use Sie\AppWebBundle\Entity\EstTecJurisdiccionGeografica;
+use Sie\AppWebBundle\Entity\EstTecInstitutoSedeDocenteAdm;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -58,7 +58,7 @@ class SedeController extends Controller
 
         // $this->session->set('sedeId', $sedeId);
 
-        $entityUnivSedeActual = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
+        $entityUnivSedeActual = $em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('id' => $sedeId));
         //$titulo = $entityUnivSedeActual->getUnivUniversidad()->getUniversidad();
         //$subtitulo = $entityUnivSedeActual->getSede();
 
@@ -68,7 +68,7 @@ class SedeController extends Controller
         // $this->session->set('sede', $titulo);
         // $this->session->set('subsede', $subtitulo);
 
-        $sedeSucursalEntity = $em->getRepository('SieAppWebBundle:UnivSedeSucursal')->findBy(array('univSede'=>$sedeId, 'gestionTipo'=>$gestionId));
+        $sedeSucursalEntity = $em->getRepository('SieAppWebBundle:EstTecSedeSucursal')->findBy(array('estTecSede'=>$sedeId, 'gestionTipo'=>$gestionId));
         
         $info = base64_encode(json_encode(array('sedeId'=>$sedeId,'gestionId'=>$gestionId)));
         $info = bin2hex(serialize(array('sedeId'=>$sedeId,'gestionId'=>$gestionId)));
@@ -84,14 +84,14 @@ class SedeController extends Controller
             $fax = $sedeSucursalArray->getFax();
             $casilla = $sedeSucursalArray->getCasilla();
             $sitio = $sedeSucursalArray->getSitioWeb();
-            $departamento = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
-            $provincia = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getLugarTipo()->getId();
-            $municipio = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getId();
-            $comunidad = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getId();
-            $latitud = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getCordx();
-            $longitud = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getCordy();
-            $zona = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getZona();
-            $direccion = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getDireccion();
+            $departamento = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
+            $provincia = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getId();
+            $municipio = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getId();
+            $comunidad = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getId();
+            $latitud = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getCordx();
+            $longitud = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getCordy();
+            $zona = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getZona();
+            $direccion = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getDireccion();
         } else {
             $telefono = "";
             $celular = "";
@@ -151,7 +151,7 @@ class SedeController extends Controller
         $docentesAdministrativos = $query->getQuery()->getResult();
 */
 
-        $univRegistroConsolidacionEntity = $em->getRepository('SieAppWebBundle:UnivRegistroConsolidacion')->findBy(array('univSede' => $sedeId),array('gestionTipo'=>'DESC'));
+        $univRegistroConsolidacionEntity = $em->getRepository('SieAppWebBundle:EstTecRegistroConsolidacion')->findBy(array('estTecSede' => $sedeId),array('gestionTipo'=>'DESC'));
         $gestiones = array();
         foreach ($univRegistroConsolidacionEntity as $registro) {
             $gestiones[] = $registro->getGestionTipo();       
@@ -159,7 +159,7 @@ class SedeController extends Controller
 
         $cantidadDocentesAdministrativos = $this->cantidadSedeDocenteAdministrativo($sedeId,$gestionId);
 
-        return $this->render('SieUniversityBundle:Sede:index.html.twig', array(
+        return $this->render('SieTecnicaEstBundle:Sede:index.html.twig', array(
             'sede' => $entityUnivSedeActual,
             'titulo' => $titulo,
             'subtitulo' => $subtitulo,
@@ -175,7 +175,7 @@ class SedeController extends Controller
     public function tuisionSede($sede, $usuarioId)
     {    
         $em = $this->getDoctrine()->getManager();
-        $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('usuario' => $usuarioId, 'id' => $sede));
+        $entityUnivSede = $em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('usuario' => $usuarioId, 'id' => $sede));
         if (count($entityUnivSede)>0){
             return true;
         } else {
@@ -230,8 +230,8 @@ class SedeController extends Controller
         ->add('provincia', 'choice', array('label' => 'Provincia', 'choices' => $datos['provincia']['lugar'], 'data' => $datos['provincia']['id'], 'empty_value' => 'Seleccione Provincia', 'attr' => array('class' => '', 'onchange' => 'listarMunicipio(this.value)', 'required' => true)))
         ->add('municipio', 'choice', array('label' => 'Municipio', 'choices' => $datos['municipio']['lugar'], 'data' => $datos['municipio']['id'], 'empty_value' => 'Seleccione Municipio', 'attr' => array('class' => '', 'onchange' => 'listarComunidad(this.value)', 'required' => true)))
         ->add('comunidad', 'choice', array('label' => 'Comunidad', 'choices' => $datos['comunidad']['lugar'], 'data' => $datos['comunidad']['id'], 'empty_value' => 'Seleccione Comunidad', 'attr' => array('class' => '', 'required' => true)))
-        ->add('latitud', 'text', array('label' => 'Latitud', 'required' => false, 'attr' => array('value' => $datos['latitud'], 'class' => 'form-control datocea', 'style' => 'pointer-events:none')))
-        ->add('longitud', 'text', array('label' => 'Longitud', 'required' => false, 'attr' => array('value' => $datos['longitud'], 'class' => 'form-control datocea', 'style' => 'pointer-events:none')))
+        ->add('latitud', 'text', array('label' => 'Latitud', 'required' => false, 'attr' => array('value' => $datos['longitud'], 'class' => 'form-control datocea', 'style' => 'pointer-events:none')))
+        ->add('longitud', 'text', array('label' => 'Longitud', 'required' => false, 'attr' => array('value' => $datos['latitud'], 'class' => 'form-control datocea', 'style' => 'pointer-events:none')))
         ->add('zona', 'text', array('label' => 'Zona:', 'required' => false, 'attr' => array('value' => $datos['zona'], 'class' => 'form-control datocea', 'style' => 'text-transform:uppercase')))
         ->add('direccion', 'text', array('label' => 'Dirección:', 'required' => false, 'attr' => array('value' => $datos['direccion'], 'class' => 'form-control datocea', 'style' => 'text-transform:uppercase')))
         ->getForm()->createView();
@@ -344,7 +344,7 @@ class SedeController extends Controller
 
         
         $em = $this->getDoctrine()->getManager();
-        $sedeSucursalEntity = $em->getRepository('SieAppWebBundle:UnivSedeSucursal')->findBy(array('univSede'=>$sedeId, 'gestionTipo'=>$gestionId));
+        $sedeSucursalEntity = $em->getRepository('SieAppWebBundle:EstTecSedeSucursal')->findBy(array('estTecSede'=>$sedeId, 'gestionTipo'=>$gestionId));
         //dump($sedeSucursalEntity, $sedeSucursalEntity[0]->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo());die;
         if (count($sedeSucursalEntity) > 0){
             $sedeSucursalArray = $sedeSucursalEntity[0];
@@ -357,14 +357,14 @@ class SedeController extends Controller
             $fax = $sedeSucursalArray->getFax();
             $casilla = $sedeSucursalArray->getCasilla();
             $sitio = $sedeSucursalArray->getSitioWeb();
-            $departamento = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
-            $provincia = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getLugarTipo()->getId();
-            $municipio = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getLugarTipo()->getId();
-            $comunidad = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getLugarTipoLocalidad2012()->getId();
-            $latitud = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getCordx();
-            $longitud = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getCordy();
-            $zona = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getZona();
-            $direccion = $sedeSucursalArray->getUnivSede()->getUnivJuridicciongeografica()->getDireccion();
+            $departamento = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
+            $provincia = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getId();
+            $municipio = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getId();
+            $comunidad = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getId();
+            $latitud = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getCordx();
+            $longitud = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getCordy();
+            $zona = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getZona();
+            $direccion = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getDireccion();
         } else {
             $sedeSucursalId = 0;
             $telefono = "";
@@ -413,7 +413,7 @@ class SedeController extends Controller
 
         //dump($datos);die;
         //dump($sedeId,$info, $formSedeSucursal);die;
-        $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findOneBy(array('id' => $sedeId));
+        $entityUnivSede = $em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('id' => $sedeId));
         $sedeDetalle = array(
             'nombre'=>$entityUnivSede->getSede(),
             'resolucionMinisterial'=>$entityUnivSede->getResolucionMinisterial(),
@@ -426,7 +426,7 @@ class SedeController extends Controller
 
         $arrayFormulario = array('estado'=>$estado, 'msg'=>$msg, 'titulo' => "Modificación de Sede / Sub Sede", 'form'=>$formSedeSucursal, 'sedeDetalle'=>$sedeDetalle);
         $response->setStatusCode(200);
-        return $this->render('SieUniversityBundle:Sede:form.html.twig', $arrayFormulario);
+        return $this->render('SieTecnicaEstBundle:Sede:form.html.twig', $arrayFormulario);
 
     }
 
@@ -478,10 +478,10 @@ class SedeController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         try {        
-            $sedeSucursalEntity = $em->getRepository('SieAppWebBundle:UnivSedeSucursal')->findBy(array('id'=>$sedeSucursalId, 'univSede'=>$sedeId, 'gestionTipo'=>$gestionId));
+            $sedeSucursalEntity = $em->getRepository('SieAppWebBundle:EstTecSedeSucursal')->findBy(array('id'=>$sedeSucursalId, 'estTecSede'=>$sedeId, 'gestionTipo'=>$gestionId));
             if(count($sedeSucursalEntity) <= 0){             
-                $sedeSucursalEntity = new UnivSedeSucursal();
-                $sedeSucursalEntity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($sedeId));
+                $sedeSucursalEntity = new EstTecSedeSucursal();
+                $sedeSucursalEntity->setEstTecSede($em->getRepository('SieAppWebBundle:EstTecSede')->find($sedeId));
                 $sedeSucursalEntity->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestionId));
                 $sedeSucursalEntity->setFechaRegistro(new \DateTime('now'));
             } else {
@@ -499,13 +499,13 @@ class SedeController extends Controller
             $sedeSucursalEntity->setFechaModificacion(new \DateTime('now'));
             $em->persist($sedeSucursalEntity);
 
-            $sedeEntity = $em->getRepository('SieAppWebBundle:UnivSede')->find($sedeId);
-            $univJuridicciongeograficaEntity = $sedeEntity->getUnivJuridicciongeografica();
+            $sedeEntity = $em->getRepository('SieAppWebBundle:EstTecSede')->find($sedeId);
+            $univJuridicciongeograficaEntity = $sedeEntity->getEstTecJuridicciongeografica();
             if(count($univJuridicciongeograficaEntity) <= 0){             
-                $univJuridicciongeograficaEntity = new UnivJurisdiccionGeografica();
+                $univJuridicciongeograficaEntity = new EstTecJurisdiccionGeografica();
                 $univJuridicciongeograficaEntity->setFechaRegistro(new \DateTime('now'));
             } 
-            $univJuridicciongeograficaEntity->setLugarTipoLocalidad2012($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['comunidad']));
+            $univJuridicciongeograficaEntity->setLugarTipoLocalidad($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['comunidad']));
             $univJuridicciongeograficaEntity->setObs("");
             $univJuridicciongeograficaEntity->setCordx($form['longitud']);
             $univJuridicciongeograficaEntity->setCordy($form['latitud']);
@@ -514,8 +514,8 @@ class SedeController extends Controller
             $univJuridicciongeograficaEntity->setFechaModificacion(new \DateTime('now'));
             $em->persist($univJuridicciongeograficaEntity);
 
-            if(count($sedeEntity->getUnivJuridicciongeografica()) <= 0){             
-                $sedeEntity->setUnivJuridicciongeografica($univJuridicciongeograficaEntity);
+            if(count($sedeEntity->getEstTecJuridicciongeografica()) <= 0){             
+                $sedeEntity->setEstTecJuridicciongeografica($univJuridicciongeograficaEntity);
                 $sedeEntity->setFechaModificacion(new \DateTime('now'));
                 $em->persist($sedeEntity);
             } 
@@ -576,12 +576,12 @@ class SedeController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $query = $em->getConnection()->prepare('
-            select coalesce(usda.cantidad,0) as cantidad, est.* from (select * from univ_universidad_sede_docente_adm where univ_sede_id = :sede_id and gestion_tipo_id = :gestion_id) as usda
+            select coalesce(usda.cantidad,0) as cantidad, est.* from (select * from tes_tec_tecnica_sede_docente_adm where est_tec_sede_id = :sede_id and gestion_tipo_id = :gestion_id) as usda
             RIGHT JOIN (
             select ct.id as cargo_tipo_id, ct.cargo, gt.id as genero_tipo_id, gt.genero 
-            from univ_cargo_tipo as ct 
+            from est_tec_cargo_tipo as ct 
             cross join genero_tipo as gt
-            ) as est on est.cargo_tipo_id = usda.univ_cargo_tipo_id and est.genero_tipo_id = usda.genero_tipo_id
+            ) as est on est.cargo_tipo_id = usda.est_tec_cargo_tipo_id and est.genero_tipo_id = usda.genero_tipo_id
             order by est.cargo_tipo_id, est.genero_tipo_id
         ');
         $query->bindValue(':sede_id', $sedeId);
@@ -598,7 +598,7 @@ class SedeController extends Controller
 
         $arrayFormulario = array('estado'=>$estado, 'msg'=>$msg, 'titulo' => "Modificación de cantidad de Docentres / Administrativos", 'datos'=>$array);
                 
-        return $this->render('SieUniversityBundle:Sede:formDocAdm.html.twig', $arrayFormulario);
+        return $this->render('SieTecnicaEstBundle:Sede:formDocAdm.html.twig', $arrayFormulario);
 
     }
 
@@ -646,10 +646,10 @@ class SedeController extends Controller
                     return $response->setData(array('estado' => $estado, 'msg' => $msg));
                 }
 
-                $UniversidadDocenteAdministrativoEntity = $em->getRepository('SieAppWebBundle:UnivUniversidadSedeDocenteAdm')->findBy(array('univSede'=>$sedeId, 'gestionTipo'=>$gestionId, 'generoTipo'=>$generoId, 'univCargoTipo'=>$cargoId));
+                $UniversidadDocenteAdministrativoEntity = $em->getRepository('SieAppWebBundle:EstTecTecnicaSedeDocenteAdm')->findBy(array('estTecSede'=>$sedeId, 'gestionTipo'=>$gestionId, 'generoTipo'=>$generoId, 'estTecCargoTipo'=>$cargoId));
                 if(count($UniversidadDocenteAdministrativoEntity) <= 0){             
-                    $UniversidadDocenteAdministrativoEntity = new UnivUniversidadSedeDocenteAdm();
-                    $UniversidadDocenteAdministrativoEntity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($sedeId));
+                    $UniversidadDocenteAdministrativoEntity = new EstTecTecnicaSedeDocenteAdm();
+                    $UniversidadDocenteAdministrativoEntity->setEstTecSede($em->getRepository('SieAppWebBundle:EstTecSede')->find($sedeId));
                     $UniversidadDocenteAdministrativoEntity->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($gestionId));
                     $UniversidadDocenteAdministrativoEntity->setFechaCreacion(new \DateTime('now'));
                 } else {
@@ -657,7 +657,7 @@ class SedeController extends Controller
                 }
                 $UniversidadDocenteAdministrativoEntity->setCantidad($cantidad);
                 $UniversidadDocenteAdministrativoEntity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoId));
-                $UniversidadDocenteAdministrativoEntity->setUnivCargoTipo($em->getRepository('SieAppWebBundle:UnivCargoTipo')->find($cargoId));
+                $UniversidadDocenteAdministrativoEntity->setEstTecCargoTipo($em->getRepository('SieAppWebBundle:EstTecCargoTipo')->find($cargoId));
                 $UniversidadDocenteAdministrativoEntity->setFechaActualizacion(new \DateTime('now'));
                 $em->persist($UniversidadDocenteAdministrativoEntity);
             }
@@ -678,12 +678,12 @@ class SedeController extends Controller
     public function cantidadSedeDocenteAdministrativo($sedeId,$gestionId){    
         $em = $this->getDoctrine()->getManager();
         $query = $em->getConnection()->prepare('
-            select sum(coalesce(usda.cantidad,0)) as cantidad from (select * from univ_universidad_sede_docente_adm where univ_sede_id = :sede_id and gestion_tipo_id = :gestion_id) as usda
+            select sum(coalesce(usda.cantidad,0)) as cantidad from (select * from est_tec_instituto_sede_docente_adm where est_tec_sede_id = :sede_id and gestion_tipo_id = :gestion_id) as usda
             RIGHT JOIN (
             select ct.id as cargo_tipo_id, ct.cargo, gt.id as genero_tipo_id, gt.genero 
-            from univ_cargo_tipo as ct 
+            from est_tec_cargo_tipo as ct 
             cross join genero_tipo as gt
-            ) as est on est.cargo_tipo_id = usda.univ_cargo_tipo_id and est.genero_tipo_id = usda.genero_tipo_id
+            ) as est on est.cargo_tipo_id = usda.est_tec_cargo_tipo_id and est.genero_tipo_id = usda.genero_tipo_id
         ');
         $query->bindValue(':sede_id', $sedeId);
         $query->bindValue(':gestion_id', $gestionId);

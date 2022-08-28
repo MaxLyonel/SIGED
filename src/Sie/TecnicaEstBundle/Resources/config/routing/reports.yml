@@ -1,21 +1,21 @@
 
-reports_index:
+tecest_reports_index:
     path:     /
     defaults: { _controller: SieTecnicaEstBundle:Reports:index }
 
 
-reports_getAllReports:
+tecest_reports_getAllReports:
     path:     /getAllReports
     defaults: { _controller: SieTecnicaEstBundle:Reports:getAllReports }
     options:
         expose: true
 
-reports_downloadreportgeneral:
+tecest_reports_downloadreportgeneral:
     path:     /downloadreportgeneral/{gestion}/{id_sede}
     defaults: { _controller: SieTecnicaEstBundle:Reports:downloadreportgeneral }
 
 
-reports_getAllOperative:
+tecest_reports_getAllOperative:
     path:     /getAllOperative
     defaults: { _controller: SieTecnicaEstBundle:Reports:getAllOperative }
     options:

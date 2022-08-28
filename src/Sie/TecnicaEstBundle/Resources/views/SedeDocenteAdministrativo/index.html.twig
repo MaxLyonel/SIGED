@@ -1,4 +1,4 @@
-{% extends 'layoutUniversity.html.twig' %}
+{% extends 'layoutTecnicaEst.html.twig' %}
 
 {% block stylesheets %}
     {{parent()}}
@@ -23,9 +23,9 @@
           <ol class="breadcrumb">
               <li>
                   <i class="fa fa-home"></i>
-                  <a href="{{path('sie_university_homepage')}}">Inicio</a>
+                  <a href="{{path('sie_tecnicaest_homepage')}}">Inicio</a>
                   /
-                  <a href="{{path('maininfouni_index')}}">Menú Principal</a>
+                  <a href="{{path('tecest_maininfotecest_index')}}">Menú Principal</a>
               </li>
           </ol>
       </div><!-- /.breadcrumb-wrapper -->
@@ -65,7 +65,7 @@
   {% endif %}  
     <div class="row">
         <div class="col-lg-2 col-md-2 col-sm-4 col-sx-12">    
-            <form name="form" id="form" role="form" action="{{ path('sie_university_sede_docenteadministrativo_index') }}" method="POST" onsubmit="return verificaCampos()">
+            <form name="form" id="form" role="form" action="{{ path('sie_tecest_sede_docenteadministrativo_index') }}" method="POST" onsubmit="return verificaCampos()">
                 <input type="hidden" name="_token" value="{{ csrf_token('gestiones') }}">
                 <input type="hidden" id="form_gestion" name="form[gestion]" value="">  
                 <input type="hidden" id="form_data" name="form[data]" value="{{data.info}}">                 
@@ -243,7 +243,7 @@
 
         $.ajax({
             type: 'post',
-            url: Routing.generate('sie_university_sede_docente_administrativo_save'),
+            url: Routing.generate('sie_tecest_sede_docente_administrativo_save'),
             data: formData,
             processData: false,
             contentType: false,

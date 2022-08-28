@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\User\User;
-use Sie\AppWebBundle\Entity\UnivAutoridadUniversidad;
+use Sie\AppWebBundle\Entity\EstTecAutoridadInstituto;
 use Sie\AppWebBundle\Entity\Persona;
 
 
@@ -52,7 +52,7 @@ class ExecutiveStaffController extends Controller{
     	// $arrRequest = array('sedeId' => 64,  'userId' => 13820843, 'yearSelected' => $request->get('year'));
         $this->baseData['yearSelected'] = $request->get('year');
         
-    	$arrRegisteredStaff = $this->get('univfunctions')->getAllStaff($this->baseData);
+    	$arrRegisteredStaff = $this->get('tecestfunctions')->getAllStaff($this->baseData);
 
     	// check if the staffs exists
     	if(sizeof($arrRegisteredStaff)>0){
@@ -102,14 +102,14 @@ class ExecutiveStaffController extends Controller{
         if(sizeof($objPerson)>0){
             
             $arrSearchStaff = array('yearchoose'=>$request->get('yearchoose'),'sedeId'=>$request->get('sedeId'),'personId'=>$objPerson->getId());
-            $existsPersonStaffRegistered = $this->get('univfunctions')->getPersonalStaff($arrSearchStaff);
+            $existsPersonStaffRegistered = $this->get('tecestfunctions')->getPersonalStaff($arrSearchStaff);
         }
         $arrPosition = array();
         $arrTraining = array();
         if(!$existsPersonStaffRegistered){
             // get the information classifiers
-            $arrPosition = $this->get('univfunctions')->getPosition();
-            $arrTraining = $this->get('univfunctions')->getTraining();
+            $arrPosition = $this->get('tecestfunctions')->getPosition();
+            $arrTraining = $this->get('tecestfunctions')->getTraining();
         }
 
         $arrPerson = array(
@@ -166,7 +166,7 @@ class ExecutiveStaffController extends Controller{
         $response = new JsonResponse();             
 
         $arrData = array('sedeId'=> $request->get('sedeId'));
-        $arrOperative = $this->get('univfunctions')->getAllOperative($arrData);
+        $arrOperative = $this->get('tecestfunctions')->getAllOperative($arrData);
           $arrResponse = array(             
             'arrOperative' => $arrOperative,
           );
@@ -239,12 +239,12 @@ class ExecutiveStaffController extends Controller{
                 $new_name = date('YmdHis').'.'.$extension;
 
                 // GUARDAMOS EL ARCHIVO
-                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataUniversity/' .date('Y');
+                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataInstituto/' .date('Y');
                 if (!file_exists($directorio)) {
                     mkdir($directorio, 0775, true);
                 }
 
-                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataUniversity/' .date('Y').'/'.$arrData['sedeId'];
+                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataInstituto/' .date('Y').'/'.$arrData['sedeId'];
                 if (!file_exists($directoriomove)) {
                     mkdir($directoriomove, 0775, true);
                 }
@@ -255,7 +255,7 @@ class ExecutiveStaffController extends Controller{
                     $response->setStatusCode(500);
                     return $response;
                 }
-                $arrData['pathDirectory'] = 'uploads/archivos/dataUniversity/' .date('Y').'/'.$arrData['sedeId'].'/'.$new_name;
+                $arrData['pathDirectory'] = 'uploads/archivos/dataInstituto/' .date('Y').'/'.$arrData['sedeId'].'/'.$new_name;
                 // CREAMOS LOS DATOS DE LA IMAGEN
                 $informe = array(
                     'name' => $name,
@@ -279,7 +279,7 @@ class ExecutiveStaffController extends Controller{
 
             $this->baseData['yearSelected'] = $arrData["yearchoose"];
 
-            $arrRegisteredStaff = $this->get('univfunctions')->getAllStaff($this->baseData);
+            $arrRegisteredStaff = $this->get('tecestfunctions')->getAllStaff($this->baseData);
 
             // check if the staffs exists
             if(sizeof($arrRegisteredStaff)>0){
@@ -313,23 +313,23 @@ class ExecutiveStaffController extends Controller{
         $arrData["email"] = $arrData["email"];
         // $arrData["descripcion"] = $arrData["descripcion"];
         $arrData["formaciondescripcion"] = $arrData["formaciondescripcion"];
-        $arrData["gestion_nombramiento_id"] = $arrData["gestion_nombramiento_id"];
-        $arrData["ratificacion_anio_ini"] = $arrData["ratificacion_anio_ini"];
-        $arrData["ratificacion_anio_fin"] = $arrData["ratificacion_anio_fin"];
+        // $arrData["gestion_nombramiento_id"] = $arrData["gestion_nombramiento_id"];
+        // $arrData["ratificacion_anio_ini"] = $arrData["ratificacion_anio_ini"];
+        // $arrData["ratificacion_anio_fin"] = $arrData["ratificacion_anio_fin"];
         $arrData["fecha_registro_firma"] = $arrData["fecha_registro_firma"];
         $arrData["yearchoose"] = $arrData["yearchoose"];
         
         if($flag){
-            $entity = $em->getRepository('SieAppWebBundle:UnivAutoridadUniversidad')->find($arrData["personId"]);
+            $entity = $em->getRepository('SieAppWebBundle:EstTecAutoridadInstituto')->find($arrData["personId"]);
             $entity->setFechaActualizacion(new \DateTime('now'));
             if($arrData['pathDirectory']){
                 $entity->setDocumentosAcad($arrData['pathDirectory']);
             }
         }else{
 
-            $entity = new UnivAutoridadUniversidad();
+            $entity = new EstTecAutoridadInstituto();
             $arrData["sedeId"]     = $arrData["sedeId"];
-            $entity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($arrData["sedeId"]));
+            $entity->setEstTecSede($em->getRepository('SieAppWebBundle:EstTecSede')->find($arrData["sedeId"]));
             $entity->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($arrData["personId"]));
             $entity->setDocumentosAcad($arrData['pathDirectory']);
         }
@@ -341,14 +341,14 @@ class ExecutiveStaffController extends Controller{
         $entity->setEmail($arrData["email"]);
         $entity->setFormaciondescripcion($arrData["formaciondescripcion"]);
         
-        $entity->setRatificacionAnioIni($arrData["ratificacion_anio_ini"]);
-        $entity->setRatificacionAnioFin($arrData["ratificacion_anio_fin"]);        
+        // $entity->setRatificacionAnioIni($arrData["ratificacion_anio_ini"]);
+        // $entity->setRatificacionAnioFin($arrData["ratificacion_anio_fin"]);        
         $entity->setFechaRegistroFirma(new \DateTime($arrData["fecha_registro_firma"]));
         $entity->setFechaCreacion(new \DateTime('now'));
-        $entity->setGestionNombramiento($em->getRepository('SieAppWebBundle:GestionTipo')->find($arrData["gestion_nombramiento_id"]));
+        // $entity->setGestionNombramiento($em->getRepository('SieAppWebBundle:GestionTipo')->find($arrData["gestion_nombramiento_id"]));
         
-        $entity->setUnivFormacionTipo($em->getRepository('SieAppWebBundle:UnivFormacionTipo')->find($arrData["formacion"]));
-        $entity->setUnivCargoJerarquicoTipo($em->getRepository('SieAppWebBundle:UnivCargoJerarquicoTipo')->find($arrData["cargo"]));
+        $entity->setEstTecFormacionTipo($em->getRepository('SieAppWebBundle:EstTecFormacionTipo')->find($arrData["formacion"]));
+        $entity->setEstTecCargoJerarquicoTipo($em->getRepository('SieAppWebBundle:EstTecCargoJerarquicoTipo')->find($arrData["cargo"]));
         $entity->setGestionTipo($em->getRepository('SieAppWebBundle:GestionTipo')->find($arrData["yearchoose"]));
         
 
@@ -395,7 +395,7 @@ class ExecutiveStaffController extends Controller{
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
 
-        $objPerson = $em->getRepository('SieAppWebBundle:UnivAutoridadUniversidad')->find($request->get('id'));
+        $objPerson = $em->getRepository('SieAppWebBundle:EstTecAutoridadInstituto')->find($request->get('id'));
 
         $em->remove($objPerson);
 
@@ -404,7 +404,7 @@ class ExecutiveStaffController extends Controller{
         
         $this->baseData['yearSelected'] = $request->get('yearSelected');
 
-        $arrRegisteredStaff = $this->get('univfunctions')->getAllStaff($this->baseData);
+        $arrRegisteredStaff = $this->get('tecestfunctions')->getAllStaff($this->baseData);
 
         // check if the staffs exists
         if(sizeof($arrRegisteredStaff)>0){
@@ -430,7 +430,7 @@ class ExecutiveStaffController extends Controller{
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
         // get the personal sede info
-        $objPersonalStaff = $em->getRepository('SieAppWebBundle:UnivAutoridadUniversidad')->find($request->get('id'));
+        $objPersonalStaff = $em->getRepository('SieAppWebBundle:EstTecAutoridadInstituto')->find($request->get('id'));
         
         $objPerson = $em->getRepository('SieAppWebBundle:Persona')->find($objPersonalStaff->getPersona()->getId());
 
@@ -450,12 +450,12 @@ class ExecutiveStaffController extends Controller{
             "documentos_acad" => $objPersonalStaff->getDocumentosAcad(),
             "descripcion" => $objPersonalStaff->getFormaciondescripcion(),
             "fecNac" => $objPerson->getFechaNacimiento()->format('d-m-Y'),
-            "formacion" => $objPersonalStaff->getUnivFormacionTipo()->getId(),            
-            "cargo" => $objPersonalStaff->getUnivCargoJerarquicoTipo()->getId(),
-            "ratificacion_anio_fin" => $objPersonalStaff->getRatificacionAnioFin(),
-            "ratificacion_anio_ini" => $objPersonalStaff->getRatificacionAnioIni(),
+            "formacion" => $objPersonalStaff->getEstTecFormacionTipo()->getId(),            
+            "cargo" => $objPersonalStaff->getEstTecCargoJerarquicoTipo()->getId(),
+            // "ratificacion_anio_fin" => $objPersonalStaff->getRatificacionAnioFin(),
+            // "ratificacion_anio_ini" => $objPersonalStaff->getRatificacionAnioIni(),
             "formaciondescripcion" => $objPersonalStaff->getFormaciondescripcion(),
-            "gestion_nombramiento_id" => $objPersonalStaff->getGestionNombramiento()->getId(),
+            // "gestion_nombramiento_id" => $objPersonalStaff->getGestionNombramiento()->getId(),
             "fecha_registro_firma" => $objPersonalStaff->getFechaRegistroFirma()->format('d-m-Y'),
             "yearchoose" => $request->get("yearSelected"),
             "sedeId"     => $request->get("sedeId"),
@@ -468,9 +468,9 @@ class ExecutiveStaffController extends Controller{
         // $em->flush();
         
         $this->baseData['yearSelected'] = $request->get('yearSelected');
-        //$arrRegisteredStaff = $this->get('univfunctions')->getAllStaff($this->baseData);
-        $arrPosition = $this->get('univfunctions')->getPosition();
-        $arrTraining = $this->get('univfunctions')->getTraining();
+        //$arrRegisteredStaff = $this->get('tecestfunctions')->getAllStaff($this->baseData);
+        $arrPosition = $this->get('tecestfunctions')->getPosition();
+        $arrTraining = $this->get('tecestfunctions')->getTraining();
         // check if the staffs exists
         // if(sizeof($arrRegisteredStaff)>0){
 
@@ -512,12 +512,12 @@ class ExecutiveStaffController extends Controller{
                 $new_name = date('YmdHis').'.'.$extension;
 
                 // GUARDAMOS EL ARCHIVO
-                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataUniversity/' .date('Y');
+                $directorio = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataInstituto/' .date('Y');
                 if (!file_exists($directorio)) {
                     mkdir($directorio, 0775, true);
                 }
 
-                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataUniversity/' .date('Y').'/'.$arrData['sedeId'];
+                $directoriomove = $this->get('kernel')->getRootDir() . '/../web/uploads/archivos/dataInstituto/' .date('Y').'/'.$arrData['sedeId'];
                 if (!file_exists($directoriomove)) {
                     mkdir($directoriomove, 0775, true);
                 }
@@ -528,7 +528,7 @@ class ExecutiveStaffController extends Controller{
                     $response->setStatusCode(500);
                     return $response;
                 }
-                $arrData['pathDirectory'] = 'uploads/archivos/dataUniversity/' .date('Y').'/'.$arrData['sedeId'].'/'.$new_name;
+                $arrData['pathDirectory'] = 'uploads/archivos/dataInstituto/' .date('Y').'/'.$arrData['sedeId'].'/'.$new_name;
                 // CREAMOS LOS DATOS DE LA IMAGEN
                 $informe = array(
                     'name' => $name,
@@ -542,7 +542,7 @@ class ExecutiveStaffController extends Controller{
                 $archivador = 'empty';
         } 
         if($informe){
-            $arrData['pathDirectory'] = 'uploads/archivos/dataUniversity/' .date('Y').'/'.$arrData['sedeId'].'/'.$new_name;
+            $arrData['pathDirectory'] = 'uploads/archivos/dataInstituto/' .date('Y').'/'.$arrData['sedeId'].'/'.$new_name;
         }else{
             $arrData['pathDirectory'] = '';
         }
@@ -553,7 +553,7 @@ class ExecutiveStaffController extends Controller{
             $this->baseData['yearSelected'] = $arrData["yearchoose"];
             $this->baseData['sedeId'] = $arrData["sedeId"];
 
-            $arrRegisteredStaff = $this->get('univfunctions')->getAllStaff($this->baseData);
+            $arrRegisteredStaff = $this->get('tecestfunctions')->getAllStaff($this->baseData);
 
             // check if the staffs exists
             if(sizeof($arrRegisteredStaff)>0){
