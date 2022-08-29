@@ -174,13 +174,50 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
             }
         }    
 
+        //////////////////////////////////////////////////////////////////////////////////////////
         // VALIDAR TUISION DEL ESTUDIANTE CON LA U.E.
-        // INGRESAR CODIGO 
-        /////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////
+        
+        $tuisionEstudiante = $this->getTuisionEstudianteUnidadEducativa($rude, $codigoSie, $fechaActual->format("Y"));
+        if(count($tuisionEstudiante)<=0){
+            $alert = array('estado'=>false, 'msg'=>"LA UNIDAD EDUCATIVA NO TIENE TUISIÓN SOBRE EL ESTUDIANTE");
+            return $this->render('SieProcesosBundle:TramiteInscripcionNivelacionRezago:formulario.html.twig', array('alert'=>$alert));
+        }
+        
+        //////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////
 
         $estudianteHistorialTramite = $this->estudianteHistorialTramite($rude,$tramiteDevuelto,$data,$tramiteId,$codigoSie,$id_usuario);
         return $this->render('SieProcesosBundle:TramiteInscripcionNivelacionRezago:formulario.html.twig', $estudianteHistorialTramite);
 
+    }
+
+    //****************************************************************************************************
+    // DESCRIPCION DEL METODO:
+    // Funcion que lista un documento
+    // PARAMETROS: id
+    // AUTOR: RCANAVIRI
+    //****************************************************************************************************
+    public function getTuisionEstudianteUnidadEducativa($rude, $sie, $gestion) {
+        $em = $this->getDoctrine()->getManager();
+        $entity = $em->getRepository('SieAppWebBundle:Estudiante');
+        $query = $entity->createQueryBuilder('e')
+                ->select("e.codigoRude as rude, e.paterno as paterno, e.materno as materno, e.nombre as nombre, e.fechaNacimiento as fechanacimiento")
+                ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'ei.estudiante = e.id')                
+                ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'iec', 'WITH', 'iec.id = ei.institucioneducativaCurso')                
+                ->where('e.codigoRude = :rude')
+                ->andWhere('iec.institucioneducativa = :sie')
+                ->andWhere('iec.gestionTipo = :gestion')
+                ->setParameter('rude', $rude)
+                ->setParameter('sie', $sie)
+                ->setParameter('gestion', $gestion);
+        $entity = $query->getQuery()->getResult();
+        if(count($entity)>0){
+            return $entity[0];
+        } else {
+            return $entity;
+        }
     }
 
     public function estudianteHistorialTramite($rude,$tramiteDevuelto,$data,$tramiteId,$codigoSie,$usuarioId){
@@ -364,9 +401,9 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                         $nivelGradoPermitido[$key]['ue'] = $nivelesAutorizado[$registro['nivelId']];
 
                         //////////// borrar codigo, solo para pruebas ////////////////
-                        if($registro['nivelId'] == 13) {
-                            $nivelGradoPermitido[$key]['nivelAutorizado'] = false;
-                        }
+                        // if($registro['nivelId'] == 13) {
+                        //     $nivelGradoPermitido[$key]['nivelAutorizado'] = false;
+                        // }
                         //////////// borrar codigo, solo para pruebas ////////////////                       
                     } else {
                         $nivelGradoPermitido[$key]['nivelAutorizado'] = false;
