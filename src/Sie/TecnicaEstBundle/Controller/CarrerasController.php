@@ -13,6 +13,7 @@ use Sie\AppWebBundle\Entity\UnivNivelAcademicoTipo;
 use Sie\AppWebBundle\Entity\UnivRegimenEstudiosTipo;
 use Sie\AppWebBundle\Entity\UnivModalidadEnsenanzaTipo;
 use Sie\AppWebBundle\Entity\UnivGradoacademicoTipo;
+use Sie\AppWebBundle\Entity\EstTecInstitutoCarrera;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -33,6 +34,8 @@ class CarrerasController extends Controller
 
     public function indexAction(Request $request)
     {
+
+        
        
         //$form = $request->get('form');
         
@@ -44,33 +47,21 @@ class CarrerasController extends Controller
         $sedeId = $this->session->get('sedeId'); //$data['sedeId'];
         $userId = $this->session->get('userId'); //$data['userId'];
 
+        //$sedeId = 80830098;
 
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection();  
         
         //contadores
 
-        $query = "select count(*) from univ_universidad_carrera where univ_sede_id = " . $sedeId;
+        $query = "select count(*) from est_tec_instituto_carrera where est_tec_sede_id = " . $sedeId;
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();
         $total_carreras = $po[0]['count'];
 
-        $query = "select count(*) from univ_universidad_carrera where univ_sede_id = " . $sedeId . " and univ_nivel_academico_tipo_id = 1";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $total_carreras_pre = $po[0]['count'];
-
-        $query = "select count(*) from univ_universidad_carrera where univ_sede_id = " . $sedeId . " and univ_nivel_academico_tipo_id = 2";
-        $stmt = $db->prepare($query);
-        $params = array();
-        $stmt->execute($params);
-        $po = $stmt->fetchAll();
-        $total_carreras_post = $po[0]['count'];
-
+       
        
         
         $fechaActual = new \DateTime(date('Y-m-d'));
@@ -81,46 +72,51 @@ class CarrerasController extends Controller
             return $this->redirect($this->generateUrl('login'));
         }
 
-       
+
+     
+
         $entityUsuario = $em->getRepository('SieAppWebBundle:Usuario')->findOneBy(array('id' => $id_usuario));
 
         $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findBy(array('usuario' => $id_usuario));
                
-        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findById($sedeId);
+        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('id' => $sedeId));
 
-        $entityPregrado = $em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->findById(1);    
-        $entityPostgrado = $em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->findById(2);    
+        //$entityPregrado = $em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->findById(1);    
+       // $entityPostgrado = $em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->findById(2);    
         
-        $entityUniv = $em->getRepository('SieAppWebBundle:UnivUniversidad')->findById(1);
+        //$entityUniv = $em->getRepository('SieAppWebBundle:UnivUniversidad')->findById(1);
         //dump($entityUniv);die;
 
-        $carreras = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->findBy(array('univSede' => $entityUnivSedeCentral, 'univNivelAcademicoTipo' => $entityPregrado), array('carrera'=> 'ASC'));
-        $carreras_post = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->findBy(array('univSede' => $entityUnivSedeCentral, 'univNivelAcademicoTipo' => $entityPostgrado), array('carrera'=> 'ASC'));
+        $carreras = $em->getRepository('SieAppWebBundle:EstTecInstitutoCarrera')->findBy(array('estTecSede' => $entityUnivSedeCentral), array('carrera'=> 'ASC'));
+        //$carreras = $em->getRepository('SieAppWebBundle:UnivUniversidadCa☻rrera')->findBy(array('univSede' => $entityUnivSedeCentral), array('carrera'=> 'ASC'));
+        //$carreras_post = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->findBy(array('univSede' => $entityUnivSedeCentral, 'univNivelAcademicoTipo' => $entityPostgrado), array('carrera'=> 'ASC'));
+
+        //dump($carreras); exit;
         
         $niveles = $em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->findAll();       
         $modalidad = $em->getRepository('SieAppWebBundle:UnivModalidadEnsenanzaTipo')->findAll();       
         //$grado_academico = $em->getRepository('SieAppWebBundle:UnivClaGradoAcademico')->findAll();       
-        $grado_academico = $em->getRepository('SieAppWebBundle:UnivgradoAcademicoTipo')->findAll(); 
-        $regimen_estudios = $em->getRepository('SieAppWebBundle:UnivregimenEstudiosTipo')->findAll();       
-        $periodo_academico = $em->getRepository('SieAppWebBundle:UnivPeriodoAcademicoTipo')->findAll();       
+        //$grado_academico = $em->getRepository('SieAppWebBundle:UnivgradoAcademicoTipo')->findAll(); 
+        $regimen_estudios = $em->getRepository('SieAppWebBundle:EstTecRegimenEstudioTipo')->findAll();       
+        $periodo_academico = $em->getRepository('SieAppWebBundle:UnivPeriodoAcademicoTipo')->findAll();   
         
-        $area_conocimiento = $em->getRepository('SieAppWebBundle:UnivAreaConocimientoTipo')->findAll();       
+        //$area_conocimiento = $em->getRepository('SieAppWebBundle:UnivAreaConocimientoTipo')->findAll();       
+        $area_formacion = $em->getRepository('SieAppWebBundle:EstTecAreaFormacionTipo')->findAll();       
        
         return $this->render('SieTecnicaEstBundle:Carreras:index.html.twig', array(
             'sedes' => $entityUnivSede,
-            'central' => $entityUniv[0],
+            'sede_id' => $sedeId,
+            //'central' => $entityUniv[0],
             'titulo' => "Carreras",
             'carreras' => $carreras,      
-            'carreras_post' => $carreras_post,      
-            'niveles' => $niveles,           
-            'modalidad' => $modalidad,           
-            'grado_academico' => $grado_academico,           
-            'regimen_estudios' => $regimen_estudios,           
+            //'carreras_post' => $carreras_post,      
+            'niveles' => $niveles,
+            'regimen_estudios' => $regimen_estudios,
+            'area_formacion' => $area_formacion,           
+            //'grado_academico' => $grado_academico,           
+            //'regimen_estudios' => $regimen_estudios,           
             'periodo_academico' => $periodo_academico,   
-            'total_carreras' => $total_carreras,
-            'total_carreras_pre' => $total_carreras_pre,
-            'total_carreras_post' => $total_carreras_post,
-            'area_conocimiento' => $area_conocimiento
+            'total_carreras' => $total_carreras           
 
         ));
         
@@ -129,6 +125,7 @@ class CarrerasController extends Controller
 
     public function infoAction(Request $request)
     {
+        
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
         $response = new JsonResponse();
@@ -149,62 +146,64 @@ class CarrerasController extends Controller
 
         //$carrera_id = 1582;
 
-        $entityUnivSede = $em->getRepository('SieAppWebBundle:UnivSede')->findBy(array('usuario' => $id_usuario));
+        $entityUnivSede = $em->getRepository('SieAppWebBundle:EstTecSede')->findBy(array('usuario' => $id_usuario));
 
         //TODO: JALAR DE LA SESION ?
         $sedeId = $this->session->get('sedeId');
-        //dump($sedeId); die; 62
+        //$sedeId = 80830098;
 
-        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findById($sedeId); //43
+        $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:EstTecSede')->findById($sedeId); //43
+      
+      
+        $nombre_universidad = $entityUnivSedeCentral[0]->getEstTecInstituto()->getInstituto();
+        
+               
+        $carreraEntity = $em->getRepository('SieAppWebBundle:EstTecInstitutoCarrera')->find($carrera_id); 
+        $periodos = $carreraEntity->getEstTecRegimenEstudioTipo()->getId();
+        $nivel_academico = "";// $carreraEntity->getUnivNivelAcademicoTipo()->getDescripcion();
 
-        $es_indigena = 0;
-        $nombre_universidad = $entityUnivSedeCentral[0]->getUnivUniversidad()->getUniversidad();
-         //"UNIVERSIDAD PRIVADA DEL VALLE"
-        if (strpos($nombre_universidad, 'INDÍGENA') !== false) {       
-            $es_indigena = 1;
-        }
-        if (strpos($nombre_universidad, 'INDIGENA') !== false) {       
-            $es_indigena = 1;
-        }
-       
-        $carreraEntity = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->find($carrera_id); 
-        $periodos = $carreraEntity->getUnivRegimenEstudiosTipo()->getId();
-        $nivel_academico =  $carreraEntity->getUnivNivelAcademicoTipo()->getDescripcion();
-
-        // 1: semestral
-        // 2: anual
+        // 1: anual
+        // 2: semestral
         //3 : modular
+        //4: anbual con sistema modular
         
         $nro_periodos = 1;
-        if($periodos != 2){
-             $nro_periodos = 2;
-        } 
+        if($periodos == 1){
+             $nro_periodos = 3;
+        }else{
+            $nro_periodos = 6;
+        }
 
                
-        $entityUniv = $em->getRepository('SieAppWebBundle:UnivUniversidad')->findById(1);
+        $entityUniv = $em->getRepository('SieAppWebBundle:EstTecInstituto')->findById(1);
         
-        $gestiones = $em->getRepository('SieAppWebBundle:UnivRegistroConsolidacion')->findAll();      
+        $gestiones = $em->getRepository('SieAppWebBundle:EstTecRegistroConsolidacion')->findAll();      
 
         $arrData = array('sedeId'=> $sedeId);
         //$arrData = array('sedeId'=> $request->get(64));
-        $gestiones = $this->get('univfunctions')->getAllOperative($arrData);
+        $gestiones = $this->get('tecestfunctions')->getAllOperative($arrData);
         //dump($gestiones); die;
 
         //$generos = $em->getRepository('SieAppWebBundle:UnivClaGenero')->findAll();   
         $generos = $em->getRepository('SieAppWebBundle:GeneroTipo')->findAll();   
 
         if($nro_periodos == 1) {
-            $periodos = $em->getRepository('SieAppWebBundle:UnivPeriodoAcademicoTipo')->findById(1);     
+            $periodos = $em->getRepository('SieAppWebBundle:EstTecPeriodoAcademicoTipo')->findById(1);     
         }else{
-            $periodos = $em->getRepository('SieAppWebBundle:UnivPeriodoAcademicoTipo')->findAll();    
+            $periodos = $em->getRepository('SieAppWebBundle:EstTecPeriodoAcademicoTipo')->findAll();    
         }
 
-        $matriculas = $em->getRepository('SieAppWebBundle:UnivMatriculaNacionalidadBecaTipo')->findAll();      
-        $matriculasestado = $em->getRepository('SieAppWebBundle:UnivEstadomatriculaTipo')->findAll();      
-        $cargos = $em->getRepository('SieAppWebBundle:UnivCargoTipo')->findAll();   
+        
+
+        $matriculas = $em->getRepository('SieAppWebBundle:EstTecMatriculaNacionalidadBecaTipo')->findAll();      
+        $matriculasestado = $em->getRepository('SieAppWebBundle:EstTecEstadomatriculaTipo')->findAll();      
+        $cargos = $em->getRepository('SieAppWebBundle:EstTecCargoTipo')->findAll();   
+
+        
 
         //verificar si hay datos para le gestion y carrera, si no hay generar con ceros
         $this->verifica_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion);
+        
         $this->verifica_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion);
         
         //solo si es universidad indigena
@@ -213,8 +212,9 @@ class CarrerasController extends Controller
         //dump('generated !'); die; 
         //datos estudiantes por genero y tipo beca
 
-
+      
         $filas = $this->get_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion);
+        
         $totales1 = array();
         $t1 = 0;
         $t2 = 0;
@@ -223,9 +223,16 @@ class CarrerasController extends Controller
        
         for($i = 0; $i < sizeof($filas); $i++ ){
             $t1 = $t1 + $filas[$i]['m1'];
-            $t2 = $t2 + $filas[$i]['f1'];         
+            $t2 = $t2 + $filas[$i]['f1']; 
+            
+            $t3 = $t3 + $filas[$i]['m2'];
+            //$t4 = $t4 + $filas[$i]['f2'];
+            //$t5 = $t5 + $filas[$i]['m3'];
+            //$t6 = $t6 + $filas[$i]['f3'];
+                
+                
             //TODO: las del periodo 2
-            if($nro_periodos == 2){
+            if($nro_periodos == 6){
                 $t3 = $t3 + $filas[$i]['m2'];
                 $t4 = $t4 + $filas[$i]['f2'];              
             }
@@ -234,10 +241,12 @@ class CarrerasController extends Controller
         $totales = array(   
             'id' => 0,
             'matricula' => "TOTALES",        
-            'm1'  => $t1,
-            'f1'  => $t2,           
-            'm2'  => $t3,
-            'f2'  => $t4,
+            'm1'  => 0,//$t1,
+            'f1'  => 0,//$t2,           
+            'm2'  => 0,//$t3,
+            'f2'  => 0,//$t4,
+            'm3'  => 0,//$t3,
+            'f3'  => 0//$t4,
             
         );
        
@@ -245,13 +254,13 @@ class CarrerasController extends Controller
 
         //solo para universidad indigena y otros
         $cargos_array = $this->get_univ_universidad_carrera_docente_administrativo($carrera_id, $nro_periodos, $gestion);
-
+        //dump($cargos_array); die;
 
         //datos estudiantes por tipo de matricula
         /*--------------------------------------------------*/
         $tipo_matricula_array = $this->get_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion);
 
-              
+        
         $data = array(            
             'periodos' => $nro_periodos,
             'array_estudiantes' => $filas,
@@ -260,12 +269,13 @@ class CarrerasController extends Controller
         );
 
         
+        
         return $this->render('SieTecnicaEstBundle:Carreras:info.html.twig', array(
             'carrera_id' => $carrera_id,
             'gestion_id' =>  $gestion,
             'entity' => $carreraEntity,           
             'sedes' => $entityUnivSede,
-            'central' => $entityUniv[0],
+            'central' => 0,//$entityUniv[0],
             'titulo' => "Carreras",                     
             'gestiones' => $gestiones,                     
             'generos' => $generos,                     
@@ -275,7 +285,7 @@ class CarrerasController extends Controller
             'cargos' => $cargos,  
             'data' => $data,
             'totales1' => $totales1,
-            'es_indigena' => $es_indigena
+            'es_indigena' => 0
 
         ));
         
@@ -284,59 +294,49 @@ class CarrerasController extends Controller
 
     public function newAction(Request $request)
     {
+
+        //dump($request);die;
         date_default_timezone_set('America/La_Paz');
         $response = new JsonResponse();
         
         $fechaActual = new \DateTime(date('Y-m-d'));
-        $sedeId = $this->session->get('sedeId');
+
+        //$sedeId = $this->session->get('sedeId');
+        $sedeId =  $request->get('sede_id');
 
         $nivel_academico_id = $request->get('nivel_academico_id');
-        $modalidad_id = $request->get('modalidad_id');
-        $regimen_id = $request->get('regimen_id');
-        $grado_id = $request->get('grado_id');
-        $duracion = $request->get('duracion');
-        $duracion_anios = $request->get('duracion_anios');
-        
-        $area_conocimiento_id = $request->get('area_conocimiento_id');
+        $regimen_id = $request->get('modalidad_id');
        
-        $fecha_apertura_tmp = $request->get('fecha_apertura');
+        $area_formacion_id = $request->get('grado_id');
+        $tiempo_estudio = $request->get('tiempo_estudio');
+        $carga_horaria = $request->get('duracion_anios');
+        
+        //$area_conocimiento_id = $request->get('area_conocimiento_id');
+       
+        //$fecha_apertura_tmp = $request->get('fecha_apertura');
         //15/12/2003
        
-        $fecha_apertura = date('Y-m-d', strtotime($fecha_apertura_tmp));
+        //$fecha_apertura = date('Y-m-d', strtotime($fecha_apertura_tmp));
 
         $em = $this->getDoctrine()->getManager();
 
-        $carreraEntity = new UnivUniversidadCarrera();
+        $carreraEntity = new EstTecInstitutoCarrera();
        
 
-        $carreraEntity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($sedeId));
-        //$carreraEntity->setUnivAreaConocimiento($request->get('area_conocimiento'));
-
-        $carreraEntity->setUnivNivelAcademicoTipo($em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->find($nivel_academico_id));
-        $carreraEntity->setUnivRegimenEstudiosTipo($em->getRepository('SieAppWebBundle:UnivRegimenEstudiosTipo')->find($regimen_id));
-        $carreraEntity->setUnivModalidadEnsenanzaTipo($em->getRepository('SieAppWebBundle:UnivModalidadEnsenanzaTipo')->find($modalidad_id));
+        $carreraEntity->setEstTecSede($em->getRepository('SieAppWebBundle:EstTecSede')->find($sedeId));
+      
+     
+        $carreraEntity->setEstTecRegimenEstudioTipo($em->getRepository('SieAppWebBundle:EstTecRegimenEstudioTipo')->find($regimen_id));
+        $carreraEntity->setEstTecAreaFormacionTipo($em->getRepository('SieAppWebBundle:EstTecAreaFormacionTipo')->find($area_formacion_id));
 
         $carreraEntity->setCarrera($request->get('carrera'));
         $carreraEntity->setResolucion($request->get('resolucion'));  
         
-        $carreraEntity->setUnivAreaConocimientoTipo($em->getRepository('SieAppWebBundle:UnivAreaConocimientoTipo')->find($area_conocimiento_id));  
-        
+        $carreraEntity->setTiempoEstudio($request->get('tiempo_estudio'));
+        $carreraEntity->setCargaHoraria($request->get('carga_horaria'));
 
-        //$aux = $em->getRepository('SieAppWebBundle:UnivAreaConocimientoTipo')->find($area_conocimiento_id);
-        //dump($aux); die;
-        
-        //fecha ??
-        //rm_apertura ??
-        //dump($fecha_apertura); die;
-        $carreraEntity->setFechaApertura(new \DateTime( $fecha_apertura));
-        
-        $carreraEntity->setUnivGradoAcademicoTipo($em->getRepository('SieAppWebBundle:UnivGradoacademicoTipo')->find($grado_id));
-
-        $carreraEntity->setDuracion($request->get('duracion'));
-        $carreraEntity->setDuracionAnios($request->get('duracion_anios'));
-
-        $carreraEntity->setEsSiesu(0);
-        $carreraEntity->setEstado(0);
+       
+        $carreraEntity->setEstado(1);
         $carreraEntity->setFechaRegistro(new \DateTime('now'));
         $carreraEntity->setFechaModificacion(new \DateTime('now'));
 
@@ -346,67 +346,76 @@ class CarrerasController extends Controller
         $em->flush();       
 
         $this->get('session')->getFlashBag()->add('carreraok', 'La carrera fue creada correctamente');
-        return $this->redirect($this->generateUrl('carreras_index', array('op' => 'result')));
+        return $this->redirect($this->generateUrl('tecest_carreras', array('op' => 'result')));
 
 
     }
 
     public function editAction(Request $request)
     {
+        
         date_default_timezone_set('America/La_Paz');
         $response = new JsonResponse();
         
         //dump($request); die;
         //TODO: esto de donde ?
         $carrera_id = $request->get('carrera_id');
-        $sedeId = $this->session->get('sedeId');
-        $nivel_academico_id = $request->get('edit_nivel_academico_id');
-        $modalidad_id = $request->get('edit_modalidad_id');
-        $regimen_id = $request->get('edit_regimen_id');
-        $grado_id = $request->get('edit_grado_id');
-        $duracion = $request->get('edit_duracion');
-        $duracion_anios = $request->get('edit_duracion_anios');
+        //$sedeId = $this->session->get('sedeId');
+        $sedeId =$request->get('sede_id');
 
-        $fecha_apertura_tmp = $request->get('edit_fecha_apertura');
+        $nivel_academico_id = $request->get('edit_nivel_academico_id');
+        $regimen_id = $request->get('edit_modalidad_id');
+
+        $area_formacion_id = $request->get('edit_grado_id');
+      
+        $tiempo_estudio = $request->get('edit_tiempo_estudio');
+        $carga_horaria = $request->get('edit_carga_horaria');
+        $resolucion = $request->get('edit_resolucion');
+
+        //$area_conocimiento_id = $request->get('area_conocimiento_id');
+
+        //$fecha_apertura_tmp = $request->get('fecha_apertura');
         //15/12/2003
-       
-        $fecha_apertura = date('Y-m-d', strtotime($fecha_apertura_tmp));
+
+        //$fecha_apertura = date('Y-m-d', strtotime($fecha_apertura_tmp));
 
         $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
 
-        $area_conocimiento_id = $request->get('edit_area_conocimiento_id');
+        $query = "update est_tec_instituto_carrera set est_tec_regimen_estudio_tipo_id = ? , est_tec_area_formacion_tipo_id = ?, tiempo_estudio = ?, carga_horaria = ?, resolucion = ? where id = ?";
+        $stmt = $db->prepare($query);
+        $params = array($regimen_id, $area_formacion_id, $tiempo_estudio, $carga_horaria, $resolucion, $carrera_id);
+        $stmt->execute($params);       
        
-        $carreraEntity = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->find($carrera_id);       
+        /*$carreraEntity = $em->getRepository('SieAppWebBundle:EstTecInstitutoCarrera')->find($carrera_id);
 
-        $carreraEntity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($sedeId));
-        //$carreraEntity->setUnivAreaConocimiento($request->get('edit_area_conocimiento'));
+        //dump($carreraEntity);die;
 
-        $carreraEntity->setUnivNivelAcademicoTipo($em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->find($nivel_academico_id));
-        $carreraEntity->setUnivRegimenEstudiosTipo($em->getRepository('SieAppWebBundle:UnivRegimenEstudiosTipo')->find($regimen_id));
-        $carreraEntity->setUnivModalidadEnsenanzaTipo($em->getRepository('SieAppWebBundle:UnivModalidadEnsenanzaTipo')->find($modalidad_id));
+        $carreraEntity->setEstTecSede($em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('id' => $sedeId)));
 
-        $carreraEntity->setCarrera($request->get('edit_carrera'));
-        $carreraEntity->setResolucion($request->get('edit_resolucion'));  
-        
-        //fecha ??
-        //rm_apertura ??
-        //dump($fecha_apertura); die;
-        $carreraEntity->setFechaApertura(new \DateTime( $fecha_apertura));
-        
-        $carreraEntity->setUnivGradoAcademicoTipo($em->getRepository('SieAppWebBundle:UnivGradoacademicoTipo')->find($grado_id));
+        dump($em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('id' => $sedeId)));
 
-        $carreraEntity->setDuracion($request->get('edit_duracion'));
-        $carreraEntity->setDuracionAnios($request->get('edit_duracion_anios'));
-        $carreraEntity->setUnivAreaConocimientoTipo($em->getRepository('SieAppWebBundle:UnivAreaConocimientoTipo')->find($area_conocimiento_id));  
-        
+
+        $carreraEntity->setEstTecRegimenEstudioTipo($em->getRepository('SieAppWebBundle:EstTecRegimenEstudioTipo')->findOneBy(array('id' => $regimen_id)));
+        $carreraEntity->setEstTecAreaFormacionTipo($em->getRepository('SieAppWebBundle:EstTecAreaFormacionTipo')->findOneBy(array('id' => $area_formacion_id)));
+
+        $carreraEntity->setCarrera($request->get('carrera'));
+        $carreraEntity->setResolucion($request->get('resolucion'));
+
+        $carreraEntity->setTiempoEstudio($request->get('tiempo_estudio'));
+        $carreraEntity->setCargaHoraria($request->get('carga_horaria'));
+
+
+        $carreraEntity->setEstado(1);       
+        $carreraEntity->setFechaModificacion(new \DateTime('now'));
 
         //$univJuridicciongeograficaEntity->setFechaRegistro(new \DateTime('now'));
        
         $em->persist($carreraEntity);
-        $em->flush();       
+        $em->flush();      */
 
         $this->get('session')->getFlashBag()->add('carreraok', 'La carrera fue actualizada correctamente');
-        return $this->redirect($this->generateUrl('carreras_index', array('op' => 'result')));
+        return $this->redirect($this->generateUrl('tecest_carreras', array('op' => 'result')));
 
 
     }
@@ -443,8 +452,8 @@ class CarrerasController extends Controller
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
-        $sql = "select count(*) as existe from univ_universidad_carrera_estudiante_estado
-        where univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
+        $sql = "select count(*) as existe from est_tec_instituto_carrera_estudiante_estado
+        where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
         $stmt = $db->prepare($sql);
         $params = array();
         $stmt->execute($params);
@@ -455,7 +464,7 @@ class CarrerasController extends Controller
         if($total_filas == 0){
             //creamos las filas en univ_universidad_carrera_estudiante_estado
 
-            $sql = "select * from univ_estadomatricula_tipo";
+            $sql = "select * from est_tec_estadomatricula_tipo";
             $stmt = $db->prepare($sql);
             $params = array();
             $stmt->execute($params);
@@ -466,24 +475,24 @@ class CarrerasController extends Controller
                 for($j = 1; $j <= $nro_periodos; $j++ ){
 
                     //masculinos
-                    $query = $em->getConnection()->prepare('INSERT INTO univ_universidad_carrera_estudiante_estado(gestion_tipo_id, univ_universidad_carrera_id, genero_tipo_id, univ_estadomatricula_tipo_id, univ_periodo_academico_tipo_id, cantidad)'
-                                . 'VALUES(:gestion_tipo_id, :univ_universidad_carrera_id,:genero_tipo_id,:univ_estadomatricula_tipo_id,:univ_periodo_academico_tipo_id, :cantidad)');
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_estado(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_estadomatricula_tipo_id, est_tec_periodo_academico_tipo_id, cantidad)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_estadomatricula_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad)');
                     $query->bindValue(':gestion_tipo_id', $gestion);
-                    $query->bindValue(':univ_universidad_carrera_id', $carrera_id);
+                    $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
                     $query->bindValue(':genero_tipo_id', 1);
-                    $query->bindValue(':univ_estadomatricula_tipo_id', $data[$i]['id']);
-                    $query->bindValue(':univ_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_estadomatricula_tipo_id', $data[$i]['id']);
+                    $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
                     $query->bindValue(':cantidad', rand(10, 80));                
                     $query->execute();
 
                     //femeninos
-                    $query = $em->getConnection()->prepare('INSERT INTO univ_universidad_carrera_estudiante_estado(gestion_tipo_id, univ_universidad_carrera_id, genero_tipo_id, univ_estadomatricula_tipo_id, univ_periodo_academico_tipo_id, cantidad)'
-                                . 'VALUES(:gestion_tipo_id, :univ_universidad_carrera_id,:genero_tipo_id,:univ_estadomatricula_tipo_id,:univ_periodo_academico_tipo_id, :cantidad)');
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_estado(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_estadomatricula_tipo_id, est_tec_periodo_academico_tipo_id, cantidad)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_estadomatricula_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad)');
                     $query->bindValue(':gestion_tipo_id', $gestion);
-                    $query->bindValue(':univ_universidad_carrera_id', $carrera_id);
+                    $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
                     $query->bindValue(':genero_tipo_id', 2);
-                    $query->bindValue(':univ_estadomatricula_tipo_id', $data[$i]['id']);
-                    $query->bindValue(':univ_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_estadomatricula_tipo_id', $data[$i]['id']);
+                    $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
                     $query->bindValue(':cantidad', rand(10, 80));                
                     $query->execute();
 
@@ -497,8 +506,8 @@ class CarrerasController extends Controller
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
-        $sql = "select count(*) as existe from univ_universidad_carrera_estudiante_nacionalidad
-        where univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
+        $sql = "select count(*) as existe from est_tec_instituto_carrera_estudiante_nacionalidad
+        where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
         $stmt = $db->prepare($sql);
         $params = array();
         $stmt->execute($params);
@@ -507,9 +516,9 @@ class CarrerasController extends Controller
 
         //dump($total_filas); die;
         if($total_filas == 0){
-            //creamos las filas en univ_universidad_carrera_estudiante_estado
+            //creamos las filas en est_tec_instituto_carrera_estudiante_estado
 
-            $sql = "select * from univ_matricula_nacionalidad_beca_tipo";
+            $sql = "select * from est_tec_matricula_nacionalidad_beca_tipo";
             $stmt = $db->prepare($sql);
             $params = array();
             $stmt->execute($params);
@@ -520,24 +529,24 @@ class CarrerasController extends Controller
                 for($j = 1; $j <= $nro_periodos; $j++ ){
 
                     //masculinos
-                    $query = $em->getConnection()->prepare('INSERT INTO univ_universidad_carrera_estudiante_nacionalidad(gestion_tipo_id, univ_universidad_carrera_id, genero_tipo_id, univ_matricula_nacionalidad_beca_tipo_id, univ_periodo_academico_tipo_id, cantidad)'
-                                . 'VALUES(:gestion_tipo_id, :univ_universidad_carrera_id,:genero_tipo_id,:univ_matricula_beca_tipo_id,:univ_periodo_academico_tipo_id, :cantidad)');
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_nacionalidad(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_matricula_nacionalidad_beca_tipo_id, est_tec_periodo_academico_tipo_id, cantidad)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_matricula_beca_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad)');
                     $query->bindValue(':gestion_tipo_id', $gestion);
-                    $query->bindValue(':univ_universidad_carrera_id', $carrera_id);
+                    $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
                     $query->bindValue(':genero_tipo_id', 1);
-                    $query->bindValue(':univ_matricula_beca_tipo_id', $data[$i]['id']);
-                    $query->bindValue(':univ_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_matricula_beca_tipo_id', $data[$i]['id']);
+                    $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
                     $query->bindValue(':cantidad', rand(10, 70));                
                     $query->execute();
 
                     //femeninos
-                    $query = $em->getConnection()->prepare('INSERT INTO univ_universidad_carrera_estudiante_nacionalidad(gestion_tipo_id, univ_universidad_carrera_id, genero_tipo_id, univ_matricula_nacionalidad_beca_tipo_id, univ_periodo_academico_tipo_id, cantidad)'
-                                . 'VALUES(:gestion_tipo_id, :univ_universidad_carrera_id,:genero_tipo_id,:univ_matricula_beca_tipo_id,:univ_periodo_academico_tipo_id, :cantidad)');
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_nacionalidad(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_matricula_nacionalidad_beca_tipo_id, est_tec_periodo_academico_tipo_id, cantidad)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_matricula_beca_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad)');
                     $query->bindValue(':gestion_tipo_id', $gestion);
-                    $query->bindValue(':univ_universidad_carrera_id', $carrera_id);
+                    $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
                     $query->bindValue(':genero_tipo_id', 2);
-                    $query->bindValue(':univ_matricula_beca_tipo_id', $data[$i]['id']);
-                    $query->bindValue(':univ_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_matricula_beca_tipo_id', $data[$i]['id']);
+                    $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
                     $query->bindValue(':cantidad', rand(10, 50));                
                     $query->execute();
 
@@ -550,8 +559,9 @@ class CarrerasController extends Controller
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
-        $sql = "select count(*) as existe from univ_universidad_carrera_docente_administrativo
-        where univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
+        $sql = "select count(*) as existe from est_tec_instituto_carrera_docente_administrativo
+        where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
+        
         $stmt = $db->prepare($sql);
         $params = array();
         $stmt->execute($params);
@@ -560,37 +570,38 @@ class CarrerasController extends Controller
 
         //dump($total_filas); die;
         if($total_filas == 0){
-            //creamos las filas en univ_universidad_carrera_estudiante_estado
+            //creamos las filas en est_tec_instituto_carrera_estudiante_estado
 
-            $sql = "select * from univ_cargo_tipo";
+            $sql = "select * from est_tec_cargo_tipo";
             $stmt = $db->prepare($sql);
             $params = array();
             $stmt->execute($params);
             $data = $stmt->fetchAll();
+           
             for($i = 0; $i < sizeof($data); $i++ ){
 
                 
                 for($j = 1; $j <= $nro_periodos; $j++ ){
 
                     //masculinos
-                    $query = $em->getConnection()->prepare('INSERT INTO univ_universidad_carrera_docente_administrativo(gestion_tipo_id, univ_universidad_carrera_id, genero_tipo_id, univ_cargo_tipo_id, univ_periodo_academico_tipo_id, cantidad)'
-                                . 'VALUES(:gestion_tipo_id, :univ_universidad_carrera_id,:genero_tipo_id,:univ_cargo_tipo_id,:univ_periodo_academico_tipo_id, :cantidad)');
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_docente_administrativo(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_cargo_tipo_id, est_tec_periodo_academico_tipo_id, cantidad)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_cargo_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad)');
                     $query->bindValue(':gestion_tipo_id', $gestion);
-                    $query->bindValue(':univ_universidad_carrera_id', $carrera_id);
+                    $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
                     $query->bindValue(':genero_tipo_id', 1);
-                    $query->bindValue(':univ_cargo_tipo_id', $data[$i]['id']);
-                    $query->bindValue(':univ_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_cargo_tipo_id', $data[$i]['id']);
+                    $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
                     $query->bindValue(':cantidad', rand(10, 70));                
                     $query->execute();
 
                     //femeninos
-                    $query = $em->getConnection()->prepare('INSERT INTO univ_universidad_carrera_docente_administrativo(gestion_tipo_id, univ_universidad_carrera_id, genero_tipo_id, univ_cargo_tipo_id, univ_periodo_academico_tipo_id, cantidad)'
-                                . 'VALUES(:gestion_tipo_id, :univ_universidad_carrera_id,:genero_tipo_id,:univ_cargo_tipo_id,:univ_periodo_academico_tipo_id, :cantidad)');
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_docente_administrativo(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_cargo_tipo_id, est_tec_periodo_academico_tipo_id, cantidad)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_cargo_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad)');
                     $query->bindValue(':gestion_tipo_id', $gestion);
-                    $query->bindValue(':univ_universidad_carrera_id', $carrera_id);
+                    $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
                     $query->bindValue(':genero_tipo_id', 2);
-                    $query->bindValue(':univ_cargo_tipo_id', $data[$i]['id']);
-                    $query->bindValue(':univ_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_cargo_tipo_id', $data[$i]['id']);
+                    $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
                     $query->bindValue(':cantidad', rand(10, 50));                
                     $query->execute();
 
@@ -601,26 +612,27 @@ class CarrerasController extends Controller
     }
 
     public function get_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion){
+        
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
         $query ="SELECT
-            univ_universidad_carrera_estudiante_nacionalidad.id, 
-            univ_universidad_carrera_estudiante_nacionalidad.gestion_tipo_id, 
-            univ_universidad_carrera_estudiante_nacionalidad.univ_universidad_carrera_id, 
-            univ_universidad_carrera_estudiante_nacionalidad.genero_tipo_id, 
-            univ_universidad_carrera_estudiante_nacionalidad.univ_periodo_academico_tipo_id, 
-            univ_universidad_carrera_estudiante_nacionalidad.cantidad, 
-            univ_universidad_carrera_estudiante_nacionalidad.univ_matricula_nacionalidad_beca_tipo_id, 
-            univ_matricula_nacionalidad_beca_tipo.nacionalidad_beca
+            est_tec_instituto_carrera_estudiante_nacionalidad.id, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.gestion_tipo_id, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_instituto_carrera_id, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.genero_tipo_id, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_periodo_academico_tipo_id, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.cantidad, 
+            est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_matricula_nacionalidad_beca_tipo_id, 
+            est_tec_matricula_nacionalidad_beca_tipo.nacionalidad_beca
         FROM
-            univ_universidad_carrera_estudiante_nacionalidad
+            est_tec_instituto_carrera_estudiante_nacionalidad
             INNER JOIN
-            univ_matricula_nacionalidad_beca_tipo
+            est_tec_matricula_nacionalidad_beca_tipo
             ON 
-                univ_universidad_carrera_estudiante_nacionalidad.univ_matricula_nacionalidad_beca_tipo_id = univ_matricula_nacionalidad_beca_tipo.id
+                est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_matricula_nacionalidad_beca_tipo_id = est_tec_matricula_nacionalidad_beca_tipo.id
         WHERE
-            univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
+            est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
         //dump($query);die;
         $stmt = $db->prepare($query);
         $params = array();
@@ -629,7 +641,7 @@ class CarrerasController extends Controller
         //dump($data); die;
         $filasaux = array();
         for($i = 0; $i < sizeof($data); $i++ ){
-            array_push($filasaux,$data[$i]['univ_matricula_nacionalidad_beca_tipo_id'] );
+            array_push($filasaux,$data[$i]['est_tec_matricula_nacionalidad_beca_tipo_id'] );
         }
         
         $rowsaux = array_unique($filasaux);
@@ -644,7 +656,7 @@ class CarrerasController extends Controller
         for($i = 0; $i < sizeof($rows); $i++ ){
 
             for($j = 0; $j < sizeof($data); $j++ ){
-                if ($data[$j]['univ_matricula_nacionalidad_beca_tipo_id']  == $rows[$i]){
+                if ($data[$j]['est_tec_matricula_nacionalidad_beca_tipo_id']  == $rows[$i]){
                     array_push($rowsaux, $data[$j]);
                 }
             }
@@ -654,29 +666,74 @@ class CarrerasController extends Controller
             //beca tipo 1
             $m1 = 0; $f1 = 0; $t1 = 0;
             $m2 = 0; $f2 = 0; $t2 = 0;
+            $m3 = 0; $f3 = 0; $t3 = 0;
+            $m4 = 0; $f4 = 0; $t4 = 0;
+            $m5 = 0; $f5 = 0; $t5 = 0;
+            $m6 = 0; $f6 = 0; $t6 = 0;
+
+
             $idm2 = 0; $idf2 = 0;
             $idm1= 0; $idf1 = 0;
+
+            $idm3 = 0; $idf3 = 0;
+            $idm4 = 0; $idf4 = 0;
+            $idm5 = 0; $idf5 = 0;
+            $idm6 = 0; $idf6 = 0;
 
             for($k = 0; $k < sizeof($rowsaux); $k++ ){               
                 $matricula = $rowsaux[$k]['nacionalidad_beca'];   
                 
-                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['univ_periodo_academico_tipo_id'] == 1){
+                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 1){
                     $m1 = $rowsaux[$k]['cantidad'];
                     $idm1 =  $rowsaux[$k]['id'];
                 }
-                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['univ_periodo_academico_tipo_id'] == 1){
+                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 1){
                     $f1  = $rowsaux[$k]['cantidad'];
                     $idf1 =  $rowsaux[$k]['id'];
                 }
+                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 2){
+                    $m2 = $rowsaux[$k]['cantidad'];
+                    $idm2 =  $rowsaux[$k]['id'];
+                }
+                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 2){
+                    $f2  = $rowsaux[$k]['cantidad'];
+                    $idf2 =  $rowsaux[$k]['id'];
+                }
+                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 3){
+                    $m3 = $rowsaux[$k]['cantidad'];
+                    $idm3 =  $rowsaux[$k]['id'];
+                }
+                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 3){
+                    $f3  = $rowsaux[$k]['cantidad'];
+                    $idf3 =  $rowsaux[$k]['id'];
+                }
 
-                if($nro_periodos == 2){
-                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['univ_periodo_academico_tipo_id'] == 2){
-                        $m2  = $rowsaux[$k]['cantidad'];
-                        $idm2 =  $rowsaux[$k]['id'];
+                if($nro_periodos == 6){
+                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 4){
+                        $m4  = $rowsaux[$k]['cantidad'];
+                        $idm4 =  $rowsaux[$k]['id'];
                     }
-                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['univ_periodo_academico_tipo_id'] == 2){
-                        $f2  = $rowsaux[$k]['cantidad'];
-                        $idf2 =  $rowsaux[$k]['id'];
+                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 4){
+                        $f4  = $rowsaux[$k]['cantidad'];
+                        $idf4 =  $rowsaux[$k]['id'];
+                    }   
+
+                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 5){
+                        $m5  = $rowsaux[$k]['cantidad'];
+                        $idm5 =  $rowsaux[$k]['id'];
+                    }
+                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 5){
+                        $f5  = $rowsaux[$k]['cantidad'];
+                        $idf5 =  $rowsaux[$k]['id'];
+                    }   
+
+                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 6){
+                        $m6  = $rowsaux[$k]['cantidad'];
+                        $idm6 =  $rowsaux[$k]['id'];
+                    }
+                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 6){
+                        $f6  = $rowsaux[$k]['cantidad'];
+                        $idf6 =  $rowsaux[$k]['id'];
                     }   
                 }
                 
@@ -693,8 +750,33 @@ class CarrerasController extends Controller
                 'm2'  => $m2,
                 'idm2'  => $idm2,
                 'f2'  => $f2,
-                'idf2'  => $idf2,
-                'total2' => $m2 + $f2
+                'idf2'  => $idf2, 
+                'total2' => $m2 + $f2,
+
+                'm3'  => $m3,
+                'idm3'  => $idm3,
+                'f3'  => $f3,
+                'idf3'  => $idf3,
+                'total3' => $m3 + $f3,
+
+                'm4'  => $m4,
+                'idm4'  => $idm4,
+                'f4'  => $f4,
+                'idf4'  => $idf4,
+                'total4' => $m4 + $f4,
+
+                'm5'  => $m5,
+                'idm5'  => $idm5,
+                'f5'  => $f5,
+                'idf5'  => $idf5,
+                'total5' => $m5 + $f5,
+
+                'm6'  => $m6,
+                'idm6'  => $idm6,
+                'f6'  => $f6,
+                'idf6'  => $idf6,
+                'total6' => $m6 + $f6,
+
             );
 
             array_push($filas, $row);
@@ -740,21 +822,21 @@ class CarrerasController extends Controller
 
         $query ="
         SELECT
-            univ_universidad_carrera_estudiante_estado.id, 
-            univ_universidad_carrera_estudiante_estado.gestion_tipo_id, 
-            univ_universidad_carrera_estudiante_estado.univ_universidad_carrera_id, 
-            univ_universidad_carrera_estudiante_estado.genero_tipo_id, 
-            univ_universidad_carrera_estudiante_estado.univ_estadomatricula_tipo_id, 
-            univ_universidad_carrera_estudiante_estado.univ_periodo_academico_tipo_id, 
-            univ_universidad_carrera_estudiante_estado.cantidad, 
-            univ_estadomatricula_tipo.estadomatricula
+            est_tec_instituto_carrera_estudiante_estado.id, 
+            est_tec_instituto_carrera_estudiante_estado.gestion_tipo_id, 
+            est_tec_instituto_carrera_estudiante_estado.est_tec_instituto_carrera_id, 
+            est_tec_instituto_carrera_estudiante_estado.genero_tipo_id, 
+            est_tec_instituto_carrera_estudiante_estado.est_tec_estadomatricula_tipo_id, 
+            est_tec_instituto_carrera_estudiante_estado.est_tec_periodo_academico_tipo_id, 
+            est_tec_instituto_carrera_estudiante_estado.cantidad, 
+            est_tec_estadomatricula_tipo.estadomatricula
         FROM
-            univ_universidad_carrera_estudiante_estado
+            est_tec_instituto_carrera_estudiante_estado
             INNER JOIN
-            univ_estadomatricula_tipo
+            est_tec_estadomatricula_tipo
             ON 
-                univ_universidad_carrera_estudiante_estado.univ_estadomatricula_tipo_id = univ_estadomatricula_tipo.id
-            where univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;        
+                est_tec_instituto_carrera_estudiante_estado.est_tec_estadomatricula_tipo_id = est_tec_estadomatricula_tipo.id
+            where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;        
 
         $stmt = $db->prepare($query);
         $params = array();
@@ -763,7 +845,7 @@ class CarrerasController extends Controller
         //dump($data); die;
         $filasaux = array();
         for($i = 0; $i < sizeof($data); $i++ ){
-             array_push($filasaux,$data[$i]['univ_estadomatricula_tipo_id'] );
+             array_push($filasaux,$data[$i]['est_tec_estadomatricula_tipo_id'] );
         }
         $rowsx = array_unique($filasaux);
 
@@ -780,7 +862,7 @@ class CarrerasController extends Controller
         for($i = 0; $i < sizeof($rows); $i++ ){
 
             for($j = 0; $j < sizeof($data); $j++ ){
-                if ($data[$j]['univ_estadomatricula_tipo_id']  == $rows[$i]){
+                if ($data[$j]['est_tec_estadomatricula_tipo_id']  == $rows[$i]){
                     array_push($rowsaux, $data[$j]);
                 }
             }
@@ -788,29 +870,75 @@ class CarrerasController extends Controller
             //beca tipo 1
             $m1 = 0; $f1 = 0; $t1 = 0;
             $m2 = 0; $f2 = 0; $t2 = 0;
+
+            $m3 = 0; $f3 = 0; $t3 = 0;
+            $m4 = 0; $f4 = 0; $t4 = 0;
+            $m5 = 0; $f5 = 0; $t5 = 0;
+            $m6 = 0; $f6 = 0; $t6 = 0;
+
+
             $idm2 = 0; $idf2 = 0;
             $idm1= 0; $idf1 = 0;
+            $idm3 = 0; $idf3 = 0;
+
+            $idm4 = 0; $idf4 = 0;
+            $idm5 = 0; $idf5 = 0;
+            $idm6 = 0; $idf6 = 0;
 
             for($k = 0; $k < sizeof($rowsaux); $k++ ){               
                 $matricula = $rowsaux[$k]['estadomatricula'];
 
-                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['univ_periodo_academico_tipo_id'] == 1){
+                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 1){
                     $m1  = $rowsaux[$k]['cantidad'];
                     $idm1 =  $rowsaux[$k]['id'];
                 }
-                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['univ_periodo_academico_tipo_id'] == 1){
+                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 1){
                     $f1  = $rowsaux[$k]['cantidad'];
                     $idf1 =  $rowsaux[$k]['id'];
                 }
 
-                if($nro_periodos == 2){
-                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['univ_periodo_academico_tipo_id'] == 2){
-                        $m2  = $rowsaux[$k]['cantidad'];
-                        $idm2 =  $rowsaux[$k]['id'];
+                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 2){
+                    $m2  = $rowsaux[$k]['cantidad'];
+                    $idm2 =  $rowsaux[$k]['id'];
+                }
+                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 2){
+                    $f2  = $rowsaux[$k]['cantidad'];
+                    $idf2 =  $rowsaux[$k]['id'];
+                }   
+
+                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 3){
+                    $m3  = $rowsaux[$k]['cantidad'];
+                    $idm3 =  $rowsaux[$k]['id'];
+                }
+                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 3){
+                    $f3  = $rowsaux[$k]['cantidad'];
+                    $idf3 =  $rowsaux[$k]['id'];
+                }   
+
+                if($nro_periodos == 6){
+                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 4){
+                        $m4  = $rowsaux[$k]['cantidad'];
+                        $idm4 =  $rowsaux[$k]['id'];
                     }
-                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['univ_periodo_academico_tipo_id'] == 2){
-                        $f2  = $rowsaux[$k]['cantidad'];
-                        $idf2 =  $rowsaux[$k]['id'];
+                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 4){
+                        $f4  = $rowsaux[$k]['cantidad'];
+                        $idf4 =  $rowsaux[$k]['id'];
+                    }   
+                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 5){
+                        $m5  = $rowsaux[$k]['cantidad'];
+                        $idm5 =  $rowsaux[$k]['id'];
+                    }
+                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 5){
+                        $f5  = $rowsaux[$k]['cantidad'];
+                        $idf5 =  $rowsaux[$k]['id'];
+                    }   
+                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 6){
+                        $m6  = $rowsaux[$k]['cantidad'];
+                        $idm6 =  $rowsaux[$k]['id'];
+                    }
+                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 6){
+                        $f6  = $rowsaux[$k]['cantidad'];
+                        $idf6 =  $rowsaux[$k]['id'];
                     }   
                 }
 
@@ -829,7 +957,31 @@ class CarrerasController extends Controller
                 'idm2'  => $idm2,
                 'f2'  => $f2,
                 'idf2'  => $idf2,
-                'total2' => $m2 + $f2
+                'total2' => $m2 + $f2,
+
+                'm3'  => $m3,
+                'idm3'  => $idm3,
+                'f3'  => $f3,
+                'idf3'  => $idf3,
+                'total3' => $m3 + $f3,
+
+                'm4'  => $m4,
+                'idm4'  => $idm4,
+                'f4'  => $f4,
+                'idf4'  => $idf4,
+                'total4' => $m4 + $f4,
+
+                'm5'  => $m5,
+                'idm5'  => $idm5,
+                'f5'  => $f5,
+                'idf5'  => $idf5,
+                'total5' => $m5 + $f5,
+
+                'm6'  => $m6,
+                'idm6'  => $idm6,
+                'f6'  => $f6,
+                'idf6'  => $idf6,
+                'total6' => $m6 + $f6
             );
 
             array_push($tipo_matricula_array, $row);
@@ -1003,21 +1155,21 @@ class CarrerasController extends Controller
 
         $query ="
         SELECT
-            univ_universidad_carrera_docente_administrativo.id, 
-            univ_universidad_carrera_docente_administrativo.gestion_tipo_id, 
-            univ_universidad_carrera_docente_administrativo.univ_universidad_carrera_id, 
-            univ_universidad_carrera_docente_administrativo.genero_tipo_id, 
-            univ_universidad_carrera_docente_administrativo.univ_cargo_tipo_id, 
-            univ_universidad_carrera_docente_administrativo.univ_periodo_academico_tipo_id, 
-            univ_universidad_carrera_docente_administrativo.cantidad, 
-            univ_cargo_tipo.cargo
+            est_tec_instituto_carrera_docente_administrativo.id, 
+            est_tec_instituto_carrera_docente_administrativo.gestion_tipo_id, 
+            est_tec_instituto_carrera_docente_administrativo.est_tec_instituto_carrera_id, 
+            est_tec_instituto_carrera_docente_administrativo.genero_tipo_id, 
+            est_tec_instituto_carrera_docente_administrativo.est_tec_cargo_tipo_id, 
+            est_tec_instituto_carrera_docente_administrativo.est_tec_periodo_academico_tipo_id, 
+            est_tec_instituto_carrera_docente_administrativo.cantidad, 
+            est_tec_cargo_tipo.cargo
         FROM
-            univ_universidad_carrera_docente_administrativo
+            est_tec_instituto_carrera_docente_administrativo
             INNER JOIN
-            univ_cargo_tipo
+            est_tec_cargo_tipo
             ON 
-            univ_universidad_carrera_docente_administrativo.univ_cargo_tipo_id = univ_cargo_tipo.id
-            where univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;        
+            est_tec_instituto_carrera_docente_administrativo.est_tec_cargo_tipo_id = est_tec_cargo_tipo.id
+            where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;        
 
         $stmt = $db->prepare($query);
         $params = array();
@@ -1026,7 +1178,7 @@ class CarrerasController extends Controller
         //dump($data); die;
         $filasaux = array();
         for($i = 0; $i < sizeof($data); $i++ ){
-             array_push($filasaux,$data[$i]['univ_cargo_tipo_id'] );
+             array_push($filasaux,$data[$i]['est_tec_cargo_tipo_id'] );
         }
         $rowsaux = array_unique($filasaux);
 
@@ -1043,7 +1195,7 @@ class CarrerasController extends Controller
         for($i = 0; $i < sizeof($rows); $i++ ){
 
             for($j = 0; $j < sizeof($data); $j++ ){
-                if ($data[$j]['univ_cargo_tipo_id']  == $rows[$i]){
+                if ($data[$j]['est_tec_cargo_tipo_id']  == $rows[$i]){
                     array_push($rowsaux, $data[$j]);
                 }
             }
@@ -1051,29 +1203,74 @@ class CarrerasController extends Controller
             //beca tipo 1
             $m1 = 0; $f1 = 0; $t1 = 0;
             $m2 = 0; $f2 = 0; $t2 = 0;
+
+            $m3 = 0; $f3 = 0; $t3 = 0;
+            $m4 = 0; $f4 = 0; $t4 = 0;
+            $m5 = 0; $f5 = 0; $t5 = 0;
+            $m6 = 0; $f6 = 0; $t6 = 0;
+
+
             $idm2 = 0; $idf2 = 0;
             $idm1= 0; $idf1 = 0;
+            $idm3= 0; $idf3 = 0;
+            $idm4= 0; $idf4 = 0;
+            $idm5= 0; $idf5 = 0;
+            $idm6= 0; $idf6 = 0;
 
             for($k = 0; $k < sizeof($rowsaux); $k++ ){               
                 $matricula = $rowsaux[$k]['cargo'];
 
-                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['univ_periodo_academico_tipo_id'] == 1){
+                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 1){
                     $m1  = $rowsaux[$k]['cantidad'];
                     $idm1 =  $rowsaux[$k]['id'];
                 }
-                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['univ_periodo_academico_tipo_id'] == 1){
+                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 1){
                     $f1  = $rowsaux[$k]['cantidad'];
                     $idf1 =  $rowsaux[$k]['id'];
                 }
 
-                if($nro_periodos == 2){
-                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['univ_periodo_academico_tipo_id'] == 2){
-                        $m2  = $rowsaux[$k]['cantidad'];
-                        $idm2 =  $rowsaux[$k]['id'];
+                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 2){
+                    $m2  = $rowsaux[$k]['cantidad'];
+                    $idm2 =  $rowsaux[$k]['id'];
+                }
+                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 2){
+                    $f2  = $rowsaux[$k]['cantidad'];
+                    $idf2 =  $rowsaux[$k]['id'];
+                }   
+
+                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 3){
+                    $m3  = $rowsaux[$k]['cantidad'];
+                    $idm3 =  $rowsaux[$k]['id'];
+                }
+                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 3){
+                    $f3  = $rowsaux[$k]['cantidad'];
+                    $idf3 =  $rowsaux[$k]['id'];
+                }   
+
+                if($nro_periodos == 6){
+                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 4){
+                        $m4  = $rowsaux[$k]['cantidad'];
+                        $idm4 =  $rowsaux[$k]['id'];
                     }
-                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['univ_periodo_academico_tipo_id'] == 2){
-                        $f2  = $rowsaux[$k]['cantidad'];
-                        $idf2 =  $rowsaux[$k]['id'];
+                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 4){
+                        $f4  = $rowsaux[$k]['cantidad'];
+                        $idf4 =  $rowsaux[$k]['id'];
+                    }   
+                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 5){
+                        $m5  = $rowsaux[$k]['cantidad'];
+                        $idm5 =  $rowsaux[$k]['id'];
+                    }
+                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 5){
+                        $f5  = $rowsaux[$k]['cantidad'];
+                        $idf5 =  $rowsaux[$k]['id'];
+                    }   
+                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 6){
+                        $m6  = $rowsaux[$k]['cantidad'];
+                        $idm6 =  $rowsaux[$k]['id'];
+                    }
+                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 6){
+                        $f6  = $rowsaux[$k]['cantidad'];
+                        $idf6 =  $rowsaux[$k]['id'];
                     }   
                 }
 
@@ -1092,7 +1289,31 @@ class CarrerasController extends Controller
                 'idm2'  => $idm2,
                 'f2'  => $f2,
                 'idf2'  => $idf2,
-                'total2' => $m2 + $f2
+                'total2' => $m2 + $f2,
+
+                'm3'  => $m3,
+                'idm3'  => $idm3,
+                'f3'  => $f3,
+                'idf3'  => $idf3,
+                'total3' => $m3 + $f3,
+
+                'm4'  => $m4,
+                'idm4'  => $idm4,
+                'f4'  => $f4,
+                'idf4'  => $idf4,
+                'total4' => $m4 + $f4,
+
+                'm5'  => $m5,
+                'idm5'  => $idm5,
+                'f5'  => $f5,
+                'idf5'  => $idf5,
+                'total5' => $m5 + $f5,
+
+                'm6'  => $m6,
+                'idm6'  => $idm6,
+                'f6'  => $f6,
+                'idf6'  => $idf6,
+                'total6' => $m6 + $f6
             );
 
             array_push($tipo_matricula_array, $row);
@@ -1165,7 +1386,7 @@ class CarrerasController extends Controller
                 $cantidad = $valor; 
 
                 //update al registro, solo se cambia cantidad
-                $query ="update univ_universidad_carrera_estudiante_nacionalidad set cantidad = ? where id = ?";
+                $query ="update est_tec_instituto_carrera_estudiante_nacionalidad set cantidad = ? where id = ?";
                 $stmt = $db->prepare($query);
                 $params = array($cantidad, $id);
                 $stmt->execute($params);           
@@ -1195,7 +1416,7 @@ class CarrerasController extends Controller
                 $cantidad = $valor; 
 
                 //update al registro, solo se cambia cantidad
-                $query ="update univ_universidad_carrera_estudiante_estado set cantidad = ? where id = ?";
+                $query ="update est_tec_instituto_carrera_estudiante_estado set cantidad = ? where id = ?";
                 $stmt = $db->prepare($query);
                 $params = array($cantidad, $id);
                 $stmt->execute($params);           
@@ -1225,7 +1446,7 @@ class CarrerasController extends Controller
                 $cantidad = $valor; 
 
                 //update al registro, solo se cambia cantidad
-                $query ="update univ_universidad_carrera_docente_administrativo set cantidad = ? where id = ?";
+                $query ="update est_tec_instituto_carrera_docente_administrativo set cantidad = ? where id = ?";
                 $stmt = $db->prepare($query);
                 $params = array($cantidad, $id);
                 $stmt->execute($params);           
