@@ -1422,7 +1422,7 @@ class TramiteModCalVigenteController extends Controller {
         }
     }
 
-    public function requestInsCalYearOldAction(Request $request, $idTramite){
+    public function requestInsCalYearVigAction(Request $request, $idTramite){
 
         $response = new Response();
         $gestion = $this->session->get('currentyear');
