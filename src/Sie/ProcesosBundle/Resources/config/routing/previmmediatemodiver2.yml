@@ -96,6 +96,6 @@ tramite_modificacion_calificaciones_acta_imprimir:
   defaults:
     { _controller: SieProcesosBundle:PrevImmediateModiVer2:actaImprimir }
 
-tramite_download_inscriptionScore_yearOld:
+previmmediatemodiver2_download_inscriptionScore_yearOld:
     path:     /ficgp/{{idTramite}
     defaults: { _controller: SieProcesosBundle:PrevImmediateModiVer2:requestInsCalYearOld }  
