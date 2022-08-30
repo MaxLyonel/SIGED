@@ -326,20 +326,20 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
             );
 
             $nivelGradoObject = array(
-                5 => array('nivelId'=>11, 'gradoId'=>1),
-                6 => array('nivelId'=>11, 'gradoId'=>2),
-                7 => array('nivelId'=>12, 'gradoId'=>1),
-                8 => array('nivelId'=>12, 'gradoId'=>2),
-                9 => array('nivelId'=>12, 'gradoId'=>3),
-                10 => array('nivelId'=>12, 'gradoId'=>4),
-                11 => array('nivelId'=>12, 'gradoId'=>5),
-                12 => array('nivelId'=>12, 'gradoId'=>6),
-                13 => array('nivelId'=>13, 'gradoId'=>1),
-                14 => array('nivelId'=>13, 'gradoId'=>2),
-                15 => array('nivelId'=>13, 'gradoId'=>3),
-                16 => array('nivelId'=>13, 'gradoId'=>4),
-                17 => array('nivelId'=>13, 'gradoId'=>5),
-                18 => array('nivelId'=>13, 'gradoId'=>6)
+                4 => array('nivelId'=>11, 'gradoId'=>1),
+                5 => array('nivelId'=>11, 'gradoId'=>2),
+                6 => array('nivelId'=>12, 'gradoId'=>1),
+                7 => array('nivelId'=>12, 'gradoId'=>2),
+                8 => array('nivelId'=>12, 'gradoId'=>3),
+                9 => array('nivelId'=>12, 'gradoId'=>4),
+                10 => array('nivelId'=>12, 'gradoId'=>5),
+                11 => array('nivelId'=>12, 'gradoId'=>6),
+                12 => array('nivelId'=>13, 'gradoId'=>1),
+                13 => array('nivelId'=>13, 'gradoId'=>2),
+                14 => array('nivelId'=>13, 'gradoId'=>3),
+                15 => array('nivelId'=>13, 'gradoId'=>4),
+                16 => array('nivelId'=>13, 'gradoId'=>5),
+                17 => array('nivelId'=>13, 'gradoId'=>6)
             );
 
             if(isset($nivelGradoObject[$actualEdadR])){
