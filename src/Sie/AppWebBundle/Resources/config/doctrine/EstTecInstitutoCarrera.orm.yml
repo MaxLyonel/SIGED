@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\EstTecInstitutoCarrera:
     type: entity
     table: est_tec_instituto_carrera
     indexes:
+        IDX_2B7728628470456:
+            columns:
+                - est_tec_nivel_tipo_id
         IDX_2B772866F017409:
             columns:
                 - est_tec_area_formacion_tipo_id
@@ -61,6 +64,15 @@ Sie\AppWebBundle\Entity\EstTecInstitutoCarrera:
             comment: ''
             column: fecha_modificacion
     manyToOne:
+        estTecNivelTipo:
+            targetEntity: EstTecNivelTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_nivel_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         estTecAreaFormacionTipo:
             targetEntity: EstTecAreaFormacionTipo
             cascade: {  }
