@@ -304,32 +304,4 @@ class EstTecInstitutoCarrera
     {
         return $this->estTecSede;
     }
-    /**
-     * @var \Sie\AppWebBundle\Entity\EstTecNivelTipo
-     */
-    private $estTecNivelTipo;
-
-
-    /**
-     * Set estTecNivelTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\EstTecNivelTipo $estTecNivelTipo
-     * @return EstTecInstitutoCarrera
-     */
-    public function setEstTecNivelTipo(\Sie\AppWebBundle\Entity\EstTecNivelTipo $estTecNivelTipo = null)
-    {
-        $this->estTecNivelTipo = $estTecNivelTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get estTecNivelTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\EstTecNivelTipo 
-     */
-    public function getEstTecNivelTipo()
-    {
-        return $this->estTecNivelTipo;
-    }
 }

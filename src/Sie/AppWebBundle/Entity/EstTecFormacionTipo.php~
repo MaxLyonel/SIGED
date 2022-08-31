@@ -5,9 +5,9 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * EstTecTipoInstituto
+ * EstTecFormacionTipo
  */
-class EstTecTipoInstituto
+class EstTecFormacionTipo
 {
     /**
      * @var integer
@@ -17,7 +17,7 @@ class EstTecTipoInstituto
     /**
      * @var string
      */
-    private $tipoInstituto;
+    private $cargo;
 
 
     /**
@@ -31,25 +31,25 @@ class EstTecTipoInstituto
     }
 
     /**
-     * Set tipoInstituto
+     * Set cargo
      *
-     * @param string $tipoInstituto
-     * @return EstTecTipoInstituto
+     * @param string $cargo
+     * @return EstTecFormacionTipo
      */
-    public function setTipoInstituto($tipoInstituto)
+    public function setCargo($cargo)
     {
-        $this->tipoInstituto = $tipoInstituto;
+        $this->cargo = $cargo;
     
         return $this;
     }
 
     /**
-     * Get tipoInstituto
+     * Get cargo
      *
      * @return string 
      */
-    public function getTipoInstituto()
+    public function getCargo()
     {
-        return $this->tipoInstituto;
+        return $this->cargo;
     }
 }
