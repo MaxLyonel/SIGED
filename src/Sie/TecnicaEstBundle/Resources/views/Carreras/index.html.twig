@@ -54,7 +54,7 @@
                 </div>##}
                 <div class="panel panel-primary">
                     <div class="panel-heading yearOld">
-                        <h3 class="panel-title"> <i class="fa fa-file"></i> ADMINISTRACION DE CARRERAS</h3>
+                        <h3 class="panel-title"> <i class="fa fa-file"></i> LISTADO DE CARRERAS</h3>
                     </div>
 
                     <div class="panel-body">
@@ -85,11 +85,12 @@
 
                                     <div class="tab-pane fade in active" id="tab2-1">
 
-                                    
+                                        {# 
                                         <button class="btn btn-m btn-primary yearOld" onclick="showModalNew(1)">
                                             Adicionar Carrera                       
                                         </button>
                                         <hr>
+                                        #}
                                     
                                        
 
@@ -98,12 +99,19 @@
                                             <thead class="cf">
                                                 <tr>
                                                     
-                                                    <th width="60%">
+                                                    <th width="35%">
                                                         Nombre Carrera                                      
                                                     </th>
+
+                                                    <th width="15%">
+                                                        Regimen Estudios                                      
+                                                    </th>
                                                     
+                                                    <th width="20%">
+                                                        Nivel Académico                                     
+                                                    </th>
                                                     <th width="10%">
-                                                        Acciones                                     
+                                                        Opciones                                     
                                                     </th>
                                                     <th width="20%" align="center">
                                                         Datos                                            
@@ -116,18 +124,20 @@
                                                     <td>
                                                         {{ entity.carrera |trim }}
                                                     </td>
+
+                                                    <td>
+                                                        {{ entity.getEstTecRegimenEstudioTipo.getDescripcion() }}
+                                                    </td>
                                                 
                                                     <td>
-                                                       
+                                                        {{ entity.getEstTecNIvelTipo.getNivelTipo() }}
+
+                                                        {# 
                                                         <button  style="border-radius: 10px;" class="btn btn-danger" onclick="deleteCarrera('{{ entity.id }}');">
                                                             <i class="fa fa-trash"></i>
                                                         </button>
-                                                       
-                                                      
-                                                        <button  style="border-radius: 10px;" class="btn btn-info"
-                                                            onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.tiempoEstudio }}',' {{ entity.cargaHoraria }}','{{ entity.getEstTecRegimenEstudioTipo.getId() }}','{{ entity.getEstTecAreaFormacionTipo.getId() }}',0);">
-                                                            <i class="fa fa-edit"></i>
-                                                        </button>
+                                                        
+                                                        #}
 
                                                        
                                                         {##
@@ -141,11 +151,19 @@
 
                                                        
                                                     </td>
+                                                    <td>
+
+                                                        <button  style="border-radius: 10px;" class="btn btn-info"
+                                                            onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.tiempoEstudio }}',' {{ entity.cargaHoraria }}','{{ entity.getEstTecRegimenEstudioTipo.getId() }}','{{ entity.getEstTecAreaFormacionTipo.getId() }}',0);">
+                                                            <i class="fa fa-edit"></i>
+                                                        </button>
+
+                                                    </td>
 
                                                     <td>
 
-                                                        <a href="{{ path('tecest_carreras_info',  {'carrera_id':entity.id, 'gestion' : 2021}) }}" class="btn btn-success" data-toggle="tooltip" data-placement="top"
-                                                            data-original-title="Ver Estadisticas">Ver Estadisticas</a>
+                                                        <a href="{{ path('tecest_carreras_info',  {'carrera_id':entity.id, 'gestion' : 2022}) }}" class="btn btn-success" style="border-radius: 10px;" data-toggle="tooltip" data-placement="top"
+                                                            data-original-title="Ver Estadisticas">Ver Estadisticas  <i class="fa fa-bars"></i> </a>
 
                                                         
                                                         
@@ -198,15 +216,25 @@
                                 <div class="panel text-center rounded shadow">
                                     <div class="panel-body bg-success rounded">
                                            
-                                        <h5 class="media-heading">Carreras</h5>                                        
+                                        <h5 class="media-heading">TECNICO SUPERIOR</h5>                                        
                                         <div style="height:60px">
-                                            <h3 class="text-strong mb-0" id="cantDocAdm">{{ total_carreras }}</h3>
+                                            <h3 class="text-strong mb-0" id="cantDocAdm">{{ total_carreras_tec_sup }}</h3>
                                             <p class="text-muted">TOTAL GENERAL</p> 
                                         </div>
                                             
                                         
                                     </div><!-- /.panel-body -->
                                     <hr>
+                                    <div class="panel-body bg-info rounded">
+                                           
+                                        <h5 class="media-heading">TECNICO MEDIO</h5>                                        
+                                        <div style="height:60px">
+                                            <h3 class="text-strong mb-0" id="cantDocAdm">{{ total_carreras_tec_med }}</h3>
+                                            <p class="text-muted">TOTAL GENERAL</p> 
+                                        </div>
+                                            
+                                        
+                                    </div>
                                    
                                     
                                     
@@ -474,7 +502,7 @@
         console.log(nivel_id);
 
         
-        $("#titulo").html('Adicionar Carrera');       
+        $("#titulo").html('Ver Datos Carrera');       
 
         document.getElementById("nivel_academico_id").setAttribute('value', nivel_id);
         
@@ -491,7 +519,7 @@
         console.log(area_formacion_id);       
 
         if(sw == 0){
-            $("#titulo-edit").html('Editar Carrera');
+            $("#titulo-edit").html('Ver Datos Carrera');
         }else{
             $("#titulo-edit").html('Ver Datos Carrera');
         }
@@ -510,6 +538,9 @@
         //$('#edit_regimen_id').val(regimen_id);  
         
        // $('#edit_area_conocimiento_id').val(area_conocimiento_id);
+
+        var button = document.getElementById("btn_save_edit");
+        button.style.display = "none";
 
 
         /*if(sw == 1){

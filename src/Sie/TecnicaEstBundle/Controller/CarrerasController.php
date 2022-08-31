@@ -54,12 +54,19 @@ class CarrerasController extends Controller
         
         //contadores
 
-        $query = "select count(*) from est_tec_instituto_carrera where est_tec_sede_id = " . $sedeId;
+        $query = "select count(*) from est_tec_instituto_carrera where est_tec_nivel_tipo_id  = 500 and est_tec_sede_id = " . $sedeId;
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
         $po = $stmt->fetchAll();
-        $total_carreras = $po[0]['count'];
+        $total_carreras_tec_sup = $po[0]['count'];
+
+        $query = "select count(*) from est_tec_instituto_carrera where est_tec_nivel_tipo_id  = 501 and est_tec_sede_id = " . $sedeId;
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $total_carreras_tec_med = $po[0]['count'];
 
        
        
@@ -116,7 +123,8 @@ class CarrerasController extends Controller
             //'grado_academico' => $grado_academico,           
             //'regimen_estudios' => $regimen_estudios,           
             'periodo_academico' => $periodo_academico,   
-            'total_carreras' => $total_carreras           
+            'total_carreras_tec_sup' => $total_carreras_tec_sup,
+            'total_carreras_tec_med' => $total_carreras_tec_med  
 
         ));
         
@@ -269,25 +277,46 @@ class CarrerasController extends Controller
         );
 
         
+        if($nro_periodos == 1){
+            return $this->render('SieTecnicaEstBundle:Carreras:info.html.twig', array(
+                'carrera_id' => $carrera_id,
+                'gestion_id' =>  $gestion,
+                'entity' => $carreraEntity,           
+                'sedes' => $entityUnivSede,
+                'central' => 0,//$entityUniv[0],
+                'titulo' => "Carreras",                     
+                'gestiones' => $gestiones,                     
+                'generos' => $generos,                     
+                'periodos' => $periodos,                     
+                'matriculas' => $matriculas,  
+                'matriculasestado' => $matriculasestado,
+                'cargos' => $cargos,  
+                'data' => $data,
+                'totales1' => $totales1,
+                'es_indigena' => 0
+    
+            ));
+        }else{
+            return $this->render('SieTecnicaEstBundle:Carreras:infosem.html.twig', array(
+                'carrera_id' => $carrera_id,
+                'gestion_id' =>  $gestion,
+                'entity' => $carreraEntity,           
+                'sedes' => $entityUnivSede,
+                'central' => 0,//$entityUniv[0],
+                'titulo' => "Carreras",                     
+                'gestiones' => $gestiones,                     
+                'generos' => $generos,                     
+                'periodos' => $periodos,                     
+                'matriculas' => $matriculas,  
+                'matriculasestado' => $matriculasestado,
+                'cargos' => $cargos,  
+                'data' => $data,
+                'totales1' => $totales1,
+                'es_indigena' => 0
+    
+            ));
+        }
         
-        return $this->render('SieTecnicaEstBundle:Carreras:info.html.twig', array(
-            'carrera_id' => $carrera_id,
-            'gestion_id' =>  $gestion,
-            'entity' => $carreraEntity,           
-            'sedes' => $entityUnivSede,
-            'central' => 0,//$entityUniv[0],
-            'titulo' => "Carreras",                     
-            'gestiones' => $gestiones,                     
-            'generos' => $generos,                     
-            'periodos' => $periodos,                     
-            'matriculas' => $matriculas,  
-            'matriculasestado' => $matriculasestado,
-            'cargos' => $cargos,  
-            'data' => $data,
-            'totales1' => $totales1,
-            'es_indigena' => 0
-
-        ));
         
 
     }

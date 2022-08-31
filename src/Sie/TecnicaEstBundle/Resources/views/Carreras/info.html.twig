@@ -118,8 +118,9 @@
                                                             <td class="text-center">1</td>
                                                            
                                                             <td> 
-                                                               
+                                                               <strong>
                                                                 <a href="{{ path('tecest_carreras_info',  {'carrera_id':carrera_id, 'gestion' :  entity.gestion_tipo_id}) }}"  data-toggle="tooltip" data-placement="top" data-original-title="Ver Estadisticas" >{{ entity.gestion_tipo_id }}</a>
+                                                            </strong>
                                                             </td>
 
                                                             
@@ -151,9 +152,9 @@
                                                         <thead>
                                                         <tr>
                                                             <th width="50%" style="text-align:center" rowspan="2"><strong>TIPO DE BECA</strong></th>
-                                                            <th colspan="2" style="text-align:center"><strong>1er. Periodo</strong></th>
-                                                            <th colspan="2" style="text-align:center"><strong>2do. Periodo</strong></th>
-                                                            <th colspan="2" style="text-align:center"><strong>3er. Periodo</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>1er. Semestre</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>2do. Semestre</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>3er. Semestre</strong></th>
 
                                                             {% if data.periodos == 6 %}
                                                                 <th colspan="2" style="text-align:center"><strong>4to. Periodo</strong></th>
@@ -185,7 +186,7 @@
                                                         <tbody>
                                                         {% for key, entity in data.array_estudiantes %}
                                                         <tr>
-                                                            <td> {{ entity.matricula }}</td>
+                                                            <td> <strong> {{ entity.matricula }} </strong></td>
 
                                                             <td class="success" id="af{{ key + 1 }}c1">
                                                                 <input type="number" min="0" max="9999" id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]" class="form-control clase1" value="{{ entity.m1 }}" onclick="calculaTotales()" oninput="calculaTotales()"/>
@@ -275,8 +276,7 @@
                                                 <span class="alert-icon"><i class="fa fa-file"></i></span>
                                                 <div class="notification-info">
                                                     <ul class="clearfix notification-meta">
-                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE ESTUDIANTES POR TIPO DE MATRICULA Y GENERO EN LA
-                                                                        GESTION Y PERIODO</strong></a></span></li>
+                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE ESTUDIANTES MATRICULADOS POR GENERO Y REGIMEN DE ESTUDIO</strong></a></span></li>
                                                         <li class="pull-right notification-sender" id="label_gestion_est"><strong>{{ gestion_id }}</strong></li>
                                                     </ul>
                                                 </div>
@@ -289,9 +289,9 @@
                                                         <thead>
                                                             <tr>
                                                                 <th width="50%" rowspan="2" style="text-align:center"><strong>TIPO MATRICULA</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>1er. Periodo</strong></th>
-                                                                <th style="text-align:center" colspan="2"><strong>2do. Periodo</strong></th>
-                                                                <th style="text-align:center" colspan="2"><strong>3er. Periodo</strong></th>
+                                                                <th colspan="2" style="text-align:center"><strong>1er. Semestre</strong></th>
+                                                                <th style="text-align:center" colspan="2"><strong>2do. Semestre</strong></th>
+                                                                <th style="text-align:center" colspan="2"><strong>3er. Semestre</strong></th>
                                                 
                                                                 {% if data.periodos == 6 %}
                                                                 <th colspan="2" style="text-align:center"><strong>4to. Periodo</strong></th>
@@ -322,7 +322,7 @@
                                                         <tbody>
                                                             {% for key, entity in data.array_tipo_matricula %}
                                                             <tr>
-                                                                <td> {{ entity.matricula }}</td>
+                                                                <td> <strong>{{ entity.matricula }}</strong></td>
                                                 
                                                                 <td class="success" id="cf{{ key + 1 }}c1">
                                                                     <input type="number" min="0" max="9999" id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]" class="form-control" value="{{ entity.m1 }}"/>
@@ -403,8 +403,7 @@
                                                 <span class="alert-icon"><i class="fa fa-users"></i></span>
                                                 <div class="notification-info">
                                                     <ul class="clearfix notification-meta">
-                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE DOCENTES POR GENERO EN LA
-                                                                        GESTION Y PERIODO</strong></a></span></li>
+                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE DOCENTES ASIGNADOS A LA CARRERA</strong></a></span></li>
                                                         <li class="pull-right notification-sender" id="label_gestion_est"><strong>{{ gestion_id }}</strong></li>
                                                     </ul>
                                                 </div>
@@ -417,9 +416,9 @@
                                                         <thead>
                                                             <tr>
                                                                 <th  width="50%" style="text-align:center" rowspan="2"><strong>TIPO CARGO</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>1er. Periodo</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>2do. Periodo</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>3er. Periodo</strong></th>
+                                                                <th colspan="2" style="text-align:center"><strong>1er. Semestre</strong></th>
+                                                                <th colspan="2" style="text-align:center"><strong>2do. Semestre</strong></th>
+                                                                <th colspan="2" style="text-align:center"><strong>3er. Semestre</strong></th>
                                                 
                                                                 {% if data.periodos == 6 %}
                                                                 <th colspan="2" style="text-align:center"><strong>4to. Periodo</strong></th>
@@ -450,7 +449,7 @@
                                                         <tbody>
                                                             {% for key, entity in data.array_cargos %}
                                                             <tr>
-                                                                <td> {{ entity.matricula }}</td>
+                                                                <td> <strong>{{ entity.matricula }}</strong></td>
                                                 
                                                                 <td class="success" id="bf{{ key + 1 }}c1">
                                                                     <input type="number" min="0" max="9999" onKeyUp="if(parseInt(this.value)>1000){ this.value =1000; return false; }" id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]" class="form-control" value="{{ entity.m1 }}"/>
@@ -801,7 +800,7 @@
         console.log(formData);
         $.ajax({
             type: 'post',
-            url: Routing.generate('carrera_estadistica_becas_save'),
+            url: Routing.generate('tecest_carrera_estadistica_becas_save'),
             data: formData,
             processData: false,
             contentType: false,
@@ -840,7 +839,7 @@
        console.log(formData);
        $.ajax({
            type: 'post',
-           url: Routing.generate('carrera_estadistica_matriculas_save'),
+           url: Routing.generate('tecest_carrera_estadistica_matriculas_save'),
            data: formData,
            processData: false,
            contentType: false,
@@ -878,7 +877,7 @@
        console.log(formData);
        $.ajax({
            type: 'post',
-           url: Routing.generate('carrera_estadistica_cargos_save'),
+           url: Routing.generate('tecest_carrera_estadistica_cargos_save'),
            data: formData,
            processData: false,
            contentType: false,
