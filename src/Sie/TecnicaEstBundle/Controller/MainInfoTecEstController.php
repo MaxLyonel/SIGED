@@ -45,10 +45,10 @@ class MainInfoTecEstController extends Controller{
         return $this->render('SieTecnicaEstBundle:MainInfoEstTec:index.html.twig', array(
             'tuicion'                   => true,
             'enablePersonalStaffOption' => $enablePersonalStaffOption,
-            'uni_staff'          		=> $this->buildOptionUni('tecest_staff_index', 'Personal Ejecutivo', $data)->createView(),
-            'uni_infosede'       		=> $this->buildOptionUni('sie_tecest_sede_index', 'Informacion Sede/sub Sede Central', $data)->createView(),
-            'uni_statisticssede' 		=> $this->buildOptionUni('sie_tecest_sede_docenteadministrativo_index', 'Estadisitica Sede/sub Sede Central', $data)->createView(),
-            'uni_statistics'     		=> $this->buildOptionUni('tecest_carreras_index', 'Estadisticas', $data)->createView(),
+            'uni_staff'          		=> $this->buildOptionUni('tecest_staff_index', 'Personal Directivo', $data)->createView(),
+            'uni_infosede'       		=> $this->buildOptionUni('sie_tecest_sede_index', 'Ubicación Geográfica Sede/Sub Sede', $data)->createView(),
+            'uni_statisticssede' 		=> $this->buildOptionUni('sie_tecest_sede_docenteadministrativo_index', 'Estadística de Personal', $data)->createView(),
+            'uni_statistics'     		=> $this->buildOptionUni('tecest_carreras_index', 'Estadística de Estudiantes', $data)->createView(),
 
             ));    
     }
