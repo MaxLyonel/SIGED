@@ -276,8 +276,8 @@ class CarrerasController extends Controller
             'array_tipo_matricula' => $tipo_matricula_array
         );
 
-        
-        if($nro_periodos == 1){
+        //dump($nro_periodos); die;
+        if($nro_periodos == 3){
             return $this->render('SieTecnicaEstBundle:Carreras:info.html.twig', array(
                 'carrera_id' => $carrera_id,
                 'gestion_id' =>  $gestion,
