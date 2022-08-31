@@ -436,7 +436,7 @@ class TramiteModificacionCalificacionGestionPasadaController extends Controller 
             $lugarTipo = $this->get('wftramite')->lugarTipoUE($sie, $gestion);
 
             // OBTENEMOS EL TIPO DE TRAMITE
-            $tipoTramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs'=>'ICG'));
+            $tipoTramite = $em->getRepository('SieAppWebBundle:TramiteTipo')->findOneBy(array('obs'=>'MCGP'));
 
             if ($idTramite == null) {
                 // OBTENEMOS OPERATIVO ACTUAL Y LO AGREGAMOS AL ARRAY DE DATOS           
