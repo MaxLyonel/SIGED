@@ -237,7 +237,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
         
         $em = $this->getDoctrine()->getManager();
         
-        $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
+        $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "') where institucioneducativa_tipo_id_raep = 1 order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
         $query->execute();
         $dataInscription = $query->fetchAll();
 
