@@ -1,0 +1,139 @@
+<?php
+
+namespace Sie\AppWebBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * UnivUniversidadCarreraGradoAcademico
+ */
+class UnivUniversidadCarreraGradoAcademico
+{
+    /**
+     * @var integer
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaRegistro;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaModificacion;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\UnivUniversidadCarrera
+     */
+    private $univUniversidadCarrera;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\UnivGradoAcademicoTipo
+     */
+    private $univGradoAcademicoTipo;
+
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set fechaRegistro
+     *
+     * @param \DateTime $fechaRegistro
+     * @return UnivUniversidadCarreraGradoAcademico
+     */
+    public function setFechaRegistro($fechaRegistro)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro
+     *
+     * @return \DateTime 
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * Set fechaModificacion
+     *
+     * @param \DateTime $fechaModificacion
+     * @return UnivUniversidadCarreraGradoAcademico
+     */
+    public function setFechaModificacion($fechaModificacion)
+    {
+        $this->fechaModificacion = $fechaModificacion;
+    
+        return $this;
+    }
+
+    /**
+     * Get fechaModificacion
+     *
+     * @return \DateTime 
+     */
+    public function getFechaModificacion()
+    {
+        return $this->fechaModificacion;
+    }
+
+    /**
+     * Set univUniversidadCarrera
+     *
+     * @param \Sie\AppWebBundle\Entity\UnivUniversidadCarrera $univUniversidadCarrera
+     * @return UnivUniversidadCarreraGradoAcademico
+     */
+    public function setUnivUniversidadCarrera(\Sie\AppWebBundle\Entity\UnivUniversidadCarrera $univUniversidadCarrera = null)
+    {
+        $this->univUniversidadCarrera = $univUniversidadCarrera;
+    
+        return $this;
+    }
+
+    /**
+     * Get univUniversidadCarrera
+     *
+     * @return \Sie\AppWebBundle\Entity\UnivUniversidadCarrera 
+     */
+    public function getUnivUniversidadCarrera()
+    {
+        return $this->univUniversidadCarrera;
+    }
+
+    /**
+     * Set univGradoAcademicoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\UnivGradoAcademicoTipo $univGradoAcademicoTipo
+     * @return UnivUniversidadCarreraGradoAcademico
+     */
+    public function setUnivGradoAcademicoTipo(\Sie\AppWebBundle\Entity\UnivGradoAcademicoTipo $univGradoAcademicoTipo = null)
+    {
+        $this->univGradoAcademicoTipo = $univGradoAcademicoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get univGradoAcademicoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\UnivGradoAcademicoTipo 
+     */
+    public function getUnivGradoAcademicoTipo()
+    {
+        return $this->univGradoAcademicoTipo;
+    }
+}

@@ -1,0 +1,50 @@
+Sie\AppWebBundle\Entity\UnivUniversidadCarreraGradoAcademico:
+    type: entity
+    table: univ_universidad_carrera_grado_academico
+    indexes:
+        IDX_4CD5204635334B9:
+            columns:
+                - univ_universidad_carrera_id
+        IDX_4CD5204BA738CEC:
+            columns:
+                - univ_grado_academico_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        univUniversidadCarrera:
+            targetEntity: UnivUniversidadCarrera
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_universidad_carrera_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        univGradoAcademicoTipo:
+            targetEntity: UnivGradoAcademicoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_grado_academico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

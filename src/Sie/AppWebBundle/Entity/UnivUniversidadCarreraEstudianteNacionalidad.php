@@ -248,4 +248,32 @@ class UnivUniversidadCarreraEstudianteNacionalidad
     {
         return $this->gestionTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\UnivUniversidadCarreraGradoAcademico
+     */
+    private $univUniversidadCarreraGradoAcademico;
+
+
+    /**
+     * Set univUniversidadCarreraGradoAcademico
+     *
+     * @param \Sie\AppWebBundle\Entity\UnivUniversidadCarreraGradoAcademico $univUniversidadCarreraGradoAcademico
+     * @return UnivUniversidadCarreraEstudianteNacionalidad
+     */
+    public function setUnivUniversidadCarreraGradoAcademico(\Sie\AppWebBundle\Entity\UnivUniversidadCarreraGradoAcademico $univUniversidadCarreraGradoAcademico = null)
+    {
+        $this->univUniversidadCarreraGradoAcademico = $univUniversidadCarreraGradoAcademico;
+    
+        return $this;
+    }
+
+    /**
+     * Get univUniversidadCarreraGradoAcademico
+     *
+     * @return \Sie\AppWebBundle\Entity\UnivUniversidadCarreraGradoAcademico 
+     */
+    public function getUnivUniversidadCarreraGradoAcademico()
+    {
+        return $this->univUniversidadCarreraGradoAcademico;
+    }
 }

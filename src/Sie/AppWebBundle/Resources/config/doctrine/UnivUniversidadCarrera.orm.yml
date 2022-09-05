@@ -30,6 +30,13 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             generator:
                 strategy: SEQUENCE
     fields:
+        univFacultad:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: univ_facultad
         carrera:
             type: string
             nullable: true
@@ -59,10 +66,9 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             comment: ''
             column: fecha_apertura
         duracion:
-            type: string
+            type: integer
             nullable: true
-            length: 45
-            fixed: false
+            unsigned: false
             comment: ''
         duracionAnios:
             type: integer
@@ -85,13 +91,6 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             nullable: true
             comment: ''
             column: fecha_modificacion
-        univFacultad:
-            type: string
-            nullable: true
-            length: 250
-            fixed: false
-            comment: ''
-            column: univ_facultad
         esSiesu:
             type: integer
             nullable: true
@@ -99,7 +98,6 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             comment: ''
             default: '0'
             column: es_siesu
-        
     manyToOne:
         univAreaConocimientoTipo:
             targetEntity: UnivAreaConocimientoTipo

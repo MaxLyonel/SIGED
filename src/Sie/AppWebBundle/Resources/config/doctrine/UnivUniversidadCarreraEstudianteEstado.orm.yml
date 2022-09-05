@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarreraEstudianteEstado:
     type: entity
     table: univ_universidad_carrera_estudiante_estado
     indexes:
+        IDX_44DED925C10EC33:
+            columns:
+                - univ_universidad_carrera_grado_academico_id
         IDX_44DED925F67BB471:
             columns:
                 - univ_periodo_academico_tipo_id
@@ -11,20 +14,9 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarreraEstudianteEstado:
         IDX_44DED9252BCFBA7:
             columns:
                 - genero_tipo_id
-        IDX_44DED925635334B9:
-            columns:
-                - univ_universidad_carrera_id
         IDX_44DED925179FF95:
             columns:
                 - gestion_tipo_id
-    uniqueConstraints:
-        carrera_estudiante_estadounique_key:
-            columns:
-                - gestion_tipo_id
-                - univ_universidad_carrera_id
-                - genero_tipo_id
-                - univ_periodo_academico_tipo_id
-                - univ_estadomatricula_tipo_id
     id:
         id:
             type: integer
@@ -50,7 +42,21 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarreraEstudianteEstado:
             nullable: true
             comment: ''
             column: fecha_actualizacion
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
     manyToOne:
+        univUniversidadCarreraGradoAcademico:
+            targetEntity: UnivUniversidadCarreraGradoAcademico
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_universidad_carrera_grado_academico_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         univPeriodoAcademicoTipo:
             targetEntity: UnivPeriodoAcademicoTipo
             cascade: {  }
@@ -76,15 +82,6 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarreraEstudianteEstado:
             inversedBy: null
             joinColumns:
                 genero_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        univUniversidadCarrera:
-            targetEntity: UnivUniversidadCarrera
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                univ_universidad_carrera_id:
                     referencedColumnName: id
             orphanRemoval: false
         gestionTipo:
