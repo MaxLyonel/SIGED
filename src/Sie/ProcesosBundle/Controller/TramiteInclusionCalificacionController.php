@@ -227,11 +227,12 @@ class TramiteInclusionCalificacionController extends Controller {
         $promedioGeneral = ''; // PARA PRIMARIA 2019
       
         if(count($tramitePendiente)<=0) { 
-        
-            $datos = $this->get('notas')->regular($idInscripcion, $operativo);
+        //dump($idInscripcion);
+        //dump($operativo);
+       // die;
+            $datos = $this->get('notas')->regularDB($idInscripcion, $operativo);
             // dump($operativo);
-            // dump($datos);
-            // die;
+            
             if($datos['gestion'] >= 2019 and $datos['nivel'] == 12){
                 foreach ($datos['cualitativas'] as $key => $value) {
                     if ($value['idNotaTipo'] == 9) {
@@ -347,7 +348,6 @@ class TramiteInclusionCalificacionController extends Controller {
             $checkBoletin = $request->get('checkBoletin');
             $checkCi = $request->get('checkCi');
             $checkSolicitud = $request->get('checkSolicitud');
-
 
 
             $dataInscription = array(
