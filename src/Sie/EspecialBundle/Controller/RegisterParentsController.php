@@ -255,7 +255,7 @@ class RegisterParentsController extends Controller {
 		//dump($answerSegip);die;
 		//$answerSegip = true;
 		if($answerSegip){	
-			$newPerson = $this->registerNewPerson($arrParametros, $carnet, $generoId);
+			$newPerson = $this->registerNewPerson($arrParametros, $carnet, $generoId, $extranjero);
 			$personId = $newPerson->getId();
 		}
       	
@@ -309,7 +309,7 @@ class RegisterParentsController extends Controller {
 
     }
 
-    private function registerNewPerson($data,$carnet, $generoId){
+    private function registerNewPerson($data,$carnet, $generoId, $extranjero){
     	// create db conexion
     	$em = $this->getDoctrine()->getManager();
     	// create new person object
@@ -332,6 +332,7 @@ class RegisterParentsController extends Controller {
             $newpersona->setEsVigente('1');
             $newpersona->setCountEdit('1');
             $newpersona->setEsvigenteApoderado('1');
+            $newpersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(($extranjero)?2:1));
             
             // $newpersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($data['departamentoTipo']));
             $em->persist($newpersona);
