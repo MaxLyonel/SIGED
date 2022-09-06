@@ -59,4 +59,4 @@ tramite_mod_cal_vigente_acta_imprimir:
 
 tramite_add_mod_download_requet:
     path:     /famcgp/{idTramite}
-    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:requestInsCalYearOld }  
+    defaults: { _controller: SieProcesosBundle:TramiteModCalVigente:requestInsCalYearVig }  

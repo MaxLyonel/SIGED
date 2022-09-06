@@ -99,5 +99,5 @@ sie_procesos_tramite_previmmediatemodiver2:
 
 sie_procesos_tramite_mod_cal_vigente:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteModCalVigente.yml"
-    prefix:   /sie/tramite/ramiteModCalVigente
+    prefix:   /sie/tramite/tramiteModCalVigente
 
