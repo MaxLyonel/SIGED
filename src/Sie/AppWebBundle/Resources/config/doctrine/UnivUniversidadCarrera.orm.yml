@@ -14,9 +14,6 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
         IDX_729C05DBEC47CD44:
             columns:
                 - univ_nivel_academico_tipo_id
-        IDX_729C05DBA4A51A20:
-            columns:
-                - univ_gradoacademico_tipo_id
         IDX_729C05DB9B2067FB:
             columns:
                 - univ_sede_id
@@ -133,15 +130,6 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             inversedBy: null
             joinColumns:
                 univ_nivel_academico_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        univGradoacademicoTipo:
-            targetEntity: UnivGradoacademicoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                univ_gradoacademico_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         univSede:
