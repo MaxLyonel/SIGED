@@ -808,4 +808,32 @@ class Persona
     {
         return $this->estadocivilTipo;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\CedulaTipo
+     */
+    private $cedulaTipo;
+
+
+    /**
+     * Set cedulaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\CedulaTipo $cedulaTipo
+     * @return Persona
+     */
+    public function setCedulaTipo(\Sie\AppWebBundle\Entity\CedulaTipo $cedulaTipo = null)
+    {
+        $this->cedulaTipo = $cedulaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get cedulaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\CedulaTipo 
+     */
+    public function getCedulaTipo()
+    {
+        return $this->cedulaTipo;
+    }
 }

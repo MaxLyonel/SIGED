@@ -1,37 +1,39 @@
 Sie\AppWebBundle\Entity\Estudiante:
     type: entity
     table: estudiante
-    repositoryClass: Sie\AppWebBundle\Entity\EstudianteRepository
     indexes:
+        indx_per_nomb:
+            columns:
+                - paterno
+                - materno
+                - nombre
         indx_ci:
             columns:
                 - carnet_identidad
         estudiante_idx_pais_tipo_id:
             columns:
                 - pais_tipo_id
-        indx_per_nomb:
-            columns:
-                - paterno
-                - materno
-                - nombre
-        IDX_3B3F3FAD2BCFBA7:
-            columns:
-                - genero_tipo_id
-        IDX_3B3F3FAD37A3B790:
-            columns:
-                - lugar_nac_tipo_id
-        IDX_3B3F3FAD75376D93:
-            columns:
-                - estado_civil_id
-        IDX_3B3F3FAD86DC8ECF:
-            columns:
-                - lugar_prov_nac_tipo_id
         IDX_3B3F3FAD70591119:
             columns:
                 - sangre_tipo_id
+        IDX_3B3F3FAD86DC8ECF:
+            columns:
+                - lugar_prov_nac_tipo_id
+        IDX_3B3F3FAD75376D93:
+            columns:
+                - estado_civil_id
+        IDX_3B3F3FADAE7432DF:
+            columns:
+                - cedula_tipo_id
         IDX_3B3F3FAD1C73F6E:
             columns:
                 - expedido_id
+        IDX_3B3F3FAD37A3B790:
+            columns:
+                - lugar_nac_tipo_id
+        IDX_3B3F3FAD2BCFBA7:
+            columns:
+                - genero_tipo_id
     uniqueConstraints:
         estudiante_codigo_rude_key:
             columns:
@@ -55,10 +57,11 @@ Sie\AppWebBundle\Entity\Estudiante:
             column: codigo_rude
         carnetIdentidad:
             type: string
-            nullable: true
+            nullable: false
             length: 20
             fixed: false
             comment: ''
+            default: ''
             column: carnet_identidad
         pasaporte:
             type: string
@@ -212,40 +215,13 @@ Sie\AppWebBundle\Entity\Estudiante:
             fixed: false
             comment: ''
     manyToOne:
-        generoTipo:
-            targetEntity: GeneroTipo
+        sangreTipo:
+            targetEntity: SangreTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                genero_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        lugarNacTipo:
-            targetEntity: LugarTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                lugar_nac_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        estadoCivil:
-            targetEntity: EstadoCivilTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                estado_civil_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        lugarProvNacTipo:
-            targetEntity: LugarTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                lugar_prov_nac_tipo_id:
+                sangre_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         paisTipo:
@@ -257,13 +233,31 @@ Sie\AppWebBundle\Entity\Estudiante:
                 pais_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
-        sangreTipo:
-            targetEntity: SangreTipo
+        lugarProvNacTipo:
+            targetEntity: LugarTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                sangre_tipo_id:
+                lugar_prov_nac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estadoCivil:
+            targetEntity: EstadoCivilTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                estado_civil_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        cedulaTipo:
+            targetEntity: CedulaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                cedula_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         expedido:
@@ -273,6 +267,24 @@ Sie\AppWebBundle\Entity\Estudiante:
             inversedBy: null
             joinColumns:
                 expedido_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        lugarNacTipo:
+            targetEntity: LugarTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                lugar_nac_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        generoTipo:
+            targetEntity: GeneroTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                genero_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
