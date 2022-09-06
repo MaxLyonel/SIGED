@@ -189,6 +189,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
         //////////////////////////////////////////////////////////////////////////////////////////
 
         $estudianteHistorialTramite = $this->estudianteHistorialTramite($rude,$tramiteDevuelto,$data,$tramiteId,$codigoSie,$id_usuario);
+        //dump($estudianteHistorialTramite);die;
         return $this->render('SieProcesosBundle:TramiteInscripcionNivelacionRezago:formulario.html.twig', $estudianteHistorialTramite);
 
     }
@@ -391,54 +392,60 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                     $nivelGradoPermitido[$key]['paralelo'] = $actualParaleloR;
                 }
                 if( $key >= ($keyUltimaInscripcion-1) and $key <= $actualEdadR and $keyUltimaInscripcion > 0){
-                    $registro['edad'] = $key;
-                    $nivelGradoPermitido[$key]['data'] = bin2hex(serialize($registro));
-                    $nivelGradoPermitido[$key]['nivel'] = $em->getRepository('SieAppWebBundle:NivelTipo')->find($registro['nivelId'])->getNivel();
-                    $nivelGradoPermitido[$key]['grado'] = $em->getRepository('SieAppWebBundle:GradoTipo')->find($registro['gradoId'])->getGrado();
-
-                    if(isset($nivelesAutorizado[$registro['nivelId']])){
-                        $nivelGradoPermitido[$key]['nivelAutorizado'] = true;
-                        $nivelGradoPermitido[$key]['ue'] = $nivelesAutorizado[$registro['nivelId']];
-
-                        //////////// borrar codigo, solo para pruebas ////////////////
-                        // if($registro['nivelId'] == 13) {
-                        //     $nivelGradoPermitido[$key]['nivelAutorizado'] = false;
-                        // }
-                        //////////// borrar codigo, solo para pruebas ////////////////                       
-                    } else {
-                        $nivelGradoPermitido[$key]['nivelAutorizado'] = false;
-                        $nivelGradoPermitido[$key]['ue'] = "";
-                    }
-
                     $arrayInfoCurso = array('institucioneducativa'=>$codigoSie, 'nivelTipo'=>$registro['nivelId'], 'gradoTipo'=>$registro['gradoId'], 'gestionTipo'=>$fechaActual->format("Y"));
                     $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findBy($arrayInfoCurso, array('turnoTipo'=>'ASC'));
                     
-                    foreach ($objCurso as $key3 => $curso) {
-                        $turnoId = hexdec(decoct(ord($curso->getTurnoTipo()->getId())+($registro['gradoId']+$registro['nivelId'])));
-                        // $turnoId = chr(octdec(dechex($turnoId)-6));
-                        $turnoNombre = $curso->getTurnoTipo()->getTurno();
-                        $nivelGradoPermitido[$key]['turno'][$turnoId] = $turnoNombre;
-                    } 
+                    if (count($objCurso)>0){
 
-                    if($key == ($keyUltimaInscripcion-1)){
-                        $nivelGradoPermitido[$key]['ue'] = $actualInstitucionEducativaR;
-                    }
-                    
-                    $query = $em->getConnection()->prepare("
-                        select distinct a.id, a.asignatura 
-                        from tmp_lista_oficial_materias as at
-                        inner join asignatura_tipo as a on a.id = at.asignatura_tipo_id
-                        where at.gestion_tipo_id = ".$fechaActual->format("Y")." and at.nivel_tipo_id = ".$registro['nivelId']." and at.grado_tipo_id = ".$registro['gradoId']."
-                        ");
-                    $query->execute();
-                    $asignaturaEntity = $query->fetchAll();
+                        $registro['edad'] = $key;
+                        $nivelGradoPermitido[$key]['data'] = bin2hex(serialize($registro));
+                        $nivelGradoPermitido[$key]['nivel'] = $em->getRepository('SieAppWebBundle:NivelTipo')->find($registro['nivelId'])->getNivel();
+                        $nivelGradoPermitido[$key]['grado'] = $em->getRepository('SieAppWebBundle:GradoTipo')->find($registro['gradoId'])->getGrado();
 
-                    foreach ($asignaturaEntity as $key2 => $asignatura) {
-                        $idenficadorAsignatura = bin2hex(serialize(array('asignaturaId'=>$asignatura['id'],'asignatura'=>$asignatura['asignatura'])));
-                        $nivelGradoPermitido[$key]['asignatura'][$idenficadorAsignatura] = $asignatura['asignatura'];
-                    }
+                        if(isset($nivelesAutorizado[$registro['nivelId']])){
+                            $nivelGradoPermitido[$key]['nivelAutorizado'] = true;
+                            $nivelGradoPermitido[$key]['ue'] = $nivelesAutorizado[$registro['nivelId']];
+
+                            //////////// borrar codigo, solo para pruebas ////////////////
+                            // if($registro['nivelId'] == 13) {
+                            //     $nivelGradoPermitido[$key]['nivelAutorizado'] = false;
+                            // }
+                            //////////// borrar codigo, solo para pruebas ////////////////                       
+                        } else {
+                            $nivelGradoPermitido[$key]['nivelAutorizado'] = false;
+                            $nivelGradoPermitido[$key]['ue'] = "";
+                        }
 
                     
+                    
+                        foreach ($objCurso as $key3 => $curso) {
+                            $turnoId = hexdec(decoct(ord($curso->getTurnoTipo()->getId())+($registro['gradoId']+$registro['nivelId'])));
+                            // $turnoId = chr(octdec(dechex($turnoId)-6));
+                            $turnoNombre = $curso->getTurnoTipo()->getTurno();
+                            $nivelGradoPermitido[$key]['turno'][$turnoId] = $turnoNombre;
+                        }
+                    
+                     
+
+                        if($key == ($keyUltimaInscripcion-1)){
+                            $nivelGradoPermitido[$key]['ue'] = $actualInstitucionEducativaR;
+                        }
+                        
+                        $query = $em->getConnection()->prepare("
+                            select distinct a.id, a.asignatura 
+                            from tmp_lista_oficial_materias as at
+                            inner join asignatura_tipo as a on a.id = at.asignatura_tipo_id
+                            where at.gestion_tipo_id = ".$fechaActual->format("Y")." and at.nivel_tipo_id = ".$registro['nivelId']." and at.grado_tipo_id = ".$registro['gradoId']."
+                            ");
+                        $query->execute();
+                        $asignaturaEntity = $query->fetchAll();
+
+                        foreach ($asignaturaEntity as $key2 => $asignatura) {
+                            $idenficadorAsignatura = bin2hex(serialize(array('asignaturaId'=>$asignatura['id'],'asignatura'=>$asignatura['asignatura'])));
+                            $nivelGradoPermitido[$key]['asignatura'][$idenficadorAsignatura] = $asignatura['asignatura'];
+                        }
+
+                    }
 
                     //$nivelesPermitido = $nivelesPermitido.",";                
                 }            
