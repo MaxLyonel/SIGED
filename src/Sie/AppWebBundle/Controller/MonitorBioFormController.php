@@ -494,7 +494,7 @@ class MonitorBioFormController extends Controller{
         }else{
         	$ues = array();
         	foreach ($tmp as $value) {
-        		$objBioInstitucioneducativaBioseguridad = $em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridad')->findBy(array('gestionTipo'=>$gestion,  'institucioneducativa' => $value['id'] ), array('fechaRegistro'=>'ASC'));
+        		$objBioInstitucioneducativaBioseguridad = $em->getRepository('SieAppWebBundle:BioInstitucioneducativaBioseguridad')->findBy(array('gestionTipo'=>$gestion,  'institucioneducativa' => $value['id'] ), array('fechaRegistro'=>'DESC'));
         		$arrformbio = array();
         		if($objBioInstitucioneducativaBioseguridad){
         			// dump($objBioInstitucioneducativaBioseguridad);

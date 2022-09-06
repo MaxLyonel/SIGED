@@ -213,20 +213,25 @@ class SolicitudBTHController extends Controller {
     }
 
     public function guardaNuevoAction(Request $request) {
+        
         $em = $this->getDoctrine()->getManager();
-        dump($gestion_sucursal);die;
         $institucion_id = $request->get('institucionid');
         $gestion =  $request->getSession()->get('currentyear');
         $id_tipoTramite = $request->get('idsolicitud');
         $id_distrito = $request->get('id_distrito');
-        
+        $flujotipo = $request->get('idflujotipo');
+        // dump($request);die;
         $sw = $request->get('sw');
 
+        $id_rol = $this->session->get('roluser');
+        $id_usuario = $this->session->get('userId');
+        
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $flujotipo , 'orden' => 1));
         $tarea = $flujoproceso->getId();
         $tabla = 'institucioneducativa';
         $datos = ($request->get('ipt'));
         $idTramite = '';
+        // dump($flujoproceso);die;
         if($sw == 0) {
             // Envio de solicitud nuevo
             $mensaje = $this->get('wftramite')->guardarTramiteNuevo($id_usuario, $id_rol, $flujotipo, $tarea, $tabla, $institucion_id, '', $id_tipoTramite, '', $idTramite,$datos, '', $id_distrito);
