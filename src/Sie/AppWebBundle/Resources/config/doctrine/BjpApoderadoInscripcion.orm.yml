@@ -2,20 +2,15 @@ Sie\AppWebBundle\Entity\BjpApoderadoInscripcion:
     type: entity
     table: bjp_apoderado_inscripcion
     indexes:
-        IDX_C125194BC861DD7C:
-            columns:
-                - apoderado_tipo_id
         IDX_C125194BF5F88DB9:
             columns:
                 - persona_id
         IDX_C125194BA1104027:
             columns:
                 - estudiante_inscripcion_id
-    uniqueConstraints:
-        uq_apoderado_inscripcion_bjp:
+        IDX_C125194BC861DD7C:
             columns:
-                - persona_id
-                - estudiante_inscripcion_id
+                - apoderado_tipo_id
     id:
         id:
             type: integer
@@ -48,16 +43,13 @@ Sie\AppWebBundle\Entity\BjpApoderadoInscripcion:
             nullable: true
             comment: ''
             column: fecha_modificacion
+        esEliminado:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+            column: es_eliminado
     manyToOne:
-        apoderadoTipo:
-            targetEntity: BjpApoderadoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                apoderado_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
         persona:
             targetEntity: Persona
             cascade: {  }
@@ -74,6 +66,15 @@ Sie\AppWebBundle\Entity\BjpApoderadoInscripcion:
             inversedBy: null
             joinColumns:
                 estudiante_inscripcion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        apoderadoTipo:
+            targetEntity: BjpApoderadoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                apoderado_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }
