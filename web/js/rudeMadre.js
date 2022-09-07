@@ -308,6 +308,7 @@ var m_buscarMadre = function(){
 
 // cargar los campos con los datos devueltos por el servicio
 var m_cargarDatos = function(data){
+    
     $('#m_idPersona').val(data.id);
     $('#m_carnet').val(data.carnet);
     $('#m_complemento').val(data.complemento);
@@ -315,6 +316,7 @@ var m_cargarDatos = function(data){
     $('#m_materno').val(data.materno);
     $('#m_nombre').val(data.nombre);
     $('#m_fechaNacimiento').val(data.fecha_nacimiento);
+    $('#m_cedulaTipoId').val(data.cedula_tipo_id);
 }
 
 // borrar los datos si el servicio no devuelve datos
