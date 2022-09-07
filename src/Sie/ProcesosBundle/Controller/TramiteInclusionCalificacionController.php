@@ -82,7 +82,7 @@ class TramiteInclusionCalificacionController extends Controller {
 
         $response = new JsonResponse();
 
-        $codigoRude = $request->get('codigoRude');
+        $codigoRude = trim($request->get('codigoRude'));
         $flujoTipo = $request->get('flujoTipo');
         $sie = $this->session->get('ie_id');
         $rol = $this->session->get('roluser');
@@ -230,7 +230,8 @@ class TramiteInclusionCalificacionController extends Controller {
         //dump($idInscripcion);
         //dump($operativo);
        // die;
-            $datos = $this->get('notas')->regularDB($idInscripcion, $operativo);
+           // $datos = $this->get('notas')->regularDB($idInscripcion, $operativo);
+            $datos = $this->get('notas')->regular($idInscripcion, $operativo);
             // dump($operativo);
             
             if($datos['gestion'] >= 2019 and $datos['nivel'] == 12){
