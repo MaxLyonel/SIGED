@@ -4378,15 +4378,24 @@ class TramiteController extends Controller {
                 $em->getConnection()->beginTransaction();
                 try {
                     $estudianteInscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->findOneBy(array('id' => $estudianteInscripcionId));
-                    if(count($estudianteInscripcion)>0){                        
+                    if(count($estudianteInscripcion)>0){      
+                        //dump($estudianteInscripcion->getEstudiante());die;                  
                         $nombre = $estudianteInscripcion->getEstudiante()->getNombre();
                         $paterno = $estudianteInscripcion->getEstudiante()->getPaterno();
                         $materno = $estudianteInscripcion->getEstudiante()->getMaterno();
                         $carnetIdentidad = $estudianteInscripcion->getEstudiante()->getCarnetIdentidad();
                         $complemento = $estudianteInscripcion->getEstudiante()->getComplemento();
                         $fechaNacimiento = $estudianteInscripcion->getEstudiante()->getFechaNacimiento();
-
+                        if($estudianteInscripcion->getEstudiante()->getCedulaTipo()){
+                            $cedulaTipoId = $estudianteInscripcion->getEstudiante()->getCedulaTipo()->getId();
+                        } else {
+                            $cedulaTipoId = 1;
+                        }
+                        
                         $arrParametros = array('complemento'=>$complemento, 'primer_apellido'=>$paterno, 'segundo_apellido'=>$materno, 'nombre'=>$nombre, 'fecha_nacimiento'=>$fechaNacimiento->format('d-m-Y'));
+                        if($cedulaTipoId==2) {
+                            $arrParametros['extranjero'] = 'E';
+                        } 
 
                         $answerSegip = false;
                         if ($carnetIdentidad > 0){
@@ -4400,6 +4409,7 @@ class TramiteController extends Controller {
                         if($answerSegip){
                             $entityEstudiante = $estudianteInscripcion->getEstudiante();
                             $entityEstudiante->setSegipId(1);
+                            $entityEstudiante->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId));
                             $em->persist($entityEstudiante);
                             $em->flush();
                             $em->getConnection()->commit();

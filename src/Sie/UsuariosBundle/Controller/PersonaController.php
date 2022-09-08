@@ -47,7 +47,8 @@ class PersonaController extends Controller
     
     public function personainsertAction(Request $request) {
         $form = $request->get('sie_usuarios_persona_edit');
- 
+        // dump($request);
+        // dump($form); die;
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         $response = new JsonResponse();
@@ -62,18 +63,19 @@ class PersonaController extends Controller
                 'paterno'=>$form['paterno'],
                 'materno'=>$form['materno'],
                 'nombre'=>$form['nombre'],
-                'fecha_nacimiento'=> $fecha
+                'fecha_nacimiento'=> $fecha,
+                'tipo_persona'=>$form['extranjero'],
             );
-            
+            // dump($arrayDatosPersona);
             $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $arrayDatosPersona, 'prod', 'academico');
-
+             
             if($personaValida == false)
             {
                 //throw new \Exception("Datos de Persona no encontrada en el SEGIP", 1);
                 return $response->setData(array('mensaje' => 'Proceso detenido! Datos de Persona no encontrados en el SEGIP')); 
             }
             else
-            {
+            {   
                 $arrayDatosPersona['carnet']=$form['carnet'];
                 $arrayDatosPersona['fechaNacimiento']=str_replace('/','-',$fecha);
                 unset($arrayDatosPersona['fecha_nacimiento']);
@@ -100,6 +102,7 @@ class PersonaController extends Controller
                     $newpersona->setEsvigenteApoderado('1');
                     $newpersona->setCountEdit('1');
                     $newpersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($form['departamentoTipo']));
+                    $newpersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($form['extranjero']));
                     $em->persist($newpersona);
                     $em->flush();
                 }
@@ -459,6 +462,7 @@ class PersonaController extends Controller
     }
 
     public function apropiacionpersonabuscarAction($ci,$complemento,$extranjero,Request $request){
+        // dump($extranjero);die;
         $em = $this->getDoctrine()->getManager();    
         //$em = $this->getDoctrine()->getEntityManager();
         $db = $em->getConnection();
