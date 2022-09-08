@@ -189,7 +189,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
         //////////////////////////////////////////////////////////////////////////////////////////
 
         $estudianteHistorialTramite = $this->estudianteHistorialTramite($rude,$tramiteDevuelto,$data,$tramiteId,$codigoSie,$id_usuario);
-        dump($estudianteHistorialTramite);die;
+        //dump($estudianteHistorialTramite);die;
         return $this->render('SieProcesosBundle:TramiteInscripcionNivelacionRezago:formulario.html.twig', $estudianteHistorialTramite);
 
     }
