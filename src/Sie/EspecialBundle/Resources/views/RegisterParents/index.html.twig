@@ -245,7 +245,7 @@ input {
                             <th scope="col">FECHA NACIMIENTO</th>
                             <th scope="col">PARENTESCO</th>
                             {# <th scope="col">OPCION</th> #}
-                            <th scope="col">TUTOR BENEFICIARIO</th>
+                            <th scope="col">TITULAR DE COBRO</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -257,7 +257,7 @@ input {
                             <td> ${parent.fechaNacimiento}</td>						
                             <td> ${parent.apoderadoTipo}</td>
                             {# <td><a v-if="!swExistParentBJP" href="#" @click="removeParent(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td> #}
-                            <td> <a v-if="!swExistParentBJP" href="#" @click="assignParentBJP(parent)" > <i class="fa fa-pencil text-success"></i> Seleccionar Beneficiario </a></td>
+                            <td> <a v-if="!swExistParentBJP" href="#" @click="assignParentBJP(parent)" > <i class="fa fa-pencil text-success"></i> Seleccionar Titular </a></td>
                             </tr>
                         </tbody>
                         </table>

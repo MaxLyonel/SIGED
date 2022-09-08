@@ -244,8 +244,8 @@ input {
                             <th scope="col">NOMBRE(S)</th>
                             <th scope="col">FECHA NACIMIENTO</th>
                             <th scope="col">PARENTESCO</th>
-                            {# <th scope="col">OPCION</th> #}
                             <th scope="col">TUTOR BENEFICIARIO</th>
+                            <th scope="col" v-if="!swExistParentBJP">OPCION</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -254,10 +254,11 @@ input {
                             <td>${parent.paterno}</td>
                             <td>${parent.materno}</td>
                             <td>${parent.nombre}</td>
-                            <td> ${parent.fechaNacimiento}</td>						
+                            <td> ${parent.fechaNacimiento}</td>                     
                             <td> ${parent.apoderadoTipo}</td>
                             {# <td><a v-if="!swExistParentBJP" href="#" @click="removeParent(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td> #}
                             <td> <a v-if="!swExistParentBJP" href="#" @click="assignParentBJP(parent)" > <i class="fa fa-pencil text-success"></i> Seleccionar Beneficiario </a></td>
+                            <td v-if="!swExistParentBJP"><a v-if="parent.esEliminado" href="#" @click="removeParent(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td>
                             </tr>
                         </tbody>
                         </table>
@@ -288,7 +289,7 @@ input {
                             <td>${parent.paterno}</td>
                             <td>${parent.materno}</td>
                             <td>${parent.nombre}</td>
-                            <td> ${parent.fechaNacimiento}</td>						
+                            <td> ${parent.fechaNacimiento}</td>                     
                             <td> ${parent.apoderadoTipo}</td>
                             <td><a href="#" @click="removeParentBJP(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td>
                             </tr>
@@ -469,7 +470,7 @@ var app = new Vue({
             })
             .catch(e = {
 
-            });					
+            });                 
         },
         removeParent:function(idremove){
             this.buscando = false;

@@ -147,6 +147,24 @@
                     </div>
                 </div>
             {% endif %}
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                <div class="thumbnail">
+                    <img src="{{asset('images/juancito.jpg')}}" alt="Operativo Bono Juancito Pinto">
+                    &nbsp;
+                    <div class="caption text-center">
+                        <h4>Operativo Bono JP</h4>
+                        <div class="thumbnail-action">
+                            {% if operativoBonoJP %}
+                                <a href="{{path('operativo_bono_jp_ddjj',{sie:data.ieducativa.id,gestion:data.gestion})}}" target="_blank" class="btn btn-success btn-md btn-block">Descargar DDJJ</a>
+                            {% else %}
+                            {{form_start(operativoBonoJPform, { 'attr':{'id':'formCerrarBonoJs' }} )}}
+                                {{form_widget(operativoBonoJPform.next)}}
+                            {{form_end(operativoBonoJPform)}}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>            
 
         </div>
         <div class="row">
