@@ -162,7 +162,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                 select t.id as tramite_id, t.esactivo, td.tramite_estado_id, td.usuario_destinatario_id, td.id as tramite_detalle_id from tramite as t
                 inner join tramite_detalle as td on td.tramite_id = t.id
                 inner join wf_solicitud_tramite as wst on wst.tramite_detalle_id = td.id 
-                where t.flujo_tipo_id = 24 and tramite_tipo = 76 and t.esactivo = true and cast((cast(wst.datos as json))->>'estudianteId' as integer) = ".$estudianteEntity->getId()."
+                where t.flujo_tipo_id = ".$data['flujoId']." and t.esactivo = true and cast((cast(wst.datos as json))->>'estudianteId' as integer) = ".$estudianteEntity->getId()."
             ");
             $query->execute();
             $dataEstudianteTramite = $query->fetchAll();
@@ -259,7 +259,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
 
         if ((count($dataInscription) <= 0 or $inscripcionGestionActual == false or ($tramiteId != 0 and $tramiteDevuelto != true)) and $tramiteConcluido == false){      
             if($tramiteId != 0){
-                $alert = array('estado'=>false, 'msg'=>"YA CUENTA CON UN TRAMITE DE NIVELACIÓN POR REZAGO PENDIENTE, CONCLUYA EL TRAMITE ".$tramiteId." E INTENTE NUEVAMENTE");
+                $alert = array('estado'=>false, 'msg'=>"YA CUENTA CON UN TRÁMITE DE NIVELACIÓN POR REZAGO PENDIENTE, CONCLUYA EL TRAMITE ".$tramiteId." E INTENTE NUEVAMENTE");
             } elseif(count($dataInscription) <= 0) {
                 $alert = array('estado'=>false, 'msg'=>"NO CUENTA CON HISTORIAL ACADEMICO EN EDUCACIÓN REGULAR");
             } elseif($inscripcionGestionActual == false) {
