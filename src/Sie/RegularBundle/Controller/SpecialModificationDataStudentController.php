@@ -308,12 +308,12 @@ class SpecialModificationDataStudentController extends Controller{
         $jsonData = $request->get('datos');
         $arrData = json_decode($jsonData,true);
         // dump($jsonData);
-        // dump($arrData);
-        // die;
 
         $estudianteId = $arrData['estudianteId'];
         $carnetIdentidad=$arrData['carnetIdentidad'];
         $complemento=$arrData['complemento'];
+        $cedulaTipoId=$arrData['cedulaTipoId'];
+        $cedulaTipo=$arrData['cedulaTipo'];
         $generoId=$arrData['generoTipoId'];
         $paterno=$arrData['paterno'];
         $materno=$arrData['materno'];
@@ -392,6 +392,9 @@ class SpecialModificationDataStudentController extends Controller{
         if($complemento!=$objStudent->getComplemento()){
             $oldDataStudentPrev[] = array('campo'=>'Complemento','anterior'=>$objStudent->getComplemento(),'nuevo'=>$complemento);
         }
+        if($cedulaTipoId!=$objStudent->getCedulaTipo()->getId()){
+            $oldDataStudentPrev[] = array('campo'=>'Cédula Tipo','anterior'=>$objStudent->getCedulaTipo()->getId(),'nuevo'=>$cedulaTipoid);
+        }
         if($generoId!=$objStudent->getGeneroTipo()->getId()){
             $oldDataStudentPrev[] = array('campo'=>'Género','anterior'=>$objStudent->getGeneroTipo()->getId(),'nuevo'=>$generoId);
         }
@@ -447,7 +450,7 @@ class SpecialModificationDataStudentController extends Controller{
         if($pasaporte!=$objStudent->getPasaporte()){
             $oldDataStudentPrev[] = array('campo'=>'Pasaporte','anterior'=>$objStudent->getPasaporte(),'nuevo'=>$pasaporte);
         }
-
+//dump($arrData,$arrData['cedulaTipoId']);die;
         $oldDataStudent2 = json_encode($oldDataStudentPrev);
 
                 // $oldDataStudent = clone $objStudent;
@@ -456,6 +459,7 @@ class SpecialModificationDataStudentController extends Controller{
 
                 $objStudent->setCarnetIdentidad($carnetIdentidad);
                 $objStudent->setComplemento($complemento);
+                $objStudent->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId) );
                 $objStudent->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoId) );
                 $objStudent->setPaterno(mb_strtoupper($paterno, 'utf8'));
                 $objStudent->setMaterno(mb_strtoupper($materno, 'utf8'));
