@@ -29,7 +29,7 @@
 
     <!-- Start page header -->
     <div class="header-content">
-        <h2><i class="fa fa-table"></i> Inscripción Inicial(1y2)/Primaria(1) <span></span></h2>
+        <h2><i class="fa fa-table"></i> Inscripción Inicial (1y2)/Primaria(1) <span></span></h2>
         <div class="breadcrumb-wrapper hidden-xs">
             <span class="label">Usted esta aquí:</span>
             <ol class="breadcrumb">
@@ -227,35 +227,37 @@
                          <form role="form">
                             <div class="row">
                               <div class="col-sm-2">
-                              <label for="ci">(*)Carnet de Identidad</label>
-                              <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataNewStudent.cifind">
+                                  <label for="ci">(*)Carnet de Identidad</label>
+                                  <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataNewStudent.cifind">
                               </div>
                               <div class="col-sm-2">
-                              <label for="complemento(s)">Complemento</label>
+                                  <label for="complemento(s)">Complemento</label>
                                   <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataNewStudent.complementofind">
                               </div>
                               <div class="col-sm-1">
-                              <label for="expedido">Expedido</label>
-                                <select name="DBExpedido" id="idarrExpe" v-model="dataNewStudent.expedidoIdfind" class="custom-select form-control"> 
- 								                  {% for entity in arrExpedido %}
-                                    <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
-								                  {% endfor %}
-                                </select> 
+                                  <label for="expedido">Expedido</label>
+                                  <select name="DBExpedido" id="idarrExpe" v-model="dataNewStudent.expedidoIdfind" class="custom-select form-control"> 
+                                    {% for entity in arrExpedido %}
+                                      <option  value="{{ entity.id }}">{{ entity.sigla }}</option>       
+                                    {% endfor %}
+                                  </select> 
                               </div>
                               <div class="col-sm-3">
-                              	<label for="fechanac">(*)Fec. Nacimiento  dd-mm-aaaa</label>
+                              	  <label for="fechanac">(*)Fec. Nacimiento  dd-mm-aaaa</label>
                               	    <!-- <vuejs-datepicker input-class="custom-date" :bootstrap-styling="true" :format="customFormatter" v-model="dataNewStudent.fecnacfindOrig"></vuejs-datepicker>
                               	    <input type="text" class="form-control" placeholder="Complemento"  maxlength="2" autocomplete="off" style="text-transform:uppercase" v-model="dataNewStudent.fecnacfind" > -->
                                   <input type="text" placeholder="dd-mm-aaaa" id="form_idfecnac" name="form[idfecnac]" class="form-control jupper" v-model="dataNewStudent.fecnacfind">
                               </div>
 
                               <div class="col-sm-3" v-if="allowwithoutci">
-								
-	                               <label for="form_caseespecial" class="validation">SIN CI :</label>
-	                       			<input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
-                       			
-
+	                                <label for="form_caseespecial" class="validation">SIN CI :</label>
+	                       			    <input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
                               </div>
+                              <div class="col-sm-3" v-if="allowwithoutci">
+	                                <label for="form_caseespecial" class="validation">SIN CI :</label>
+	                       			    <input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
+                              </div>
+
 
                             </div>
                             </br>     

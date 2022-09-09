@@ -47,7 +47,6 @@ class WfTramiteController extends Controller
         $rol = $this->session->get('roluser');
         $pathSystem = $this->session->get('pathSystem');
         $tipo = $request->get('tipo');
-        
         //validation if the user is logged
         if (!isset($usuario)) {
             return $this->redirect($this->generateUrl('login'));
@@ -73,12 +72,13 @@ class WfTramiteController extends Controller
         $roluserlugarid = $this->session->get('roluserlugarid');
         $pathSystem = $this->session->get('pathSystem');
         $tipo = $request->get('tipo');
+       //dump($tipo);die;
         //validation if the user is logged
         if (!isset($usuario)) {
             return $this->redirect($this->generateUrl('login'));
         }
         switch ($tipo) {
-            case 1:
+            case 1: 
                 $data = $this->listaNuevos($pathSystem);
                 break;
             case 2:
@@ -100,7 +100,7 @@ class WfTramiteController extends Controller
                 $data = $this->listaNuevos($pathSystem);
                 break;
         }
-                
+        
         return $this->render('SieProcesosBundle:WfTramite:contenido.html.twig', $data);
     }
 
@@ -125,6 +125,11 @@ class WfTramiteController extends Controller
         $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findBy(array('flujoTipo'=>$id,'orden'=>1));
 
         if($flujoproceso[0]->getRolTipo()->getId()!= 9){  //si no es director
+            //TODO cvm -.- consultar como se aplicariando
+            //mientras directo
+            return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id,'tipo'=>'idflujo')); 
+
+
             $wfusuario = $em->getRepository('SieAppWebBundle:WfUsuarioFlujoProceso')->createQueryBuilder('wfufp')
                 ->select('wfufp')
                 ->innerJoin('SieAppWebBundle:FlujoProceso', 'fp', 'with', 'fp.id = wfufp.flujoProceso')
@@ -136,6 +141,7 @@ class WfTramiteController extends Controller
                 ->andWhere('fp.rolTipo='.$rol)
                 ->getQuery()
                 ->getResult();
+
             if($wfusuario){
                 return $this->redirectToRoute($flujoproceso[0]->getRutaFormulario(),array('id'=>$id,'tipo'=>'idflujo'));
             }else{
@@ -163,7 +169,7 @@ class WfTramiteController extends Controller
             }else{
                 $request->getSession()
                         ->getFlashBag()
-                        ->add('error', "No tiene tuición para iniciar un nuevo tramite: ". $flujoproceso[0]->getFlujoTipo()->getFlujo());
+                        ->add('error', "No tiene tuición para iniciar un nuevo tramite.: ". $flujoproceso[0]->getFlujoTipo()->getFlujo());
                 return $this->redirectToRoute('wf_tramite_index');    
             }
         }
@@ -190,7 +196,7 @@ class WfTramiteController extends Controller
 
         $tramite = $em->getRepository('SieAppWebBundle:Tramite')->find($id);
         $tramiteDetalle = $em->getRepository('SieAppWebBundle:TramiteDetalle')->find((int)$tramite->getTramite());
-
+        
         if($tramiteDetalle->getTramiteEstado()->getId() == 15 or $tramiteDetalle->getTramiteEstado()->getId() == 4){ //enviado o devuelto
             $idtramite = $id;
             if($tramiteDetalle->getFlujoProceso()->getEsEvaluacion() == true){

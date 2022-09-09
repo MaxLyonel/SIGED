@@ -45,6 +45,7 @@ class WFTramite {
             /**
             * insert tramite
             */
+            
             $tramite = new Tramite();
             $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('tramite');")->execute();
             $tramite->setFlujoTipo($flujotipo);
@@ -78,6 +79,7 @@ class WFTramite {
             /**
             * insert tramite_detalle 
             */
+           
             $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('tramite_detalle');")->execute();
             $tramiteDetalle = new TramiteDetalle();    
             $tramiteDetalle->setTramite($tramite);
@@ -94,7 +96,8 @@ class WFTramite {
             /**
             * insert datos propios de la solicitud
             */
-            if ($datos){
+
+            if ($datos){ 
                 $this->em->getConnection()->prepare("select * from sp_reinicia_secuencia('wf_solicitud_tramite');")->execute();   
                 $wfSolicitudTramite = new WfSolicitudTramite();
                 $wfSolicitudTramite->setTramiteDetalle($tramiteDetalle);
@@ -108,18 +111,21 @@ class WFTramite {
                 $this->em->flush();
             }
             if ($flujoproceso->getEsEvaluacion() == true) 
-            {
+            { 
                 $tramiteDetalle->setValorEvaluacion($varevaluacion);
-
+                
                 $wfcondiciontarea = $this->em->getRepository('SieAppWebBundle:WfTareaCompuerta')->findOneBy(array('flujoProceso'=>$flujoproceso->getId(),'condicion'=>$varevaluacion));
+                
+                
                 $tarea_sig_id = $wfcondiciontarea->getCondicionTareaSiguiente();
 
-            }else{
+            }else{ 
                 $tarea_sig_id = $flujoproceso->getTareaSigId();
             }
 
             if($tarea_sig_id != null){
                 $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
+                //dump ($uDestinatario);die;
                 if($uDestinatario == false){
                     $this->em->getConnection()->rollback();
                     $mensaje['dato'] = false;
@@ -157,6 +163,7 @@ class WFTramite {
      */
     public function guardarTramiteEnviado($usuario,$rol,$flujotipo,$tarea,$tabla,$id_tabla,$observacion,$varevaluacion,$idtramite,$datos,$lugarTipoLocalidad_id,$lugarTipoDistrito_id)
     {
+       
         $flujoproceso = $this->em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea);
         // dump($flujoproceso,$tarea);die;
         $usuario = $this->em->getRepository('SieAppWebBundle:Usuario')->find($usuario);
@@ -175,6 +182,7 @@ class WFTramite {
             /**
             * asigana usuario destinatario
             */
+            
             if ($flujoproceso->getEsEvaluacion() == true) 
             {
                 $tramiteDetalle->setValorEvaluacion($varevaluacion);
@@ -185,21 +193,27 @@ class WFTramite {
             }else{
                 $tarea_sig_id = $flujoproceso->getTareaSigId();
             }
+            
             if($tarea_sig_id != null){
+                
                 $uDestinatario = $this->obtieneUsuarioDestinatario($tarea,$tarea_sig_id,$id_tabla,$tabla,$tramite);
-                if($uDestinatario == false){
+                if($uDestinatario == false){ 
                     $this->em->getConnection()->rollback();
                     $mensaje['dato'] = false;
                     $mensaje['msg'] = '¡Error, no existe usuario destinatario registrado.!';
                     $mensaje['tipo'] = 'error';
                     return $mensaje;
                 }else{
+                    
                     $tramiteDetalle->setUsuarioDestinatario($uDestinatario);
                 }
             }
             /**
             * guarda tramite enviado/devuelto
             */
+            //dump($tarea_sig_id);
+            //dump($flujoproceso->getId());
+            //die;//
             if (($flujoproceso->getTareaSigId() != null and $flujoproceso->getEsEvaluacion() == false ) or ($tarea_sig_id != null and $flujoproceso->getEsEvaluacion() == true)){
                 if($tarea_sig_id > $flujoproceso->getId()){
                     $tramiteestado = $this->em->getRepository('SieAppWebBundle:TramiteEstado')->find(15); //enviado
@@ -444,19 +458,22 @@ class WFTramite {
 
     /**
      * funcion para asignar el usuario destinatario de la tarea actual
+     * NOTA: Asegurarse de que estén asignados los procesos a los usuarios 
      */
     public function obtieneUsuarioDestinatario($tarea_actual,$tarea_sig_id,$id_tabla,$tabla,$tramite)
     {
-        
+        //dump($tarea_actual); dump($tarea_sig_id); dump($id_tabla); dump($tabla); dump($tramite);  
         $flujoprocesoSiguiente = $this->em->getRepository('SieAppWebBundle:FlujoProceso')->find($tarea_sig_id);
+        //dump($flujoprocesoSiguiente);die;
         $nivel = $flujoprocesoSiguiente->getRolTipo()->getLugarNivelTipo();
-        //dump($nivel);die;
+        
         switch ($tabla) {
             case 'institucioneducativa':
                 if ($tramite->getInstitucioneducativa()){
                     $institucioneducativa = $this->em->getRepository('SieAppWebBundle:Institucioneducativa')->find($id_tabla);
                     $lugar_tipo_distrito = $institucioneducativa->getleJuridicciongeografica()->getLugarTipoIdDistrito();
                     $lugar_tipo_departamento = $institucioneducativa->getleJuridicciongeografica()->getlugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getLugartipo()->getCodigo();
+                    
                 }else{
                     $wfdatos = $this->em->getRepository('SieAppWebBundle:WfSolicitudTramite')->createQueryBuilder('wfd')
                         ->select('wfd')
@@ -479,7 +496,7 @@ class WFTramite {
             case 'maestro_inscripcion':
                 break;
         }
-
+        //dump($nivel->getId());
         switch ($nivel->getId()) {
             case 7:   // Distrito
                 //dump($lugar_tipo_distrito);die;
@@ -499,10 +516,12 @@ class WFTramite {
                 break;
             case 6:   // Departamento
             case 8:
-                //dump($lugar_tipo_departamento);die;
+                //dump($flujoprocesoSiguiente->getId());
+                //dump($lugar_tipo_departamento);
                 $query = $this->em->getConnection()->prepare("select ufp.* from wf_usuario_flujo_proceso ufp join lugar_tipo lt on ufp.lugar_tipo_id=lt.id where ufp.flujo_proceso_id=". $flujoprocesoSiguiente->getId()." and ufp.esactivo is true and cast(lt.codigo as int)=".$lugar_tipo_departamento);
                 $query->execute();
                 $uDestinatario = $query->fetchAll();
+                //dump($uDestinatario);die;
                 if($uDestinatario){
                     //dump($uDestinatario);die;
                     if(count($uDestinatario)>1){
@@ -551,6 +570,7 @@ class WFTramite {
         }
 
         $usuario = $this->em->getRepository('SieAppWebBundle:Usuario')->find($uid);
+        
         return $usuario;
     }
 
@@ -576,7 +596,7 @@ class WFTramite {
         return $uid;
     }
 
-    public function lugarTipoUE($sie, $gestion){
+    public function lugarTipoUE($sie, $gestion){ 
         $repository = $this->em->getRepository('SieAppWebBundle:JurisdiccionGeografica');
         $query = $repository->createQueryBuilder('jg')
             ->select('lt4.codigo AS codigo_departamento,
@@ -618,7 +638,6 @@ class WFTramite {
             ->setParameter('gestion', $gestion)
             ->getQuery();
         $ubicacionUe = $query->getSingleResult();
-
         return $ubicacionUe;
     }
 

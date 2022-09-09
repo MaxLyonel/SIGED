@@ -1460,6 +1460,7 @@ class Notas{
                 //}
                 //dump($areas);die;
                 $tipo = 'Bimestre';
+                //dump($notasArray);die;
             }
 
             /*
