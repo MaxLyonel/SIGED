@@ -162,8 +162,8 @@ class InfoEspecialController extends Controller{
                // 'operativoSaludform' => $this->InfoStudentForm('herramienta_info_personalAdm_maestro_index', 'Operativo Salud',$data)->createView(),
                 'data'=>$dataInfo,
                 'operativo'=>$periodo,
-               // 'operativoBonoJPform' => $this->cerrarOperativoForm('operativo_bono_jp_cerrar', 'Cerrar Operativo Bono JP',$data)->createView(),
-               // 'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($data['idInstitucion'],$data['gestion'],14),                
+                'operativoBonoJPform' => $this->cerrarOperativoForm('operativo_bono_jp_cerrar', 'Cerrar Operativo Bono JP',$data)->createView(),
+                'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($data['idInstitucion'],$data['gestion'],14),                
     ));
 
   }
