@@ -234,7 +234,7 @@
                                 <hr>
                                 <h5>
                                     <b>Detalle de calificaciones</b>
-                                    <a v-if="datos != ''" class="btn btn-primary yearOld" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Seleccionar calificación(es)--</a>
+                                    <a v-if="datos != ''" class="btn btn-primary yearOld" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Seleccionar calificación(es)</a>
                                 </h5>
                                 <div v-if="notas.length > 0 || notasCualitativas.length > 0">
                                     <table v-if="notas.length > 0" class="table table-bordered table-striped table-condensed">
@@ -441,9 +441,9 @@
                                         <td>${ins.nivel}</td>
                                         <td>${ins.grado}</td>
                                         <td>${ins.paralelo}</td>
-                                        <td>${ins.estadomatricula} </td>
+                                        <td>${ins.estadomatricula}</td>
                                         <td>
-                                            <a v-if="(ins.estadomatriculaId == 5 ||ins.estadomatriculaId == 6 ||ins.estadomatriculaId == 10 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11 || ins.estadomatriculaId == 28) && (ins.idNivel != 1 && ins.idNivel != 11) && (ins.sie == sieActual) && (ins.gestion <2022)" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs yearOld" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
+                                            <a v-if="(ins.estadomatriculaId == 5 ||ins.estadomatriculaId == 6 ||ins.estadomatriculaId == 10 || ins.estadomatriculaId == 4 || ins.estadomatriculaId == 11 || ins.estadomatriculaId == 28) && (ins.idNivel != 1 && ins.idNivel != 11) && (ins.sie == sieActual) && (ins.gestion ==2021)" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs yearOld" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
                                             {# <a v-bind:href="'{{path("solicitud_modificacion_calificaciones_formulario_index")}}?idInscripcion=' + ins.idInscripcion" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-edit"></i> </a> #}
                                         </td>
                                     </tr>
@@ -473,7 +473,7 @@
                             <thead>
                                 <tr>
                                     <th><small>Área</small></th>
-                                    <th v-for="n in datos.titulosNotas" align="center"><small>${n.titulo}</small></th>
+                                    <th v-for="n in datos.titulosNotas" align="center"><small>${n.titulo}krlos</small></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -482,9 +482,9 @@
                                         <small>${a.asignatura}</small>
                                     </td>
                                     <td v-for="n in a.notas" v-bind:id="n.idFila" align="center" v-bind:data-title="n.bimestre" v-on:click="agregarNota(n.idEstudianteNota,a.asignatura,n.bimestre,n.nota,n.id,n.idFila,n.idNotaTipo,n.idEstudianteAsignatura, datos.gestion)" v-bind:class="claseNotaTipo(n.idNotaTipo,datos.gestion)">
-                                        <small v-if="datos.nivel == 11 || datos.nivel == 1 || datos.nivel == 403"> ${n.nota}</small>
+                                        <small v-if="datos.nivel == 11 || datos.nivel == 1 || datos.nivel == 403">${n.nota}</small>
                                         <div v-else>
-                                            <span v-bind:class="{tachado: n.notaNueva != '' && n.nota != n.notaNueva}"> ${n.nota}</span>
+                                            <span v-bind:class="{tachado: n.notaNueva != '' && n.nota != n.notaNueva}">${n.nota}</span>
                                             <span v-if="n.nota != n.notaNueva && verModificaciones" v-bind:class="{notaNueva: true, notaNuevaAprobado: n.idNotaTipo == 5 && n.notaNueva >= 51, notaNuevaReprobado: n.idNotaTipo == 5 && n.notaNueva < 51}">${n.notaNueva}</span>
                                         </div>
                                     </td>
@@ -785,7 +785,7 @@
                     });
                 },
                 agregarNota: function(idEstudianteNota, asignatura, bimestre, nota, idNota, idFila, idNotaTipo, idEstudianteAsignatura, gestion){
-                    if (idNotaTipo != 5 && idNotaTipo != 6 && idNotaTipo != 7 && idNotaTipo != 8 && idNotaTipo != 9 && idNotaTipo != 11 || gestion <= 2021) {
+                    if (idNotaTipo != 5 && idNotaTipo != 6 && idNotaTipo != 7 && idNotaTipo != 8 && idNotaTipo != 9 && idNotaTipo != 11 || gestion == 2021) {
 
                         var index = this.filas.indexOf(idFila);
                         

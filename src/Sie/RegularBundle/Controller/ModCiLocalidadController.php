@@ -145,7 +145,7 @@ class ModCiLocalidadController extends Controller {
 
             $objstudent = $em->getRepository('SieAppWebBundle:Estudiante');
             $query = $objstudent->createQueryBuilder('e')
-                ->select('e.id as idStudent, e.paterno, e.materno,e.nombre, e.fechaNacimiento, g.genero, e.carnetIdentidad', 'e.complemento', 'e.segipId', 'e.oficialia', 'e.libro', 'e.partida', 'e.folio','e.carnetIbc','e.carnetCodepedis', 'IDENTITY(e.generoTipo) as generoId', 'ptp.pais', '(ltd.lugar) as departamento', 'ltp.lugar as provincia', 'e.localidadNac')
+                ->select('e.id as idStudent, e.paterno, e.materno,e.nombre, e.fechaNacimiento, g.genero, e.carnetIdentidad', 'e.complemento', 'e.segipId', 'e.oficialia', 'e.libro', 'e.partida', 'e.folio', 'IDENTITY(e.generoTipo) as generoId', 'ptp.pais', '(ltd.lugar) as departamento', 'ltp.lugar as provincia', 'e.localidadNac')
                 ->leftjoin('SieAppWebBundle:PaisTipo', 'ptp', 'WITH', 'e.paisTipo = ptp.id')
                 ->leftjoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'e.lugarNacTipo = ltd.id')
                 ->leftjoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'e.lugarProvNacTipo = ltp.id')
@@ -178,7 +178,6 @@ class ModCiLocalidadController extends Controller {
     }
 
     private function createFormStudent($data) {
-        
         $formStudent = $this->createFormBuilder()
             ->setAction($this->generateUrl('modificar_ci_localidad_save'))
             ->add('idStudent', 'hidden', array('data' => $data['idStudent']));
@@ -214,8 +213,6 @@ class ModCiLocalidadController extends Controller {
             ->add('materno', 'text', array('label' => 'Materno', 'data' => $data['materno'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
             ->add('nombre', 'text', array('label' => 'Nombre', 'data' => $data['nombre'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
             ->add('genero', 'text', array('label' => 'Género', 'data' => $data['genero'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
-           // ->add('carnetIbc', 'text', array('label' => 'Carnet IBC', 'data' => $data['carnetIbc'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => false)))
-           // ->add('carnetCodepedis', 'text', array('label' => 'Carnet Codepedis', 'data' => $data['carnetCodepedis'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => false)))
             ->add('pais', 'text', array('label' => 'Pais', 'data' => strtoupper($data['pais']), 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
             ->add('departamento', 'text', array('label' => 'Departamento', 'data' => strtoupper($data['departamento']), 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
             ->add('provincia', 'text', array('label' => 'Provincia', 'data' => strtoupper($data['provincia']), 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
@@ -301,7 +298,7 @@ class ModCiLocalidadController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $em->getConnection()->beginTransaction();
         try {
-            $form = $request->get('form'); 
+            $form = $request->get('form');
             $carnetIdentidad = "";
             $complemento = "";
             $paterno = "";
@@ -344,14 +341,6 @@ class ModCiLocalidadController extends Controller {
                 } else {
                     $nombre = $student->getNombre();
                 }
-                
-                //if(isset($form['carnetIbc'])){
-                  //  $carnetIbc = $form['carnetIbc'];
-                //} 
-                //if(isset($form['carnetCodepedis'])){
-                  //  $carnetCodepedis = $form['carnetCodepedis'];
-                //} 
-                
     
                 if(isset($form['fechaNacimiento'])){
                     $fechaNacimiento = $form['fechaNacimiento'];
@@ -408,12 +397,6 @@ class ModCiLocalidadController extends Controller {
                     if(isset($form['fechaNacimiento'])){
                         $student->setFechaNacimiento(new \DateTime($fechaNacimiento));
                     }
-                   // if(isset($form['carnetIbc'])){
-                   //     $student->setCarnetIbc($carnetIbc);
-                   // }
-                   // if(isset($form['carnetCodepedis'])){
-                    //    $student->setCarnetCodepedis($carnetCodepedis);
-                   // }
                     
                     $student->setSegipId(1);
                     $em->persist($student);

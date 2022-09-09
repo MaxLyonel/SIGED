@@ -144,7 +144,6 @@ class TramiteAceleracionController extends Controller
     }
 
     public function buscaEstudianteAction(Request $request) {
-       
         $msg = "existe";
         $rude = trim($request->get('rude'));
         $flujotipo_id = trim($request->get('flujotipo_id'));
@@ -468,7 +467,7 @@ class TramiteAceleracionController extends Controller
             $distrito_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoIdDistrito();
             $lugarlocalidad_id = $ieducativa->getLeJuridicciongeografica()->getLugarTipoLocalidad()->getId();
         }
-        if ($datos['devolucion'] == 0) { //1rA VEZ guarda tramite
+        if ($datos['devolucion'] == 0) {
             $result = $this->get('wftramite')->guardarTramiteNuevo($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $institucioneducativa_id, $observaciones, $tipotramite_id, $datos['procede_aceleracion'], $tramite_id, json_encode($datos), $lugarlocalidad_id, $distrito_id);
             if ($result) {
                 $tramite_id = $result['idtramite'];
@@ -480,13 +479,12 @@ class TramiteAceleracionController extends Controller
             $msg = $result['msg'];
             $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $datos['flujotipo_id'], 'orden' => 2));
             $tarea_sig = $flujoproceso->getId();
-            //salta a otro formulario por lo que se hace la recepcion
             $mensaje = $this->get('wftramite')->guardarTramiteRecibido($usuario_id, $tarea_sig, $tramite_id);
             if ($mensaje['dato'] == true) {
                 $msg = $mensaje['msg'];
             } else {
                 // eliminar guardarTramiteNuevo / guardarTramiteEnviado
-                if ($datos['devolucion'] == 0) { //COMO SA
+                if ($datos['devolucion'] == 0) {
                     $result_el = $this->get('wftramite')->eliminarTramiteNuevo($tramite_id);
                 } else {
                     $result_el = $this->get('wftramite')->eliminarTramiteEnviado($tramite_id, $usuario_id);
@@ -1038,10 +1036,8 @@ class TramiteAceleracionController extends Controller
         $datos2 = json_decode($resultDatos[1]->getdatos());
 
         // dump($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $institucioneducativa_id, $observaciones, $evaluacion, $datos['tramite_id'], json_encode($datos), $lugarlocalidad_id, $distrito_id);die;
-        $result    = $this->get('wftramite')->guardarTramiteEnviado($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $institucioneducativa_id, $observaciones, $evaluacion, $datos['tramite_id'], json_encode($datos), $lugarlocalidad_id, $distrito_id);
-        
+        $result = $this->get('wftramite')->guardarTramiteEnviado($usuario_id, $rol_id, $flujo_tipo, $tarea_id, $tabla, $institucioneducativa_id, $observaciones, $evaluacion, $datos['tramite_id'], json_encode($datos), $lugarlocalidad_id, $distrito_id);
         if ($result['dato'] == true) {
-
             if ($evaluacion == "NO") {
                 $em->getConnection()->beginTransaction();
                 try {
@@ -1187,14 +1183,14 @@ class TramiteAceleracionController extends Controller
                     $estado = 500;
                     $msg = $resultf['msg'];
                 }
-            } else { 
+            } else {
                 // Recibe el tramite para observacion
                 $flujoproceso = $em->getRepository('SieAppWebBundle:FlujoProceso')->findOneBy(array('flujoTipo' => $tramite->getFlujoTipo(), 'orden' => 4));
                 $tarea_sig = $flujoproceso->getId();
                 $mensaje = $this->get('wftramite')->guardarTramiteRecibido($usuario_id, $tarea_sig, $datos['tramite_id']);
                 if ($mensaje['dato'] == true) {
                     $msg = $mensaje['msg'];
-                    $observaciones = 'Observación del trámite AA';
+                    $observaciones = 'Observación del trámite';
                     $evaluacion = "SI";
                     $resultobs = $this->get('wftramite')->guardarTramiteEnviado($usuario_id, $rol_id, $flujo_tipo, $tarea_sig, $tabla, $institucioneducativa_id, $observaciones, $evaluacion, $datos['tramite_id'], json_encode($datos), $lugarlocalidad_id, $distrito_id);
                     if ($resultobs['dato'] == true) {

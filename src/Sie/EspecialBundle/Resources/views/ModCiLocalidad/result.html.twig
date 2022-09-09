@@ -78,7 +78,6 @@
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
-
                             <div class="row">
 
                                 <div class="col-md-3 form-group">
@@ -97,11 +96,6 @@
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
-                            
-                          
-                            
-                           {{ form.carnetInc.vars.value }}
-                           
                             {{form_widget(form.save, {'attr':{'class':'btn btn-success', 'onclick':"return confirm('Está a punto de validar con SEGIP y actualizar la información. ¿Desea continuar?');"} }) }}
                             {{form_end(form)}}
                         </div>
