@@ -5,9 +5,9 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UnivGradoAcademicoTipo
+ * UnivGradoTipo
  */
-class UnivGradoAcademicoTipo
+class UnivGradoTipo
 {
     /**
      * @var integer
@@ -39,7 +39,7 @@ class UnivGradoAcademicoTipo
      * Set gradoAcademico
      *
      * @param string $gradoAcademico
-     * @return UnivGradoAcademicoTipo
+     * @return UnivGradoTipo
      */
     public function setGradoAcademico($gradoAcademico)
     {
@@ -62,7 +62,7 @@ class UnivGradoAcademicoTipo
      * Set univNivelAcademicoTipo
      *
      * @param \Sie\AppWebBundle\Entity\UnivNivelAcademicoTipo $univNivelAcademicoTipo
-     * @return UnivGradoAcademicoTipo
+     * @return UnivGradoTipo
      */
     public function setUnivNivelAcademicoTipo(\Sie\AppWebBundle\Entity\UnivNivelAcademicoTipo $univNivelAcademicoTipo = null)
     {

@@ -30,6 +30,11 @@ class UnivUniversidadCarreraEstudianteNacionalidad
     private $fechaActualizacion;
 
     /**
+     * @var \Sie\AppWebBundle\Entity\UnivUniversidadCarrera
+     */
+    private $univUniversidadCarrera;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\UnivPeriodoAcademicoTipo
      */
     private $univPeriodoAcademicoTipo;
@@ -43,11 +48,6 @@ class UnivUniversidadCarreraEstudianteNacionalidad
      * @var \Sie\AppWebBundle\Entity\GeneroTipo
      */
     private $generoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\UnivUniversidadCarrera
-     */
-    private $univUniversidadCarrera;
 
     /**
      * @var \Sie\AppWebBundle\Entity\GestionTipo
@@ -135,6 +135,29 @@ class UnivUniversidadCarreraEstudianteNacionalidad
     }
 
     /**
+     * Set univUniversidadCarrera
+     *
+     * @param \Sie\AppWebBundle\Entity\UnivUniversidadCarrera $univUniversidadCarrera
+     * @return UnivUniversidadCarreraEstudianteNacionalidad
+     */
+    public function setUnivUniversidadCarrera(\Sie\AppWebBundle\Entity\UnivUniversidadCarrera $univUniversidadCarrera = null)
+    {
+        $this->univUniversidadCarrera = $univUniversidadCarrera;
+    
+        return $this;
+    }
+
+    /**
+     * Get univUniversidadCarrera
+     *
+     * @return \Sie\AppWebBundle\Entity\UnivUniversidadCarrera 
+     */
+    public function getUnivUniversidadCarrera()
+    {
+        return $this->univUniversidadCarrera;
+    }
+
+    /**
      * Set univPeriodoAcademicoTipo
      *
      * @param \Sie\AppWebBundle\Entity\UnivPeriodoAcademicoTipo $univPeriodoAcademicoTipo
@@ -204,29 +227,6 @@ class UnivUniversidadCarreraEstudianteNacionalidad
     }
 
     /**
-     * Set univUniversidadCarrera
-     *
-     * @param \Sie\AppWebBundle\Entity\UnivUniversidadCarrera $univUniversidadCarrera
-     * @return UnivUniversidadCarreraEstudianteNacionalidad
-     */
-    public function setUnivUniversidadCarrera(\Sie\AppWebBundle\Entity\UnivUniversidadCarrera $univUniversidadCarrera = null)
-    {
-        $this->univUniversidadCarrera = $univUniversidadCarrera;
-    
-        return $this;
-    }
-
-    /**
-     * Get univUniversidadCarrera
-     *
-     * @return \Sie\AppWebBundle\Entity\UnivUniversidadCarrera 
-     */
-    public function getUnivUniversidadCarrera()
-    {
-        return $this->univUniversidadCarrera;
-    }
-
-    /**
      * Set gestionTipo
      *
      * @param \Sie\AppWebBundle\Entity\GestionTipo $gestionTipo
@@ -247,33 +247,5 @@ class UnivUniversidadCarreraEstudianteNacionalidad
     public function getGestionTipo()
     {
         return $this->gestionTipo;
-    }
-    /**
-     * @var \Sie\AppWebBundle\Entity\UnivUniversidadCarreraGradoAcademico
-     */
-    private $univUniversidadCarreraGradoAcademico;
-
-
-    /**
-     * Set univUniversidadCarreraGradoAcademico
-     *
-     * @param \Sie\AppWebBundle\Entity\UnivUniversidadCarreraGradoAcademico $univUniversidadCarreraGradoAcademico
-     * @return UnivUniversidadCarreraEstudianteNacionalidad
-     */
-    public function setUnivUniversidadCarreraGradoAcademico(\Sie\AppWebBundle\Entity\UnivUniversidadCarreraGradoAcademico $univUniversidadCarreraGradoAcademico = null)
-    {
-        $this->univUniversidadCarreraGradoAcademico = $univUniversidadCarreraGradoAcademico;
-    
-        return $this;
-    }
-
-    /**
-     * Get univUniversidadCarreraGradoAcademico
-     *
-     * @return \Sie\AppWebBundle\Entity\UnivUniversidadCarreraGradoAcademico 
-     */
-    public function getUnivUniversidadCarreraGradoAcademico()
-    {
-        return $this->univUniversidadCarreraGradoAcademico;
     }
 }

@@ -19,9 +19,6 @@ class UnivOperativoTipo
      */
     private $operativo;
 
-    public function __toString(){
-        return $this->operativo;
-    }
 
     /**
      * Get id

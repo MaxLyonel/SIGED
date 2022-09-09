@@ -100,7 +100,7 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             column: es_siesu
     manyToOne:
         univGradoAcademicoTipo:
-            targetEntity: UnivGradoAcademicoTipo
+            targetEntity: UnivGradoTipo
             cascade: {  }
             mappedBy: null
             inversedBy: null
