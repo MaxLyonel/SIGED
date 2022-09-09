@@ -80,14 +80,14 @@ class BusquedasController extends Controller
     }
     
     public function carnetpersonabuscarAction(Request $request) {
-        
+        //  dump('ok');die;
         $formNacional = $this->createForm(new BuscarPersonaTypev2(array('opcion'=>0)));
+        // dump($formNacional);
         $formNacional->handleRequest($request);
-        
+        // dump($formNacional);die;
         if ($formNacional->isValid())
         {
             $persona = $formNacional->getData();
-            
             /*
             $data = $formNacional->getData();
             $servicioPersona = $this->get('sie_app_web.persona');
@@ -109,12 +109,14 @@ class BusquedasController extends Controller
                 'complemento'=>$complemento,
                 'fecha_nacimiento' => $fecha
             );
-
+            // dump($persona['extranjero']); die;
+            
             if($persona['extranjero']=='1')
-                $arrayDatosPersona['extranjero']='E';
+                $arrayDatosPersona['tipo_persona']='2';
+            // dump($arrayDatosPersona['extranjero']); die;
 
             $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['ci'], $arrayDatosPersona, 'prod', 'academico');
-            
+            // dump($personaValida); die;
             if( $personaValida )
             {
                 $arrayDatosPersona['carnet']=$persona['ci'];

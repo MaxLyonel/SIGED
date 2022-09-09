@@ -162,7 +162,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                 select t.id as tramite_id, t.esactivo, td.tramite_estado_id, td.usuario_destinatario_id, td.id as tramite_detalle_id from tramite as t
                 inner join tramite_detalle as td on td.tramite_id = t.id
                 inner join wf_solicitud_tramite as wst on wst.tramite_detalle_id = td.id 
-                where t.flujo_tipo_id = 24 and tramite_tipo = 76 and t.esactivo = true and cast((cast(wst.datos as json))->>'estudianteId' as integer) = ".$estudianteEntity->getId()."
+                where t.flujo_tipo_id = ".$data['flujoId']." and t.esactivo = true and cast((cast(wst.datos as json))->>'estudianteId' as integer) = ".$estudianteEntity->getId()."
             ");
             $query->execute();
             $dataEstudianteTramite = $query->fetchAll();
@@ -259,7 +259,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
 
         if ((count($dataInscription) <= 0 or $inscripcionGestionActual == false or ($tramiteId != 0 and $tramiteDevuelto != true)) and $tramiteConcluido == false){      
             if($tramiteId != 0){
-                $alert = array('estado'=>false, 'msg'=>"YA CUENTA CON UN TRAMITE DE NIVELACIÓN POR REZAGO PENDIENTE, CONCLUYA EL TRAMITE ".$tramiteId." E INTENTE NUEVAMENTE");
+                $alert = array('estado'=>false, 'msg'=>"YA CUENTA CON UN TRÁMITE DE NIVELACIÓN POR REZAGO PENDIENTE, CONCLUYA EL TRAMITE ".$tramiteId." E INTENTE NUEVAMENTE");
             } elseif(count($dataInscription) <= 0) {
                 $alert = array('estado'=>false, 'msg'=>"NO CUENTA CON HISTORIAL ACADEMICO EN EDUCACIÓN REGULAR");
             } elseif($inscripcionGestionActual == false) {
@@ -272,6 +272,8 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
             $actualInstitucionEducativaR = "";
             $actualNivelIdR = 0;
             $actualGradoIdR = 0;
+            $ultimoNivelId = 0;
+            $ultimoGradoId = 0;
             $actualTurnoIdR = 0;
             $actualParaleloIdR = 0;
             $actualEdadR = 0;
@@ -293,6 +295,11 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                             if($inscription['gestion_tipo_id_raep'] == $fechaActual->format("Y"))$actualParaleloIdR = $inscription['paralelo_tipo_id_raep'];
                             if($inscription['gestion_tipo_id_raep'] == $fechaActual->format("Y"))$actualParaleloR = $inscription['paralelo_raep'];
                             if($inscription['gestion_tipo_id_raep'] == $fechaActual->format("Y"))$actualEstudianteInscripcionIdR = $inscription['estudiante_inscripcion_id_raep'];
+                        }
+
+                        if ($ultimoNivelId == 0 and $ultimoGradoId == 0 and $key > 0){
+                            if($inscription['gestion_tipo_id_raep'] < $fechaActual->format("Y"))$ultimoNivelId = $inscription['nivel_tipo_id_r'];
+                            if($inscription['gestion_tipo_id_raep'] < $fechaActual->format("Y"))$ultimoGradoId = $inscription['grado_tipo_id_r'];
                         }
                         break;
                     case '2':
@@ -384,7 +391,12 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
             }
 
             $keyUltimaInscripcion = 0;
+            $keyUltimaEdadRegistro = 0;
+            //dump($ultimoNivelId,$ultimoGradoId);
             foreach ($nivelGradoObject as $key => $registro) {
+                if($registro['nivelId'] == $ultimoNivelId and $ultimoGradoId == $registro['gradoId']){
+                    $keyUltimaEdadRegistro = $key;
+                }
                 if($registro['nivelId'] == $actualNivelIdR and $actualGradoIdR == $registro['gradoId']){
                     $keyUltimaInscripcion = $key+1;
                     
@@ -450,8 +462,8 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                     //$nivelesPermitido = $nivelesPermitido.",";                
                 }            
             }
-            
-            if(($actualEdadR-$keyUltimaInscripcion)<2){
+            //dump($actualEdadR,$keyUltimaInscripcion);die;
+            if(($actualEdadR-$keyUltimaEdadRegistro)<2){
                 $alert = array('estado'=>false, 'msg'=>"NO CUENTA CON 2 O MAS AÑOS DE REZAGO ESCOLAR RESPECTO A SU GRUPO ETARIO");
             }
             

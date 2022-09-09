@@ -313,6 +313,7 @@ var t_cargarDatos = function(data){
     $('#t_materno').val(data.materno);
     $('#t_nombre').val(data.nombre);
     $('#t_fechaNacimiento').val(data.fecha_nacimiento);
+    $('#t_cedulaTipoId').val(data.cedula_tipo_id);
 }
 
 // borrar los datos si el servicio no devuelve datos

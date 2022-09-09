@@ -158,6 +158,14 @@ class SpecialModificationDataStudentController extends Controller{
                 $arrGenero[] = array('generoId' => $value->getId(),'genero' => $value->getGenero());                
             }
         }
+        // get CedulaTipo
+        $objCedula = $em->getRepository('SieAppWebBundle:CedulaTipo')->findAll();
+        $arrCedula = array();
+        // foreach ($objCedula as $value) {
+        //     $arrCedula[] = array('cedulaTipoId' => $value->getId(),'cedulaTipo' => $value->getCedulaTipo()); 
+        // }
+        $arrCedula[0] = array('cedulaTipoId' => 1,'cedulaTipo' => 'Nacional'); 
+        $arrCedula[1] = array('cedulaTipoId' => 2,'cedulaTipo' => 'Extranjero'); 
         //get pais
         $objPais = $em->getRepository('SieAppWebBundle:PaisTipo')->findAll();
         $arrPais = array();
@@ -211,6 +219,10 @@ class SpecialModificationDataStudentController extends Controller{
 
                     'generoTipo'=>($objStudent->getGeneroTipo()==NULL)?'':$objStudent->getGeneroTipo()->getGenero(),
                     'generoTipoId'=>($objStudent->getGeneroTipo()==NULL)?'':$objStudent->getGeneroTipo()->getId(),
+
+                    'cedulaTipo'=>($objStudent->getCedulaTipo()==NULL)?'':$objStudent->getCedulaTipo()->getCedulaTipo(),
+                    'cedulaTipoId'=>($objStudent->getCedulaTipo()==NULL)?'':$objStudent->getCedulaTipo()->getId(),
+
                     'pasaporte'=>$objStudent->getPasaporte(),
 
                     'localidad'=>$objStudent->getLocalidadNac(),
@@ -235,6 +247,7 @@ class SpecialModificationDataStudentController extends Controller{
             'student'=> $arrStudent,
             'studentModif'=> $arrStudentModif,
             'arrGenero' => $arrGenero,
+            'arrCedula' => $arrCedula,
             'arrPais' => $arrPais,
             'arrDepto' => $arrDepto,
             'arrProvincia' => $arrProvincia,
@@ -295,12 +308,12 @@ class SpecialModificationDataStudentController extends Controller{
         $jsonData = $request->get('datos');
         $arrData = json_decode($jsonData,true);
         // dump($jsonData);
-        // dump($arrData);
-        // die;
 
         $estudianteId = $arrData['estudianteId'];
         $carnetIdentidad=$arrData['carnetIdentidad'];
         $complemento=$arrData['complemento'];
+        $cedulaTipoId=$arrData['cedulaTipoId'];
+        $cedulaTipo=$arrData['cedulaTipo'];
         $generoId=$arrData['generoTipoId'];
         $paterno=$arrData['paterno'];
         $materno=$arrData['materno'];
@@ -379,6 +392,9 @@ class SpecialModificationDataStudentController extends Controller{
         if($complemento!=$objStudent->getComplemento()){
             $oldDataStudentPrev[] = array('campo'=>'Complemento','anterior'=>$objStudent->getComplemento(),'nuevo'=>$complemento);
         }
+        if($cedulaTipoId!=$objStudent->getCedulaTipo()->getId()){
+            $oldDataStudentPrev[] = array('campo'=>'Cédula Tipo','anterior'=>$objStudent->getCedulaTipo()->getId(),'nuevo'=>$cedulaTipoId);
+        }
         if($generoId!=$objStudent->getGeneroTipo()->getId()){
             $oldDataStudentPrev[] = array('campo'=>'Género','anterior'=>$objStudent->getGeneroTipo()->getId(),'nuevo'=>$generoId);
         }
@@ -434,7 +450,7 @@ class SpecialModificationDataStudentController extends Controller{
         if($pasaporte!=$objStudent->getPasaporte()){
             $oldDataStudentPrev[] = array('campo'=>'Pasaporte','anterior'=>$objStudent->getPasaporte(),'nuevo'=>$pasaporte);
         }
-
+//dump($arrData,$arrData['cedulaTipoId']);die;
         $oldDataStudent2 = json_encode($oldDataStudentPrev);
 
                 // $oldDataStudent = clone $objStudent;
@@ -443,6 +459,7 @@ class SpecialModificationDataStudentController extends Controller{
 
                 $objStudent->setCarnetIdentidad($carnetIdentidad);
                 $objStudent->setComplemento($complemento);
+                $objStudent->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId) );
                 $objStudent->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($generoId) );
                 $objStudent->setPaterno(mb_strtoupper($paterno, 'utf8'));
                 $objStudent->setMaterno(mb_strtoupper($materno, 'utf8'));
@@ -901,6 +918,7 @@ class SpecialModificationDataStudentController extends Controller{
         $paterno = $request->get('paterno');
         $materno = $request->get('materno');
         $nombre = $request->get('nombre');
+        $cedulaTipoId = $request->get('cedulaTipo');
 
         $arrParametros = array(
                 'complemento'=>$complemento,
@@ -908,6 +926,11 @@ class SpecialModificationDataStudentController extends Controller{
                 'segundo_apellido'=>$materno,
                 'nombre'=>$nombre,
                 'fecha_nacimiento'=>$fechaNacimiento);
+
+        //dump($cedulaTipoId);die();
+        if($cedulaTipoId == 2){
+            $arrParametros['extranjero'] = 'E';
+        } 
 
         $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');        
         

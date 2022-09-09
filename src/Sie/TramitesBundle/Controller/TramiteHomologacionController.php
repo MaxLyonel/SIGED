@@ -690,7 +690,7 @@ class TramiteHomologacionController extends Controller {
                 $arrParametros = array('complemento'=>$newStudent['complemento'], 'primer_apellido'=>$newStudent['paterno'], 'segundo_apellido'=>$newStudent['materno'], 'nombre'=>$newStudent['nombre'], 'fecha_nacimiento'=>$newStudent['fnacimiento']);
 
                 if($newStudent['extrajero']==1){
-                    $arrParametros['extranjero']='e'; // extranjero
+                    $arrParametros['extranjero']='E'; // extranjero
                 }
 
                 $answerSegip = false;
@@ -716,6 +716,11 @@ class TramiteHomologacionController extends Controller {
                 $student->setPasaporte($newStudent['pasaporte']);
                 $student->setExpedido($entityExpedido);
                 $student->setSegipId(1);
+                if($newStudent['extrajero']==1){
+                    $student->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(2)); // extranjero
+                } else {
+                    $student->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(1)); // nacional
+                }
                 $student->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($newStudent['generoTipo']));
                 $student->setPaisTipo($em->getRepository('SieAppWebBundle:PaisTipo')->find($newStudent['pais']));
                 if (isset($newStudent['provincia'])){
@@ -734,8 +739,12 @@ class TramiteHomologacionController extends Controller {
                     $newStudent['ci'] = $student->getCarnetIdentidad();
                     $newStudent['complemento'] = $student->getComplemento();
                     $newStudent['pasaporte'] = $student->getPasaporte();
+                    $newStudent['nombre'] = $student->getNombre();
+                    $newStudent['paterno'] = $student->getPaterno();
+                    $newStudent['materno'] = $student->getMaterno();
                     $rude = $student->getCodigoRude();
                     $segipId = $student->getSegipId();
+                    //dump($student,$newStudent);die;
                     if ($segipId != 1){
                         $msg = 'Datos del estudiante '.strtoupper($newStudent['nombre'].' '.$newStudent['paterno'].' '.$newStudent['materno']).', no validados';
                         return $response->setData(array('estado' => false, 'msg' => $msg));

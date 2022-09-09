@@ -220,4 +220,32 @@ class BjpApoderadoInscripcion
     {
         return $this->estudianteInscripcion;
     }
+    /**
+     * @var boolean
+     */
+    private $esEliminado;
+
+
+    /**
+     * Set esEliminado
+     *
+     * @param boolean $esEliminado
+     * @return BjpApoderadoInscripcion
+     */
+    public function setEsEliminado($esEliminado)
+    {
+        $this->esEliminado = $esEliminado;
+    
+        return $this;
+    }
+
+    /**
+     * Get esEliminado
+     *
+     * @return boolean 
+     */
+    public function getEsEliminado()
+    {
+        return $this->esEliminado;
+    }
 }
