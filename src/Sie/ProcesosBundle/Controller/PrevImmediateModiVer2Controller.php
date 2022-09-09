@@ -1947,8 +1947,7 @@ class PrevImmediateModiVer2Controller extends Controller{
         $insGestion = $inscripcion->getInstitucioneducativaCurso()->getGestionTipo()->getId();
         $insNivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
         $insGrado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
-        dump($insNivel);
-        dump($datosNotas);
+        
         // REGISTRAMOS LAS NOTAS CUANTITATIVAS
         if(count($datosNotas['notas']) > 0){
             foreach ($datosNotas['notas'] as $n) {
