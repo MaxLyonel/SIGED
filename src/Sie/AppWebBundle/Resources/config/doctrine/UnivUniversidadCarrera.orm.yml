@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
     type: entity
     table: univ_universidad_carrera
     indexes:
+        IDX_729C05DBBA738CEC:
+            columns:
+                - univ_grado_academico_tipo_id
         IDX_729C05DB7AC73B91:
             columns:
                 - univ_area_conocimiento_tipo_id
@@ -96,6 +99,15 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             default: '0'
             column: es_siesu
     manyToOne:
+        univGradoAcademicoTipo:
+            targetEntity: UnivGradoAcademicoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_grado_academico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         univAreaConocimientoTipo:
             targetEntity: UnivAreaConocimientoTipo
             cascade: {  }

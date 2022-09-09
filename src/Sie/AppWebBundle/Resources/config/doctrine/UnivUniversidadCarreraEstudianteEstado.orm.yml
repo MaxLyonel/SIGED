@@ -2,9 +2,9 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarreraEstudianteEstado:
     type: entity
     table: univ_universidad_carrera_estudiante_estado
     indexes:
-        IDX_44DED925C10EC33:
+        IDX_44DED925635334B9:
             columns:
-                - univ_universidad_carrera_grado_academico_id
+                - univ_universidad_carrera_id
         IDX_44DED925F67BB471:
             columns:
                 - univ_periodo_academico_tipo_id
@@ -48,13 +48,13 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarreraEstudianteEstado:
             comment: ''
             column: fecha_registro
     manyToOne:
-        univUniversidadCarreraGradoAcademico:
-            targetEntity: UnivUniversidadCarreraGradoAcademico
+        univUniversidadCarrera:
+            targetEntity: UnivUniversidadCarrera
             cascade: {  }
             mappedBy: null
             inversedBy: null
             joinColumns:
-                univ_universidad_carrera_grado_academico_id:
+                univ_universidad_carrera_id:
                     referencedColumnName: id
             orphanRemoval: false
         univPeriodoAcademicoTipo:
