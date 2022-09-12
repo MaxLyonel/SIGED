@@ -43,31 +43,36 @@
     </div>
     <div class="body-content animated fadeIn">
         <div class="row">
+
             {% for entidad in entidades %}
                 <div class="col-lg-6 col-sm-12">
-                    <div class="circle-tile">
-                        <a href="{{ path('ccalidad_list', { 'id': entidad.id, 'gestion': currentyear }) }}">
-                            <div class="circle-tile-heading blue">
-                                <i class="fa fa-users fa-fw fa-3x"></i>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"> {{ entidad.entidad }} </div>
+                        <div class="panel-body">
+                            <a href="{{ path('ccalidad_list', { 'id': entidad.id, 'gestion': currentyear }) }}">
+                                <div class="circle-tile-heading blue">
+                                    <i class="fa fa-pencil-square-o fa-fw fa-3x"></i>
+                                </div>
+                            </a>
+                            <div class="circle-tile-content blue">
+                                <div class="circle-tile-description text-faded">
+                                    {{ entidad.obs }}
+                                </div>
+                                <div class="circle-tile-number text-faded">
+                                    {{ entidad.entidad }}
+                                </div>
+                                <select id="gestionesCalidad_{{entidad.id}}" onchange="listaInconsistencias({{entidad.id}})" class="form-control">
+                                    <option value="-1">Seleccionar gestión...</option>
+                                    {% for gestion in gestiones %}
+                                        <option value="{{gestion.id}}">{{gestion.id}}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
-                        </a>
-                        <div class="circle-tile-content blue">
-                            <div class="circle-tile-description text-faded">
-                                {{ entidad.obs }}
-                            </div>
-                            <div class="circle-tile-number text-faded">
-                                {{ entidad.entidad }}
-                            </div>
-                            <select id="gestionesCalidad_{{entidad.id}}" onchange="listaInconsistencias({{entidad.id}})" class="form-control">
-                                <option value="-1">Seleccionar gestión...</option>
-                                {% for gestion in gestiones %}
-                                    <option value="{{gestion.id}}">{{gestion.id}}</option>
-                                {% endfor %}
-                            </select>
                         </div>
                     </div>
                 </div>
             {% endfor %}
+
         </div>
         {% if app.session.get('roluser') == 10 %}
             <div class="row">
