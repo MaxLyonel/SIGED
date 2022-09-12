@@ -306,6 +306,19 @@
                             <span class="selected"></span>
                         </a>
                     </li>
+                    {% if app.session.get('roluser') in [7,8,9,10] %}
+                        <li class="submenu">
+                            <a href="javascript:void(0);">
+                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                <span class="text">Control de Calidad</span>
+                                <span class="arrow"></span>
+                            </a>
+                            <ul>
+                                <li><a href="{{ path('ccalidad_index')}}">Inconsistencias</a></li>
+
+                            </ul>
+                        </li>
+                    {% endif %}                    
                     {% if app.session.get('roluser') in [7,8,10] %}
                         <li class="submenu">
                             <a href="javascript:void(0);">
