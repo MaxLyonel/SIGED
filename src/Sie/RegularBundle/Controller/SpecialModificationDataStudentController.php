@@ -393,7 +393,7 @@ class SpecialModificationDataStudentController extends Controller{
             $oldDataStudentPrev[] = array('campo'=>'Complemento','anterior'=>$objStudent->getComplemento(),'nuevo'=>$complemento);
         }
         if($cedulaTipoId!=$objStudent->getCedulaTipo()->getId()){
-            $oldDataStudentPrev[] = array('campo'=>'Cédula Tipo','anterior'=>$objStudent->getCedulaTipo()->getId(),'nuevo'=>$cedulaTipoid);
+            $oldDataStudentPrev[] = array('campo'=>'Cédula Tipo','anterior'=>$objStudent->getCedulaTipo()->getId(),'nuevo'=>$cedulaTipoId);
         }
         if($generoId!=$objStudent->getGeneroTipo()->getId()){
             $oldDataStudentPrev[] = array('campo'=>'Género','anterior'=>$objStudent->getGeneroTipo()->getId(),'nuevo'=>$generoId);

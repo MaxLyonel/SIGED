@@ -86,7 +86,7 @@ input {
                             <div class="panel-heading">
                          
                                 <div class="pull-left">
-                                    <h3 class="panel-title">Registrar Beneficiario - Busqueda por CI</h3>
+                                    <h3 class="panel-title">Registrar Titular de cobro - Busqueda por CI</h3>
                                     <button class="btn btn-success" v-on:click="isHidden = !isHidden"><strong  v-if="isHidden">Cerrar</strong><strong  v-else>Abrir</strong> Formulario de Busqueda</button>
                                     <button type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>
                                     
@@ -244,7 +244,7 @@ input {
                             <th scope="col">NOMBRE(S)</th>
                             <th scope="col">FECHA NACIMIENTO</th>
                             <th scope="col">PARENTESCO</th>
-                            <th scope="col">TUTOR BENEFICIARIO</th>
+                            <th scope="col">TITULAR</th>
                             <th scope="col" v-if="!swExistParentBJP">OPCION</th>
                             </tr>
                         </thead>
@@ -257,7 +257,7 @@ input {
                             <td> ${parent.fechaNacimiento}</td>                     
                             <td> ${parent.apoderadoTipo}</td>
                             {# <td><a v-if="!swExistParentBJP" href="#" @click="removeParent(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td> #}
-                            <td> <a v-if="!swExistParentBJP" href="#" @click="assignParentBJP(parent)" > <i class="fa fa-pencil text-success"></i> Seleccionar Beneficiario </a></td>
+                            <td> <a v-if="!swExistParentBJP" href="#" @click="assignParentBJP(parent)" > <i class="fa fa-pencil text-success"></i> Seleccionar Titular de cobro </a></td>
                             <td v-if="!swExistParentBJP"><a v-if="parent.esEliminado" href="#" @click="removeParent(parent.id)" > <i class="fa fa-trash text-danger"></i>Eliminar </a></td>
                             </tr>
                         </tbody>
@@ -270,7 +270,7 @@ input {
                         <table class="table" >
                         <thead>
                             <tr>
-                                <th colspan="7" style="text-align: center;"><strong class="text"> Tutor beneficiario Bono Juancito Pinto registrado:</strong></th>
+                                <th colspan="7" style="text-align: center;"><strong class="text"> Titular de cobro para el Bono Juancito Pinto registrado:</strong></th>
                             </tr>
                             <tr>
                             
@@ -585,8 +585,8 @@ var app = new Vue({
             this.messageAsig=false;
             this.itemColor=false;
             Swal.fire({
-                title: 'Asignar Beneficiario?',
-                text: "Esta seguro de CONFIRMAR la asignación de la Persona como beneficiario para el Bono Juancito Pinto",
+                title: 'Asignar Titulas de cobro?',
+                text: "Esta seguro de CONFIRMAR la asignación de la Persona como Tutor de cobro para el Bono Juancito Pinto",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
