@@ -1,0 +1,116 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+
+    <div class="header-content">
+        <h2><i class="fa fa-table"></i>Control de Calidad <span>Menu principal</span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{path('ccalidad_index')}}">Inicio</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+
+                <li class="active">Registro</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('warning') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-warning" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <p><i class="fa fa-warning"></i> Tenga en cuenta que la información registrada a través de los módulos para resolver inconsistencias es responsabilidad de las/los Técnicos SIE Distritales, por tanto, se debe tener mucho cuidado durante este proceso.</p>
+            </div>
+        </div>
+    </div>
+    <div class="body-content animated fadeIn">
+        <div class="row">
+
+            {% for entidad in entidades %}
+                <div class="col-lg-6 col-sm-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading"> {{ entidad.entidad }} </div>
+                        <div class="panel-body">
+                            <a href="{{ path('ccalidad_list', { 'id': entidad.id, 'gestion': currentyear }) }}">
+                                <div class="circle-tile-heading blue">
+                                    <i class="fa fa-pencil-square-o fa-fw fa-3x"></i>
+                                </div>
+                            </a>
+                            <div class="circle-tile-content blue">
+                                <div class="circle-tile-description text-faded">
+                                    {{ entidad.obs }}
+                                </div>
+                                <div class="circle-tile-number text-faded">
+                                    {{ entidad.entidad }}
+                                </div>
+                                <select id="gestionesCalidad_{{entidad.id}}" onchange="listaInconsistencias({{entidad.id}})" class="form-control">
+                                    <option value="-1">Seleccionar gestión...</option>
+                                    {% for gestion in gestiones %}
+                                        <option value="{{gestion.id}}">{{gestion.id}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+        {% if app.session.get('roluser') == 10 %}
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                    <div class="circle-tile">
+                        <a href="{{ path('ccalidad_reporte', { 'lugar_tipo_id': lugar_tipo_id }) }}">
+                            <div class="circle-tile-heading dark-blue">
+                                <i class="fa fa-save fa-fw fa-3x"></i>
+                            </div>
+                        </a>
+                        <div class="circle-tile-content dark-blue">
+                            <div class="circle-tile-description text-faded">
+                                Generar
+                            </div>
+                            <div class="circle-tile-number text-faded">
+                                Reporte
+                            </div>
+                            <a href="{{ path('ccalidad_reporte', { 'lugar_tipo_id': lugar_tipo_id }) }}" class="circle-tile-footer">Generar reporte <i class="fa fa-save"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <!-- end DASHBOARD CIRCLE TILES --> 
+    </div>
+{% endblock %}
+{% block javascripts %}
+{{parent()}}
+<script>
+    function listaInconsistencias(entidadid){
+        var gestion = $('#gestionesCalidad_'+entidadid).val();
+        var ruta = Routing.generate('ccalidad_list', {'id': entidadid, 'gestion': gestion});
+
+        if(gestion != -1){
+            window.location.href = ruta;
+        } else {
+            alert("Debe seleccionar una gestión válida");
+        }
+    }
+</script>
+{% endblock %}

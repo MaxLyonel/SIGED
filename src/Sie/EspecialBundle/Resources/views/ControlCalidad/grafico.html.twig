@@ -1,0 +1,137 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="page-title">
+                <h1>Control de Calidad
+                    <small>{{ regla.descripcion }}</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><i class="fa fa-home"></i>  <a href="{{path('ccalidad_index')}}"> Menú principal</a></li>
+                    <li><i class="fa fa-home"></i>  <a href="{{path('ccalidad_list', {'id': regla.validacionReglaEntidadTipo.id, 'gestion': gestion})}}"> Atrás</a></li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% for flashMessage in app.session.flashbag.get('success') %}
+                <div class="alert alert-success" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="glyphicon glyphicon-ok"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% for flashMessage in app.session.flashbag.get('warning') %}
+                <div class="alert alert-danger" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <i class="fa fa-warning"></i> {{ flashMessage }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% if datosGrafico is not empty %}
+                <div class="portlet portlet-{{ app.session.get('sysporlet') }}">
+                    <div class="portlet-heading">
+                        <div class="pull-left">
+                            <h4 class="portlet-title">Gráfico de Barras - {{gestion}}</h4>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div><!-- /.panel-heading -->
+                    <div class="portlet-body">
+                        <div class="panel-body panel-primary">
+                            <!-- GRAFICO -->
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="contenedor-tabla" style="width: 100%; overflow: scroll;">
+                                        <div id="divGrafico" style="min-width: 310px; max-width: 800px, height: 400px; margin: 0 auto"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <i class="fa fa-warning"></i> No presenta inconsistencias respecto a {{ regla.descripcion }}.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script>
+        Highcharts.chart('divGrafico', {
+            colors: ['#de0f27','#58c224'],
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '{{ regla.descripcion }}'
+            },
+            xAxis: {
+                categories: [  {% for datos in datosGrafico %} '{{ datos.lugar }}', {% endfor %} ]
+            },
+            credits: {
+              enabled: false
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: '{{ usuario_lugar.lugar }} - Gestión {{ gestion }}'
+                },
+                stackLabels: {
+                    enabled: true,
+                    style: {
+                        fontWeight: 'bold',
+                        fontSize:'10px',
+                        color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                    }
+                }
+            },
+            legend: {
+                align: 'right',
+                x: -30,
+                verticalAlign: 'top',
+                y: 25,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.background2) || 'white',
+                borderColor: '#CCC',
+                borderWidth: 1,
+                shadow: false
+            },
+            tooltip: {
+                headerFormat: '<b>{point.x}</b><br/>',
+                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+            },
+            plotOptions: {
+                column: {
+                    stacking: 'normal',
+                    dataLabels: {
+                        enabled: true,
+                        color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
+                    }
+                }
+            },
+            series: [{
+                name: 'Sin corregir',
+                data: [
+                    {% for datos in datosGrafico %} {{ datos.sin_corregir }}, {% endfor %}
+                ]
+                }, {
+                name: 'Corregido',
+                data: [
+                    {% for datos in datosGrafico %} {{ datos.corregido }}, {% endfor %}
+                ]
+            }]
+        });
+    </script>
+{% endblock %}
