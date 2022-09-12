@@ -1,0 +1,1593 @@
+<div class="panel panel-warning">
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <i class="fa fa-table"></i> <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">Inconsistencias respecto a {{ regla.descripcion }}</a>
+        </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse">
+        <div class="panel-body">
+            {% if lista_detalle is not empty %}
+                <div id="no-more-tables" class="table-responsive">
+                    <table class="table table-bordered table-hover cf dataTable">
+                        <thead class="cf">
+                            <tr>
+                                <th>No.</th>
+                                <th>Gestión</th>
+                                <th>Observación</th>
+                                <th>Unidad Educativa</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% set TIPO_REGLA = -1 %}
+                            {% set titulo = '' %}
+                            {% set idioma1 = '' %}
+                            {% set idioma2 = '' %}
+                            {% set idioma3 = '' %}
+
+                            {% for detalle in lista_detalle %}
+                                <tr id="rowListaDetalle{{ loop.index }}" class="tr-observacion-{{detalle.id}}">
+                                    <td data-title="No.">{{ loop.index }}</td>
+                                    <td data-title="Gestion">{{detalle.gestionTipo}}</td>
+                                    <td data-title="Observacion">{{detalle.obs}}</td>
+                                    <td data-title="Unidad Educativa">{{detalle.institucionEducativaId}}</td>
+                                    <td data-title="Acciones"> 
+                                    {# Para Unidades Educativas y Distritos #}
+                                    
+                                    {% if app.session.get('roluser') in [7,9,10] %}
+                                        {% if regla.id == 63  %}
+
+                                            <button type="button" class="btn btn-link" onclick="editar_datos('{{detalle.gestionTipo}}','{{detalle.obs}}','{{detalle.id}}','{{detalle.institucionEducativaId}}','{{detalle.llave}}')"><span class="fa fa-pencil"></span>  Modificar</button>
+                                            
+                                        {% endif %}
+                                        {% if regla.id == 2 or regla.id == 3 or regla.id == 4 or regla.id == 6  or regla.id == 12 or regla.id == 13 or regla.id == 16 %} {#or regla.id == 8#}
+                                            <form action="{{path('ccalidad_verificar')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_solucion" name="form[solucion]" value="{{detalle.solucionTipoId}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del estado actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                            </form>
+                                        {% endif %}
+                                         
+                                        {% if regla.id == 1 %}
+                                            <form action="{{path('ccalidad_verificar')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del promedio actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                            </form>
+                                            <form action="{{path('maestroAsignacion')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if regla.id in [2,20] %}
+                                            <form action="{{path('sie_estudiantes_result')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_mode1" name="form[mode1]" value="1">
+                                                <input type="hidden" id="form_mode3" name="form[mode3]" value="1">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_calidad" name="form[calidad]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>
+                                            <form action="{{path('ccalidad_ratificar_edad')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de ratificar el proceso de validación del registro observado, por tanto, confirmará que la información actual es la correcta. ¿Desea continuar?');"><i class="fa fa-check"></i> Ratificar Edad</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if regla.id == 3 %}
+                                            <form action="{{path('sie_estudiantes_result')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_mode3" name="form[mode3]" value="1">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if regla.id == 10 %}
+                                            <form action="{{path('reg_multigrado_index')}}" method="post"  target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if regla.id == 14 %}                                    
+                                            <form action="{{path('ccalidad_verificar')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                                <form action="{{path('ccalidad_omitir')}}" method="post">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
+                                                </form>
+                                            </form>
+                                            <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignarMateria({{detalle.id}}, {{detalle.llave}}, {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
+                                        {% elseif regla.id == 56 %}                                    
+                                            <form action="{{path('ccalidad_verificar')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación del promedio actual de la/el estudiante observada/o. ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                            </form>
+                                            <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignarMaestro({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
+                                        {% elseif regla.id == 54 %}    
+                                            <button type="submit" class="btn btn-link" onclick="ingresarSolucionValidacionSegip({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
+                                        {% elseif regla.id == 55 %}    
+                                            <button type="submit" class="btn btn-link" onclick="ingresarSolucionFuenteFinanciamiento({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
+                                            <form action="{{path('ccalidad_omitir')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
+                                            </form>
+                                        {% elseif regla.id == 57 %}    
+                                            <button type="submit" class="btn btn-link" onclick="ingresarSolucionAsignacion({{detalle.id}}, '{{detalle.llave}}', {{detalle.gestionTipo}}, '{{detalle.obs}}', 'rowListaDetalle{{ loop.index }}')"><i class="fa fa-eye"></i> Ver solución</button>
+                                            <form action="{{path('ccalidad_omitir')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if regla.id in 25 %}
+                                            {% set rudes = detalle.llave|split('|') %}
+                                            <form action="{{path('specialmodificationdata_student_index')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_rude" name="form[rude]" value="{{rudes[0]}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Modificar Datos: {{rudes[0]}}</button>
+                                            </form>
+                                            <form action="{{path('specialmodificationdata_student_index')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_rude" name="form[rude]" value="{{rudes[1]}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Modificar Datos: {{rudes[1]}}</button>
+                                            </form>
+                                            <form action="{{path('ccalidad_verificar')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                            </form>
+                                            <div class="justificacion">
+                                                <button type="submit" class="btn btn-link" onclick="justificarModificarDatos({{detalle.id}})"><i class="fa fa-edit"></i> Omitir</button>
+                                            </div>
+                                        {% endif %}
+                                        {% if regla.id == 37 %}
+                                            <form action="{{path('ccalidad_validar_estudiante_segip')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_idSolucion" name="form[idSolucion]" value="0">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Está a punto de validar con SEGIP el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Validación SEGIP</button>
+                                            </form>
+                                            <div class="justificacion">
+                                                <button type="submit" class="btn btn-link" onclick="justificarSinCarnet({{detalle.id}})"><i class="fa fa-edit"></i> Omitir C.I.</button>
+                                            </div>
+                                        {% endif %}
+
+
+                                        {% if regla.id == 17 %}<!-- Validacion para la regla "Grados sin desayuno escolar respecto a la gestion 2014" -->
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-desayuno',{{detalle.id}})">Solucionar observación</button>
+                                        {% endif %}
+                                        {% if regla.id == 19 %}<!-- Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" -->
+                                            {% set TIPO_REGLA = 19 %}
+                                            {% set titulo = 'LENGUA EN LOS PROCESOS PEDAGÓGICOS' %}
+                                            {% set idioma1 = '1. Lengua del proceso pedagógico (primera lengua)' %}
+                                            {% set idioma2 = '2. Lengua del proceso pedagógico (segunda lengua)' %}
+                                            {% set idioma3 = '3. Lengua extranjera de apoyo en los procesos pedagógicos' %}
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
+                                        {% endif %}
+                                        {% if regla.id == 18 %}<!-- Inconsistencias respecto a Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 " -->
+                                            {% set TIPO_REGLA = 18 %}
+                                            {% set titulo = 'PRESENCIA DE LENGUAS EN EL AMBITO ESCOLAR' %}
+                                            {% set idioma1 = '1. Lengua más hablada (más frecuente)' %}
+                                            {% set idioma2 = '2. Lengua regularmente hablada (menos frecuente)' %}
+                                            {% set idioma3 = '3. Lengua menos hablada (poco frecuente)' %}
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación</button>
+                                        {% endif %}
+                                    
+                                        {#
+                                            BJP 2021-Apoderados con SEGIP INCONSISTENTE regla -> 60
+                                            BJP 2021-Usuarios (APODERADOS Y ADMINISTRATIVOS) con SEGIP INCONSISTENTE regla -> 61
+                                            BJP 2021-Maestros (MAESTROS Y ADMINISTRATIVOS) con SEGIP INCONSISTENTE regla -> 62
+                                        #}
+                                        {% if regla.id == 60 or regla.id == 61 or regla.id == 62 %}
+                                            <!--Resolver-->
+                                            <button class="btn btn-success" onclick="seleccionarInconsistenciaSegip({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-segip',{{detalle.id}},{{regla.id}})">Solucionar observación</button>
+                                            <!--Omitir-->
+                                            <form action="{{path('ccalidad_omitir')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
+                                            </form>
+                                        {% endif %}
+                                    {% endif %}
+                                    
+                                    {# Para Distritos #}
+                                    {% if app.session.get('roluser') in [7,10] %}
+                                         {% if regla.id in [24,25,26] %}
+                                            {% set rudes = detalle.llave|split('|') %}
+                                            <form action="{{path('specialmodificationdata_student_index')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_rude" name="form[rude]" value="{{rudes[0]}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Modificar Datos: {{rudes[0]}}</button>
+                                            </form>
+                                            <form action="{{path('specialmodificationdata_student_index')}}" method="post" target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_rude" name="form[rude]" value="{{rudes[1]}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Modificar Datos: {{rudes[1]}}</button>
+                                            </form>
+                                        {% endif %}
+                                        
+                                        {% if regla.id in [24,26,8]  %}
+                                        
+                                            <form action="{{path('rudeunification_index')}}" method="post"  target="_blank">
+                                                <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
+                                                <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"> 
+                                                <div style=""><i class="fa fa-compress"></i> Unificar RUDES</div> 
+                                                </button>
+                                            </form>
+                                             
+                                                <form action="{{path('homonimo_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
+                                                    <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"> 
+                                                    <div style=""><i class="fa fa-random"></i> Son Homónimos</div> 
+                                                    </button>
+                                                </form>
+                                           {# <div class="justificacion">
+                                                <button type="submit" class="btn btn-link" onclick="justificarHomonimoGemelo({{detalle.id}})"><i class="fa fa-edit"></i> Omitir: Homónimos/Gemelas(os)</button>
+                                            </div>
+                                            #}
+                                        {% endif %}
+                                         {% if regla.id in [24,25,26,8]  %}
+                                            <form action="{{path('ccalidad_verificar')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucionEducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Se realizará la verificación ¿Desea continuar?');"><i class="fa fa-check"></i> Verificar</button>
+                                            </form>
+                                         {% endif %}
+                                        {% if regla.id == 6 %}
+                                            <form action="{{path('regularizacionDobleInscripcion_result')}}" method="post">
+                                                <input type="hidden" id="form_codigoRude" name="form[codigoRude]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if regla.id == 88888 %}
+                                            {% if detalle.solucionTipoId == 1 %}
+                                                <form action="{{path('deleteInscriptionQa_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                                </form>
+                                            {% elseif detalle.solucionTipoId == 2 %}
+                                                <form action="{{path('rudeunification_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idProceso" name="form[idProceso]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_rude" name="form[rude]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_sie" name="form[sie]" value="{{detalle.institucionEducativaId}}">
+                                                    <input type="hidden" id="form_idRegla" name="form[idRegla]" value="{{regla.id}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');">
+                                                    <div style="">Ir a solución..</div>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if regla.id == 11 %}
+                                            <button type="submit" class="btn btn-link" onclick="mostrarSolucionApropiacionRudes({{regla.id}}, {{detalle.solucionTipoId}})"><i class="fa fa-eye"></i> Ver solución</button>
+                                        {% endif %}
+                                        {% if regla.id == 13 %}
+                                            <form action="{{path('reg_changestadoqa_index')}}" method="post"  target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <input type="hidden" id="form_optionTodo" name="form[optionTodo]" value=1>
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>
+                                        {% endif %}
+                                        {% if regla.id in [12,15] %}
+                                            <form action="{{path('updateSudentLevel_index')}}" method="post"  target="_blank">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                <input type="hidden" id="form_optionTodo" name="form[optionTodo]" value=2>
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución</button>
+                                            </form>
+                                            <form action="{{path('ccalidad_omitir')}}" method="post">
+                                                <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                <button type="submit" class="btn btn-link" onclick="return confirm('Omitirá esta incosistencia. ¿Desea continuar?');"><i class="fa fa-forward"></i> Omitir</button>
+                                            </form>                                            
+                                        {% endif %}
+                                        {% if regla.id == 16 %}
+                                            {% if detalle.solucionTipoId == 0 or detalle.solucionTipoId == 2 %}
+                                                <form action="{{path('reg_changestadoqa_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                    <input type="hidden" id="form_optionTodo" name="form[optionTodo]" value=2>
+                                                    <input type="hidden" id="form_optionEliminaRude" name="form[optionEliminaRude]" value=1>
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución eliminar</button>
+                                                </form>
+                                            {% endif %}
+                                            {% if detalle.solucionTipoId == 1 %}
+                                                <form action="{{path('historial_calidad_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución cambiar estado extranjero</button>
+                                                </form>
+                                            {% endif %}
+                                            {% if detalle.solucionTipoId == 3 %}
+                                                <form action="{{path('reg_changestadoqa_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                    <input type="hidden" id="form_optionTodo" name="form[optionTodo]" value=2>
+                                                    <input type="hidden" id="form_optionEliminaRude" name="form[optionEliminaRude]" value=1>
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución eliminar</button>
+                                                </form>
+                                                <form action="{{path('historial_calidad_index')}}" method="post"  target="_blank">
+                                                    <input type="hidden" id="form_idDetalle" name="form[idDetalle]" value="{{detalle.id}}">
+                                                    <input type="hidden" id="form_llave" name="form[llave]" value="{{detalle.llave}}">
+                                                    <input type="hidden" id="form_gestion" name="form[gestion]" value="{{detalle.gestionTipo}}">
+                                                    <input type="hidden" id="form_institucionEducativa" name="form[institucioneducativa]" value="{{detalle.institucionEducativaId}}">
+                                                    <button type="submit" class="btn btn-link" onclick="return confirm('Abandonará temporalmente esta página. ¿Desea continuar?');"><i class="fa fa-forward"></i> Ir a solución cambiar estado extranjero</button>
+                                                </form>
+                                            {% endif %}
+                                        {% endif %}
+
+
+                                        {# if regla.id == 17 %}<!-- Validacion para la regla "Grados sin desayuno escolar respecto a la gestion 2014" -->
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-desayuno',{{detalle.id}})">Solucionar observación-17</button>
+                                        {% endif %}
+                                        {% if regla.id == 19 %}<!-- Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015" -->
+                                            {% set TIPO_REGLA = 19 %}
+                                            {% set titulo = 'LENGUA EN LOS PROCESOS PEDAGÓGICOS' %}
+                                            {% set idioma1 = '1. Lengua del proceso pedagógico (primera lengua)' %}
+                                            {% set idioma2 = '2. Lengua del proceso pedagógico (segunda lengua)' %}
+                                            {% set idioma3 = '3. Lengua extranjera de apoyo en los procesos pedagógicos' %}
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación-19</button>
+                                        {% endif %}
+                                        {% if regla.id == 18 %}<!-- Inconsistencias respecto a Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 " -->
+                                            {% set TIPO_REGLA = 18 %}
+                                            {% set titulo = 'PRESENCIA DE LENGUAS EN EL AMBITO ESCOLAR' %}
+                                            {% set idioma1 = '1. Lengua más hablada (más frecuente)' %}
+                                            {% set idioma2 = '2. Lengua regularmente hablada (menos frecuente)' %}
+                                            {% set idioma3 = '3. Lengua menos hablada (poco frecuente)' %}
+                                            <button class="btn btn-success" onclick="seleccionarInconsistencia({{detalle.institucionEducativaId}},{{detalle.llave}},'modal-inconsistencia-sin-idioma-ensenanza-aula',{{detalle.id}})">Solucionar observación-18</button>
+                                        {% endif #}
+                                    {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    <i class="fa fa-warning"></i> No presenta inconsistencias respecto a {{ regla.descripcion }}.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+    
+
+
+<div class="modal modal-flex fade" id="myModalSolucion" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+    <div class="modal-dialog higherWider">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="flexModalLabel">Instrucciones</h4>
+            </div>
+            <div class="modal-body">
+                <div id="idTitulo"></div>
+                <div id="idCuerpo"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal modal-flex fade" id="myModalSolucionSinCarnet" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+    <div class="modal-dialog higherWider">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="flexModalLabel">Control de Calidad</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{{path('ccalidad_justificar_estudiante_segip')}}" method="post">
+                    <div class="form-group">
+                        <textarea id="formJ_justificacion" name= "formJ[justificacion]" placeholder="Introduzca una descripción por la cual se omitirá la validación con SEGIP" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Está a punto de omitir el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Confirmar</button>
+                    </div>
+                    <input type="hidden" id="formJ_idDetalle" name="formJ[idDetalle]" value="">
+                    <input type="hidden" id="formJ_idSolucion" name="formJ[idSolucion]" value="1">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal modal-flex fade" id="myModalInconsistencias" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+    <div class="modal-dialog higherWider">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="flexModalLabel">Inconsistencias</h4>
+            </div>
+            <div class="modal-body">
+                <div id="idInconsistencias"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal modal-flex fade" id="myModalSolucionHomonimoGemelo" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+    <div class="modal-dialog higherWider">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="flexModalLabel">Control de Calidad</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{{path('ccalidad_justificar_homonimo_gemelo')}}" method="post">
+                    <div class="form-group">
+                        <select id="formH_justificacion" name= "formH[justificacion]" class="form-control">
+                            <option value="HOMÓNIMOS PERFECTOS">HOMÓNIMOS PERFECTOS</option>
+                            <option value="GEMELAS(OS)">GEMELAS(OS)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Está a punto de omitir el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Confirmar</button>
+                    </div>
+                    <input type="hidden" id="formH_idDetalle" name="formH[idDetalle]" value="">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="modal modal-flex fade" id="myModalSolucionModificarDatos" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+    <div class="modal-dialog higherWider">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="flexModalLabel">Control de Calidad</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{{path('ccalidad_justificar_modificar_datos')}}" method="post">
+                    <div class="form-group">
+                        <textarea id="formMD_justificacion" name= "formMD[justificacion]" placeholder="Introduzca una descripción por la cual se omitirá la modificación de datos" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Está a punto de omitir el registro observado. ¿Desea continuar?');"><i class="fa fa-check"></i> Confirmar</button>
+                    </div>
+                    <input type="hidden" id="formMD_idDetalle" name="formMD[idDetalle]" value="">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{# Modal solucion al caso Inconsistencias respecto a Grados sin desayuno escolar respecto a la gestion 2014 #}
+<div class="modal fade" id="modal-inconsistencia-sin-desayuno" tabindex="-1" role="dialog" aria-labelledby="modal-inconsistencia-sin-desayuno">
+        <form action="#" method="POST" class="form-resolve-inconsistency-desayuno">
+            <input type="hidden" name="token" value="{{ csrf_token('form-resolve-inconsistency-desayuno') }}">
+            <input type="hidden" id="form_id" name="id" value="">
+            <input type="hidden" id="form_inconsistencia" name="inconsistencia" value="">
+            <input type="hidden" id="form_ue" name="ue" value="">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="modal-inconsistencia-sin-desayuno">Desayuno Escolar</h4>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="row" style="padding-top:1rem">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="col-xs-12 col-sm-6 control-label">¿Se proporciona desayuno escolar al curso?</label>
+                                            <div class="col-xs-12 col-sm-6">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <input type="radio" id="form_desayunoEscolar_1" name="desayunoEscolar" class="request-desayuno" required="required" value="1" autocomplete="off">
+                                                        <label for="form_desayunoEscolar_1" class="required">Si</label>
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <input type="radio" id="form_desayunoEscolar_0" name="desayunoEscolar" class="request-desayuno" required="required" value="0" autocomplete="off">
+                                                        <label for="form_desayunoEscolar_0" class="required">No</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row tiene-financiamiento" style="padding-top:1rem; display:none">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="col-xs-12 col-sm-6 control-label"> Fuente de financiamiento del Desayuno Escolar </label>
+                                            <div class="col-xs-12 col-sm-6">
+                                                <select id="form_finDesEscolarTipo" name="finDesEscolarTipo" class="form-control chosen-select" autocomplete="off">
+                                                    <option value> Seleccione una opción </option>
+                                                    <option value="1">MINISTERIO DE EDUCACION</option>
+                                                    <option value="2">ONG</option>
+                                                    <option value="3">IGLESIA</option>
+                                                    <option value="4">GOBIERNO MUNICIPAL</option>
+                                                    <option value="5">PREFECTURA</option>
+                                                    <option value="6">COMUNAL (TODA LA COMUNIDAD)</option>
+                                                    <option value="7">AD HONOREM</option>
+                                                    <option value="8">RECURSOS PROPIOS</option>
+                                                    <option value="9">GOBIERNO DEPARTAMENTAL</option>
+                                                    <option value="10">PADRES DE FAMILIA</option>
+                                                    <option value="11">TGN OTROS</option>
+                                                    <option value="12">FUNDACION</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success btn-resolver-inconsistencia">Registrar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+</div>
+
+{# 
+    Modal solución al caso Inconsistencias respecto a Grados sin idioma de enseñanza en el aula respecto a la gestion 2015 
+    Modal solucion al caso Inconsistencias de Grados sin idioma que hablan los estudiantes respecto a la gestion 2015 
+ #}
+<div class="modal fade" id="modal-inconsistencia-sin-idioma-ensenanza-aula" tabindex="-1" role="dialog" aria-labelledby="modal-inconsistencia-sin-idioma-ensenanza-aula">
+    <form action="#" method="POST" class="form-resolve-inconsistency-idioma-aula">
+        <input type="hidden" name="token" value="{{ csrf_token('form-resolve-inconsistency-idioma-aula') }}">
+        <input type="hidden" id="form_id" name="id" value="">
+        <input type="hidden" id="form_inconsistencia" name="inconsistencia" value="">
+        <input type="hidden" id="form_ue" name="ue" value="">
+        <input type="hidden" id="form_tipo" name="tipo" value="{{TIPO_REGLA}}">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-inconsistencia-sin-idioma-ensenanza-aula"> {{titulo}}</h4>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row" style="padding-top:1rem">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> {{idioma1}} </label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <select id="form_priLenEnsenanzaTipo" name="priLenEnsenanzaTipo" required="required" class="form-control chosen-select" autocomplete="off">
+                                                <option value="" selected="selected">Seleccionar...</option>
+                                                {% for idioma in idiomas %}
+                                                    <option value="{{idioma.id}}"> {{idioma.idioma}} </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem;">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> {{idioma2}} </label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <select id="form_segLenEnsenanzaTipo" name="segLenEnsenanzaTipo" required="required" class="form-control chosen-select" autocomplete="off">
+                                                <option value="" selected="selected">Seleccionar...</option>
+                                                {% for idioma in idiomas %}
+                                                    <option value="{{idioma.id}}"> {{idioma.idioma}} </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem;">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> {{idioma3}} </label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <select id="form_terLenEnsenanzaTipo" name="terLenEnsenanzaTipo" required="required" class="form-control chosen-select" autocomplete="off">
+                                                <option value="" selected="selected">Seleccionar...</option>
+                                                {% for idioma in idiomas %}
+                                                    <option value="{{idioma.id}}"> {{idioma.idioma}} </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success btn-resolver-inconsistencia-idioma-aula">Registrar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<!--Modal para solucionar inconsistenci de segip-->
+<div class="modal fade" id="modal-inconsistencia-segip" tabindex="-1" role="dialog" aria-labelledby="modal-inconsistencia-segip">
+    <form action="#" method="POST" class="form-resolve-inconsistency-segip">
+        <input type="hidden" name="token" value="{{ csrf_token('modal-inconsistencia-segip') }}">
+        <input type="hidden" id="form_id" name="id" value="">
+        <input type="hidden" id="form_inconsistencia" name="inconsistencia" value="">
+        <input type="hidden" id="form_ue" name="ue" value="">
+        {#<input type="hidden" id="form_tipo" name="tipo" value="{{TIPO_REGLA}}">#}
+        <input type="hidden" id="form_tipo" name="tipo" value="">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id=""> Soilucionar inconsistencia SEGIP</h4>
+                </div>
+                
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="row" style="padding-top:1rem">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> Nombres </label>
+                                        <div class="col-xs-12 col-sm-6 form_nombre">
+                                            <input type="text" class="form-control" id="form_nombre" name="nombre" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem;">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> Paterno </label>
+                                        <div class="col-xs-12 col-sm-6 form_paterno">
+                                            <input type="text" class="form-control" id="form_paterno" name="paterno" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem;">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label">Materno </label>
+                                        <div class="col-xs-12 col-sm-6 form_materno">
+                                            <input type="text" class="form-control" id="form_materno" name="materno" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="row" style="padding-top:1rem">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> Carnet </label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <input type="text" class="form-control" id="form_carnet" name="carnet" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem;">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label"> Complemento </label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <input type="text" class="form-control" id="form_complemento" name="complemento" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem;">
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-12 col-sm-6 control-label">Fecha nacimiento </label>
+                                        <div class="col-xs-12 col-sm-6">
+                                            <input type="text" class="form-control" id="form_fecha_nacimiento" name="fecha_nacimiento" value="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top:1rem">
+                                <div class="col-xs-12 col-sm-12">
+                                  <div class="checkbox">
+                                    <label class="col-xs-12 col-sm-6 control-label">
+                                      <input type="checkbox" id="form_extranjero" name="extranjero"> ¿Es extranjero?
+                                    </label>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success btn-resolver-inconsistencia-segip">Solucionar observación</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<div class="modal modal-flex fade" id="myModalSolucionInconsistenciaEstado" tabindex="-1" role="dialog" aria-labelledby="flexModalLabel" aria-hidden="true">
+    <div class="modal-dialog higherWider">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="flexModalLabel">Inconsistencia en los estados del estudiante a media gestión</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{{path('cInconsistencia_estado_estudiante_segip')}}" class="validar_form" method="post">
+                <label class="text-info">Datos personales</label>
+                    <table class="table table-condensed table-bordered" style="background:#EEEEEE">
+                        <tr> <th>Gestión</th><td><b id="gestionTipo"></b></td> </tr>
+                        <tr><th>Unidad Educativa</th><td><b id="institucionEducativaId"></b></td> </tr>
+                        <tr> <th>Observación</th><td><b id="obs"></b></td>  </tr>
+                    </table>
+
+                    <div class="form-group">
+                    <label class="text-info">MODIFICAR ESTADO</label>
+                        <select name="formFer[estado]" id="estado" class="form-control input-lg" required>
+                            <option value="" disabled selected>Seleccionar...</option>
+                            {% for estado in lista_estado %}
+                                <option value="{{estado.id}}"> {{estado.estadomatricula}} </option>
+                            {% endfor %}
+                        </select>
+                        {# <span class="help-block" id="error"></span> #}
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success btn-lg " ><i class="fa fa-save"></i> Confirmar</button>
+                        <button type="button" class="btn btn-success btn-lg"  data-dismiss="modal"><i class="fa fa-close"></i> Cancelar</button>
+                    </div>
+                    <input type="hidden" id="idDetalle" name="formFer[idDetalle]">
+                    <input type="hidden" id="llave" name="formFer[llave]">
+                    <input type="hidden" id="idgestion" name="formFer[idgestion]">
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+{% block javascripts %}
+    <script>
+
+    var botonListDetalle = null;             
+
+    $('#collapseOne').removeClass('in').addClass('collapse');
+    $('#collapseTwo').removeClass('collapse').addClass('in');
+
+    var ingresarSolucionValidacionSegip = function(vp_id, llave, gestion, obs, listaDetalleId){
+        botonListDetalle = $('#'+listaDetalleId);
+        var htmlTitulo = "Inconsistencia: "+obs+"";
+        $('#collapseThreeTitle').html(htmlTitulo);
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('maestroAsignacion_validar_segip', {'vp_id': vp_id, 'id': llave, 'gestion': gestion}),
+            beforeSend: function () {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").html(data);        
+                $('#collapseOne').removeClass('in').addClass('collapse');
+                $('#collapseTwo').removeClass('in').addClass('collapse');
+                $('#solution').removeClass('invisible').addClass('visible');
+                $('#collapseThree').removeClass('collapse').addClass('in');
+                $('#collapseThree').css('height','auto');
+            },
+            error: function(error){
+                $("#collapseThreeBody").empty(); 
+                $("#collapseThreeBody").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
+            },
+        });
+    }
+
+    var ingresarSolucionAsignacion = function(vp_id, llave, gestion, obs, listaDetalleId){
+        botonListDetalle = $('#'+listaDetalleId);
+        var htmlTitulo = "Inconsistencia: "+obs+"";
+        $('#collapseThreeTitle').html(htmlTitulo);
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('maestroAsignacion_lista', {'vp_id': vp_id, 'id': llave, 'gestion': gestion}),
+            beforeSend: function () {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").html(data);        
+                $('#collapseOne').removeClass('in').addClass('collapse');
+                $('#collapseTwo').removeClass('in').addClass('collapse');
+                $('#solution').removeClass('invisible').addClass('visible');
+                $('#collapseThree').removeClass('collapse').addClass('in');
+                $('#collapseThree').css('height','auto');
+            },
+            error: function(error){
+                $("#collapseThreeBody").empty(); 
+                $("#collapseThreeBody").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
+            },
+        });
+    }
+
+    var ingresarSolucionFuenteFinanciamiento = function(vp_id, llave, gestion, obs, listaDetalleId){
+        botonListDetalle = $('#'+listaDetalleId);
+        var htmlTitulo = "Inconsistencia: "+obs+"";
+        $('#collapseThreeTitle').html(htmlTitulo);
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('maestroAsignacion_asignar_fuente_financiamiento', {'vp_id': vp_id, 'id': llave, 'gestion': gestion}),
+            beforeSend: function () {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").html(data);        
+                $('#collapseOne').removeClass('in').addClass('collapse');
+                $('#collapseTwo').removeClass('in').addClass('collapse');
+                $('#solution').removeClass('invisible').addClass('visible');
+                $('#collapseThree').removeClass('collapse').addClass('in');
+                $('#collapseThree').css('height','auto');
+            },
+            error: function(error){
+                $("#collapseThreeBody").empty(); 
+                $("#collapseThreeBody").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
+            },
+        });
+    }
+
+    var ingresarSolucionAsignarMateria = function(vp_id, llave, gestion, obs, listaDetalleId){
+        botonListDetalle = $('#'+listaDetalleId);
+        var htmlTitulo = "Inconsistencia: "+obs+"";
+        $('#collapseThreeTitle').html(htmlTitulo);
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('maestroAsignacion_asignar_materia', {'vp_id': vp_id, 'id': llave, 'gestion': gestion}),
+            beforeSend: function () {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").html(data);        
+                $('#collapseOne').removeClass('in').addClass('collapse');
+                $('#collapseTwo').removeClass('in').addClass('collapse');
+                $('#solution').removeClass('invisible').addClass('visible');
+                $('#collapseThree').removeClass('collapse').addClass('in');
+                $('#collapseThree').css('height','auto');
+            },
+            error: function(error){
+                $("#collapseThreeBody").empty(); 
+                $("#collapseThreeBody").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
+            },
+        });
+    }
+
+    var ingresarSolucionAsignarMaestro = function(vp_id, llave, gestion, obs, listaDetalleId){
+        botonListDetalle = $('#'+listaDetalleId);
+        var htmlTitulo = "Inconsistencia: "+obs+"";
+        $('#collapseThreeTitle').html(htmlTitulo);
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('maestroAsignacion_asignar_maestro', {'vp_id': vp_id, 'id': llave, 'gestion': gestion}),
+            beforeSend: function () {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {
+                $("#collapseThreeBody").empty();
+                $("#collapseThreeBody").html(data);        
+                $('#collapseOne').removeClass('in').addClass('collapse');
+                $('#collapseTwo').removeClass('in').addClass('collapse');
+                $('#solution').removeClass('invisible').addClass('visible');
+                $('#collapseThree').removeClass('collapse').addClass('in');
+                $('#collapseThree').css('height','auto');
+            },
+            error: function(error){
+                $("#collapseThreeBody").empty(); 
+                $("#collapseThreeBody").prepend('<div class="alert alert-danger"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error: </strong> No se pudo procesar la solicitud, intente nuevamente</div>');
+            },
+        });
+    }
+
+    var mostrarSolucionNuevoMaestro = function(reglaId, solucionId){
+        var htmlTitulo = "<h4>{{ regla.descripcion }}</h4>";
+        var htmlCuerpo = "<p>Paso 1.- Ingresar al sistema web academico.sie.gob.bo<br />"+
+                        "Paso 2.- Ingresar al módulo Gestión Personal U.E. -> Personal Docente<br />"+
+                        "Paso 3.- Ingresar el código SIE para seleccionar la U.E. con la que se trabajará<br />"+
+                        "Paso 4.- Ir a la opción Nueva/o Maestra/o.<br />"+
+                        "Paso 5.- Ingresar el número de carnet para realizar la búsqueda.<br />"+
+                        "Paso 6.- Seleccionar la opción Inscribir.<br />"+
+                        "Paso 7.- Registrar toda la información requerida en el ingreso de datos de la/el Docente.</p>";
+
+        $('#idTitulo').html(htmlTitulo);
+        $('#idCuerpo').html(htmlCuerpo);
+        $('#myModalSolucion').modal('show');
+    }
+
+    var mostrarSolucionEliminarMaestro = function(reglaId, solucionId){
+        var htmlTitulo = "<h4>{{ regla.descripcion }}</h4>";
+        var htmlCuerpo = "<p>Paso 1.- Ingresar al sistema web academico.sie.gob.bo<br />"+
+                        "Paso 2.- Ingresar al módulo Gestión Personal U.E. -> Personal Docente<br />"+
+                        "Paso 3.- Identificar al maestro a eliminar.<br />"+
+                        "Paso 4.- Hacer clic en el botón Eliminar (Confirmar para eliminar el registro).</p>";
+
+        $('#idTitulo').html(htmlTitulo);
+        $('#idCuerpo').html(htmlCuerpo);
+        $('#myModalSolucion').modal('show');
+    }
+
+    var mostrarSolucionApropiacionRudes = function(reglaId, solucionId){
+        var htmlTitulo = "<h4>{{ regla.descripcion }}</h4>";
+        var htmlCuerpo = "<p>Paso 1.- Encuentre el RUDE correcto a través de la búsqueda de estudiante.<br />"+
+                        "Paso 2.-  Ingresar al módulo Unidad Educativa -> Apropiación de RUDES.<br />"+
+                        "Paso 3.- Introduzca el RUDE observado y el RUDE al que se llevará parte del historial.<br />"+
+                        "Paso 4.- Seleccione la inscripción que moverá al RUDE correcto.</p>";
+
+        $('#idTitulo').html(htmlTitulo);
+        $('#idCuerpo').html(htmlCuerpo);
+        $('#myModalSolucion').modal('show');
+    }
+
+    var mostrarSolucionFinanciamientoMaestro = function(reglaId, solucionId){
+        var htmlTitulo = "<h4>{{ regla.descripcion }}</h4>";
+        var htmlCuerpo = "<p>Paso 1.- Ingresar al sistema web academico.sie.gob.bo<br />"+
+                        "Paso 2.- Ingresar al módulo Gestión Personal U.E. -> Personal Docente<br />"+
+                        "Paso 3.- Ingresar el código SIE para seleccionar la U.E. con la que se trabajará<br />"+
+                        "Paso 4.- Encontrar a la/el docente observado.<br />"+
+                        "Paso 5.- Seleccionar la opción Editar.<br />"+
+                        "Paso 6.- Cambiar la Fuente de Financiamiento.</p>";
+
+        $('#idTitulo').html(htmlTitulo);
+        $('#idCuerpo').html(htmlCuerpo);
+        $('#myModalSolucion').modal('show');
+    }
+
+    var mostrarSolucionHistorico = function(vp_id, llave, gestion){
+        var htmlTitulo = "<h4>Inconsistencias para el código RUDE: "+llave+"</h4>";
+        $('#idTitulo').html(htmlTitulo);
+        $.ajax({
+            type: 'get',
+            url: Routing.generate('ccalidad_solucion_historico', {'vp_id': vp_id, 'llave': llave, 'gestion': gestion}),
+            beforeSend: function () {
+                $("#idCuerpo").empty();
+                $("#idCuerpo").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {
+                $("#idCuerpo").empty();
+                $("#idCuerpo").html(data);
+            },
+            statusCode: {
+                500: function () {
+
+                },
+                404: function () {
+
+                }
+            }
+        });
+        $('#myModalSolucion').modal('show');
+    }
+
+    var omitirSolucionHistorico = function(vp_id, llave, gestion, nivel, grado){
+        if (confirm('Está a punto de omitir el proceso de validación del registro observado, por tanto, confirmará que la información actual es la correcta. ¿Desea continuar?')) {
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('ccalidad_omitir_historico', {'vp_id': vp_id, 'llave': llave, 'gestion': gestion, 'nivel': nivel, 'grado': grado}),
+                beforeSend: function () {
+                    $("#idCuerpo").empty();
+                    $("#idCuerpo").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {
+                    $("#idCuerpo").empty();
+                    $("#idCuerpo").html(data);
+                },
+                statusCode: {
+                    500: function () {
+    
+                    },
+                    404: function () {
+    
+                    }
+                }
+            });
+        }
+    }
+
+    var justificarSinCarnet = function(id){
+        $('#formJ_idDetalle').val(id);
+        $('#myModalSolucionSinCarnet').modal('show');
+    }
+
+    var justificarHomonimoGemelo = function(id){
+        $('#formH_idDetalle').val(id);
+        $('#myModalSolucionHomonimoGemelo').modal('show');
+    }
+
+    var justificarModificarDatos = function(id){
+        $('#formMD_idDetalle').val(id);
+        $('#myModalSolucionModificarDatos').modal('show');
+    }
+
+    {# Resolver inconsistencia desayuno escolar #}
+
+    $('.request-desayuno').on('change',function(e)
+    {
+        if (this.checked)
+        {
+            var estadosDesayuno=$('.request-desayuno');
+            if(typeof(estadosDesayuno)!='undefined')
+            {
+                var cambio=desayunoEstaSeleccionado(estadosDesayuno);
+                if(cambio.valor==0)//si tiene desayuno
+                {
+                    $('.tiene-financiamiento').hide();
+                }
+                else if(cambio.valor == 1)//no tiene desayuno
+                {
+                    $('.tiene-financiamiento').show();
+                }
+            }
+        }
+    });
+
+    $('.form-resolve-inconsistency-desayuno').on('submit',function(e)
+    {
+        resolverInconsistenciaDesayuno(this,e);
+    });
+    $('.form-resolve-inconsistency-idioma-aula').on('submit',function(e)
+    {
+        resolverInconsistenciaIdiomaAula(this,e);
+    });
+
+    $("#form_fecha_nacimiento").inputmask({ "alias": "dd-mm-yyyy" ,'placeholder':'dd-mm-aaaa'});
+    $('.form-resolve-inconsistency-segip').on('submit',function(e)
+    {
+        resolverInconsistenciaSegip(this,e);
+    });
+
+    $('.modal').on('hidden.bs.modal', function ()
+    {
+      var form=$(this).find('.form-resolve-inconsistency-desayuno');
+      if(typeof(form)!='undefined')
+      {
+        form.find('#form_id').val('');
+        form.find('#form_inconsistencia').val('');
+        form.find('#form_ue').val('');
+        var checks=form.find('.request-desayuno');
+        if(typeof(checks)!='undefined')
+        {
+            $.each(checks,function(i, item)
+            {
+                $(item).attr("checked", false);
+                $(item).prop("checked", false);
+            });
+        }
+        $('.tiene-financiamiento').hide();
+        form.find('#form_finDesEscolarTipo').val('');
+      }
+    });
+    var seleccionarInconsistencia= function(_ue,_id,_form,_inconsistencia)
+    {
+        var form=$('#'+_form);
+        if(typeof(form)!='undefined')
+        {
+            var input    = form.find('#form_ue');
+            var input1   = form.find('#form_id');
+            var input2   = form.find('#form_inconsistencia');
+            if(typeof(input)!='undefined' && typeof(input1)!='undefined' && typeof(input2)!='undefined')
+            {
+                input.val(_ue);
+                input1.val(_id);
+                input2.val(_inconsistencia);
+                abrirModal(_form);
+            }
+            else
+                alert('Acaba de ocurrir un error, por favor vuelva a interntarlo');
+        }
+        else
+            alert('Acaba de ocurrir un error, por favor vuelva a interntarlo');
+    }
+
+    var buscarPersona = function (id,callback,callbackError)
+    {
+        $.ajax({
+            type:'POST',
+            url:'{{ path("inconsistencia_buscar_persona") }}',
+            data:{id:id},
+            dataType: 'json',
+           //processData: false,
+           //contentType: false,
+            success:callback,
+            error: callbackError,
+        });
+    }
+
+    var seleccionarInconsistenciaSegip= function(_ue,_id,_form,_inconsistencia,regla)
+    {
+        var form=$('#'+_form);
+        if(typeof(form)!='undefined')
+        {
+            var input    = form.find('#form_ue');
+            var input1   = form.find('#form_id');
+            var input2   = form.find('#form_inconsistencia');
+
+            if(typeof(input)!='undefined' && typeof(input1)!='undefined' && typeof(input2)!='undefined')
+            {
+                input.val(_ue);
+                input1.val(_id);
+                input2.val(_inconsistencia);
+
+                buscarPersona(_id,
+                function(data)
+                {
+                    var persona = data.data;
+                    form.find('#form_nombre').val(persona.nombre);
+                    form.find('#form_paterno').val(persona.paterno);
+                    form.find('#form_materno').val(persona.materno);
+
+                    form.find('#form_tipo').val(regla);
+                    form.find('#form_carnet').val(persona.carnet);
+                    form.find('#form_complemento').val(persona.complemento);
+                    form.find('#form_fecha_nacimiento').val(persona.fechaNacimiento);
+                    abrirModal(_form);
+                },
+                function(data)//en caso de error llamara a esta funcion
+                {
+                    alert('Acaba de ocurrir un error, no se pudo obtener dato de la persona, por favor vuelva a intentarlo.');
+                    return;
+                });
+            }
+            else
+                alert('Acaba de ocurrir un error, por favor vuelva a interntarlo');
+        }
+        else
+            alert('Acaba de ocurrir un error, por favor vuelva a interntarlo');
+    }
+    var desayunoEstaSeleccionado = function (desayunoEstados)
+    {
+        var seleccionado    = true;
+        var valor           =-1;
+        var cantidadEstados = desayunoEstados.length;
+        if(typeof(desayunoEstados)!='undefined')
+        {
+            if(cantidadEstados==2)
+            {
+                for(var i =0;i<cantidadEstados;i++)
+                {
+                    if( $(desayunoEstados[i]).is(':checked') == true)
+                    {
+                        valor=$(desayunoEstados[i]).val();
+                    }
+                }
+            }
+            else
+                seleccionado =false;
+        }
+        else
+            seleccionado =false;
+        if(valor==-1)
+            seleccionado=false;
+        return {'seleccionado':seleccionado,'valor':valor};
+    }
+    var abrirModal=function(_nombreModal)
+    {
+        var modal=$("#"+_nombreModal);
+        if(typeof(modal)!=null)
+            modal.modal('show');
+    }
+    var cerrarModal=function(_nombreModal)
+    {
+        var modal=$("#"+_nombreModal);
+        if(typeof(modal)!=null)
+        {
+            modal.modal('hide');
+            {#limpiarModal(_nombreModal)#}
+        }
+    }
+    var ejecutandoAccion=function (_con,_ele,_text)
+    {
+        var ele=$('.'+_con).find('.'+_ele);
+        if(typeof(ele)!=null)
+        {
+            ele.text(_text);
+        }
+    }
+    var habilitarElemento=function(_con,_ele)
+    {
+        var ele=$(_con).find('.'+_ele);
+        if(typeof(ele)!=null)
+        {
+            ele.removeAttr('disabled');
+        }
+    }
+    var deshabilitarElemento=function(_con,_ele)
+    {
+        var ele=$(_con).find('.'+_ele);
+        if(typeof(ele)!=null)
+        {
+            ele.attr('disabled',true);
+        }
+    }
+    var resolverInconsistenciaDesayuno = function (_form,e)
+    {
+        e.preventDefault();
+        var form=$(_form);
+        var desayunoSeleccionado =desayunoEstaSeleccionado($('.request-desayuno'));
+        if(desayunoSeleccionado.valor<0 || desayunoSeleccionado.seleccionado==false)
+        {
+            alert('Debe seleccionar SI se proporciona o NO desayuno escolar al curso');
+            return
+        }
+        if(desayunoSeleccionado.valor==1)
+        {
+            var financiamiento=form.find('#form_finDesEscolarTipo');
+            if(typeof(financiamiento)!='undefined')
+            {
+                if(financiamiento.val()=='')
+                {
+                    alert('Debe seleccionar una fuente de financiamiento del desayuno');
+                    return;
+                }
+            }
+            else
+            {
+                alert('Acaba de ocurrir uun error, por favor vuelva a intentarlo');
+                return;
+            }
+        }
+        else
+        {
+            var financiamiento=form.find('#form_finDesEscolarTipo');
+            if(typeof(financiamiento)!='undefined')
+            {
+                financiamiento.val('');
+            }
+        }
+        var q=confirm('¿Está seguro de proceder?');
+        if(q==false)
+        {
+            return;
+        }
+        var _btn_submit='btn-resolver-inconsistencia';
+        $.ajax({
+                type: 'POST',
+                url: '{{path("ccalidad_resolver_inconsistencias_grados_sin_desayuno")}}',
+                data: form.serialize(),
+                {#
+                /*dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData:false,*/
+                #}
+                beforeSend: function()
+                {
+                    deshabilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-desayuno',_btn_submit,'Solucionando observación ...');
+                },
+                success: function(data)
+                {
+                    var status  = data.status;
+                    var msj     = data.msj;
+                    var id      = data.data;
+                    if(status==200)
+                    {
+                        if(id!=null && msj!=null)
+                        {
+                            cerrarModal('modal-inconsistencia-sin-desayuno');
+                            $('.tr-observacion-'+id).fadeOut();
+                            $('.tr-observacion-'+id).remove();
+                            alert(msj);
+                        }
+                        else
+                        {
+                            alert('Acaba de ocurrir un error por favor vuelva a intentarlo.');
+                        }
+                    }
+                    else
+                    {
+                        alert(msj);
+                    }
+                    habilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-desayuno',_btn_submit,'Solucionar observación');
+                },
+                error:function (xhr)
+                {
+                    habilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-desayuno',_btn_submit,'Solucionar observación');
+                    try
+                    {
+                        var data    = JSON.parse(xhr.responseText);
+                        var msj     = data.msj;
+                        var status  = data.status;
+                        if(status== 404)
+                            alert(data.msj);
+                        else
+                            alert('Acaba de ocurrir un error por favor vuelva a intentarlo');
+                    }
+                    catch(e)
+                    {
+                        alert('Acaba de ocurrir un error por favor vuelva a intentarlo');
+                    }
+                }
+        });
+    }
+    var resolverInconsistenciaIdiomaAula = function (_form,e)
+    {
+        e.preventDefault();
+        var form=$(_form);
+        var idioma1=form.find('#form_priLenEnsenanzaTipo');
+        var idioma2=form.find('#form_segLenEnsenanzaTipo');
+        var idioma3=form.find('#form_terLenEnsenanzaTipo');
+
+        if(typeof(idioma1)=='undefined' || (typeof(idioma1)!='undefined' && idioma1.val()=='' ) )
+        {
+            alert('Debe seleccionar la primera lengua');
+            return;
+        }
+        if(typeof(idioma2)=='undefined' || (typeof(idioma2)!='undefined' && idioma2.val()=='' ) )
+        {
+            alert('Debe seleccionar la segunda lengua');
+            return;
+        }
+        if(typeof(idioma3)=='undefined' || (typeof(idioma3)!='undefined' && idioma3.val()=='' ) )
+        {
+            alert('Debe seleccionar la tercera lengua');
+            return;
+        }
+        var q=confirm('¿Está seguro de proceder?');
+        if(q==false)
+        {
+            return;
+        }
+        var _btn_submit='btn-resolver-inconsistencia-idioma-aula';
+        $.ajax({
+                type: 'POST',
+                url: '{{path("ccalidad_resolver_inconsistencias_grados_sin_idioma_ensenanza_aula")}}',
+                data: form.serialize(),
+                {#
+                /*dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData:false,*/
+                #}
+                beforeSend: function()
+                {
+                    deshabilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-idioma-aula',_btn_submit,'Solucionando observación ...');
+                },
+                success: function(data)
+                {
+                    var status  = data.status;
+                    var msj     = data.msj;
+                    var id      = data.data;
+                    if(status==200)
+                    {
+                        if(id!=null && msj!=null)
+                        {
+                            cerrarModal('modal-inconsistencia-sin-idioma-ensenanza-aula');
+                            $('.tr-observacion-'+id).fadeOut();
+                            $('.tr-observacion-'+id).remove();
+                            $(form)[0].reset();
+                            alert(msj);
+                        }
+                        else
+                        {
+                            alert('Acaba de ocurrir un error por favor vuelva a intentarlo.');
+                        }
+                    }
+                    else
+                    {
+                        alert(msj);
+                    }
+                    habilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-idioma-aula',_btn_submit,'Solucionar observación');
+                },
+                error:function (xhr)
+                {
+                    habilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-idioma-aula',_btn_submit,'Solucionar observación');
+                    try
+                    {
+                        var data    = JSON.parse(xhr.responseText);
+                        var msj     = data.msj;
+                        var status  = data.status;
+                        if(status== 404)
+                            alert(data.msj);
+                        else
+                            alert('Acaba de ocurrir un error por favor vuelva a intentarlo');
+                    }
+                    catch(e)
+                    {
+                        alert('Acaba de ocurrir un error por favor vuelva a intentarlo');
+                    }
+                }
+        });
+    }
+
+
+    var resolverInconsistenciaSegip = function (_form,e)
+    {
+        e.preventDefault();
+        var form=$(_form);
+        var carnet = form.find('#form_carnet');
+        var complemento = form.find('#form_complemento');
+        var fechaNacimiento = form.find('#form_fecha_nacimiento');
+
+        var nombre = form.find('#form_nombre');
+        var paterno = form.find('#form_paterno');
+        var materno = form.find('#form_materno');
+
+        if(typeof(nombre)=='undefined' || (typeof(nombre)!='undefined' && nombre.val()=='' ) )
+        {
+            alert('Debe llenar el campo nombre.');
+            return;
+        }
+        if(typeof(paterno)=='undefined' || (typeof(paterno)!='undefined' && paterno.val()=='' ) )
+        {
+            alert('Debe llenar el campo paterno.');
+            return;
+        }
+        if(typeof(materno)=='undefined' || (typeof(materno)!='undefined' && materno.val()=='' ) )
+        {
+            alert('Debe llenar el campo materno.');
+            return;
+        }
+
+        if(typeof(carnet)=='undefined' || (typeof(carnet)!='undefined' && carnet.val()=='' ) )
+        {
+            alert('Debe llenar el campo carnet.');
+            return;
+        }
+        if(typeof(fechaNacimiento)=='undefined' || (typeof(fechaNacimiento)!='undefined' && fechaNacimiento.val()=='' ) )
+        {
+            alert('Debe llenar el campo fecha de nacimiento.');
+            return;
+        }
+        var q=confirm('¿Está seguro de proceder?');
+        if(q==false)
+        {
+            return;
+        }
+        var _btn_submit='btn-resolver-inconsistencia-segip';
+        $.ajax({
+                type: 'POST',
+                url: '{{path("ccalidad_resolver_inconsistencias_segip")}}',
+                data: form.serialize(),
+                {#
+                /*dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData:false,*/
+                #}
+                beforeSend: function()
+                {
+                    deshabilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-segip',_btn_submit,'Solucionando observación ...');
+                },
+                success: function(data)
+                {
+                    var status  = data.status;
+                    var msj     = data.msj;
+                    var id      = data.data;
+                    if(status==200)
+                    {
+                        if(id!=null && msj!=null)
+                        {
+                            cerrarModal('modal-inconsistencia-sin-idioma-ensenanza-aula');
+                            $('.tr-observacion-'+id).fadeOut();
+                            $('.tr-observacion-'+id).remove();
+                            $(form)[0].reset();
+                            alert(msj);
+                        }
+                        else
+                        {
+                            alert('Acaba de ocurrir un error por favor vuelva a intentarlo.');
+                        }
+                    }
+                    else
+                    {
+                        alert(msj);
+                    }
+                    habilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-segip',_btn_submit,'Solucionar observación');
+                },
+                error:function (xhr)
+                {
+                    habilitarElemento($(_form),_btn_submit);
+                    ejecutandoAccion('form-resolve-inconsistency-segip',_btn_submit,'Solucionar observación');
+                    try
+                    {
+                        var data    = JSON.parse(xhr.responseText);
+                        var msj     = data.msj;
+                        var status  = data.status;
+                        if(status== 404)
+                            alert(data.msj);
+                        else
+                            alert('Acaba de ocurrir un error por favor vuelva a intentarlo');
+                    }
+                    catch(e)
+                    {
+                        alert('Acaba de ocurrir un error por favor vuelva a intentarlo');
+                    }
+                }
+        });
+    }
+    function editar_datos(gestionTipo,obs,id,institucionEducativaId,llave) { 
+        $('#myModalSolucionInconsistenciaEstado').modal('show');
+        $('#gestionTipo').html(gestionTipo);
+        $('#institucionEducativaId').html(institucionEducativaId);
+        $('#obs').html(obs);
+        $('#idDetalle').val(id);
+        $('#llave').val(llave);
+        $('#idgestion').val(gestionTipo);
+
+        // $("#estado option[value=2").attr("selected",true);
+    }
+    $(".validar_form").submit(function (e) {
+        var select = $("select").val();
+        if (select == 0) {
+            // $('.error').text("Seleccione...");
+            return false;
+        } else {
+            // $('.error').hide();
+            // alert('OK');
+        }
+    });
+
+    </script>
+{% endblock %}

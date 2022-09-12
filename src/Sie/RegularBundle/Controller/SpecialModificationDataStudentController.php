@@ -45,7 +45,7 @@ class SpecialModificationDataStudentController extends Controller{
             $idDetalle = $formCalidad['idDetalle'];
         }
 
-        return $this->render('SieRegularBundle:SpecialModificationDataStudent:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':SpecialModificationDataStudent:index.html.twig', array(
                 'form' => $this->craeteformsearch($formCalidad['rude'])->createView(),
                 'rude' => $rude,
                 'idDetalle' => $idDetalle
