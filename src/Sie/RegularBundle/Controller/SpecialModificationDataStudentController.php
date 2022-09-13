@@ -312,7 +312,7 @@ class SpecialModificationDataStudentController extends Controller{
         $estudianteId = $arrData['estudianteId'];
         $carnetIdentidad=$arrData['carnetIdentidad'];
         $complemento=$arrData['complemento'];
-        $cedulaTipoId=$arrData['cedulaTipoId'];
+        $cedulaTipoId=$arrData['cedulaTipoId'];        
         $cedulaTipo=$arrData['cedulaTipo'];
         $generoId=$arrData['generoTipoId'];
         $paterno=$arrData['paterno'];
@@ -391,9 +391,14 @@ class SpecialModificationDataStudentController extends Controller{
         }
         if($complemento!=$objStudent->getComplemento()){
             $oldDataStudentPrev[] = array('campo'=>'Complemento','anterior'=>$objStudent->getComplemento(),'nuevo'=>$complemento);
+        }        
+        if($objStudent->getCedulaTipo()){
+            $cedulaTipoIdAnt = $objStudent->getCedulaTipo()->getId();
+        } else {
+            $cedulaTipoIdAnt = 0;
         }
-        if($cedulaTipoId!=$objStudent->getCedulaTipo()->getId()){
-            $oldDataStudentPrev[] = array('campo'=>'Cédula Tipo','anterior'=>$objStudent->getCedulaTipo()->getId(),'nuevo'=>$cedulaTipoId);
+        if($cedulaTipoId!=$cedulaTipoIdAnt){
+            $oldDataStudentPrev[] = array('campo'=>'Cédula Tipo','anterior'=>$cedulaTipoIdAnt,'nuevo'=>$cedulaTipoId);
         }
         if($generoId!=$objStudent->getGeneroTipo()->getId()){
             $oldDataStudentPrev[] = array('campo'=>'Género','anterior'=>$objStudent->getGeneroTipo()->getId(),'nuevo'=>$generoId);
@@ -450,7 +455,23 @@ class SpecialModificationDataStudentController extends Controller{
         if($pasaporte!=$objStudent->getPasaporte()){
             $oldDataStudentPrev[] = array('campo'=>'Pasaporte','anterior'=>$objStudent->getPasaporte(),'nuevo'=>$pasaporte);
         }
-//dump($arrData,$arrData['cedulaTipoId']);die;
+
+        if($carnetIdentidad){
+            // set the valuest to validate on segip
+            $arrParametros = array('complemento'=>$complemento,
+                'primer_apellido'=>$paterno,
+                'segundo_apellido'=>$materno,
+                'nombre'=>$nombre,
+                'fecha_nacimiento'=>$fechaNacimiento
+            );
+            if($cedulaTipoId == 2){
+                $arrParametros['extranjero'] = 'E';
+            } 
+            // call to segip function
+            $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnetIdentidad,$arrParametros,'prod', 'academico');
+
+        }
+        
         $oldDataStudent2 = json_encode($oldDataStudentPrev);
 
                 // $oldDataStudent = clone $objStudent;
@@ -496,7 +517,13 @@ class SpecialModificationDataStudentController extends Controller{
                         'primer_apellido'=>$paterno,
                         'segundo_apellido'=>$materno,
                         'nombre'=>$nombre,
-                        'fecha_nacimiento'=>$fechaNacimiento);
+                        'fecha_nacimiento'=>$fechaNacimiento
+                    );
+
+                    if($cedulaTipoId == 2){
+                        $arrParametros['extranjero'] = 'E';
+                    } 
+                        
                     // call to segip function
                     $answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnetIdentidad,$arrParametros,'prod', 'academico');
 
