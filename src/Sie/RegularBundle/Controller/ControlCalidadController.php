@@ -895,20 +895,19 @@ class ControlCalidadController extends Controller {
         } else {
             $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($vproceso->getLlave());
         }
-        
-        $extranjeto = '';
-        if($estudiante->getCedulaTipo() == 2){
-            $extranjeto = 'E';
-        }
 
         $datos = array(
             'complemento'=>$estudiante->getComplemento(),
             'primer_apellido'=>$estudiante->getPaterno(),
             'segundo_apellido'=>$estudiante->getMaterno(),
             'nombre'=>$estudiante->getNombre(),
-            'fecha_nacimiento'=>$estudiante->getFechaNacimiento()->format('d-m-Y'),
-            'extranjeto'=>$extranjeto,
+            'fecha_nacimiento'=>$estudiante->getFechaNacimiento()->format('d-m-Y')
         );
+
+
+        if($estudiante->getCedulaTipo() == 2){
+            $datos['extranjero'] = 'E';
+        } 
         
         if($estudiante){
             if($estudiante->getCarnetIdentidad()){
