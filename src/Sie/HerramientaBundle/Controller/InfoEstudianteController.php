@@ -827,7 +827,7 @@ class InfoEstudianteController extends Controller {
             if($gestion == $this->session->get('currentyear')){
                 // Unidades educativas plenas, modulares y humanisticas
                 // if(in_array($tipoUE['id'], array(1,3,5,6,7)) and (($operativo >= 2 and $gestion < 2019) or ($gestion >= 2019 and $operativo >= 5))) {
-                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 2 ) {
+                if(in_array($tipoUE['id'], array(1,3,5,6,7)) and $operativo >= 3 ) {
                     $imprimirLibreta = true;
                 }
                 // dump($imprimirLibreta);exit();
