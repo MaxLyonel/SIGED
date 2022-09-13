@@ -63,7 +63,7 @@ class InfoStudentsController extends Controller {
               //get the literal data of unidad educativa
               $sinfoUeducativa = serialize(array(
                   'ueducativaInfo' => array('nivel' => $uEducativa['nivel'], 'grado' => $uEducativa['grado'], 'paralelo' => $uEducativa['paralelo'], 'turno' => $uEducativa['turno'], 'programa' => $uEducativa['programa'], 'servicio' => $uEducativa['servicio'], 'areaEspecial' => $uEducativa['areaEspecial'], 'iecLugar'=>$uEducativa['iecLugar'], 'momento'=>$uEducativa['momento']),
-                  'ueducativaInfoId' => array('paraleloId' => $uEducativa['paraleloId'], 'turnoId' => $uEducativa['turnoId'],'programaId'=>$uEducativa['especialProgramaTipo'],'servicioId'=>$uEducativa['especialServicioTipo'], 'nivelId' => $uEducativa['nivelId'], 'gradoId' => $uEducativa['gradoId'], 'cicloId' => $uEducativa['cicloTipoId'], 'iecId' => $uEducativa['iecId'], 'ieceId' => $uEducativa['ieceId'],'areaEspecialId' => $uEducativa['areaEspecialId']),
+                  'ueducativaInfoId' => array('paraleloId' => $uEducativa['paraleloId'], 'turnoId' => $uEducativa['turnoId'],'programaId'=>$uEducativa['especialProgramaTipo'],'servicioId'=>$uEducativa['especialServicioTipo'], 'nivelId' => $uEducativa['nivelId'], 'gradoId' => $uEducativa['gradoId'], 'cicloId' => $uEducativa['cicloTipoId'], 'iecId' => $uEducativa['iecId'], 'ieceId' => $uEducativa['ieceId'],'areaEspecialId' => $uEducativa['areaEspecialId'], 'modalidadId' => $uEducativa['modalidadId']),
                   'requestUser' => array('sie' => $form['sie'], 'gestion' => $form['gestion'])
               ));
 
@@ -129,7 +129,7 @@ class InfoStudentsController extends Controller {
       //get the info ue
       $infoUe = $request->get('infoUe');
       $aInfoUeducativa = unserialize($infoUe);
-      //dump( $aInfoUeducativa);die;
+      
       //get the values throght the infoUe
       $sie = $aInfoUeducativa['requestUser']['sie'];
       $iecId = $aInfoUeducativa['ueducativaInfoId']['iecId'];
@@ -145,6 +145,7 @@ class InfoStudentsController extends Controller {
       $nivelname = $aInfoUeducativa['ueducativaInfo']['nivel'];
       $turnoname = $aInfoUeducativa['ueducativaInfo']['turno'];
       $momento = $aInfoUeducativa['ueducativaInfo']['momento'];
+      $modalidad = $aInfoUeducativa['ueducativaInfoId']['modalidadId'];
       
       //get db connexion
       $em = $this->getDoctrine()->getManager();
@@ -212,6 +213,13 @@ class InfoStudentsController extends Controller {
       //para talento en general  
       if(($nivel==410 or $nivel==411) and $gestion>2021 and $objArea->getId()==7){
         $arrDataLibreta['libreta'] = true;
+      }
+
+      //para bono
+      $arrDataLibreta['bono'] = false;
+      $areasBono=array(3,1,2,4,5);  
+      if( $gestion>2021 and in_array($objArea->getId(), $areasBono) and $modalidad==1){
+        $arrDataLibreta['bono'] = true;
       }
       // $UePlenasAddSpeciality = (in_array($sie, $arrUePlenasAddSpeciality))?true:false;
 

@@ -43,7 +43,7 @@ class MaestroAsignacionController extends Controller {
         $cursoOferta = $em->getRepository('SieAppWebBundle:InstitucioneducativaCursoOferta')->find($idCursoOferta);
         $maestros = $this->get('maestroAsignacion')->listar($idCursoOferta);
 
-        return $this->render('SieRegularBundle:MaestroAsignacion:index.html.twig',array(
+        return $this->render($this->session->get('pathSystem').':MaestroAsignacion:index.html.twig',array(
             'cursoOferta'=>$cursoOferta,
             'maestros'=>$maestros,
             'idValidacion'=>$idValidacion

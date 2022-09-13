@@ -158,7 +158,7 @@ class ControlCalidadController extends Controller {
 
         $gestiones = $query->getResult();
 
-        return $this->render('SieRegularBundle:ControlCalidad:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':ControlCalidad:index.html.twig', array(
                     'entidades' => $entidades,
                     'gestiones' => $gestiones,
                     'currentyear' => $currentyear,
@@ -268,7 +268,7 @@ class ControlCalidadController extends Controller {
         
         $lista_inconsistencias = $query->getResult();
 
-        return $this->render('SieRegularBundle:ControlCalidad:list.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':ControlCalidad:list.html.twig', array(
                     'lista_inconsistencias' => $lista_inconsistencias,
                     'entidad' => $entidad,
                     'gestion' => $gestion
@@ -384,7 +384,7 @@ class ControlCalidadController extends Controller {
         $query->execute();
         $lista_estado = $query->fetchAll();
         // dump($lista_estado);die;
-        return $this->render('SieRegularBundle:ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla,'idiomas'=>$idiomas,'lista_estado'=>$lista_estado));
+        return $this->render($this->session->get('pathSystem').':ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla,'idiomas'=>$idiomas,'lista_estado'=>$lista_estado));
     }
 
     public function omitirAction(Request $request) {
@@ -759,7 +759,7 @@ class ControlCalidadController extends Controller {
                 break;
         }
 
-        return $this->render('SieRegularBundle:ControlCalidad:grafico.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':ControlCalidad:grafico.html.twig', array(
             'gestion' => $gestion,
             'datosGrafico' => $datosGrafico,
             'regla' => $regla,
@@ -785,7 +785,7 @@ class ControlCalidadController extends Controller {
         $query->execute();
         $inconsistencias = $query->fetchAll();
         
-        return $this->render('SieRegularBundle:ControlCalidad:solucion_historico.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':ControlCalidad:solucion_historico.html.twig', array(
             'inconsistencias' => $inconsistencias,
             'vp_id' => $vp_id,
             'llave' => $llave,
@@ -870,7 +870,7 @@ class ControlCalidadController extends Controller {
         $query->execute();
         $inconsistencias = $query->fetchAll();
         
-        return $this->render('SieRegularBundle:ControlCalidad:solucion_historico.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':ControlCalidad:solucion_historico.html.twig', array(
             'inconsistencias' => $inconsistencias,
             'vp_id' => $vp_id,
             'llave' => $llave,

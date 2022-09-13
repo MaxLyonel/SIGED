@@ -67,6 +67,14 @@
 
                          <form role="form">
                             <div class="row">
+                             <div class="col-sm-2">
+                                <label for="idarrCedula">¿El Carnet de Identidad es?</label>
+                                <select name="DBExpedido" id="idarrCedula" v-model="dataNewStudent.cedulaTipoId" class="custom-select form-control"> 
+ 								                  {% for item in arrCedula %}
+                                    <option  value="{{ item.cedulaTipoId }}">{{ item.cedulaTipo }}</option>       
+								                  {% endfor %}
+                                </select> 
+                              </div>
                               <div class="col-sm-2">
                               <label for="ci">(*)Carnet de Identidad</label>
                               <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataNewStudent.cifind">
@@ -90,10 +98,11 @@
                                   <input type="text" placeholder="dd-mm-aaaa" id="form_idfecnac" name="form[idfecnac]" class="form-control jupper" v-model="dataNewStudent.fecnacfind">
                               </div>
 
-                              <div class="col-sm-3" v-if="allowwithoutci">
+                              <div class="col-sm-2" v-if="allowwithoutci">
 	                              <label for="form_caseespecial" class="validation">SIN CI :</label>
   	                       			<input type="checkbox" v-model="dataNewStudent.withoutcifind" id="form_withoutcifind" name="form[withoutcifind]" class="form-check-input" value="1">
                               </div>
+                               
 
                             </div>
                             </br>     
@@ -461,50 +470,64 @@
                   if (typeof this.dataNewStudent.withoutcifind === "undefined") {
 					          this.dataNewStudent.withoutcifind = false;
 					        }
-					if(!this.dataNewStudent.withoutcifind){
-						if (typeof this.dataNewStudent.cifind === "undefined") {
-	        				Swal.fire(
-		                        'Carnet de Identidad',
-		                        'Debe ingresar un Carnet de Identidad válido, en caso de que la/el estudiante no tenga el carnet de identidad, el registro se lo realiza por medio del TÉCNICO DE DISTRITO',
-		                        'warning'
-		                        );
-	        				this.buscando = false;
-		                    return;
-						} 					
-					}
-					if (typeof this.dataNewStudent.fecnacfind === "undefined") {
-						Swal.fire(
-		                        'Fecha de Nacimiento',
-		                        'Debe ingresar la Fecha de Nacimiento del Estudiante Ej: 01-01-2015',
-		                        'warning'
-		                        );
-        				this.buscando = false;
-	                    return;
-					}
-					if (typeof this.dataNewStudent.nombre === "undefined" || this.dataNewStudent.nombre == "") {
-						Swal.fire(
-		                        'Nombre del Estudiante',
-		                        'Debe ingresar el Nombre(s) del Estudiante',
-		                        'warning'
-		                        );
-        				this.buscando = false;
-        				return;
-					}					
-					if (((typeof this.dataNewStudent.paterno === "undefined" || typeof this.dataNewStudent.materno === "undefined") && (this.dataNewStudent.paterno == "" || this.dataNewStudent.materno == ""))) {
-						Swal.fire(
-		                        'Apellidos del Estudiante',
-		                        'Debe ingresar Apellido(s) del Estudiante',
-		                        'warning'
-		                        );
-        				this.buscando = false;
-        				return;
-					}
-					if (typeof this.dataNewStudent.complementofind === "undefined") {
-					  this.dataNewStudent.complementofind = '';
-					}
-					if (typeof this.dataNewStudent.expedidoIdfind === "undefined") {
-					  this.dataNewStudent.expedidoIdfind = 0;
-					}					
+
+                  if(!this.dataNewStudent.withoutcifind){
+                    if (typeof this.dataNewStudent.cifind === "undefined") {
+                          Swal.fire(
+                                    'Carnet de Identidad',
+                                    'Debe ingresar un Carnet de Identidad válido, en caso de que la/el estudiante no tenga el carnet de identidad, el registro se lo realiza por medio del TÉCNICO DE DISTRITO',
+                                    'warning'
+                                    );
+                          this.buscando = false;
+                                return;
+                    } 					
+                  }
+                  if (typeof this.dataNewStudent.fecnacfind === "undefined") {
+                    Swal.fire(
+                                    'Fecha de Nacimiento',
+                                    'Debe ingresar la Fecha de Nacimiento del Estudiante Ej: 01-01-2015',
+                                    'warning'
+                                    );
+                        this.buscando = false;
+                              return;
+                  }
+                  if (typeof this.dataNewStudent.nombre === "undefined" || this.dataNewStudent.nombre == "") {
+                    Swal.fire(
+                                    'Nombre del Estudiante',
+                                    'Debe ingresar el Nombre(s) del Estudiante',
+                                    'warning'
+                                    );
+                        this.buscando = false;
+                        return;
+                  }					
+                  if (((typeof this.dataNewStudent.paterno === "undefined" || typeof this.dataNewStudent.materno === "undefined") && (this.dataNewStudent.paterno == "" || this.dataNewStudent.materno == ""))) {
+                    Swal.fire(
+                                    'Apellidos del Estudiante',
+                                    'Debe ingresar Apellido(s) del Estudiante',
+                                    'warning'
+                                    );
+                        this.buscando = false;
+                        return;
+                  }
+                  if ( this.dataNewStudent.withoutcifind==false && (typeof this.dataNewStudent.cedulaTipoId === "undefined" || typeof this.dataNewStudent.cedulaTipoId === "" )) {
+                    Swal.fire(
+                                    'El Carnet de Identidad es?',
+                                    'Debe  seleccionar si el estudiante es Nacional o extranjero',
+                                    'warning'
+                                    );
+                        this.buscando = false;
+                        return;
+                  }
+                  if (typeof this.dataNewStudent.complementofind === "undefined") {
+                    this.dataNewStudent.complementofind = '';
+                  }
+                  if (typeof this.dataNewStudent.expedidoIdfind === "undefined") {
+                    this.dataNewStudent.expedidoIdfind = 0;
+                  }				
+
+                  if (typeof this.dataNewStudent.cedulaTipoId === "undefined") {
+                    this.dataNewStudent.cedulaTipoId = 0;
+                  }		
 					
                     axios.get(Routing.generate('newinscriptionEspecial_checksegipstudent', this.dataNewStudent ))
                     .then(response => {

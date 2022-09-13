@@ -1,0 +1,109 @@
+  
+	<div id="no-more-tables" class="table-responsive">
+        <table class="table table-bordered table-hover cf dataTable">
+            {% if listaAsignatura is defined %}  
+                {% if listaAsignatura|length > 0 %}  
+                    {% set lista = listaAsignatura[0] %}
+                {% else %}
+                    {% set lista = listaAsignatura %}
+                {% endif %}
+            {% endif %}
+            {% if listaCurso is defined %}  
+                {% if listaCurso|length > 0 %}  
+                    {% set lista = listaCurso[0] %}
+                {% else %}
+                    {% set lista = listaCurso %}
+                {% endif %}
+            {% endif %}
+            <thead  class="cf">
+                <tr>
+                    {% for key, dato in lista %}
+                        <th class="text-center">{{key}}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% if listaAsignatura is defined %}       
+                    {% for key, asignatura in listaAsignatura %}
+                        {% set countPeriodos = 1 %}
+                        <tr>
+                            {% for name, dato in asignatura %}
+                                <td data-title="{{name}}">
+                                    {% if dato.estado is defined %}
+                                        {% if dato.estado == "t" %}
+                                            {% set botonColorClase = "btn-success" %}
+                                            {% set botonNombre = "SI" %}
+                                        {% else %}
+                                            {% set botonColorClase = "btn-default" %}
+                                            {% set botonNombre = "NO" %}
+                                        {% endif %}
+                                        {% if countPeriodos <= periodos %}
+                                            {% set countPeriodos = countPeriodos + 1 %}
+                                            <button type="button" class="btn {{ botonColorClase }} btn-block" onclick='formulario("{{ dato.value }}", this)' data-toggle="modal" data-target="#popup">
+                                                {{ botonNombre }}
+                                            </button>
+                                        {% endif %}
+                                    {% else %}
+                                        {{ dato }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                {% else %}    
+                    {% for key, curso in listaCurso %}
+                        {% set countPeriodos = 1 %}
+                        <tr>
+                            {% for name, dato in curso %}
+                                <td data-title="{{name}}">
+                                    {% if dato.estado is defined %}
+                                        {% if dato.estado == "t" %}
+                                            {% set botonColorClase = "btn-success" %}
+                                            {% set botonNombre = "SI" %}
+                                        {% else %}
+                                            {% set botonColorClase = "btn-default" %}
+                                            {% set botonNombre = "NO" %}
+                                        {% endif %}
+                                        {% if countPeriodos <= periodos %}
+                                            {% set countPeriodos = countPeriodos + 1 %}
+                                            <button type="button" class="btn {{ botonColorClase }} btn-block" onclick='formulario("{{ dato.value }}", this)' data-toggle="modal" data-target="#popup">
+                                                {{ botonNombre }}
+                                            </button>
+                                        {% endif %}
+                                    {% else %}
+                                        {{ dato }}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    
+
+	<script>
+        var botonForm = null;
+        var formulario = function(val, bot){
+            botonForm = $(bot); 
+            var info = document.getElementById('form_info').value;
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_formulario', {'val': val, 'info': info}),
+                beforeSend: function () {
+                    $("#popupBody").empty();
+                    $("#popupBody").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    $("#popupBody").empty();  
+                    $("#popupBody").html(data);                  
+                },
+                error: function(error){          
+                    $("#popupBody").empty();           
+                    $("#popupBody").append('<div class="text-center">Error</div>');   
+                },
+            });          
+        }      
+	</script>
