@@ -853,6 +853,7 @@ class NewInscriptionEspecialController extends Controller
 		$estudiante->setFechaModificacion(new \DateTime('now'));     
 		$estudiante->setObservacion("REGISTRO ESPECIAL SIN RUDE");                        
 		// check if the country is Bolivia
+		
 		if ($paisId == '1'){                    
 			$estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId));
 			$estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarProvNacTipoId));
@@ -862,9 +863,8 @@ class NewInscriptionEspecialController extends Controller
 			$estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
 			$estudiante->setLocalidadNac('');
 		}
-
+		$estudiante->setCarnetIdentidad($carnet);
 		if(!$withoutcifind){
-			$estudiante->setCarnetIdentidad($carnet);
 			$estudiante->setComplemento(mb_strtoupper($complemento, 'utf-8'));
 			$estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
 			$estudiante->setSegipId(1);
