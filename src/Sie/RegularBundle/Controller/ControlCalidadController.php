@@ -890,7 +890,11 @@ class ControlCalidadController extends Controller {
         $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
         $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
 
-        $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($vproceso->getLlave());
+        if ($vproceso->getValidacionReglaTipo()->getId() == 37 ){
+            $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$vproceso->getLlave()));
+        } else {
+            $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($vproceso->getLlave());
+        }
 
         $datos = array(
             'complemento'=>$estudiante->getComplemento(),
@@ -899,6 +903,11 @@ class ControlCalidadController extends Controller {
             'nombre'=>$estudiante->getNombre(),
             'fecha_nacimiento'=>$estudiante->getFechaNacimiento()->format('d-m-Y')
         );
+
+
+        if($estudiante->getCedulaTipo() == 2){
+            $datos['extranjero'] = 'E';
+        } 
         
         if($estudiante){
             if($estudiante->getCarnetIdentidad()){
