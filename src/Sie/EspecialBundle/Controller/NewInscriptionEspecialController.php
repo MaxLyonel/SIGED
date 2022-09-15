@@ -863,7 +863,7 @@ class NewInscriptionEspecialController extends Controller
 			$estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
 			$estudiante->setLocalidadNac('');
 		}
-		$estudiante->setCarnetIdentidad($carnet);
+		$estudiante->setCarnetIdentidad($carnet); //para que ingrese con carnet = ''
 		if(!$withoutcifind){
 			$estudiante->setComplemento(mb_strtoupper($complemento, 'utf-8'));
 			$estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
