@@ -161,6 +161,7 @@ class PrevImmediateModiVer2Controller extends Controller{
         // }
 
         $inscripcionesArray = [];
+        $sieselected = 1;
         foreach ($inscripciones as $key => $value) {
             $inscripcionesArray[] = array(
                 'idInscripcion'=>$value['id'],
@@ -178,6 +179,10 @@ class PrevImmediateModiVer2Controller extends Controller{
                 'distrito'=>$value['distrito']
                 // 'ruta'=>$this->generateUrl('tramite_modificacion_calificaciones_formulario', array('flujoTipo'=>$flujoTipo,'idInscripcion'=>$value['id']))
             );
+
+            if($value['gestion'] == 2021){
+                $sieselected = $value['sie'];
+            }
         }
 
         /////start get dir info
@@ -186,11 +191,12 @@ class PrevImmediateModiVer2Controller extends Controller{
 	         		select pe.* 
 					from maestro_inscripcion mi 
 					inner join persona pe on (mi.persona_id = pe.id)
-					where mi.institucioneducativa_id = ".$inscripcionesArray[0]['sie']." and gestion_tipo_id = ".$inscripcionesArray[0]['gestion']." and cargo_tipo_id in (1,12)
+					where mi.institucioneducativa_id = ".$sieselected." and gestion_tipo_id = ".$inscripcionesArray[0]['gestion']." and cargo_tipo_id in (1,12)
 	            ");
 	            $query->execute();
 
 	            $dirinfo = $query->fetchAll();
+                
 	            if(sizeof($dirinfo)>0){
 			   		$directorNombre = $dirinfo[0]['nombre'].' '.$dirinfo[0]['paterno'].' '.$dirinfo[0]['materno'];
 			        $directorCarnet = $dirinfo[0]['carnet'];
