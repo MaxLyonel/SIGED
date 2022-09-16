@@ -1083,8 +1083,9 @@ class NewInscriptionIniPriController extends Controller
 				                    $estudiante->setLocalidadNac('');
 				                }
 
+								$estudiante->setCarnetIdentidad($carnet); //se añadio por calidacion CI not null
 				                if(!$withoutcifind){
-					                $estudiante->setCarnetIdentidad($carnet);
+					                
 					                $estudiante->setComplemento(mb_strtoupper($complemento, 'utf-8'));
 					                $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
 					                $estudiante->setSegipId(1);

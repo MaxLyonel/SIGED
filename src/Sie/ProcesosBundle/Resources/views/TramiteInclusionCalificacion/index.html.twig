@@ -224,8 +224,9 @@
                                 <hr>
                                 <h5>
                                     <b>Detalle de calificaciones</b>
-                                    <a v-if="datos != ''" class="btn btn-primary yearOld" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Seleccionar calificación(es)--</a>
+                                    <a v-if="datos != '' && swCuantitativas" class="btn btn-primary yearOld" data-toggle="modal" href='#modalCalificaciones' style="float:right; margin-top:-12px;"> <i class="fa fa-edit"></i> Seleccionar calificación(es)</a>
                                 </h5>
+
                                 <div v-if="notas.length > 0 || notasCualitativas.length > 0">
                                     <table v-if="notas.length > 0" class="table table-bordered table-striped table-condensed">
                                         <thead>
@@ -335,9 +336,12 @@
 
                                 </div>
                                 <div v-else>
-                                    <div class="alert alert-info">
+                                    <div v-if ="!swCuantitativas" class="alert alert-danger">
+                                        <strong>Nota!</strong> No se encontró la oferta académica de la UE en la gestión y grado seleccionado, debe comunicarse con el Administrador.
+                                    </div>
+                                    <div v-else class="alert alert-info">
                                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                        <strong>Nota!</strong> Seleccione las calificaciones que solicita adicionar o modificar. Haga clic en el boton "Agregar calificación" ->
+                                        <strong>Nota!</strong> Seleccione las calificaciones que solicita adicionar o modificar. Haga clic en el boton "Seleccionar calificación" ->
                                     </div>
                                 </div>
                             </div>
@@ -743,6 +747,7 @@
                     this.estadomatricula = '';
                     this.operativo = '';
                     this.idNivel = '';
+                    this.swCuantitativas = true;
 
                     this.nuevoEstadomatricula = '';
 
@@ -766,6 +771,9 @@
                             });
                         }else{
                             this.datos = response.data.datos;
+                            if(this.datos.cuantitativas.length == 0)
+                            this.swCuantitativas = false;
+
                             console.log(this.datos);
                             this.estadosMatricula = response.data.estadosMatricula;
                             this.promedioGeneral = response.data.promedioGeneral;

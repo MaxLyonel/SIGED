@@ -407,9 +407,10 @@ class InfoEstudianteRudeesNuevoController extends Controller
 
 	public function saveFormEstudianteAction(Request $request)
 	{
-	
+		
 		$em = $this->getDoctrine()->getManager();
-		$form = $request->get('form'); //dump($form); die;// dump($form['tieneDiscapacidad']);die;
+		$form = $request->get('form');// dump($form['tieneDiscapacidad']);die;
+		
 		$estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['estudianteId']);		
 		$rude = $em->getRepository('SieAppWebBundle:Rude')->find($form['rudeId']);
 		if($form['discapacidadId']=='nuevo'){
@@ -422,13 +423,10 @@ class InfoEstudianteRudeesNuevoController extends Controller
 		$estudiante->setFolio($form['folio']);
 		$estudiante->setCarnetIbc($form['carnetIbc']?$form['carnetIbc']:'');
 		$estudiante->setCarnetCodepedis($form['carnetCodepedis']?$form['carnetCodepedis']:'');
-		
-		
 		$rude->setTieneDiscapacidad($tieneDiscapacidad);
 		$carnetIbc=empty($form['carnetIbc'])?0:1;
 		$rude->setTieneCarnetDiscapacidad($carnetIbc);
 		$rude->setTieneCi($form['tieneCi']);
-		
 		$em->persist($estudiante);
 		$em->flush();
 		
@@ -2402,6 +2400,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 						p.celular,
 						p.segipId,
 						p.apellidoEsposo,
+						ct.id as cedulaTipoId,
 						IDENTITY(p.estadocivilTipo) as estado_civil, 
 						dt.id as expedido,
 						gt.id as genero, 
@@ -2421,6 +2420,7 @@ class InfoEstudianteRudeesNuevoController extends Controller
 					->leftJoin('SieAppWebBundle:InstruccionTipo','it','with','aid.instruccionTipo = it.id')
 					->leftJoin('SieAppWebBundle:ApoderadoOcupacionTipo','aot','with','aid.ocupacionTipo = aot.id')
 					->leftJoin('SieAppWebBundle:DepartamentoTipo','dt','with','p.expedido = dt.id')
+					->leftJoin('SieAppWebBundle:CedulaTipo','ct','with','p.cedulaTipo = ct.id')
 					->where('ai.estudianteInscripcion = :idInscripcion')
 					->andWhere('at.id in (:tipoApoderado)')
 					->setParameter('idInscripcion',$idInscripcion)
