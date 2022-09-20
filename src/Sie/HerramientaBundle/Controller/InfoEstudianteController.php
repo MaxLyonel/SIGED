@@ -222,6 +222,7 @@ class InfoEstudianteController extends Controller {
         //obterner el grado para los reportes de  operatvo de modificar/eiminar
         $grado = ($this->session->get('gradoTipoBth'))?$this->session->get('gradoTipoBth'):[0];
         $gradoId = implode(",",$grado);
+        // dump($this->session->get('pathSystem'));die;
         return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:index.html.twig', array(
                     'aInfoUnidadEductiva' => $aInfoUnidadEductiva,
                     'sie' => $form['sie'],
@@ -2110,19 +2111,30 @@ class InfoEstudianteController extends Controller {
         $persona = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $codigoRude));
         $estado = false;
         $mensaje = "";
+        $cedulaTipo = "";
+
+        if ($persona->getCedulaTipo() == null){
+            $cedulaTipo = 1;
+        }else{
+            $cedulTipo = $persona->getCedulaTipo();
+        }
+
+        
         if($persona){
             $datos = array(
                 'complemento'=>$persona->getComplemento(),
                 'primer_apellido'=>$persona->getPaterno(),
                 'segundo_apellido'=>$persona->getMaterno(),
                 'nombre'=>$persona->getNombre(),
-                'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y')
+                'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y'),
+                'tipo_persona' => $cedulaTipo
             );
             if($persona->getCarnetIdentidad()){
                 $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona->getCarnetIdentidad(),$datos,'prod','academico');
 
                 if($resultadoPersona){
                     $persona->setSegipId(1);
+                    $persona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipo));
                     $em->persist($persona);
                     $em->flush();
                     $mensaje = "Válido SEGIP";
