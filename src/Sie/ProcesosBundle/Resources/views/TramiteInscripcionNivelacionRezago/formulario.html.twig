@@ -228,6 +228,7 @@
             var fomularioCheck;
             var habilitado = false;
             var formsHabilitados = 0;
+            
             for (var i=0; i < formularios.length; i++){
                 form = formularios[i];
                 formDat = new FormData(form);
@@ -236,6 +237,7 @@
                 }
                 area = "";
                 habilitado = false;
+                
                 for (var j = 0, element; element = form[j++];) {
                     
                     if(element.type === "checkbox"){
@@ -296,14 +298,25 @@
                         }      
                         
                         if(element.type === "number" && (element.value < 51 || element.value > 100)){ 
-                            // alert("La calificación debe estar en el rango establecido segun normativa (51 a 100)");              
-                            element.focus();    
-                            Swal.fire({
-                                title: 'Calificación incorrecta',
-                                text: 'La calificación debe estar en el rango establecido segun normativa (51 a 100)',
-                                type: 'warning'
-                            });             
-                            return false;
+                            if ((cantidadFomulariosActivados-1) === i){
+                                if(element.value <= 0){                                    
+                                    element.focus();    
+                                    Swal.fire({
+                                        title: 'Calificación incorrecta',
+                                        text: 'La calificación del primer trimestre debe estar en el rango establecido segun normativa (1 a 100)',
+                                        type: 'warning'
+                                    }); 
+                                    return false;
+                                }
+                            } else {           
+                                element.focus();    
+                                Swal.fire({
+                                    title: 'Calificación incorrecta',
+                                    text: 'La calificación de nivelación debe estar en el rango establecido segun normativa (51 a 100)',
+                                    type: 'warning'
+                                });             
+                                return false;
+                            }
                         }            
                     }
                 }
