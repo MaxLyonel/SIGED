@@ -5,9 +5,9 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UnivNaturalezajuridicaTipo
+ * UnivCategoriaTipo
  */
-class UnivNaturalezajuridicaTipo
+class UnivCategoriaTipo
 {
     /**
      * @var integer
@@ -17,7 +17,7 @@ class UnivNaturalezajuridicaTipo
     /**
      * @var string
      */
-    private $naturalezajuridica;
+    private $categoriauniversidad;
 
 
     /**
@@ -31,25 +31,25 @@ class UnivNaturalezajuridicaTipo
     }
 
     /**
-     * Set naturalezajuridica
+     * Set categoriauniversidad
      *
-     * @param string $naturalezajuridica
-     * @return UnivNaturalezajuridicaTipo
+     * @param string $categoriauniversidad
+     * @return UnivCategoriaTipo
      */
-    public function setNaturalezajuridica($naturalezajuridica)
+    public function setCategoriauniversidad($categoriauniversidad)
     {
-        $this->naturalezajuridica = $naturalezajuridica;
+        $this->categoriauniversidad = $categoriauniversidad;
     
         return $this;
     }
 
     /**
-     * Get naturalezajuridica
+     * Get categoriauniversidad
      *
      * @return string 
      */
-    public function getNaturalezajuridica()
+    public function getCategoriauniversidad()
     {
-        return $this->naturalezajuridica;
+        return $this->categoriauniversidad;
     }
 }

@@ -45,6 +45,11 @@ class UnivUniversidad
     private $fechaModificacion;
 
     /**
+     * @var \Sie\AppWebBundle\Entity\UnivCategoriaTipo
+     */
+    private $univCategoriaTipo;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\UnivTipoUniversidad
      */
     private $univTipoUniversidad;
@@ -196,6 +201,29 @@ class UnivUniversidad
     public function getFechaModificacion()
     {
         return $this->fechaModificacion;
+    }
+
+    /**
+     * Set univCategoriaTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\UnivCategoriaTipo $univCategoriaTipo
+     * @return UnivUniversidad
+     */
+    public function setUnivCategoriaTipo(\Sie\AppWebBundle\Entity\UnivCategoriaTipo $univCategoriaTipo = null)
+    {
+        $this->univCategoriaTipo = $univCategoriaTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get univCategoriaTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\UnivCategoriaTipo 
+     */
+    public function getUnivCategoriaTipo()
+    {
+        return $this->univCategoriaTipo;
     }
 
     /**

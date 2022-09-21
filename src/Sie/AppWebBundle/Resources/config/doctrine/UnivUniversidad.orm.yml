@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\UnivUniversidad:
     type: entity
     table: univ_universidad
     indexes:
+        IDX_54C77A5E8A3C865F:
+            columns:
+                - univ_categoria_tipo_id
         IDX_54C77A5EECF8F789:
             columns:
                 - univ_tipo_universidad_id
@@ -51,6 +54,15 @@ Sie\AppWebBundle\Entity\UnivUniversidad:
             comment: ''
             column: fecha_modificacion
     manyToOne:
+        univCategoriaTipo:
+            targetEntity: UnivCategoriaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_categoria_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         univTipoUniversidad:
             targetEntity: UnivTipoUniversidad
             cascade: {  }
