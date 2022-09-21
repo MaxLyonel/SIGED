@@ -2966,7 +2966,7 @@ class CursosLargosController extends Controller {
 
 
             $query = $em->getConnection()->prepare('
-                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid, d.estadomatricula  AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
+                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid, d.estadomatricula  AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero, a.complemento
 
                 from estudiante a
                     inner join estudiante_inscripcion b on b.estudiante_id =a.id
@@ -3639,7 +3639,7 @@ class CursosLargosController extends Controller {
         $objStudents = array();
 
         $query = $em->getConnection()->prepare('
-                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid,d.estadomatricula  AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero 
+                select c.id as idcurso, b.id as idestins,d.id as estadomatriculaid,d.estadomatricula  AS estadomatricula, b.estudiante_id as idest, a .codigo_rude as codigorude, a.carnet_identidad as carnet,a.paterno,a.materno,a.nombre,a.fecha_nacimiento as fechanacimiento, e.genero, a.complemento
                 from estudiante a
                     inner join estudiante_inscripcion b on b.estudiante_id =a.id
                         inner join institucioneducativa_curso c on b.institucioneducativa_curso_id = c.id 
