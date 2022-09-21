@@ -1,0 +1,829 @@
+{% extends app.session.get('layout') %}
+{% block contentoption %}
+    
+    <style type="text/css">
+        [v-cloak]{
+            display: none;
+        }
+        .buscador{
+            margin-top: -20px;
+            background: #E4E4E4;
+            padding: 10px;
+        }
+        .encabezado{
+            padding: 5px;
+            /* font-weight: bold; */
+        }
+        .estudiante{
+            padding: 10px;
+            background: #EEEEEE;
+            text-align: center;
+            font-weight: bold;
+            font-size: 17px;
+        }
+        .jupper{
+            text-transform: uppercase;
+        }
+        input[type='text']{
+            /* background: #000000; */
+            text-transform: uppercase;
+            color: #000000 !important;
+        }
+        .select-nota:hover{
+            /* border-color: #60AA5D; */
+            background: #EAFBF1;
+            color: #009900;
+        }
+        .seleccionado{
+            background: #B8F1CA !important;
+        }
+        .headtabla{
+            background: #717171 !important;
+            color: #FFFFFF;
+            border-bottom: none !important;
+        }
+        /*.check{**/
+            /* background: #EEEEEE; */
+            /* margin-right: 30px; */
+        /*}*/
+        h5{
+            font-weight: bold;
+        }
+        .cajaPromedio{
+            font-weight: bold; 
+            /* background:#DDDDDD; */
+            background:#EAEAEA !important;
+        }
+        .cajaNota{
+            cursor: pointer;
+        }
+
+        .include{
+            margin: 20px;
+        }
+        .titulo{
+            padding: 5px;
+        }
+        .tachado{
+            text-decoration: line-through;
+            /* color: #D5956E; */
+            /* color:  #D51528; */
+            color:  #555555;
+            opacity: 0.4;
+            /* display: none; */
+        }
+        /* nota seleccionada */
+        .notaNueva{
+            /* color: #1EB480; */
+            /* color: #7B7DA7; */
+            font-size: 1.2em;
+        }
+        .notaNuevaAprobado{
+            /* color: #1EB480; */
+            color: #5CA813;
+            font-size: 1.2em;
+        }
+        .notaNuevaReprobado{
+            /* color: #1EB480; */
+            color: #E62220;
+            font-size: 1.2em;
+        }
+        input[type=”file”]#image {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+        label[for="image"] {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            background-color: #14A1DA;
+            display: inline-block;
+            transition: all .5s;
+            cursor: pointer;
+            padding: 5px 20px !important;
+            width: fit-content;
+            text-align: center;
+        }
+        input[type=”file”]#imageue {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+        label[for="imageue"] {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            background-color: #14A1DA;
+            display: inline-block;
+            transition: all .5s;
+            cursor: pointer;
+            padding: 5px 20px !important;
+            width: fit-content;
+            text-align: center;
+        }
+        .vistaModificaciones{
+            float: right;
+            font-size: 1.2em;
+        }
+        textarea{
+            resize: vertical;
+        }
+    </style>
+    <style type="text/css">
+        .requisitos{
+            background: #EEEEEE;
+            padding: 5px;
+            padding-left: 50px;
+            box-shadow: 4px 4px #DDDDDD;
+            margin-bottom: 15px;
+        }
+        .requisitos > .checkbox > label{
+            color: #2A3271;
+            font-size: 1.2rem !important;
+        }
+    </style>
+
+    <div class="header-content">
+        <h2 name="tramiteEnviado"><i class="fa fa-list-alt"></i> Trámites <span></span></h2>
+        <div class="breadcrumb-wrapper hidden-xs">
+            <span class="label">Usted esta aquí:</span>
+            <ol class="breadcrumb">
+                <li>
+                    <i class="fa fa-home"></i>
+                    <a href="{{ path('wf_tramite_index') }}">Tramites</a>
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li>
+                    <i class="fa fa-file"></i>
+                    Con mas de un estado Final
+                    <i class="fa fa-angle-right"></i>
+                </li>
+                <li class="active">Formulario</li>
+            </ol>
+        </div><!-- /.breadcrumb-wrapper -->
+    </div><!-- /.header-content -->
+    <div class="include animated fadeIn">
+        {% if idTramite is not null %}
+            <div class="panel-heading yearOld">
+                <h3 class="panel-title"> <i class="fa fa-file"></i> impresion </h3>
+            </div>
+            {# {% include 'SieProcesosBundle:TramiteRegDobleProm:historial.html.twig' with { 'historial': historial} %} #}
+        {% endif %}
+    </div>
+    <div id="app">
+    <div v-cloak>
+        <div class="body-content animated fadeIn">
+
+            <div class="panel panel-primary" v-if="urlreporte == ''">
+                <div class="panel-heading yearOld">
+                    <h3 class="panel-title"> <i class="fa fa-file"></i> Formulario </h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="text-center">
+                                <h3>FORMULARIO DE REGULARIZACIÓN CON MAS DE UN ESTADO FINAL <br> DE PROMOVIDO Y/O RETENIDO EN UN MISMO AÑO DE ESCOLARIDAD</h3>
+                            </div>
+                            <a class="btn btn-primary yearOld" data-toggle="modal" href='#modalEstudiante' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Buscar estudiante </a>
+                            <div class="clearfix"></div>
+                            <div v-if="datos != ''">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <table class="table table-condensed table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="4">
+                                                        <b>Datos del Estudiante</b>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><th>Código RUDE</th><td colspan="3">${codigoRude}</td></tr>
+                                                <tr><th>Nombre</th><td colspan="3">${estudiante}</td></tr>
+                                                <tr>
+                                                    <th>Cédula de Identidad</th><td>${carnet}</td>
+                                                    <th>Complemento</th><td>${complemento}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <table class="table table-condensed table-bordered">
+                                            <thead>
+                                                <tr><th colspan="4"><b>Datos de la Unidad Educativa Observada</b></th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><th>Unidad Educativa</th><td colspan="3">${sie} - ${institucioneducativa}</td></tr>
+                                                <tr>
+                                                    <th>Departamento</th><td>${departamento}</td>
+                                                    <th>Distrito</th><td>${distrito}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                        <table class="table table-condensed table-bordered">
+                                            <thead>
+                                                <tr><th colspan="4"><b>Datos del Trámite a Regularizar</b></th></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr><th colspan="4">Datos de Inscripción</th></tr>
+                                                <tr><th>Nivel</th><td>${nivel}</td><th>Paralelo</th><td>${paralelo}</td></tr>
+                                                <tr><th>Grado</th><td>${grado}</td><th>Turno</th><td>${turno}</td></tr>
+                                                <tr><th>Estado de Matricula a Regularizar</th><td><h5>${estadomatricula}</h5></td><th>Gestión</th><td>${gestion}</td></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="row">
+                                        <hr>
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                            <h5><b>Documentos que debe presentar a la Dirección Distrital a la DDE</b></h5>
+                                            <div class="requisitos">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" v-model="checkSolicitud">
+                                                        Nota de Solicitud dirigida a la Dirección Distrital Educativa
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" v-model="checkFotocopiaci">
+                                                        Fotocopia simple de CI del Estudiante
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label style="margin-left:-20px;">
+                                                        <input type="checkbox" v-model="checkInformeue" disabled style="display:none">
+                                                        <i v-if="informeue == ''" class="fa fa-square-o" style="color:#AAAAAA"></i>
+                                                        <i v-else class="fa fa-check-square-o"></i>
+                                                        &nbsp;Informe Técnico de la U.E: ${institucioneducativa} - ${sie}
+                                                        <input type="file" id="imageue" name="imageue" @change="getImageue" accept="file/*" style="display:none">
+                                                        <label for="imageue"> <i class="fa fa-upload"></i> 
+                                                            <span v-if="informeue != ''">${informeue.name}</span>
+                                                            <span v-else>Adjuntar informe Técnico U.E</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label style="margin-left:-20px;">
+                                                        <input type="checkbox" v-model="checkInforme" disabled style="display:none">
+                                                        <i v-if="informe == ''" class="fa fa-square-o" style="color:#AAAAAA"></i>
+                                                        <i v-else class="fa fa-check-square-o"></i>
+                                                        &nbsp;Informe Técnico de la Direccion Distrital
+                                                        <input type="file" id="image" name="image" @change="getImage" accept="file/*" style="display:none">
+                                                        <label for="image"> <i class="fa fa-upload"></i> 
+                                                            <span v-if="informe != ''">${informe.name}</span>
+                                                            <span v-else>Adjuntar informe DDD</span>
+                                                        </label>
+                                                    </label>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="text-center">
+                                                <a href="" class="btn btn-default">Cancelar</a>
+                                                <button v-bind:disabled="formularioEnviado" v-on:click="enviarSolicitud()" type="button" class="btn btn-success">Enviar solicitud</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div v-else>
+                                    <div class="alert alert-info">
+                                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                        <strong>Nota!</strong> Seleccione las calificaciones que solicita adicionar o modificar. Haga clic en el boton "Agregar calificación" ->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div v-else>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"> <i class="fa fa-file-pdf-o"></i> Trámite enviado</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            Trámite Nro. <h5><b class="text-success">${respuestaIdTramite}</b></h5> enviado exitosamente.
+                        </div>
+                        <div class="text-center">
+                            <a v-bind:href="urlreporte"><b> <i class="fa fa-file-pdf-o fa-2x"></i> Descargar formulario</b></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+
+        <div class="modal fade" id="modalEstudiante">
+            <div class="modal-dialog" style="width:800px">
+                <div class="modal-content">
+                    <div class="modal-header yearOld">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title"> <i class="fa fa-search"></i> Buscar estudiante</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row buscador">
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-right">
+                                Código Rude
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                <input type="text" class="form-control" v-model="rudeBuscar" maxlength="18" v-on:keyup.enter="buscarEstudiante()" placeholder="Ingrese el Código RUDE a buscar">
+                            </div>
+                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                                <button v-on:click="buscarEstudiante()" type="button" class="btn btn-primary yearOld"><i class="fa fa-search"></i> Buscar </button>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning" v-if="respuesta != ''"> <i class="fa fa-warning"></i> ${respuesta}</div>
+                        <div v-if="buscando" class="text-center">
+                            <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
+                        </div>
+
+                        <div v-if="inscripciones.length > 0">
+                            <p class="encabezado yearOld">Datos Estudiante</p>
+                            <table class="table table-primary">
+                                <tr>
+                                    <th>Código Rude</th>
+                                    <td>${codigoRude}</td>
+                                </tr>
+                                <tr>
+                                    <th>Estudiante</th>
+                                    <td>${estudiante}</td>
+                                </tr>
+                            </table>
+                            <br>
+                            <p class="encabezado yearOld">Historial de Inscripciones: <span> ( SELECCIONE LA INSCRIPCIÓN A REGULARIZAR )</span> </p>
+                            <div v-if="cargandoCalificaciones" style="position:absolute; text-align:center; background:#FFFFFF; width:96%">
+                                <img src="{{asset('img/loading.gif')}}" alt=""> Abriendo formulario de regularización ${gestion}
+                            </div>
+                            <table class="table table-striped table-default">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center border-right">#</th>
+                                        <th>Gestión</th>
+                                        <th>Sie</th>
+                                        <th>Institución educativa</th>
+                                        <th>Nivel</th>
+                                        <th>Grado</th>
+                                        <th>Paralelo</th>
+                                        <th>Estado Matrícula</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(ins, index) in inscripciones">
+                                        <td class="text-center border-right">${ index + 1}</td>
+                                        <td>${ins.gestion}</td>
+                                        <td>${ins.sie}</td>
+                                        <td>${ins.institucioneducativa}</td>
+                                        <td>${ins.nivel}</td>
+                                        <td>${ins.grado}</td>
+                                        <td>${ins.paralelo}</td>
+                                        <td>${ins.estadomatricula}</td>
+                                        <td>
+                                            <a v-if="(ins.estadomatriculaid == 5 || ins.estadomatriculaid == 11) && (ins.ban == 1) && (ins.iddistrito == rolLugarId)" v-on:click="seleccionarInscripcion(index)" class="btn btn-primary btn-xs yearOld" data-toggle="tooltip" data-placement="top" data-original-title="Realizar solicitud"><i class="fa fa-pencil"></i> </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>      
+    </div>
+    </div>
+
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script>
+        var app = new Vue({
+            delimiters: ['${', '}'],
+            el: '#app',
+            data: {
+                idTramite: '{{idTramite}}',
+                sieActual: '{{sieActual}}',
+                buscando: false,
+                rudeBuscar: '',
+                respuesta: '',
+
+                codigoRude: '',
+                rolLugarId:'',
+                estudiante: '',
+                carnet: '',
+                complemento:'',
+
+                sie: '',
+                institucioneducativa: '',
+                nivel: '',
+                grado: '',
+                paralelo: '',
+                turno: '',
+                gestion: '',
+                departamento: '',
+                distrito: '',
+                
+                inscripciones: [],
+
+                datos: '',
+
+                idInscripcion: '',
+                flujoTipo: '',
+                solicitud: '',
+                fotocopiaci: '',
+                informeue: '',
+                informe: '',
+                flujoTipo: '{{flujoTipo}}',
+                formularioEnviado: false,
+                urlreporte: '',
+                respuestaIdTramite: '',
+                
+                actualEstadomatricula: '',
+                estadosMatricula: [],
+                checkSolicitud: false,
+                checkFotocopiaci: false,
+                checkInformeue: false,
+                checkInforme: false
+                
+            },
+            methods: {
+                buscarEstudiante: function(){
+                    
+                    this.buscando = true;
+                    this.codigoRude = '';
+                    this.rolLugarId = '';
+                    this.estudiante = '';
+                    this.carnet = '';
+                    this.complemento = '';
+                    this.inscripciones = '';
+                    this.respuesta = '';
+                    this.datos = '';
+                    
+                    this.idInscripcion = '';
+                    this.sie = '';
+                    this.institucioneducativa = '';
+                    this.nivel = '';
+                    this.grado = '';
+                    this.paralelo = '';
+                    this.turno = '';
+                    this.gestion = '';
+                    this.departamento = '';
+                    this.distrito = '';
+                    this.solicitud = '';
+                    this.fotocopiaci = '';
+                    this.informeue = '';
+                    this.informe = '';
+
+                    // this.justificacion = '';
+                    
+                    if (this.rudeBuscar.length == 0) {
+                        this.respuesta = 'Debe ingresar un código RUDE válido';
+                        this.buscando = false;
+                        return;
+                    }
+
+                    if (this.rudeBuscar.length < 13) {
+                        this.respuesta = 'El código RUDE ingresado no es válido';
+                        this.buscando = false;
+                        return;
+                    }
+                    axios.get(Routing.generate('tramite_reg_doble_prom_buscar_estudiante', {
+                        codigoRude: this.rudeBuscar,
+                        flujoTipo: '{{ flujoTipo }}'
+                    }))
+                    .then(response => {
+                        if (response.status == 200) {
+                            this.codigoRude = response.data.codigoRude;
+                            this.rolLugarId = response.data.rolLugarId;
+                            // console.log(this.rolLugarId);
+                            this.estudiante = response.data.estudiante;
+                            this.carnet = response.data.carnet;
+                            this.complemento = response.data.complemento;
+                            this.inscripciones = response.data.inscripciones;
+                            // console.log(this.inscripciones[2].idInscripcion);
+                            $('[data-toggle="tooltip"]').tooltip();
+                            
+                        }
+                       
+                        if( response.status == 202){
+                            this.respuesta = response.data;
+                        }
+
+                        this.buscando = false;
+                    })
+                    .catch(e => {
+                        console.log(e);
+                        this.buscando = false;
+                    });
+                },
+                seleccionarInscripcion: function(pos){
+                    // this.cargandoCalificaciones = true;
+
+                    this.idInscripcion = this.inscripciones[pos].idInscripcion;
+                    this.sie = this.inscripciones[pos].sie;
+                    this.institucioneducativa = this.inscripciones[pos].institucioneducativa;
+                    this.nivel = this.inscripciones[pos].nivel;
+                    this.grado = this.inscripciones[pos].grado;
+                    this.paralelo = this.inscripciones[pos].paralelo;
+                    this.turno = this.inscripciones[pos].turno;
+                    this.gestion = this.inscripciones[pos].gestion;
+                    this.departamento = this.inscripciones[pos].departamento;
+                    this.distrito = this.inscripciones[pos].distrito;
+                    this.datos = '';
+                    this.solicitud = '';
+                    this.fotocopiaci = '';
+                    this.informeue = '';
+                    this.informe = '';
+                    this.checkSolicitud = false;
+                    this.checkFotocopiaci = false;
+                    this.checkInformeue = false;
+                    this.checkInforme = false;
+
+                    this.estadomatricula = this.inscripciones[pos].estadomatricula;
+                    this.estadomatriculaid = this.inscripciones[pos].estadomatriculaid;
+                    this.operativo = '';
+                    this.idNivel = '';              
+
+                    // CARGAMOS LAS CALIFICACIONES
+                    
+                    axios.get(Routing.generate('tramite_reg_doble_prom_buscar_inscripcion', {
+                        idInscripcion: this.idInscripcion, 
+                        idTramite: this.idTramite,
+                        flujoTipo: this.flujoTipo
+                    }))
+                    .then(response => {
+                        if (response.data.tramitePendiente.length > 0) {
+                            var msg = 'La inscripción tiene un trámite pendiente. <br> <b>Trámite Nro. '+ response.data.tramitePendiente[0].tramite_id +'</b>';
+                            Swal.fire({
+                              title: 'Tramites pendientes!',
+                              html: msg,
+                              type: 'warning'
+                            });
+                        }else{
+                            this.datos = 1;
+                            this.estadosMatricula = response.data.estadosMatricula;
+
+                            var me = this;
+                            $.each(this.estadosMatricula, function(index, val) {
+                                if (val['id'] == me.datos.estadoMatricula) {
+                                    me.actualEstadomatricula = val['estadoMatricula'];
+                                }
+                            });
+
+                            $('#modalEstudiante').modal('hide');
+                        }
+                        // this.cargandoCalificaciones = false;
+                    })
+                    .catch(e => {
+                        Swal.fire(
+                          'Error!',
+                          e,
+                          'danger'
+                        );
+
+                        // this.cargandoCalificaciones = false;
+                    });
+                },
+                getImageue: function(event){
+                    var informeue = event.target.files[0];
+                    var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+                    
+                    if(!allowedExtensions.exec(event.target.value)){
+                        event.target.value = '';
+                        Swal.fire(
+                              'Archivo incorrecto!',
+                              'El archivo adjunto debe ser una imagen o un archivo pdf',
+                              'warning'
+                            );
+                        this.informeue = '';
+                        this.checkInformeue = false;
+                        return false;
+                    }else{
+                        var megas = (informeue.size / 1024)/1024;
+                        if (megas > 2) {
+                            event.target.value = '';
+                            Swal.fire(
+                              'Tamaño no permitido!',
+                              'El archivo debe tener un tamaño menor a 2MB',
+                              'warning'
+                            );
+                            this.informeue = '';
+                            this.checkInformeue = false;
+                            return false;
+                        }
+                    }
+                    this.informeue = event.target.files[0];
+                    this.checkInformeue = true;
+                },
+                getImage: function(event){
+                    var informe = event.target.files[0];
+                    var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+                    
+                    if(!allowedExtensions.exec(event.target.value)){
+                        event.target.value = '';
+                        Swal.fire(
+                              'Archivo incorrecto!',
+                              'El archivo adjunto debe ser una imagen o un archivo pdf',
+                              'warning'
+                            );
+                        this.informe = '';
+                        this.checkInforme = false;
+                        return false;
+                    }else{
+                        var megas = (informe.size / 1024)/1024;
+                        if (megas > 2) {
+                            event.target.value = '';
+                            Swal.fire(
+                              'Tamaño no permitido!',
+                              'El archivo debe tener un tamaño menor a 2MB',
+                              'warning'
+                            );
+                            this.informe = '';
+                            this.checkInforme = false;
+                            return false;
+                        }
+                    }
+                    this.informe = event.target.files[0];
+                    // console.log(this.informe);
+                    this.checkInforme = true;
+                },
+                enviarSolicitud: function(){
+                    // DESACTIVAMOS EL BOTON DE ENVIAR
+
+                    // VALIDAMOS QUE SE HAYA LLENADO EL JUSTIFICATIVO
+                    if (!this.checkSolicitud) {
+                        // this.$refs.checkSolicitud.focus();
+                        Swal.fire(
+                          'Nota de Solicitud!',
+                          'Debe marcar la solicitud y adjuntar a la documentación.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    if (!this.checkFotocopiaci) {
+                        // this.$refs.checkSolicitud.focus();
+                        Swal.fire(
+                          'Fotocopia C.I.!',
+                          'Debe marcar fotocopia C.I. y adjuntar a la documentación.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    // VALIDAMOS QUE SE HAYA SELECCIONADO LA IMAGEN DEL INFORME
+                    if (typeof this.informeue != 'object') {
+                        Swal.fire(
+                          'Adjuntar Informe de la U.E.',
+                          'Debe adjuntar el informe de la U.E., puede ser un archivo de imagen o PDF, y debe tener un tamaño menor a 2MB',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    // VALIDAMOS LOS DOCUMENTOS MINIMOS
+                    if (!this.checkInformeue ){// || !this.checkCuaderno){ //|| !this.checkFormulario) 
+                        Swal.fire(
+                          'Requisitos!',
+                          'Debe subir el informe de la U.E.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    // VALIDAMOS QUE SE HAYA SELECCIONADO LA IMAGEN DEL INFORME
+                    if (typeof this.informe != 'object') {
+                        Swal.fire(
+                          'Adjuntar Informe Distrito',
+                          'Debe adjuntar el informe técnico del Distrito, puede ser un archivo de imagen o PDF, y debe tener un tamaño menor a 2MB',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    // VALIDAMOS LOS DOCUMENTOS MINIMOS
+                    if (!this.checkInforme ){// || !this.checkCuaderno){ //|| !this.checkFormulario) 
+                        Swal.fire(
+                          'Requisitos!',
+                          'Debe subir la solicitud realizada.',
+                          'warning'
+                        );
+                        return;
+                    }
+
+                    Swal.fire({
+                        title: '¿Enviar solicitud?',
+                        text: "La solicitud será enviada a la Dirección Departamental",
+                        type: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Si, enviar solicitud',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.value) {
+                            var data = new FormData();
+                            data.append('idTramite', this.idTramite);
+                            data.append('idInscripcion', this.idInscripcion);
+                            data.append('codigoRude', this.codigoRude);
+                            data.append('estudiante', this.estudiante);
+                            data.append('carnet', this.carnet);
+                            data.append('complemento', this.complemento);
+                            data.append('sie', this.sie);
+                            data.append('institucioneducativa', this.institucioneducativa);
+                            data.append('nivel', this.nivel);
+                            data.append('grado', this.grado);
+                            data.append('paralelo', this.paralelo);
+                            data.append('turno', this.turno);
+                            data.append('gestion', this.gestion);
+                            data.append('departamento', this.departamento);
+                            data.append('distrito', this.distrito);
+                            
+                            data.append('flujoTipo', this.flujoTipo);
+                            data.append('estadomatricula', this.estadomatricula);
+                            data.append('estadomatriculaid', this.estadomatriculaid);
+
+                            data.append('checkSolicitud', this.checkSolicitud);
+                            data.append('checkFotocopiaci', this.checkFotocopiaci);
+                            data.append('checkInformeue', this.checkInformeue);
+                            data.append('informeue', this.informeue);
+                            data.append('checkInforme', this.checkInforme);
+                            data.append('informe', this.informe);
+
+                            this.formularioEnviado = true;
+                            
+                            console.log(this.informeue);
+                            console.log(this.informe);
+
+                            axios.post(Routing.generate('tramite_reg_doble_prom_formulario_save'), data)
+                            .then(response => {
+                                this.respuestaIdTramite = response.data.idTramite;
+                                this.urlreporte = response.data.urlreporte;
+
+                                document.location.href = "#tramiteEnviado";
+                                
+                            })
+                            .catch(e => {
+                                this.formularioEnviado = false;
+                                Swal.fire(
+                                  'No se pudo enviar la solicitud!',
+                                  '',
+                                  'error'
+                                );
+                            });
+                        }
+                    })
+                }
+            },
+            mounted(){
+            }
+        });
+
+        $(".jnumbersletters").keypress(function (key) {
+            var key = key || window.event;
+            var k = key.charCode || key.keyCode;
+            if ((k < 97 || k > 122)//letras minusculas
+                && (k < 65 || k > 90) //letras mayusculas
+                && (k < 48 || k > 57) //NUmeros
+                // && (k != 13) //ENTER
+                && (k != 8) //retroceso
+                && (k != 9) //tab
+                && (k != 241) //ñ
+                 && (k != 209) //Ñ
+                 && (k != 32) //espacio
+                 && (k != 225) //á
+                 && (k != 233) //é
+                 && (k != 237) //í
+                 && (k != 243) //ó
+                 && (k != 250) //ú
+                 && (k != 193) //Á
+                 && (k != 201) //É
+                 && (k != 205) //Í
+                 && (k != 211) //Ó
+                 && (k != 218) //Ú
+                 && (k != 44) //coma ,
+                 && (k != 46) //punto .
+                )
+                return false;
+        });
+
+    </script>
+{% endblock %}

@@ -101,3 +101,7 @@ sie_procesos_tramite_mod_cal_vigente:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteModCalVigente.yml"
     prefix:   /sie/tramite/tramiteModCalVigente
 
+sie_procesos_tramite_reg_doble_promocion:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteRegDobleProm.yml"
+    prefix:   /sie/tramite/tramiteRegDobleProm
+

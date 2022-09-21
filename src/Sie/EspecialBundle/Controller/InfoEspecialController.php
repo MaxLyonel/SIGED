@@ -163,7 +163,8 @@ class InfoEspecialController extends Controller{
                 'data'=>$dataInfo,
                 'operativo'=>$periodo,
                 'operativoBonoJPform' => $this->cerrarOperativoForm('operativo_bono_jp_cerrar', 'Cerrar Operativo Bono JP',$data)->createView(),
-               // 'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($data['idInstitucion'],$data['gestion'],14),                
+                'operativoBonoJP' => $this->get('operativoutils')->verificarEstadoOperativo($data['idInstitucion'],$data['gestion'],14),                
+
     ));
 
   }

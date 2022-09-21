@@ -108,6 +108,7 @@
 																		<tr><th>Nivel</th><td>{{ nivelgrado.nivel }}</td></tr>
 																		<tr><th>Grado</th><td>{{ nivelgrado.grado }}</td></tr>
 																		<tr><th>Código S.I.E.</th><td>{{ nivelgrado.sie }}</td></tr>
+																		<tr><th>Evaluación pedagógica</th><td><a href="{{ asset('uploads/archivos/flujos/tramite/nivelacion/' ~ nivelgrado.sie ~ '/' ~ nivelgrado.urlEvaluacion) }}" target="_blank"> <b> <i class="fa fa-file-pdf-o fa-1x"></i> Ver adjunto </b></a></td></tr>
 																		<tr><th>Calificaciones</th><td>
 																			<ul class="list-group" style="margin-left:0px;">	
 																				{% for key, nota in nivelgrado.calificacion %}

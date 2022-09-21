@@ -116,7 +116,7 @@ class RudeUnificationController extends Controller{
             }
         }
 
-        return $this->render('SieAppWebBundle:RudeUnification:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':RudeUnification:index.html.twig', array(
                 'rudeStudent' => $arrStudent
             ));    
     }

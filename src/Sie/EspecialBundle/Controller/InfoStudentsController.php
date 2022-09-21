@@ -214,6 +214,7 @@ class InfoStudentsController extends Controller {
       if(($nivel==410 or $nivel==411) and $gestion>2021 and $objArea->getId()==7){
         $arrDataLibreta['libreta'] = true;
       }
+
       //para bono
       $arrDataLibreta['bono'] = false;
       $areasBono=array(3,1,2,4,5);  

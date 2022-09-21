@@ -1,0 +1,334 @@
+   
+    
+	<div class="row">
+        <div class="col-lg-12">
+            <div class="panel">
+                <div class="panel-heading"  id="solucionContent">
+                    <div id="no-more-tables" class="table-responsive">
+                        <input type="hidden" value="{{info}}" id="form_info" />
+                        <table class="table table-bordered table-hover cf dataTable">
+                            <thead  class="cf">
+                                <tr>
+                                    {% if lista.contenido is defined %}
+                                        {% for key, data in lista.cabecera %}
+                                            {% if data == '' or data == 'B1' or data == 'B2' or data == 'B3' or data == 'B4' or data == 'T1' or data == 'T2' or data == 'T3' %}
+                                            {% else %}
+                                            <th class="text-center" id="{{data}}">{{data}}</th> 
+                                            {% endif %}                                                           
+                                        {% endfor %}  
+                                    {% endif %}
+                                </tr>
+                            </thead>
+                            <tbody>    
+                                {% set index = 0 %}
+                                {% if lista.contenido is defined %}
+                                    {% for keyt, turno in lista.contenido %}
+                                        {% for keyn, nivel in turno %}
+                                            {% for keyg, grado in nivel %}
+                                                {% for keyp, paralelo in grado %}
+                                                    {% for keya, asignatura in paralelo %}
+                                                    <tr>
+                                                        {% set index = index + 1 %}
+                                                        {% if loop.first %}
+                                                            <td rowspan="{{paralelo|length}}">{{keyt}}</td>
+                                                            <td rowspan="{{paralelo|length}}">{{keyn}}</td>
+                                                            <td rowspan="{{paralelo|length}}">{{keyg}}</td>
+                                                            <td rowspan="{{paralelo|length}}">{{keyp}}</td>
+                                                        {% endif %}
+                                                            <td>{{keya}}</td>
+                                                        
+                                                    </tr>
+                                                    {% endfor %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% endfor %}    
+                                {% endif %} 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="panel panel-default" >
+                        <div class="panel-heading"  id="maestroNuevo">
+                            {% if nuevo %}
+                                {{form_start(formMaestro, {'attr': {'role': "form", 'id': "formNuevo"} } )}}
+                                    <input type="hidden" value="{% if nuevo == true %}true{% else %}false{% endif %}" id="form_enabled"/>
+                                    {{ form_widget(formMaestro.info) }}
+                                    <div class="form-body">          
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                                    {{ form_label(formMaestro.carnetIdentidad, '', { 'label_attr': {'class': 'control-label'} }) }}
+                                                    {{ form_widget(formMaestro.carnetIdentidad, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>       
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                                    {{ form_label(formMaestro.complemento) }}
+                                                    {{ form_widget(formMaestro.complemento, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>    
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                                    {{ form_label(formMaestro.expedido) }}
+                                                    {{ form_widget(formMaestro.expedido, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>                                                         
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">  
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.nombre) }}
+                                                    {{ form_widget(formMaestro.nombre, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>          
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.paterno) }}
+                                                    {{ form_widget(formMaestro.paterno, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>        
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.materno) }}
+                                                    {{ form_widget(formMaestro.materno, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>          
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.fechaNacimiento) }}
+                                                    <div id="sandbox-container1" class="sandbox-container">
+                                                        {{ form_widget(formMaestro.fechaNacimiento, { 'attr': {'class': 'form-control'} }) }}
+                                                    </div>
+                                                </div>                                                    
+                                            </div>
+                                        </div> 
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.rda, '', { 'label_attr': {'class': 'control-label'} }) }}
+                                                    {{ form_widget(formMaestro.rda, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>       
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.genero) }}
+                                                    {{ form_widget(formMaestro.genero, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>    
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.celular) }}
+                                                    {{ form_widget(formMaestro.celular, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>        
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.correo, '', { 'label_attr': {'class': 'control-label'} }) }}
+                                                    {{ form_widget(formMaestro.correo, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>                                                      
+                                            </div>
+                                        </div>  
+                                        <div class="form-group">
+                                            <div class="row">  
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.direccion) }}
+                                                    {{ form_widget(formMaestro.direccion, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>    
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.funcion) }}
+                                                    {{ form_widget(formMaestro.funcion, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>      
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.financiamiento, '', { 'label_attr': {'class': 'control-label'} }) }}
+                                                    {{ form_widget(formMaestro.financiamiento, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.item) }}
+                                                    {{ form_widget(formMaestro.item, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>                                                        
+                                            </div>
+                                        </div>    
+                                        <div class="form-group">
+                                            <div class="row">   
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.formacion) }}
+                                                    {{ form_widget(formMaestro.formacion, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>  
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.formacionDescripcion) }}
+                                                    {{ form_widget(formMaestro.formacionDescripcion, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>                                                     
+                                            </div>
+                                        </div>         
+                                        <div class="form-group">
+                                            <div class="row">       
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.idiomaOriginario) }}
+                                                    {{ form_widget(formMaestro.idiomaOriginario, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>    
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.normalista, '', { 'label_attr': {'class': 'control-label'} }) }}
+                                                    {{ form_widget(formMaestro.normalista, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>         
+                                                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                                                    {{ form_label(formMaestro.leeEscribeBraile, '', { 'label_attr': {'class': 'control-label'} }) }}
+                                                    {{ form_widget(formMaestro.leeEscribeBraile, { 'attr': {'class': 'form-control'} }) }}
+                                                </div>                                                      
+                                            </div>
+                                        </div>     
+                                        <div class="form-group">
+                                            <div class="row">       
+                                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">    
+                                                    {{ form_widget(formMaestro.guardar, { 'label': 'Incorporar maestro y finalizar', 'attr': {'class': 'form-control btn btn-default col-sm-12'} }) }}                                                  
+                                                </div>                                                      
+                                            </div>
+                                        </div> 
+                                    </div>
+                                {{form_end(formMaestro)}}     
+                            {% else %}   
+                                <form>
+                                    <div class="form-body">                    
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label">Cédula de Identidad</label>:
+                                                    <div class="well well-sm">{{ formMaestro.carnet }}</div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label">Complemento</label>:
+                                                    <div class="well well-sm">{{ formMaestro.complemento }}&nbsp;</div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                                    <label class="control-label">Fecha de Nacimiento</label>:
+                                                    <div class="well well-sm">{{ formMaestro.fechaNacimiento }}&nbsp;</div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                                    <label class="control-label">Paterno</label>:
+                                                    <div class="well well-sm">{{ formMaestro.paterno }}&nbsp;</div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                                    <label class="control-label">Materno</label>:
+                                                    <div class="well well-sm">{{ formMaestro.materno }}&nbsp;</div>
+                                                </div>
+                                                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                                    <label class="control-label">Nombre</label>:
+                                                    <div class="well well-sm">{{ formMaestro.nombre }}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>     
+                            {% endif %} 
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer"  id="solucionFooter">
+                    <div class="btn-group btn-group-justified">                    
+                        <a class="btn btn-warning" role="button" onclick="omitir()">Omitir incosnsistencia</a>                     
+                        {% if nuevo == false %}<a class="btn btn-danger" role="button" onclick="eliminar()">Eliminar maestro y finalizar</a>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>       
+	<script>
+
+        $('.sandbox-container input').datepicker({
+            autoclose: true,
+            todayHighlight: true,
+            format: 'dd-mm-yyyy',
+            language: 'es',
+        });
+
+        $("#formNuevo").submit(function( event ) {
+            var r = confirm("¿Desea finalizar la insconsistencia del maestro?");
+            if (r == false) {
+                return false;
+            }
+            var info = document.getElementById('form_info').value;
+            var content = $('#solucionContent').html();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_guarda'),
+                data: $('#formNuevo').serialize(),
+                beforeSend: function () {
+                    $('#solucionContent').empty();
+                    $("#solucionContent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    if (data.estado) {
+                        alert("Correcto, "+data.msg);
+                        botonListDetalle.remove();
+                        $("#collapseThreeTitle").empty();
+                        $("#collapseThreeBody").empty();
+                        $('#solution').removeClass('visible').addClass('invisible');
+                        $('#collapseTwo').removeClass('collapse').addClass('in');
+                    } else {
+                        alert("Error, "+data.msg);
+                        $('#solucionContent').html(content);
+                    }                    
+                },
+                error: function(error){     
+                    $('#solucionContent').html(content);
+                    alert("Error, no fue posible realizar el registro, intente nuevamente");  
+                },
+            });               
+            event.preventDefault(); 
+        });
+
+        var eliminar = function(){
+            var r = confirm("¿Desea eliminar la inscripción del maestro y finalizar la incosistencia?");
+            if (r == false) {
+                return false;
+            }
+            var info = document.getElementById('form_info').value;
+            var content = $('#solucionContent').html();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_asignar_materia_eliminar', {'info': info}),
+                beforeSend: function () {
+                    $('#solucionContent').empty();
+                    $("#solucionContent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    if (data.estado) {
+                        alert("Correcto, "+data.msg);
+                        botonListDetalle.remove();
+                        $("#collapseThreeTitle").empty();
+                        $("#collapseThreeBody").empty();
+                        $('#solution').removeClass('visible').addClass('invisible');
+                        $('#collapseTwo').removeClass('collapse').addClass('in');
+                    } else {
+                        alert("Error, "+data.msg);
+                        $('#solucionContent').html(content);
+                    }                    
+                },
+                error: function(error){     
+                    $('#solucionContent').html(content);
+                    alert("Error, no fue posible realizar el registro, intente nuevamente");  
+                },
+            });    
+        }
+
+        var omitir = function(){
+            var r = confirm("¿Desea omitir y finalizar la incosistencia?");
+            if (r == false) {
+                return false;
+            }
+            var info = document.getElementById('form_info').value;
+            var content = $('#solucionContent').html();
+            $.ajax({
+                type: 'get',
+                url: Routing.generate('maestroAsignacion_omitir', {'info': info}),
+                beforeSend: function () {
+                    $('#solucionContent').empty();
+                    $("#solucionContent").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+                },
+                success: function (data) {      
+                    if (data.estado) {
+                        alert("Correcto, "+data.msg);
+                        botonListDetalle.remove();
+                        $("#collapseThreeTitle").empty();
+                        $("#collapseThreeBody").empty();
+                        $('#solution').removeClass('visible').addClass('invisible');
+                        $('#collapseTwo').removeClass('collapse').addClass('in');
+                    } else {
+                        alert("Error, "+data.msg);
+                        $('#solucionContent').html(content);
+                    }                    
+                },
+                error: function(error){     
+                    $('#solucionContent').html(content);
+                    alert("Error, no fue posible realizar el registro, intente nuevamente");  
+                },
+            });    
+        }
+
+
+	</script>

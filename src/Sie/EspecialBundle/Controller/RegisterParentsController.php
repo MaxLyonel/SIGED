@@ -469,7 +469,7 @@ class RegisterParentsController extends Controller {
         list($dayPer, $monthPer, $yearPer) = explode('-',$apoderadoInscription['fechaNacimiento']);
         $arrYearsOld = implode('-',array($yearPer,$monthPer,$dayPer));
         
-        $sql = "select public.sp_obtener_edad(to_date('".$arrYearsOld."','YYYY-MM-DD'),to_date('2021-10-24','YYYY-MM-DD'))";
+        $sql = "select public.sp_obtener_edad(to_date('".$arrYearsOld."','YYYY-MM-DD'),to_date('2022-10-24','YYYY-MM-DD'))";
         $query = $em->getConnection()->prepare($sql);
         $query->execute();
         $datayearPerson = $query->fetch();
@@ -495,11 +495,11 @@ class RegisterParentsController extends Controller {
                 $obParentBjp->setFechaRegistro(new \DateTime('now'));
                 $em->persist($obParentBjp);
                 $em->flush();   
-                $message='Beneficiario Bono Juancito Pinto registrado!';  
+                $message='Tutor de cobro para el Bono Juancito Pinto registrado!';  
                 $itemColor = '#7bbf8b';         
             }
         }else{
-            $message='Beneficiario Bono Juancito Pinto NO registrado. Menor de Edad';  
+            $message='Tutor de cobro para el Bono Juancito Pinto NO registrado. Menor de Edad';  
             $itemColor='#f0ae68';
         }
       
