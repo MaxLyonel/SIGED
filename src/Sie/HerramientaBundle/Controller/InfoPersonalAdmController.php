@@ -1003,6 +1003,8 @@ class InfoPersonalAdmController extends Controller {
                 $newPersona->setEsvigente('t');
                 $newPersona->setActivo('t');
 
+                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(isset($persona['extranjero'])?2:1));
+
                 $em->persist($newPersona);
                 $em->flush();
                 $persona_validada = $newPersona;
