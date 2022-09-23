@@ -211,7 +211,7 @@ class OperativoBonoJPController extends Controller
 
 	private function getObservacionesControlCalidad($data)
 	{
-		$data['reglas'] = '12,13,26,24,25,8,15,20,63,60,61,62';
+		$data['reglas'] = '12,13,8,15,20,63,60';
 		// added to 2021 about qa
 		// $years = $data['gestion'].' ,'.$data['gestion'];
 		$years = $this->session->get('currentyear');
