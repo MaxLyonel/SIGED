@@ -49,6 +49,7 @@ class MainInfoUniController extends Controller{
             'uni_infosede'       		=> $this->buildOptionUni('sie_university_sede_index', 'Informacion Sede/sub Sede Central', $data)->createView(),
             'uni_statisticssede' 		=> $this->buildOptionUni('sie_university_sede_docenteadministrativo_index', 'Estadisitica Sede/sub Sede Central', $data)->createView(),
             'uni_statistics'     		=> $this->buildOptionUni('carreras_index', 'Estadisticas', $data)->createView(),
+            'closeform'            => $this->buildOptionUni('maininfouni_closeope', 'Cerrar operativo', $data)->createView(),
 
             ));    
     }
@@ -58,6 +59,7 @@ class MainInfoUniController extends Controller{
      * @return type obj form
      */
     private function buildOptionUni($goToPath, $nextButton, $data) {
+
         $form =  $this->createFormBuilder()
                         ->setAction($this->generateUrl($goToPath))
                         ->add('data', 'hidden', array('data' => $data));
@@ -65,5 +67,65 @@ class MainInfoUniController extends Controller{
         $form = $form->getForm();
         return $form;
     }    
+
+    /** krlos
+     * the method to decrypt
+     */
+    private function kdecrypt($data){
+        $data = hex2bin($data);
+        return unserialize($data);
+    }
+    /** krlos
+     * the method to close ope
+     */
+    public function closeOpeAction(Request $request){
+        $form = $request->get('form');
+        $data = ($this->kdecrypt($form['data']));
+        // $data    = bin2hex(serialize($form['data']));
+        ////////////////////////
+        $data=null;
+        $status= 404;
+        $msj='Ocurrio un error, por favor vuelva a intentarlo.';
+        $reporte = '';
+        $observations = null;
+        try{
+
+        $observations = null;
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $query = 'select * from sp_validacion_universidades_estadistico_web(?);';
+        $stmt = $db->prepare($query);
+        $params = array($data['sedeId']);
+        $stmt->execute($params);
+        $observations = $stmt->fetchAll();
+        // are there observations?
+            
+            if($observations == null){
+                $data=null;
+                $status= 200;
+                $msj='All thing is good...';
+                // miss save data about the operative to the universite data
+
+            }
+            else{
+                $data=null;
+                $status= 200;
+                $msj='No se puedo cerrar el operativo, todavia tiene inconsistencias.';
+            }
+        }catch(Exception $e){
+            $data=null;
+            $status= 404;
+            $msj='Ocurrio un error al cerrar el operativo, por favor vuelva a intentarlo.';
+        }
+        $response = new JsonResponse($data,$status);
+        $response->headers->set('Content-Type', 'application/json');
+        $allData = array('data'=>$data,'status'=>$status,'msj'=>$msj,'observations'=>$observations);
+        // dump($allData);die;
+        return $response->setData($allData);
+        ////////////////////////
+
+
+    }
+
 
 }
