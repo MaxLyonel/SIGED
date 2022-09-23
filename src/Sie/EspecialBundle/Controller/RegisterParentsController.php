@@ -72,7 +72,7 @@ class RegisterParentsController extends Controller {
 
         $em= $this->getDoctrine()->getManager();
         $objStudentInscription = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($idInscription);     
-        $sql = "select public.sp_obtener_edad(to_date('".$objStudentInscription->getEstudiante()->getFechaNacimiento()->format('Y-m-d')."','YYYY-MM-DD'),to_date('2021-12-31','YYYY-MM-DD'))";
+        $sql = "select public.sp_obtener_edad(to_date('".$objStudentInscription->getEstudiante()->getFechaNacimiento()->format('Y-m-d')."','YYYY-MM-DD'),to_date('2022-12-31','YYYY-MM-DD'))";
         $query = $em->getConnection()->prepare($sql);
         $query->execute();
         $dataStudent = $query->fetch();

@@ -733,7 +733,7 @@ class TramiteDetalleController extends Controller {
             ei.id as estudiante_inscripcion_id,ei.estudiante_id as estudiante_id, sat.codigo as nivel, ies.periodo_tipo_id as periodo, iec.periodo_tipo_id as per, siea.institucioneducativa_id as institucioneducativa
             , sest.id as especialidad_id, ies.gestion_tipo_id,ies.periodo_tipo_id,siea.institucioneducativa_id, sfat.codigo as nivel_id, sfat.facultad_area, sest.codigo as ciclo_id
             ,sest.especialidad,sat.codigo as grado_id,sat.acreditacion,ei.id as estudiante_inscripcion,e.codigo_rude, e.nombre, e.paterno, e.materno, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento
-            , cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad
+            , (case e.cedula_tipo_id when 2 then 'E-' else '' end) || cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad
             , case pt.id when 1 then lt2.lugar when 0 then '' else pt.pais end as lugar_nacimiento
             --, lt4.id as departamento_id, lt4.lugar as departamento,date_part('year',age(e.fecha_nacimiento)) as edad--,e.genero_tipo_id
             , t.id as tramite_id, td.id as tramite_detalle_id, ei.estadomatricula_tipo_id, segip_id
@@ -1061,7 +1061,7 @@ class TramiteDetalleController extends Controller {
             ei.id as estudiante_inscripcion_id,ei.estudiante_id as estudiante_id, sat.codigo as nivel, ies.periodo_tipo_id as periodo, iec.periodo_tipo_id as per, siea.institucioneducativa_id as institucioneducativa
             , sest.id as especialidad_id, ies.gestion_tipo_id,ies.periodo_tipo_id,siea.institucioneducativa_id, sfat.codigo as nivel_id, sfat.facultad_area, sest.codigo as ciclo_id
             ,sest.especialidad,sat.codigo as grado_id,sat.acreditacion,ei.id as estudiante_inscripcion,e.codigo_rude, e.nombre, e.paterno, e.materno, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento
-            , cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad
+            , (case e.cedula_tipo_id when 2 then 'E-' else '' end) || cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad
             , case pt.id when 1 then lt2.lugar when 0 then '' else pt.pais end as lugar_nacimiento
             --, lt4.id as departamento_id, lt4.lugar as departamento,date_part('year',age(e.fecha_nacimiento)) as edad--,e.genero_tipo_id
             , t.id as tramite_id, td.id as tramite_detalle_id, ei.estadomatricula_tipo_id, segip_id
@@ -1727,7 +1727,7 @@ class TramiteDetalleController extends Controller {
             ei.id as estudiante_inscripcion_id,ei.estudiante_id as estudiante_id, sat.codigo as nivel, ies.periodo_tipo_id as periodo, iec.periodo_tipo_id as per, siea.institucioneducativa_id as institucioneducativa
             , sest.id as especialidad_id, ies.gestion_tipo_id,ies.periodo_tipo_id,siea.institucioneducativa_id, sfat.codigo as nivel_id, sfat.facultad_area, sest.codigo as ciclo_id
             ,sest.especialidad,sat.codigo as grado_id,sat.acreditacion,ei.id as estudiante_inscripcion,e.codigo_rude, e.nombre, e.paterno, e.materno, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento
-            , cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad
+            , (case e.cedula_tipo_id when 2 then 'E-' else '' end) || cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad
             , case pt.id when 1 then lt2.lugar when 0 then '' else pt.pais end as lugar_nacimiento
             --, lt4.id as departamento_id, lt4.lugar as departamento,date_part('year',age(e.fecha_nacimiento)) as edad--,e.genero_tipo_id
             , t.id as tramite_id, td.id as tramite_detalle_id, ei.estadomatricula_tipo_id, segip_id
@@ -2178,7 +2178,7 @@ class TramiteDetalleController extends Controller {
             ei.id as estudiante_inscripcion_id,ei.estudiante_id as estudiante_id, sat.codigo as nivel, ies.periodo_tipo_id as periodo, iec.periodo_tipo_id as per, siea.institucioneducativa_id as institucioneducativa
             , sest.id as especialidad_id, ies.gestion_tipo_id,ies.periodo_tipo_id,siea.institucioneducativa_id, sfat.codigo as nivel_id, sfat.facultad_area, sest.codigo as ciclo_id
             ,sest.especialidad,sat.codigo as grado_id,sat.acreditacion,ei.id as estudiante_inscripcion,e.codigo_rude, e.nombre, e.paterno, e.materno, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento
-            , cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad
+            , (case e.cedula_tipo_id when 2 then 'E-' else '' end) || cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad
             , case pt.id when 1 then lt2.lugar when 0 then '' else pt.pais end as lugar_nacimiento
             --, lt4.id as departamento_id, lt4.lugar as departamento,date_part('year',age(e.fecha_nacimiento)) as edad--,e.genero_tipo_id
             , t.id as tramite_id, td.id as tramite_detalle_id, ei.estadomatricula_tipo_id, segip_id, d.documento_serie_id
@@ -2517,7 +2517,7 @@ class TramiteDetalleController extends Controller {
             ei.id as estudiante_inscripcion_id,ei.estudiante_id as estudiante_id, sat.codigo as nivel, ies.periodo_tipo_id as periodo, iec.periodo_tipo_id as per, siea.institucioneducativa_id as institucioneducativa
             , sest.id as especialidad_id, ies.gestion_tipo_id,ies.periodo_tipo_id,siea.institucioneducativa_id, sfat.codigo as nivel_id, sfat.facultad_area, sest.codigo as ciclo_id
             ,sest.especialidad,sat.codigo as grado_id,sat.acreditacion,ei.id as estudiante_inscripcion,e.codigo_rude, e.nombre, e.paterno, e.materno, to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento
-            , cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad
+            , (case e.cedula_tipo_id when 2 then 'E-' else '' end) || cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad
             , case pt.id when 1 then lt2.lugar when 0 then '' else pt.pais end as lugar_nacimiento
             --, lt4.id as departamento_id, lt4.lugar as departamento,date_part('year',age(e.fecha_nacimiento)) as edad--,e.genero_tipo_id
             , t.id as tramite_id, td.id as tramite_detalle_id, ei.estadomatricula_tipo_id, segip_id, d.documento_serie_id
@@ -2806,7 +2806,8 @@ class TramiteDetalleController extends Controller {
             pt.id as paralelo_tipo_id, pt.paralelo,
             tt.id as turno_tipo_id, tt.turno,
             e.id as estudiante_id, e.codigo_rude, e.pasaporte,
-            e.carnet_identidad as carnet,  e.complemento,
+            (case e.cedula_tipo_id when 2 then 'E-' else '' end) || e.carnet_identidad as carnet,  e.complemento,
+            (case e.cedula_tipo_id when 2 then 'E-' else '' end) ||
             cast(e.carnet_identidad as varchar)||(case when complemento is null then '' when complemento = '' then '' else '-'||complemento end) as carnet_identidad,
             e.paterno, e.materno, e.nombre, e.segip_id,
             to_char(e.fecha_nacimiento,'DD/MM/YYYY') as fecha_nacimiento,

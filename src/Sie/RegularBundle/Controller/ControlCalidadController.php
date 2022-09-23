@@ -913,7 +913,11 @@ class ControlCalidadController extends Controller {
             'fecha_nacimiento'=>$estudiante->getFechaNacimiento()->format('d-m-Y')
         );
 
-        if($estudiante->getCedulaTipo() == 2){
+        $cedulaTipoId = 0;
+        if($estudiante->getCedulaTipo()){
+            $cedulaTipoId = $estudiante->getCedulaTipo()->getId();
+        }
+        if($cedulaTipoId == 2){
             $datos['extranjero'] = 'E';
         } 
         
