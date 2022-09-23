@@ -104,9 +104,29 @@ class PrevImmediateModiVer2Controller extends Controller{
         $em = $this->getDoctrine()->getManager();
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$codigoRude));
 
+        //start addded to 13-6 and stasus 5
+       $inscriptionval = $em->createQueryBuilder()
+                    ->select('IDENTITY(ei.estadomatriculaTipo)')
+                    ->from('SieAppWebBundle:EstudianteInscripcion','ei')
+                    ->innerJoin('SieAppWebBundle:Estudiante','e','with','ei.estudiante = e.id')
+                    ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso','iec','with','ei.institucioneducativaCurso = iec.id')
+                    ->where('e.codigoRude = :rude')
+                    ->andWhere('iec.gestionTipo = :gestion')
+                    ->andWhere('ei.estadomatriculaTipo = :mat')
+                    // ->andWhere('iec.nivelTipo = :nivel')
+                    // ->andWhere('iec.gradoTipo = :grado')
+                    ->setParameter('rude', $codigoRude)
+                    ->setParameter('mat', 5)
+                    // ->setParameter('nivel', 13)
+                    // ->setParameter('grado', 6)
+                    ->setParameter('gestion', $this->session->get('currentyear')-1)
+                    ->getQuery()
+                    ->getResult();
+        //end addded to 13-6 and stasus 5
+
         // VALIDAMOS QUE EL ESTUDIANTE NO TENGA DOCUMENTOS EMITIDOS
         $documentos = $this->get('funciones')->validarDocumentoEstudiante($codigoRude);
-        if (count($documentos) > 0) {
+        if (count($documentos) > 0  && (!(sizeof( $inscriptionval)>0))) {
             $response->setStatusCode(202);
             $response->setData('El estudiante con el código RUDE '. $codigoRude .' tiene documentos emitidos, por esto no puede realizar la solicitud!');
             return $response;
