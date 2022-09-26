@@ -73,6 +73,8 @@ class SedeController extends Controller
         $info = base64_encode(json_encode(array('sedeId'=>$sedeId,'gestionId'=>$gestionId)));
         $info = bin2hex(serialize(array('sedeId'=>$sedeId,'gestionId'=>$gestionId)));
 
+        $baseData = array('sedeId'=>$sedeId,'yearSelected'=>$gestionId);
+
         if (count($sedeSucursalEntity) > 0){
             $editar = true;
             $sedeSucursalArray = $sedeSucursalEntity[0];
@@ -166,7 +168,8 @@ class SedeController extends Controller
             'gestiones' => $gestiones,
             'datos' => $datos,
             'editar' => $editar,
-            'repDocentesAdministrativos' => $cantidadDocentesAdministrativos
+            'repDocentesAdministrativos' => $cantidadDocentesAdministrativos,
+            'opeStatus' => $this->get('univfunctions')->getOperativeStatus($baseData)
         ));
 
     }
