@@ -413,7 +413,7 @@ class InfoMaestroMigrarController extends Controller {
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
         $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneById($form['personaId']);
-        
+                
         if($persona){
             $datos = array(
                 'complemento'=>$persona->getComplemento(),
@@ -422,6 +422,13 @@ class InfoMaestroMigrarController extends Controller {
                 'nombre'=>$persona->getNombre(),
                 'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y')
             );
+            $cedulaTipoId = 0;
+            if($persona->getCedulaTipo()){
+                $cedulaTipoId = $persona->getCedulaTipo()->getId();
+            }
+            if($cedulaTipoId == 2){
+                $datos["extranjero"] = 'E';
+            } 
             if($persona->getCarnet()){
                 $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona->getCarnet(),$datos,'prod','academico');
 
