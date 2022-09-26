@@ -178,6 +178,9 @@ class CarrerasController extends Controller
         if (strpos($nombre_universidad, 'INDIGENA') !== false) {       
             $es_indigena = 1;
         }
+        if (strpos($nombre_universidad, 'MILITAR') !== false) {       
+            $es_indigena = 1;
+        }
        
         $carreraEntity = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->find($carrera_id); 
         $periodos = $carreraEntity->getUnivRegimenEstudiosTipo()->getId();
@@ -211,8 +214,19 @@ class CarrerasController extends Controller
             $periodos = $em->getRepository('SieAppWebBundle:UnivPeriodoAcademicoTipo')->findAll();    
         }
 
-        $matriculas = $em->getRepository('SieAppWebBundle:UnivMatriculaNacionalidadBecaTipo')->findAll();      
-        $matriculasestado = $em->getRepository('SieAppWebBundle:UnivEstadomatriculaTipo')->findAll();      
+        $matriculas = $em->getRepository('SieAppWebBundle:UnivMatriculaNacionalidadBecaTipo')->findAll();  
+        
+        /*$matriculasestado = $em->getRepository('SieAppWebBundle:UnivEstadomatriculaTipo')->findAll( array(),array('id' => 'ASC'));    
+        dump($matriculasestado); die;*/
+
+        $sql = "select * from univ_estadomatricula_tipo order by 2";
+        $stmt = $db->prepare($sql);
+        $params = array();
+        $stmt->execute($params);
+        $matriculasestado = $stmt->fetchAll();
+        //dump($matriculasestado); die;
+
+
         $cargos = $em->getRepository('SieAppWebBundle:UnivCargoTipo')->findAll();   
 
         //verificar si hay datos para le gestion y carrera, si no hay generar con ceros
@@ -342,7 +356,7 @@ class CarrerasController extends Controller
             'totales1' => $totales1,
             'totales2' => $totales2,
             'totales3' => $totales3,
-            'es_indigena' => 1, //$es_indigena,
+            'es_indigena' => $es_indigena,
            
         ));
         
@@ -694,7 +708,7 @@ class CarrerasController extends Controller
             ON 
                 univ_universidad_carrera_estudiante_nacionalidad.univ_matricula_nacionalidad_beca_tipo_id = univ_matricula_nacionalidad_beca_tipo.id
         WHERE
-            univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
+            univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion . " order by nacionalidad_beca";
         //dump($query);die;
         $stmt = $db->prepare($query);
         $params = array();
@@ -828,8 +842,9 @@ class CarrerasController extends Controller
             univ_estadomatricula_tipo
             ON 
                 univ_universidad_carrera_estudiante_estado.univ_estadomatricula_tipo_id = univ_estadomatricula_tipo.id
-            where univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;        
+            where univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion . " order by estadomatricula";        
 
+        
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
@@ -1091,7 +1106,7 @@ class CarrerasController extends Controller
             univ_cargo_tipo
             ON 
             univ_universidad_carrera_docente_administrativo.univ_cargo_tipo_id = univ_cargo_tipo.id
-            where univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;        
+            where univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion . " order by cargo";        
 
         $stmt = $db->prepare($query);
         $params = array();
