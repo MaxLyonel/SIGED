@@ -234,7 +234,7 @@
 				            <div class="panel panel-default" v-if="swgetinfostaff">
 				                <div class="panel-heading container-fluid">
 				                    <h3 class="panel-title"> <i class="fa fa-file"></i> Personal Ejecutivo ${yearSelected}</h3>
-				                     <a class="btn btn-primary yearOld" data-toggle="modal" href='#modalPerson' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Nuevo Personal ${yearSelected}</a>							        			                    
+				                     <a v-if="opeStatus" class="btn btn-primary yearOld" data-toggle="modal" href='#modalPerson' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Nuevo Personal ${yearSelected}</a>							        			                    
                                      {# <a class="btn btn-primary yearOld" data-toggle="modal" href='#modaldetails' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Nuevo Personal ${yearSelected}</a> #}                                                                    
 				                </div>
 				                <div class="panel-body">
@@ -276,7 +276,7 @@
                                                                     {# ${registeredStaff.id}      #}
                                                                   </td>
                                                                   <td>
-                                                                        <a style="border-radius: 10px;" class="btn btn-danger btn" href="#" aria-label="Delete" @click="deletePersonal(registeredStaff.id, yearSelected )">
+                                                                        <a v-if="opeStatus" style="border-radius: 10px;" class="btn btn-danger btn" href="#" aria-label="Delete" @click="deletePersonal(registeredStaff.id, yearSelected )">
                                                                       <i class="fa fa-trash-o" aria-hidden="true"></i>
                                                                     </a>                                                             
                                                                     </td>
@@ -769,7 +769,7 @@
                                                         <div {# v-if="!swperson" #}>
                                                             <div class="row">
                                                               <div class="col-sm-12">
-                                                                <button v-on:click.prevent="saveEditPersonal()" type="button" class="btn btn-success"><i class="fa fa-book"></i>Actualizar </button>
+                                                                <button v-if="opeStatus" v-on:click.prevent="saveEditPersonal()" type="button" class="btn btn-success"><i class="fa fa-book"></i>Actualizar </button>
                                                                 <button v-on:click="cancelEdit" type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>                                                              
                                                               </div>
                                                             </div> 
@@ -857,6 +857,7 @@
                 buscandoall: false,
                 disabledbutton: false,
                 swgetinfostaff: false,
+                opeStatus: false,
                 sedeId: {{ sedeId }},
                 existsPersonStaffRegistered: false,
 
@@ -980,6 +981,7 @@
 				getAllStaff: function(inyear){
 					
 					this.swgetinfostaff = false;
+                    this.opeStatus = false;
 					this.yearSelected = 0;
 					this.buscandoall = true;
 					this.arrRegisteredStaff = [];
@@ -987,6 +989,7 @@
                     .then(response => {
                         if (response.status == 200) {
 
+                            this.opeStatus = response.data.opeStatus;
                         	this.swgetinfostaff = response.data.swgetinfostaff;
                         	this.arrRegisteredStaff = response.data.arrRegisteredStaff;
                         	this.yearSelected = inyear;

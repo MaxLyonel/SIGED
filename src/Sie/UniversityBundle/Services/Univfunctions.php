@@ -14,7 +14,7 @@ use JMS\Serializer\SerializerBuilder;
  * Date: 09-05-2022
  *
  *
- * Olimfunctions
+ * univ functions
  *
  * Email bugs/suggestions to pckrlos@gmail.com
  */
@@ -60,7 +60,7 @@ class Univfunctions {
   public function getAllOperative($arrData){
 
     $query =       "
-        select * from univ_registro_consolidacion where univ_sede_id = ".$arrData['sedeId'] ." and activo is true order by 1";
+        select * from univ_registro_consolidacion where univ_sede_id = ".$arrData['sedeId'] ."  order by 1";
 
     $query = $this->em->getConnection()->prepare($query);
     
@@ -139,6 +139,28 @@ class Univfunctions {
     // return 'krlos';    
 
   }
+
+  /**
+   * [getOperativeStatus description]
+   * @param  [type] sedeId       [sede id]
+   * @return [type] yearSelected [year selected]
+   */
+  public function getOperativeStatus($arrData){
+    // search the status of operative by id and year
+    $query = " select activo from univ_registro_consolidacion where univ_sede_id = ".$arrData['sedeId'] ." and  gestion_tipo_id = ".$arrData['yearSelected'] ." order by 1";
+    $query = $this->em->getConnection()->prepare($query);
+    
+    $query->execute();
+    $arrOpe = $query->fetchAll();
+
+    if(sizeof($arrOpe)>0){
+      $statusOpe = $arrOpe[0]['activo'];
+    }else{ 
+      $statusOpe = false;
+    }
+     return $statusOpe;
+    // return 'krlos';
+  }  
 
  
  

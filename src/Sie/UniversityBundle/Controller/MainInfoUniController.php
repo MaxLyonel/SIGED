@@ -99,7 +99,6 @@ class MainInfoUniController extends Controller{
             $stmt->execute($params);
             $observations = $stmt->fetchAll();
             // are there observations?
-            $observations = null;
             if($observations == null){
                 $data=null;
                 $status= 200;

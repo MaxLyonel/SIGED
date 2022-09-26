@@ -56,14 +56,16 @@ class ExecutiveStaffController extends Controller{
 
     	// check if the staffs exists
     	if(sizeof($arrRegisteredStaff)>0){
-
     	}else{
     		$arrRegisteredStaff = array();
     	}
+        // get the status to this year
+        // $opeStatus = $this->get('univfunctions')->getOperativeStatus($this->baseData);        
 
 		$arrResponse = array(
-		    'swgetinfostaff'           => true,
-		    'arrRegisteredStaff'       => $arrRegisteredStaff,
+		    'swgetinfostaff'     => true,
+		    'arrRegisteredStaff' => $arrRegisteredStaff,
+                'opeStatus'          => $this->get('univfunctions')->getOperativeStatus($this->baseData),
 		    // 'swperson'                 => $swperson,
 		);
 		
