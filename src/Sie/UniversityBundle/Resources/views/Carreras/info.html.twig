@@ -265,15 +265,21 @@
 
 
                                                         <tr>
-                                                            <td> </td>
+                                                            <td></td>
                                                             {% if data.periodos == 1 %}
+                                                            {% if opestatus == 1 %}
                                                             <td colspan="2"> <a href="#"
                                                                     class="btn btn-success btn-block"
                                                                     id="form_save_becas">Registrar Estadísticas</a> </td>
+                                                            {% endif %}        
                                                             {% else %}
-                                                            <td colspan="4"> <a href="#"
+                                                            <td colspan="4"> 
+                                                                {% if opestatus == 1 %}
+                                                                <a href="#"
                                                                     class="btn btn-success btn-block"
-                                                                    id="form_save_becas">Registrar Estadísticas</a> </td>
+                                                                    id="form_save_becas">Registrar Estadísticas</a> 
+                                                                {% endif %}
+                                                                </td>
                                                             {% endif %}
                                                         </tr>
 
@@ -401,13 +407,20 @@
                                                         <tr>
                                                             <td> </td>
                                                             {% if data.periodos == 1 %}
-                                                            <td colspan="2"> <a href="#"
+                                                            <td colspan="2"> 
+                                                                {% if opestatus == 1 %}
+                                                                    <a href="#"
                                                                     class="btn btn-success btn-block"
                                                                     id="form_save_matriculas">Registrar Estadísticas</a> </td>
+                                                                {% endif %}        
                                                             {% else %}
-                                                            <td colspan="4"> <a href="#"
+                                                            <td colspan="4"> 
+                                                                {% if opestatus == 1 %}
+                                                                    <a href="#"
                                                                     class="btn btn-success btn-block"
-                                                                    id="form_save_matriculas">Registrar Estadísticas</a> </td>
+                                                                    id="form_save_matriculas">Registrar Estadísticas</a> 
+                                                                {% endif %}
+                                                                </td>
                                                             {% endif %}
                                                         </tr>                                                        
 
@@ -536,13 +549,21 @@
                                                         <tr>
                                                             <td> </td>
                                                             {% if data.periodos == 1 %}
-                                                            <td colspan="2"> <a href="#"
+                                                            <td colspan="2"> 
+                                                                {% if opestatus == 1 %}
+                                                                    <a href="#"
                                                                     class="btn btn-success btn-block"
-                                                                    id="form_save_cargos">Registrar Estadísticas</a> </td>
+                                                                    id="form_save_cargos">Registrar Estadísticas</a> 
+                                                                {% endif %}
+                                                                </td>
                                                             {% else %}
-                                                            <td colspan="4"> <a href="#"
+                                                            <td colspan="4"> 
+                                                                {% if opestatus == 1 %}
+                                                                    <a href="#"
                                                                     class="btn btn-success btn-block"
-                                                                    id="form_save_cargos">Registrar Estadísticas</a> </td>
+                                                                    id="form_save_cargos">Registrar Estadísticas</a> 
+                                                                {% endif %}
+                                                            </td>
                                                             {% endif %}
                                                         </tr>
 

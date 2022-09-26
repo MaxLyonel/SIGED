@@ -167,6 +167,15 @@ class CarrerasController extends Controller
         $sedeId = $this->session->get('sedeId');
         //dump($sedeId); die; 62
 
+        // para saber si el operatico esta abierto(true) o cerrado (false)
+        $sql = "select activo from univ_registro_consolidacion
+        where univ_sede_id = ".$sedeId." and gestion_tipo_id = ". $gestion;
+        $stmt = $db->prepare($sql);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $opestatus = $po[0]['activo'];
+        
         $entityUnivSedeCentral = $em->getRepository('SieAppWebBundle:UnivSede')->findById($sedeId); //43
 
         $es_indigena = 0;
@@ -179,6 +188,9 @@ class CarrerasController extends Controller
             $es_indigena = 1;
         }
         if (strpos($nombre_universidad, 'MILITAR') !== false) {       
+            $es_indigena = 1;
+        }
+        if (strpos($nombre_universidad, 'POLI') !== false) {       
             $es_indigena = 1;
         }
        
@@ -357,6 +369,8 @@ class CarrerasController extends Controller
             'totales2' => $totales2,
             'totales3' => $totales3,
             'es_indigena' => $es_indigena,
+            'opestatus' => 0//$opestatus,
+
            
         ));
         
