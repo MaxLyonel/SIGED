@@ -80,7 +80,7 @@ class MainInfoUniController extends Controller{
      */
     public function closeOpeAction(Request $request){
         $form = $request->get('form');
-        $data = ($this->kdecrypt($form['data']));
+        $dataform = $this->kdecrypt($form['data']);
         // $data    = bin2hex(serialize($form['data']));
         ////////////////////////
         $data=null;
@@ -90,22 +90,30 @@ class MainInfoUniController extends Controller{
         $observations = null;
         try{
 
-        $observations = null;
-        $em = $this->getDoctrine()->getManager();
-        $db = $em->getConnection();
-        $query = 'select * from sp_validacion_universidades_estadistico_web(?);';
-        $stmt = $db->prepare($query);
-        $params = array($data['sedeId']);
-        $stmt->execute($params);
-        $observations = $stmt->fetchAll();
-        // are there observations?
-            
+            $observations = null;
+            $em = $this->getDoctrine()->getManager();
+            $db = $em->getConnection();
+            $query = 'select * from sp_validacion_universidades_estadistico_web(?);';
+            $stmt = $db->prepare($query);
+            $params = array($dataform['sedeId']);
+            $stmt->execute($params);
+            $observations = $stmt->fetchAll();
+            // are there observations?
+            $observations = null;
             if($observations == null){
                 $data=null;
                 $status= 200;
-                $msj='All thing is good...';
+                $msj='Cierre correcto! No exixten inconsistencias en el cierre...';
                 // miss save data about the operative to the universite data
-
+                // close oall year to the UnivSedeId
+                $objOperative = $em->getRepository('SieAppWebBundle:UnivRegistroConsolidacion')->findBy(array('univSede'=>$dataform['sedeId']));
+                if(sizeof($objOperative)>0){
+                    foreach ($objOperative as $value) {
+                        $value->setActivo(0);
+                        $em->persist($value);
+                    }
+                    $em->flush();
+                }
             }
             else{
                 $data=null;
