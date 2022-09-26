@@ -913,7 +913,7 @@ class ControlCalidadController extends Controller {
             'fecha_nacimiento'=>$estudiante->getFechaNacimiento()->format('d-m-Y')
         );
 
-        $cedulaTipoId = 0;
+        $cedulaTipoId = 1;
         if($estudiante->getCedulaTipo()){
             $cedulaTipoId = $estudiante->getCedulaTipo()->getId();
         }
@@ -928,6 +928,7 @@ class ControlCalidadController extends Controller {
                 if($resultadoEstudiante){
                     $mensaje = "Se realizó el proceso satisfactoriamente. Los datos de la/el estudiante:".$estudiante->getCodigoRude().", se validaron correctamente con SEGIP.";
                     $estudiante->setSegipId(1);
+                    $estudiante->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId) );
                     $em->persist($estudiante);
                     $em->flush();
                     $this->ratificar($vproceso);

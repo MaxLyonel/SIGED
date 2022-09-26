@@ -422,7 +422,7 @@ class InfoMaestroMigrarController extends Controller {
                 'nombre'=>$persona->getNombre(),
                 'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y')
             );
-            $cedulaTipoId = 0;
+            $cedulaTipoId = 1;
             if($persona->getCedulaTipo()){
                 $cedulaTipoId = $persona->getCedulaTipo()->getId();
             }
@@ -435,6 +435,7 @@ class InfoMaestroMigrarController extends Controller {
                 if($resultadoPersona){
                     $mensaje = "Se realizó el proceso satisfactoriamente. Los datos de la persona se validaron correctamente con SEGIP.";
                     $persona->setSegipId(1);
+                    $persona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId));
                     $em->persist($persona);
                     $em->flush();
                     $this->addFlash('updateOk', $mensaje);
