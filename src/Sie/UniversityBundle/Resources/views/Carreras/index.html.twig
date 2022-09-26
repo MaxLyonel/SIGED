@@ -171,7 +171,7 @@
                                                         {% endif %}
                                                         #}
 
-                                                        <button style="border-radius: 0px;" class="btn btn-info btn-push"
+                                                        <button style="border-radius: 0px;" class="btn btn-info btn-push" data-toggle="tooltip" data-placement="top" data-original-title="Ver datos"
                                                             onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0) }}');">
                                                             <i class="fa fa-edit"></i>
                                                         </button>
@@ -205,7 +205,7 @@
                                         <hr>
 
                                             <div class="table-responsive">
-                                                <table id="tbl-postgrado" class="table table-bordered table-hover cf dataTable table-primary">
+                                                <table id="tbl-postgrado" class="table table-bordered table-hover cf dataTable table-teal">
                                                     <thead class="cf">
                                                         <tr>
                                                             
@@ -261,7 +261,7 @@
                                                                 {% endif %}
                                                                 #}
 
-                                                                <button style="border-radius: 0px;" class="btn btn-info btn-push"
+                                                                <button style="border-radius: 0px;" class="btn btn-info btn-push" data-toggle="tooltip" data-placement="top" data-original-title="Ver datos"
                                                                     onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0) }}');">
                                                                     <i class="fa fa-edit"></i>
                                                                 </button>

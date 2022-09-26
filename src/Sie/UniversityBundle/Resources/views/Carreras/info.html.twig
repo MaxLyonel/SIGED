@@ -103,7 +103,7 @@
 
                                         <div class="table-responsive mb-20">
 
-                                            <div class="alert alert-info">
+                                            <div class="alert yearOld" style="text-align: center;">
                                                 <strong>OPERATIVOS DISPONIBLES</strong>
                                             </div>
                                             <div class="formatyears">
@@ -119,17 +119,30 @@
                                                     <tbody>
                                                         {% set var = 1 %}
                                                         {% for entity in gestiones %}
-                                                        <tr scope="row">
-                                                            <td class="text-center">{{var}}</td>
-                                                            <td>
-                                                                <a href="{{ path('carreras_info',  {'carrera_id':carrera_id, 'gestion' :  entity.gestion_tipo_id}) }}"
-                                                                    data-toggle="tooltip" data-placement="top"
-                                                                    data-original-title="Ver Estadisticas">{{
-                                                                    entity.gestion_tipo_id }}</a>
-                                                            </td>
 
-                                                        </tr>
-                                                        {% set var = var + 1 %}
+                                                            {% if gestion_id == entity.gestion_tipo_id %}      
+                                                            <tr scope="row" class="success">
+                                                                <td class="text-center"><strong>{{var}}</strong></td>
+                                                                <td >
+                                                                    <strong>
+                                                                    {{entity.gestion_tipo_id }}                                                            
+                                                                    </strong>
+                                                                </td>
+                                                            </tr>
+                                                            {% else %}
+                                                            <tr scope="row">
+                                                                <td class="text-center">{{var}}</td>
+                                                                <td >
+                                                                    <a href="{{ path('carreras_info',  {'carrera_id':carrera_id, 'gestion' :  entity.gestion_tipo_id}) }}"
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        data-original-title="Ver Estadisticas">{{
+                                                                        entity.gestion_tipo_id }}</a>                                                               
+                                                                </td>
+                                                            </tr>
+
+                                                            {% endif %}
+                                                            
+                                                            {% set var = var + 1 %}
                                                         {% endfor %}
                                                     </tbody>
                                                 </table>
@@ -144,12 +157,11 @@
                                             <span class="alert-icon"><i class="fa fa-user"></i></span>
                                             <div class="notification-info">
                                                 <ul class="clearfix notification-meta">
-                                                    <li class="pull-left notification-sender"><span><a
-                                                                href="#"><strong>REGISTRO DE ESTUDIANTES SEGUN TIPO DE
+                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE ESTUDIANTES SEGUN TIPO DE
                                                                     BECA POR GENERO EN LA GESTION Y
-                                                                    PERIODO</strong></a></span></li>
+                                                                    PERIODO</strong></span></li>
                                                     <li class="pull-right notification-sender" id="label_gestion_est">
-                                                        <strong>{{ gestion_id }}</strong></li>
+                                                        <strong>GESTION: {{ gestion_id }}</strong></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -257,11 +269,11 @@
                                                             {% if data.periodos == 1 %}
                                                             <td colspan="2"> <a href="#"
                                                                     class="btn btn-success btn-block"
-                                                                    id="form_save_becas">Guardar</a> </td>
+                                                                    id="form_save_becas">Registrar Estadísticas</a> </td>
                                                             {% else %}
                                                             <td colspan="4"> <a href="#"
                                                                     class="btn btn-success btn-block"
-                                                                    id="form_save_becas">Guardar</a> </td>
+                                                                    id="form_save_becas">Registrar Estadísticas</a> </td>
                                                             {% endif %}
                                                         </tr>
 
@@ -281,12 +293,11 @@
                                             <span class="alert-icon"><i class="fa fa-file"></i></span>
                                             <div class="notification-info">
                                                 <ul class="clearfix notification-meta">
-                                                    <li class="pull-left notification-sender"><span><a
-                                                                href="#"><strong>REGISTRO DE ESTUDIANTES POR TIPO DE
+                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE ESTUDIANTES POR TIPO DE
                                                                     MATRICULA Y GENERO EN LA
-                                                                    GESTION Y PERIODO</strong></a></span></li>
+                                                                    GESTION Y PERIODO</strong></span></li>
                                                     <li class="pull-right notification-sender" id="label_gestion_est">
-                                                        <strong>{{ gestion_id }}</strong></li>
+                                                        <strong>GESTION: {{ gestion_id }}</strong></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -392,11 +403,11 @@
                                                             {% if data.periodos == 1 %}
                                                             <td colspan="2"> <a href="#"
                                                                     class="btn btn-success btn-block"
-                                                                    id="form_save_matriculas">Guardar</a> </td>
+                                                                    id="form_save_matriculas">Registrar Estadísticas</a> </td>
                                                             {% else %}
                                                             <td colspan="4"> <a href="#"
                                                                     class="btn btn-success btn-block"
-                                                                    id="form_save_matriculas">Guardar</a> </td>
+                                                                    id="form_save_matriculas">Registrar Estadísticas</a> </td>
                                                             {% endif %}
                                                         </tr>                                                        
 
@@ -414,12 +425,11 @@
                                             <span class="alert-icon"><i class="fa fa-users"></i></span>
                                             <div class="notification-info">
                                                 <ul class="clearfix notification-meta">
-                                                    <li class="pull-left notification-sender"><span><a
-                                                                href="#"><strong>REGISTRO DE DOCENTES POR GENERO EN LA
+                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE DOCENTES POR GENERO EN LA
                                                                     GESTION Y PERIODO (SOLO UNIVERSIDADES INDIGENAS,
-                                                                    POLICIALES Y OTROS)</strong></a></span></li>
+                                                                    POLICIALES Y OTROS)</strong></span></li>
                                                     <li class="pull-right notification-sender" id="label_gestion_est">
-                                                        <strong>{{ gestion_id }}</strong></li>
+                                                        <strong>GESTION: {{ gestion_id }}</strong></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -459,7 +469,7 @@
                                                         <tr>
                                                             <td> {{ entity.matricula }}</td>
 
-                                                            <td class="info" id="bf{{ key + 1 }}c1">
+                                                            <td class="" id="bf{{ key + 1 }}c1">
                                                                 <input type="number" min="0" max="9999"                                                                   
                                                                     id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
                                                                     class="form-control clase9" value="{{ entity.m1 }}"
@@ -470,7 +480,7 @@
 
                                                                     
                                                             </td>
-                                                            <td class="info" id="bf{{ key + 1 }}c2">
+                                                            <td class="" id="bf{{ key + 1 }}c2">
                                                                 <input type="number" min="0" max="9999"
                                                                     onfocusout="losesFocus()" id="{{ entity.idf1 }}"
                                                                     name="form[{{entity.idf1}}]" class="form-control clase10"
@@ -484,7 +494,7 @@
 
                                                             {% if data.periodos == 2 %}
 
-                                                            <td class="info" id="bf{{ key + 1 }}c4">
+                                                            <td class="" id="bf{{ key + 1 }}c4">
                                                                 <input type="number" min="0" max="9999"
                                                                     id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]"
                                                                     class="form-control clase11" value="{{ entity.m2 }}" 
@@ -493,7 +503,7 @@
                                                                     oninput="calculaTotales3(this)"
                                                                     onblur="datoVacio3(this)" />
                                                             </td>
-                                                            <td class="info" id="bf{{ key + 1 }}c5">
+                                                            <td class="" id="bf{{ key + 1 }}c5">
                                                                 <input type="number" min="0" max="9999"
                                                                     id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]"
                                                                     class="form-control clase12" value="{{ entity.f2 }}" 
@@ -528,11 +538,11 @@
                                                             {% if data.periodos == 1 %}
                                                             <td colspan="2"> <a href="#"
                                                                     class="btn btn-success btn-block"
-                                                                    id="form_save_cargos">Guardar</a> </td>
+                                                                    id="form_save_cargos">Registrar Estadísticas</a> </td>
                                                             {% else %}
                                                             <td colspan="4"> <a href="#"
                                                                     class="btn btn-success btn-block"
-                                                                    id="form_save_cargos">Guardar</a> </td>
+                                                                    id="form_save_cargos">Registrar Estadísticas</a> </td>
                                                             {% endif %}
                                                         </tr>
 
@@ -1109,117 +1119,194 @@
     }
 
     $('#form_save_becas').on("click", function () {
+       
 
-        var r = confirm("¿Desea guardar el registro?");
-        if (r == false) {
-            return false;
-        }
+        swal({
+            title: "¿Grabar Datos?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+        .then(function(respuesta)  {
+            if (respuesta) {
+                var imagen = '{{ asset("img/loading.gif") }}';
+                /*var r = confirm("¿Desea registrar la información ?");
+                if (r == false) {
+                    return false;
+                }*/
 
-        var formulario = document.getElementById("formBecas"); //$('#formBecas');
-        var formData = new FormData(formulario);
+                var formulario = document.getElementById("formBecas"); //$('#formBecas');
+                var formData = new FormData(formulario);
 
-        formData.append('key1', 'value1');
-        console.log(formData);
-        $.ajax({
-            type: 'post',
-            url: Routing.generate('carrera_estadistica_becas_save'),
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function () {
-                $("#messagebecas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
-            },
-            success: function (data) {
-                $('#messagebecas').empty();
-                if (data.estado) {
-                    $("#messagebecas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
-                } else {
-                    $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
-                }
-            },
-            error: function (error) {
-                $('#message').empty();
-                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
-                //boton.show();
-            },
-        });
+                formData.append('key1', 'value1');
+                console.log(formData);
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('carrera_estadistica_becas_save'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        swal({
+                            title: "Registrando la informacion...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+                        //$('#form_save_becas').attr("disabled", true);
+                        //$("#messagebecas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (data) {
+                        $('#form_save_becas').attr("disabled", false);
+                        $('#messagebecas').empty();
+                        if (data.estado) {
+                            //Swal.fire('la información ha sido registrada');
+                            $("#messagebecas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                        } else {
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
+                        }
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();
+                        $(".messagebecas").fadeTo(3000, 1000).slideUp(1000, function(){
+                            $(".messagebecas").slideUp(1000);
+                        });
+                    },
+                    error: function (error) {
+                        $('#message').empty();
+                        $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                        //boton.show();
+                    },
+                });
 
+            }        
+        
+        })
 
     });
 
     $('#form_save_matriculas').on("click", function () {
-        console.log('form_save_matriculas');
-        var r = confirm("¿Desea guardar el registro?");
-        if (r == false) {
-            return false;
-        }
 
-        var formulario = document.getElementById("formMatriculas"); //$('#formBecas');
-        var formData = new FormData(formulario);
+        swal({
+            title: "¿Grabar Datos?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+        .then(function(respuesta)  {
+            if (respuesta) {
+                var imagen = '{{ asset("img/loading.gif") }}';
+                //console.log('form_save_matriculas');
+                /*var r = confirm("¿Desea Registrar Estadísticas el registro?");
+                if (r == false) {
+                    return false;
+                }*/
 
-        formData.append('key1', 'value1');
-        console.log(formData);
-        $.ajax({
-            type: 'post',
-            url: Routing.generate('carrera_estadistica_matriculas_save'),
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function () {
-                $("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
-            },
-            success: function (data) {
-                $('#messagematriculas').empty();
-                if (data.estado) {
-                    $("#messagematriculas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
-                } else {
-                    $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
-                }
-            },
-            error: function (error) {
-                $('#message').empty();
-                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
-                //boton.show();
-            },
-        });
+                var formulario = document.getElementById("formMatriculas"); //$('#formBecas');
+                var formData = new FormData(formulario);
+
+                formData.append('key1', 'value1');
+                console.log(formData);
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('carrera_estadistica_matriculas_save'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        swal({
+                            title: "Registrando la informacion...",
+                            text: "Espere un momento por favor",
+                            icon: imagen,
+                            buttons: false
+                        });
+                        //$("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (data) {
+                        $('#messagematriculas').empty();
+                        if (data.estado) {
+                            $("#messagematriculas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                        } else {
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
+                        }
+                    },
+                    complete: function () {
+                        swal.stopLoading();
+                        swal.close();
+                        $(".messagematriculas").fadeTo(3000, 1000).slideUp(1000, function(){
+                            $(".messagematriculas").slideUp(1000);
+                        });
+                    },
+                    error: function (error) {
+                        $('#message').empty();
+                        $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                        //boton.show();
+                    },
+                });
+
+
+            }
+
+        })
 
     });
 
     $('#form_save_cargos').on("click", function () {
-        console.log('form_save_cargos');
-        var r = confirm("¿Desea guardar el registro?");
-        if (r == false) {
-            return false;
-        }
 
-        var formulario = document.getElementById("formCargos"); //$('#formBecas');
-        var formData = new FormData(formulario);
+        swal({
+            title: "¿Grabar Datos?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+        .then(function(respuesta)  {
+            if (respuesta) {
 
-        formData.append('key1', 'value1');
-        console.log(formData);
-        $.ajax({
-            type: 'post',
-            url: Routing.generate('carrera_estadistica_cargos_save'),
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function () {
-                $("#messagecargos").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
-            },
-            success: function (data) {
-                $('#messagecargos').empty();
-                if (data.estado) {
-                    $("#messagecargos").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
-                } else {
-                    $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
-                }
-            },
-            error: function (error) {
-                $('#message').empty();
-                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
-                //boton.show();
-            },
-        });
+                /*console.log('form_save_cargos');
+                var r = confirm("¿Desea Registrar Estadísticas el registro?");
+                if (r == false) {
+                    return false;
+                }*/
+
+                var formulario = document.getElementById("formCargos"); //$('#formBecas');
+                var formData = new FormData(formulario);
+
+                formData.append('key1', 'value1');
+                console.log(formData);
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('carrera_estadistica_cargos_save'),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $("#messagecargos").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                    },
+                    success: function (data) {
+                        $('#messagecargos').empty();
+                        if (data.estado) {
+                            $("#messagecargos").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                        } else {
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
+                        }
+                    },
+                    error: function (error) {
+                        $('#message').empty();
+                        $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                        //boton.show();
+                    },
+                });
+
+            }
+
+        })
+
+
+        
     });
 
     var datoVacio = function (control) {
