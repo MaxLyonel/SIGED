@@ -1259,7 +1259,7 @@ class CarrerasController extends Controller
         $response = new JsonResponse();
         //dump($request);die;
         //recibe todas las variables del form
-        $form = $request->get('form');
+        $form = $request->get('form');       
 
         try {    
 
@@ -1340,6 +1340,37 @@ class CarrerasController extends Controller
             $msg  = 'Error al realizar el registro, intente nuevamente';
             return $response->setData(array('estado' => false, 'msg' => $msg, 'cantidad' => -1));
         } 
+    }
+
+
+    public function statsSinInfoSaveAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $response = new JsonResponse();
+           
+        $justifica  =  $request->get('justifica');
+        $carrera_id =  $request->get('carrera_id');
+        $gestion_id =  $request->get('gestion_id');
+        
+        //dump($carrera_id); die;
+
+        try {              
+
+            //update al registro, solo se cambia cantidad
+            $query ="update univ_universidad_carrera_ctr set univ_estadocarrera_tipo_id = 2, justificacion = ? where univ_universidad_carrera_id = ? and gestion_tipo_id = ?";
+            $stmt = $db->prepare($query);
+            $params = array($justifica, $carrera_id, $gestion_id);
+            $stmt->execute($params);           
+          
+            $msg  = 'La carrera no reportará datos en esta gestion';
+            return $response->setData(array('estado' => true, 'msg' => $msg, 'cantidad' => 0));
+
+        } catch (\Doctrine\ORM\NoResultException $ex) {           
+            $msg  = 'Error al realizar el registro, intente nuevamente';
+            return $response->setData(array('estado' => false, 'msg' => $msg, 'cantidad' => -1));
+        } 
+
+
     }
 
     function max_attribute_in_array($data){

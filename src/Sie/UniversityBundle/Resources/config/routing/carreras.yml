@@ -41,3 +41,9 @@ carrera_estadistica_cargos_save:
     defaults: { _controller: SieUniversityBundle:Carreras:statsCargosSave }
     options:
         expose: true
+
+carrera_sin_info_save:
+    path:     /estats/sininfo/save
+    defaults: { _controller: SieUniversityBundle:Carreras:statsSinInfoSave }
+    options:
+        expose: true

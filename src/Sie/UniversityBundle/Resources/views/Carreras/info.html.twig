@@ -153,24 +153,21 @@
 
                                     <div class="col-md-10">
 
-                                        <div class="row">
+                                        <div class="row" style="padding: 10px;">
 
-                                        <table width="30%">
-                                            <th>
-                                                <td>
-                                                    <a href="#"
-                                                    class="btn btn-success btn-block" style="border-radius: 10px;"
-                                                    id="btn_sin_dato">REPORTAR SIN INFORMACION EN LA GESTIÓN</a> 
-                                                </td>
-                                            </th>
-                                        </table>
-
-                                        
+                                            <table width="30%" padding="20" border="0">
+                                                <th>
+                                                    <td  >
+                                                        <a href="#"
+                                                        class="btn btn-teal btn-block" style="border-radius: 2px;"
+                                                        id="btn_sin_dato">Reportar sin información en la gestión</a> 
+                                                    </td>                                                   
+                                                </th>
+                                            </table>
+                                            <div class="messagejustifica" id="messagejustifica"></div>
                                                                       
                                         </div>
                                         <br>
-
-                                    
 
                                         <div class="alert alert-success fa-2xs" style="border-radius: 10px;">
                                             <span class="alert-icon"><i class="fa fa-user"></i></span>
@@ -656,22 +653,30 @@
     aria-hidden="true">
     <div class="modal-dialog modal-m">
         <div class="modal-content">          
-            <div class="modal-body">
-                <div class="alert alert-warning">
-                    <strong>SIN INFORMACION EN LA GESTION</strong>
+            <div class="modal-body">               
+
+                <div class="alert alert-danger">
+                    <strong> SIN INFORMACION EN LA GESTION ? </strong>
                 </div>
 
-                <form action="project-issue-tracker.html#" class="formatyearsform">
-                    <div>
+                <div class="callout callout-warning">
+                    <strong>Atencion!</strong> Para indicar que NO se tienen datos disponibles de esta <strong>carrera</strong> en esta <strong>gestion</strong>, debe colocar una justificacion documentada para consideracion del Ministerio de Educación</a>.
+                </div>
 
-                    <textarea class="form-control" maxlength="20" rows="5" placeholder="Introduzca la justificacion para esta accion "></textarea> 
+                <br>
+
+                <form name="form" method="post" role="form" id="formJustifica" class="formatyearsform">               
+                    <div>
+                    <input type="hidden" name="carrera_id" id="carrera_id" value={{carrera_id}}>
+                    <input type="hidden" name="gestion_id" id="gestion_id" value={{gestion_id}}>
+                    <textarea name="justifica" id="justifica" class="form-control" maxlength="250" rows="5" placeholder="Introduzca la justificacion para esta accion "></textarea> 
 
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-                <button class="btn btn-theme" onclick="updateSinInfo();">Grabar</button>
+                <button class="btn btn-theme" onclick="updateSinInfo();">Proceder</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -1404,6 +1409,65 @@
         if (control.value == "") { control.value = 0; }
         if (control.value > 9999) { control.value = 0; }
         calculaTotales3(control);
+    }
+    
+    function  updateSinInfo(){
+
+        if(document.getElementById("justifica").value == ""  ||  document.getElementById("justifica").value.length  < 50){
+            //no hay justificacion
+            alert("DEBE ESPECIFICAR LA JUSTIFICACION DE ESTA ACCION (MINIMO 50 CARACTERES) !");
+            document.getElementById("justifica").focus();
+
+        }else{
+
+            //procede
+
+            swal({
+                title: "¿Grabar Justificacion ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                buttons: ["Cancelar", "Grabar"],
+            })
+            .then(function(respuesta)  {
+                if (respuesta) {              
+    
+                    var formulario = document.getElementById("formJustifica"); //$('#formBecas');
+                    var formData = new FormData(formulario);
+    
+                    formData.append('key1', 'value1');
+                    console.log(formData);
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('carrera_sin_info_save'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            $("#messagejustifica").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $('#messagejustifica').empty();
+                            $("#modal-sin-info").modal('hide');
+                            $("#messagejustifica").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                        },
+                        error: function (error) {
+                            $('#message').empty();
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                            //boton.show();
+                        },
+                    });
+    
+                }
+    
+            });
+
+
+
+        }
+       
+       
+
     }
 
 
