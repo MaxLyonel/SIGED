@@ -652,6 +652,31 @@
 
 </div>
 
+<div id="modal-sin-info" class="modal modal-success fade bs-example-modal-lg" tabindex="-1" role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-m">
+        <div class="modal-content">          
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <strong>SIN INFORMACION EN LA GESTION</strong>
+                </div>
+
+                <form action="project-issue-tracker.html#" class="formatyearsform">
+                    <div>
+
+                    <textarea class="form-control" maxlength="20" rows="5" placeholder="Introduzca la justificacion para esta accion "></textarea> 
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-theme" onclick="updateSinInfo();">Grabar</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
 
 <div id="modal-estudiante" class="modal modal-success fade bs-example-modal-lg" tabindex="-1" role="dialog"
     aria-hidden="true">
@@ -1007,6 +1032,14 @@
         formulario.submit();
         return true;
     };
+
+    $('#btn_sin_dato').click(function () {
+        showModalSinInfo();
+    });
+
+    function showModalSinInfo(){
+        $("#modal-sin-info").modal('show');
+    }
 
     function updateEstudiantes(id, fila) {
         console.log(id, fila);
