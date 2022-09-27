@@ -369,7 +369,7 @@ class CarrerasController extends Controller
             'totales2' => $totales2,
             'totales3' => $totales3,
             'es_indigena' => $es_indigena,
-            'opestatus' => 1//$opestatus,
+            'opestatus' => $opestatus,
 
            
         ));
