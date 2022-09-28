@@ -454,8 +454,8 @@ class CarrerasController extends Controller
         //dump($request); die;
         //TODO: esto de donde ?
         $carrera_id = $request->get('carrera_id');
-        /*$sedeId = $this->session->get('sedeId');
-        $nivel_academico_id = $request->get('edit_nivel_academico_id');
+        $sedeId = $this->session->get('sedeId');
+        /*$nivel_academico_id = $request->get('edit_nivel_academico_id');
         $modalidad_id = $request->get('edit_modalidad_id');
         $regimen_id = $request->get('edit_regimen_id');
         */
@@ -474,7 +474,7 @@ class CarrerasController extends Controller
        
         $carreraEntity = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->find($carrera_id);       
 
-        $carreraEntity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($sedeId));
+        //$carreraEntity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($sedeId));
         //$carreraEntity->setUnivAreaConocimiento($request->get('edit_area_conocimiento'));
 
         //$carreraEntity->setUnivNivelAcademicoTipo($em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->find($nivel_academico_id));
