@@ -11,7 +11,7 @@ reports_getAllReports:
         expose: true
 
 reports_downloadreportgeneral:
-    path:     /downloadreportgeneral/{gestion}/{id_sede}
+    path:     /downloadreportgeneral/{gestion}/{id_sede}/{statusope}
     defaults: { _controller: SieUniversityBundle:Reports:downloadreportgeneral }
 
 
