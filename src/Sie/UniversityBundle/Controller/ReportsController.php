@@ -74,7 +74,7 @@ class ReportsController extends Controller{
     	$arrRegisteredStaff = array();//$this->get('univfunctions')->getAllStaff($this->baseData);
 		$this->baseData['urlreporte'] = $this->generateUrl('reports_downloadreportgeneral', array('gestion'=>$this->baseData['yearSelected'],'id_sede'=>$this->baseData['sedeId'],'statusope'=> ($this->get('univfunctions')->getOperativeStatus($this->baseData)== null || $this->get('univfunctions')->getOperativeStatus($this->baseData)== false)?0:1 ));
 	
-      $this->baseData['reportDetail'] = ($this->get('univfunctions')->getOperativeStatus($this->baseData)== null || $this->get('univfunctions')->getOperativeStatus($this->baseData)== false)?'Reporte  Preliminar':'Reporte  Oficial' ;
+      $this->baseData['reportDetail'] = ($this->get('univfunctions')->getOperativeStatus($this->baseData)== null || $this->get('univfunctions')->getOperativeStatus($this->baseData)== false)?'Reporte Oficial':'Reporte Preliminar' ;
 	      $response->setStatusCode(200);
           $response->setData(array(
           	'swgetinfostaff' => true,
@@ -94,7 +94,7 @@ class ReportsController extends Controller{
         
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'reporteGeneral'.$id_sede.'_'.$this->session->get('currentyear'). '.pdf'));
-        $nameReport = ($statusope)?'univ_reporte_estadistico_ejea_v1':'univ_reporte_estadistico_ejea_v1_borrador';
+        $nameReport = ($statusope)?'univ_reporte_estadistico_ejea_v1_borrador':'univ_reporte_estadistico_ejea_v1';
         $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .$nameReport.'.rptdesign&gestion='.$gestion.'&id_sede='.$id_sede.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
