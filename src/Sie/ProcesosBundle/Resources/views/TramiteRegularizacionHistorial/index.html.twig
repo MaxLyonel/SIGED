@@ -636,6 +636,7 @@
                     'gradoId':'',
                     'paraleloId':'',
                     'turnoId':'',
+                    'rude':''
                 },
                 RequestInscription:[],
                 RequestInscriptionSelected:[],
@@ -809,6 +810,7 @@
                     this.DBinfoInscription.paraleloId = '';
                     this.DBTruno = [];
                     this.DBinfoInscription.turnoId = '';
+                    this.DBinfoInscription.rude = this.codigoRude;
                     
                    // this.DBinfoInscription.sieActual = this.codigoRue;
                     axios.post(Routing.generate('tramite_regularizacion_historial_loadLevel', this.DBinfoInscription))
