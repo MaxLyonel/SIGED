@@ -197,6 +197,9 @@ class TramiteInclusionCalificacionController extends Controller {
     }
 
     public function buscarCalificacionesAction(Request $request){ 
+
+        
+
         $idInscripcion = $request->get('idInscripcion');
         $idTramite = $request->get('idTramite');
         $flujoTipo = $request->get('flujoTipo');
@@ -237,7 +240,7 @@ class TramiteInclusionCalificacionController extends Controller {
        // die;
            // $datos = $this->get('notas')->regularDB($idInscripcion, $operativo);
             $datos = $this->get('notas')->regular($idInscripcion, $operativo);
-            // dump($operativo);
+           //  dump($datos);die;
             
             if($datos['gestion'] >= 2019 and $datos['nivel'] == 12){
                 foreach ($datos['cualitativas'] as $key => $value) {
@@ -247,7 +250,7 @@ class TramiteInclusionCalificacionController extends Controller {
                 }
             }
         }
-
+        
         // ESTADOS MATRICULAS
         $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(4,5,11,28)));
         $arrayEstados = [];
@@ -1365,13 +1368,17 @@ class TramiteInclusionCalificacionController extends Controller {
         $insNivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
         $insGrado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
         //dump($insNivel);
-        //dump($datosNotas); die;
+       // dump($datosNotas); die;
         // REGISTRAMOS LAS NOTAS CUANTITATIVAS
         if(count($datosNotas['notas']) > 0){
             foreach ($datosNotas['notas'] as $n) {
+                if($n['idNotaTipo']=='10'){
+                    dump("tiene un reforzamiento");die;
+                }
                 if ($n['idEstudianteNota'] == 'nuevo') {
                     // REGISTRAMOS LA NUEVA CALIFICACION
                     $datoNota = $this->get('notas')->registrarNota($n['idNotaTipo'], $n['idEstudianteAsignatura'],$n['notaNueva'], '');
+                    
                 }else{
                     // ACTUALIZAMOS LA CALIFICACION
                    // $datoNota = $this->get('notas')->modificarNota($n['idEstudianteNota'],$n['notaNueva'], '');
@@ -1424,7 +1431,7 @@ class TramiteInclusionCalificacionController extends Controller {
             $this->get('notas')->updateAveragePrim($idInscripcion);
         }
         // ACTUALIZAMOS EL ESTADO DE MATRICULA
-        // $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+        //$this->get('notas')->actualizarEstadoMatricula($idInscripcion);
         $this->get('notas')->actualizarEstadoMatriculaIGP($idInscripcion);                    
 
         return true;

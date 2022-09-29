@@ -603,7 +603,7 @@
             methods: {
                 cerrarModal: function(){
                     
-                     if(this.validarLlenado())     {
+                     if(this.validarLlenado()=='sin_validacion')     {
                          Swal.fire(
                                 'Aviso!',
                                 'No puede dejar calificaciones vacias',
@@ -617,8 +617,12 @@
                 validarLlenado: function(){
                     var me = this;
                     var sw = false;
+                   // console.log('------------ inicio');
+                   // console.log(this.datos.cuantitativas);
+                   // console.log('------------ fin');
                     $.each(this.datos.cuantitativas, function(index, val) {
                         $.each(val['notas'], function(index2, val2) {
+                            console.log(val2['idTipoNota']);
                             if (val2['nota'] == '' && val2['notaNueva'] =='') {
                                sw = true;  
                             }
@@ -826,13 +830,13 @@
 
                         if(index == -1){
                             // AGREGAR CALIFICACION
-                            if(!nuevaNota.nota){
+                          if(!nuevaNota.nota){
                                 const {value: calificacion} = Swal.fire({
-                                title: 'Agregar calificación',
-                                input: 'text',
-                                inputValue: nuevaNota.nota,
-                                showCancelButton: true,
-                                inputValidator: (value) => {
+                                    title: 'Agregar calificación',
+                                    input: 'text',
+                                    inputValue: nuevaNota.nota,
+                                    showCancelButton: true,
+                                    inputValidator: (value) => {
                                     if (!value) {
                                         return 'Ingrese una calificación!'
                                     }
@@ -880,13 +884,12 @@
                                     this.filas.push(idFila);
                                     $('#'+idFila).addClass('seleccionado');
                                     console.log('donde');
-                                },
-                                onClose: () => {
-                                    $('body').addClass('modal-open');
-                                }
-                            })
-                             }else{
-                                
+                                    },
+                                    onClose: () => {
+                                        $('body').addClass('modal-open');
+                                    }
+                                })
+                            }else{
                                 Swal.fire(
                                 'Aviso!',
                                 'No corresponde a una inclusión de calificación',
@@ -1046,7 +1049,7 @@
                     //console.log(this.datos.cuantitativas)       ;
                     this.calcularPromedios();
                 },
-                calcularPromedios: function(){
+                calcularPromediosAntes: function(){
                     var me = this;
                     var nulos;
                     var suma;
@@ -1274,8 +1277,308 @@
                                     }
                                     if (val2['idNotaTipo'] == 8) {
                                          suma3t = suma3t + valor;
+                                         
                                     }
                                     
+                                    if (val2['idNotaTipo'] == 9) {
+                                        promedioAnual = Math.round((suma1t + suma2t + suma3t)/3);
+                                        me.datos.cuantitativas[index].notas[index2].notaNueva = promedioAnual;
+                                    }else{
+                                        if (val2['idNotaTipo'] == 10) {
+                                            if (promedioAnual >= 36) {
+                                                reforzamiento = 0;
+                                            }else{
+                                                reforzamiento = valor;
+                                            }
+                                            me.datos.cuantitativas[index].notas[index2].notaNueva = reforzamiento;
+                                        }else{
+                                            if (val2['idNotaTipo'] == 11 && reforzamiento != 0 && reforzamiento != '') {
+                                                promedioFinal = promedioAnual + reforzamiento;
+                                                me.datos.cuantitativas[index].notas[index2].notaNueva = promedioFinal;
+
+                                                arrayPromedios.push({
+                                                    idAsignatura: val['idAsignatura'],
+                                                    promedio: promedioFinal
+                                                });
+                                                // INCREMENTAMOS LA CANTIDAD DE PROMEDIOS
+                                                cantidadPromedios+=1;
+
+                                            }else{
+                                                if (val2['idNotaTipo'] == 11) {
+                                                    me.datos.cuantitativas[index].notas[index2].notaNueva = 0;
+                                                    
+                                                    arrayPromedios.push({
+                                                        idAsignatura: val['idAsignatura'],
+                                                        promedio: promedioAnual
+                                                    });
+                                                    // INCREMENTAMOS LA CANTIDAD DE PROMEDIOS
+                                                    cantidadPromedios+=1;
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+
+                            // CALCULAMOS EL ESTADO DE MATRÍCULA
+                            var cantidadMaterias = this.datos.cuantitativas.length;
+                            if(cantidadMaterias == cantidadPromedios){
+                                var me = this;
+                                $.each(this.estadosMatricula, function(index, val) {
+                                    if (val['id'] == 5) {
+                                        me.nuevoEstadomatricula = val['estadoMatricula'];
+                                    }
+                                });
+                                // CALCULAMOS EL ESTADO GENERAL DE ACUERDO AL PROMEDIO GENERAL ANUAL EN PRIMARIA en la gestion 2019
+                                $.each(arrayPromedios, function(index, val) {
+                                    if(val.promedio < 36){
+                                        $.each(me.estadosMatricula, function(index, val) {
+                                            if (val['id'] == 11) {
+                                                me.nuevoEstadomatricula = val['estadoMatricula'];
+                                            }
+                                        });
+                                    }
+                                });
+                            }else{
+                                var me = this;
+                                $.each(this.estadosMatricula, function(index, val) {
+                                    if (val['estadoMatricula'] == me.actualEstadomatricula) {
+                                        me.nuevoEstadomatricula = val['estadoMatricula'];
+                                    }
+                                });
+                            }
+                        }                        
+
+                    }
+
+                },
+
+                calcularPromedios: function(){
+                    var me = this;
+                    var nulos;
+                    var suma;
+                    var promedio;
+                    var cantidadPromedios = 0;
+                    var arrayPromedios = [];
+                    //to year 2020 and avg trim
+                    if(this.gestion == 2021){
+                        $.each(this.datos.cuantitativas, function(index, val) {
+                            nulos = 0;
+                            suma = 0;
+                            promedio = 0;
+                            $.each(val['notas'], function(index2, val2) {
+                                if (val2['idNotaTipo'] != 9) {
+                                    var valor = val2['notaNueva'];
+                                    if(valor == ''){
+                                        valor = val2['nota'];
+                                        if (valor == '') {
+                                            valor = 0;
+                                            nulos = nulos + 1;
+                                        }
+                                    }
+                                    suma = suma + valor;
+                                }
+                                if (val2['idNotaTipo'] == 9 && nulos == 0) {
+                                    // CALCULAMOS EL PROMEDIO Y LO AGREGAMOS AL OBJETO
+                                    promedio = Math.round(suma/3);
+                                    me.datos.cuantitativas[index].notas[index2].notaNueva = promedio;
+                                    // AGREGAMOS EL PROMEDIO AL ARRAY
+                                    arrayPromedios.push({
+                                        idAsignatura: val['idAsignatura'],
+                                        promedio: promedio
+                                    });
+                                    // INCREMENTAMOS LA CANTIDAD DE PROMEDIOS
+                                    cantidadPromedios+=1;
+                                }
+                                if (val2['idNotaTipo'] == 9 && nulos > 0) {
+                                    me.datos.cuantitativas[index].notas[index2].notaNueva = '';
+                                }
+                            });
+                        });
+
+                        // CALCULAMOS EL ESTADO DE MATRÍCULA
+                        var cantidadMaterias = this.datos.cuantitativas.length;
+                        console.log(cantidadMaterias);
+                        console.log(cantidadPromedios);
+
+                        if(cantidadMaterias == cantidadPromedios){
+                            var me = this;
+                            $.each(this.estadosMatricula, function(index, val) {
+                                if (val['id'] == 5) {
+                                    me.nuevoEstadomatricula = val['estadoMatricula'];
+                                }
+                            });
+                            // CALCULAMOS EL ESTADO GENERAL DE ACUERDO AL PROMEDIO GENERAL ANUAL EN PRIMARIA en la gestion 2019
+                            if (this.datos.gestion >= 2019 && this.datos.nivel == 12) {
+                                var sumaPromedios = 0;
+                                var promedioGeneralAnual;
+                                $.each(arrayPromedios, function(index, val) {
+                                    sumaPromedios = sumaPromedios + val.promedio;
+                                });
+                                promedioGeneralAnual = Math.round(sumaPromedios/cantidadMaterias);
+
+                                if (promedioGeneralAnual < 51) {
+                                    $.each(me.estadosMatricula, function(index, val) {
+                                        if (val['id'] == 28) {
+                                            me.nuevoEstadomatricula = val['estadoMatricula'];
+                                        }
+                                    });
+                                }
+
+                                this.nuevoPromedioGeneral = promedioGeneralAnual;
+
+                            }else{
+                                $.each(arrayPromedios, function(index, val) {
+                                    // NO CONSIDERAMOS LAS MATERIAS (ESPECIFICACMENTE PARA LA GESTION 2018)
+                                    // 1052 CIENCIAS NATURALES: FISICA
+                                    // 1053 CIENCIAS NATURALES: QUIMICA
+                                    if(val.promedio < 51 && val.idAsignatura != 1052 && val.idAsignatura != 1053){
+                                        $.each(me.estadosMatricula, function(index, val) {
+                                            if (val['id'] == 11) {
+                                                me.nuevoEstadomatricula = val['estadoMatricula'];
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }else{
+                            var me = this;
+                            $.each(this.estadosMatricula, function(index, val) {
+                                if (val['estadoMatricula'] == me.actualEstadomatricula) {
+                                    me.nuevoEstadomatricula = val['estadoMatricula'];
+                                }
+                            });
+                        }                        
+
+                    }else{
+                        // CÁLCULO DE PROMEDIOS Y ESTADO DE MATRICULA PARA NOTAS BIMESTRALES
+                        if ((this.gestion >= 2014 && this.datos.operativo >= 4) || (this.gestion == 2013 && this.datos.grado == 1) ) {
+                            $.each(this.datos.cuantitativas, function(index, val) {
+                                nulos = 0;
+                                suma = 0;
+                                promedio = 0;
+                                $.each(val['notas'], function(index2, val2) {
+                                    if (val2['idNotaTipo'] != 5) {
+                                        var valor = val2['notaNueva'];
+                                        if(valor == ''){
+                                            valor = val2['nota'];
+                                            if (valor == '') {
+                                                valor = 0;
+                                                nulos = nulos + 1;
+                                            }
+                                        }
+                                        suma = suma + valor;
+                                    }
+                                    if (val2['idNotaTipo'] == 5 && nulos == 0) {
+                                        // CALCULAMOS EL PROMEDIO Y LO AGREGAMOS AL OBJETO
+                                        promedio = Math.round(suma/4);
+                                        me.datos.cuantitativas[index].notas[index2].notaNueva = promedio;
+                                        // AGREGAMOS EL PROMEDIO AL ARRAY
+                                        arrayPromedios.push({
+                                            idAsignatura: val['idAsignatura'],
+                                            promedio: promedio
+                                        });
+                                        // INCREMENTAMOS LA CANTIDAD DE PROMEDIOS
+                                        cantidadPromedios+=1;
+                                    }
+                                    if (val2['idNotaTipo'] == 5 && nulos > 0) {
+                                        me.datos.cuantitativas[index].notas[index2].notaNueva = '';
+                                    }
+                                });
+                            });
+
+                            // CALCULAMOS EL ESTADO DE MATRÍCULA
+                            var cantidadMaterias = this.datos.cuantitativas.length;
+                            if(cantidadMaterias == cantidadPromedios){
+                                var me = this;
+                                $.each(this.estadosMatricula, function(index, val) {
+                                    if (val['id'] == 5) {
+                                        me.nuevoEstadomatricula = val['estadoMatricula'];
+                                    }
+                                });
+                                // CALCULAMOS EL ESTADO GENERAL DE ACUERDO AL PROMEDIO GENERAL ANUAL EN PRIMARIA en la gestion 2019
+                                if (this.datos.gestion >= 2019 && this.datos.nivel == 12) {
+                                    var sumaPromedios = 0;
+                                    var promedioGeneralAnual;
+                                    $.each(arrayPromedios, function(index, val) {
+                                        sumaPromedios = sumaPromedios + val.promedio;
+                                    });
+                                    promedioGeneralAnual = Math.round(sumaPromedios/cantidadMaterias);
+
+                                    if (promedioGeneralAnual < 51) {
+                                        $.each(me.estadosMatricula, function(index, val) {
+                                            if (val['id'] == 28) {
+                                                me.nuevoEstadomatricula = val['estadoMatricula'];
+                                            }
+                                        });
+                                    }
+
+                                    this.nuevoPromedioGeneral = promedioGeneralAnual;
+
+                                }else{
+                                    $.each(arrayPromedios, function(index, val) {
+                                        // NO CONSIDERAMOS LAS MATERIAS (ESPECIFICACMENTE PARA LA GESTION 2018)
+                                        // 1052 CIENCIAS NATURALES: FISICA
+                                        // 1053 CIENCIAS NATURALES: QUIMICA
+                                        if(val.promedio < 51 && val.idAsignatura != 1052 && val.idAsignatura != 1053){
+                                            $.each(me.estadosMatricula, function(index, val) {
+                                                if (val['id'] == 11) {
+                                                    me.nuevoEstadomatricula = val['estadoMatricula'];
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            }else{
+                                var me = this;
+                                $.each(this.estadosMatricula, function(index, val) {
+                                    if (val['estadoMatricula'] == me.actualEstadomatricula) {
+                                        me.nuevoEstadomatricula = val['estadoMatricula'];
+                                    }
+                                });
+                            }
+                        }else{
+                            // CÁLCULO DE PROMEDIOS Y ESTADO DE MATRICULA PARA NOTAS TRIMESTRALES
+                            $.each(this.datos.cuantitativas, function(index, val) {
+                                nulos = 0;
+                                suma1t = 0;
+                                suma2t = 0;
+                                suma3t = 0;
+                                promedioAnual = 0;
+                                reforzamiento = 0;
+                                promedioFinal = 0;
+                                $.each(val['notas'], function(index2, val2) {
+                                    if (val2['idNotaTipo'] != 6 && val2['idNotaTipo'] != 7 && val2['idNotaTipo'] != 8 && val2['idNotaTipo'] != 9 && val2['idNotaTipo'] != 11) {
+                                        var valor = val2['notaNueva'];
+                                        if(valor == ''){
+                                            valor = val2['nota'];
+                                            if (valor == '') {
+                                                valor = 0;
+                                                nulos = nulos + 1;
+                                            }
+                                        }
+
+                                        if (val2['idNotaTipo'] == 27 || val2['idNotaTipo'] == 30) {
+                                            suma1t = suma1t + valor;
+                                        }
+                                        if (val2['idNotaTipo'] == 28 || val2['idNotaTipo'] == 31) {
+                                            suma2t = suma2t + valor;
+                                        }
+                                        if (val2['idNotaTipo'] == 29 || val2['idNotaTipo'] == 32) {
+                                            suma3t = suma3t + valor;
+                                        }
+                                    }
+
+                                    if (val2['idNotaTipo'] == 6) {
+                                        me.datos.cuantitativas[index].notas[index2].notaNueva = suma1t;
+                                    }
+                                    if (val2['idNotaTipo'] == 7) {
+                                        me.datos.cuantitativas[index].notas[index2].notaNueva = suma2t;
+                                    }
+                                    if (val2['idNotaTipo'] == 8) {
+                                        me.datos.cuantitativas[index].notas[index2].notaNueva = suma3t;
+                                    }
+
                                     if (val2['idNotaTipo'] == 9) {
                                         promedioAnual = Math.round((suma1t + suma2t + suma3t)/3);
                                         me.datos.cuantitativas[index].notas[index2].notaNueva = promedioAnual;
@@ -1506,7 +1809,7 @@
                 },
                 enviarSolicitud: function(){
                     // DESACTIVAMOS EL BOTON DE ENVIAR
-                     if(this.validarLlenado())     {
+                     if(this.validarLlenado()=='no_validar')     {
                          Swal.fire(
                                 'Aviso!',
                                 'No puede dejar calificaciones vacias',
@@ -1517,7 +1820,7 @@
                     // VALIDAR NOTAS
                     var notasValidas = true;
                     $.each(this.notas, function(index, val) {
-                        if(val.notaNueva == '' || val.notaNueva == 0){
+                        if(val.notaNueva == ''){
                             notasValidas = false;
                             // break;
                         }
