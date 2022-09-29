@@ -45,12 +45,12 @@ class UnivUniversidadCarrera
     private $fechaApertura;
 
     /**
-     * @var integer
+     * @var float
      */
     private $duracion;
 
     /**
-     * @var integer
+     * @var float
      */
     private $duracionAnios;
 
