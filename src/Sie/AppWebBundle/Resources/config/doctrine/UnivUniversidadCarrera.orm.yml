@@ -66,12 +66,12 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             comment: ''
             column: fecha_apertura
         duracion:
-            type: integer
+            type: float
             nullable: true
             unsigned: false
             comment: ''
         duracionAnios:
-            type: integer
+            type: float
             nullable: true
             unsigned: false
             comment: ''
