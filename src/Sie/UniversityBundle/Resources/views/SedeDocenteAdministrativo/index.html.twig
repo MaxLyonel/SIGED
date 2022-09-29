@@ -121,7 +121,9 @@
                                                         <tfoot>
                                                             <tr>
                                                                 <th style="text-align:center;" colspan="{{c}}">                                        
-                                                                    <a href="#" class="btn btn-success btn-block" id="form_guardar">Guardar</a>
+                                                                    {% if opeStatus == true %}
+                                                                        <a href="#" class="btn btn-success btn-block" id="form_guardar">Guardar</a>
+                                                                    {% endif %}
                                                                 </th>
                                                             </tr>
                                                         </tfoot>              
