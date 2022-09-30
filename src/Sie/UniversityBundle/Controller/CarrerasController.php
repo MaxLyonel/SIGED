@@ -100,6 +100,7 @@ class CarrerasController extends Controller
         //dump($entityUniv);die;
 
         $carreras = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->findBy(array('univSede' => $entityUnivSedeCentral, 'univNivelAcademicoTipo' => $entityPregrado), array('carrera'=> 'ASC'));
+        //dump($carreras); die;
         $carreras_post = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->findBy(array('univSede' => $entityUnivSedeCentral, 'univNivelAcademicoTipo' => $entityPostgrado), array('carrera'=> 'ASC'));
         
         $niveles = $em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->findAll();       
@@ -194,7 +195,7 @@ class CarrerasController extends Controller
             $es_indigena = 1;
         }
        
-        $carreraEntity = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->find($carrera_id); 
+        $carreraEntity = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->find($carrera_id);        
         $periodos = $carreraEntity->getUnivRegimenEstudiosTipo()->getId();
         $nivel_academico =  $carreraEntity->getUnivNivelAcademicoTipo()->getDescripcion();
 
@@ -242,8 +243,8 @@ class CarrerasController extends Controller
         $cargos = $em->getRepository('SieAppWebBundle:UnivCargoTipo')->findAll();   
 
         //verificar si hay datos para le gestion y carrera, si no hay generar con ceros
-        $this->verifica_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion);
-        $this->verifica_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion);
+        $this->verifica_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion, $nivel_academico);
+        $this->verifica_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion, $nivel_academico);
         
         //solo si es universidad indigena
         $this->verifica_get_univ_universidad_carrera_docente_administrativo($carrera_id, $nro_periodos, $gestion);
@@ -252,7 +253,7 @@ class CarrerasController extends Controller
         //datos estudiantes por genero y tipo beca
 
 
-        $filas = $this->get_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion);
+        $filas = $this->get_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion, $nivel_academico);
         $totales1 = array();
         $t1 = 0;
         $t2 = 0;
@@ -313,7 +314,7 @@ class CarrerasController extends Controller
 
         //datos estudiantes por tipo de matricula
         /*--------------------------------------------------*/
-        $tipo_matricula_array = $this->get_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion);
+        $tipo_matricula_array = $this->get_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion, $nivel_academico);
         $filas2 = $tipo_matricula_array;
         $totales2 = array();
         $t1 = 0;
@@ -454,8 +455,8 @@ class CarrerasController extends Controller
         //dump($request); die;
         //TODO: esto de donde ?
         $carrera_id = $request->get('carrera_id');
-        /*$sedeId = $this->session->get('sedeId');
-        $nivel_academico_id = $request->get('edit_nivel_academico_id');
+        $sedeId = $this->session->get('sedeId');
+        /*$nivel_academico_id = $request->get('edit_nivel_academico_id');
         $modalidad_id = $request->get('edit_modalidad_id');
         $regimen_id = $request->get('edit_regimen_id');
         */
@@ -474,7 +475,7 @@ class CarrerasController extends Controller
        
         $carreraEntity = $em->getRepository('SieAppWebBundle:UnivUniversidadCarrera')->find($carrera_id);       
 
-        $carreraEntity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($sedeId));
+        //$carreraEntity->setUnivSede($em->getRepository('SieAppWebBundle:UnivSede')->find($sedeId));
         //$carreraEntity->setUnivAreaConocimiento($request->get('edit_area_conocimiento'));
 
         //$carreraEntity->setUnivNivelAcademicoTipo($em->getRepository('SieAppWebBundle:UnivNivelAcademicoTipo')->find($nivel_academico_id));
@@ -535,9 +536,11 @@ class CarrerasController extends Controller
         return $this->redirect($this->generateUrl('carreras_index', array('op' => 'result')));
     }
 
-    public function verifica_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion){
+    public function verifica_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion, $nivel_academico){
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
+
+        //dump($nivel_academico); die;  llega PREGRADO o POSTGRADO
 
         $sql = "select count(*) as existe from univ_universidad_carrera_estudiante_estado
         where univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
@@ -551,7 +554,13 @@ class CarrerasController extends Controller
         if($total_filas == 0){
             //creamos las filas en univ_universidad_carrera_estudiante_estado
 
-            $sql = "select * from univ_estadomatricula_tipo";
+            if($nivel_academico == 'PREGRADO'){
+                $wheresql = " where es_pregrado_nivel_academico = true";
+            }else{
+                $wheresql = " where es_postgrado_nivel_academico = true";
+            }
+
+            $sql = "select * from univ_estadomatricula_tipo " . $wheresql;
             $stmt = $db->prepare($sql);
             $params = array();
             $stmt->execute($params);
@@ -591,7 +600,7 @@ class CarrerasController extends Controller
         }
     }
 
-    public function verifica_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion){
+    public function verifica_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion, $nivel_academico){
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
@@ -607,7 +616,13 @@ class CarrerasController extends Controller
         if($total_filas == 0){
             //creamos las filas en univ_universidad_carrera_estudiante_estado
 
-            $sql = "select * from univ_matricula_nacionalidad_beca_tipo";
+            if($nivel_academico == 'PREGRADO'){
+                $wheresql = " where es_pregrado_nivel_academico = true";
+            }else{
+                $wheresql = " where es_postgrado_nivel_academico = true";
+            }
+
+            $sql = "select * from univ_matricula_nacionalidad_beca_tipo " . $wheresql;
             $stmt = $db->prepare($sql);
             $params = array();
             $stmt->execute($params);
@@ -625,8 +640,8 @@ class CarrerasController extends Controller
                     $query->bindValue(':genero_tipo_id', 1);
                     $query->bindValue(':univ_matricula_beca_tipo_id', $data[$i]['id']);
                     $query->bindValue(':univ_periodo_academico_tipo_id', $j);
-                    $query->bindValue(':cantidad', rand(10, 70));                
-                    //$query->bindValue(':cantidad', 0);                
+                    //$query->bindValue(':cantidad', rand(10, 70));                
+                    $query->bindValue(':cantidad', 0);                
                     $query->execute();
 
                     //femeninos
@@ -637,8 +652,8 @@ class CarrerasController extends Controller
                     $query->bindValue(':genero_tipo_id', 2);
                     $query->bindValue(':univ_matricula_beca_tipo_id', $data[$i]['id']);
                     $query->bindValue(':univ_periodo_academico_tipo_id', $j);
-                    $query->bindValue(':cantidad', rand(10, 50));                
-                    //$query->bindValue(':cantidad', 0);                
+                    //$query->bindValue(':cantidad', rand(10, 50));                
+                    $query->bindValue(':cantidad', 0);                
                     $query->execute();
 
                 }
@@ -702,9 +717,15 @@ class CarrerasController extends Controller
         }
     }
 
-    public function get_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion){
+    public function get_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion, $nivel_academico){
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
+
+        if($nivel_academico == 'PREGRADO'){
+            $wheresql = " and univ_matricula_nacionalidad_beca_tipo.es_pregrado_nivel_academico = true";
+        }else{
+            $wheresql = " and univ_matricula_nacionalidad_beca_tipo.es_postgrado_nivel_academico = true";
+        }
 
         $query ="SELECT
             univ_universidad_carrera_estudiante_nacionalidad.id, 
@@ -722,7 +743,7 @@ class CarrerasController extends Controller
             ON 
                 univ_universidad_carrera_estudiante_nacionalidad.univ_matricula_nacionalidad_beca_tipo_id = univ_matricula_nacionalidad_beca_tipo.id
         WHERE
-            univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion . " order by nacionalidad_beca";
+            univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion . $wheresql . " order by nacionalidad_beca";
         //dump($query);die;
         $stmt = $db->prepare($query);
         $params = array();
@@ -836,9 +857,15 @@ class CarrerasController extends Controller
         
     }
 
-    public function get_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion){
+    public function get_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion, $nivel_academico){
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
+
+        if($nivel_academico == 'PREGRADO'){
+            $wheresql = " and univ_estadomatricula_tipo.es_pregrado_nivel_academico = true";
+        }else{
+            $wheresql = " and univ_estadomatricula_tipo.es_postgrado_nivel_academico = true";
+        }
 
         $query ="
         SELECT
@@ -856,7 +883,7 @@ class CarrerasController extends Controller
             univ_estadomatricula_tipo
             ON 
                 univ_universidad_carrera_estudiante_estado.univ_estadomatricula_tipo_id = univ_estadomatricula_tipo.id
-            where univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion . " order by estadomatricula";        
+            where univ_universidad_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion . $wheresql ." order by estadomatricula";        
 
         
         $stmt = $db->prepare($query);

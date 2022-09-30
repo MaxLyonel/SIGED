@@ -46,9 +46,9 @@ class MainInfoUniController extends Controller{
             'tuicion'                   => true,
             'enablePersonalStaffOption' => $enablePersonalStaffOption,
             'uni_staff'          		=> $this->buildOptionUni('staff_index', 'Personal Ejecutivo', $data)->createView(),
-            'uni_infosede'       		=> $this->buildOptionUni('sie_university_sede_index', 'Informacion Sede/sub Sede Central', $data)->createView(),
-            'uni_statisticssede' 		=> $this->buildOptionUni('sie_university_sede_docenteadministrativo_index', 'Estadisitica Sede/sub Sede Central', $data)->createView(),
-            'uni_statistics'     		=> $this->buildOptionUni('carreras_index', 'Estadisticas', $data)->createView(),
+            'uni_infosede'       		=> $this->buildOptionUni('sie_university_sede_index', 'Información Sede/sub Sede Central', $data)->createView(),
+            'uni_statisticssede' 		=> $this->buildOptionUni('sie_university_sede_docenteadministrativo_index', 'Estadística Sede/sub Sede Central', $data)->createView(),
+            'uni_statistics'     		=> $this->buildOptionUni('carreras_index', 'Estadísticas', $data)->createView(),
             'closeform'            => $this->buildOptionUni('maininfouni_closeope', 'Cerrar operativo', $data)->createView(),
 
             ));    
@@ -102,7 +102,7 @@ class MainInfoUniController extends Controller{
             if($observations == null){
                 $data=null;
                 $status= 200;
-                $msj='Cierre correcto! No exixten inconsistencias en el cierre...';
+                $msj='Cierre correcto! No existen inconsistencias en el cierre...';
                 // miss save data about the operative to the universite data
                 // close oall year to the UnivSedeId
                 $objOperative = $em->getRepository('SieAppWebBundle:UnivRegistroConsolidacion')->findBy(array('univSede'=>$dataform['sedeId']));
