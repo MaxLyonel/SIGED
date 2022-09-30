@@ -102,7 +102,7 @@ class MainInfoUniController extends Controller{
             if($observations == null){
                 $data=null;
                 $status= 200;
-                $msj='Cierre correcto! No exixten inconsistencias en el cierre...';
+                $msj='Cierre correcto! No existen inconsistencias en el cierre...';
                 // miss save data about the operative to the universite data
                 // close oall year to the UnivSedeId
                 $objOperative = $em->getRepository('SieAppWebBundle:UnivRegistroConsolidacion')->findBy(array('univSede'=>$dataform['sedeId']));
