@@ -351,6 +351,17 @@ class CarrerasController extends Controller
             'array_tipo_matricula' => $tipo_matricula_array
         );
 
+        //ver si tiene dato en la gestion
+        //univ_universidad_carrera_ctr
+        $sindatoenlagestion = false;  // se muestra el boton
+        $sql = "select univ_estadocarrera_tipo_id from univ_universidad_carrera_ctr where univ_universidad_carrera_id = " .$carrera_id . " and gestion_tipo_id = " . $gestion;
+        $stmt = $db->prepare($sql);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $estado = $po[0]['univ_estadocarrera_tipo_id'];
+        //dump($estado);die;
+        if($estado == 1){$sindatoenlagestion = false;}
         
         return $this->render('SieUniversityBundle:Carreras:info.html.twig', array(
             'carrera_id' => $carrera_id,
@@ -371,6 +382,7 @@ class CarrerasController extends Controller
             'totales3' => $totales3,
             'es_indigena' => $es_indigena,
             'opestatus' => $opestatus,
+            'sindatoenlagestion' => $sindatoenlagestion,
 
            
         ));
