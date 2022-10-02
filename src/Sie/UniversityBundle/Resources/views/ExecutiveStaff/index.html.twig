@@ -208,7 +208,7 @@
 	            <div class="panel-body">
 
 					 <div class="row">
-				    	<div class="col-sm-2">
+                        <div class="col-lg-2 col-md-6 col-sm-2 col-xs-2">
                             <div class="formatyears">
     							<table class="table ">
     							  <thead class="thead-dark">
@@ -226,7 +226,8 @@
     							</table>
                             </div>
 				    	</div>
-				    	<div class="col-sm-10">
+                        
+                        <div class="col-lg-10 col-md-6 col-sm-12 col-xs-12">
 
 		                    <div v-if="buscandoall" class="text-center">
 		                        <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
@@ -1092,6 +1093,8 @@
                     
                     this.DBsearch.yearchoose = yearchoose;
                     this.DBsearch.sedeId = this.sedeId;
+                    this.DBsearch.fecNac = this.DBsearch.fecNac.replace('/','-');
+                    this.DBsearch.fecNac = this.DBsearch.fecNac.replace('/','-');
                     axios.get(Routing.generate('staff_lookforperson', this.DBsearch))
                     .then(response => {
                         if (response.status == 200) {
