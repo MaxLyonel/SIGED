@@ -60,7 +60,7 @@ class Tecestfunctions {
   public function getAllOperative($arrData){
 
     $query =       "
-        select * from est_tec_registro_consolidacion where est_tec_sede_id = ".$arrData['sedeId'] ." and activo is true order by 1";
+        select * from est_tec_registro_consolidacion where est_tec_sede_id = ".$arrData['sedeId'] ."  order by 1";
 
     $query = $this->em->getConnection()->prepare($query);
     
