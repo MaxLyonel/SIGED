@@ -59,9 +59,9 @@ class DefaultController extends Controller {
                 $layout = 'layoutAlternativa.html.twig';
                 $this->session->set('pathSystem', "SieAlternativaBundle");
                 break;
-            case '172.20.196.13:8025':
-            case 'sieuni.sie.gob.bo':
-                $sysname = 'DEGESTTLA ESTADISTICO';
+            case '172.20.196.8:8025':
+            case 'sieitt.sie.gob.bo':
+                $sysname = 'DGESTTLA ESTADISTICO';
                 $sysporlet = 'blue';
                 $sysbutton = false;
                 $layout = 'layoutTecnicaEst.html.twig';
