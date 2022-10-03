@@ -92,7 +92,7 @@ class HomonimoController extends Controller{
             }
         }
 
-        return $this->render('SieAppWebBundle:Homonimo:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':Homonimo:index.html.twig', array(
                 'rudeStudent' => $arrStudent
             ));    
     }

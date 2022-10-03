@@ -49,7 +49,7 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
     }
 //Director
     public function indexAction (Request $request) {
-        //dump('ok'); die;
+        // dump('ok'); die;
         $id_Institucion =  $request->getSession()->get('ie_id');
         $gestion =  $request->getSession()->get('currentyear');
         //$flujotipo = $request->get('id');
@@ -92,7 +92,16 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             $form= $this->createFormBuilder()
                 ->add('solicitud', 'choice', array('required' => true, 'empty_value' => 'Seleccionar...','choices' => $tramite_tipoArray, 'attr' => array('class' => 'form-control chosen-select','onchange' => 'validarsolicitud()')))
                 ->getForm();
-               $estado =  $this->validainicioTramite($id_Institucion,$gestion);//dump($estado);die;
+            $estado =  $this->validainicioTramite($id_Institucion,$gestion);
+            
+            /**************temporal solo ues habilitadas 2022 */
+            // $ue = array(81980587, 81980181);
+            // if (in_array($id_Institucion, $ue) and $estado == 0){
+            //     $estado = 0;
+            // }else{
+            //     $estado = 1;
+            // }
+            
             return $this->render('SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:index.html.twig',array( 'form' => $form->createView(),
                 'id_institucion'=>$id_Institucion,
                 'idflujo'=>$request->get('id'),
@@ -113,14 +122,14 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         $query->execute();
         $valida_ue = $query->fetch();
         $ue_autorizada = 0;
-        $a = array(40730065,40730314,61880077,61880180,51880001,51880019,61880156,61880174,51880003,61880147,61880182);
-        if (in_array($id_institucion, $a)) {
-            $ue_autorizada = 0;
-          /*  dump(id_institucion);
-            dump($estado);*/
-        }else{
-            $ue_autorizada = 1;
-        }
+        // $a = array(81980587,81980181);
+        // if (in_array($id_institucion, $a)) {
+        //     $ue_autorizada = 0;
+        //   /*  dump(id_institucion);
+        //     dump($estado);*/
+        // }else{
+        //     $ue_autorizada = 1;
+        // }
         /*dump($estado);
         die;*/
 

@@ -5,3 +5,9 @@ maininfouni_index:
 # maininfouni_index:
 #     path:     /
 #     defaults: { _controller: SieUniversityBundle:ExecutiveStaff:index }    
+
+maininfouni_closeope:
+    path:     /closeope
+    defaults: { _controller: "SieUniversityBundle:MainInfoUni:closeOpe"}
+    options:
+         expose: true

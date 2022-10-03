@@ -766,6 +766,13 @@ class EstudianteUpdateController extends Controller {
         }
         $oldDataStudent = clone $entity;
         $oldDataStudent = (array)$oldDataStudent;
+
+        $cedulaTipoId = $entity->getCedulaTipo()->getId();
+        if($cedulaTipoId == 2){
+            $form["extranjero"] = 'E';
+        } else {
+            $form["extranjero"] = '';
+        }
         
         // save the segip id - validation
         $resultSegip = $this->saveResultSegipService($form);
@@ -848,6 +855,13 @@ class EstudianteUpdateController extends Controller {
         }
         $oldDataStudent = clone $entity;
         $oldDataStudent = (array)$oldDataStudent;
+
+        $cedulaTipoId = $entity->getCedulaTipo()->getId();
+        if($cedulaTipoId == 2){
+            $form["extranjero"] = 'E';
+        } else {
+            $form["extranjero"] = '';
+        }    
 
          // save the segip id - validation
         $resultSegip = $this->saveResultSegipService($form);
@@ -977,7 +991,12 @@ class EstudianteUpdateController extends Controller {
 //
         //save about the certificadoNac
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
-        $ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
+
+        //$ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
+        $ci = $form['ci'];
+        $cedulaTipoId = ($form['extranjero'] == 'E') ? 2 : 1;
+        $entity->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId));
+
         $entity->setCarnetIdentidad($ci);
         $entity->setComplemento( mb_strtoupper($form['complemento'], 'utf-8'));
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
@@ -1067,7 +1086,12 @@ class EstudianteUpdateController extends Controller {
         ($form['pais'] == 1) ? $entity->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['provincia'])) : $entity->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11));
         ($form['pais'] == 1) ? $entity->setLocalidadNac(strtoupper($form['localidad'])) : $entity->setLocalidadNac(strtoupper(''));
         //save about the certificadoNac
-        $ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
+        
+        //$ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
+        $ci = $form['ci'];
+        $cedulaTipoId = ($form['extranjero'] == 'E') ? 2 : 1;
+        $entity->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId));
+
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setCarnetIdentidad($ci);
         $entity->setComplemento( mb_strtoupper($form['complemento'], 'utf-8'));
@@ -1154,6 +1178,7 @@ class EstudianteUpdateController extends Controller {
         $resultSegip = $this->saveResultSegipService($form);
 
         if($resultSegip || $resultSegip == 2){
+
         //Array ( [pais] => 0 [departamento] => 1 [provincia] => 23 [localidad] => localidad [ci] => 9977761 [complemento] => N [generoTipo] => 0 [oficialia] => ofi [libro] => libro [partida] => partida [folio] => folio [save] => [_token] => OF55YYMRBysUBsEUK_Op9az4wkkA9nnABC1AGDdwCKY )
         $entity->setPaterno(mb_strtoupper($form['paterno']));
         $entity->setMaterno(mb_strtoupper($form['materno']));
@@ -1167,7 +1192,12 @@ class EstudianteUpdateController extends Controller {
         ($form['pais'] == 1) ? $entity->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($form['provincia'])) : $entity->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find(11));
         ($form['pais'] == 1) ? $entity->setLocalidadNac(strtoupper($form['localidad'])) : $entity->setLocalidadNac(strtoupper(''));
         //save about the certificadoNac
-        $ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
+
+        //$ci = ($form['extranjero']) ? mb_strtoupper($form['extranjero']) . '-' . $form['ci'] : $form['ci'];
+        $ci = $form['ci'];
+        $cedulaTipoId = ($form['extranjero'] == 'E') ? 2 : 1;
+        $entity->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId));
+
         $entity->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->find($form['generoTipo']));
         $entity->setCarnetIdentidad($ci);
         $entity->setComplemento( mb_strtoupper($form['complemento'], 'utf-8'));
@@ -1215,7 +1245,6 @@ class EstudianteUpdateController extends Controller {
             'updateMessage' => $updateMessage,
             'typeMessage'   => $typeMessage,
             'mainMessage'   => $mainMessage
-
         ));
     }
     /*

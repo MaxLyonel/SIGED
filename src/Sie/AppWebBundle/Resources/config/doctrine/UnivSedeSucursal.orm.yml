@@ -60,7 +60,7 @@ Sie\AppWebBundle\Entity\UnivSedeSucursal:
         sitioWeb:
             type: string
             nullable: true
-            length: 65
+            length: 150
             fixed: false
             comment: ''
             column: sitio_web

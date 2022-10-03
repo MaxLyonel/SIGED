@@ -1372,7 +1372,7 @@ class TramiteCertificacionesPermanenteController extends Controller {
             //$pdf->write1DBarcode('CODE 39', 'C39', '', '', '', 18, 0.4, $style, 'N');
             $pdf->Cell(20, 6, '', 0, 0, 'L'); 
             //$pdf->write1DBarcode($datosParticipante[0]['codigoRude'], 'C128C', '', '', '', 13, 0.3, $style, 'N');
-            $pdf->write1DBarcode($datosParticipante[0]['codigoRude'], 'I25', '', '', '', 13, 0.3, $style, 'N');
+            $pdf->write1DBarcode($datosParticipante[0]['codigoRude'], 'C128A', '', '', '', 13, 0.3, $style, 'N');
      
             $ci = $datosParticipante[0]['carnetIdentidad'].($datosParticipante[0]['complemento'] == '' ? '' : '-'.$datosParticipante[0]['complemento']).' '.$datosParticipante[0]['sigla']; 
             

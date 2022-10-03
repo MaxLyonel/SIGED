@@ -82,7 +82,7 @@ class TramiteInclusionCalificacionController extends Controller {
 
         $response = new JsonResponse();
 
-        $codigoRude = $request->get('codigoRude');
+        $codigoRude = trim($request->get('codigoRude'));
         $flujoTipo = $request->get('flujoTipo');
         $sie = $this->session->get('ie_id');
         $rol = $this->session->get('roluser');
@@ -94,13 +94,8 @@ class TramiteInclusionCalificacionController extends Controller {
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$codigoRude));
 
         // VALIDAMOS QUE EL ESTUDIANTE NO TENGA DOCUMENTOS EMITIDOS
-        $documentos = $this->get('funciones')->validarDocumentoEstudiante($codigoRude);
-        if (count($documentos) > 0) {
-            $response->setStatusCode(202);
-            $response->setData('El estudiante con el código RUDE '. $codigoRude .' tiene documentos emitidos, por esto no puede realizar la solicitud!');
-            return $response;
-        }
-        // dump($documentos);die;
+        //TODO EVALUAR PARA QUIENES 
+       
 
         // SI EL ESTUDIANTE NO EXISTE, DEVOLVEMOS 204 SIN CONTENIDO
         if(!$estudiante){
@@ -135,11 +130,21 @@ class TramiteInclusionCalificacionController extends Controller {
                             ->getResult();
 
         // SI EL ESTUDIANTE NO TIENE INSCRIPCIONES
+        
+
         if(!$inscripciones){
             $response->setStatusCode(202);
             $response->setData('El estudiante no tiene inscripciones registradas ');
             return $response;
         }
+        
+       /* $documentos = $this->get('funciones')->validarDocumentoEstudiante($codigoRude);
+        if (count($documentos) > 0) {
+            $response->setStatusCode(202);
+            $response->setData('El estudiante con el código RUDE '. $codigoRude .' tiene documentos emitidos, por esto no puede realizar la solicitud!');
+            return $response;
+        }*/
+        // dump($documentos);die;
 
 
         // VALIDAMOS SI LA UNIDAD EDUCATIVA TIENE TUICION SOBRE EL ESTUDIANTE
@@ -192,6 +197,9 @@ class TramiteInclusionCalificacionController extends Controller {
     }
 
     public function buscarCalificacionesAction(Request $request){ 
+
+        
+
         $idInscripcion = $request->get('idInscripcion');
         $idTramite = $request->get('idTramite');
         $flujoTipo = $request->get('flujoTipo');
@@ -227,11 +235,13 @@ class TramiteInclusionCalificacionController extends Controller {
         $promedioGeneral = ''; // PARA PRIMARIA 2019
       
         if(count($tramitePendiente)<=0) { 
-        
+        //dump($idInscripcion);
+        //dump($operativo);
+       // die;
+           // $datos = $this->get('notas')->regularDB($idInscripcion, $operativo);
             $datos = $this->get('notas')->regular($idInscripcion, $operativo);
-            // dump($operativo);
-            // dump($datos);
-            // die;
+           //  dump($datos);die;
+            
             if($datos['gestion'] >= 2019 and $datos['nivel'] == 12){
                 foreach ($datos['cualitativas'] as $key => $value) {
                     if ($value['idNotaTipo'] == 9) {
@@ -240,7 +250,7 @@ class TramiteInclusionCalificacionController extends Controller {
                 }
             }
         }
-
+        
         // ESTADOS MATRICULAS
         $estados = $em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findBy(array('id'=>array(4,5,11,28)));
         $arrayEstados = [];
@@ -347,7 +357,6 @@ class TramiteInclusionCalificacionController extends Controller {
             $checkBoletin = $request->get('checkBoletin');
             $checkCi = $request->get('checkCi');
             $checkSolicitud = $request->get('checkSolicitud');
-
 
 
             $dataInscription = array(
@@ -1112,6 +1121,7 @@ class TramiteInclusionCalificacionController extends Controller {
     }
 
     public function guardarVerificacionDepartamentoAction(Request $request){
+        
         try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -1122,6 +1132,7 @@ class TramiteInclusionCalificacionController extends Controller {
             /*----------  VERIFICACION  ----------*/
             // VERIFICAMOS SI EL NUEVO ESTADO ES PROMOVIDO Y POSTERIORMENTE VERIFICAMOS SI EXISTE OTRA INSCRIPCION SIMILAR DEL MISMO NIVEL Y GRADO
             // PARA EVITAR DOBLE PROMOCION
+            
             $respuesta = $this->calcularNuevoEstado($idTramite);
             if ($respuesta['nuevoEstado'] == 5) {
                 $inscripcionSimilar = $this->get('funciones')->existeInscripcionSimilarAprobado($respuesta['idInscripcion']);
@@ -1132,6 +1143,8 @@ class TramiteInclusionCalificacionController extends Controller {
                     return $this->redirectToRoute('tramite_inclusion_calificacion_verifica_departamento', array('id'=>$idTramite, 'tipo'=>'idtramite'));
                 }
             }
+
+            $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($respuesta['idInscripcion']);            
             /*=====  End of VERIFICACION  ======*/
             
 
@@ -1170,29 +1183,7 @@ class TramiteInclusionCalificacionController extends Controller {
 
           
 
-            // VERIFICAMOS SI LA GESTION ES CONSOLIDADA OPERATIVO >= 4 O LA GESTION PERMITE LA IMPRESION DE LA LIBRETA ELECTRONICA
-            // $gestionConsolidada = 'NO';
-            // if($gestionInscripcion >= 2015){
-            //     $operativo = $this->get('funciones')->obtenerOperativo($sieInscripcion,$gestionInscripcion);
-            //     if($operativo >= 4 ){
-            //         $gestionConsolidada = 'SI';
-            //     }
-            // }
-
-            // ARMAMOS EL ARRAY DE LOS DATOS
-            // VERIFICAMOS SI EL ESTADO DE MATRICULA ES IGUAL A 4 EFECTIVO PARA NO REGISTRA RESOLUCION ADMINISTRATIVA
-            // if ($estadomatricula == 4) {
-            //     $datos = json_encode(array(
-            //         'sie'=>$sie,
-            //         'aprueba'=>$aprueba,
-            //         'gestionConsolidada'=>$gestionConsolidada,
-            //         'observacion'=>$observacion,
-            //         'estadomatricula'=>$estadomatricula,
-            //         'resAdm'=>$resAdm,
-            //         'nroResAdm'=>'',
-            //         'fechaResAdm'=>''
-            //     ), JSON_UNESCAPED_UNICODE);
-            // }else{
+           
                 $datos = json_encode(array(
                     'sie'=>$sie,
                     'aprueba'=>$aprueba,
@@ -1235,7 +1226,11 @@ class TramiteInclusionCalificacionController extends Controller {
 
                 /*----------  FIN MODIFICACION DE CALIFICACIONES EN EL SIE  ----------*/                
                 
-
+                if($inscripcion->getEstadomatriculaTipo()->getId() == 10 && $respuesta['nuevoEstado'] == 5){ //inscripcion actual y matricula retiro abandono
+                    $inscripcion->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->find(5));
+                    $em->persist($inscripcion);
+                    $em->flush();
+                }
                 // ARMAMOS EL ARRAY DE DATOS
                 $datos = json_encode(array(
                     'observacion'=>$observacion
@@ -1373,13 +1368,17 @@ class TramiteInclusionCalificacionController extends Controller {
         $insNivel = $inscripcion->getInstitucioneducativaCurso()->getNivelTipo()->getId();
         $insGrado = $inscripcion->getInstitucioneducativaCurso()->getGradoTipo()->getId();
         //dump($insNivel);
-        //dump($datosNotas); die;
+       // dump($datosNotas); die;
         // REGISTRAMOS LAS NOTAS CUANTITATIVAS
         if(count($datosNotas['notas']) > 0){
             foreach ($datosNotas['notas'] as $n) {
+                if($n['idNotaTipo']=='10'){
+                    dump("tiene un reforzamiento");die;
+                }
                 if ($n['idEstudianteNota'] == 'nuevo') {
                     // REGISTRAMOS LA NUEVA CALIFICACION
                     $datoNota = $this->get('notas')->registrarNota($n['idNotaTipo'], $n['idEstudianteAsignatura'],$n['notaNueva'], '');
+                    
                 }else{
                     // ACTUALIZAMOS LA CALIFICACION
                    // $datoNota = $this->get('notas')->modificarNota($n['idEstudianteNota'],$n['notaNueva'], '');
@@ -1432,7 +1431,7 @@ class TramiteInclusionCalificacionController extends Controller {
             $this->get('notas')->updateAveragePrim($idInscripcion);
         }
         // ACTUALIZAMOS EL ESTADO DE MATRICULA
-        // $this->get('notas')->actualizarEstadoMatricula($idInscripcion);
+        //$this->get('notas')->actualizarEstadoMatricula($idInscripcion);
         $this->get('notas')->actualizarEstadoMatriculaIGP($idInscripcion);                    
 
         return true;

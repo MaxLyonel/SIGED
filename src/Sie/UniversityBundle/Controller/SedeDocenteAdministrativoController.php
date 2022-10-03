@@ -75,6 +75,7 @@ class SedeDocenteAdministrativoController extends Controller
         
         $info = bin2hex(serialize(array('sedeId'=>$sedeId,'gestionId'=>$gestionId)));
 
+        $baseData = array('sedeId'=>$sedeId,'yearSelected'=>$gestionId);
 
         $query = $em->getConnection()->prepare('
             select coalesce(usda.cantidad,0) as cantidad, est.* from (select * from univ_universidad_sede_docente_adm where univ_sede_id = :sede_id and gestion_tipo_id = :gestion_id) as usda
@@ -116,7 +117,8 @@ class SedeDocenteAdministrativoController extends Controller
             'gestiones' => $gestiones,
             'datos' => $array,
             'data' => array('info'=>$info, 'gestion'=>$gestionId) ,
-            'editar' => $editar
+            'editar' => $editar,
+            'opeStatus' => $this->get('univfunctions')->getOperativeStatus($baseData)
         ));
 
     }

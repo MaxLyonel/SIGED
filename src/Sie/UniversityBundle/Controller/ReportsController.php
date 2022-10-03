@@ -72,12 +72,14 @@ class ReportsController extends Controller{
         $this->baseData['yearSelected'] = $request->get('year');
 
     	$arrRegisteredStaff = array();//$this->get('univfunctions')->getAllStaff($this->baseData);
-		$this->baseData['urlreporte'] = $this->generateUrl('reports_downloadreportgeneral', array('gestion'=>$this->baseData['yearSelected'],'id_sede'=>$this->baseData['sedeId'],));
+		$this->baseData['urlreporte'] = $this->generateUrl('reports_downloadreportgeneral', array('gestion'=>$this->baseData['yearSelected'],'id_sede'=>$this->baseData['sedeId'],'statusope'=> ($this->get('univfunctions')->getOperativeStatus($this->baseData)== null || $this->get('univfunctions')->getOperativeStatus($this->baseData)== false)?0:1 ));
 	
+      $this->baseData['reportDetail'] = ($this->get('univfunctions')->getOperativeStatus($this->baseData)== null || $this->get('univfunctions')->getOperativeStatus($this->baseData)== false)?'Reporte Oficial':'Reporte Preliminar' ;
 	      $response->setStatusCode(200);
           $response->setData(array(
           	'swgetinfostaff' => true,
           	'datareports'         => array($this->baseData)
+
           ));
 
 
@@ -86,13 +88,14 @@ class ReportsController extends Controller{
 
     }
 
-    public function downloadreportgeneralAction(Request $request, $gestion, $id_sede){
+    public function downloadreportgeneralAction(Request $request, $gestion, $id_sede, $statusope){
     	
         $response = new Response();
         
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'reporteGeneral'.$id_sede.'_'.$this->session->get('currentyear'). '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'univ_reporte_estadistico_ejea_v1.rptdesign&gestion='.$gestion.'&id_sede='.$id_sede.'&&__format=pdf&'));
+        $nameReport = ($statusope)?'univ_reporte_estadistico_ejea_v1_borrador':'univ_reporte_estadistico_ejea_v1';
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .$nameReport.'.rptdesign&gestion='.$gestion.'&id_sede='.$id_sede.'&&__format=pdf&'));
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

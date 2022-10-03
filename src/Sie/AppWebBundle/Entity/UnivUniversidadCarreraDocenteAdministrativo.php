@@ -30,6 +30,11 @@ class UnivUniversidadCarreraDocenteAdministrativo
     private $fechaActualizacion;
 
     /**
+     * @var \Sie\AppWebBundle\Entity\UnivUniversidadCarrera
+     */
+    private $univUniversidadCarrera;
+
+    /**
      * @var \Sie\AppWebBundle\Entity\UnivPeriodoAcademicoTipo
      */
     private $univPeriodoAcademicoTipo;
@@ -43,11 +48,6 @@ class UnivUniversidadCarreraDocenteAdministrativo
      * @var \Sie\AppWebBundle\Entity\GeneroTipo
      */
     private $generoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\UnivUniversidadCarrera
-     */
-    private $univUniversidadCarrera;
 
     /**
      * @var \Sie\AppWebBundle\Entity\GestionTipo
@@ -135,6 +135,29 @@ class UnivUniversidadCarreraDocenteAdministrativo
     }
 
     /**
+     * Set univUniversidadCarrera
+     *
+     * @param \Sie\AppWebBundle\Entity\UnivUniversidadCarrera $univUniversidadCarrera
+     * @return UnivUniversidadCarreraDocenteAdministrativo
+     */
+    public function setUnivUniversidadCarrera(\Sie\AppWebBundle\Entity\UnivUniversidadCarrera $univUniversidadCarrera = null)
+    {
+        $this->univUniversidadCarrera = $univUniversidadCarrera;
+    
+        return $this;
+    }
+
+    /**
+     * Get univUniversidadCarrera
+     *
+     * @return \Sie\AppWebBundle\Entity\UnivUniversidadCarrera 
+     */
+    public function getUnivUniversidadCarrera()
+    {
+        return $this->univUniversidadCarrera;
+    }
+
+    /**
      * Set univPeriodoAcademicoTipo
      *
      * @param \Sie\AppWebBundle\Entity\UnivPeriodoAcademicoTipo $univPeriodoAcademicoTipo
@@ -201,29 +224,6 @@ class UnivUniversidadCarreraDocenteAdministrativo
     public function getGeneroTipo()
     {
         return $this->generoTipo;
-    }
-
-    /**
-     * Set univUniversidadCarrera
-     *
-     * @param \Sie\AppWebBundle\Entity\UnivUniversidadCarrera $univUniversidadCarrera
-     * @return UnivUniversidadCarreraDocenteAdministrativo
-     */
-    public function setUnivUniversidadCarrera(\Sie\AppWebBundle\Entity\UnivUniversidadCarrera $univUniversidadCarrera = null)
-    {
-        $this->univUniversidadCarrera = $univUniversidadCarrera;
-    
-        return $this;
-    }
-
-    /**
-     * Get univUniversidadCarrera
-     *
-     * @return \Sie\AppWebBundle\Entity\UnivUniversidadCarrera 
-     */
-    public function getUnivUniversidadCarrera()
-    {
-        return $this->univUniversidadCarrera;
     }
 
     /**

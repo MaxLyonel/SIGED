@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
     type: entity
     table: univ_universidad_carrera
     indexes:
+        IDX_729C05DBBA738CEC:
+            columns:
+                - univ_grado_academico_tipo_id
         IDX_729C05DB7AC73B91:
             columns:
                 - univ_area_conocimiento_tipo_id
@@ -14,9 +17,6 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
         IDX_729C05DBEC47CD44:
             columns:
                 - univ_nivel_academico_tipo_id
-        IDX_729C05DBA4A51A20:
-            columns:
-                - univ_gradoacademico_tipo_id
         IDX_729C05DB9B2067FB:
             columns:
                 - univ_sede_id
@@ -30,6 +30,13 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             generator:
                 strategy: SEQUENCE
     fields:
+        univFacultad:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: univ_facultad
         carrera:
             type: string
             nullable: true
@@ -59,13 +66,12 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             comment: ''
             column: fecha_apertura
         duracion:
-            type: string
+            type: float
             nullable: true
-            length: 45
-            fixed: false
+            unsigned: false
             comment: ''
         duracionAnios:
-            type: integer
+            type: float
             nullable: true
             unsigned: false
             comment: ''
@@ -85,13 +91,6 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             nullable: true
             comment: ''
             column: fecha_modificacion
-        univFacultad:
-            type: string
-            nullable: true
-            length: 250
-            fixed: false
-            comment: ''
-            column: univ_facultad
         esSiesu:
             type: integer
             nullable: true
@@ -99,8 +98,16 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             comment: ''
             default: '0'
             column: es_siesu
-        
     manyToOne:
+        univGradoAcademicoTipo:
+            targetEntity: UnivGradoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_grado_academico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         univAreaConocimientoTipo:
             targetEntity: UnivAreaConocimientoTipo
             cascade: {  }
@@ -135,15 +142,6 @@ Sie\AppWebBundle\Entity\UnivUniversidadCarrera:
             inversedBy: null
             joinColumns:
                 univ_nivel_academico_tipo_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        univGradoacademicoTipo:
-            targetEntity: UnivGradoacademicoTipo
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                univ_gradoacademico_tipo_id:
                     referencedColumnName: id
             orphanRemoval: false
         univSede:

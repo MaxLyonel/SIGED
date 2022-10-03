@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\TtecInstitucioneducativaHistorico:
     type: entity
     table: ttec_institucioneducativa_historico
     indexes:
+        IDX_E9725CC0B06B3524:
+            columns:
+                - tipo_resolucion_id
         IDX_E9725CC03AB163FE:
             columns:
                 - institucioneducativa_id
@@ -56,7 +59,20 @@ Sie\AppWebBundle\Entity\TtecInstitucioneducativaHistorico:
             length: 200
             fixed: false
             comment: ''
+        autorizado:
+            type: boolean
+            nullable: true
+            comment: ''
     manyToOne:
+        tipoResolucion:
+            targetEntity: TtecResolucionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tipo_resolucion_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         institucioneducativa:
             targetEntity: Institucioneducativa
             cascade: {  }

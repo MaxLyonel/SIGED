@@ -56,14 +56,16 @@ class ExecutiveStaffController extends Controller{
 
     	// check if the staffs exists
     	if(sizeof($arrRegisteredStaff)>0){
-
     	}else{
     		$arrRegisteredStaff = array();
     	}
+        // get the status to this year
+        // $opeStatus = $this->get('univfunctions')->getOperativeStatus($this->baseData);        
 
 		$arrResponse = array(
-		    'swgetinfostaff'           => true,
-		    'arrRegisteredStaff'       => $arrRegisteredStaff,
+		    'swgetinfostaff'     => true,
+		    'arrRegisteredStaff' => $arrRegisteredStaff,
+                'opeStatus'          => $this->get('univfunctions')->getOperativeStatus($this->baseData),
 		    // 'swperson'                 => $swperson,
 		);
 		
@@ -308,8 +310,8 @@ class ExecutiveStaffController extends Controller{
         $arrData["formacion"] = $arrData["formacion"];
         $arrData["ref"] = $arrData["ref"];
         $arrData["telefono"] = $arrData["telefono"];
-        $arrData["fax"] = $arrData["fax"];
-        $arrData["casilla"] = $arrData["casilla"];
+        $arrData["fax"] = isset($arrData["fax"])?$arrData["fax"]:'';
+        $arrData["casilla"] = isset($arrData["casilla"])?$arrData["casilla"]:'';
         $arrData["email"] = $arrData["email"];
         // $arrData["descripcion"] = $arrData["descripcion"];
         $arrData["formaciondescripcion"] = $arrData["formaciondescripcion"];
@@ -376,6 +378,7 @@ class ExecutiveStaffController extends Controller{
         $newpersona->setFechaNacimiento(new \DateTime($data['fecNac']));            
         $newpersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($data['generoId']));
         $newpersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
+        $newpersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(($data['extranjero'])?2:1));
         $newpersona->setRda('0');
         $newpersona->setActivo('1');
         $newpersona->setSegipId('1');            

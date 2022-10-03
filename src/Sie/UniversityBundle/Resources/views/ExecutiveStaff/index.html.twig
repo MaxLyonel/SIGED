@@ -208,7 +208,7 @@
 	            <div class="panel-body">
 
 					 <div class="row">
-				    	<div class="col-sm-2">
+                        <div class="col-lg-2 col-md-6 col-sm-2 col-xs-2">
                             <div class="formatyears">
     							<table class="table ">
     							  <thead class="thead-dark">
@@ -226,7 +226,8 @@
     							</table>
                             </div>
 				    	</div>
-				    	<div class="col-sm-10">
+                        
+                        <div class="col-lg-10 col-md-6 col-sm-12 col-xs-12">
 
 		                    <div v-if="buscandoall" class="text-center">
 		                        <img src="{{asset('img/loading.gif')}}" alt=""> Buscando...
@@ -234,7 +235,7 @@
 				            <div class="panel panel-default" v-if="swgetinfostaff">
 				                <div class="panel-heading container-fluid">
 				                    <h3 class="panel-title"> <i class="fa fa-file"></i> Personal Ejecutivo ${yearSelected}</h3>
-				                     <a class="btn btn-primary yearOld" data-toggle="modal" href='#modalPerson' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Nuevo Personal ${yearSelected}</a>							        			                    
+				                     <a v-if="opeStatus" class="btn btn-primary yearOld" data-toggle="modal" href='#modalPerson' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Nuevo Personal ${yearSelected}</a>							        			                    
                                      {# <a class="btn btn-primary yearOld" data-toggle="modal" href='#modaldetails' style="float:right; margin-top:-12px;" > <i class="fa fa-search"></i> Nuevo Personal ${yearSelected}</a> #}                                                                    
 				                </div>
 				                <div class="panel-body">
@@ -276,7 +277,7 @@
                                                                     {# ${registeredStaff.id}      #}
                                                                   </td>
                                                                   <td>
-                                                                        <a style="border-radius: 10px;" class="btn btn-danger btn" href="#" aria-label="Delete" @click="deletePersonal(registeredStaff.id, yearSelected )">
+                                                                        <a v-if="opeStatus" style="border-radius: 10px;" class="btn btn-danger btn" href="#" aria-label="Delete" @click="deletePersonal(registeredStaff.id, yearSelected )">
                                                                       <i class="fa fa-trash-o" aria-hidden="true"></i>
                                                                     </a>                                                             
                                                                     </td>
@@ -405,21 +406,21 @@
 			                    </div>
 			                        <div class="panel-body">
                                         <div class="alert alert-info" role="alert">
-                                          Datos de la Busqueda
+                                          Datos de la Busqueda (los campos con * son requeridos)
                                         </div>
 			                          
 			                        	<form role="form" class="formatk">
 				                            <div class="row">
 				                              <div class="col-sm-4">
-				                              <label for="paterno">Paterno</label>
+				                              <label class="text-danger">(*)</label> <label for="paterno">Paterno</label>
 				                              <input type="text" class="form-control" placeholder="Paterno" v-model="dataPerson.paterno" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swperson'>
 				                              </div>
 				                              <div class="col-sm-4">
-				                              <label for="materno">Materno</label>
+				                              <label class="text-danger">(*)</label> <label for="materno">Materno</label>
 				                                  <input type="text" class="form-control" placeholder="Materno" v-model="dataPerson.materno" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swperson'>
 				                              </div>
 				                              <div class="col-sm-4">
-				                              <label for="Nombre(s)">Nombre(s)</label>
+				                              <label class="text-danger">(*)</label> <label for="Nombre(s)">Nombre(s)</label>
 				                                  <input type="text" class="form-control" placeholder="Nombre(s)" v-model="dataPerson.nombre" maxlength="35" autocomplete="off" style="text-transform:uppercase" v-bind:readonly='swperson'>
 				                              </div>
 				                            </div>
@@ -427,7 +428,7 @@
 
 				                            <div class="row">
 				                              <div class="col-sm-6">
-				                              <label for="ci">C. I.</label>
+				                              <label class="text-danger">(*)</label> <label for="ci">C. I.</label>
 				                              <input type="text" class="form-control" placeholder="Carnet Identidad" v-model="dataPerson.carnet" v-bind:readonly='swperson'>
 				                              </div>
 				                              <div class="col-sm-6">
@@ -438,11 +439,11 @@
 
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <label for="fechanac">F. Nacimiento</label>
+                                                    <label class="text-danger">(*)</label> <label for="fechanac">F. Nacimiento</label>
                                                     <input type="text" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="dd-mm-aaaa" v-model="dataPerson.fecNac" v-bind:readonly='swperson'>
                                                 </div>
                                                 <div class="col-sm-6" v-if='!swperson'>                                              
-                                                    <label for="genero">G&eacute;nero</label>
+                                                    <label class="text-danger">(*)</label> <label for="genero">G&eacute;nero</label>
                                                     <select name="arrGenero" id="idarrGenero" v-model="dataPerson.generoId" v-model="dataPerson.genero">  
                                                         <option value="1">Masculino</option>
                                                         <option value="2">Femenino</option>
@@ -453,7 +454,7 @@
                                             <div v-if="!swperson">
                                                 <div class="row" >
                                                     <div class="col-sm-12">
-                                                          <label for="ext">Extranjero</label>
+                                                          <label class="text-danger">(*)</label> <label for="ext">Extranjero</label>
                                                           <select name="arrApode" id="idarrGenero" v-model="dataPerson.extranjero"  v-model="dataPerson.foreign">  
                                                           <option value="0">No</option>
                                                           <option value="1">Si</option>
@@ -483,14 +484,14 @@
     											<div v-if="swperson">
                                                 </br>
                                                 <div class="alert alert-success" role="alert">
-                                                  Completar Información
+                                                  Completar la siguiente Información
                                                 </div>
                                                 
                                                 <form role="form" class="formatk">
                                                     <div class="row">
 
                                                       <div class="col-sm-6">
-                                                      <label for="Cargo">Cargo</label>
+                                                      <label class="text-danger">(*)</label> <label for="Cargo">Cargo</label>
                                                         <select name="arrGenero" id="idarrGenero" class="" v-model="dataPerson.cargo">  
                                                           <option v-for=" training in DBTraining " :value="training.id">${training.cargo}</option>
                                                           
@@ -498,7 +499,7 @@
                                                       </div>
 
                                                       <div class="col-sm-6">
-                                                      <label for="Formacion">Formación</label>
+                                                      <label class="text-danger">(*)</label> <label for="Formacion">Formación</label>
                                                         <select name="arrGenero" id="idarrGenero" class="" v-model="dataPerson.formacion">  
                                                           <option v-for=" position in DBPosition" :value="position.id">${position.cargo}</option>
                                                         </select>
@@ -509,20 +510,20 @@
 
     					                            <div class="row">
     					                              <div class="col-sm-3">
-    					                              <label for="ci">Referencia</label>
+    					                              <label class="text-danger">(*)</label> <label for="ci">Referencia</label>
     					                              <input type="text" class="form-control" placeholder="Referencia" v-model="dataPerson.ref" >
     					                              </div>
     					                              <div class="col-sm-3">
-    					                              <label for="telefono">Telefono</label>
+    					                              <label class="text-danger">(*)</label> <label for="telefono">Teléfono</label>
     					                                  <input type="text" class="form-control" placeholder="Telefono"  maxlength="8" autocomplete="off" style="text-transform:uppercase" v-model="dataPerson.telefono">
     					                              </div>
 
     					                              <div class="col-sm-3">
-    					                              <label for="fechanac">Fax</label>
+    					                              <label class="text-danger">(*)</label> <label for="fechanac">Fax</label>
     					                                  <input type="text" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="Fax" v-model="dataPerson.fax">
     					                              </div>
     					                              <div class="col-sm-3" >
-    					                              <label for="genero">Casilla</label>
+    					                              <label class="text-danger">(*)</label> <label for="genero">Casilla</label>
     					                                <input type="text" class="form-control" id="form_idfecnac" name="form[idfecnac]" placeholder="Casilla" v-model="dataPerson.casilla">
     					                              </div>
     					                            </div>
@@ -530,7 +531,7 @@
     					                            <div class="row">
 
                                                       <div class="col-sm-3">
-                                                      <label for="email(s)">email</label>
+                                                      <label class="text-danger">(*)</label> <label for="email(s)">email</label>
                                                           <input type="text" class="form-control" style="text-transform: lowercase;" placeholder="email"  autocomplete="off" v-model="dataPerson.email">
                                                       </div>
 
@@ -542,11 +543,11 @@
 
 
     					                              <div class="col-sm-6">
-    					                              <label for="formaciondescripcion">Formacion descripcion</label>
+    					                              <label class="text-danger">(*)</label> <label for="formaciondescripcion">Formacion descripcion</label>
                                                           <textarea class="" id="message_input" rows="3"  v-model="dataPerson.formaciondescripcion" placeholder="Formacion descripcion "></textarea>
     					                              </div>
     					                              <div class="col-sm-3" >
-    					                              <label for="documentos_acad">Documentos Academicos</label>
+    					                              <label class="text-danger">(*)</label> <label for="documentos_acad">Documentos Academicos</label>
     					                                {# <input type="text" class="form-control" id="form_idfecnac" placeholder="documentos_acad" v-model="dataPerson.documentos_acad"> #}
                                                           <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
     					                              </div>
@@ -554,20 +555,20 @@
 
     					                            <div class="row">
     					                              <div class="col-sm-3">
-    					                              <label for="gestion_nombramiento_id">Gestión Nombramiento</label>
+    					                              <label class="text-danger">(*)</label> <label for="gestion_nombramiento_id">Gestión Nombramiento</label>
     					                              <input type="text" class="form-control" placeholder="AAAA" v-model="dataPerson.gestion_nombramiento_id" >
     					                              </div>
     					                              <div class="col-sm-3">
-    					                              <label for="ratificacion_anio_ini">Ratificación año inicio</label>
+    					                              <label class="text-danger">(*)</label> <label for="ratificacion_anio_ini">Ratificación año inicio</label>
     					                                  <input type="text" class="form-control" placeholder="AAAA"  autocomplete="off" v-model="dataPerson.ratificacion_anio_ini">
     					                              </div>
 
     					                              <div class="col-sm-3">
-    					                              <label for="ratificacion_anio_fin">Ratificación año fin</label>
+    					                              <label class="text-danger">(*)</label> <label for="ratificacion_anio_fin">Ratificación año fin</label>
     					                                  <input type="text" class="form-control" id="form_ratificacion_anio_fin"placeholder="AAAA" v-model="dataPerson.ratificacion_anio_fin">
     					                              </div>
     					                              <div class="col-sm-3" >
-    					                              <label for="fecha_registro_firma">Fecha registro firma</label>
+    					                              <label class="text-danger">(*)</label> <label for="fecha_registro_firma">Fecha registro firma</label>
     					                                <input type="text" class="form-control" id="form_idfecnac" placeholder="dd-mm-aaaa" v-model="dataPerson.fecha_registro_firma">
     					                              </div>
     					                            </div>
@@ -769,7 +770,7 @@
                                                         <div {# v-if="!swperson" #}>
                                                             <div class="row">
                                                               <div class="col-sm-12">
-                                                                <button v-on:click.prevent="saveEditPersonal()" type="button" class="btn btn-success"><i class="fa fa-book"></i>Actualizar </button>
+                                                                <button v-if="opeStatus" v-on:click.prevent="saveEditPersonal()" type="button" class="btn btn-success"><i class="fa fa-book"></i>Actualizar </button>
                                                                 <button v-on:click="cancelEdit" type="button" class="btn btn-danger mr-5" data-dismiss="modal">Cancelar</button>                                                              
                                                               </div>
                                                             </div> 
@@ -797,6 +798,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+      <script src="{{asset('js/inputmask.js')}}"></script>
     <script>
         var app = new Vue({
             delimiters: ['${', '}'],
@@ -857,6 +859,7 @@
                 buscandoall: false,
                 disabledbutton: false,
                 swgetinfostaff: false,
+                opeStatus: false,
                 sedeId: {{ sedeId }},
                 existsPersonStaffRegistered: false,
 
@@ -865,6 +868,8 @@
             },
             mounted(){
                 this.getAllOperative(this.sedeId);
+                var selector = document.getElementById("form_idfecnac");
+                Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "mm-yyyy-dd", inputEventOnly: true}).mask(selector);                
             },
             methods: {
                 getImage: function(event){
@@ -980,6 +985,7 @@
 				getAllStaff: function(inyear){
 					
 					this.swgetinfostaff = false;
+                    this.opeStatus = false;
 					this.yearSelected = 0;
 					this.buscandoall = true;
 					this.arrRegisteredStaff = [];
@@ -987,6 +993,7 @@
                     .then(response => {
                         if (response.status == 200) {
 
+                            this.opeStatus = response.data.opeStatus;
                         	this.swgetinfostaff = response.data.swgetinfostaff;
                         	this.arrRegisteredStaff = response.data.arrRegisteredStaff;
                         	this.yearSelected = inyear;
@@ -1089,6 +1096,8 @@
                     
                     this.DBsearch.yearchoose = yearchoose;
                     this.DBsearch.sedeId = this.sedeId;
+                    this.DBsearch.fecNac = this.DBsearch.fecNac.replace('/','-');
+                    this.DBsearch.fecNac = this.DBsearch.fecNac.replace('/','-');
                     axios.get(Routing.generate('staff_lookforperson', this.DBsearch))
                     .then(response => {
                         if (response.status == 200) {
@@ -1116,6 +1125,90 @@
                 },
 
                 registerNewPersonStaff: function(yearchoose){
+
+                    if(typeof(this.dataPerson.cargo)  === 'undefined'){
+                        Swal.fire(
+                        'Registre Cargo',
+                        'Debe registrar el cargo...',
+                        'warning'
+                        );
+                        return;
+                    }                    
+                    if(typeof(this.dataPerson.formacion)  === 'undefined'){
+                        Swal.fire(
+                        'Registre formacion',
+                        'Debe registrar el formacion...',
+                        'warning'
+                        );
+                        return;
+                    }
+                    if(typeof(this.dataPerson.ref)  === 'undefined'){
+                        Swal.fire(
+                        'Registre Referencia',
+                        'Debe registrar el Referencia...',
+                        'warning'
+                        );
+                        return;
+                    }
+                    if(typeof(this.dataPerson.telefono)  === 'undefined'){
+                        Swal.fire(
+                        'Registre telefono',
+                        'Debe registrar el telefono...',
+                        'warning'
+                        );
+                        return;
+                    }
+                    if(typeof(this.dataPerson.email)  === 'undefined'){
+                        Swal.fire(
+                        'Registre email',
+                        'Debe registrar el email...',
+                        'warning'
+                        );
+                        return;
+                    }
+                    if(typeof(this.dataPerson.formaciondescripcion)  === 'undefined'){
+                        Swal.fire(
+                        'Registre descripcion',
+                        'Debe registrar descripcion...',
+                        'warning'
+                        );
+                        return;
+                    }
+                    if(typeof(this.dataPerson.gestion_nombramiento_id)  === 'undefined'){
+                        Swal.fire(
+                        'Registre Gestión Nombramiento',
+                        'Debe registrar Gestión Nombramiento...',
+                        'warning'
+                        );
+                        return;
+                    }
+                    if(typeof(this.dataPerson.ratificacion_anio_ini)  === 'undefined'){
+                        Swal.fire(
+                        'Registre Ratificación año inicio',
+                        'Debe registrar Ratificación año inicio...',
+                        'warning'
+                        );
+                        return;
+                    }
+                    if(typeof(this.dataPerson.ratificacion_anio_fin)  === 'undefined'){
+                        Swal.fire(
+                        'Registre Ratificación año fin',
+                        'Debe registrar Ratificación año fin...',
+                        'warning'
+                        );
+                        return;
+                    }
+                    if(typeof(this.dataPerson.fecha_registro_firma)  === 'undefined'){
+                        Swal.fire(
+                        'Registre Fecha registro firma',
+                        'Debe registrar Fecha registro firma...',
+                        'warning'
+                        );
+                        return;
+                    }
+
+
+                                                            
 
                     if (typeof this.informe != 'object') {
                         Swal.fire(

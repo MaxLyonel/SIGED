@@ -1,0 +1,35 @@
+Sie\AppWebBundle\Entity\UnivGradoTipo:
+    type: entity
+    table: univ_grado_tipo
+    indexes:
+        IDX_90477B6EEC47CD44:
+            columns:
+                - univ_nivel_academico_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        gradoAcademico:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+            column: grado_academico
+    manyToOne:
+        univNivelAcademicoTipo:
+            targetEntity: UnivNivelAcademicoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                univ_nivel_academico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
