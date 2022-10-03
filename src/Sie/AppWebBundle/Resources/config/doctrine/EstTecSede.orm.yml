@@ -14,9 +14,6 @@ Sie\AppWebBundle\Entity\EstTecSede:
         IDX_30C5A6CB472D7505:
             columns:
                 - est_tec_instituto_id
-        IDX_30C5A6CBF40C2965:
-            columns:
-                - est_tec_juridicciongeografica_id
     id:
         id:
             type: integer
@@ -99,15 +96,6 @@ Sie\AppWebBundle\Entity\EstTecSede:
             inversedBy: null
             joinColumns:
                 est_tec_instituto_id:
-                    referencedColumnName: id
-            orphanRemoval: false
-        estTecJuridicciongeografica:
-            targetEntity: EstTecJurisdiccionGeografica
-            cascade: {  }
-            mappedBy: null
-            inversedBy: null
-            joinColumns:
-                est_tec_juridicciongeografica_id:
                     referencedColumnName: id
             orphanRemoval: false
     lifecycleCallbacks: {  }

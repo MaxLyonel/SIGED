@@ -388,4 +388,32 @@ class EstTecSedeSucursal
     {
         return $this->estTecSede;
     }
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstTecJurisdiccionGeografica
+     */
+    private $estTecJuridicciongeografica;
+
+
+    /**
+     * Set estTecJuridicciongeografica
+     *
+     * @param \Sie\AppWebBundle\Entity\EstTecJurisdiccionGeografica $estTecJuridicciongeografica
+     * @return EstTecSedeSucursal
+     */
+    public function setEstTecJuridicciongeografica(\Sie\AppWebBundle\Entity\EstTecJurisdiccionGeografica $estTecJuridicciongeografica = null)
+    {
+        $this->estTecJuridicciongeografica = $estTecJuridicciongeografica;
+    
+        return $this;
+    }
+
+    /**
+     * Get estTecJuridicciongeografica
+     *
+     * @return \Sie\AppWebBundle\Entity\EstTecJurisdiccionGeografica 
+     */
+    public function getEstTecJuridicciongeografica()
+    {
+        return $this->estTecJuridicciongeografica;
+    }
 }

@@ -2,6 +2,9 @@ Sie\AppWebBundle\Entity\EstTecSedeSucursal:
     type: entity
     table: est_tec_sede_sucursal
     indexes:
+        IDX_BB3EC29F40C2965:
+            columns:
+                - est_tec_juridicciongeografica_id
         IDX_BB3EC295D678D7A:
             columns:
                 - estadoinstitucion_tipo_id
@@ -81,6 +84,15 @@ Sie\AppWebBundle\Entity\EstTecSedeSucursal:
             comment: ''
             column: fecha_modificacion
     manyToOne:
+        estTecJuridicciongeografica:
+            targetEntity: EstTecJurisdiccionGeografica
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_juridicciongeografica_id:
+                    referencedColumnName: id
+            orphanRemoval: false
         estadoinstitucionTipo:
             targetEntity: EstadoinstitucionTipo
             cascade: {  }
