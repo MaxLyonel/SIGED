@@ -95,12 +95,12 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
             $estado =  $this->validainicioTramite($id_Institucion,$gestion);
             
             /**************temporal solo ues habilitadas 2022 */
-            $ue = array(81980587, 81980181);
-            if (in_array($id_Institucion, $ue) and $estado == 0){
-                $estado = 0;
-            }else{
-                $estado = 1;
-            }
+            // $ue = array(81980587, 81980181);
+            // if (in_array($id_Institucion, $ue) and $estado == 0){
+            //     $estado = 0;
+            // }else{
+            //     $estado = 1;
+            // }
             
             return $this->render('SieProcesosBundle:TramiteAdiElimEspecialidadesBTH:index.html.twig',array( 'form' => $form->createView(),
                 'id_institucion'=>$id_Institucion,
@@ -122,14 +122,14 @@ class TramiteAdiElimEspecialidadesBTHController extends Controller {
         $query->execute();
         $valida_ue = $query->fetch();
         $ue_autorizada = 0;
-        $a = array(81980587,81980181);
-        if (in_array($id_institucion, $a)) {
-            $ue_autorizada = 0;
-          /*  dump(id_institucion);
-            dump($estado);*/
-        }else{
-            $ue_autorizada = 1;
-        }
+        // $a = array(81980587,81980181);
+        // if (in_array($id_institucion, $a)) {
+        //     $ue_autorizada = 0;
+        //   /*  dump(id_institucion);
+        //     dump($estado);*/
+        // }else{
+        //     $ue_autorizada = 1;
+        // }
         /*dump($estado);
         die;*/
 
