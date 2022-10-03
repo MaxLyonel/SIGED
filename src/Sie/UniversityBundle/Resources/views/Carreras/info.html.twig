@@ -153,22 +153,32 @@
 
                                     <div class="col-md-10">
 
-                                        <div class="row" style="padding: 10px;">
+                                        {% if sindatoenlagestion == false %}
 
-                                            <table width="30%" padding="20" border="0">
-                                                <th>
-                                                    <td  >
-                                                        <a href="#"
-                                                        class="btn btn-teal btn-block" style="border-radius: 2px;"
-                                                        id="btn_sin_dato">Reportar sin información en la gestión</a> 
-                                                    </td>                                                   
-                                                </th>
-                                            </table>
-                                            <div class="messagejustifica" id="messagejustifica"></div>
-                                                                      
+                                            <div class="row" style="padding: 10px;">
+
+                                                <table width="30%" padding="20" border="0">
+                                                    <th>
+                                                        <td  >
+                                                            <a href="#"
+                                                            class="btn btn-teal btn-block" style="border-radius: 2px;"
+                                                            id="btn_sin_dato">Reportar sin información en la gestión</a> 
+                                                        </td>                                                   
+                                                    </th>
+                                                </table>
+                                                <div class="messagejustifica" id="messagejustifica"></div>
+                                                                        
+                                            </div>
+                                           
+                                        {% else %}
+
+                                        <div class="callout callout-warning">
+                                            <strong>IMPORTANTE!</strong>  SE HA REGISTRADO ESTA GESTION COMO <strong>"SIN DATOS"</strong>. PARA REVERTIR ESTE ESTADO DEBE COMUNICARSE CON EL MINISTERIO DE EDUCACION
+                                           
                                         </div>
-                                        <br>
 
+                                        {% endif %}
+                                        <br>
                                         <div class="alert alert-success fa-2xs" style="border-radius: 10px;">
                                             <span class="alert-icon"><i class="fa fa-user"></i></span>
                                             <div class="notification-info">
@@ -1392,6 +1402,7 @@
         console.log(control.value);*/
         if (control.value == "") { control.value = 0; }
         if (control.value > 9999) { control.value = 0; }
+        if (control.value < 0) { control.value = 0; }
         calculaTotales(control);
     }
 
@@ -1400,6 +1411,7 @@
         console.log(control.value);*/
         if (control.value == "") { control.value = 0; }
         if (control.value > 9999) { control.value = 0; }
+        if (control.value < 0) { control.value = 0; }
         calculaTotales2(control);
     }
 
@@ -1408,6 +1420,7 @@
         console.log(control.value);*/
         if (control.value == "") { control.value = 0; }
         if (control.value > 9999) { control.value = 0; }
+        if (control.value < 0) { control.value = 0; }
         calculaTotales3(control);
     }
     
