@@ -382,7 +382,7 @@
                     this.yearSelected = 0;
                     this.buscandoall = true;
                     this.datareports = [];
-                    axios.get(Routing.generate('reports_getAllReports', { year: inyear }))
+                    axios.get(Routing.generate('tecest_reports_getAllReports', { year: inyear }))
                     .then(response => {
                         if (response.status == 200) {
 
