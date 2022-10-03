@@ -55,7 +55,7 @@ class ReportsController extends Controller{
 
         $arrData = array('sedeId'=> $request->get('sedeId'));
         
-        $arrOperative = $this->get('estTecfunctions')->getAllOperative($arrData);
+        $arrOperative = $this->get('tecestfunctions')->getAllOperative($arrData);
           $arrResponse = array(             
             'arrOperative' => $arrOperative,
           );
@@ -72,8 +72,10 @@ class ReportsController extends Controller{
         $this->baseData['yearSelected'] = $request->get('year');
 
     	$arrRegisteredStaff = array();//$this->get('univfunctions')->getAllStaff($this->baseData);
-		$this->baseData['urlreporte'] = $this->generateUrl('tecest_reports_downloadreportgeneral', array('gestion'=>$this->baseData['yearSelected'],'id_sede'=>$this->baseData['sedeId'],));
+		
+      $this->baseData['urlreporte'] = $this->generateUrl('tecest_reports_downloadreportgeneral', array('gestion'=>$this->baseData['yearSelected'],'id_sede'=>$this->baseData['sedeId'],'statusope'=> ($this->get('tecestfunctions')->getOperativeStatus($this->baseData)== null || $this->get('tecestfunctions')->getOperativeStatus($this->baseData)== false)?0:1 ));
 	
+        $this->baseData['reportDetail'] = ($this->get('tecestfunctions')->getOperativeStatus($this->baseData)== null || $this->get('tecestfunctions')->getOperativeStatus($this->baseData)== false)?'Reporte Oficial':'Reporte Preliminar' ;
 	      $response->setStatusCode(200);
           $response->setData(array(
           	'swgetinfostaff' => true,
@@ -86,13 +88,16 @@ class ReportsController extends Controller{
 
     }
 
-    public function downloadreportgeneralAction(Request $request, $gestion, $id_sede){
+    public function downloadreportgeneralAction(Request $request, $gestion, $id_sede, $statusope){
     	
         $response = new Response();
         
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'reporteGeneral'.$id_sede.'_'.$this->session->get('currentyear'). '.pdf'));
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'univ_reporte_estadistico_ejea_v1_borrador.rptdesign&gestion='.$gestion.'&id_sede='.$id_sede.'&&__format=pdf&'));
+
+        $nameReport = ($statusope)?'univ_reporte_estadistico_ejea_v1_borrador':'univ_reporte_estadistico_ejea_v1';
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .$nameReport.'.rptdesign&gestion='.$gestion.'&id_sede='.$id_sede.'&&__format=pdf&'));
+
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Pragma', 'no-cache');

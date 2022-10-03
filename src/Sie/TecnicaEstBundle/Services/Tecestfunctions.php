@@ -140,6 +140,28 @@ class Tecestfunctions {
 
   }
 
+  /**
+   * [getOperativeStatus description]
+   * @param  [type] sedeId       [sede id]
+   * @return [type] yearSelected [year selected]
+   */
+  public function getOperativeStatus($arrData){
+    // search the status of operative by id and year
+    $query = " select activo from est_tec_registro_consolidacion where est_tec_sede_id = ".$arrData['sedeId'] ." and  gestion_tipo_id = ".$arrData['yearSelected'] ." order by 1";
+    $query = $this->em->getConnection()->prepare($query);
+    
+    $query->execute();
+    $arrOpe = $query->fetchAll();
+
+    if(sizeof($arrOpe)>0){
+      $statusOpe = $arrOpe[0]['activo'];
+    }else{ 
+      $statusOpe = false;
+    }
+     return $statusOpe;
+    // return 'krlos';
+  }    
+
  
  
  

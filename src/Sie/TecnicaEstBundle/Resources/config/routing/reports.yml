@@ -11,7 +11,7 @@ tecest_reports_getAllReports:
         expose: true
 
 tecest_reports_downloadreportgeneral:
-    path:     /downloadreportgeneral/{gestion}/{id_sede}
+    path:     /downloadreportgeneral/{gestion}/{id_sede}/{statusope}
     defaults: { _controller: SieTecnicaEstBundle:Reports:downloadreportgeneral }
 
 
