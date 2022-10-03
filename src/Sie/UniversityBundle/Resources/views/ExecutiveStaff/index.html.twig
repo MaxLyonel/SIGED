@@ -798,6 +798,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+      <script src="{{asset('js/inputmask.js')}}"></script>
     <script>
         var app = new Vue({
             delimiters: ['${', '}'],
@@ -867,6 +868,8 @@
             },
             mounted(){
                 this.getAllOperative(this.sedeId);
+                var selector = document.getElementById("form_idfecnac");
+                Inputmask("datetime",{ inputFormat: "dd-mm-yyyy", outputFormat: "mm-yyyy-dd", inputEventOnly: true}).mask(selector);                
             },
             methods: {
                 getImage: function(event){
