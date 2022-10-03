@@ -24,11 +24,11 @@
     {% if tuicion %}
         <div class="row">
         	{% if enablePersonalStaffOption == 1 %}
-            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
                     <img src="{{asset('img/uni_staff.png')}}" alt="">
                     <div class="caption text-center">
-                        <h4>Personal Ejecutivo</h4>
+                        <h5>Personal Ejecutivo</h5>
                         <div class="thumbnail-action">
                             {{form_start(uni_staff)}}
                                 {{form_widget(uni_staff.next)}}
@@ -38,11 +38,11 @@
                 </div>
             </div>
         	{% endif %}
-            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
                     <img src="{{asset('img/uni_infosede.png')}}" alt="">
                     <div class="caption text-center">
-                        <h4>Información Sede/sub Sede Central</h4>
+                        <h5>Información Sede Central/Sub Sede Académica</h5>
                         <div class="thumbnail-action">
                             {{form_start(uni_infosede)}}
                                 {{form_widget(uni_infosede.next)}}
@@ -52,11 +52,11 @@
                 </div>
             </div>
         	{% if enablePersonalStaffOption == 1 %}
-            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
                     <img src="{{asset('img/uni_statisticssede.png')}}" alt="">
                     <div class="caption text-center">
-                        <h4>Estadística Sede Central</h4>
+                        <h5>Estadística Sede Central</h5>
                         <div class="thumbnail-action">
                             {{form_start(uni_statisticssede)}}
                                 {{form_widget(uni_statisticssede.next)}}
@@ -66,11 +66,11 @@
                 </div>
             </div>
         	{% endif %}
-            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
                     <img src="{{asset('img/uni_statistics.png')}}" alt="">
                     <div class="caption text-center">
-                        <h4>Estadísticas</h4>
+                        <h5>Estadísticas</h5>
                         <div class="thumbnail-action">
                             {{form_start(uni_statistics)}}
                                 {{form_widget(uni_statistics.next)}}
@@ -79,11 +79,11 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
                     <img src="{{asset('img/uni_close.png')}}" alt="">
                     <div class="caption text-center">
-                        <h4>Cerrar Operativo</h4>
+                        <h5>Cerrar Operativo</h5>
                         <div class="thumbnail-action">
                             {{form_start(closeform, { 'attr':{'id':'formcloseopeId' }} )}}
                                 {{form_widget(closeform.next)}}
@@ -97,7 +97,7 @@
 
         </div>
         <div class="row">
-            <div id="closeopediv" style="overflow: scroll; width: 100%; height:300px" class="col-lg-3 col-md-6 col-sm-12 col-xs-12"></div>
+            <div id="closeopediv" style="overflow: scroll; width: 100%; height:300px" class="col-lg-4 col-md-6 col-sm-12 col-xs-12"></div>
         </div>
     {% else %}
         <div class="row">
@@ -147,7 +147,7 @@
                             if(observations && observations.length>0)
                             {
                                 $("#closeopediv").empty();
-                                var obs ='<ol class="list-group"><li class="list-group-item" style="background-color:#63D3E9;color:white"><h4>'+observations.length+' Inconsistencias / Observaciones</h4></li>';
+                                var obs ='<ol class="list-group"><li class="list-group-item" style="background-color:#63D3E9;color:white"><h5>'+observations.length+' Inconsistencias / Observaciones</h5></li>';
                                 for (var i in observations)
                                 {
                                     obs+='<li class="list-group-item list-group-item-danger">'+observations[i].observacion+'</li>';

@@ -32,7 +32,7 @@
                 <a href="{{path('maininfouni_index')}}">Registro de Información</a>
                 <i class="fa fa-angle-right"></i>
             </li>
-            <li class="active">Administracion de Carreras</li>
+            <li class="active">Administración de Carreras</li>
         </ol>
         </div>
     <!-- /.breadcrumb-wrapper -->
@@ -172,7 +172,7 @@
                                                         #}
 
                                                         <button style="border-radius: 0px;" class="btn btn-info btn-push" data-toggle="tooltip" data-placement="top" data-original-title="Ver datos"
-                                                            onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion }}',' {{ entity.duracionAnios }}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0) }}');">
+                                                            onclick="updateCarrera('{{ entity.id }}',' {{ entity.carrera }}',' {{ entity.resolucion }}',' {{ entity.fechaApertura|date('d-m-Y') }}',' {{ entity.duracion |trim}}',' {{ entity.duracionAnios |trim}}','{{ entity.getUnivNivelAcademicoTipo.getId() }}','{{ entity.getUnivModalidadEnsenanzaTipo.getId() }}','{{ entity.getUnivGradoAcademicoTipo.getId() }}','{{ entity.getUnivRegimenEstudiosTipo.getId() }}',1,'{{ entity.getUnivAreaConocimientoTipo.getId()  | default(0) }}');">
                                                             <i class="fa fa-edit"></i>
                                                         </button>
 
@@ -546,7 +546,7 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <label for="carrera">
-                                Carrera
+                                Carrera dsadad
                                 </label>
                                 <input type="text" class="form-control" id="edit_carrera" name= "edit_carrera" placeholder="" maxlength="50">
                             </div>
@@ -648,7 +648,7 @@
                                 <label for="modalidad">
                                 Duracion Semestres
                                 </label>
-                                <input type="text" class="form-control" id="edit_duracion" name="edit_duracion" placeholder="" maxlength="20" required>
+                                <input type="text" class="form-control decimales" id="edit_duracion" name="edit_duracion" placeholder="9 o 9.5 segun corresponda" maxlength="3" data-type="currency" required>
                             </div>
                         </div>
                         <div class="row">
@@ -656,7 +656,7 @@
                                 <label for="grado">
                                 Duracion Años
                                 </label>
-                                <input type="text" class="form-control" id="edit_duracion_anios" name="edit_duracion_anios" placeholder="" maxlength="20" required>
+                                <input type="text" class="form-control decimales" id="edit_duracion_anios" name="edit_duracion_anios" placeholder="4 o 4.5 segun corresponda" maxlength="3" required>
                             </div>
                         </div>
                         {##<div class="row">
@@ -733,6 +733,8 @@
         sw = 1 es ver
         */
         console.log(fecha_apertura);
+        console.log(duracion);
+        console.log(duracion_anios);
 
         if(sw == 0){
             $("#titulo-edit").html('Editar Carrera');
@@ -772,8 +774,8 @@
         document.getElementById("edit_resolucion").value = resolucion;
         document.getElementById("edit_fecha_apertura").value = fecha_apertura;
 
-        document.getElementById("edit_duracion").value = duracion;
-        document.getElementById("edit_duracion_anios").value = duracion_anios;
+        document.getElementById("edit_duracion").value = duracion.replace(/\s+/g, "");
+        document.getElementById("edit_duracion_anios").value = duracion_anios.replace(/\s+/g, "");
         
         $('#edit_nivel_academico_id').val(nivel_academico_id);
         $('#edit_modalidad_id').val(modalidad_id);
@@ -884,8 +886,58 @@
             return false;
         }
 
+        if( esnumero(aux) == 0){
+            //no es numero
+            alert("la duracion en semestres no es un numero valido !");
+            return false;
+        }else{
+            //es numero, es valido ?
+            if(aux>0 && aux<=10 ){
+                // es valor correcto
+            }else{
+                alert("la duracion en semestres no pertenece a un rango valido !");
+                return false;
+            }
+        }
+
+        if( esnumero(aux2) == 0){
+            //no es numero
+            alert("la duracion en años no es un numero valido !");
+            return false;
+        }else{
+            //es numero, es valido ?
+            if(aux2>0 && aux2<=5){
+                // es valor correcto
+            }else{
+                alert("la duracion en años no pertenece a un rango valido !");
+                return false;
+            }
+        }
+
+        if(!confirm('Actualizar los datos de la carrera ?')){return false;}
 
     }
+
+    $('.decimales').on('input', function () {
+        this.value = this.value.replace(/[^0-9,.]/g, '').replace(/,/g, '.');
+    });
+
+    function esnumero(valor){
+        var num = valor; //"987238";
+
+        if(num.match(/^-?\d+$/)){
+        //valid integer (positive or negative)
+        return 1;
+        }else if(num.match(/^\d+\.\d+$/)){
+        //valid float
+        return 1;
+        }else{
+        //not valid number
+        return 0;
+        }
+    }
+
+
 
 </script>
 {% endblock %}

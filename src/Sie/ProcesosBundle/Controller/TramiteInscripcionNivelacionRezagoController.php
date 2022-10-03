@@ -1482,7 +1482,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                     if($clave1 == 0){
                         $studentInscription = $objEstInsc;
                         $objCurso = $objEstInsc->getInstitucioneducativaCurso();
-                        $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(56));
+                        $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(57));
                         $em->persist($studentInscription);
                         //dump($studentInscription);
                     } else {
@@ -1498,7 +1498,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                         if($esUltimo){
                             $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(4));
                         } else {
-                            $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(56));
+                            $studentInscription->setEstadomatriculaTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(57));
                         }
                         $studentInscription->setEstudiante($em->getRepository('SieAppWebBundle:Estudiante')->findOneById($objEst->getId()));
                         $studentInscription->setObservacion('INRE');
@@ -1506,7 +1506,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                         $studentInscription->setFechaInscripcion(new \DateTime('now'));
                         $studentInscription->setFechaRegistro(new \DateTime('now'));
                         $studentInscription->setInstitucioneducativaCurso($objCurso);
-                        $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(50));
+                        $studentInscription->setEstadomatriculaInicioTipo($em->getRepository('SieAppWebBundle:EstadomatriculaTipo')->findOneById(51));
                         $studentInscription->setCodUeProcedenciaId($sie);
                         $studentInscription->setNumMatricula(0);
                         $em->persist($studentInscription);

@@ -1,0 +1,141 @@
+Sie\AppWebBundle\Entity\EstTecAutoridadInstituto:
+    type: entity
+    table: est_tec_autoridad_instituto
+    indexes:
+        IDX_10AF7AAEF5F88DB9:
+            columns:
+                - persona_id
+        IDX_10AF7AAE33218414:
+            columns:
+                - est_tec_formacion_tipo_id
+        IDX_10AF7AAEAEE08439:
+            columns:
+                - est_tec_cargo_jerarquico_tipo_id
+        IDX_10AF7AAE179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_10AF7AAEE8E891F1:
+            columns:
+                - est_tec_sede_id
+    uniqueConstraints:
+        uniq_est_tec_aut_or_idad_univ:
+            columns:
+                - gestion_tipo_id
+                - est_tec_sede_id
+                - est_tec_cargo_jerarquico_tipo_id
+                - persona_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        ref:
+            type: string
+            nullable: true
+            length: 80
+            fixed: false
+            comment: ''
+        telefono:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        fax:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        casilla:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        email:
+            type: string
+            nullable: true
+            length: 45
+            fixed: false
+            comment: ''
+        formaciondescripcion:
+            type: string
+            nullable: true
+            length: 1500
+            fixed: false
+            comment: ''
+        documentosAcad:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: documentos_acad
+        fechaRegistroFirma:
+            type: date
+            nullable: true
+            comment: ''
+            column: fecha_registro_firma
+        fechaCreacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_creacion
+        fechaActualizacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_actualizacion
+    manyToOne:
+        persona:
+            targetEntity: Persona
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                persona_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecFormacionTipo:
+            targetEntity: EstTecFormacionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_formacion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecCargoJerarquicoTipo:
+            targetEntity: EstTecCargoJerarquicoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_cargo_jerarquico_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecSede:
+            targetEntity: EstTecSede
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_sede_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

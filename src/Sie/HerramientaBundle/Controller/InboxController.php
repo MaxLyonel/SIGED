@@ -1753,6 +1753,7 @@ class InboxController extends Controller {
       switch ($operativo) {
         case 1:
         case 2:
+        case 3:
           $opeTrim = $operativo + 5;
           $dbFunction = 'sp_validacion_regular_web2022_mg';
           break;
@@ -1810,8 +1811,10 @@ class InboxController extends Controller {
             $registroConsol->setInstitucioneducativaTipoId(1);
 
           }else{
-            $fieldOpe = 'setBim' .$operativo;
-            $registroConsol->$fieldOpe(2);
+            if($operativo <= 2 ){
+              $fieldOpe = 'setBim' .$operativo;
+              $registroConsol->$fieldOpe(2);              
+            }
           }
             $em->persist($registroConsol);
             $em->flush();

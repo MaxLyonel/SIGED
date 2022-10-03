@@ -1,0 +1,378 @@
+<link rel="stylesheet" href="{{asset('css/kcssformat.css')}}">
+<style>
+    #mapMarker { top:0; bottom:0; width:100%; height: 300px; }
+</style>
+<div class="row"> 
+    <div class="col-lg-12 col-md-12 alert alert-warning">
+        {% if sedeDetalle is defined %}
+            {% set nombre = sedeDetalle.nombre %}
+            {% set resolucionMinisterial = sedeDetalle.resolucionMinisterial %}
+            {% set decretoSupremo = sedeDetalle.decretoSupremo %}
+            {% set naturalezaJuridica = sedeDetalle.naturalezaJuridica %}
+        {% else %}
+            {% set nombre = "" %}
+            {% set resolucionMinisterial = "" %}
+            {% set decretoSupremo = "" %}
+            {% set naturalezaJuridica = "" %}
+        {% endif %}    
+        <h3 style="margin-top:0px;">{{ nombre }}</h3>
+        <h5><i class="fa fa-university fa-muted fa-fw"></i> R.M.:  {{ resolucionMinisterial }}</h5>
+        <p><i class="fa fa-building-o fa-muted fa-fw"></i> D.S.: {{ decretoSupremo }}</p>
+        <p><i class="fa fa-code-fork fa-muted fa-fw"></i> N.J.: {{ naturalezaJuridica }}</p>
+    </div> 
+</div> 
+<div class="row"> 
+    {% if form is defined %}
+        <div class="col-lg-12 col-md-12" id="maestroNuevo">
+            <div class="tile orange style="height: auto;">
+                {{form_start(form, {'attr': {'role': "form", 'id': "formSedeSucursal", 'style': "padding:5px; margin-top:0px; margin-bottom:0px;"} } )}}
+                    {{ form_widget(form.data) }}
+                    
+                    <div class="row"> 
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12 mb-10">
+                            <label class="text-danger">(*) Campos requeridos</label> 
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.telefono) }}
+                            {{ form_widget(form.telefono, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.celular) }}
+                            {{ form_widget(form.celular, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.referenciaCelular) }}
+                            {{ form_widget(form.referenciaCelular, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.correo) }}
+                            {{ form_widget(form.correo, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.inicioCalendarioAcademico) }}
+                            <div id="sandbox-container1" class="sandbox-container">
+                                {{ form_widget(form.inicioCalendarioAcademico, { 'attr': {'class': 'form-control'} }) }}
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.fax) }}
+                            {{ form_widget(form.fax, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.casilla) }}
+                            {{ form_widget(form.casilla, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.sitioWeb) }}
+                            {{ form_widget(form.sitioWeb, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>
+                    <div class="row"> 
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.departamento) }}
+                            {{ form_widget(form.departamento) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.provincia) }}
+                            {{ form_widget(form.provincia ) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.municipio) }}
+                            {{ form_widget(form.municipio) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.comunidad) }}
+                            {{ form_widget(form.comunidad ) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.zona) }}
+                            {{ form_widget(form.zona, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
+                            <label class="text-danger">(*)</label>{{ form_label(form.direccion) }}
+                            {{ form_widget(form.direccion, { 'attr': {'class': 'form-control'} }) }}
+                        </div>   
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12 mb-10 alert alert-info">
+                            <div id="mapMarker"></div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5 alert alert-info">
+                            <label class="text-danger">(*)</label>{{ form_label(form.latitud) }}
+                            {{ form_widget(form.latitud, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5 alert alert-info">
+                            <label class="text-danger">(*)</label>{{ form_label(form.longitud) }}
+                            {{ form_widget(form.longitud, { 'attr': {'class': 'form-control'} }) }}
+                        </div>
+                    </div>  
+                    </br>     
+                    <div class="row">               
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12">
+                            <a href="#" class="btn btn-primary btn-block" id="form_guardar">Guardar</a>
+                        </div>
+                    </div>
+                {{form_end(form)}}            
+            </div>
+        </div>
+    {% endif %}
+</div> 
+
+<script>
+    $('.sandbox-container input').datepicker({
+        autoclose: true,
+        todayHighlight: true,
+        format: 'dd-mm-yyyy',
+		language: 'es'
+    });
+
+    mapboxgl.accessToken = 'pk.eyJ1IjoianVybGFuIiwiYSI6ImNqd3RkNjZjYzAxd2k0MGw1a3A4dmJuZjIifQ.hcnCGlBc18MaYfIFG22P-Q'; // Nuestro Token de acceso
+    var mapMarker = new mapboxgl.Map({
+        container: 'mapMarker', // id del contenedor
+        style: 'mapbox://styles/mapbox/streets-v9', // localización del mapa de estilo
+        center: [{{sedeDetalle.latitud}},{{sedeDetalle.longitud}}], // Posición inicial
+        zoom: 13 // Zoom inicial
+    });
+
+    var add_marker = function (event){
+        var coordenadas = event.lngLat;
+        marker.setLngLat(coordenadas).addTo(mapMarker);
+
+        const lngLat = marker.getLngLat();
+        $('#form_latitud').val(lngLat.lat);
+        $('#form_longitud').val(lngLat.lng);
+    }
+
+   
+    marker = new mapboxgl.Marker().setLngLat([{{sedeDetalle.latitud}},{{sedeDetalle.longitud}}]).addTo(mapMarker);
+    mapMarker.on('click',add_marker.bind(this));
+    
+
+    var listarProvincia = function(departamento){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
+        $('#form_provincia').empty();
+        $("#form_provincia").append('<option value="">Seleccionar Provincia</option>');
+        $('#form_municipio').empty();
+        $("#form_municipio").append('<option value="">Seleccionar Municipio</option>');
+        $('#form_comunidad').empty();
+        $("#form_comunidad").append('<option value="">Seleccionar Comunidad</option>');
+        if (departamento == "") {
+            return false;
+        }
+        peticion = $.ajax({
+            type: 'GET',
+            url: '{{ path('sie_tecest_sede_lista_provincia')}}',
+            data: {'departamento': departamento},
+            beforeSend: function () {
+                $('#form_provincia').attr('disabled', 'true');
+                $('#form_provincia').empty();
+                $("#form_provincia").append('<option value="">Cargando Datos..</option>');
+            },
+            success: function (data) {
+                $('#form_provincia').removeAttr('disabled');
+                $('#form_provincia').empty();
+                $("#form_provincia").append('<option value="">Seleccionar Provincia</option>');
+                if (data.lista != '') {
+                    for (var i in data.lista) {
+                        $("#form_provincia").append('<option value="' + data.lista[i].id + '">' + data.lista[i].nombre + '</option>');
+                    }
+                }
+            }
+        });
+    }
+
+    var listarMunicipio = function(provincia){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
+        $('#form_municipio').empty();
+        $("#form_municipio").append('<option value="">Seleccionar Municipio</option>');
+        $('#form_comunidad').empty();
+        $("#form_comunidad").append('<option value="">Seleccionar Comunidad</option>');
+        if (provincia == "") {
+            return false;
+        }
+        peticion = $.ajax({
+            type: 'GET',
+            url: '{{ path('sie_tecest_sede_lista_municipio')}}',
+            data: {'provincia': provincia},
+            beforeSend: function () {
+                $('#form_municipio').attr('disabled', 'true');
+                $('#form_municipio').empty();
+                $("#form_municipio").append('<option value="">Cargando Datos..</option>');
+            },
+            success: function (data) {
+                $('#form_municipio').removeAttr('disabled');
+                $('#form_municipio').empty();
+                $("#form_municipio").append('<option value="">Seleccionar Municipio</option>'); 
+                if (data.lista != '') {
+                    for (var i in data.lista) {
+                        $("#form_municipio").append('<option value="' + data.lista[i].id + '">' + data.lista[i].nombre + '</option>');
+                    }
+                }
+            }
+        });
+    }
+
+    var listarComunidad = function(municipio){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
+        $('#form_comunidad').empty();
+        $("#form_comunidad").append('<option value="">Seleccionar Comunidad</option>');
+        if (municipio == "") {
+            return false;
+        }
+        peticion = $.ajax({
+            type: 'GET',
+            url: '{{ path('sie_tecest_sede_lista_comunidad')}}',
+            data: {'municipio': municipio},
+            beforeSend: function () {
+                $('#form_comunidad').attr('disabled', 'true');
+                $('#form_comunidad').empty();
+                $("#form_comunidad").append('<option value="">Cargando Datos..</option>');
+            },
+            success: function (data) {
+                $('#form_comunidad').removeAttr('disabled');
+                $('#form_comunidad').empty();
+                $("#form_comunidad").append('<option value="">Seleccionar Comunidad</option>');
+                if (data.lista != '') {
+                    for (var i in data.lista) {
+                        $("#form_comunidad").append('<option value="' + data.lista[i].id + '">' + data.lista[i].nombre + '</option>');
+                    }
+                }
+            }
+        });
+    }
+
+    $('#form_guardar').on("click", function(){
+        var peticion;
+        if (peticion && peticion.readyState != 4) {
+            peticion.abort();
+        }
+        var r = confirm("¿Desea guardar el registro?");
+        if (r == false) {
+            return false;
+        }
+        var validacion = validacionForm();
+        if(!validacion){
+            return validacion;
+        }
+        
+        var boton = $(this);
+        boton.hide();
+
+        $.ajax({
+            type: 'post',
+            url: Routing.generate('sie_tecest_sede_update'),
+            data: $('#formSedeSucursal').serialize(),
+            beforeSend: function () {       
+                $("#formSedeSucursal").append('<div class="text-center" id="message"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
+            },
+            success: function (data) {                                  
+                $('#message').empty();
+                if(data.estado){ 
+                    $("#message").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');                    
+                    location.reload();
+                } else {
+                    $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');
+                    boton.show();
+                }                
+            },
+            error: function(error){    
+                $('#message').empty();   
+                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');                 
+                boton.show();
+            },
+        }); 
+    });
+
+ 
+    var validacionForm = function(){
+        if($('#form_telefono').val() == "" || $('#form_telefono').val() == "0"){
+            alert("Debe ingresar el número de teléfono");
+            $('#form_telefono').focus();
+            return false;
+        }
+        if($('#form_celular').val() == "" || $('#form_celular').val() == "0"){
+            alert("Debe ingresar el número de celular");
+            $('#form_celular').focus();
+            return false;
+        }
+        if($('#form_refereciaCelular').val() == "0" || $('#form_refereciaCelular').val() == ""){
+            alert("Debe ingresar la referencia del celular");
+            $('#form_refereciaCelular').focus();
+            return false;
+        }
+        if($('#form_correo').val() == ""){
+            alert("Debe ingresar el correo electrónico");
+            $('#form_fechaInicio').focus();
+            return false;
+        }
+        if($('#form_inicioCalendarioAcademico').val() == ""){
+            alert("Debe ingresar la fecha de inicio del calendario académico");
+            $('#form_inicioCalendarioAcademico').focus();
+            return false;
+        }
+        if($('#form_fax').val() == ""){
+            alert("Debe ingresar el número fax");
+            $('#form_fax').focus();
+            return false;
+        }
+        if($('#form_casilla').val() == ""){
+            alert("Debe ingresar la casilla");
+            $('#form_casilla').focus();
+            return false;
+        }
+        if($('#form_sitioWeb').val() == ""){
+            alert("Debe ingresar su sitio web");
+            $('#form_sitioWeb').focus();
+            return false;
+        }
+        if($('#form_departamento').val() == ""){
+            alert("Debe seleccionar el departamento");
+            $('#form_departamento').focus();
+            return false;form_departamento
+        }
+        if($('#form_provincia').val() == ""){
+            alert("Debe seleccionar la provincia");
+            $('#form_provincia').focus();
+            return false;
+        }
+        if($('#form_municipio').val() == ""){
+            alert("Debe seleccionar el municipio");
+            $('#form_municipio').focus();
+            return false;
+        }
+        if($('#form_comunidad').val() == ""){
+            alert("Debe seleccionar la comunidad");
+            $('#form_comunidad').focus();
+            return false;
+        }
+        if($('#form_latitud').val() == ""){
+            alert("Debe ingresar la latitud de coordenadas geográficas");
+            $('#form_latitud').focus();
+            return false;
+        }
+        if($('#form_longitud').val() == ""){
+            alert("Debe ingresar la longitud de coordenadas geográficas");
+            $('#form_longitud').focus();
+            return false;
+        }
+        if($('#form_zona').val() == ""){
+            alert("Debe ingresar la zona");
+            $('#form_zona').focus();
+            return false;
+        }
+        if($('#form_direccion').val() == ""){
+            alert("Debe ingresar la dirección");
+            $('#form_direccion').focus();
+            return false;
+        }
+        return true;
+    }
+    
+</script>

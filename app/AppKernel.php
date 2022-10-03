@@ -49,6 +49,7 @@ class AppKernel extends Kernel {
             new Sie\ProcesosBundle\SieProcesosBundle(),
             new WhiteOctober\TCPDFBundle\WhiteOctoberTCPDFBundle(),
             new Sie\UniversityBundle\SieUniversityBundle(),
+            new Sie\TecnicaEstBundle\SieTecnicaEstBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
