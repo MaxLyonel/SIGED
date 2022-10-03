@@ -241,6 +241,32 @@
         var formulario = $('#formDocAdm')[0];
         var formData = new FormData(formulario);
 
+        for (var j = 0, element; element = formulario[j++];) {            
+            if (element.type === "number" && element.value === ""){
+                var idVal = element.id;                   
+                element.focus();
+                alert("Debe registrar la cantidad de personal");
+                boton.show();
+                return false;
+            }  
+
+            if (element.type === "number" && (element.value < 0 || element.value > 999999999)){
+                var idVal = element.id;                   
+                element.focus();
+                alert("Debe registrar una cantidad válida mayor a 0");
+                boton.show();
+                return false;
+            } 
+
+            if(element.type === "number" && (element.value % 1 != 0)){   
+                element.focus();
+                alert("Debe registrar un valor entrero válido");
+                boton.show();
+                return false;
+            }
+        }
+        
+
         $.ajax({
             type: 'post',
             url: Routing.generate('sie_tecest_sede_docente_administrativo_save'),

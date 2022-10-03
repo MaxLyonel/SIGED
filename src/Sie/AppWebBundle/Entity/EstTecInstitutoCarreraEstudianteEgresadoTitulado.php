@@ -5,9 +5,9 @@ namespace Sie\AppWebBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * EstTecInstitutoCarreraEstudianteEstado
+ * EstTecInstitutoCarreraEstudianteEgresadoTitulado
  */
-class EstTecInstitutoCarreraEstudianteEstado
+class EstTecInstitutoCarreraEstudianteEgresadoTitulado
 {
     /**
      * @var integer
@@ -40,21 +40,6 @@ class EstTecInstitutoCarreraEstudianteEstado
     private $estTecGradoAcademicoTipo;
 
     /**
-     * @var \Sie\AppWebBundle\Entity\EstTecPeriodoAcademicoTipo
-     */
-    private $estTecPeriodoAcademicoTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\EstTecEstadomatriculaTipo
-     */
-    private $estTecEstadomatriculaTipo;
-
-    /**
-     * @var \Sie\AppWebBundle\Entity\GeneroTipo
-     */
-    private $generoTipo;
-
-    /**
      * @var \Sie\AppWebBundle\Entity\EstTecInstitutoCarrera
      */
     private $estTecInstitutoCarrera;
@@ -63,6 +48,21 @@ class EstTecInstitutoCarreraEstudianteEstado
      * @var \Sie\AppWebBundle\Entity\GestionTipo
      */
     private $gestionTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstTecPeriodoAcademicoTipo
+     */
+    private $estTecPeriodoAcademicoTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\EstTecEgresadoTituladosTipo
+     */
+    private $estTecEgresadoTituladosTipo;
+
+    /**
+     * @var \Sie\AppWebBundle\Entity\GeneroTipo
+     */
+    private $generoTipo;
 
 
     /**
@@ -79,7 +79,7 @@ class EstTecInstitutoCarreraEstudianteEstado
      * Set cantidad
      *
      * @param integer $cantidad
-     * @return EstTecInstitutoCarreraEstudianteEstado
+     * @return EstTecInstitutoCarreraEstudianteEgresadoTitulado
      */
     public function setCantidad($cantidad)
     {
@@ -102,7 +102,7 @@ class EstTecInstitutoCarreraEstudianteEstado
      * Set fechaCreacion
      *
      * @param \DateTime $fechaCreacion
-     * @return EstTecInstitutoCarreraEstudianteEstado
+     * @return EstTecInstitutoCarreraEstudianteEgresadoTitulado
      */
     public function setFechaCreacion($fechaCreacion)
     {
@@ -125,7 +125,7 @@ class EstTecInstitutoCarreraEstudianteEstado
      * Set fechaActualizacion
      *
      * @param \DateTime $fechaActualizacion
-     * @return EstTecInstitutoCarreraEstudianteEstado
+     * @return EstTecInstitutoCarreraEstudianteEgresadoTitulado
      */
     public function setFechaActualizacion($fechaActualizacion)
     {
@@ -148,7 +148,7 @@ class EstTecInstitutoCarreraEstudianteEstado
      * Set estTecModalidadEnsenanzaTipo
      *
      * @param \Sie\AppWebBundle\Entity\EstTecModalidadEnsenanzaTipo $estTecModalidadEnsenanzaTipo
-     * @return EstTecInstitutoCarreraEstudianteEstado
+     * @return EstTecInstitutoCarreraEstudianteEgresadoTitulado
      */
     public function setEstTecModalidadEnsenanzaTipo(\Sie\AppWebBundle\Entity\EstTecModalidadEnsenanzaTipo $estTecModalidadEnsenanzaTipo = null)
     {
@@ -171,7 +171,7 @@ class EstTecInstitutoCarreraEstudianteEstado
      * Set estTecGradoAcademicoTipo
      *
      * @param \Sie\AppWebBundle\Entity\EstTecGradoAcademicoTipo $estTecGradoAcademicoTipo
-     * @return EstTecInstitutoCarreraEstudianteEstado
+     * @return EstTecInstitutoCarreraEstudianteEgresadoTitulado
      */
     public function setEstTecGradoAcademicoTipo(\Sie\AppWebBundle\Entity\EstTecGradoAcademicoTipo $estTecGradoAcademicoTipo = null)
     {
@@ -191,79 +191,10 @@ class EstTecInstitutoCarreraEstudianteEstado
     }
 
     /**
-     * Set estTecPeriodoAcademicoTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\EstTecPeriodoAcademicoTipo $estTecPeriodoAcademicoTipo
-     * @return EstTecInstitutoCarreraEstudianteEstado
-     */
-    public function setEstTecPeriodoAcademicoTipo(\Sie\AppWebBundle\Entity\EstTecPeriodoAcademicoTipo $estTecPeriodoAcademicoTipo = null)
-    {
-        $this->estTecPeriodoAcademicoTipo = $estTecPeriodoAcademicoTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get estTecPeriodoAcademicoTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\EstTecPeriodoAcademicoTipo 
-     */
-    public function getEstTecPeriodoAcademicoTipo()
-    {
-        return $this->estTecPeriodoAcademicoTipo;
-    }
-
-    /**
-     * Set estTecEstadomatriculaTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\EstTecEstadomatriculaTipo $estTecEstadomatriculaTipo
-     * @return EstTecInstitutoCarreraEstudianteEstado
-     */
-    public function setEstTecEstadomatriculaTipo(\Sie\AppWebBundle\Entity\EstTecEstadomatriculaTipo $estTecEstadomatriculaTipo = null)
-    {
-        $this->estTecEstadomatriculaTipo = $estTecEstadomatriculaTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get estTecEstadomatriculaTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\EstTecEstadomatriculaTipo 
-     */
-    public function getEstTecEstadomatriculaTipo()
-    {
-        return $this->estTecEstadomatriculaTipo;
-    }
-
-    /**
-     * Set generoTipo
-     *
-     * @param \Sie\AppWebBundle\Entity\GeneroTipo $generoTipo
-     * @return EstTecInstitutoCarreraEstudianteEstado
-     */
-    public function setGeneroTipo(\Sie\AppWebBundle\Entity\GeneroTipo $generoTipo = null)
-    {
-        $this->generoTipo = $generoTipo;
-    
-        return $this;
-    }
-
-    /**
-     * Get generoTipo
-     *
-     * @return \Sie\AppWebBundle\Entity\GeneroTipo 
-     */
-    public function getGeneroTipo()
-    {
-        return $this->generoTipo;
-    }
-
-    /**
      * Set estTecInstitutoCarrera
      *
      * @param \Sie\AppWebBundle\Entity\EstTecInstitutoCarrera $estTecInstitutoCarrera
-     * @return EstTecInstitutoCarreraEstudianteEstado
+     * @return EstTecInstitutoCarreraEstudianteEgresadoTitulado
      */
     public function setEstTecInstitutoCarrera(\Sie\AppWebBundle\Entity\EstTecInstitutoCarrera $estTecInstitutoCarrera = null)
     {
@@ -286,7 +217,7 @@ class EstTecInstitutoCarreraEstudianteEstado
      * Set gestionTipo
      *
      * @param \Sie\AppWebBundle\Entity\GestionTipo $gestionTipo
-     * @return EstTecInstitutoCarreraEstudianteEstado
+     * @return EstTecInstitutoCarreraEstudianteEgresadoTitulado
      */
     public function setGestionTipo(\Sie\AppWebBundle\Entity\GestionTipo $gestionTipo = null)
     {
@@ -303,5 +234,74 @@ class EstTecInstitutoCarreraEstudianteEstado
     public function getGestionTipo()
     {
         return $this->gestionTipo;
+    }
+
+    /**
+     * Set estTecPeriodoAcademicoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EstTecPeriodoAcademicoTipo $estTecPeriodoAcademicoTipo
+     * @return EstTecInstitutoCarreraEstudianteEgresadoTitulado
+     */
+    public function setEstTecPeriodoAcademicoTipo(\Sie\AppWebBundle\Entity\EstTecPeriodoAcademicoTipo $estTecPeriodoAcademicoTipo = null)
+    {
+        $this->estTecPeriodoAcademicoTipo = $estTecPeriodoAcademicoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get estTecPeriodoAcademicoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EstTecPeriodoAcademicoTipo 
+     */
+    public function getEstTecPeriodoAcademicoTipo()
+    {
+        return $this->estTecPeriodoAcademicoTipo;
+    }
+
+    /**
+     * Set estTecEgresadoTituladosTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\EstTecEgresadoTituladosTipo $estTecEgresadoTituladosTipo
+     * @return EstTecInstitutoCarreraEstudianteEgresadoTitulado
+     */
+    public function setEstTecEgresadoTituladosTipo(\Sie\AppWebBundle\Entity\EstTecEgresadoTituladosTipo $estTecEgresadoTituladosTipo = null)
+    {
+        $this->estTecEgresadoTituladosTipo = $estTecEgresadoTituladosTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get estTecEgresadoTituladosTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\EstTecEgresadoTituladosTipo 
+     */
+    public function getEstTecEgresadoTituladosTipo()
+    {
+        return $this->estTecEgresadoTituladosTipo;
+    }
+
+    /**
+     * Set generoTipo
+     *
+     * @param \Sie\AppWebBundle\Entity\GeneroTipo $generoTipo
+     * @return EstTecInstitutoCarreraEstudianteEgresadoTitulado
+     */
+    public function setGeneroTipo(\Sie\AppWebBundle\Entity\GeneroTipo $generoTipo = null)
+    {
+        $this->generoTipo = $generoTipo;
+    
+        return $this;
+    }
+
+    /**
+     * Get generoTipo
+     *
+     * @return \Sie\AppWebBundle\Entity\GeneroTipo 
+     */
+    public function getGeneroTipo()
+    {
+        return $this->generoTipo;
     }
 }
