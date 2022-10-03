@@ -27,76 +27,80 @@
             <div class="tile orange style="height: auto;">
                 {{form_start(form, {'attr': {'role': "form", 'id': "formSedeSucursal", 'style': "padding:5px; margin-top:0px; margin-bottom:0px;"} } )}}
                     {{ form_widget(form.data) }}
+                    
                     <div class="row"> 
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12 mb-10">
+                            <label class="text-danger">(*) Campos requeridos</label> 
+                        </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.telefono) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.telefono) }}
                             {{ form_widget(form.telefono, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.celular) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.celular) }}
                             {{ form_widget(form.celular, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.referenciaCelular) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.referenciaCelular) }}
                             {{ form_widget(form.referenciaCelular, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.correo) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.correo) }}
                             {{ form_widget(form.correo, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.inicioCalendarioAcademico) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.inicioCalendarioAcademico) }}
                             <div id="sandbox-container1" class="sandbox-container">
                                 {{ form_widget(form.inicioCalendarioAcademico, { 'attr': {'class': 'form-control'} }) }}
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.fax) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.fax) }}
                             {{ form_widget(form.fax, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.casilla) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.casilla) }}
                             {{ form_widget(form.casilla, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.sitioWeb) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.sitioWeb) }}
                             {{ form_widget(form.sitioWeb, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                     </div>
                     <div class="row"> 
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.departamento) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.departamento) }}
                             {{ form_widget(form.departamento) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.provincia) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.provincia) }}
                             {{ form_widget(form.provincia ) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.municipio) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.municipio) }}
                             {{ form_widget(form.municipio) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.comunidad) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.comunidad) }}
                             {{ form_widget(form.comunidad ) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.zona) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.zona) }}
                             {{ form_widget(form.zona, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5">
-                            {{ form_label(form.direccion) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.direccion) }}
                             {{ form_widget(form.direccion, { 'attr': {'class': 'form-control'} }) }}
                         </div>   
                         <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12 mb-10 alert alert-info">
                             <div id="mapMarker"></div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5 alert alert-info">
-                            {{ form_label(form.latitud) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.latitud) }}
                             {{ form_widget(form.latitud, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12 col-sx-12 mb-5 alert alert-info">
-                            {{ form_label(form.longitud) }}
+                            <label class="text-danger">(*)</label>{{ form_label(form.longitud) }}
                             {{ form_widget(form.longitud, { 'attr': {'class': 'form-control'} }) }}
                         </div>
                     </div>  
