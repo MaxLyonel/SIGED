@@ -208,6 +208,8 @@ class CarrerasController extends Controller
         $cargos = $em->getRepository('SieAppWebBundle:EstTecCargoTipo')->findAll();   
 
         
+        //verifica egresados y titulados
+        $this->verifica_get_univ_universidad_carrera_egresados($carrera_id, $nro_periodos, $gestion);
 
         //verificar si hay datos para le gestion y carrera, si no hay generar con ceros
         $this->verifica_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion);
@@ -221,64 +223,395 @@ class CarrerasController extends Controller
         //datos estudiantes por genero y tipo beca
 
       
+        $filas_egresados = $this->get_univ_universidad_carrera_egresados($carrera_id, $nro_periodos, $gestion);
+        $totales0 = array();
+        $t1 = 0;
+        $t2 = 0;
+
+        for($i = 0; $i < sizeof($filas_egresados); $i++ ){
+            $t1 = $t1 + $filas_egresados[$i]['m1'];
+            $t2 = $t2 + $filas_egresados[$i]['f1']; 
+        }
+        $totales0_aux = array(   
+            'id' => 0,
+            'matricula' => "TOTALES",        
+            'm1'  => $t1,
+            'f1'  => $t2,           
+        );
+       
+        array_push($totales0, $totales0_aux);
+       
+
+        /*--------------------------------------------*/
         $filas = $this->get_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion);
+        $filasp2 = array();
         
         $totales1 = array();
         $t1 = 0;
         $t2 = 0;
         $t3 = 0;
         $t4 = 0;
+        $t5 = 0;
+        $t6 = 0;
+
+        $t7 = 0;
+        $t8 = 0;
+        $t9 = 0;
+        $t10 = 0;
+        $t11 = 0;
+        $t12 = 0;
        
         for($i = 0; $i < sizeof($filas); $i++ ){
             $t1 = $t1 + $filas[$i]['m1'];
             $t2 = $t2 + $filas[$i]['f1']; 
             
             $t3 = $t3 + $filas[$i]['m2'];
-            //$t4 = $t4 + $filas[$i]['f2'];
-            //$t5 = $t5 + $filas[$i]['m3'];
-            //$t6 = $t6 + $filas[$i]['f3'];
+            $t4 = $t4 + $filas[$i]['f2'];
+            $t5 = $t5 + $filas[$i]['m3'];
+            $t6 = $t6 + $filas[$i]['f3'];
                 
                 
             //TODO: las del periodo 2
             if($nro_periodos == 6){
-                $t3 = $t3 + $filas[$i]['m2'];
-                $t4 = $t4 + $filas[$i]['f2'];              
+                $t7 = $t7 + $filas[$i]['m4'];
+                $t8 = $t8 + $filas[$i]['f4'];    
+                $t9 = $t9 + $filas[$i]['m5'];
+                $t10 = $t10 + $filas[$i]['f5'];     
+                $t11 = $t11 + $filas[$i]['m6'];
+                $t12 = $t12 + $filas[$i]['f6'];     
             }
 
         }
         $totales = array(   
             'id' => 0,
             'matricula' => "TOTALES",        
-            'm1'  => 0,//$t1,
-            'f1'  => 0,//$t2,           
-            'm2'  => 0,//$t3,
-            'f2'  => 0,//$t4,
-            'm3'  => 0,//$t3,
-            'f3'  => 0//$t4,
+            'm1'  => $t1,
+            'f1'  => $t2,           
+            'm2'  => $t3,
+            'f2'  => $t4,
+            'm3'  => $t5,
+            'f3'  => $t6,
+
+            'm4'  => $t7,
+            'f4'  => $t8,           
+            'm5'  => $t9,
+            'f5'  => $t10,
+            'm6'  => $t11,
+            'f6'  => $t12,
             
         );
        
         array_push($totales1, $totales);
 
+        //inicio tipo de beca si es semestral para el periodo2
+        if($nro_periodos == 6){
+            $filasp2 = $this->get_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion,2);            
+            //dump($filasp2); die;
+            $totales1p2 = array();
+            $t1 = 0;
+            $t2 = 0;
+            $t3 = 0;
+            $t4 = 0;
+            $t5 = 0;
+            $t6 = 0;
+
+            $t7 = 0;
+            $t8 = 0;
+            $t9 = 0;
+            $t10 = 0;
+            $t11 = 0;
+            $t12 = 0;
+        
+            for($i = 0; $i < sizeof($filasp2); $i++ ){
+                $t1 = $t1 + $filasp2[$i]['m1'];
+                $t2 = $t2 + $filasp2[$i]['f1']; 
+                
+                $t3 = $t3 + $filasp2[$i]['m2'];
+                $t4 = $t4 + $filasp2[$i]['f2'];
+                $t5 = $t5 + $filasp2[$i]['m3'];
+                $t6 = $t6 + $filasp2[$i]['f3'];
+                    
+                $t7 = $t7 + $filasp2[$i]['m4'];
+                $t8 = $t8 + $filasp2[$i]['f4'];    
+                $t9 = $t9 + $filasp2[$i]['m5'];
+                $t10 = $t10 + $filasp2[$i]['f5'];     
+                $t11 = $t11 + $filasp2[$i]['m6'];
+                $t12 = $t12 + $filasp2[$i]['f6'];                   
+
+            }
+            $totales = array(   
+                'id' => 0,
+                'matricula' => "TOTALES",        
+                'm1'  => $t1,
+                'f1'  => $t2,           
+                'm2'  => $t3,
+                'f2'  => $t4,
+                'm3'  => $t5,
+                'f3'  => $t6,
+
+                'm4'  => $t7,
+                'f4'  => $t8,           
+                'm5'  => $t9,
+                'f5'  => $t10,
+                'm6'  => $t11,
+                'f6'  => $t12,
+                
+            );
+            array_push($totales1p2, $totales);
+
+        }
+        //fin tipo de beca si es semestral
+
         //solo para universidad indigena y otros
         $cargos_array = $this->get_univ_universidad_carrera_docente_administrativo($carrera_id, $nro_periodos, $gestion);
-        //dump($cargos_array); die;
+        $filas3 = $cargos_array;
+        $cargos_arrayp2 = array();
+        $totales3 = array();
+        $t1 = 0;
+        $t2 = 0;
+        $t3 = 0;
+        $t4 = 0;
+        $t5 = 0;
+        $t6 = 0;
+        $t7 = 0;
+        $t8 = 0;
+        $t9 = 0;
+        $t10 = 0;
+        $t11 = 0;
+        $t12 = 0;
+       
+        for($i = 0; $i < sizeof($filas3); $i++ ){
+            $t1 = $t1 + $filas3[$i]['m1'];
+            $t2 = $t2 + $filas3[$i]['f1'];    
+            $t3 = $t3 + $filas3[$i]['m2'];
+            $t4 = $t4 + $filas3[$i]['f2'];
+            $t5 = $t5 + $filas3[$i]['m3'];
+            $t6 = $t6 + $filas3[$i]['f3'];
+
+            if($nro_periodos == 6){
+                $t7 = $t7 + $filas3[$i]['m4'];
+                $t8 = $t8 + $filas3[$i]['f4'];    
+                $t9 = $t9 + $filas3[$i]['m5'];
+                $t10 = $t10 + $filas3[$i]['f5'];     
+                $t11 = $t11 + $filas3[$i]['m6'];
+                $t12 = $t12 + $filas3[$i]['f6'];                  
+            }
+
+        }
+        $totales = array(   
+            'id' => 0,
+            'matricula' => "TOTALES",        
+            'm1'  => $t1,
+            'f1'  => $t2,           
+            'm2'  => $t3,
+            'f2'  => $t4,
+            'm3'  => $t5,
+            'f3'  => $t6,
+            'm4'  => $t7,
+            'f4'  => $t8,           
+            'm5'  => $t9,
+            'f5'  => $t10,
+            'm6'  => $t11,
+            'f6'  => $t12,
+            
+        );
+        array_push($totales3, $totales);
+
+         //inicio docentes si es semestral para el periodo2
+         if($nro_periodos == 6){
+
+            $cargos_arrayp2 = $this->get_univ_universidad_carrera_docente_administrativo($carrera_id, $nro_periodos, $gestion,2);
+            $filas3p2 = $cargos_arrayp2;            
+            $totales3p2 = array();
+            $t1 = 0;
+            $t2 = 0;
+            $t3 = 0;
+            $t4 = 0;
+            $t5 = 0;
+            $t6 = 0;
+            $t7 = 0;
+            $t8 = 0;
+            $t9 = 0;
+            $t10 = 0;
+            $t11 = 0;
+            $t12 = 0;
+           
+            for($i = 0; $i < sizeof($filas3p2); $i++ ){
+                $t1 = $t1 + $filas3p2[$i]['m1'];
+                $t2 = $t2 + $filas3p2[$i]['f1'];    
+                $t3 = $t3 + $filas3p2[$i]['m2'];
+                $t4 = $t4 + $filas3p2[$i]['f2'];
+                $t5 = $t5 + $filas3p2[$i]['m3'];
+                $t6 = $t6 + $filas3p2[$i]['f3'];
+    
+                if($nro_periodos == 6){
+                    $t7 = $t7 + $filas3p2[$i]['m4'];
+                    $t8 = $t8 + $filas3p2[$i]['f4'];    
+                    $t9 = $t9 + $filas3p2[$i]['m5'];
+                    $t10 = $t10 + $filas3p2[$i]['f5'];     
+                    $t11 = $t11 + $filas3p2[$i]['m6'];
+                    $t12 = $t12 + $filas3p2[$i]['f6'];                  
+                }
+    
+            }
+            $totales = array(   
+                'id' => 0,
+                'matricula' => "TOTALES",        
+                'm1'  => $t1,
+                'f1'  => $t2,           
+                'm2'  => $t3,
+                'f2'  => $t4,
+                'm3'  => $t5,
+                'f3'  => $t6,
+                'm4'  => $t7,
+                'f4'  => $t8,           
+                'm5'  => $t9,
+                'f5'  => $t10,
+                'm6'  => $t11,
+                'f6'  => $t12,
+                
+            );
+            array_push($totales3p2, $totales);
+
+         }
+         //fin docentes si es semestral para el periodo2
 
         //datos estudiantes por tipo de matricula
         /*--------------------------------------------------*/
         $tipo_matricula_array = $this->get_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion);
+        $filas2 = $tipo_matricula_array;
+        $tipo_matricula_arrayp2 = array();
+        $totales2 = array();
+        $t1 = 0;
+        $t2 = 0;
+        $t3 = 0;
+        $t4 = 0;
+        $t5 = 0;
+        $t6 = 0;
+        $t7 = 0;
+        $t8 = 0;
+        $t9 = 0;
+        $t10 = 0;
+        $t11 = 0;
+        $t12 = 0;
+        
+       
+        for($i = 0; $i < sizeof($filas2); $i++ ){
+            $t1 = $t1 + $filas2[$i]['m1'];
+            $t2 = $t2 + $filas2[$i]['f1']; 
+            
+            $t3 = $t3 + $filas2[$i]['m2'];
+            $t4 = $t4 + $filas2[$i]['f2'];
+            $t5 = $t5 + $filas2[$i]['m3'];
+            $t6 = $t6 + $filas2[$i]['f3'];    
+            
+            if($nro_periodos == 6){
+                $t7 = $t7 + $filas2[$i]['m4'];
+                $t8 = $t8 + $filas2[$i]['f4'];    
+                $t9 = $t9 + $filas2[$i]['m5'];
+                $t10 = $t10 + $filas2[$i]['f5'];     
+                $t11 = $t11 + $filas2[$i]['m6'];
+                $t12 = $t12 + $filas2[$i]['f6'];                  
+            }
+
+        }
+        $totales_aux3 = array(   
+            'id' => 0,
+            'matricula' => "TOTALES",        
+            'm1'  => $t1,
+            'f1'  => $t2,           
+            'm2'  => $t3,
+            'f2'  => $t4,
+            'm3'  => $t5,
+            'f3'  => $t6,
+            'm4'  => $t7,
+            'f4'  => $t8,           
+            'm5'  => $t9,
+            'f5'  => $t10,
+            'm6'  => $t11,
+            'f6'  => $t12,
+            
+        );
+       
+        array_push($totales2, $totales_aux3);
+
+        // inicio tipo matricula periodo 2
+        if($nro_periodos == 6){ 
+
+            $tipo_matricula_arrayp2 = $this->get_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion, 2);
+            $filas2p2 = $tipo_matricula_arrayp2;
+            $totales2p2 = array();
+            $t1 = 0;
+            $t2 = 0;
+            $t3 = 0;
+            $t4 = 0;
+            $t5 = 0;
+            $t6 = 0;
+            $t7 = 0;
+            $t8 = 0;
+            $t9 = 0;
+            $t10 = 0;
+            $t11 = 0;
+            $t12 = 0;
+            
+        
+            for($i = 0; $i < sizeof($filas2p2); $i++ ){
+                $t1 = $t1 + $filas2p2[$i]['m1'];
+                $t2 = $t2 + $filas2p2[$i]['f1']; 
+                
+                $t3 = $t3 + $filas2p2[$i]['m2'];
+                $t4 = $t4 + $filas2p2[$i]['f2'];
+                $t5 = $t5 + $filas2p2[$i]['m3'];
+                $t6 = $t6 + $filas2p2[$i]['f3'];    
+                
+                if($nro_periodos == 6){
+                    $t7 = $t7 + $filas2p2[$i]['m4'];
+                    $t8 = $t8 + $filas2p2[$i]['f4'];    
+                    $t9 = $t9 + $filas2p2[$i]['m5'];
+                    $t10 = $t10 + $filas2p2[$i]['f5'];     
+                    $t11 = $t11 + $filas2p2[$i]['m6'];
+                    $t12 = $t12 + $filas2p2[$i]['f6'];                  
+                }
+
+            }
+            $totales_aux3 = array(   
+                'id' => 0,
+                'matricula' => "TOTALES",        
+                'm1'  => $t1,
+                'f1'  => $t2,           
+                'm2'  => $t3,
+                'f2'  => $t4,
+                'm3'  => $t5,
+                'f3'  => $t6,
+                'm4'  => $t7,
+                'f4'  => $t8,           
+                'm5'  => $t9,
+                'f5'  => $t10,
+                'm6'  => $t11,
+                'f6'  => $t12,
+                
+            );
+        
+            array_push($totales2p2, $totales_aux3);
+
+        }
+        // fin tipo matricula periodo 2
 
         
         $data = array(            
             'periodos' => $nro_periodos,
-            'array_estudiantes' => $filas,
-            'array_cargos' => $cargos_array,
-            'array_tipo_matricula' => $tipo_matricula_array
+            'array_estudiantes' => $filas,  //tipo de beca periodo1
+            'array_estudiantesp2' => $filasp2,  //tipo de beca periodo2
+            'array_cargos' => $cargos_array,    //cargos periodo 1
+            'array_cargosp2' => $cargos_arrayp2, //cargos periodo2
+            'array_tipo_matricula' => $tipo_matricula_array,
+            'array_tipo_matriculap2' => $tipo_matricula_arrayp2,
+            'filas_egresados' => $filas_egresados,
         );
 
         //dump($nro_periodos); die;
         
-        if($nro_periodos == 3){
+        if($nro_periodos == 3){  //anual
             return $this->render('SieTecnicaEstBundle:Carreras:info.html.twig', array(
                 'carrera_id' => $carrera_id,
                 'gestion_id' =>  $gestion,
@@ -294,10 +627,15 @@ class CarrerasController extends Controller
                 'cargos' => $cargos,  
                 'data' => $data,
                 'totales1' => $totales1,
-                'es_indigena' => 0
+                'totales2' => $totales2,
+                'totales3' => $totales3,
+                'es_indigena' => 0,
+                 'headertxt' => 'Año',
+                 'filas_egresados' => $filas_egresados,
+                 'totales0' => $totales0,
     
             ));
-        }else{
+        }else{ //semestral
             return $this->render('SieTecnicaEstBundle:Carreras:infosem.html.twig', array(
                 'carrera_id' => $carrera_id,
                 'gestion_id' =>  $gestion,
@@ -313,7 +651,13 @@ class CarrerasController extends Controller
                 'cargos' => $cargos,  
                 'data' => $data,
                 'totales1' => $totales1,
-                'es_indigena' => 0
+                'totales1p2' => $totales1p2,
+                'totales2' => $totales2,
+                'totales2p2' => $totales2p2,
+                'totales3' => $totales3,
+                'totales3p2' => $totales3p2,
+                'es_indigena' => 0,
+                'headertxt' => 'Semestre'
     
             ));
         }
@@ -482,6 +826,9 @@ class CarrerasController extends Controller
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
+        //dump($nro_periodos); die; //3: anual   6:semestral
+
+
         $sql = "select count(*) as existe from est_tec_instituto_carrera_estudiante_estado
         where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
         $stmt = $db->prepare($sql);
@@ -499,42 +846,74 @@ class CarrerasController extends Controller
             $params = array();
             $stmt->execute($params);
             $data = $stmt->fetchAll();
-            for($i = 0; $i < sizeof($data); $i++ ){
 
+            for($i = 0; $i < sizeof($data); $i++ ){
                 
                 for($j = 1; $j <= $nro_periodos; $j++ ){
-
                     //masculinos
-                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_estado(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_estadomatricula_tipo_id, est_tec_periodo_academico_tipo_id, cantidad)'
-                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_estadomatricula_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad)');
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_estado(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_estadomatricula_tipo_id, est_tec_periodo_academico_tipo_id, cantidad,est_tec_grado_academico_tipo_id)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_estadomatricula_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
                     $query->bindValue(':gestion_tipo_id', $gestion);
                     $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
                     $query->bindValue(':genero_tipo_id', 1);
                     $query->bindValue(':est_tec_estadomatricula_tipo_id', $data[$i]['id']);
                     $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_grado_academico_tipo_id', 1); // del primer periodo academico
                     $query->bindValue(':cantidad', rand(10, 80));                
                     $query->execute();
 
                     //femeninos
-                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_estado(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_estadomatricula_tipo_id, est_tec_periodo_academico_tipo_id, cantidad)'
-                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_estadomatricula_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad)');
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_estado(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_estadomatricula_tipo_id, est_tec_periodo_academico_tipo_id, cantidad,est_tec_grado_academico_tipo_id)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_estadomatricula_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
                     $query->bindValue(':gestion_tipo_id', $gestion);
                     $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
                     $query->bindValue(':genero_tipo_id', 2);
                     $query->bindValue(':est_tec_estadomatricula_tipo_id', $data[$i]['id']);
                     $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_grado_academico_tipo_id', 1); // del primer periodo academico
                     $query->bindValue(':cantidad', rand(10, 80));                
                     $query->execute();
-
                 }
-
             }
+            if($nro_periodos == 6){
+                for($i = 0; $i < sizeof($data); $i++ ){                
+                    for($j = 1; $j <= $nro_periodos; $j++ ){
+                        //masculinos
+                        $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_estado(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_estadomatricula_tipo_id, est_tec_periodo_academico_tipo_id, cantidad, est_tec_grado_academico_tipo_id)'
+                                    . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_estadomatricula_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
+                        $query->bindValue(':gestion_tipo_id', $gestion);
+                        $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
+                        $query->bindValue(':genero_tipo_id', 1);
+                        $query->bindValue(':est_tec_estadomatricula_tipo_id', $data[$i]['id']);
+                        $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                        $query->bindValue(':est_tec_grado_academico_tipo_id',2 ); // del segundo periodo academico
+                        $query->bindValue(':cantidad', rand(10, 80));                
+                        $query->execute();
+
+                        //femeninos
+                        $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_estado(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_estadomatricula_tipo_id, est_tec_periodo_academico_tipo_id, cantidad, est_tec_grado_academico_tipo_id)'
+                                    . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_estadomatricula_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
+                        $query->bindValue(':gestion_tipo_id', $gestion);
+                        $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
+                        $query->bindValue(':genero_tipo_id', 2);
+                        $query->bindValue(':est_tec_estadomatricula_tipo_id', $data[$i]['id']);
+                        $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                        $query->bindValue(':est_tec_grado_academico_tipo_id',2 ); // del segundo periodo academico
+                        $query->bindValue(':cantidad', rand(10, 80));                
+                        $query->execute();
+                    }
+                }
+            }
+
+
         }
     }
 
     public function verifica_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion){
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
+
+        //nro_periodos  3: anual (1 periodo), 6:semestral (2 periodos)
 
         $sql = "select count(*) as existe from est_tec_instituto_carrera_estudiante_nacionalidad
         where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
@@ -554,37 +933,70 @@ class CarrerasController extends Controller
             $stmt->execute($params);
             $data = $stmt->fetchAll();
             for($i = 0; $i < sizeof($data); $i++ ){
-
-                
                 for($j = 1; $j <= $nro_periodos; $j++ ){
-
                     //masculinos
-                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_nacionalidad(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_matricula_nacionalidad_beca_tipo_id, est_tec_periodo_academico_tipo_id, cantidad)'
-                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_matricula_beca_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad)');
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_nacionalidad(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_matricula_nacionalidad_beca_tipo_id, est_tec_periodo_academico_tipo_id, cantidad,est_tec_grado_academico_tipo_id)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_matricula_beca_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
                     $query->bindValue(':gestion_tipo_id', $gestion);
                     $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
                     $query->bindValue(':genero_tipo_id', 1);
                     $query->bindValue(':est_tec_matricula_beca_tipo_id', $data[$i]['id']);
                     $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_grado_academico_tipo_id', 1); // del primer periodo academico
                     $query->bindValue(':cantidad', rand(10, 70));                
                     $query->execute();
 
                     //femeninos
-                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_nacionalidad(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_matricula_nacionalidad_beca_tipo_id, est_tec_periodo_academico_tipo_id, cantidad)'
-                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_matricula_beca_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad)');
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_nacionalidad(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_matricula_nacionalidad_beca_tipo_id, est_tec_periodo_academico_tipo_id, cantidad, est_tec_grado_academico_tipo_id)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_matricula_beca_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
                     $query->bindValue(':gestion_tipo_id', $gestion);
                     $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
                     $query->bindValue(':genero_tipo_id', 2);
                     $query->bindValue(':est_tec_matricula_beca_tipo_id', $data[$i]['id']);
-                    $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_periodo_academico_tipo_id',$j);
+                    $query->bindValue(':est_tec_grado_academico_tipo_id', 1); // del primer periodo academico
                     $query->bindValue(':cantidad', rand(10, 50));                
                     $query->execute();
+                }
 
+            }
+
+            if($nro_periodos == 6){
+                // generar otros 12 para el periodo academico 2
+
+                for($i = 0; $i < sizeof($data); $i++ ){
+                    for($j = 1; $j <= $nro_periodos; $j++ ){
+                        //masculinos
+                        $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_nacionalidad(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_matricula_nacionalidad_beca_tipo_id, est_tec_periodo_academico_tipo_id, cantidad, est_tec_grado_academico_tipo_id)'
+                                    . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_matricula_beca_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
+                        $query->bindValue(':gestion_tipo_id', $gestion);
+                        $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
+                        $query->bindValue(':genero_tipo_id', 1);
+                        $query->bindValue(':est_tec_matricula_beca_tipo_id', $data[$i]['id']);
+                        $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                        $query->bindValue(':est_tec_grado_academico_tipo_id', 2); // del segundo periodo academico
+                        $query->bindValue(':cantidad', rand(10, 70));                
+                        $query->execute();
+    
+                        //femeninos
+                        $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_nacionalidad(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_matricula_nacionalidad_beca_tipo_id, est_tec_periodo_academico_tipo_id, cantidad, est_tec_grado_academico_tipo_id)'
+                                    . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_matricula_beca_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
+                        $query->bindValue(':gestion_tipo_id', $gestion);
+                        $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
+                        $query->bindValue(':genero_tipo_id', 2);
+                        $query->bindValue(':est_tec_matricula_beca_tipo_id', $data[$i]['id']);
+                        $query->bindValue(':est_tec_periodo_academico_tipo_id',$j);
+                        $query->bindValue(':est_tec_grado_academico_tipo_id', 2); // del segundo periodo academico
+                        $query->bindValue(':cantidad', rand(10, 50));                
+                        $query->execute();
+                    }
+    
                 }
 
             }
         }
     }
+
     public function verifica_get_univ_universidad_carrera_docente_administrativo($carrera_id, $nro_periodos, $gestion){
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
@@ -609,43 +1021,183 @@ class CarrerasController extends Controller
             $data = $stmt->fetchAll();
            
             for($i = 0; $i < sizeof($data); $i++ ){
-
-                
+                // periodo academico 1
                 for($j = 1; $j <= $nro_periodos; $j++ ){
 
                     //masculinos
-                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_docente_administrativo(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_cargo_tipo_id, est_tec_periodo_academico_tipo_id, cantidad)'
-                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_cargo_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad)');
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_docente_administrativo(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_cargo_tipo_id, est_tec_periodo_academico_tipo_id, cantidad,est_tec_grado_academico_tipo_id)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_cargo_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
                     $query->bindValue(':gestion_tipo_id', $gestion);
                     $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
                     $query->bindValue(':genero_tipo_id', 1);
                     $query->bindValue(':est_tec_cargo_tipo_id', $data[$i]['id']);
                     $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_grado_academico_tipo_id', 1); // del primer periodo academico
                     $query->bindValue(':cantidad', rand(10, 70));                
                     $query->execute();
 
                     //femeninos
-                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_docente_administrativo(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_cargo_tipo_id, est_tec_periodo_academico_tipo_id, cantidad)'
-                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_cargo_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad)');
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_docente_administrativo(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_cargo_tipo_id, est_tec_periodo_academico_tipo_id, cantidad, est_tec_grado_academico_tipo_id)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_cargo_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
                     $query->bindValue(':gestion_tipo_id', $gestion);
                     $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
                     $query->bindValue(':genero_tipo_id', 2);
                     $query->bindValue(':est_tec_cargo_tipo_id', $data[$i]['id']);
                     $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_grado_academico_tipo_id', 1); // del primer periodo academico
                     $query->bindValue(':cantidad', rand(10, 50));                
                     $query->execute();
 
                 }
 
             }
+
+            if($nro_periodos == 6){
+                 // generar otros 12 para el periodo academico 2
+
+                 for($i = 0; $i < sizeof($data); $i++ ){
+                    // periodo academico 1
+                    for($j = 1; $j <= $nro_periodos; $j++ ){
+    
+                        //masculinos
+                        $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_docente_administrativo(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_cargo_tipo_id, est_tec_periodo_academico_tipo_id, cantidad,est_tec_grado_academico_tipo_id)'
+                                    . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_cargo_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
+                        $query->bindValue(':gestion_tipo_id', $gestion);
+                        $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
+                        $query->bindValue(':genero_tipo_id', 1);
+                        $query->bindValue(':est_tec_cargo_tipo_id', $data[$i]['id']);
+                        $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                        $query->bindValue(':est_tec_grado_academico_tipo_id', 2); // del primer periodo academico
+                        $query->bindValue(':cantidad', rand(10, 70));                
+                        $query->execute();
+    
+                        //femeninos
+                        $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_docente_administrativo(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_cargo_tipo_id, est_tec_periodo_academico_tipo_id, cantidad, est_tec_grado_academico_tipo_id)'
+                                    . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_cargo_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
+                        $query->bindValue(':gestion_tipo_id', $gestion);
+                        $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
+                        $query->bindValue(':genero_tipo_id', 2);
+                        $query->bindValue(':est_tec_cargo_tipo_id', $data[$i]['id']);
+                        $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                        $query->bindValue(':est_tec_grado_academico_tipo_id', 2); // del primer periodo academico
+                        $query->bindValue(':cantidad', rand(10, 50));                
+                        $query->execute();
+    
+                    }
+    
+                }
+
+            }
         }
     }
 
-    public function get_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion){
+
+    public function verifica_get_univ_universidad_carrera_egresados($carrera_id, $nro_periodos, $gestion){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection(); 
+
+        $sql = "select count(*) as existe from est_tec_instituto_carrera_estudiante_egresado_titulado
+        where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
+        
+        $stmt = $db->prepare($sql);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $total_filas = $po[0]['existe'];
+
+        //dump($total_filas); die;
+        if($total_filas == 0){
+            //creamos las filas en est_tec_instituto_carrera_estudiante_estado
+
+            $sql = "select * from est_tec_egresado_titulados_tipo";
+            $stmt = $db->prepare($sql);
+            $params = array();
+            $stmt->execute($params);
+            $data = $stmt->fetchAll();
+           
+            for($i = 0; $i < sizeof($data); $i++ ){
+                // periodo academico 1
+                for($j = 1; $j <= 1; $j++ ){
+
+                    //masculinos
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_egresado_titulado(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_egresado_titulados_tipo_id, est_tec_periodo_academico_tipo_id, cantidad,est_tec_grado_academico_tipo_id)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_egresado_titulados_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
+                    $query->bindValue(':gestion_tipo_id', $gestion);
+                    $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
+                    $query->bindValue(':genero_tipo_id', 1);
+                    $query->bindValue(':est_tec_egresado_titulados_tipo_id', $data[$i]['id']);
+                    $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_grado_academico_tipo_id', 1); // del primer periodo academico
+                    $query->bindValue(':cantidad', rand(10, 70));                
+                    $query->execute();
+
+                    //femeninos
+                    $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_estudiante_egresado_titulado(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_egresado_titulados_tipo_id, est_tec_periodo_academico_tipo_id, cantidad, est_tec_grado_academico_tipo_id)'
+                                . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_egresado_titulados_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
+                    $query->bindValue(':gestion_tipo_id', $gestion);
+                    $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
+                    $query->bindValue(':genero_tipo_id', 2);
+                    $query->bindValue(':est_tec_egresado_titulados_tipo_id', $data[$i]['id']);
+                    $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                    $query->bindValue(':est_tec_grado_academico_tipo_id', 1); // del primer periodo academico
+                    $query->bindValue(':cantidad', rand(10, 50));                
+                    $query->execute();
+
+                }
+
+            }
+            /*
+            if($nro_periodos == 6){
+                 // generar otros 12 para el periodo academico 2
+
+                 for($i = 0; $i < sizeof($data); $i++ ){
+                    // periodo academico 1
+                    for($j = 1; $j <= $nro_periodos; $j++ ){
+    
+                        //masculinos
+                        $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_docente_administrativo(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_cargo_tipo_id, est_tec_periodo_academico_tipo_id, cantidad,est_tec_grado_academico_tipo_id)'
+                                    . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_cargo_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
+                        $query->bindValue(':gestion_tipo_id', $gestion);
+                        $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
+                        $query->bindValue(':genero_tipo_id', 1);
+                        $query->bindValue(':est_tec_cargo_tipo_id', $data[$i]['id']);
+                        $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                        $query->bindValue(':est_tec_grado_academico_tipo_id', 2); // del primer periodo academico
+                        $query->bindValue(':cantidad', rand(10, 70));                
+                        $query->execute();
+    
+                        //femeninos
+                        $query = $em->getConnection()->prepare('INSERT INTO est_tec_instituto_carrera_docente_administrativo(gestion_tipo_id, est_tec_instituto_carrera_id, genero_tipo_id, est_tec_cargo_tipo_id, est_tec_periodo_academico_tipo_id, cantidad, est_tec_grado_academico_tipo_id)'
+                                    . 'VALUES(:gestion_tipo_id, :est_tec_instituto_carrera_id,:genero_tipo_id,:est_tec_cargo_tipo_id,:est_tec_periodo_academico_tipo_id, :cantidad, :est_tec_grado_academico_tipo_id)');
+                        $query->bindValue(':gestion_tipo_id', $gestion);
+                        $query->bindValue(':est_tec_instituto_carrera_id', $carrera_id);
+                        $query->bindValue(':genero_tipo_id', 2);
+                        $query->bindValue(':est_tec_cargo_tipo_id', $data[$i]['id']);
+                        $query->bindValue(':est_tec_periodo_academico_tipo_id', $j);
+                        $query->bindValue(':est_tec_grado_academico_tipo_id', 2); // del primer periodo academico
+                        $query->bindValue(':cantidad', rand(10, 50));                
+                        $query->execute();
+    
+                    }
+    
+                }
+
+            }
+            */
+        }
+    }
+
+    public function get_univ_matricula_nacionalidad_beca_tipo($carrera_id, $nro_periodos, $gestion, $periodo=1){
         
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
 
+        $periodosql = " and est_tec_grado_academico_tipo_id in (1) ";
+        if($periodo == 2){
+            $periodosql = " and est_tec_grado_academico_tipo_id in (2)  ";
+            //dump($periodosql); die; 
+        }
+       
         $query ="SELECT
             est_tec_instituto_carrera_estudiante_nacionalidad.id, 
             est_tec_instituto_carrera_estudiante_nacionalidad.gestion_tipo_id, 
@@ -662,8 +1214,10 @@ class CarrerasController extends Controller
             ON 
                 est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_matricula_nacionalidad_beca_tipo_id = est_tec_matricula_nacionalidad_beca_tipo.id
         WHERE
-            est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;
-        //dump($query);die;
+            est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion . $periodosql ." order by est_tec_matricula_nacionalidad_beca_tipo.nacionalidad_beca";
+        /*if($periodo == 2){
+        dump($query);die;
+        }*/
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params);
@@ -680,7 +1234,7 @@ class CarrerasController extends Controller
         foreach ($rowsaux as $valor) {
             array_push($rows, $valor);
         }
-        //dump($rowsaux);die;
+        //dump($nro_periodos);die;  3:anual 6 semestral
 
         $rowsaux = array();
         for($i = 0; $i < sizeof($rows); $i++ ){
@@ -701,14 +1255,27 @@ class CarrerasController extends Controller
             $m5 = 0; $f5 = 0; $t5 = 0;
             $m6 = 0; $f6 = 0; $t6 = 0;
 
+            $m7 = 0; $f7 = 0; $t7 = 0;
+            $m8 = 0; $f8 = 0; $t8 = 0;
+            $m9 = 0; $f9 = 0; $t9 = 0;
+            $m10 = 0; $f10 = 0; $t10 = 0;
+            $m11 = 0; $f11 = 0; $t11 = 0;
+            $m12 = 0; $f12 = 0; $t12 = 0;
 
-            $idm2 = 0; $idf2 = 0;
+
             $idm1= 0; $idf1 = 0;
-
+            $idm2 = 0; $idf2 = 0;
             $idm3 = 0; $idf3 = 0;
             $idm4 = 0; $idf4 = 0;
             $idm5 = 0; $idf5 = 0;
             $idm6 = 0; $idf6 = 0;
+
+            $idm7= 0; $idf7 = 0;
+            $idm8 = 0; $idf8 = 0;
+            $idm9 = 0; $idf9 = 0;
+            $idm10 = 0; $idf10 = 0;
+            $idm11 = 0; $idf11 = 0;
+            $idm12 = 0; $idf12 = 0;
 
             for($k = 0; $k < sizeof($rowsaux); $k++ ){               
                 $matricula = $rowsaux[$k]['nacionalidad_beca'];   
@@ -738,7 +1305,7 @@ class CarrerasController extends Controller
                     $idf3 =  $rowsaux[$k]['id'];
                 }
 
-                if($nro_periodos == 6){
+                if($nro_periodos == 6){ //semestral se debn mostrar 12 ?
                     if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 4){
                         $m4  = $rowsaux[$k]['cantidad'];
                         $idm4 =  $rowsaux[$k]['id'];
@@ -807,6 +1374,42 @@ class CarrerasController extends Controller
                 'idf6'  => $idf6,
                 'total6' => $m6 + $f6,
 
+                'm7'  => $m7,
+                'idm7'  => $idm7,
+                'f7'  => $f7,
+                'idf7'  => $idf7,
+                'total7' => $m7 + $f7,
+
+                'm8'  => $m8,
+                'idm8'  => $idm8,
+                'f8'  => $f8,
+                'idf8'  => $idf8,
+                'total8' => $m8 + $f8,
+
+                'm9'  => $m9,
+                'idm9'  => $idm9,
+                'f9'  => $f9,
+                'idf9'  => $idf9,
+                'total9' => $m9 + $f9,
+
+                'm10'  => $m10,
+                'idm10'  => $idm10,
+                'f10'  => $f10,
+                'idf10'  => $idf10,
+                'total10' => $m10 + $f10,
+
+                'm11'  => $m11,
+                'idm11'  => $idm11,
+                'f11'  => $f11,
+                'idf11'  => $idf11,
+                'total11' => $m11 + $f11,
+
+                'm12'  => $m12,
+                'idm12'  => $idm12,
+                'f12'  => $f12,
+                'idf12'  => $idf12,
+                'total12' => $m12 + $f12,
+
             );
 
             array_push($filas, $row);
@@ -846,9 +1449,15 @@ class CarrerasController extends Controller
         
     }
 
-    public function get_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion){
+    public function get_univ_universidad_carrera_estudiante_estado($carrera_id, $nro_periodos, $gestion, $periodo=1){
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
+
+        $periodosql = " and est_tec_grado_academico_tipo_id in (1) ";
+        if($periodo == 2){
+            $periodosql = " and est_tec_grado_academico_tipo_id in (2)  ";
+            //dump($periodosql); die; 
+        }
 
         $query ="
         SELECT
@@ -866,7 +1475,7 @@ class CarrerasController extends Controller
             est_tec_estadomatricula_tipo
             ON 
                 est_tec_instituto_carrera_estudiante_estado.est_tec_estadomatricula_tipo_id = est_tec_estadomatricula_tipo.id
-            where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;        
+            where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion.  $periodosql.  " order by est_tec_estadomatricula_tipo.estadomatricula";        
 
         $stmt = $db->prepare($query);
         $params = array();
@@ -900,20 +1509,32 @@ class CarrerasController extends Controller
             //beca tipo 1
             $m1 = 0; $f1 = 0; $t1 = 0;
             $m2 = 0; $f2 = 0; $t2 = 0;
-
             $m3 = 0; $f3 = 0; $t3 = 0;
             $m4 = 0; $f4 = 0; $t4 = 0;
             $m5 = 0; $f5 = 0; $t5 = 0;
             $m6 = 0; $f6 = 0; $t6 = 0;
 
+            $m7 = 0; $f7 = 0; $t7 = 0;
+            $m8 = 0; $f8 = 0; $t8 = 0;
+            $m9 = 0; $f9 = 0; $t9 = 0;
+            $m10 = 0; $f10 = 0; $t10 = 0;
+            $m11 = 0; $f11 = 0; $t11 = 0;
+            $m12 = 0; $f12 = 0; $t12 = 0;
+
 
             $idm2 = 0; $idf2 = 0;
             $idm1= 0; $idf1 = 0;
             $idm3 = 0; $idf3 = 0;
-
             $idm4 = 0; $idf4 = 0;
             $idm5 = 0; $idf5 = 0;
             $idm6 = 0; $idf6 = 0;
+
+            $idm7= 0; $idf7 = 0;
+            $idm8 = 0; $idf8 = 0;
+            $idm9 = 0; $idf9 = 0;
+            $idm10 = 0; $idf10 = 0;
+            $idm11 = 0; $idf11 = 0;
+            $idm12 = 0; $idf12 = 0;
 
             for($k = 0; $k < sizeof($rowsaux); $k++ ){               
                 $matricula = $rowsaux[$k]['estadomatricula'];
@@ -1011,7 +1632,43 @@ class CarrerasController extends Controller
                 'idm6'  => $idm6,
                 'f6'  => $f6,
                 'idf6'  => $idf6,
-                'total6' => $m6 + $f6
+                'total6' => $m6 + $f6,
+
+                'm7'  => $m7,
+                'idm7'  => $idm7,
+                'f7'  => $f7,
+                'idf7'  => $idf7,
+                'total7' => $m7 + $f7,
+
+                'm8'  => $m8,
+                'idm8'  => $idm8,
+                'f8'  => $f8,
+                'idf8'  => $idf8,
+                'total8' => $m8 + $f8,
+
+                'm9'  => $m9,
+                'idm9'  => $idm9,
+                'f9'  => $f9,
+                'idf9'  => $idf9,
+                'total9' => $m9 + $f9,
+
+                'm10'  => $m10,
+                'idm10'  => $idm10,
+                'f10'  => $f10,
+                'idf10'  => $idf10,
+                'total10' => $m10 + $f10,
+
+                'm11'  => $m11,
+                'idm11'  => $idm11,
+                'f11'  => $f11,
+                'idf11'  => $idf11,
+                'total11' => $m11 + $f11,
+
+                'm12'  => $m12,
+                'idm12'  => $idm12,
+                'f12'  => $f12,
+                'idf12'  => $idf12,
+                'total12' => $m12 + $f12,
             );
 
             array_push($tipo_matricula_array, $row);
@@ -1178,10 +1835,16 @@ class CarrerasController extends Controller
 
     }
 
-    public function get_univ_universidad_carrera_docente_administrativo($carrera_id, $nro_periodos, $gestion){
+    public function get_univ_universidad_carrera_docente_administrativo($carrera_id, $nro_periodos, $gestion, $periodo=1){
         
         $em = $this->getDoctrine()->getManager();
         $db = $em->getConnection(); 
+
+        $periodosql = " and est_tec_grado_academico_tipo_id in (1) ";
+        if($periodo == 2){
+            $periodosql = " and est_tec_grado_academico_tipo_id in (2)  ";
+            //dump($periodosql); die; 
+        }
 
         $query ="
         SELECT
@@ -1199,7 +1862,7 @@ class CarrerasController extends Controller
             est_tec_cargo_tipo
             ON 
             est_tec_instituto_carrera_docente_administrativo.est_tec_cargo_tipo_id = est_tec_cargo_tipo.id
-            where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion;        
+            where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion . $periodosql ." order by  est_tec_cargo_tipo.cargo";        
 
         $stmt = $db->prepare($query);
         $params = array();
@@ -1230,7 +1893,7 @@ class CarrerasController extends Controller
                 }
             }
 
-            //beca tipo 1
+           
             $m1 = 0; $f1 = 0; $t1 = 0;
             $m2 = 0; $f2 = 0; $t2 = 0;
 
@@ -1239,6 +1902,13 @@ class CarrerasController extends Controller
             $m5 = 0; $f5 = 0; $t5 = 0;
             $m6 = 0; $f6 = 0; $t6 = 0;
 
+            $m7 = 0; $f7 = 0; $t7 = 0;
+            $m8 = 0; $f8 = 0; $t8 = 0;
+            $m9 = 0; $f9 = 0; $t9 = 0;
+            $m10 = 0; $f10 = 0; $t10 = 0;
+            $m11 = 0; $f11 = 0; $t11 = 0;
+            $m12 = 0; $f12 = 0; $t12 = 0;
+
 
             $idm2 = 0; $idf2 = 0;
             $idm1= 0; $idf1 = 0;
@@ -1246,6 +1916,13 @@ class CarrerasController extends Controller
             $idm4= 0; $idf4 = 0;
             $idm5= 0; $idf5 = 0;
             $idm6= 0; $idf6 = 0;
+
+            $idm7= 0; $idf7 = 0;
+            $idm8= 0; $idf8 = 0;
+            $idm9= 0; $idf9 = 0;
+            $idm10= 0; $idf10 = 0;
+            $idm11= 0; $idf11 = 0;
+            $idm12= 0; $idf12 = 0;
 
             for($k = 0; $k < sizeof($rowsaux); $k++ ){               
                 $matricula = $rowsaux[$k]['cargo'];
@@ -1343,7 +2020,322 @@ class CarrerasController extends Controller
                 'idm6'  => $idm6,
                 'f6'  => $f6,
                 'idf6'  => $idf6,
-                'total6' => $m6 + $f6
+                'total6' => $m6 + $f6,
+
+                'm7'  => $m7,
+                'idm7'  => $idm7,
+                'f7'  => $f7,
+                'idf7'  => $idf7,
+                'total7' => $m7 + $f7,
+
+                'm8'  => $m8,
+                'idm8'  => $idm8,
+                'f8'  => $f8,
+                'idf8'  => $idf8,
+                'total8' => $m8 + $f8,
+
+                'm9'  => $m9,
+                'idm9'  => $idm9,
+                'f9'  => $f9,
+                'idf9'  => $idf9,
+                'total9' => $m9 + $f9,
+
+                'm10'  => $m10,
+                'idm10'  => $idm10,
+                'f10'  => $f10,
+                'idf10'  => $idf10,
+                'total10' => $m10 + $f10,
+
+                'm11'  => $m11,
+                'idm11'  => $idm11,
+                'f11'  => $f11,
+                'idf11'  => $idf11,
+                'total11' => $m11 + $f11,
+
+                'm12'  => $m12,
+                'idm12'  => $idm12,
+                'f12'  => $f12,
+                'idf12'  => $idf12,
+                'total12' => $m12 + $f12,
+            );
+
+            array_push($tipo_matricula_array, $row);
+            
+        }
+
+        return $tipo_matricula_array;
+
+        /*$cargos_array = array();
+        $fila = array(
+            'id' => 5,
+            'matricula' => "DIRECTOR",
+            'm1'  => 5,
+            'f1'  => 6,
+            'total1' => 11,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
+        $fila2 = array(
+            'id' => 6,
+            'matricula' => "DOCENTE DE PLANTA",
+            'm1'  => 15,
+            'f1'  => 1,
+            'total1' => 16,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
+        $fila3 = array(
+            'id' => 6,
+            'matricula' => "OTRO ADMINISTRATIVO",
+            'm1'  => 15,
+            'f1'  => 1,
+            'total1' => 16,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
+        $fila4 = array(   
+            'id' => 0,
+            'matricula' => "TOTALES",        
+            'm1'  => 35,
+            'f1'  => 8,
+            'total1' => 43,
+            'm2'  => 0,
+            'f2'  => 0,
+            'total2' => 0
+        );
+
+        array_push($cargos_array, $fila);
+        array_push($cargos_array, $fila2);
+        array_push($cargos_array, $fila3);
+        array_push($cargos_array, $fila4);*/
+    }
+
+    public function get_univ_universidad_carrera_egresados($carrera_id, $nro_periodos, $gestion, $periodo=1){
+        
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection(); 
+
+        $periodosql = " and est_tec_grado_academico_tipo_id in (1) ";
+        if($periodo == 2){
+            $periodosql = " and est_tec_grado_academico_tipo_id in (2)  ";
+            //dump($periodosql); die; 
+        }
+
+        $query ="
+        SELECT
+            est_tec_instituto_carrera_estudiante_egresado_titulado.id, 
+            est_tec_instituto_carrera_estudiante_egresado_titulado.gestion_tipo_id, 
+            est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_instituto_carrera_id, 
+            est_tec_instituto_carrera_estudiante_egresado_titulado.genero_tipo_id, 
+            est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_egresado_titulados_tipo_id, 
+            est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_periodo_academico_tipo_id, 
+            est_tec_instituto_carrera_estudiante_egresado_titulado.cantidad, 
+            est_tec_egresado_titulados_tipo.estado_final as cargo
+        FROM
+        est_tec_instituto_carrera_estudiante_egresado_titulado
+            INNER JOIN
+            est_tec_egresado_titulados_tipo
+            ON 
+            est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_egresado_titulados_tipo_id = est_tec_egresado_titulados_tipo.id
+            where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion . $periodosql ." order by  est_tec_egresado_titulados_tipo.estado_final";        
+
+       
+        $stmt = $db->prepare($query);
+        $params = array();
+        $stmt->execute($params);
+        $data = $stmt->fetchAll();
+        //dump($data); die;
+        $filasaux = array();
+        for($i = 0; $i < sizeof($data); $i++ ){
+             array_push($filasaux,$data[$i]['est_tec_egresado_titulados_tipo_id'] );
+        }
+        $rowsaux = array_unique($filasaux);
+
+        $rows = array();
+        foreach ($rowsaux as $valor) {
+            array_push($rows, $valor);
+        }
+
+
+        $tipo_matricula_array = array();
+       
+
+        $rowsaux = array();
+        for($i = 0; $i < sizeof($rows); $i++ ){
+
+            for($j = 0; $j < sizeof($data); $j++ ){
+                if ($data[$j]['est_tec_egresado_titulados_tipo_id']  == $rows[$i]){
+                    array_push($rowsaux, $data[$j]);
+                }
+            }
+
+           
+            $m1 = 0; $f1 = 0; $t1 = 0;
+            $m2 = 0; $f2 = 0; $t2 = 0;
+
+            $m3 = 0; $f3 = 0; $t3 = 0;
+            $m4 = 0; $f4 = 0; $t4 = 0;
+            $m5 = 0; $f5 = 0; $t5 = 0;
+            $m6 = 0; $f6 = 0; $t6 = 0;
+
+            $m7 = 0; $f7 = 0; $t7 = 0;
+            $m8 = 0; $f8 = 0; $t8 = 0;
+            $m9 = 0; $f9 = 0; $t9 = 0;
+            $m10 = 0; $f10 = 0; $t10 = 0;
+            $m11 = 0; $f11 = 0; $t11 = 0;
+            $m12 = 0; $f12 = 0; $t12 = 0;
+
+
+            $idm2 = 0; $idf2 = 0;
+            $idm1= 0; $idf1 = 0;
+            $idm3= 0; $idf3 = 0;
+            $idm4= 0; $idf4 = 0;
+            $idm5= 0; $idf5 = 0;
+            $idm6= 0; $idf6 = 0;
+
+            $idm7= 0; $idf7 = 0;
+            $idm8= 0; $idf8 = 0;
+            $idm9= 0; $idf9 = 0;
+            $idm10= 0; $idf10 = 0;
+            $idm11= 0; $idf11 = 0;
+            $idm12= 0; $idf12 = 0;
+
+            for($k = 0; $k < sizeof($rowsaux); $k++ ){               
+                $matricula = $rowsaux[$k]['cargo'];
+
+                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 1){
+                    $m1  = $rowsaux[$k]['cantidad'];
+                    $idm1 =  $rowsaux[$k]['id'];
+                }
+                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 1){
+                    $f1  = $rowsaux[$k]['cantidad'];
+                    $idf1 =  $rowsaux[$k]['id'];
+                }
+
+                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 2){
+                    $m2  = $rowsaux[$k]['cantidad'];
+                    $idm2 =  $rowsaux[$k]['id'];
+                }
+                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 2){
+                    $f2  = $rowsaux[$k]['cantidad'];
+                    $idf2 =  $rowsaux[$k]['id'];
+                }   
+
+                if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 3){
+                    $m3  = $rowsaux[$k]['cantidad'];
+                    $idm3 =  $rowsaux[$k]['id'];
+                }
+                if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 3){
+                    $f3  = $rowsaux[$k]['cantidad'];
+                    $idf3 =  $rowsaux[$k]['id'];
+                }   
+
+                if($nro_periodos == 6){
+                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 4){
+                        $m4  = $rowsaux[$k]['cantidad'];
+                        $idm4 =  $rowsaux[$k]['id'];
+                    }
+                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 4){
+                        $f4  = $rowsaux[$k]['cantidad'];
+                        $idf4 =  $rowsaux[$k]['id'];
+                    }   
+                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 5){
+                        $m5  = $rowsaux[$k]['cantidad'];
+                        $idm5 =  $rowsaux[$k]['id'];
+                    }
+                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 5){
+                        $f5  = $rowsaux[$k]['cantidad'];
+                        $idf5 =  $rowsaux[$k]['id'];
+                    }   
+                    if($rowsaux[$k]['genero_tipo_id'] == 1 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 6){
+                        $m6  = $rowsaux[$k]['cantidad'];
+                        $idm6 =  $rowsaux[$k]['id'];
+                    }
+                    if($rowsaux[$k]['genero_tipo_id'] == 2 and $rowsaux[$k]['est_tec_periodo_academico_tipo_id'] == 6){
+                        $f6  = $rowsaux[$k]['cantidad'];
+                        $idf6 =  $rowsaux[$k]['id'];
+                    }   
+                }
+
+
+            }
+
+            $row = array(
+                'id' => 972,
+                'matricula' => $matricula,
+                'm1'  => $m1,
+                'idm1'  => $idm1,
+                'f1'  => $f1, 
+                'idf1'  => $idf1,               
+                'total1' => $m1 + $f1,
+                'm2'  => $m2,
+                'idm2'  => $idm2,
+                'f2'  => $f2,
+                'idf2'  => $idf2,
+                'total2' => $m2 + $f2,
+
+                'm3'  => $m3,
+                'idm3'  => $idm3,
+                'f3'  => $f3,
+                'idf3'  => $idf3,
+                'total3' => $m3 + $f3,
+
+                'm4'  => $m4,
+                'idm4'  => $idm4,
+                'f4'  => $f4,
+                'idf4'  => $idf4,
+                'total4' => $m4 + $f4,
+
+                'm5'  => $m5,
+                'idm5'  => $idm5,
+                'f5'  => $f5,
+                'idf5'  => $idf5,
+                'total5' => $m5 + $f5,
+
+                'm6'  => $m6,
+                'idm6'  => $idm6,
+                'f6'  => $f6,
+                'idf6'  => $idf6,
+                'total6' => $m6 + $f6,
+
+                'm7'  => $m7,
+                'idm7'  => $idm7,
+                'f7'  => $f7,
+                'idf7'  => $idf7,
+                'total7' => $m7 + $f7,
+
+                'm8'  => $m8,
+                'idm8'  => $idm8,
+                'f8'  => $f8,
+                'idf8'  => $idf8,
+                'total8' => $m8 + $f8,
+
+                'm9'  => $m9,
+                'idm9'  => $idm9,
+                'f9'  => $f9,
+                'idf9'  => $idf9,
+                'total9' => $m9 + $f9,
+
+                'm10'  => $m10,
+                'idm10'  => $idm10,
+                'f10'  => $f10,
+                'idf10'  => $idf10,
+                'total10' => $m10 + $f10,
+
+                'm11'  => $m11,
+                'idm11'  => $idm11,
+                'f11'  => $f11,
+                'idf11'  => $idf11,
+                'total11' => $m11 + $f11,
+
+                'm12'  => $m12,
+                'idm12'  => $idm12,
+                'f12'  => $f12,
+                'idf12'  => $idf12,
+                'total12' => $m12 + $f12,
             );
 
             array_push($tipo_matricula_array, $row);
@@ -1489,6 +2481,40 @@ class CarrerasController extends Controller
             return $response->setData(array('estado' => false, 'msg' => $msg, 'cantidad' => -1));
         } 
     }
+
+
+    public function statsTituladosSaveAction(Request $request){
+
+        dump('here'); die;
+
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $response = new JsonResponse();
+                
+        //recibe todas las variables del form
+        $form = $request->get('form');
+      
+        try {    
+
+            foreach ($form as $clave => $valor) {      
+                $id = $clave; 
+                $cantidad = $valor; 
+
+                //update al registro, solo se cambia cantidad
+                $query ="update est_tec_instituto_carrera_estudiante_egresado_titulado set cantidad = ? where id = ?";
+                $stmt = $db->prepare($query);
+                $params = array($cantidad, $id);
+                $stmt->execute($params);           
+            }      
+            $msg  = 'Datos registrados correctamente';
+            return $response->setData(array('estado' => true, 'msg' => $msg, 'cantidad' => 0));
+
+        } catch (\Doctrine\ORM\NoResultException $ex) {           
+            $msg  = 'Error al realizar el registro, intente nuevamente';
+            return $response->setData(array('estado' => false, 'msg' => $msg, 'cantidad' => -1));
+        } 
+    }
+
 
     
 }

@@ -1,58 +1,61 @@
 {% extends 'layoutUniversity.html.twig' %}
 {## % extends 'layoutRegular.html.twig' % ##}
 {% block contentBread %}
-    <i class="fa fa-angle-right"></i>
-    <a href="#">
-        Sedes
-            
-    </a>
+<i class="fa fa-angle-right"></i>
+<a href="#">
+    Sedes
+
+</a>
 {% endblock %}
 {% block contentoption %}
-    <style>
-        .formatyears {
-            width:200px;
-            padding:16px;
-            border-radius:10px;
-            margin:auto;
-            background-color:#e5e7e9;
-            }
-        .formatyearsform {            
-            padding:16px;
-            border-radius:10px;
-            margin:auto;
-            background-color:#e5e7e9;
-            }
-        .formatallstaff{
-            width:100%;
-            padding:16px;
-            border-radius:10px;
-            margin:auto;
-            background-color:#e5e7e9;
-            }
-        form {
-            padding: 0 !important; 
-            margin: 0 0 !important; 
-        }
-        </style>
-        <!-- Start page header -->
-        <link rel="stylesheet" href="{{asset('css/kcssformat.css')}}">
-    <div class="header-content fixed-top">
-        <h2>
-            <i class="fa fa-home"></i>
-            {% if titulo is defined %}
-                {{ titulo }}
+<style>
+    .formatyears {
+        width: 200px;
+        padding: 16px;
+        border-radius: 10px;
+        margin: auto;
+        background-color: #e5e7e9;
+    }
+
+    .formatyearsform {
+        padding: 16px;
+        border-radius: 10px;
+        margin: auto;
+        background-color: #e5e7e9;
+    }
+
+    .formatallstaff {
+        width: 100%;
+        padding: 16px;
+        border-radius: 10px;
+        margin: auto;
+        background-color: #e5e7e9;
+    }
+
+    form {
+        padding: 0 !important;
+        margin: 0 0 !important;
+    }
+</style>
+<!-- Start page header -->
+<link rel="stylesheet" href="{{asset('css/kcssformat.css')}}">
+<div class="header-content fixed-top">
+    <h2>
+        <i class="fa fa-home"></i>
+        {% if titulo is defined %}
+        {{ titulo }}
+        {% endif %}
+        <span>
+            {% if subtitulo is defined %}
+            {{ subtitulo }}
             {% endif %}
-            <span>
-                {% if subtitulo is defined %}
-                    {{ subtitulo }}
-                {% endif %}
-            </span>
-        </h2> 
-        <div class="breadcrumb-wrapper hidden-xs">
-            <span class="label">
-                Usted esta aquí:                            
-            </span>
-            <ol class="breadcrumb">
+        </span>
+    </h2>
+    <div class="breadcrumb-wrapper hidden-xs">
+        <span class="label">
+            Usted esta aquí:
+        </span>
+        <ol class="breadcrumb">
             <li>
                 <i class="fa fa-home"></i>
                 <a href="{{path('maininfouni_index')}}">Registro de Información</a>
@@ -65,572 +68,840 @@
             </li>
             <li class="active">Administracion de Carreras - Estadisticas</li>
         </ol>
-        </div>
-    <!-- /.breadcrumb-wrapper -->
     </div>
-    <!-- /.header-content -->
-    <!--/ End page header -->
-    <div class="body-content animated fadeIn">
+    <!-- /.breadcrumb-wrapper -->
+</div>
+<!-- /.header-content -->
+<!--/ End page header -->
+<div class="body-content animated fadeIn">
+    <div class="row">
+        <div class="panel">
+            <div class="panel-heading">
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="panel panel-primary">
 
-        
-        <div class="row">
-            <div class="panel">
-                <div class="panel-heading">                   
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="panel panel-primary">
-
-                            <div class="panel-heading yearOld">
-                                <h3 class="panel-title"> <i class="fa fa-file"></i> CARRERA: {{ entity.carrera }}</h3>
-                            </div>
+                        <div class="panel-heading yearOld">
+                            <h3 class="panel-title"> <i class="fa fa-file"></i> CARRERA: {{ entity.carrera }} / RÉGIMEN:  {{ entity.getEstTecRegimenEstudioTipo.getDescripcion() }} / NIVEL ACADÉMICO: {{ entity.getEstTecNIvelTipo.getNivelTipo() }} </h3>
                         </div>
                     </div>
-                    
-                    <div class="row">
-                        <div class="col-md-11">
-                            <div class="panel panel-primary">
-                                
-                                <div class="panel-body">
+                </div>
 
-                                    <div class="row">
+                <div class="row">
+                    <div class="col-md-11">
+                        <div class="panel panel-primary">
 
-                                        <div class="col-md-2">
+                            <div class="panel-body">
 
-                                            <div class="table-responsive mb-20">
-                                            
-                                                <div class="alert alert-info">
-                                                    <strong>OPERATIVOS DISPONIBLES</strong>
-                                                </div>
-                                                <div class="formatyears">
+                                <div class="row">
+
+                                    <div class="col-md-2">
+
+                                        <div class="table-responsive mb-20">
+
+                                            <div class="alert yearOld" style="text-align: center;">
+                                                <strong>OPERATIVOS</strong>
+                                            </div>
+                                            <div class="formatyears">
+
                                                 <table class="table table-bordered">
                                                     <thead class="thead-dark">
                                                         <tr>
                                                             <th scope="col">#</th>
                                                             <th scope="col">Gestión</th>
-                                                            
-                                                           
+
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {% for  entity in gestiones %}
-                                                        <tr scope="row">                                                            
-                                                            <td class="text-center">1</td>
-                                                           
-                                                            <td> 
-                                                               <strong>
-                                                                <a href="{{ path('tecest_carreras_info',  {'carrera_id':carrera_id, 'gestion' :  entity.gestion_tipo_id}) }}"  data-toggle="tooltip" data-placement="top" data-original-title="Ver Estadisticas" >{{ entity.gestion_tipo_id }}</a>
-                                                            </strong>
-                                                            </td>
+                                                        {% set var = 1 %}
+                                                        {% for entity in gestiones %}
 
-                                                            
+                                                        {% if gestion_id == entity.gestion_tipo_id %}
+                                                        <tr scope="row" class="success">
+                                                            <td class="text-center"><strong>{{var}}</strong></td>
+                                                            <td>
+                                                                <strong>
+                                                                    {{entity.gestion_tipo_id }}
+                                                                </strong>
+                                                            </td>
                                                         </tr>
-                                                    {% endfor %}
+                                                        {% else %}
+                                                        <tr scope="row">
+                                                            <td class="text-center">{{var}}</td>
+                                                            <td>
+                                                                <a href="{{ path('tecest_carreras_info',  {'carrera_id':carrera_id, 'gestion' :  entity.gestion_tipo_id}) }}"
+                                                                    data-toggle="tooltip" data-placement="top"
+                                                                    data-original-title="Ver Estadisticas">{{
+                                                                    entity.gestion_tipo_id }}</a>
+                                                            </td>
+                                                        </tr>
+
+                                                        {% endif %}
+
+                                                        {% set var = var + 1 %}
+                                                        {% endfor %}
                                                     </tbody>
                                                 </table>
-                                                </div>
+
                                             </div>
-                                    
                                         </div>
 
-                                        <div class="col-md-10">
+                                    </div>
 
-                                            <div class="alert alert-info fa-2xs">
-                                                <span class="alert-icon"><i class="fa fa-user"></i></span>
-                                                <div class="notification-info">
-                                                    <ul class="clearfix notification-meta">
-                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE ESTUDIANTES SEGUN TIPO DE BECA POR GENERO EN LA GESTION Y PERIODO</strong></a></span></li>
-                                                        <li class="pull-right notification-sender" id="label_gestion_est"><strong>{{ gestion_id }}</strong></li>
-                                                    </ul>                                                    
-                                                </div>
+                                    <div class="col-md-10">
+
+                                    <div class="formatallstaff" style="width:70% ;">
+                                    <form name="formegresadostitulados" method="post" role="form" id="formegresadostitulados">
+                                    <table id="table1" class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th width="50%" style="text-align:center">
+                                                    <strong>TITULADOS/EGRESADOS EN LA GESTION {{ gestion_id }}</strong>
+                                                </th>
+                                                <th style="text-align:center"><strong>Masculino</strong></th>
+                                                <th style="text-align:center"><strong>Femenino</strong></th>
+                                
+                                            </tr>
+                                
+                                        </thead>
+                                        <tbody>
+
+                                            {% for key, entity in data.filas_egresados %}
+                                            <tr>
+                                                <td> <strong> {{ entity.matricula }} </strong></td>
+                                                
+                                                    <td class="success" id="gaf{{ key + 1 }}c1">
+                                                    <input type="number" min="0" max="9999"
+                                                        id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
+                                                        value="{{ entity.m1 }}"
+                                                        onclick="calculaTotales0()"
+                                                        oninput="calculaTotales0()"
+                                                        class="form-control clase00" 
+                                                        onclick="this.select();" onblur="datoVacio(this)" />
+                                                </td>
+                                                <td class="success" id="gaf{{ key + 1 }}c2">
+                                                    <input type="number" min="0" max="9999"
+                                                        id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]"
+                                                        value="{{ entity.f1 }}"
+                                                        onclick="calculaTotales0()"
+                                                        oninput="calculaTotales0()"
+                                                        class="form-control clase01" 
+                                                        onclick="this.select();" onblur="datoVacio(this)" />
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+
+                                            <tr>
+                                                <th>TOTALES</th>
+                                                <th id="total00">{{ totales0[0].m1}}</th>                                                
+                                                <th id="total01">{{ totales0[0].f1}}</th>                                                       
+                                            </tr>
+
+                                            <tr>
+                                                <td> </td>                                                       
+                                                <td colspan="2"> <a href="#" class="btn btn-success btn-block" id="form_save_gral">Grabar Estadisticas</a> </td>
+                                               
+                                            </tr>
+
+
+                                        </tbody>
+                                    </table>
+                                    </form>
+                                </div>
+                                <br>
+
+                                        <div class="alert alert-success fa-2xs">
+                                            <span class="alert-icon"><i class="fa fa-user"></i></span>
+                                            <div class="notification-info">
+                                                <ul class="clearfix notification-meta">
+                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE
+                                                                ESTUDIANTES SEGUN TIPO DE BECA POR GENERO EN LA GESTION
+                                                                </strong></span></li>
+                                                    <li class="pull-right notification-sender" id="label_gestion_est">
+                                                        <strong>GESTION: {{ gestion_id }}</strong></li>
+                                                </ul>
                                             </div>
-                                            <div class="messagebecas" id="messagebecas"></div>
+                                        </div>
 
-                                            <div class="formatallstaff">
-                                                <form name="form" method="post" role="form" id="formBecas">
-                                                    <table id="table1" class="table table-bordered">
-                                                        <thead>
+                                        <div class="messagebecas" id="messagebecas"></div>                                        
+
+                                        <div class="formatallstaff">
+                                            <form name="form" method="post" role="form" id="formBecas">
+                                                <table id="table1" class="table table-bordered">
+                                                    <thead>
                                                         <tr>
-                                                            <th width="50%" style="text-align:center" rowspan="2"><strong>TIPO DE BECA</strong></th>
-                                                            <th colspan="2" style="text-align:center"><strong>1er. Semestre</strong></th>
-                                                            <th colspan="2" style="text-align:center"><strong>2do. Semestre</strong></th>
-                                                            <th colspan="2" style="text-align:center"><strong>3er. Semestre</strong></th>
+                                                            <th width="50%" style="text-align:center" rowspan="2">
+                                                                <strong>TIPO DE BECA</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>1er.
+                                                                    {{headertxt}}</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>2do.
+                                                                    {{headertxt}}</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>3er.
+                                                                    {{headertxt}}</strong></th>
 
                                                             {% if data.periodos == 6 %}
-                                                                <th colspan="2" style="text-align:center"><strong>4to. Periodo</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>5to. Periodo</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>6to. Periodo</strong></th>
-                                                            {% endif %}                                                
-                                                        
-                                                        </tr>
-                                                        <tr>
-                                                            <th style="text-align:center"><strong>Masculino</strong></th>
-                                                            <th style="text-align:center"><strong>Femenino</strong></th>
-                                                            <th style="text-align:center"><strong>Masculino</strong></th>
-                                                            <th style="text-align:center"><strong>Femenino</strong></th>
-                                                            <th style="text-align:center"><strong>Masculino</strong></th>
-                                                            <th style="text-align:center"><strong>Femenino</strong></th>
-                                                        
-                                                            {% if data.periodos == 6 %}
-                                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                                            
+                                                            <th colspan="2" style="text-align:center"><strong>4to.
+                                                                    Periodo</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>5to.
+                                                                    Periodo</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>6to.
+                                                                    Periodo</strong></th>
                                                             {% endif %}
-                                                        
+
                                                         </tr>
-                                                        </thead>
-                                                        <tbody>
+                                                        <tr>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+
+                                                            {% if data.periodos == 6 %}
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+
+                                                            {% endif %}
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
                                                         {% for key, entity in data.array_estudiantes %}
                                                         <tr>
                                                             <td> <strong> {{ entity.matricula }} </strong></td>
 
                                                             <td class="success" id="af{{ key + 1 }}c1">
-                                                                <input type="number" min="0" max="9999" id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]" class="form-control clase1" value="{{ entity.m1 }}" onclick="calculaTotales()" oninput="calculaTotales()"/>
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
+                                                                    value="{{ entity.m1 }}"
+                                                                    onclick="calculaTotales()"
+                                                                    oninput="calculaTotales()"
+                                                                    class="form-control clase1" 
+                                                                    onclick="this.select();" onblur="datoVacio(this)" />
                                                             </td>
                                                             <td class="success" id="af{{ key + 1 }}c2">
-                                                                <input type="number" min="0" max="9999" id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]" class="form-control clase2" value="{{ entity.f1 }}" onclick="calculaTotales()" oninput="calculaTotales()"/>
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]"
+                                                                    value="{{ entity.f1 }}"
+                                                                    onclick="calculaTotales()"
+                                                                    oninput="calculaTotales()"
+                                                                    class="form-control clase2" 
+                                                                    onclick="this.select();" onblur="datoVacio(this)" />
                                                             </td>
                                                             <td class="success" id="af{{ key + 1 }}c1">
-                                                                <input type="number" min="0" max="9999" id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]" class="form-control clase1" value="{{ entity.m2 }}" onclick="calculaTotales()" oninput="calculaTotales()"/>
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]"
+                                                                    class="form-control clase3" value="{{ entity.m2 }}"
+                                                                    onclick="calculaTotales()"
+                                                                    oninput="calculaTotales()"                                                                   
+                                                                    onclick="this.select();" onblur="datoVacio(this)" />
                                                             </td>
                                                             <td class="success" id="af{{ key + 1 }}c2">
-                                                                <input type="number" min="0" max="9999" id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]" class="form-control clase2" value="{{ entity.f2 }}" onclick="calculaTotales()" oninput="calculaTotales()"/>
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]"
+                                                                    class="form-control clase4" value="{{ entity.f2 }}"
+                                                                    onclick="calculaTotales()"
+                                                                    oninput="calculaTotales()"                                                                   
+                                                                    onclick="this.select();" onblur="datoVacio(this)" />
                                                             </td>
                                                             <td class="success" id="af{{ key + 1 }}c1">
-                                                                <input type="number" min="0" max="9999" id="{{ entity.idm3 }}" name="form[{{entity.idm3}}]" class="form-control clase1" value="{{ entity.m3 }}" onclick="calculaTotales()" oninput="calculaTotales()"/>
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm3 }}" name="form[{{entity.idm3}}]"
+                                                                    class="form-control clase5" value="{{ entity.m3 }}"
+                                                                    onclick="calculaTotales()"
+                                                                    oninput="calculaTotales()"                                                                    
+                                                                    onclick="this.select();" onblur="datoVacio(this)" />
                                                             </td>
                                                             <td class="success" id="af{{ key + 1 }}c2">
-                                                                <input type="number" min="0" max="9999" id="{{ entity.idf3 }}" name="form[{{entity.idf3}}]" class="form-control clase2" value="{{ entity.f3 }}" onclick="calculaTotales()" oninput="calculaTotales()"/>
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf3 }}" name="form[{{entity.idf3}}]"
+                                                                    class="form-control clase6" value="{{ entity.f3 }}"
+                                                                    onclick="calculaTotales()"
+                                                                    oninput="calculaTotales()"                                                                   
+                                                                    onclick="this.select();" onblur="datoVacio(this)" />
                                                             </td>
-                                                        
-                                                            {% if data.periodos == 6 %}
-
-                                                                <td class="warning" id="af{{ key + 1 }}c4">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idm4 }}" name="form[{{entity.idm4}}]" class="form-control" value="{{ entity.m4 }}"/>
-                                                                </td>
-                                                                <td class="warning" id="af{{ key + 1 }}c5">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idf4 }}" name="form[{{entity.idf4}}]" class="form-control" value="{{ entity.f4 }}"/>
-                                                                </td>
-                                                                <td class="warning" id="af{{ key + 1 }}c4">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idm5 }}" name="form[{{entity.idm5}}]" class="form-control" value="{{ entity.m5 }}"/>
-                                                                </td>
-                                                                <td class="warning" id="af{{ key + 1 }}c5">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idf5 }}" name="form[{{entity.idf5}}]" class="form-control" value="{{ entity.f5 }}"/>
-                                                                </td>
-                                                                <td class="warning" id="af{{ key + 1 }}c4">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idm6 }}" name="form[{{entity.idm6}}]" class="form-control" value="{{ entity.m6 }}"/>
-                                                                </td>
-                                                                <td class="warning" id="af{{ key + 1 }}c5">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idf6 }}" name="form[{{entity.idf6}}]" class="form-control" value="{{ entity.f6 }}"/>
-                                                                </td>
-                                                            
-                                                            {% endif %}
-                                                        
                                                         </tr>
                                                         {% endfor %}
 
-                                                       {# 
-                                                        <tr>                                                                
+                                                    
+                                                        <tr>
                                                             <th>TOTALES</th>
-                                                            {% if data.periodos == 1 %}
-                                                            <th id= "total1" >{{ totales1[0].m1}}</th>
-                                                            <th id= "total2">{{ totales1[0].f1}}</th>
-                                                            {% else %}
-                                                            <th id= "total1">{{ totales1[0].m1}}</th>
-                                                            <th id= "total2">{{ totales1[0].f1}}</th>
-                                                            <th>{{ totales1[0].m2}}</th>
-                                                            <th>{{ totales1[0].f2}}</th>
-                                                            {% endif %}
-                                                            
-                                                            
+                                                            <th id="total1">{{ totales1[0].m1}}</th>
+                                                            <th id="total2">{{ totales1[0].f1}}</th>
+                                                            <th id="total3">{{ totales1[0].m2}}</th>
+                                                            <th id="total4">{{ totales1[0].f2}}</th>
+                                                            <th id="total5">{{ totales1[0].m3}}</th>
+                                                            <th id="total6">{{ totales1[0].f3}}</th>
                                                         </tr>
-                                                        #}
-                                                      
+                                                        
+
 
                                                         <tr>
-                                                            <td>   </td>
+                                                            <td> </td>
                                                             {% if data.periodos == 3 %}
-                                                            <td colspan="6"> <a href="#" class="btn btn-success btn-block" id="form_save_becas">Guardar</a> </td>
+                                                            <td colspan="6"> <a href="#"
+                                                                    class="btn btn-success btn-block"
+                                                                    id="form_save_becas">Grabar Estadisticas</a> </td>
                                                             {% else %}
-                                                            <td colspan="12"> <a href="#" class="btn btn-success btn-block" id="form_save_becas">Guardar</a> </td>
+                                                            <td colspan="12"> <a href="#"
+                                                                    class="btn btn-success btn-block"
+                                                                    id="form_save_becas">Grabar Estadisticas</a> </td>
                                                             {% endif %}
                                                         </tr>
-                                                    
-                                                        </tbody>
-                                                        
-                                                        
-                                                        
-                                                        
-                                                    </table>
-                                                </form> 
-                                            </div>
+
+                                                    </tbody>
 
 
-                                            <hr>
 
-                                            <div class="alert alert-warning fa-2xs">
-                                                <span class="alert-icon"><i class="fa fa-file"></i></span>
-                                                <div class="notification-info">
-                                                    <ul class="clearfix notification-meta">
-                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE ESTUDIANTES MATRICULADOS POR GENERO Y REGIMEN DE ESTUDIO</strong></a></span></li>
-                                                        <li class="pull-right notification-sender" id="label_gestion_est"><strong>{{ gestion_id }}</strong></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="messagematriculas" id="messagematriculas"></div>
-                                            <div class="formatallstaff">
-                                                <form name="formMatriculas" method="post"  id="formMatriculas">
-                                                    <table id ="table2"  class="table table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th width="50%" rowspan="2" style="text-align:center"><strong>TIPO MATRICULA</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>1er. Semestre</strong></th>
-                                                                <th style="text-align:center" colspan="2"><strong>2do. Semestre</strong></th>
-                                                                <th style="text-align:center" colspan="2"><strong>3er. Semestre</strong></th>
-                                                
-                                                                {% if data.periodos == 6 %}
-                                                                <th colspan="2" style="text-align:center"><strong>4to. Periodo</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>5to. Periodo</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>6to. Periodo</strong></th>
-                                                                {% endif %}                                            
-                                                            
-                                                            </tr>
-                                                            <tr>
-                                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                                            
-                                                                {% if data.periodos == 6 %}
-                                                                    <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                    <th style="text-align:center"><strong>Femenino</strong></th>    
-                                                                    <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                    <th style="text-align:center"><strong>Femenino</strong></th>
-                                                                    <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                    <th style="text-align:center"><strong>Femenino</strong></th>                                                      
-                                                                {% endif %}
-                                                                
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {% for key, entity in data.array_tipo_matricula %}
-                                                            <tr>
-                                                                <td> <strong>{{ entity.matricula }}</strong></td>
-                                                
-                                                                <td class="success" id="cf{{ key + 1 }}c1">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]" class="form-control" value="{{ entity.m1 }}"/>
-                                                                </td>
-                                                                <td class="success" id="cf{{ key + 1 }}c2">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]" class="form-control" value="{{ entity.f1 }}"/>
-                                                                </td>
 
-                                                                <td class="warning" id="cf{{ key + 1 }}c4">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]" class="form-control" value="{{ entity.m2 }}"/>
-                                                                </td>
-                                                                <td class="warning" id="cf{{ key + 1 }}c5">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]" class="form-control" value="{{ entity.f2 }}"/>
-                                                                </td>     
-
-                                                                <td class="warning" id="cf{{ key + 1 }}c4">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idm3 }}" name="form[{{entity.idm3}}]" class="form-control" value="{{ entity.m3 }}"/>
-                                                                </td>
-                                                                <td class="warning" id="cf{{ key + 1 }}c5">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idf3 }}" name="form[{{entity.idf3}}]" class="form-control" value="{{ entity.f3 }}"/>
-                                                                </td>     
-                                                                                                            
-                                                                {% if data.periodos == 6 %}                                            
-                                                                    <td class="warning" id="cf{{ key + 1 }}c4">
-                                                                        <input type="number" min="0" max="9999" id="{{ entity.idm4 }}" name="form[{{entity.idm4}}]" class="form-control" value="{{ entity.m4 }}"/>
-                                                                    </td>
-                                                                    <td class="warning" id="cf{{ key + 1 }}c5">
-                                                                        <input type="number" min="0" max="9999" id="{{ entity.idf4 }}" name="form[{{entity.idf4}}]" class="form-control" value="{{ entity.f4 }}"/>
-                                                                    </td>        
-                                                                    <td class="warning" id="cf{{ key + 1 }}c4">
-                                                                        <input type="number" min="0" max="9999" id="{{ entity.idm5 }}" name="form[{{entity.idm5}}]" class="form-control" value="{{ entity.m5 }}"/>
-                                                                    </td>
-                                                                    <td class="warning" id="cf{{ key + 1 }}c5">
-                                                                        <input type="number" min="0" max="9999" id="{{ entity.idf5 }}" name="form[{{entity.idf5}}]" class="form-control" value="{{ entity.f5 }}"/>
-                                                                    </td>        
-                                                                    <td class="warning" id="cf{{ key + 1 }}c4">
-                                                                        <input type="number" min="0" max="9999" id="{{ entity.idm6 }}" name="form[{{entity.idm6}}]" class="form-control" value="{{ entity.m6 }}"/>
-                                                                    </td>
-                                                                    <td class="warning" id="cf{{ key + 1 }}c6">
-                                                                        <input type="number" min="0" max="9999" id="{{ entity.idf6 }}" name="form[{{entity.idf6}}]" class="form-control" value="{{ entity.f6 }}"/>
-                                                                    </td>        
-                                                                {% endif %}                                                                                                
-                                                                
-                                                            </tr>
-                                                            {% endfor %}
-
-                                                            <tr>
-                                                                <td>   </td>
-                                                                {% if data.periodos == 3 %}
-                                                                <td colspan="6"> <a href="#" class="btn btn-success btn-block" id="form_save_matriculas">Guardar</a> </td>
-                                                                {% else %}
-                                                                <td colspan="12"> <a href="#" class="btn btn-success btn-block" id="form_save_matriculas">Guardar</a> </td>
-                                                                {% endif %}
-                                                            </tr>
-                                                
-                                                        </tbody>
-                                                
-                                                        {## <tfoot>
-                                                            <tr>
-                                                                <th>TOTALES</th>
-                                                                <th>120</th>
-                                                                <th>50</th>
-                                                                <th>170</th>
-                                                
-                                                            </tr>
-                                                        </tfoot>
-                                                        ##}
-                                                
-                                                    </table>
-                                                </form> 
-                                            </div>
-
-                                            
-                                           
-                                            <hr>                                                
-
-                                            <div class="alert alert-danger fa-2xs">
-                                                <span class="alert-icon"><i class="fa fa-users"></i></span>
-                                                <div class="notification-info">
-                                                    <ul class="clearfix notification-meta">
-                                                        <li class="pull-left notification-sender"><span><a href="#"><strong>REGISTRO DE DOCENTES ASIGNADOS A LA CARRERA</strong></a></span></li>
-                                                        <li class="pull-right notification-sender" id="label_gestion_est"><strong>{{ gestion_id }}</strong></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-
-                                            <div class="messagecargos" id="messagecargos"></div>
-                                            <div class="formatallstaff">
-                                                <form name="formCargos" method="post"  id="formCargos">
-                                                    <table id = "table3" class="table table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th  width="50%" style="text-align:center" rowspan="2"><strong>TIPO CARGO</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>1er. Semestre</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>2do. Semestre</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>3er. Semestre</strong></th>
-                                                
-                                                                {% if data.periodos == 6 %}
-                                                                <th colspan="2" style="text-align:center"><strong>4to. Periodo</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>5to. Periodo</strong></th>
-                                                                <th colspan="2" style="text-align:center"><strong>6to. Periodo</strong></th>
-                                                                {% endif %}                                            
-                                                            
-                                                            </tr>
-                                                            <tr>
-                                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                                            
-                                                                {% if data.periodos == 6 %}
-                                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                                            
-                                                                {% endif %}                                                           
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {% for key, entity in data.array_cargos %}
-                                                            <tr>
-                                                                <td> <strong>{{ entity.matricula }}</strong></td>
-                                                
-                                                                <td class="success" id="bf{{ key + 1 }}c1">
-                                                                    <input type="number" min="0" max="9999" onKeyUp="if(parseInt(this.value)>1000){ this.value =1000; return false; }" id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]" class="form-control" value="{{ entity.m1 }}"/>
-                                                                </td>
-                                                                <td class="success" id="bf{{ key + 1 }}c2">
-                                                                    <input type="number" min="0" max="9999"  onfocusout="losesFocus()" id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]" class="form-control" value="{{ entity.f1 }}"/>
-                                                                </td>
-
-                                                                <td class="warning" id="bf{{ key + 1 }}c4">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]" class="form-control" value="{{ entity.m2 }}"/>
-                                                                </td>
-                                                                <td class="warning" id="bf{{ key + 1 }}c5">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]" class="form-control" value="{{ entity.f2 }}"/>
-                                                                </td>
-
-                                                                <td class="warning" id="bf{{ key + 1 }}c4">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idm3 }}" name="form[{{entity.idm3}}]" class="form-control" value="{{ entity.m3 }}"/>
-                                                                </td>
-                                                                <td class="warning" id="bf{{ key + 1 }}c5">
-                                                                    <input type="number" min="0" max="9999" id="{{ entity.idf3 }}" name="form[{{entity.idf3}}]" class="form-control" value="{{ entity.f3 }}"/>
-                                                                </td>
-                                                                
-                                                
-                                                                {% if data.periodos == 6 %}
-                                                
-                                                                    <td class="warning" id="bf{{ key + 1 }}c4">
-                                                                        <input type="number" min="0" max="9999" id="{{ entity.idm4 }}" name="form[{{entity.idm4}}]" class="form-control" value="{{ entity.m4 }}"/>
-                                                                    </td>
-                                                                    <td class="warning" id="bf{{ key + 1 }}c5">
-                                                                        <input type="number" min="0" max="9999" id="{{ entity.idf4 }}" name="form[{{entity.idf4}}]" class="form-control" value="{{ entity.f4 }}"/>
-                                                                    </td>
-                                                                    <td class="warning" id="bf{{ key + 1 }}c4">
-                                                                        <input type="number" min="0" max="9999" id="{{ entity.idm5 }}" name="form[{{entity.idm5}}]" class="form-control" value="{{ entity.m5 }}"/>
-                                                                    </td>
-                                                                    <td class="warning" id="bf{{ key + 1 }}c5">
-                                                                        <input type="number" min="0" max="9999" id="{{ entity.idf5 }}" name="form[{{entity.idf5}}]" class="form-control" value="{{ entity.f5 }}"/>
-                                                                    </td>
-                                                                    <td class="warning" id="bf{{ key + 1 }}c4">
-                                                                        <input type="number" min="0" max="9999" id="{{ entity.idm6 }}" name="form[{{entity.idm6}}]" class="form-control" value="{{ entity.m6 }}"/>
-                                                                    </td>
-                                                                    <td class="warning" id="bf{{ key + 1 }}c5">
-                                                                        <input type="number" min="0" max="9999" id="{{ entity.idf6 }}" name="form[{{entity.idf6}}]" class="form-control" value="{{ entity.f6 }}"/>
-                                                                    </td>
-                                                                    
-                                                
-                                                                {% endif %}                                                                                                                        
-                                                            </tr>
-                                                            {% endfor %}
-
-                                                            <tr>
-                                                                <td>   </td>
-                                                                {% if data.periodos == 3 %}
-                                                                <td colspan="6"> <a href="#" class="btn btn-success btn-block" id="form_save_cargos">Guardar</a> </td>
-                                                                {% else %}
-                                                                <td colspan="12"> <a href="#" class="btn btn-success btn-block" id="form_save_cargos">Guardar</a> </td>
-                                                                {% endif %}
-                                                            </tr>
-                                                
-                                                        </tbody>
-                                                
-                                                        
-                                                
-                                                    </table>
-                                                </form>
-                                            </div>
-
-                                          
-                                                    
-
+                                                </table>
+                                            </form>
                                         </div>
+
+
+                                        <hr>
+
+                                        <div class="alert alert-warning fa-2xs">
+                                            <span class="alert-icon"><i class="fa fa-file"></i></span>
+                                            <div class="notification-info">
+                                                <ul class="clearfix notification-meta">
+                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE
+                                                                ESTUDIANTES MATRICULADOS POR GENERO Y REGIMEN DE
+                                                                ESTUDIO</strong></span></li>
+                                                    <li class="pull-right notification-sender" id="label_gestion_est">
+                                                        <strong>GESTION: {{ gestion_id }}</strong></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="messagematriculas" id="messagematriculas"></div>
+                                        <div class="formatallstaff">
+                                            <form name="formMatriculas" method="post" id="formMatriculas">
+                                                <table id="table2" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="50%" rowspan="2" style="text-align:center">
+                                                                <strong>TIPO MATRICULA</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>1er.
+                                                                    {{headertxt}}</strong></th>
+                                                            <th style="text-align:center" colspan="2"><strong>2do.
+                                                                    {{headertxt}}</strong></th>
+                                                            <th style="text-align:center" colspan="2"><strong>3er.
+                                                                    {{headertxt}}</strong></th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for key, entity in data.array_tipo_matricula %}
+                                                        <tr>
+                                                            <td> <strong>{{ entity.matricula }}</strong></td>
+
+                                                            <td class="success" id="cf{{ key + 1 }}c1">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
+                                                                    class="form-control clase7"
+                                                                    value="{{ entity.m1 }}"
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales2(this)" 
+                                                                    oninput="calculaTotales2(this)"
+                                                                    onblur="datoVacio2(this)" />
+                                                            </td>
+                                                            <td class="success" id="cf{{ key + 1 }}c2">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]"
+                                                                    class="form-control clase8"
+                                                                    value="{{ entity.f1 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales2(this)" 
+                                                                    oninput="calculaTotales2(this)"
+                                                                    onblur="datoVacio2(this)" />
+                                                            </td>
+
+                                                            <td class="success" id="cf{{ key + 1 }}c4">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]"
+                                                                    class="form-control clase9"
+                                                                    value="{{ entity.m2 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales2(this)" 
+                                                                    oninput="calculaTotales2(this)"
+                                                                    onblur="datoVacio2(this)" />
+                                                            </td>
+                                                            <td class="success" id="cf{{ key + 1 }}c5">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]"
+                                                                    class="form-control clase10"
+                                                                    value="{{ entity.f2 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales2(this)" 
+                                                                    oninput="calculaTotales2(this)"
+                                                                    onblur="datoVacio2(this)" />
+                                                            </td>
+
+                                                            <td class="success" id="cf{{ key + 1 }}c4">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm3 }}" name="form[{{entity.idm3}}]"
+                                                                    class="form-control clase11"
+                                                                    value="{{ entity.m3 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales2(this)" 
+                                                                    oninput="calculaTotales2(this)"
+                                                                    onblur="datoVacio2(this)" />
+                                                            </td>
+                                                            <td class="success" id="cf{{ key + 1 }}c5">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf3 }}" name="form[{{entity.idf3}}]"
+                                                                    class="form-control clase12"
+                                                                    value="{{ entity.f3 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales2(this)" 
+                                                                    oninput="calculaTotales2(this)"
+                                                                    onblur="datoVacio2(this)" />
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+
+                                                        <tr>
+                                                            <th>TOTALES</th>
+                                                            <th id="total7">{{ totales2[0].m1}}</th>
+                                                            <th id="total8">{{ totales2[0].f1}}</th>
+                                                            <th id="total9">{{ totales2[0].m2}}</th>
+                                                            <th id="total10">{{ totales2[0].f2}}</th>
+                                                            <th id="total11">{{ totales2[0].m3}}</th>
+                                                            <th id="total12">{{ totales2[0].f3}}</th>
+                                                        </tr>
+
+
+                                                        <tr>
+                                                            <td> </td>
+                                                            {% if data.periodos == 3 %}
+                                                            <td colspan="6"> <a href="#"
+                                                                    class="btn btn-success btn-block"
+                                                                    id="form_save_matriculas">Grabar Estadisticas</a> </td>
+                                                            {% else %}
+                                                            <td colspan="12"> <a href="#"
+                                                                    class="btn btn-success btn-block"
+                                                                    id="form_save_matriculas">Grabar Estadisticas</a> </td>
+                                                            {% endif %}
+                                                        </tr>
+
+                                                        
+                                                    </tbody>
+
+                                                   
+
+                                                </table>
+                                            </form>
+                                        </div>
+
+
+
+                                        <hr>
+
+                                        <div class="alert alert-danger fa-2xs">
+                                            <span class="alert-icon"><i class="fa fa-users"></i></span>
+                                            <div class="notification-info">
+                                                <ul class="clearfix notification-meta">
+                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE
+                                                                DOCENTES ASIGNADOS A LA CARRERA</strong></span></li>
+                                                    <li class="pull-right notification-sender" id="label_gestion_est">
+                                                        <strong>GESTION: {{ gestion_id }}</strong></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="messagecargos" id="messagecargos"></div>
+                                        <div class="formatallstaff">
+                                            <form name="formCargos" method="post" id="formCargos">
+                                                <table id="table3" class="table table-bordered">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="50%" style="text-align:center" rowspan="2">
+                                                                <strong>TIPO CARGO</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>1er.
+                                                                    {{headertxt}}</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>2do.
+                                                                    {{headertxt}}</strong></th>
+                                                            <th colspan="2" style="text-align:center"><strong>3er.
+                                                                    {{headertxt}}</strong></th>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+                                                            <th style="text-align:center"><strong>Masculino</strong>
+                                                            </th>
+                                                            <th style="text-align:center"><strong>Femenino</strong></th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for key, entity in data.array_cargos %}
+                                                        <tr>
+                                                            <td> <strong>{{ entity.matricula }}</strong></td>
+
+                                                            <td class="success" id="bf{{ key + 1 }}c1">
+                                                                <input type="number" min="0" max="9999"                                                                    
+                                                                    id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
+                                                                    class="form-control clase13" value="{{ entity.m1 }}"
+                                                                     onclick="this.select();" 
+                                                                    onclick="calculaTotales3(this)" 
+                                                                    oninput="calculaTotales3(this)"
+                                                                    onblur="datoVacio3(this)" />
+                                                            </td>
+                                                            <td class="success" id="bf{{ key + 1 }}c2">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf1 }}"
+                                                                    name="form[{{entity.idf1}}]" class="form-control clase14"
+                                                                    value="{{ entity.f1 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales3(this)" 
+                                                                    oninput="calculaTotales3(this)"
+                                                                    onblur="datoVacio3(this)" />
+                                                            </td>
+
+                                                            <td class="success" id="bf{{ key + 1 }}c4">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]"
+                                                                    class="form-control clase15" value="{{ entity.m2 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales3(this)" 
+                                                                    oninput="calculaTotales3(this)"
+                                                                    onblur="datoVacio3(this)" />
+                                                            </td>
+                                                            <td class="success" id="bf{{ key + 1 }}c5">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]"
+                                                                    class="form-control clase16" value="{{ entity.f2 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales3(this)" 
+                                                                    oninput="calculaTotales3(this)"
+                                                                    onblur="datoVacio3(this)" />
+                                                            </td>
+
+                                                            <td class="success" id="bf{{ key + 1 }}c4">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idm3 }}" name="form[{{entity.idm3}}]"
+                                                                    class="form-control clase17" value="{{ entity.m3 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales3(this)" 
+                                                                    oninput="calculaTotales3(this)"
+                                                                    onblur="datoVacio3(this)" />
+                                                            </td>
+                                                            <td class="success" id="bf{{ key + 1 }}c5">
+                                                                <input type="number" min="0" max="9999"
+                                                                    id="{{ entity.idf3 }}" name="form[{{entity.idf3}}]"
+                                                                    class="form-control clase18" value="{{ entity.f3 }}" 
+                                                                    onclick="this.select();" 
+                                                                    onclick="calculaTotales3(this)" 
+                                                                    oninput="calculaTotales3(this)"
+                                                                    onblur="datoVacio3(this)" />
+                                                            </td>
+
+                                                        </tr>
+                                                        {% endfor %}
+
+                                                        <tr>
+                                                            <th>TOTALES</th>
+                                                            <th id="total13">{{ totales3[0].m1}}</th>
+                                                            <th id="total14">{{ totales3[0].f1}}</th>
+                                                            <th id="total15">{{ totales3[0].m2}}</th>
+                                                            <th id="total16">{{ totales3[0].f2}}</th>
+                                                            <th id="total17">{{ totales3[0].m3}}</th>
+                                                            <th id="total18">{{ totales3[0].f3}}</th>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td> </td>
+                                                            {% if data.periodos == 3 %}
+                                                            <td colspan="6"> <a href="#"
+                                                                    class="btn btn-success btn-block"
+                                                                    id="form_save_cargos">Grabar Estadisticas</a> </td>
+                                                            {% else %}
+                                                            <td colspan="12"> <a href="#"
+                                                                    class="btn btn-success btn-block"
+                                                                    id="form_save_cargos">Grabar Estadisticas</a> </td>
+                                                            {% endif %}
+                                                        </tr>
+
+                                                    </tbody>
+
+
+
+                                                </table>
+                                            </form>
+                                        </div>
+
+
+
+
                                     </div>
+                                </div>
 
-                                    <br><br>
+                                <br><br>
 
-                                    <div class="row">
+                                <div class="row">
 
                                     <div class="col-md-3">
 
-                                      
+
                                     </div>
 
-                                    
+
                                 </div>
-                                   
-                                </div>
-                            <!-- /.panel-body -->
+
                             </div>
-                        </div>
-
-                        <div class="col-md-1">
-                        </div>
-
-                        {## 
-                        <div class="col-md-3">
-                            <div class="panel panel-info">
-                                <div class="panel-heading yearOld">
-                                    <h3 class="panel-title"> <i class="fa fa-file"></i> Panel Info</h3>
-                                </div>
-                                <!-- /.panel-heading -->
-                                <div class="panel-body">
-                                    <div style=" text-align: center;">
-                                        <i class="fa fa-institution fa-lg"></i>
-                                    </div>
-
-                                    <h3>{{ central.universidad }}</h3>
-                                    <h4> Sede: La Paz </h4>
-                                    <hr>
-                                                                                                        
-                                </div>
                             <!-- /.panel-body -->
-                            </div>
                         </div>
-                        ##}
-
                     </div>
+
+                    <div class="col-md-1">
+                    </div>
+
+                    {##
+                    <div class="col-md-3">
+                        <div class="panel panel-info">
+                            <div class="panel-heading yearOld">
+                                <h3 class="panel-title"> <i class="fa fa-file"></i> Panel Info</h3>
+                            </div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div style=" text-align: center;">
+                                    <i class="fa fa-institution fa-lg"></i>
+                                </div>
+
+                                <h3>{{ central.universidad }}</h3>
+                                <h4> Sede: La Paz </h4>
+                                <hr>
+
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                    </div>
+                    ##}
+
                 </div>
             </div>
-
-            
         </div>
 
-    
+
     </div>
 
 
-   
+</div>
+
+
+
 
 </div>
 </div>
 
-    <!-- /.row -->
+<!-- /.row -->
 
-      
-   
+
+
 {% endblock %}
 {% block javascripts %}
-    {{ parent() }}
+{{ parent() }}
 
-    <script>
+<script>
 
 
-    function calculaTotales(){
+    function calculaTotales() {
 
         console.log('here');
-       
+
         var tm1 = 0;
         var tf1 = 0;
 
         var tm2 = 0;
         var tf2 = 0;
-       
-        $('.clase1').each(function(i,obj){
+
+        var tm3 = 0;
+        var tf3 = 0;
+
+        $('.clase1').each(function (i, obj) {
             tm1 = parseInt(tm1) + parseInt(obj.value);
         });
 
-        $('.clase2').each(function(i,obj){
+        $('.clase2').each(function (i, obj) {
             tf1 = parseInt(tf1) + parseInt(obj.value);
         });
-      
-        $('.clase3').each(function(i,obj){
+
+        $('.clase3').each(function (i, obj) {
             tm2 = parseInt(tm2) + parseInt(obj.value);
         });
 
-        $('.clase4').each(function(i,obj){
+        $('.clase4').each(function (i, obj) {
             tf2 = parseInt(tf2) + parseInt(obj.value);
+        });
+
+        $('.clase5').each(function (i, obj) {
+            tm3 = parseInt(tm3) + parseInt(obj.value);
+        });
+
+        $('.clase6').each(function (i, obj) {
+            tf3 = parseInt(tf3) + parseInt(obj.value);
         });
         console.log(tm1);
 
         $('#total1').html(tm1);
         $('#total2').html(tf1);
+        $('#total3').html(tm2);
+        $('#total4').html(tf2);
+        $('#total5').html(tm3);
+        $('#total6').html(tf3);
     }
 
-    function losesFocus (){
+    function calculaTotales2() {
+
+            console.log('here');
+
+            var tm1 = 0;
+            var tf1 = 0;
+
+            var tm2 = 0;
+            var tf2 = 0;
+
+            var tm3 = 0;
+            var tf3 = 0;
+
+            $('.clase7').each(function (i, obj) {
+                tm1 = parseInt(tm1) + parseInt(obj.value);
+            });
+
+            $('.clase8').each(function (i, obj) {
+                tf1 = parseInt(tf1) + parseInt(obj.value);
+            });
+
+            $('.clase9').each(function (i, obj) {
+                tm2 = parseInt(tm2) + parseInt(obj.value);
+            });
+
+            $('.clase10').each(function (i, obj) {
+                tf2 = parseInt(tf2) + parseInt(obj.value);
+            });
+
+            $('.clase11').each(function (i, obj) {
+                tm3 = parseInt(tm3) + parseInt(obj.value);
+            });
+
+            $('.clase12').each(function (i, obj) {
+                tf3 = parseInt(tf3) + parseInt(obj.value);
+            });
+            console.log(tm1);
+
+            $('#total7').html(tm1);
+            $('#total8').html(tf1);
+            $('#total9').html(tm2);
+            $('#total10').html(tf2);
+            $('#total11').html(tm3);
+            $('#total12').html(tf3);
+        }
+
+    function calculaTotales3() {
+
+            console.log('here');
+
+            var tm1 = 0;
+            var tf1 = 0;
+
+            var tm2 = 0;
+            var tf2 = 0;
+
+            var tm3 = 0;
+            var tf3 = 0;
+
+            $('.clase13').each(function (i, obj) {
+                tm1 = parseInt(tm1) + parseInt(obj.value);
+            });
+
+            $('.clase14').each(function (i, obj) {
+                tf1 = parseInt(tf1) + parseInt(obj.value);
+            });
+
+            $('.clase15').each(function (i, obj) {
+                tm2 = parseInt(tm2) + parseInt(obj.value);
+            });
+
+            $('.clase16').each(function (i, obj) {
+                tf2 = parseInt(tf2) + parseInt(obj.value);
+            });
+
+            $('.clase17').each(function (i, obj) {
+                tm3 = parseInt(tm3) + parseInt(obj.value);
+            });
+
+            $('.clase18').each(function (i, obj) {
+                tf3 = parseInt(tf3) + parseInt(obj.value);
+            });
+            console.log(tm1);
+
+            $('#total13').html(tm1);
+            $('#total14').html(tf1);
+            $('#total15').html(tm2);
+            $('#total16').html(tf2);
+            $('#total17').html(tm3);
+            $('#total18').html(tf3);
+        }
+
+        function calculaTotales0() {
+
+            console.log('here');
+
+            var tm1 = 0;
+            var tf1 = 0;
+           
+
+            $('.clase00').each(function (i, obj) {
+                tm1 = parseInt(tm1) + parseInt(obj.value);
+            });
+
+            $('.clase01').each(function (i, obj) {
+                tf1 = parseInt(tf1) + parseInt(obj.value);
+            });            
+
+            $('#total00').html(tm1);
+            $('#total01').html(tf1);
+           
+           
+        }
+
+    function losesFocus() {
         console.log("Focus Lost!");
     }
 
-    var ingresoSede = function (sede){
+    var ingresoSede = function (sede) {
         var formSede = $('#form_sede');
         var formulario = $('#form')[0];
         formSede.val(sede);
-        formulario.submit();        
+        formulario.submit();
         return true;
     };
 
@@ -677,27 +948,27 @@
 
             var col = document.getElementById("genero_id");
             var columna = col.value;
-            console.log('columna:',columna);
+            console.log('columna:', columna);
 
             var per = document.getElementById("periodo_id");
             var periodo = per.value;
-            console.log('periodo:',periodo);
+            console.log('periodo:', periodo);
 
             valor = document.getElementById("cantidad").value;
-            console.log('valor:',valor);
+            console.log('valor:', valor);
 
             row_id = document.getElementById('registro_id').value;
             fila = document.getElementById('fila').value;
-            console.log('fila:',fila);
+            console.log('fila:', fila);
 
             if (periodo === '1') {
-                if (columna === '1') { document.getElementById( fila +'c1').innerHTML = valor; }
-                if (columna === '2') { document.getElementById( fila +'c2').innerHTML = valor; }
-                document.getElementById( fila +'c3').innerHTML = parseInt(document.getElementById(fila +'c1').innerText) + parseInt(document.getElementById(fila +'c2').innerText);
+                if (columna === '1') { document.getElementById(fila + 'c1').innerHTML = valor; }
+                if (columna === '2') { document.getElementById(fila + 'c2').innerHTML = valor; }
+                document.getElementById(fila + 'c3').innerHTML = parseInt(document.getElementById(fila + 'c1').innerText) + parseInt(document.getElementById(fila + 'c2').innerText);
             } else {
-                if (columna === '1') { document.getElementById( fila +'c4').innerHTML = valor; }
-                if (columna === '2') { document.getElementById( fila +'c5').innerHTML = valor; }
-                document.getElementById( fila +'c6').innerHTML = parseInt(document.getElementById(fila +'c3').innerText) + parseInt(document.getElementById(fila +'c4').innerText);
+                if (columna === '1') { document.getElementById(fila + 'c4').innerHTML = valor; }
+                if (columna === '2') { document.getElementById(fila + 'c5').innerHTML = valor; }
+                document.getElementById(fila + 'c6').innerHTML = parseInt(document.getElementById(fila + 'c3').innerText) + parseInt(document.getElementById(fila + 'c4').innerText);
             }
 
             $('#modal-estudiante').modal('hide');
@@ -707,8 +978,8 @@
     }
 
     function updateInfoBefore() {
-       
-      
+
+
         if (confirm('Registrar Estadisticas ?')) {
 
             /*$.ajax({
@@ -735,19 +1006,19 @@
             valor = document.getElementById("cantidad").value;
             console.log(valor);
 
-            if(periodo === '1'){
-                if(columna === '1') {  document.getElementById('f4c1').innerHTML = valor; }
-                if(columna === '2') {  document.getElementById('f4c2').innerHTML = valor; }           
-                document.getElementById('f4c3').innerHTML = parseInt(document.getElementById ( "f4c1" ).innerText) + parseInt(document.getElementById ( "f4c2" ).innerText);
-            }else {
-                if(columna === '1') {  document.getElementById('f4c4').innerHTML = valor; }
-                if(columna === '2') {  document.getElementById('f4c5').innerHTML = valor; }           
-                document.getElementById('f4c6').innerHTML = parseInt(document.getElementById ( "f4c3" ).innerText) + parseInt(document.getElementById ( "f4c4" ).innerText);
+            if (periodo === '1') {
+                if (columna === '1') { document.getElementById('f4c1').innerHTML = valor; }
+                if (columna === '2') { document.getElementById('f4c2').innerHTML = valor; }
+                document.getElementById('f4c3').innerHTML = parseInt(document.getElementById("f4c1").innerText) + parseInt(document.getElementById("f4c2").innerText);
+            } else {
+                if (columna === '1') { document.getElementById('f4c4').innerHTML = valor; }
+                if (columna === '2') { document.getElementById('f4c5').innerHTML = valor; }
+                document.getElementById('f4c6').innerHTML = parseInt(document.getElementById("f4c3").innerText) + parseInt(document.getElementById("f4c4").innerText);
             }
 
             $('#modal-assign').modal('hide');
 
-           
+
 
 
 
@@ -756,13 +1027,12 @@
         return false;
     }
 
-    function loadData(gestion)
-    {
-        
+    function loadData(gestion) {
+
         console.log('gestion: ', gestion);
 
 
-        
+
         /*for(fila=1; fila<=4; fila++)
         {            
             //fila = 4;
@@ -776,133 +1046,316 @@
             document.getElementById('f' + fila + 'c6').innerHTML = parseInt(document.getElementById ( 'f' + fila + 'c3' ).innerText) + parseInt(document.getElementById ( 'f' + fila + 'c4' ).innerText);
         }*/
 
-        document.getElementById('label_gestion_est').innerHTML  = '<strong>Gestion: ' + gestion + '</strong>';
+        document.getElementById('label_gestion_est').innerHTML = '<strong>Gestion: ' + gestion + '</strong>';
         //document.getElementById('label_gestion_doc').innerHTML  ='<strong>Gestion: ' + gestion + '</strong>';
 
     }
 
-    function getRandomValue()
-    {
+    function getRandomValue() {
         return Math.floor(Math.random() * 101);
     }
 
-    $('#form_save_becas').on("click", function(){
-       
-        var r = confirm("¿Desea guardar el registro?");
-        if (r == false) {
-            return false;
-        }
-        
-        var formulario = document.getElementById("formBecas"); //$('#formBecas');
-        var formData = new FormData(formulario);
-       
-        formData.append('key1', 'value1');
-        console.log(formData);
-        $.ajax({
-            type: 'post',
-            url: Routing.generate('tecest_carrera_estadistica_becas_save'),
-            data: formData,
-            processData: false,
-            contentType: false,
-            beforeSend: function () {       
-                $("#messagebecas").append('<div class="text-center" id="message"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
-            },
-            success: function (data) {                  
-                $('#messagebecas').empty();
-                if(data.estado){ 
-                    $("#messagebecas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');                    
-                } else {
-                    $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');                   
-                }                
-            },
-            error: function(error){    
-                $('#message').empty();   
-                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');                 
-                //boton.show();
-            },
-        }); 
+    $('#form_save_becas').on("click", function () {
 
-       
+         swal({
+            title: "¿Grabar Datos?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+            .then(function (respuesta) {
+                if (respuesta) {
+                    var imagen = '{{ asset("img/loading.gif") }}';
+                    /*var r = confirm("¿Desea registrar la información ?");
+                    if (r == false) {
+                        return false;
+                    }*/
+
+                    var formulario = document.getElementById("formBecas"); //$('#formBecas');
+                    var formData = new FormData(formulario);
+
+                    formData.append('key1', 'value1');
+                    console.log(formData);
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('tecest_carrera_estadistica_becas_save'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            swal({
+                                title: "Registrando la informacion...",
+                                text: "Espere un momento por favor",
+                                icon: imagen,
+                                buttons: false
+                            });
+                            //$('#form_save_becas').attr("disabled", true);
+                            //$("#messagebecas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $('#form_save_becas').attr("disabled", false);
+                            $('#messagebecas').empty();
+                            if (data.estado) {
+                                //Swal.fire('la información ha sido registrada');
+                                $("#messagebecas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                            } else {
+                                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
+                            }
+                        },
+                        complete: function () {
+                            swal.stopLoading();
+                            swal.close();
+                            $(".messagebecas").fadeTo(3000, 1000).slideUp(1000, function () {
+                                $(".messagebecas").slideUp(1000);
+                            });
+                        },
+                        error: function (error) {
+                            $('#message').empty();
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                            //boton.show();
+                        },
+                    });
+
+                }
+
+            })
+
+
     });
 
-    $('#form_save_matriculas').on("click", function(){
-        console.log('form_save_matriculas');
-       var r = confirm("¿Desea guardar el registro?");
-       if (r == false) {
-           return false;
-       }
-       
-       var formulario = document.getElementById("formMatriculas"); //$('#formBecas');
-       var formData = new FormData(formulario);
-      
-       formData.append('key1', 'value1');
-       console.log(formData);
-       $.ajax({
-           type: 'post',
-           url: Routing.generate('tecest_carrera_estadistica_matriculas_save'),
-           data: formData,
-           processData: false,
-           contentType: false,
-           beforeSend: function () {       
-               $("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
-           },
-           success: function (data) {                  
-               $('#messagematriculas').empty();
-               if(data.estado){ 
-                   $("#messagematriculas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');                    
-               } else {
-                   $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');                   
-               }                
-           },
-           error: function(error){    
-               $('#message').empty();   
-               $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');                 
-               //boton.show();
-           },
-       });       
-      
-   });
+    $('#form_save_matriculas').on("click", function () {
+        
+        swal({
+            title: "¿Grabar Datos?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+            .then(function (respuesta) {
+                if (respuesta) {
+                    var imagen = '{{ asset("img/loading.gif") }}';
+                    //console.log('form_save_matriculas');
+                    /*var r = confirm("¿Desea Registrar Estadísticas el registro?");
+                    if (r == false) {
+                        return false;
+                    }*/
 
-   $('#form_save_cargos').on("click", function(){
-        console.log('form_save_cargos');
-       var r = confirm("¿Desea guardar el registro?");
-       if (r == false) {
-           return false;
-       }
-       
-       var formulario = document.getElementById("formCargos"); //$('#formBecas');
-       var formData = new FormData(formulario);
-      
-       formData.append('key1', 'value1');
-       console.log(formData);
-       $.ajax({
-           type: 'post',
-           url: Routing.generate('tecest_carrera_estadistica_cargos_save'),
-           data: formData,
-           processData: false,
-           contentType: false,
-           beforeSend: function () {       
-               $("#messagecargos").append('<div class="text-center" id="message"><img src="{{asset('img/loading.gif')}}" class="loading img-responsive" /></div>');
-           },
-           success: function (data) {                  
-               $('#messagecargos').empty();
-               if(data.estado){ 
-                   $("#messagecargos").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> '+data.msg+'</div>');                    
-               } else {
-                   $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> '+data.msg+'</div>');                   
-               }                
-           },
-           error: function(error){    
-               $('#message').empty();   
-               $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');                 
-               //boton.show();
-           },
-       }); 
+                    var formulario = document.getElementById("formMatriculas"); //$('#formBecas');
+                    var formData = new FormData(formulario);
+
+                    formData.append('key1', 'value1');
+                    console.log(formData);
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('tecest_carrera_estadistica_matriculas_save'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            swal({
+                                title: "Registrando la informacion...",
+                                text: "Espere un momento por favor",
+                                icon: imagen,
+                                buttons: false
+                            });
+                            //$("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $('#messagematriculas').empty();
+                            if (data.estado) {
+                                $("#messagematriculas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                            } else {
+                                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
+                            }
+                        },
+                        complete: function () {
+                            swal.stopLoading();
+                            swal.close();
+                            $(".messagematriculas").fadeTo(3000, 1000).slideUp(1000, function () {
+                                $(".messagematriculas").slideUp(1000);
+                            });
+                        },
+                        error: function (error) {
+                            $('#message').empty();
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                            //boton.show();
+                        },
+                    });
+
+
+                }
+
+            })
+
+    });
+
+    $('#form_save_cargos').on("click", function () {
+        
+        swal({
+            title: "¿Grabar Datos?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+            .then(function (respuesta) {
+                if (respuesta) {
+                    var imagen = '{{ asset("img/loading.gif") }}';
+                    //console.log('form_save_matriculas');
+                    /*var r = confirm("¿Desea Registrar Estadísticas el registro?");
+                    if (r == false) {
+                        return false;
+                    }*/
+
+                    var formulario = document.getElementById("formCargos"); //$('#formBecas');
+                    var formData = new FormData(formulario);
+
+                    formData.append('key1', 'value1');
+                    console.log(formData);
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('tecest_carrera_estadistica_cargos_save'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            swal({
+                                title: "Registrando la informacion...",
+                                text: "Espere un momento por favor",
+                                icon: imagen,
+                                buttons: false
+                            });
+                            //$("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $('#messagecargos').empty();
+                            if (data.estado) {
+                                $("#messagecargos").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                            } else {
+                                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
+                            }
+                        },
+                        complete: function () {
+                            swal.stopLoading();
+                            swal.close();
+                            $(".messagecargos").fadeTo(3000, 1000).slideUp(1000, function () {
+                                $(".messagecargos").slideUp(1000);
+                            });
+                        },
+                        error: function (error) {
+                            $('#message').empty();
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                            //boton.show();
+                        },
+                    });
+
+
+                }
+
+            })
+    });
+
+    $('#form_save_gral').on("click", function () {
+        
+        swal({
+            title: "¿Grabar Datos?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+            buttons: ["Cancelar", "Grabar"],
+        })
+            .then(function (respuesta) {
+                if (respuesta) {
+                    var imagen = '{{ asset("img/loading.gif") }}';
+                    //console.log('form_save_matriculas');
+                    /*var r = confirm("¿Desea Registrar Estadísticas el registro?");
+                    if (r == false) {
+                        return false;
+                    }*/
+
+                    var formulario = document.getElementById("formegresadostitulados"); //$('#formBecas');
+                    var formData = new FormData(formulario);
+
+                    formData.append('key1', 'value1');
+                    console.log(formData);
+                    
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('tecest_carrera_estadistica_titulados_save'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            swal({
+                                title: "Registrando la informacion...",
+                                text: "Espere un momento por favor",
+                                icon: imagen,
+                                buttons: false
+                            });
+                            //$("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $('#messagecargos').empty();
+                            if (data.estado) {
+                                $("#messagecargos").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                            } else {
+                                $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
+                            }
+                        },
+                        complete: function () {
+                            swal.stopLoading();
+                            swal.close();
+                            $(".messagecargos").fadeTo(3000, 1000).slideUp(1000, function () {
+                                $(".messagecargos").slideUp(1000);
+                            });
+                        },
+                        error: function (error) {
+                            $('#message').empty();
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                            //boton.show();
+                        },
+                    });
+                    
+
+                }
+
+            })
     });
 
    
 
 
-    </script>
+    var datoVacio = function (control) {
+        /*console.log('vacio?');
+        console.log(control.value);*/
+        if (control.value == "") { control.value = 0; }
+        if (control.value > 9999) { control.value = 0; }
+        if (control.value < 0) { control.value = 0; }
+        calculaTotales(control);
+    }
+
+    var datoVacio2 = function (control) {
+        /*console.log('vacio?');
+        console.log(control.value);*/
+        if (control.value == "") { control.value = 0; }
+        if (control.value > 9999) { control.value = 0; }
+        if (control.value < 0) { control.value = 0; }
+        calculaTotales2(control);
+    }
+
+    var datoVacio3 = function (control) {
+        /*console.log('vacio?');
+        console.log(control.value);*/
+        if (control.value == "") { control.value = 0; }
+        if (control.value > 9999) { control.value = 0; }
+        if (control.value < 0) { control.value = 0; }
+        calculaTotales3(control);
+    }
+
+
+
+
+</script>
 {% endblock %}
-    
