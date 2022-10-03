@@ -49,6 +49,7 @@ class MainInfoTecEstController extends Controller{
             'uni_infosede'       		=> $this->buildOptionUni('sie_tecest_sede_index', 'Ubicación Geográfica Sede/Sub Sede', $data)->createView(),
             'uni_statisticssede' 		=> $this->buildOptionUni('sie_tecest_sede_docenteadministrativo_index', 'Estadística de Personal', $data)->createView(),
             'uni_statistics'     		=> $this->buildOptionUni('tecest_carreras_index', 'Estadística de Estudiantes', $data)->createView(),
+            'closeform'            => $this->buildOptionUni('tecest_maininfotecest_closeope', 'Cerrar operativo', $data)->createView(),            
 
             ));    
     }
@@ -64,6 +65,72 @@ class MainInfoTecEstController extends Controller{
         $form =$form->add('next', 'submit', array('label' => "$nextButton", 'attr' => array('class' => 'btn btn-primary btn-md btn-block')));
         $form = $form->getForm();
         return $form;
+    }    
+
+    /** krlos
+     * the method to decrypt
+     */
+    private function kdecrypt($data){
+        $data = hex2bin($data);
+        return unserialize($data);
+    }
+    /** krlos
+     * the method to close ope
+     */
+    public function closeOpeAction(Request $request){
+        $form = $request->get('form');
+        $dataform = $this->kdecrypt($form['data']);
+        // $data    = bin2hex(serialize($form['data']));
+        ////////////////////////
+        $data=null;
+        $status= 404;
+        $msj='Ocurrio un error, por favor vuelva a intentarlo.';
+        $reporte = '';
+        $observations = null;
+        try{
+
+            $observations = null;
+            $em = $this->getDoctrine()->getManager();
+            $db = $em->getConnection();
+            $query = 'select * from sp_validacion_institutos_tecnicos_estadistico_web(?);';
+            $stmt = $db->prepare($query);
+            $params = array($dataform['sedeId']);
+            $stmt->execute($params);
+            $observations = $stmt->fetchAll();
+            // are there observations?
+            if($observations == null){
+                $data=null;
+                $status= 200;
+                $msj='Cierre correcto! No existen inconsistencias en el cierre...';
+                // miss save data about the operative to the universite data
+                // close oall year to the UnivSedeId
+                $objOperative = $em->getRepository('SieAppWebBundle:UnivRegistroConsolidacion')->findBy(array('univSede'=>$dataform['sedeId']));
+                if(sizeof($objOperative)>0){
+                    foreach ($objOperative as $value) {
+                        $value->setActivo(0);
+                        $em->persist($value);
+                    }
+                    $em->flush();
+                }
+            }
+            else{
+                $data=null;
+                $status= 200;
+                $msj='No se puedo cerrar el operativo, todavia tiene inconsistencias.';
+            }
+        }catch(Exception $e){
+            $data=null;
+            $status= 404;
+            $msj='Ocurrio un error al cerrar el operativo, por favor vuelva a intentarlo.';
+        }
+        $response = new JsonResponse($data,$status);
+        $response->headers->set('Content-Type', 'application/json');
+        $allData = array('data'=>$data,'status'=>$status,'msj'=>$msj,'observations'=>$observations);
+        // dump($allData);die;
+        return $response->setData($allData);
+        ////////////////////////
+
+
     }    
 
 }
