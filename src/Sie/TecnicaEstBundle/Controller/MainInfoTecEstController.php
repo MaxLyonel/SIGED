@@ -92,7 +92,7 @@ class MainInfoTecEstController extends Controller{
             $observations = null;
             $em = $this->getDoctrine()->getManager();
             $db = $em->getConnection();
-            $query = 'select * from sp_validacion_universidades_estadistico_web(?);';
+            $query = 'select * from sp_validacion_institutos_tecnicos_estadistico_web(?);';
             $stmt = $db->prepare($query);
             $params = array($dataform['sedeId']);
             $stmt->execute($params);
