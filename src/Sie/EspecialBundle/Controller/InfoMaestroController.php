@@ -272,7 +272,6 @@ class InfoMaestroController extends Controller {
 
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
-        //dump($form);die;       
 
         $persona = $this->get('sie_app_web.persona')->buscarPersonaPorCarnetComplemento($form);
         
@@ -311,7 +310,12 @@ class InfoMaestroController extends Controller {
             'nombre' => $form['nombre'],
             'fecha_nacimiento' => $form['fecha_nacimiento']
         ];
-
+        if ($request->get('nacionalidad')) {
+            //NA: nacional, EX: extranjero
+            $nacionalidad = $request->get('nacionalidad'); //EX o NA
+            $tipo_persona = ($nacionalidad == 'NA') ? 1 : 2;
+        }
+        
         $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
         $persona = array();
 
@@ -322,7 +326,8 @@ class InfoMaestroController extends Controller {
                 'primer_apellido' => $form['primer_apellido'],
                 'segundo_apellido' => $form['segundo_apellido'],
                 'nombre' => $form['nombre'],
-                'fecha_nacimiento' => $form['fecha_nacimiento']
+                'fecha_nacimiento' => $form['fecha_nacimiento'],
+                'tipo_persona' => $tipo_persona,
             ];
         }
 
@@ -340,6 +345,7 @@ class InfoMaestroController extends Controller {
             'persona' => serialize($persona),
             'institucion' => $form['institucion'],
             'gestion' => $form['gestion'],
+            'tipo_persona' => $tipo_persona
         ));
     }
 
@@ -356,13 +362,22 @@ class InfoMaestroController extends Controller {
 
         $fecha = str_replace('-','/',$persona['fecha_nacimiento']);
         $complemento = $persona['complemento'] == '0'? '':$persona['complemento'];
+        
+
+        $tipo_persona = 1;
+        if ($request->get('tipo_persona')) {
+            //NA: nacional, EX: extranjero            
+            $tipo_persona = ($request->get('tipo_persona') == "1") ? 1 : 2;
+        }
+
         $arrayDatosPersona = array(
             //'carnet'=>$form['carnet'],
             'complemento'=>$complemento,
             'paterno'=>$persona['primer_apellido'],
             'materno'=>$persona['segundo_apellido'],
             'nombre'=>$persona['nombre'],
-            'fecha_nacimiento' => $fecha
+            'fecha_nacimiento' => $fecha,
+            'tipo_persona' => $tipo_persona
         );
 
         $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['carnet'], $arrayDatosPersona, 'prod', 'academico');
@@ -389,12 +404,14 @@ class InfoMaestroController extends Controller {
                 $newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->findOneById($form['departamentoTipo']));
                 $newPersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($form['generoTipo']));
                 $newPersona->setSegipId(1);
+                
                 $newPersona->setIdiomaMaterno($em->getRepository('SieAppWebBundle:IdiomaTipo')->findOneById(0));
                 $newPersona->setSangreTipo($em->getRepository('SieAppWebBundle:SangreTipo')->findOneById(0));
                 $newPersona->setEstadocivilTipo($em->getRepository('SieAppWebBundle:EstadocivilTipo')->findOneById(0));
-                $newPersona->setRda($form['rda']);
+                $newPersona->setRda('0');
                 $newPersona->setEsvigente('t');
                 $newPersona->setActivo('t');
+                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find( $tipo_persona));
 
                 $em->persist($newPersona);
                 $em->flush();
