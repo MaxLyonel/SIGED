@@ -5,3 +5,9 @@ tecest_maininfotecest_index:
 # maininfouni_index:
 #     path:     /
 #     defaults: { _controller: SieTecnicaEstBundle:ExecutiveStaff:index }    
+
+tecest_maininfotecest_closeope:
+    path:     /closeope
+    defaults: { _controller: "SieTecnicaEstBundle:MainInfoTecEst:closeOpe"}
+    options:
+         expose: true
