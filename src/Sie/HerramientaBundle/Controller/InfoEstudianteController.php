@@ -2113,12 +2113,11 @@ class InfoEstudianteController extends Controller {
         $mensaje = "";
         $cedulaTipo = "";
 
-        if ($persona->getCedulaTipo() == null){
+        if ($persona->getCedulaTipo() === null){
             $cedulaTipo = 1;
         }else{
-            $cedulTipo = $persona->getCedulaTipo();
+            $cedulaTipo = $persona->getCedulaTipo()->getId();
         }
-
         
         if($persona){
             $datos = array(
@@ -2129,9 +2128,10 @@ class InfoEstudianteController extends Controller {
                 'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y'),
                 'tipo_persona' => $cedulaTipo
             );
+            
             if($persona->getCarnetIdentidad()){
                 $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona->getCarnetIdentidad(),$datos,'prod','academico');
-
+                
                 if($resultadoPersona){
                     $persona->setSegipId(1);
                     $persona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipo));
