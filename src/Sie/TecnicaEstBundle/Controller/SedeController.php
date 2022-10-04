@@ -80,24 +80,40 @@ class SedeController extends Controller
             $celular = $sedeSucursalArray->getTelefono2();
             $referenciaCelular = $sedeSucursalArray->getReferenciaTelefono2();
             $correo = $sedeSucursalArray->getEmail();
-            $inicioCalendarioAcademico = $sedeSucursalArray->getInicioCalendarioAcademico();
+            if($sedeSucursalArray->getInicioCalendarioAcademico()){
+                $inicioCalendarioAcademico = $sedeSucursalArray->getInicioCalendarioAcademico();
+                $inicioCalendarioAcademico = $inicioCalendarioAcademico->format('d-m-Y');
+            } else {
+                $inicioCalendarioAcademico = "";   
+            }            
             $fax = $sedeSucursalArray->getFax();
             $casilla = $sedeSucursalArray->getCasilla();
             $sitio = $sedeSucursalArray->getSitioWeb();
-            $departamento = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
-            $provincia = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getId();
-            $municipio = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getId();
-            $comunidad = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getId();
-            $latitud = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getCordx();
-            $longitud = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getCordy();
-            $zona = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getZona();
-            $direccion = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getDireccion();
+            if($sedeSucursalArray->getEstTecJuridicciongeografica()){
+                $departamento = $sedeSucursalArray->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
+                $provincia = $sedeSucursalArray->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getId();
+                $municipio = $sedeSucursalArray->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getId();
+                $comunidad = $sedeSucursalArray->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getId();
+                $latitud = $sedeSucursalArray->getEstTecJuridicciongeografica()->getCordx();
+                $longitud = $sedeSucursalArray->getEstTecJuridicciongeografica()->getCordy();
+                $zona = $sedeSucursalArray->getEstTecJuridicciongeografica()->getZona();
+                $direccion = $sedeSucursalArray->getEstTecJuridicciongeografica()->getDireccion();
+            } else {
+                $departamento = -1;
+                $provincia = -1;
+                $municipio = -1;
+                $comunidad = -1;
+                $latitud = "-63.588653";
+                $longitud = "-16.290154";
+                $zona = "";
+                $direccion = "";
+            }
         } else {
             $telefono = "";
             $celular = "";
             $referenciaCelular = "";
             $correo = "";
-            $inicioCalendarioAcademico = $fechaActual;
+            $inicioCalendarioAcademico = $fechaActual->format('d-m-Y');
             $fax = "";
             $casilla = "";
             $sitio = "";
@@ -117,7 +133,7 @@ class SedeController extends Controller
             'celular'=>$celular,
             'referenciaCelular'=>$referenciaCelular,
             'correo'=>$correo,
-            'inicioCalendarioAcademico'=>$inicioCalendarioAcademico->format('d-m-Y'),
+            'inicioCalendarioAcademico'=>$inicioCalendarioAcademico,
             'fax'=>$fax,
             'casilla'=>$casilla,
             'sitio'=>$sitio,
@@ -246,7 +262,7 @@ class SedeController extends Controller
   
         // / get provincias
         $objeto = $em->getRepository('SieAppWebBundle:LugarTipo')->findBy(array('lugarNivel' => 9, 'lugarTipo' => $lugarId));
-  
+
         $array = array();
         foreach ($objeto as $dato) {
             $array[] = array('id'=>$dato->getid(), 'nombre'=>$dato->getlugar());
@@ -353,25 +369,41 @@ class SedeController extends Controller
             $celular = $sedeSucursalArray->getTelefono2();
             $referenciaCelular = $sedeSucursalArray->getReferenciaTelefono2();
             $correo = $sedeSucursalArray->getEmail();
-            $inicioCalendarioAcademico = $sedeSucursalArray->getInicioCalendarioAcademico();
+            if($sedeSucursalArray->getInicioCalendarioAcademico()){
+                $inicioCalendarioAcademico = $sedeSucursalArray->getInicioCalendarioAcademico();
+                $inicioCalendarioAcademico = $inicioCalendarioAcademico->format('d-m-Y');
+            } else {
+                $inicioCalendarioAcademico = "";
+            }            
             $fax = $sedeSucursalArray->getFax();
             $casilla = $sedeSucursalArray->getCasilla();
             $sitio = $sedeSucursalArray->getSitioWeb();
-            $departamento = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
-            $provincia = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getId();
-            $municipio = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getId();
-            $comunidad = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getId();
-            $latitud = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getCordx();
-            $longitud = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getCordy();
-            $zona = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getZona();
-            $direccion = $sedeSucursalArray->getEstTecSede()->getEstTecJuridicciongeografica()->getDireccion();
+            if($sedeSucursalArray->getEstTecJuridicciongeografica()){
+                $departamento = $sedeSucursalArray->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getLugarTipo()->getId();
+                $provincia = $sedeSucursalArray->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getLugarTipo()->getId();
+                $municipio = $sedeSucursalArray->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getLugarTipo()->getId();
+                $comunidad = $sedeSucursalArray->getEstTecJuridicciongeografica()->getLugarTipoLocalidad()->getId();
+                $latitud = $sedeSucursalArray->getEstTecJuridicciongeografica()->getCordx();
+                $longitud = $sedeSucursalArray->getEstTecJuridicciongeografica()->getCordy();
+                $zona = $sedeSucursalArray->getEstTecJuridicciongeografica()->getZona();
+                $direccion = $sedeSucursalArray->getEstTecJuridicciongeografica()->getDireccion();
+            } else {
+                $departamento = -1;
+                $provincia = -1;
+                $municipio = -1;
+                $comunidad = -1;
+                $latitud = "-63.588653";
+                $longitud = "-16.290154";
+                $zona = "";
+                $direccion = "";
+            }            
         } else {
             $sedeSucursalId = 0;
             $telefono = "";
             $celular = "";
             $referenciaCelular = "";
             $correo = "";
-            $inicioCalendarioAcademico = $fechaActual;
+            $inicioCalendarioAcademico = $fechaActual->format('d-m-Y');
             $fax = "";
             $casilla = "";
             $sitio = "";
@@ -394,7 +426,7 @@ class SedeController extends Controller
             'celular'=>$celular,
             'referenciaCelular'=>$referenciaCelular,
             'correo'=>$correo,
-            'inicioCalendarioAcademico'=>$inicioCalendarioAcademico->format('d-m-Y'),
+            'inicioCalendarioAcademico'=>$inicioCalendarioAcademico,
             'fax'=>$fax,
             'casilla'=>$casilla,
             'sitio'=>$sitio,
@@ -500,8 +532,8 @@ class SedeController extends Controller
             $em->persist($sedeSucursalEntity);
 
             $sedeEntity = $em->getRepository('SieAppWebBundle:EstTecSede')->find($sedeId);
-            $univJuridicciongeograficaEntity = $sedeEntity->getEstTecJuridicciongeografica();
-            if(count($univJuridicciongeograficaEntity) <= 0){             
+            $univJuridicciongeograficaEntity = $sedeSucursalEntity->getEstTecJuridicciongeografica();
+            if(!$sedeSucursalEntity->getEstTecJuridicciongeografica()){             
                 $univJuridicciongeograficaEntity = new EstTecJurisdiccionGeografica();
                 $univJuridicciongeograficaEntity->setFechaRegistro(new \DateTime('now'));
             } 
@@ -514,10 +546,10 @@ class SedeController extends Controller
             $univJuridicciongeograficaEntity->setFechaModificacion(new \DateTime('now'));
             $em->persist($univJuridicciongeograficaEntity);
 
-            if(count($sedeEntity->getEstTecJuridicciongeografica()) <= 0){             
-                $sedeEntity->setEstTecJuridicciongeografica($univJuridicciongeograficaEntity);
-                $sedeEntity->setFechaModificacion(new \DateTime('now'));
-                $em->persist($sedeEntity);
+            if(!$sedeSucursalEntity->getEstTecJuridicciongeografica()){             
+                $sedeSucursalEntity->setEstTecJuridicciongeografica($univJuridicciongeograficaEntity);
+                $sedeSucursalEntity->setFechaModificacion(new \DateTime('now'));
+                $em->persist($sedeSucursalEntity);
             } 
 
             $em->flush();

@@ -46,6 +46,18 @@ class DefaultController extends Controller
             $c = $c + 1;
             $sedes[$c]['id'] = bin2hex(serialize($registro->getId()));  
             $sedes[$c]['nombre'] = $registro->getSede();     
+            $sedeSucursalEntity = $em->getRepository('SieAppWebBundle:EstTecSedeSucursal')->findBy(array('estTecSede'=>$registro->getId(), 'gestionTipo'=>$gestionActual));
+            if(count($sedeSucursalEntity)>0){
+                $sedeSucursalArray = $sedeSucursalEntity[0];
+                if($sedeSucursalArray->getEstTecJuridicciongeografica()){
+                    $sedes[$c]['direccion'] = $sedeSucursalArray->getEstTecJuridicciongeografica()->getDireccion(); 
+                } else {
+                    $sedes[$c]['direccion'] = ""; 
+                }
+            } else {
+                $sedes[$c]['direccion'] = ""; 
+            }
+            
             //$sedes[$c]['direccion'] = $registro->getEstTecJuridicciongeografica()->getDireccion();        
         }
 
