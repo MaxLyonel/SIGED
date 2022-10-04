@@ -46,7 +46,7 @@ class DefaultController extends Controller
             $c = $c + 1;
             $sedes[$c]['id'] = bin2hex(serialize($registro->getId()));  
             $sedes[$c]['nombre'] = $registro->getSede();     
-            $sedes[$c]['direccion'] = $registro->getEstTecJuridicciongeografica()->getDireccion();        
+            //$sedes[$c]['direccion'] = $registro->getEstTecJuridicciongeografica()->getDireccion();        
         }
 
         $entityEstTecSedeCentral = $em->getRepository('SieAppWebBundle:EstTecSede')->findOneBy(array('usuario' => $id_usuario, 'estTecSedeTipo' => 1));
