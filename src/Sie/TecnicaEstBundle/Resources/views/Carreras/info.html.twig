@@ -151,65 +151,65 @@
 
                                     <div class="col-md-10">
 
-                                    <div class="formatallstaff" style="width:70% ;">
-                                    <form name="formegresadostitulados" method="post" role="form" id="formegresadostitulados">
-                                    <table id="table1" class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th width="50%" style="text-align:center">
-                                                    <strong>TITULADOS/EGRESADOS EN LA GESTION {{ gestion_id }}</strong>
-                                                </th>
-                                                <th style="text-align:center"><strong>Masculino</strong></th>
-                                                <th style="text-align:center"><strong>Femenino</strong></th>
-                                
-                                            </tr>
-                                
-                                        </thead>
-                                        <tbody>
+                                        <div class="formatallstaff" style="width:70% ;">
+                                            <form name="formegresadostitulados" method="post" role="form" id="formegresadostitulados">
+                                            <table id="table1" class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="50%" style="text-align:center">
+                                                            <strong>TITULADOS/EGRESADOS EN LA GESTION {{ gestion_id }}</strong>
+                                                        </th>
+                                                        <th style="text-align:center"><strong>Masculino</strong></th>
+                                                        <th style="text-align:center"><strong>Femenino</strong></th>
+                                        
+                                                    </tr>
+                                        
+                                                </thead>
+                                                <tbody>
 
-                                            {% for key, entity in data.filas_egresados %}
-                                            <tr>
-                                                <td> <strong> {{ entity.matricula }} </strong></td>
-                                                
-                                                    <td class="success" id="gaf{{ key + 1 }}c1">
-                                                    <input type="number" min="0" max="9999"
-                                                        id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
-                                                        value="{{ entity.m1 }}"
-                                                        onclick="calculaTotales0()"
-                                                        oninput="calculaTotales0()"
-                                                        class="form-control clase00" 
-                                                        onclick="this.select();" onblur="datoVacio(this)" />
-                                                </td>
-                                                <td class="success" id="gaf{{ key + 1 }}c2">
-                                                    <input type="number" min="0" max="9999"
-                                                        id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]"
-                                                        value="{{ entity.f1 }}"
-                                                        onclick="calculaTotales0()"
-                                                        oninput="calculaTotales0()"
-                                                        class="form-control clase01" 
-                                                        onclick="this.select();" onblur="datoVacio(this)" />
-                                                </td>
-                                            </tr>
-                                            {% endfor %}
+                                                    {% for key, entity in data.filas_egresados %}
+                                                    <tr>
+                                                        <td> <strong> {{ entity.matricula }} </strong></td>
+                                                        
+                                                            <td class="success" id="gaf{{ key + 1 }}c1">
+                                                            <input type="number" min="0" max="9999"
+                                                                id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
+                                                                value="{{ entity.m1 }}"
+                                                                onclick="calculaTotales0()"
+                                                                oninput="calculaTotales0()"
+                                                                class="form-control clase00" 
+                                                                onclick="this.select();" onblur="datoVacio(this)" />
+                                                        </td>
+                                                        <td class="success" id="gaf{{ key + 1 }}c2">
+                                                            <input type="number" min="0" max="9999"
+                                                                id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]"
+                                                                value="{{ entity.f1 }}"
+                                                                onclick="calculaTotales0()"
+                                                                oninput="calculaTotales0()"
+                                                                class="form-control clase01" 
+                                                                onclick="this.select();" onblur="datoVacio(this)" />
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
 
-                                            <tr>
-                                                <th>TOTALES</th>
-                                                <th id="total00">{{ totales0[0].m1}}</th>                                                
-                                                <th id="total01">{{ totales0[0].f1}}</th>                                                       
-                                            </tr>
+                                                    <tr>
+                                                        <th>TOTALES</th>
+                                                        <th id="total00">{{ totales0[0].m1}}</th>                                                
+                                                        <th id="total01">{{ totales0[0].f1}}</th>                                                       
+                                                    </tr>
 
-                                            <tr>
-                                                <td> </td>                                                       
-                                                <td colspan="2"> <a href="#" class="btn btn-success btn-block" id="form_save_gral">Grabar Estadisticas</a> </td>
-                                               
-                                            </tr>
+                                                    <tr>
+                                                        <td> </td>                                                       
+                                                        <td colspan="2"> <a href="#" class="btn btn-success btn-block" id="form_save_gral">Grabar Estadisticas</a> </td>
+                                                    
+                                                    </tr>
 
 
-                                        </tbody>
-                                    </table>
-                                    </form>
-                                </div>
-                                <br>
+                                                </tbody>
+                                            </table>
+                                            </form>
+                                        </div>
+                                        <br>
 
                                         <div class="alert alert-success fa-2xs">
                                             <span class="alert-icon"><i class="fa fa-user"></i></span>
@@ -525,7 +525,7 @@
                                             <div class="notification-info">
                                                 <ul class="clearfix notification-meta">
                                                     <li class="pull-left notification-sender"><span><strong>REGISTRO DE
-                                                                DOCENTES ASIGNADOS A LA CARRERA</strong></span></li>
+                                                                JEFE DE CARRERA Y DOCENTES ASIGNADOS A LA CARRERA</strong></span></li>
                                                     <li class="pull-right notification-sender" id="label_gestion_est">
                                                         <strong>GESTION: {{ gestion_id }}</strong></li>
                                                 </ul>
