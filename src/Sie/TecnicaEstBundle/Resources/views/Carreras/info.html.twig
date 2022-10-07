@@ -58,15 +58,15 @@
         <ol class="breadcrumb">
             <li>
                 <i class="fa fa-home"></i>
-                <a href="{{path('maininfouni_index')}}">Registro de Información</a>
+                <a href="{{path('tecest_maininfotecest_index')}}">Menu Principal</a>
                 <i class="fa fa-angle-right"></i>
             </li>
             <li>
                 <i class="fa fa-home"></i>
-                <a href="{{path('carreras_index')}}">Carreras</a>
+                <a href="{{path('tecest_carreras_index')}}">Carreras</a>
                 <i class="fa fa-angle-right"></i>
             </li>
-            <li class="active">Administracion de Carreras - Estadisticas</li>
+            <li class="active">Estadísticas</li>
         </ol>
     </div>
     <!-- /.breadcrumb-wrapper -->
@@ -100,9 +100,7 @@
 
                                         <div class="table-responsive mb-20">
 
-                                            <div class="alert yearOld" style="text-align: center;">
-                                                <strong>OPERATIVOS</strong>
-                                            </div>
+                                            
                                             <div class="formatyears">
 
                                                 <table class="table table-bordered">
@@ -152,6 +150,8 @@
                                     <div class="col-md-10">
 
                                         <div class="formatallstaff" style="width:70% ;">
+                                            <div class="messageegresadostitulados" id="messageegresadostitulados"></div> 
+
                                             <form name="formegresadostitulados" method="post" role="form" id="formegresadostitulados">
                                             <table id="table1" class="table table-bordered">
                                                 <thead>
@@ -216,7 +216,7 @@
                                             <div class="notification-info">
                                                 <ul class="clearfix notification-meta">
                                                     <li class="pull-left notification-sender"><span><strong>REGISTRO DE
-                                                                ESTUDIANTES SEGUN TIPO DE BECA POR GENERO EN LA GESTION
+                                                                ESTUDIANTES SEGUN TIPO DE BECA Y GENERO EN LA GESTION
                                                                 </strong></span></li>
                                                     <li class="pull-right notification-sender" id="label_gestion_est">
                                                         <strong>GESTION: {{ gestion_id }}</strong></li>
@@ -525,7 +525,7 @@
                                             <div class="notification-info">
                                                 <ul class="clearfix notification-meta">
                                                     <li class="pull-left notification-sender"><span><strong>REGISTRO DE
-                                                                JEFE DE CARRERA ASIGNADOS A LA CARRERA</strong></span></li>
+                                                                JEFES DE CARRERA ASIGNADOS A LA CARRERA</strong></span></li>
                                                     <li class="pull-right notification-sender" id="label_gestion_est">
                                                         <strong>GESTION: {{ gestion_id }}</strong></li>
                                                 </ul>
@@ -1297,9 +1297,9 @@
                             //$("#messagematriculas").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
                         },
                         success: function (data) {
-                            $('#messagecargos').empty();
+                            $('#messageegresadostitulados').empty();
                             if (data.estado) {
-                                $("#messagecargos").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                                $("#messageegresadostitulados").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
                             } else {
                                 $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
                             }
@@ -1307,8 +1307,8 @@
                         complete: function () {
                             swal.stopLoading();
                             swal.close();
-                            $(".messagecargos").fadeTo(3000, 1000).slideUp(1000, function () {
-                                $(".messagecargos").slideUp(1000);
+                            $(".messageegresadostitulados").fadeTo(3000, 1000).slideUp(1000, function () {
+                                $(".messageegresadostitulados").slideUp(1000);
                             });
                         },
                         error: function (error) {
