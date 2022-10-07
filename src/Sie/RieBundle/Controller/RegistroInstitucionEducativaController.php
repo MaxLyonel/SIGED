@@ -635,7 +635,7 @@ class RegistroInstitucionEducativaController extends Controller {
         
         $em = $this->getDoctrine()->getManager();
         switch($id){
-            case '9': //instituto técnico Y técnologico
+            case '999': //instituto técnico Y técnologico
                 $nuevoArray = array();
                 //areas técnicas
                 $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findBy(array('institucioneducativaTipo' => $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find(7)));
@@ -658,7 +658,7 @@ class RegistroInstitucionEducativaController extends Controller {
                 }
             break;
             default: //instituto técnico ó tecnológico
-                $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findBy(array('institucioneducativaTipo' => $em->getRepository('SieAppWebBundle:InstitucioneducativaTipo')->find($id)));
+                $datos = $em->getRepository('SieAppWebBundle:TtecAreaFormacionTipo')->findAll();
                 $nuevoArray = array();
                 foreach($datos as $dato){
                     $nuevoArray[$dato->getId()] = $dato->getAreaFormacion();
