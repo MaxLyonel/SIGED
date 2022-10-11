@@ -283,6 +283,9 @@
                                                                   <td>
                                                                         <a style="border-radius: 10px;" class="btn btn-primary btn" @click="downloadTemplateFile(registeredStaff.documentos_acad)"> <i class="fa fa-file-pdf-o fa-1x"></i></a>                                                            
                                                                   </td>
+                                                                  <td>
+                                                                        <a style="border-radius: 10px;" class="btn btn-info btn" @click="downloadTemplateFile(registeredStaff.documentos_firma)"> <i class="fa fa-file-pdf-o fa-1x"></i></a>                                                            
+                                                                  </td>
                                                                 </tr>
                                                                 </table>
         											        </td>
@@ -483,14 +486,14 @@
     											<div v-if="swperson">
                                                 </br>
                                                 <div class="alert alert-success" role="alert">
-                                                  Completar Información
+                                                  Completar Información (*) Requerido
                                                 </div>
                                                 
                                                 <form role="form" class="formatk">
                                                     <div class="row">
 
                                                       <div class="col-sm-6">
-                                                      <label for="Cargo">Cargo</label>
+                                                      <label for="Cargo">Cargo (*)</label>
                                                         <select name="arrGenero" id="idarrGenero" class="" v-model="dataPerson.cargo">  
                                                           <option v-for=" training in DBTraining " :value="training.id">${training.cargo}</option>
                                                           
@@ -498,7 +501,7 @@
                                                       </div>
 
                                                       <div class="col-sm-6">
-                                                      <label for="Formacion">Formación</label>
+                                                      <label for="Formacion">Formación (*)</label>
                                                         <select name="arrGenero" id="idarrGenero" class="" v-model="dataPerson.formacion">  
                                                           <option v-for=" position in DBPosition" :value="position.id">${position.cargo}</option>
                                                         </select>
@@ -513,7 +516,7 @@
     					                              <input type="text" class="form-control" placeholder="Referencia" v-model="dataPerson.ref" >
     					                              </div>
     					                              <div class="col-sm-3">
-    					                              <label for="telefono">Telefono</label>
+    					                              <label for="telefono">Telefono (*)</label>
     					                                  <input type="text" class="form-control" placeholder="Telefono"  maxlength="8" autocomplete="off" style="text-transform:uppercase" v-model="dataPerson.telefono">
     					                              </div>
 
@@ -530,7 +533,7 @@
     					                            <div class="row">
 
                                                       <div class="col-sm-3">
-                                                      <label for="email(s)">email</label>
+                                                      <label for="email(s)">email (*)</label>
                                                           <input type="text" class="form-control" style="text-transform: lowercase;" placeholder="email"  autocomplete="off" v-model="dataPerson.email">
                                                       </div>
 
@@ -542,19 +545,26 @@
 
 
     					                              <div class="col-sm-6">
-    					                              <label for="formaciondescripcion">Formacion descripcion</label>
+    					                              <label for="formaciondescripcion">Formacion descripcion (*)</label>
                                                           <textarea class="" id="message_input" rows="3"  v-model="dataPerson.formaciondescripcion" placeholder="Formacion descripcion "></textarea>
     					                              </div>
     					                              <div class="col-sm-3" >
-    					                              <label for="documentos_acad">Documentos Academicos</label>
+    					                              <label for="documentos_acad">Documentos Academicos (*)</label>
     					                                {# <input type="text" class="form-control" id="form_idfecnac" placeholder="documentos_acad" v-model="dataPerson.documentos_acad"> #}
                                                           <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
     					                              </div>
+
+                                                      <div class="col-sm-3" >
+                                                        <label for="documentos_acad">Registro de Firma (*)</label>
+                                                        {# <input type="text" class="form-control" id="form_idfecnac" placeholder="documentos_acad" v-model="dataPerson.documentos_acad"> #}
+                                                            <input type="file" name="imageFirma" @change="getImageFirma" accept="file/*" class="form-control" id="archivoAdjuntoFirmaId">
+                                                        </div>
+
     					                            </div>
 
     					                            <div class="row">
     					                              <div class="col-sm-3">
-    					                              <label for="gestion_nombramiento_id">Gestión Nombramiento</label>
+    					                              <label for="gestion_nombramiento_id">Gestión Nombramiento (*)</label>
     					                              <input type="text" class="form-control" placeholder="AAAA" v-model="dataPerson.gestion_nombramiento_id" >
     					                              </div>
     					                              <div class="col-sm-3">
@@ -567,7 +577,7 @@
     					                                  <input type="text" class="form-control" id="form_ratificacion_anio_fin"placeholder="AAAA" v-model="dataPerson.ratificacion_anio_fin">
     					                              </div>
     					                              <div class="col-sm-3" >
-    					                              <label for="fecha_registro_firma">Fecha registro firma</label>
+    					                              <label for="fecha_registro_firma">Fecha registro firma (*)</label>
     					                                <input type="text" class="form-control" id="form_idfecnac" placeholder="dd-mm-aaaa" v-model="dataPerson.fecha_registro_firma">
     					                              </div>
     					                            </div>
@@ -744,6 +754,13 @@
                                                             {# <input type="text" class="form-control" id="form_idfecnac" placeholder="documentos_acad" v-model="dataPerson.documentos_acad"> #}
                                                               <input type="file" name="image" @change="getImage" accept="file/*" class="form-control" id="archivoAdjuntoId">
                                                           </div>
+
+                                                          <div class="col-sm-3" >
+                                                            <label for="documentos_acad">Registro de Firma (*)</label>
+                                                            {# <input type="text" class="form-control" id="form_idfecnac" placeholder="documentos_acad" v-model="dataPerson.documentos_acad"> #}
+                                                                <input type="file" name="imageFirma" @change="getImageFirma" accept="file/*" class="form-control" id="archivoAdjuntoFirmaId">
+                                                            </div>
+
                                                         </div>
 
                                                         <div class="row">
@@ -810,6 +827,7 @@
 
                 justificacion: '',
                 informe: '',
+                informeFirma: '',
                 urlreporte: '',
                 messagevalidatesegip: '',
 
@@ -893,6 +911,33 @@
                         }
                     }
                     this.informe = event.target.files[0];
+                },                 
+                getImageFirma: function(event){
+                    var informeFirma = event.target.files[0];
+                    var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+                    if(!allowedExtensions.exec(event.target.value)){
+                        event.target.value = '';
+                        Swal.fire(
+                              'Archivo incorrecto!',
+                              'El archivo adjunto debe ser una imagen o un archivo pdf',
+                              'warning'
+                            );
+                        this.informeFirma = '';
+                        return false;
+                    }else{
+                        var megas = (informeFirma.size / 1024)/1024;
+                        if (megas > 2) {
+                            event.target.value = '';
+                            Swal.fire(
+                              'Tamaño no permitido!',
+                              'El archivo debe tener un tamaño menor a 2MB',
+                              'warning'
+                            );
+                            this.informeFirma = '';
+                            return false;
+                        }
+                    }
+                    this.informeFirma = event.target.files[0];
                 },                 
                 getAllOperative: function(sedeId){
                     
@@ -1092,6 +1137,8 @@
                     axios.get(Routing.generate('tecest_staff_lookforperson', this.DBsearch))
                     .then(response => {
                         if (response.status == 200) {
+
+                            console.log(response); 
                         	
                         	this.dataPerson = response.data.arrPerson;
 
@@ -1117,6 +1164,9 @@
 
                 registerNewPersonStaff: function(yearchoose){
 
+                    console.log(this.dataPerson.cargo);
+                    let existe_firma =  this.informeFirma.length;
+
                     if (typeof this.informe != 'object') {
                         Swal.fire(
                         'Adjuntar Documentos',
@@ -1125,6 +1175,65 @@
                         );
                         return;
                     }                    
+
+                    if (existe_firma == 0) {
+                        Swal.fire(
+                        'Adjuntar Firma',
+                        'Debe adjuntar el documento de la Firma, puede ser un archivo de imagen o PDF',
+                        'warning'
+                        );
+                        return;
+                    }                           
+
+                    if (!this.dataPerson.cargo) {
+                        Swal.fire(
+                        'Completar Informacion',
+                        'Debe Seleccionar un cargo',
+                        'warning'
+                        );
+                        return;
+                    }       
+                    if (!this.dataPerson.formacion) {
+                        Swal.fire(
+                        'Completar Informacion',
+                        'Debe Seleccionar la formación académica',
+                        'warning'
+                        );
+                        return;
+                    }       
+                    if (!this.dataPerson.telefono) {
+                        Swal.fire(
+                        'Completar Informacion',
+                        'Debe registrar teléfono',
+                        'warning'
+                        );
+                        return;
+                    }       
+                    if (!this.dataPerson.email) {
+                        Swal.fire(
+                        'Completar Informacion',
+                        'Debe registrar un correo electronico',
+                        'warning'
+                        );
+                        return;
+                    }       
+                    if (!this.dataPerson.formaciondescripcion) {
+                        Swal.fire(
+                        'Completar Informacion',
+                        'Debe registrar una descripcion breve de la formación académica',
+                        'warning'
+                        );
+                        return;
+                    }       
+
+                    if (!this.dataPerson.fecha_registro_firma) {
+                        Swal.fire(
+                        'Completar Informacion',
+                        'Debe registrar la fecha de registro de la firma autorizada ',
+                        'warning'
+                        );
+                        return;
+                    }       
 
                     Swal.fire({
                         title: 'Registrar Personal?',
@@ -1142,6 +1251,8 @@
                             this.dataPerson.sedeId = this.sedeId;
                             data.append('datos', JSON.stringify(this.dataPerson));
                             data.append('informe', this.informe);
+                            data.append('informeFirma', this.informeFirma);
+                            console.log(this.informeFirma);
                             // data.append('yearchoose', yearchoose);
                             // data.append('sedeId', this.sedeId);
                             this.arrRegisteredStaff = [];                          
@@ -1289,6 +1400,7 @@
                             var data = new FormData();
                             data.append('datos', JSON.stringify(this.dataPersonEdit));
                             data.append('informe', this.informe);
+                            data.append('informeFirma', this.informeFirma);
                             // data.append('yearchoose', yearchoose);
                             // data.append('sedeId', this.sedeId);
                             this.arrRegisteredStaff = [];                          
