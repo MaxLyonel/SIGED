@@ -175,19 +175,22 @@
                                                             <input type="number" min="0" max="9999"
                                                                 id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
                                                                 value="{{ entity.m1 }}"
+                                                                onclick="this.select();"
                                                                 onclick="calculaTotales0()"
                                                                 oninput="calculaTotales0()"
                                                                 class="form-control clase00" 
-                                                                onclick="this.select();" onblur="datoVacio(this)" />
+                                                                onblur="datoVacio(this)" />
                                                         </td>
                                                         <td class="success" id="gaf{{ key + 1 }}c2">
                                                             <input type="number" min="0" max="9999"
                                                                 id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]"
                                                                 value="{{ entity.f1 }}"
+                                                                onclick="this.select();"
                                                                 onclick="calculaTotales0()"
                                                                 oninput="calculaTotales0()"
                                                                 class="form-control clase01" 
-                                                                onclick="this.select();" onblur="datoVacio(this)" />
+                                                                onblur="datoVacio(this)" />
+                                                                
                                                         </td>
                                                     </tr>
                                                     {% endfor %}
@@ -285,51 +288,57 @@
                                                                 <input type="number" min="0" max="9999"
                                                                     id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
                                                                     value="{{ entity.m1 }}"
+                                                                    onclick="this.select();"
                                                                     onclick="calculaTotales()"
                                                                     oninput="calculaTotales()"
                                                                     class="form-control clase1" 
-                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                    onblur="datoVacio(this)" />
                                                             </td>
                                                             <td class="success" id="af{{ key + 1 }}c2">
                                                                 <input type="number" min="0" max="9999"
                                                                     id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]"
                                                                     value="{{ entity.f1 }}"
+                                                                    onclick="this.select();"
                                                                     onclick="calculaTotales()"
                                                                     oninput="calculaTotales()"
                                                                     class="form-control clase2" 
-                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                    onblur="datoVacio(this)" />
                                                             </td>
                                                             <td class="success" id="af{{ key + 1 }}c1">
                                                                 <input type="number" min="0" max="9999"
                                                                     id="{{ entity.idm2 }}" name="form[{{entity.idm2}}]"
                                                                     class="form-control clase3" value="{{ entity.m2 }}"
+                                                                    onclick="this.select();"
                                                                     onclick="calculaTotales()"
                                                                     oninput="calculaTotales()"                                                                   
-                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                    onblur="datoVacio(this)" />
                                                             </td>
                                                             <td class="success" id="af{{ key + 1 }}c2">
                                                                 <input type="number" min="0" max="9999"
                                                                     id="{{ entity.idf2 }}" name="form[{{entity.idf2}}]"
                                                                     class="form-control clase4" value="{{ entity.f2 }}"
+                                                                    onclick="this.select();"
                                                                     onclick="calculaTotales()"
                                                                     oninput="calculaTotales()"                                                                   
-                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                    onblur="datoVacio(this)" />
                                                             </td>
                                                             <td class="success" id="af{{ key + 1 }}c1">
                                                                 <input type="number" min="0" max="9999"
                                                                     id="{{ entity.idm3 }}" name="form[{{entity.idm3}}]"
                                                                     class="form-control clase5" value="{{ entity.m3 }}"
+                                                                    onclick="this.select();"
                                                                     onclick="calculaTotales()"
                                                                     oninput="calculaTotales()"                                                                    
-                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                    onblur="datoVacio(this)" />
                                                             </td>
                                                             <td class="success" id="af{{ key + 1 }}c2">
                                                                 <input type="number" min="0" max="9999"
                                                                     id="{{ entity.idf3 }}" name="form[{{entity.idf3}}]"
                                                                     class="form-control clase6" value="{{ entity.f3 }}"
+                                                                    onclick="this.select();"
                                                                     onclick="calculaTotales()"
                                                                     oninput="calculaTotales()"                                                                   
-                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                    onblur="datoVacio(this)" />
                                                             </td>
                                                         </tr>
                                                         {% endfor %}
@@ -371,14 +380,15 @@
 
 
                                         <hr>
-
+                                        <div ref="tercero" id="tercero"></div>
                                         <div class="alert alert-warning fa-2xs">
                                             <span class="alert-icon"><i class="fa fa-file"></i></span>
                                             <div class="notification-info">
                                                 <ul class="clearfix notification-meta">
-                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE
-                                                                ESTUDIANTES MATRICULADOS POR GENERO Y REGIMEN DE
-                                                                ESTUDIO</strong></span></li>
+                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE ESTUDIANTES
+                                                        POR TIPO DE MATRICULA Y GENERO EN LA
+                                                        GESTION Y
+                                                        PERIODO</strong></span></li>
                                                     <li class="pull-right notification-sender" id="label_gestion_est">
                                                         <strong>GESTION: {{ gestion_id }}</strong></li>
                                                 </ul>
@@ -520,6 +530,10 @@
 
                                         <hr>
 
+                                        {#
+
+                                        <div ref="cuarto" id="cuarto"></div>
+
                                         <div class="alert alert-danger fa-2xs">
                                             <span class="alert-icon"><i class="fa fa-users"></i></span>
                                             <div class="notification-info">
@@ -657,6 +671,7 @@
                                                 </table>
                                             </form>
                                         </div>
+                                        #}
 
 
 
@@ -1164,6 +1179,8 @@
                         },
                         success: function (data) {
                             $('#messagematriculas').empty();
+                            document.getElementById("tercero").scrollIntoView();
+                        
                             if (data.estado) {
                                 $("#messagematriculas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
                             } else {
@@ -1232,6 +1249,9 @@
                         success: function (data) {
                             $('#messagecargos').empty();
                             if (data.estado) {
+                                document.getElementById("cuarto").scrollIntoView();
+                                //window.location.href = "#cuarto";
+                                //document.getElementById("cuarto").scrollIntoView();
                                 $("#messagecargos").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
                             } else {
                                 $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
