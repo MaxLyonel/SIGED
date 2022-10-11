@@ -443,7 +443,7 @@ class TramiteInclusionCalificacionController extends Controller {
 
                 $idTramite = $registroTramite['idtramite'];
 
-                 $msg = "El Tramite ".$registroTramite['msg']." fue guardado y enviado exitosamente";
+                 $msg = "El Tramite ".$registroTramite['msg']." fue guardado y enviado exitosamente...";
 
             }else{
                 // RECUPERAMOS EL OPERATIVO DONDE SE INICIO EL TRAMITE Y LO AGREGAMOS AL ARRAY DE DATOS
@@ -471,7 +471,7 @@ class TramiteInclusionCalificacionController extends Controller {
                     return $response;
                 }
 
-                $msg = "El Tramite ".$registroTramite['msg']." fue enviado exitosamente";
+                $msg = "El Tramite ".$registroTramite['msg']." fue enviado exitosamente...";
 
                 $request->getSession()
                         ->getFlashBag()
@@ -1601,7 +1601,29 @@ class TramiteInclusionCalificacionController extends Controller {
         $response->headers->set('Pragma', 'no-cache');
         $response->headers->set('Expires', '0');
         return $response;
-    }     
+    }    
+    
+    public function comprobanteSolicitudInclusionAction(Request $request){
+
+        $idTramite = $request->get('idtramite');
+        $tramiteDetalleId = $request->get('id_td');
+        
+        $response = new Response();
+        $gestion = $this->session->get('currentyear');
+        $codigoQR = 'INCAL'.$idTramite.'|'.$gestion;
+
+        $data = $this->session->get('userId').'|'.$gestion.'|'.$idTramite;
+        //$link = 'http://'.$_SERVER['SERVER_NAME'].'/sie/'.$this->getLinkEncript($codigoQR);
+        $response->headers->set('Content-type', 'application/pdf');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'requestProcess'.$idTramite.'_'.$this->session->get('currentyear'). '.pdf'));
+        //$response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_mod_calif_V2_eea.rptdesign&tramite_id='.$idTramite.'&&__format=pdf&'));
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .'reg_est_cert_cal_solicitud_tramite_inclusion_calif_v1.rptdesign&tramite_id='.$idTramite.'&&__format=pdf&'));
+        $response->setStatusCode(200);
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Pragma', 'no-cache');
+        $response->headers->set('Expires', '0');
+        return $response;
+    }  
     
     /*=====  End of FUNCIONES COMPLEMENTARIAS  ======*/
     

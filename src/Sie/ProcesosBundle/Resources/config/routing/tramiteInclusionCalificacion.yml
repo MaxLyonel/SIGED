@@ -33,6 +33,9 @@ tramite_inclusion_calificacion_download_solicitud:
     path:     /fsolinclu/{idTramite}
     defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:downloadSolicitudInclusion }  
 
+tramite_inclusion_calificacion_download_comprobante:
+    path:     /fsolinclucomprobante
+    defaults: { _controller: SieProcesosBundle:TramiteInclusionCalificacion:comprobanteSolicitudInclusion } 
 
 
 tramite_add_mod_cal_formulario_imprimir:
