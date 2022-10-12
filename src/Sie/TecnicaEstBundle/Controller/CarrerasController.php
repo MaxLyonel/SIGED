@@ -631,7 +631,18 @@ class CarrerasController extends Controller
             'filas_egresadosp2' => $filas_egresadosp2,
         );
 
-        //dump($nro_periodos); die;
+        //ver si tiene dato en la gestion
+        //univ_universidad_carrera_ctr
+        $sindatoenlagestion = false;  // se muestra el boton
+        $sql = "select est_tec_estadocarrera_tipo_id from est_tec_instituto_carrera_ctr where est_tec_instituto_carrera_id = " .$carrera_id . " and gestion_tipo_id = " . $gestion;
+        //dump($sql); die;
+        $stmt = $db->prepare($sql);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $estado = $po[0]['est_tec_estadocarrera_tipo_id'];
+        //dump($estado);die;
+        if($estado == 2){$sindatoenlagestion = true;}
         
         if($nro_periodos == 3){  //anual
             return $this->render('SieTecnicaEstBundle:Carreras:info.html.twig', array(
@@ -652,9 +663,10 @@ class CarrerasController extends Controller
                 'totales2' => $totales2,
                 'totales3' => $totales3,
                 'es_indigena' => 0,
-                 'headertxt' => 'Año',
-                 'filas_egresados' => $filas_egresados,
-                 'totales0' => $totales0,
+                'headertxt' => 'Año',
+                'filas_egresados' => $filas_egresados,
+                'totales0' => $totales0,
+                'sindatoenlagestion' => $sindatoenlagestion,
     
             ));
         }else{ //semestral
@@ -682,6 +694,7 @@ class CarrerasController extends Controller
                 'headertxt' => 'Semestre',
                 'totales0' => $totales0,
                 'totales0p2' => $totales0p2,
+                'sindatoenlagestion' => $sindatoenlagestion,
     
             ));
         }
@@ -1886,7 +1899,7 @@ class CarrerasController extends Controller
             INNER JOIN
             est_tec_cargo_tipo
             ON 
-            est_tec_instituto_carrera_docente_administrativo.est_tec_cargo_tipo_id = est_tec_cargo_tipo.id
+            est_tec_instituto_carrera_docente_administrativo.est_tec_cargo_tipo_id = est_tec_cargo_tipo.id and est_tec_cargo_tipo.es_docente = true 
             where est_tec_instituto_carrera_id = ".$carrera_id." and gestion_tipo_id = ". $gestion . $periodosql ." order by  est_tec_cargo_tipo.cargo";        
 
         $stmt = $db->prepare($query);
@@ -2540,6 +2553,36 @@ class CarrerasController extends Controller
         } 
     }
 
+
+    public function statsSinInfoSaveAction(Request $request){
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection();
+        $response = new JsonResponse();
+           
+        $justifica  =  $request->get('justifica');
+        $carrera_id =  $request->get('carrera_id');
+        $gestion_id =  $request->get('gestion_id');
+        
+        //dump($carrera_id, $gestion_id); die;
+
+        try {              
+
+            //update al registro, solo se cambia cantidad
+            $query ="update est_tec_instituto_carrera_ctr set est_tec_estadocarrera_tipo_id = 2, justificacion = ? where est_tec_instituto_carrera_id = ? and gestion_tipo_id = ?";
+            $stmt = $db->prepare($query);
+            $params = array($justifica, $carrera_id, $gestion_id);
+            $stmt->execute($params);           
+          
+            $msg  = 'La carrera no reportará datos en esta gestion';
+            return $response->setData(array('estado' => true, 'msg' => $msg, 'cantidad' => 0));
+
+        } catch (\Doctrine\ORM\NoResultException $ex) {           
+            $msg  = 'Error al realizar el registro, intente nuevamente';
+            return $response->setData(array('estado' => false, 'msg' => $msg, 'cantidad' => -1));
+        } 
+
+
+    }
 
     
 }

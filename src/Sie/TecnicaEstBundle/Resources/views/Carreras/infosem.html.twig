@@ -152,6 +152,33 @@
 
                                     <div class="col-md-10">
 
+                                        {% if sindatoenlagestion == false %}
+
+                                            <div class="row" style="padding: 10px;">
+
+                                                <table width="30%" padding="20" border="0">
+                                                    <th>
+                                                        <td  >
+                                                            <a href="#"
+                                                            class="btn btn-teal btn-block" style="border-radius: 2px;"
+                                                            id="btn_sin_dato">Reportar sin información en la gestión</a> 
+                                                        </td>                                                   
+                                                    </th>
+                                                </table>
+                                                <div class="messagejustifica" id="messagejustifica"></div>
+                                                                        
+                                            </div>
+                                        
+                                        {% else %}
+
+                                        <div class="callout callout-warning">
+                                            <strong>IMPORTANTE!</strong>  SE HA REGISTRADO ESTA GESTION COMO <strong>"SIN DATOS"</strong>. PARA REVERTIR ESTE ESTADO DEBE COMUNICARSE CON EL MINISTERIO DE EDUCACION
+                                        
+                                        </div>
+
+                                        {% endif %}
+                                        <br>
+
                                         <div class="panel panel-tab panel-tab-double rounded shadow">
                                             <!-- Start tabs heading -->
                                             <div class="panel-heading no-padding">
@@ -758,7 +785,7 @@
                                                         </div>
 
                                                         <hr>
-                                                        {#
+                                                        
                                                         <div ref="cuarto" id="cuarto"></div>
                                                         <div class="alert alert-danger fa-2xs">
                                                             <span class="alert-icon"><i class="fa fa-users"></i></span>
@@ -766,7 +793,7 @@
                                                                 <ul class="clearfix notification-meta">
                                                                     <li class="pull-left notification-sender"><span>
                                                                                     <strong>REGISTRO DE
-                                                                                    JEFES DE CARRERA ASIGNADOS A LA CARRERA</strong></span></li>
+                                                                                    DOCENTES ASIGNADOS A LA CARRERA</strong></span></li>
                                                                     <li class="pull-right notification-sender"
                                                                         id="label_gestion_est"><strong>GESTION: {{ gestion_id
                                                                             }}</strong></li>
@@ -1017,7 +1044,7 @@
                                                                 </table>
                                                             </form>
                                                         </div>
-                                                        #}
+                                                        
 
                                                     </div>
 
@@ -1622,14 +1649,14 @@
                                                         </div>
 
                                                         <hr>
-                                                        {#
+                                                        
                                                         <div ref="sexto" id="sexto"></div>
                                                         <div class="alert alert-danger fa-2xs">
                                                             <span class="alert-icon"><i class="fa fa-users"></i></span>
                                                             <div class="notification-info">
                                                                 <ul class="clearfix notification-meta">
                                                                     <li class="pull-left notification-sender"><span><strong>REGISTRO DE
-                                                                    JEFES DE CARRERA Y DOCENTES ASIGNADOS A LA CARRERA</strong></span></li>
+                                                                    DOCENTES ASIGNADOS A LA CARRERA</strong></span></li>
                                                                     <li class="pull-right notification-sender"
                                                                         id="label_gestion_est"><strong>{{ gestion_id
                                                                             }}</strong></li>
@@ -1878,7 +1905,7 @@
                                                                 </table>
                                                             </form>
                                                         </div>
-                                                        #}
+                                                        
 
                                                     </div>
                                                 </div>
@@ -1931,6 +1958,38 @@
 
 <!-- /.row -->
 
+<div id="modal-sin-info" class="modal modal-success fade bs-example-modal-lg" tabindex="-1" role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-m">
+        <div class="modal-content">          
+            <div class="modal-body">               
+
+                <div class="alert alert-danger">
+                    <strong> SIN INFORMACION EN LA GESTION ? </strong>
+                </div>
+
+                <div class="callout callout-warning">
+                    <strong>Atencion!</strong> Para indicar que NO se tienen datos disponibles de esta <strong>carrera</strong> en esta <strong>gestion</strong>, debe colocar una justificacion documentada para consideracion del Ministerio de Educación</a>.
+                </div>
+
+                <br>
+
+                <form name="form" method="post" role="form" id="formJustifica" class="formatyearsform">               
+                    <div>
+                    <input type="hidden" name="carrera_id" id="carrera_id" value={{carrera_id}}>
+                    <input type="hidden" name="gestion_id" id="gestion_id" value={{gestion_id}}>
+                    <textarea name="justifica" id="justifica" class="form-control" maxlength="250" rows="5" placeholder="Introduzca la justificacion para esta accion "></textarea> 
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-theme" onclick="updateSinInfo();">Proceder</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
 
 
 {% endblock %}
@@ -3242,6 +3301,72 @@
        if (control.value > 9999) { control.value = 0; }
        if (control.value < 0) { control.value = 0; }
         calculaTotales6(control);
+    }
+
+    $('#btn_sin_dato').click(function () {
+        showModalSinInfo();
+    });
+
+    function showModalSinInfo(){
+        $("#modal-sin-info").modal('show');
+    }
+
+    function  updateSinInfo(){
+
+        if(document.getElementById("justifica").value == ""  ||  document.getElementById("justifica").value.length  < 50){
+            //no hay justificacion
+            alert("DEBE ESPECIFICAR LA JUSTIFICACION DE ESTA ACCION (MINIMO 50 CARACTERES) !");
+            document.getElementById("justifica").focus();
+
+        }else{
+
+            //procede
+
+            swal({
+                title: "¿Grabar Justificacion ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                buttons: ["Cancelar", "Grabar"],
+            })
+            .then(function(respuesta)  {
+                if (respuesta) {              
+    
+                    var formulario = document.getElementById("formJustifica"); //$('#formBecas');
+                    var formData = new FormData(formulario);
+    
+                    formData.append('key1', 'value1');
+                    console.log(formData);
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('tecest_carrera_sin_info_save'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            $("#messagejustifica").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $('#messagejustifica').empty();
+                            $("#modal-sin-info").modal('hide');
+                            $("#messagejustifica").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                            document.getElementById("btn_sin_dato").style.display="none";
+                            
+                        },
+                        error: function (error) {
+                            $('#message').empty();
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                            //boton.show();
+                        },
+                    });
+    
+                }
+    
+            });
+
+
+        }
+
     }
 
 
