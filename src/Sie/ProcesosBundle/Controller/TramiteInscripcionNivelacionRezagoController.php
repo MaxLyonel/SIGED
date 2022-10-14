@@ -295,9 +295,8 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                             if($inscription['gestion_tipo_id_raep'] == $fechaActual->format("Y"))$actualParaleloIdR = $inscription['paralelo_tipo_id_raep'];
                             if($inscription['gestion_tipo_id_raep'] == $fechaActual->format("Y"))$actualParaleloR = $inscription['paralelo_raep'];
                             if($inscription['gestion_tipo_id_raep'] == $fechaActual->format("Y"))$actualEstudianteInscripcionIdR = $inscription['estudiante_inscripcion_id_raep'];
-                        }
-
-                        if ($ultimoNivelId == 0 and $ultimoGradoId == 0 and $key > 0){
+                        }                        
+                        if ($ultimoNivelId == 0 and $ultimoGradoId == 0 and $key > 0 and in_array($inscription['estadomatricula_tipo_id_fin_r'],array(4,5,11,26,31,37,40,43,55,56,57,58,100,102,104,105))){
                             if($inscription['gestion_tipo_id_raep'] < $fechaActual->format("Y"))$ultimoNivelId = $inscription['nivel_tipo_id_r'];
                             if($inscription['gestion_tipo_id_raep'] < $fechaActual->format("Y"))$ultimoGradoId = $inscription['grado_tipo_id_r'];
                         }
