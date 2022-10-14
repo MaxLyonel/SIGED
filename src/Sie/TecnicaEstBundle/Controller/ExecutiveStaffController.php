@@ -220,7 +220,8 @@ class ExecutiveStaffController extends Controller{
     }
 
     public function savestaffAction(Request $request){
-        
+
+               
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
         $jsonData = $request->get('datos');
@@ -312,9 +313,10 @@ class ExecutiveStaffController extends Controller{
                 $archivador = 'empty';
         }
 
-
+        
             if($arrData['newperson'] == true){
                 $newPerson = $this->saveNewPerson($arrData);
+                //dump($newPerson); die;
                 $arrData['personId'] = $newPerson->getId();
             }
 
@@ -438,12 +440,14 @@ class ExecutiveStaffController extends Controller{
         $newpersona->setFechaNacimiento(new \DateTime($data['fecNac']));            
         $newpersona->setGeneroTipo($em->getRepository('SieAppWebBundle:GeneroTipo')->findOneById($data['generoId']));
         $newpersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
+        $newpersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(($data['extranjero'])?2:1));
         $newpersona->setRda('0');
         $newpersona->setActivo('1');
         $newpersona->setSegipId('1');            
         $newpersona->setEsVigente('1');
         $newpersona->setCountEdit('1');
         $newpersona->setEsvigenteApoderado('1');
+
         $em->persist($newpersona);
         $em->flush();
 
