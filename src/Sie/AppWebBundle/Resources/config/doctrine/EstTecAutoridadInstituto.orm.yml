@@ -92,6 +92,13 @@ Sie\AppWebBundle\Entity\EstTecAutoridadInstituto:
             nullable: true
             comment: ''
             column: fecha_actualizacion
+        documentosFirma:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: documentos_firma
     manyToOne:
         persona:
             targetEntity: Persona

@@ -361,7 +361,7 @@ class CarrerasController extends Controller
         $po = $stmt->fetchAll();
         $estado = $po[0]['univ_estadocarrera_tipo_id'];
         //dump($estado);die;
-        if($estado == 1){$sindatoenlagestion = false;}
+        if($estado == 2){$sindatoenlagestion = true;}
         
         return $this->render('SieUniversityBundle:Carreras:info.html.twig', array(
             'carrera_id' => $carrera_id,

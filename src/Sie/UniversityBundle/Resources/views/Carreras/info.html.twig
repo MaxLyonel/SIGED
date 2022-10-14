@@ -1463,6 +1463,7 @@
                             $('#messagejustifica').empty();
                             $("#modal-sin-info").modal('hide');
                             $("#messagejustifica").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                            document.getElementById("btn_sin_dato").style.display="none";
                         },
                         error: function (error) {
                             $('#message').empty();

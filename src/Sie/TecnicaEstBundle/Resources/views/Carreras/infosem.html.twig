@@ -103,9 +103,7 @@
 
                                         <div class="table-responsive mb-20">
 
-                                            <div class="alert yearOld" style="text-align: center;">
-                                                <strong>OPERATIVOS</strong>
-                                            </div>
+                                            
                                             <div class="formatyears">
 
                                                 <table class="table table-bordered">
@@ -154,6 +152,33 @@
 
                                     <div class="col-md-10">
 
+                                        {% if sindatoenlagestion == false %}
+
+                                            <div class="row" style="padding: 10px;">
+
+                                                <table width="30%" padding="20" border="0">
+                                                    <th>
+                                                        <td  >
+                                                            <a href="#"
+                                                            class="btn btn-teal btn-block" style="border-radius: 2px;"
+                                                            id="btn_sin_dato">Reportar sin información en la gestión</a> 
+                                                        </td>                                                   
+                                                    </th>
+                                                </table>
+                                                <div class="messagejustifica" id="messagejustifica"></div>
+                                                                        
+                                            </div>
+                                        
+                                        {% else %}
+
+                                        <div class="callout callout-warning">
+                                            <strong>IMPORTANTE!</strong>  SE HA REGISTRADO ESTA GESTION COMO <strong>"SIN DATOS"</strong>. PARA REVERTIR ESTE ESTADO DEBE COMUNICARSE CON EL MINISTERIO DE EDUCACION
+                                        
+                                        </div>
+
+                                        {% endif %}
+                                        <br>
+
                                         <div class="panel panel-tab panel-tab-double rounded shadow">
                                             <!-- Start tabs heading -->
                                             <div class="panel-heading no-padding">
@@ -183,63 +208,64 @@
                                                     <div class="tab-pane fade in active" id="tab2-1">
 
                                                         <div class="formatallstaff" style="width:70% ;">
-                                                        <table id="table1" class="table table-bordered">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th width="50%" style="text-align:center">
-                                                                        <strong>TITULADOS/EGRESADOS EN LA GESTION {{ gestion_id }} PRIMER PERIODO</strong>
-                                                                    </th>
-                                                                    <th style="text-align:center"><strong>Masculino</strong></th>
-                                                                    <th style="text-align:center"><strong>Femenino</strong></th>
-                                                    
-                                                                </tr>
-                                                    
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td> <strong>EGRESADOS</strong></td>
-                                                    
-                                                                    <td class="success">
-                                                                        <input type="number" min="0" max="9999" value="0" onclick="calculaTotales()"
-                                                                            oninput="calculaTotales()" class="form-control clase1" onclick="this.select();"
-                                                                            onblur="datoVacio(this)" />
-                                                                    </td>
-                                                                    <td class="success">
-                                                                        <input type="number" min="0" max="9999" value="0" onclick="calculaTotales()"
-                                                                            oninput="calculaTotales()" class="form-control clase1" onclick="this.select();"
-                                                                            onblur="datoVacio(this)" />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td> <strong>TITULADOS</strong></td>
-                                                    
-                                                                    <td class="success">
-                                                                        <input type="number" min="0" max="9999" value="0" onclick="calculaTotales()"
-                                                                            oninput="calculaTotales()" class="form-control clase1" onclick="this.select();"
-                                                                            onblur="datoVacio(this)" />
-                                                                    </td>
-                                                                    <td class="success">
-                                                                        <input type="number" min="0" max="9999" value="0" onclick="calculaTotales()"
-                                                                            oninput="calculaTotales()" class="form-control clase1" onclick="this.select();"
-                                                                            onblur="datoVacio(this)" />
-                                                                    </td>
-                                                                </tr>
-            
-                                                                <tr>
-                                                                    <th>TOTALES</th>
-                                                                    <th id="total1">0</th>
-                                                                    <th id="total2">0</th>                                                       
-                                                                </tr>
-            
-                                                                <tr>
-                                                                    <td> </td>                                                       
-                                                                    <td colspan="2"> <a href="#" class="btn btn-success btn-block" id="form_save_gral">Grabar Estadisticas</a> </td>
-                                                                
-                                                                </tr>
-            
-            
-                                                            </tbody>
-                                                        </table>
+                                                            <form name="formegresadostitulados" method="post" role="form" id="formegresadostitulados">
+                                                            <table id="table1" class="table table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th width="50%" style="text-align:center">
+                                                                            <strong>TITULADOS/EGRESADOS EN LA GESTION {{ gestion_id }} PRIMER PERIODO</strong>
+                                                                        </th>
+                                                                        <th style="text-align:center"><strong>Masculino</strong></th>
+                                                                        <th style="text-align:center"><strong>Femenino</strong></th>
+                                                        
+                                                                    </tr>
+                                                        
+                                                                </thead>
+                                                                <tbody>
+                
+                                                                    {% for key, entity in data.filas_egresados %}
+                                                                    <tr>
+                                                                        <td> <strong> {{ entity.matricula }} </strong></td>
+                                                                        
+                                                                            <td class="success" id="gaf{{ key + 1 }}c1">
+                                                                            <input type="number" min="0" max="9999"
+                                                                                id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
+                                                                                value="{{ entity.m1 }}"
+                                                                                onclick="this.select();"
+                                                                                onclick="calculaTotales0()"
+                                                                                oninput="calculaTotales0()"
+                                                                                class="form-control clase00" 
+                                                                                onblur="datoVacio(this)" />
+                                                                        </td>
+                                                                        <td class="success" id="gaf{{ key + 1 }}c2">
+                                                                            <input type="number" min="0" max="9999"
+                                                                                id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]"
+                                                                                value="{{ entity.f1 }}"
+                                                                                onclick="this.select();"
+                                                                                onclick="calculaTotales0()"
+                                                                                oninput="calculaTotales0()"
+                                                                                class="form-control clase01" 
+                                                                                onblur="datoVacio(this)" />
+                                                                        </td>
+                                                                    </tr>
+                                                                    {% endfor %}
+                
+                                                                    <tr>
+                                                                        <th>TOTALES</th>
+                                                                        <th id="total00">{{ totales0[0].m1}}</th>                                                
+                                                                        <th id="total01">{{ totales0[0].f1}}</th>                                                       
+                                                                    </tr>
+                
+                                                                    <tr>
+                                                                        <td> </td>                                                       
+                                                                        <td colspan="2"> <a href="#" class="btn btn-success btn-block" id="form_save_gral">Grabar Estadisticas</a> </td>
+                                                                    
+                                                                    </tr>
+                
+                
+                                                                </tbody>
+                                                            </table>
+                                                            </form>
                                                         </div>
                                                         <br>
 
@@ -248,7 +274,7 @@
                                                             <div class="notification-info">
                                                                 <ul class="clearfix notification-meta">
                                                                     <li class="pull-left notification-sender"><span><strong>REGISTRO DE ESTUDIANTES
-                                                                                    SEGUN TIPO DE BECA POR GENERO EN LA
+                                                                                    SEGUN TIPO DE BECA Y GENERO EN LA
                                                                                     GESTION Y
                                                                                     PERIODO</strong></span></li>
                                                                     <li class="pull-right notification-sender"
@@ -323,13 +349,14 @@
 
                                                                             <td class="success" id="af{{ key + 1 }}c1">
                                                                                 <input type="number" min="0" max="9999"
-                                                                                    id="{{ entity.idm1 }}"
+                                                                                    id="{{ entity.idm1 }}"                                                                                    
                                                                                     name="form[{{entity.idm1}}]"
                                                                                     class="form-control clase1"
                                                                                     value="{{ entity.m1 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales()"
                                                                                     oninput="calculaTotales()"                                                                                   
-                                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                                     onblur="datoVacio(this)" />
                                                                             </td>
                                                                             <td class="success" id="af{{ key + 1 }}c2">
                                                                                 <input type="number" min="0" max="9999"
@@ -337,9 +364,10 @@
                                                                                     name="form[{{entity.idf1}}]"
                                                                                     class="form-control clase2"
                                                                                     value="{{ entity.f1 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales()"
                                                                                     oninput="calculaTotales()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                                     onblur="datoVacio(this)" />
                                                                             </td>
                                                                             <td class="success" id="af{{ key + 1 }}c1">
                                                                                 <input type="number" min="0" max="9999"
@@ -349,7 +377,7 @@
                                                                                     value="{{ entity.m2 }}"
                                                                                     onclick="calculaTotales()"
                                                                                     oninput="calculaTotales()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                                     onblur="datoVacio(this)" />
                                                                             </td>
                                                                             <td class="success" id="af{{ key + 1 }}c2">
                                                                                 <input type="number" min="0" max="9999"
@@ -357,9 +385,10 @@
                                                                                     name="form[{{entity.idf2}}]"
                                                                                     class="form-control clase4"
                                                                                     value="{{ entity.f2 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales()"
                                                                                     oninput="calculaTotales()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                                     onblur="datoVacio(this)" />
                                                                             </td>
                                                                             <td class="success" id="af{{ key + 1 }}c1">
                                                                                 <input type="number" min="0" max="9999"
@@ -367,9 +396,10 @@
                                                                                     name="form[{{entity.idm3}}]"
                                                                                     class="form-control clase5"
                                                                                     value="{{ entity.m3 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales()"
                                                                                     oninput="calculaTotales()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                                     onblur="datoVacio(this)" />
                                                                                     
                                                                             </td>
                                                                             <td class="success" id="af{{ key + 1 }}c2">
@@ -378,9 +408,10 @@
                                                                                     name="form[{{entity.idf3}}]"
                                                                                     class="form-control clase6"
                                                                                     value="{{ entity.f3 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales()"
                                                                                     oninput="calculaTotales()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                                     onblur="datoVacio(this)" />
                                                                             </td>
 
                                                                             {% if data.periodos == 6 %}
@@ -391,9 +422,10 @@
                                                                                     name="form[{{entity.idm4}}]"
                                                                                     class="form-control clase7"
                                                                                     value="{{ entity.m4 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales()"
                                                                                     oninput="calculaTotales()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                                     onblur="datoVacio(this)" />
                                                                             </td>
                                                                             <td class="success" id="af{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -401,9 +433,10 @@
                                                                                     name="form[{{entity.idf4}}]"
                                                                                     class="form-control clase8"
                                                                                     value="{{ entity.f4 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales()"
                                                                                     oninput="calculaTotales()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                                     onblur="datoVacio(this)" />
                                                                             </td>
                                                                             <td class="success" id="af{{ key + 1 }}c4">
                                                                                 <input type="number" min="0" max="9999"
@@ -411,9 +444,10 @@
                                                                                     name="form[{{entity.idm5}}]"
                                                                                     class="form-control clase9"
                                                                                     value="{{ entity.m5 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales()"
                                                                                     oninput="calculaTotales()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                                     onblur="datoVacio(this)" />
                                                                             </td>
                                                                             <td class="success" id="af{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -421,9 +455,10 @@
                                                                                     name="form[{{entity.idf5}}]"
                                                                                     class="form-control clase10"
                                                                                     value="{{ entity.f5 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales()"
                                                                                     oninput="calculaTotales()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                                     onblur="datoVacio(this)" />
                                                                             </td>
                                                                             <td class="success" id="af{{ key + 1 }}c4">
                                                                                 <input type="number" min="0" max="9999"
@@ -431,9 +466,10 @@
                                                                                     name="form[{{entity.idm6}}]"
                                                                                     class="form-control clase11"
                                                                                     value="{{ entity.m6 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales()"
                                                                                     oninput="calculaTotales()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                                     onblur="datoVacio(this)" />
                                                                             </td>
                                                                             <td class="success" id="af{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -441,9 +477,10 @@
                                                                                     name="form[{{entity.idf6}}]"
                                                                                     class="form-control clase12"
                                                                                     value="{{ entity.f6 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales()"
                                                                                     oninput="calculaTotales()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio(this)" />
+                                                                                     onblur="datoVacio(this)" />
                                                                             </td>
 
                                                                             {% endif %}
@@ -492,7 +529,7 @@
 
 
                                                         <hr>
-
+                                                        <div ref="tercero" id="tercero"></div>
                                                         <div class="alert alert-warning fa-2xs">
                                                             <span class="alert-icon"><i class="fa fa-file"></i></span>
                                                             <div class="notification-info">
@@ -580,9 +617,10 @@
                                                                                     name="form[{{entity.idm1}}]"
                                                                                     class="form-control clase13"
                                                                                     value="{{ entity.m1 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales2()"
                                                                                     oninput="calculaTotales2()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio2(this)" />
+                                                                                    onblur="datoVacio2(this)" />
                                                                             </td>
                                                                             <td class="success" id="cf{{ key + 1 }}c2">
                                                                                 <input type="number" min="0" max="9999"
@@ -590,9 +628,10 @@
                                                                                     name="form[{{entity.idf1}}]"
                                                                                     class="form-control clase14"
                                                                                     value="{{ entity.f1 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales2()"
                                                                                     oninput="calculaTotales2()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio2(this)" />
+                                                                                    onblur="datoVacio2(this)" />
                                                                             </td>
 
                                                                             <td class="success" id="cf{{ key + 1 }}c4">
@@ -601,9 +640,10 @@
                                                                                     name="form[{{entity.idm2}}]"
                                                                                     class="form-control clase15"
                                                                                     value="{{ entity.m2 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales2()"
                                                                                     oninput="calculaTotales2()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio2(this)" />
+                                                                                    onblur="datoVacio2(this)" />
                                                                             </td>
                                                                             <td class="success" id="cf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -611,9 +651,10 @@
                                                                                     name="form[{{entity.idf2}}]"
                                                                                     class="form-control clase16"
                                                                                     value="{{ entity.f2 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales2()"
                                                                                     oninput="calculaTotales2()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio2(this)" />
+                                                                                    onblur="datoVacio2(this)" />
                                                                             </td>
 
                                                                             <td class="success" id="cf{{ key + 1 }}c4">
@@ -622,9 +663,10 @@
                                                                                     name="form[{{entity.idm3}}]"
                                                                                     class="form-control clase17"
                                                                                     value="{{ entity.m3 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales2()"
                                                                                     oninput="calculaTotales2()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio2(this)" />
+                                                                                    onblur="datoVacio2(this)" />
                                                                             </td>
                                                                             <td class="success" id="cf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -632,9 +674,10 @@
                                                                                     name="form[{{entity.idf3}}]"
                                                                                     class="form-control clase18"
                                                                                     value="{{ entity.f3 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales2()"
                                                                                     oninput="calculaTotales2()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio2(this)" />
+                                                                                    onblur="datoVacio2(this)" />
                                                                             </td>
 
                                                                             {% if data.periodos == 6 %}
@@ -644,9 +687,10 @@
                                                                                     name="form[{{entity.idm4}}]"
                                                                                     class="form-control clase19"
                                                                                     value="{{ entity.m4 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales2()"
                                                                                     oninput="calculaTotales2()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio2(this)" />
+                                                                                    onblur="datoVacio2(this)" />
                                                                             </td>
                                                                             <td class="success" id="cf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -654,9 +698,10 @@
                                                                                     name="form[{{entity.idf4}}]"
                                                                                     class="form-control clase20"
                                                                                     value="{{ entity.f4 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales2()"
                                                                                     oninput="calculaTotales2()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio2(this)" />
+                                                                                    onblur="datoVacio2(this)" />
                                                                             </td>
                                                                             <td class="success" id="cf{{ key + 1 }}c4">
                                                                                 <input type="number" min="0" max="9999"
@@ -664,9 +709,10 @@
                                                                                     name="form[{{entity.idm5}}]"
                                                                                     class="form-control clase21"
                                                                                     value="{{ entity.m5 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales2()"
                                                                                     oninput="calculaTotales2()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio2(this)" />
+                                                                                    onblur="datoVacio2(this)" />
                                                                             </td>
                                                                             <td class="success" id="cf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -674,9 +720,10 @@
                                                                                     name="form[{{entity.idf5}}]"
                                                                                     class="form-control clase22"
                                                                                     value="{{ entity.f5 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales2()"
                                                                                     oninput="calculaTotales2()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio2(this)" />
+                                                                                    onblur="datoVacio2(this)" />
                                                                             </td>
                                                                             <td class="success" id="cf{{ key + 1 }}c4">
                                                                                 <input type="number" min="0" max="9999"
@@ -684,9 +731,10 @@
                                                                                     name="form[{{entity.idm6}}]"
                                                                                     class="form-control clase23"
                                                                                     value="{{ entity.m6 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales2()"
                                                                                     oninput="calculaTotales2()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio2(this)" />
+                                                                                    onblur="datoVacio2(this)" />
                                                                             </td>
                                                                             <td class="success" id="cf{{ key + 1 }}c6">
                                                                                 <input type="number" min="0" max="9999"
@@ -694,9 +742,10 @@
                                                                                     name="form[{{entity.idf6}}]"
                                                                                     class="form-control clase24"
                                                                                     value="{{ entity.f6 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales2()"
                                                                                     oninput="calculaTotales2()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio2(this)" />
+                                                                                    onblur="datoVacio2(this)" />
                                                                             </td>
                                                                             {% endif %}
 
@@ -736,16 +785,15 @@
                                                         </div>
 
                                                         <hr>
-
+                                                        
+                                                        <div ref="cuarto" id="cuarto"></div>
                                                         <div class="alert alert-danger fa-2xs">
                                                             <span class="alert-icon"><i class="fa fa-users"></i></span>
                                                             <div class="notification-info">
                                                                 <ul class="clearfix notification-meta">
                                                                     <li class="pull-left notification-sender"><span>
-                                                                                    <strong>REGISTRO DE DOCENTES
-                                                                                    POR GENERO EN LA
-                                                                                    GESTION Y
-                                                                                    PERIODO</strong></span></li>
+                                                                                    <strong>REGISTRO DE
+                                                                                    DOCENTES ASIGNADOS A LA CARRERA</strong></span></li>
                                                                     <li class="pull-right notification-sender"
                                                                         id="label_gestion_est"><strong>GESTION: {{ gestion_id
                                                                             }}</strong></li>
@@ -822,9 +870,10 @@
                                                                                     name="form[{{entity.idm1}}]"
                                                                                     class="form-control clase25"
                                                                                     value="{{ entity.m1 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales3()"
                                                                                     oninput="calculaTotales3()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio3(this)" />
+                                                                                     onblur="datoVacio3(this)" />
                                                                             </td>
                                                                             <td class="success" id="bf{{ key + 1 }}c2">
                                                                                 <input type="number" min="0" max="9999"
@@ -833,9 +882,10 @@
                                                                                     name="form[{{entity.idf1}}]"
                                                                                     class="form-control clase26"
                                                                                     value="{{ entity.f1 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales3()"
                                                                                     oninput="calculaTotales3()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio3(this)" />
+                                                                                     onblur="datoVacio3(this)" />
                                                                             </td>
 
                                                                             <td class="success" id="bf{{ key + 1 }}c4">
@@ -844,9 +894,10 @@
                                                                                     name="form[{{entity.idm2}}]"
                                                                                     class="form-control clase27"
                                                                                     value="{{ entity.m2 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales3()"
                                                                                     oninput="calculaTotales3()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio3(this)" />
+                                                                                    onblur="datoVacio3(this)" />
                                                                             </td>
                                                                             <td class="success" id="bf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -854,9 +905,10 @@
                                                                                     name="form[{{entity.idf2}}]"
                                                                                     class="form-control clase28"
                                                                                     value="{{ entity.f2 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales3()"
                                                                                     oninput="calculaTotales3()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio3(this)" />
+                                                                                    onblur="datoVacio3(this)" />
                                                                             </td>
 
                                                                             <td class="success" id="bf{{ key + 1 }}c4">
@@ -865,9 +917,10 @@
                                                                                     name="form[{{entity.idm3}}]"
                                                                                     class="form-control clase29"
                                                                                     value="{{ entity.m3 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales3()"
                                                                                     oninput="calculaTotales3()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio3(this)" />
+                                                                                    onblur="datoVacio3(this)" />
                                                                             </td>
                                                                             <td class="success" id="bf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -875,9 +928,10 @@
                                                                                     name="form[{{entity.idf3}}]"
                                                                                     class="form-control clase30"
                                                                                     value="{{ entity.f3 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales3()"
                                                                                     oninput="calculaTotales3()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio3(this)" />
+                                                                                    onblur="datoVacio3(this)" />
                                                                             </td>
 
 
@@ -889,9 +943,10 @@
                                                                                     name="form[{{entity.idm4}}]"
                                                                                     class="form-control clase31"
                                                                                     value="{{ entity.m4 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales3()"
                                                                                     oninput="calculaTotales3()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio3(this)" />
+                                                                                    onblur="datoVacio3(this)" />
                                                                             </td>
                                                                             <td class="success" id="bf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -899,9 +954,10 @@
                                                                                     name="form[{{entity.idf4}}]"
                                                                                     class="form-control clase32"
                                                                                     value="{{ entity.f4 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales3()"
                                                                                     oninput="calculaTotales3()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio3(this)" />
+                                                                                     onblur="datoVacio3(this)" />
                                                                             </td>
                                                                             <td class="success" id="bf{{ key + 1 }}c4">
                                                                                 <input type="number" min="0" max="9999"
@@ -909,9 +965,10 @@
                                                                                     name="form[{{entity.idm5}}]"
                                                                                     class="form-control clase33"
                                                                                     value="{{ entity.m5 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales3()"
                                                                                     oninput="calculaTotales3()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio3(this)" />
+                                                                                     onblur="datoVacio3(this)" />
                                                                             </td>
                                                                             <td class="success" id="bf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -919,9 +976,10 @@
                                                                                     name="form[{{entity.idf5}}]"
                                                                                     class="form-control clase34"
                                                                                     value="{{ entity.f5 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales3()"
                                                                                     oninput="calculaTotales3()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio3(this)" />
+                                                                                     onblur="datoVacio3(this)" />
                                                                             </td>
                                                                             <td class="success" id="bf{{ key + 1 }}c4">
                                                                                 <input type="number" min="0" max="9999"
@@ -929,9 +987,10 @@
                                                                                     name="form[{{entity.idm6}}]"
                                                                                     class="form-control clase35"
                                                                                     value="{{ entity.m6 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales3()"
                                                                                     oninput="calculaTotales3()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio3(this)" />
+                                                                                     onblur="datoVacio3(this)" />
                                                                             </td>
                                                                             <td class="success" id="bf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -939,9 +998,10 @@
                                                                                     name="form[{{entity.idf6}}]"
                                                                                     class="form-control clase36"
                                                                                     value="{{ entity.f6 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales3()"
                                                                                     oninput="calculaTotales3()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio3(this)" />
+                                                                                     onblur="datoVacio3(this)" />
                                                                             </td>
 
 
@@ -984,6 +1044,7 @@
                                                                 </table>
                                                             </form>
                                                         </div>
+                                                        
 
                                                     </div>
 
@@ -991,7 +1052,9 @@
 
                                                     <div class="tab-pane fade " id="tab2-2">
 
-                                                        <div class="formatallstaff" style="width:70% ;">
+                                                        
+                                                    <div class="formatallstaff" style="width:70% ;">
+                                                        <form name="formegresadostituladosp2" method="post" role="form" id="formegresadostituladosp2">
                                                         <table id="table1" class="table table-bordered">
                                                             <thead>
                                                                 <tr>
@@ -1005,39 +1068,37 @@
                                                     
                                                             </thead>
                                                             <tbody>
+            
+                                                                {% for key, entity in data.filas_egresadosp2 %}
                                                                 <tr>
-                                                                    <td> <strong>EGRESADOS</strong></td>
-                                                    
-                                                                    <td class="success">
-                                                                        <input type="number" min="0" max="9999" value="0" onclick="calculaTotales()"
-                                                                            oninput="calculaTotales()" class="form-control clase1" onclick="this.select();"
-                                                                            onblur="datoVacio(this)" />
+                                                                    <td> <strong> {{ entity.matricula }} </strong></td>
+                                                                    
+                                                                        <td class="warning" id="gaf{{ key + 1 }}c1">
+                                                                        <input type="number" min="0" max="9999"
+                                                                            id="{{ entity.idm1 }}" name="form[{{entity.idm1}}]"
+                                                                            value="{{ entity.m1 }}"
+                                                                            onclick="calculaTotales0p2()"
+                                                                            oninput="calculaTotales0p2()"
+                                                                            class="form-control clase02" 
+                                                                             onblur="datoVacio(this)" />
                                                                     </td>
-                                                                    <td class="success">
-                                                                        <input type="number" min="0" max="9999" value="0" onclick="calculaTotales()"
-                                                                            oninput="calculaTotales()" class="form-control clase1" onclick="this.select();"
-                                                                            onblur="datoVacio(this)" />
+                                                                    <td class="warning" id="gaf{{ key + 1 }}c2">
+                                                                        <input type="number" min="0" max="9999"
+                                                                            id="{{ entity.idf1 }}" name="form[{{entity.idf1}}]"
+                                                                            value="{{ entity.f1 }}"
+                                                                            onclick="this.select();"
+                                                                            onclick="calculaTotales0p2()"
+                                                                            oninput="calculaTotales0p2()"
+                                                                            class="form-control clase03" 
+                                                                             onblur="datoVacio(this)" />
                                                                     </td>
                                                                 </tr>
-                                                                <tr>
-                                                                    <td> <strong>TITULADOS</strong></td>
-                                                    
-                                                                    <td class="success">
-                                                                        <input type="number" min="0" max="9999" value="0" onclick="calculaTotales()"
-                                                                            oninput="calculaTotales()" class="form-control clase1" onclick="this.select();"
-                                                                            onblur="datoVacio(this)" />
-                                                                    </td>
-                                                                    <td class="success">
-                                                                        <input type="number" min="0" max="9999" value="0" onclick="calculaTotales()"
-                                                                            oninput="calculaTotales()" class="form-control clase1" onclick="this.select();"
-                                                                            onblur="datoVacio(this)" />
-                                                                    </td>
-                                                                </tr>
+                                                                {% endfor %}
             
                                                                 <tr>
                                                                     <th>TOTALES</th>
-                                                                    <th id="total1">0</th>
-                                                                    <th id="total2">0</th>                                                       
+                                                                    <th id="total02">{{ totales0p2[0].m1}}</th>                                                
+                                                                    <th id="total03">{{ totales0p2[0].f1}}</th>                                                       
                                                                 </tr>
             
                                                                 <tr>
@@ -1049,15 +1110,16 @@
             
                                                             </tbody>
                                                         </table>
-                                                        </div>
-                                                        <br>
+                                                        </form>
+                                                    </div>
+                                                    <br>
 
                                                         <div class="alert alert-info fa-2xs">
                                                             <span class="alert-icon"><i class="fa fa-user"></i></span>
                                                             <div class="notification-info">
                                                                 <ul class="clearfix notification-meta">
                                                                     <li class="pull-left notification-sender"><span><strong>REGISTRO DE ESTUDIANTES
-                                                                                    SEGUN TIPO DE BECA POR GENERO EN LA
+                                                                                    SEGUN TIPO DE BECA Y GENERO EN LA
                                                                                     GESTION Y
                                                                                     PERIODO</strong></span></li>
                                                                     <li class="pull-right notification-sender"
@@ -1136,9 +1198,10 @@
                                                                                     name="form[{{entity.idm1}}]"
                                                                                     class="form-control clase37"
                                                                                     value="{{ entity.m1 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales4()"
                                                                                     oninput="calculaTotales4()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio4(this)" />
+                                                                                     onblur="datoVacio4(this)" />
                                                                             </td>
                                                                             <td class="warning" id="af{{ key + 1 }}c2">
                                                                                 <input type="number" min="0" max="9999"
@@ -1146,9 +1209,10 @@
                                                                                     name="form[{{entity.idf1}}]"
                                                                                     class="form-control clase38"
                                                                                     value="{{ entity.f1 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales4()"
                                                                                     oninput="calculaTotales4()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio4(this)" />
+                                                                                     onblur="datoVacio4(this)" />
                                                                             </td>
                                                                             <td class="warning" id="af{{ key + 1 }}c1">
                                                                                 <input type="number" min="0" max="9999"
@@ -1156,9 +1220,10 @@
                                                                                     name="form[{{entity.idm2}}]"
                                                                                     class="form-control clase39"
                                                                                     value="{{ entity.m2 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales4()"
                                                                                     oninput="calculaTotales4()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio4(this)" />
+                                                                                     onblur="datoVacio4(this)" />
                                                                             </td>
                                                                             <td class="warning" id="af{{ key + 1 }}c2">
                                                                                 <input type="number" min="0" max="9999"
@@ -1166,9 +1231,10 @@
                                                                                     name="form[{{entity.idf2}}]"
                                                                                     class="form-control clase40"
                                                                                     value="{{ entity.f2 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales4()"
                                                                                     oninput="calculaTotales4()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio4(this)" />
+                                                                                    onblur="datoVacio4(this)" />
                                                                             </td>
                                                                             <td class="warning" id="af{{ key + 1 }}c1">
                                                                                 <input type="number" min="0" max="9999"
@@ -1176,9 +1242,10 @@
                                                                                     name="form[{{entity.idm3}}]"
                                                                                     class="form-control clase41"
                                                                                     value="{{ entity.m3 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales4()"
                                                                                     oninput="calculaTotales4()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio4(this)" />
+                                                                                    onblur="datoVacio4(this)" />
                                                                             </td>
                                                                             <td class="warning" id="af{{ key + 1 }}c2">
                                                                                 <input type="number" min="0" max="9999"
@@ -1186,9 +1253,10 @@
                                                                                     name="form[{{entity.idf3}}]"
                                                                                     class="form-control clase42"
                                                                                     value="{{ entity.f3 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales4()"
                                                                                     oninput="calculaTotales4()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio4(this)" />
+                                                                                     onblur="datoVacio4(this)" />
                                                                             </td>
 
                                                                             {% if data.periodos == 6 %}
@@ -1199,9 +1267,10 @@
                                                                                     name="form[{{entity.idm4}}]"
                                                                                     class="form-control clase43"
                                                                                     value="{{ entity.m4 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales4()"
                                                                                     oninput="calculaTotales4()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio4(this)" />
+                                                                                    onblur="datoVacio4(this)" />
                                                                             </td>
                                                                             <td class="warning" id="af{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -1209,9 +1278,10 @@
                                                                                     name="form[{{entity.idf4}}]"
                                                                                     class="form-control clase44"
                                                                                     value="{{ entity.f4 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales4()"
                                                                                     oninput="calculaTotales4()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio4(this)" />
+                                                                                    onblur="datoVacio4(this)" />
                                                                             </td>
                                                                             <td class="warning" id="af{{ key + 1 }}c4">
                                                                                 <input type="number" min="0" max="9999"
@@ -1219,9 +1289,10 @@
                                                                                     name="form[{{entity.idm5}}]"
                                                                                     class="form-control clase45"
                                                                                     value="{{ entity.m5 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales4()"
                                                                                     oninput="calculaTotales4()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio4(this)" />
+                                                                                    onblur="datoVacio4(this)" />
                                                                             </td>
                                                                             <td class="warning" id="af{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -1229,9 +1300,10 @@
                                                                                     name="form[{{entity.idf5}}]"
                                                                                     class="form-control clase46"
                                                                                     value="{{ entity.f5 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales4()"
                                                                                     oninput="calculaTotales4()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio4(this)" />
+                                                                                    onblur="datoVacio4(this)" />
                                                                             </td>
                                                                             <td class="warning" id="af{{ key + 1 }}c4">
                                                                                 <input type="number" min="0" max="9999"
@@ -1239,9 +1311,10 @@
                                                                                     name="form[{{entity.idm6}}]"
                                                                                     class="form-control clase47"
                                                                                     value="{{ entity.m6 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales4()"
                                                                                     oninput="calculaTotales4()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio4(this)" />
+                                                                                    onblur="datoVacio4(this)" />
                                                                             </td>
                                                                             <td class="warning" id="af{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -1249,9 +1322,10 @@
                                                                                     name="form[{{entity.idf6}}]"
                                                                                     class="form-control clase48"
                                                                                     value="{{ entity.f6 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales4()"
                                                                                     oninput="calculaTotales4()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio4(this)" />
+                                                                                    onblur="datoVacio4(this)" />
                                                                             </td>
 
                                                                             {% endif %}
@@ -1304,7 +1378,7 @@
 
 
                                                         <hr>
-
+                                                        <div ref="quinto" id="quinto"></div>
                                                         <div class="alert alert-warning fa-2xs">
                                                             <span class="alert-icon"><i class="fa fa-file"></i></span>
                                                             <div class="notification-info">
@@ -1390,9 +1464,10 @@
                                                                                     name="form[{{entity.idm1}}]"
                                                                                     class="form-control clase49"
                                                                                     value="{{ entity.m1 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales5()"
                                                                                     oninput="calculaTotales5()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio5(this)" />
+                                                                                    onblur="datoVacio5(this)" />
                                                                             </td>
                                                                             <td class="warning" id="cf{{ key + 1 }}c2">
                                                                                 <input type="number" min="0" max="9999"
@@ -1400,9 +1475,10 @@
                                                                                     name="form[{{entity.idf1}}]"
                                                                                     class="form-control clase50"
                                                                                     value="{{ entity.f1 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales5()"
                                                                                     oninput="calculaTotales5()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio5(this)" />
+                                                                                    onblur="datoVacio5(this)" />
                                                                             </td>
 
                                                                             <td class="warning" id="cf{{ key + 1 }}c4">
@@ -1411,9 +1487,10 @@
                                                                                     name="form[{{entity.idm2}}]"
                                                                                     class="form-control clase51"
                                                                                     value="{{ entity.m2 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales5()"
                                                                                     oninput="calculaTotales5()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio5(this)" />
+                                                                                    onblur="datoVacio5(this)" />
                                                                             </td>
                                                                             <td class="warning" id="cf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -1421,9 +1498,10 @@
                                                                                     name="form[{{entity.idf2}}]"
                                                                                     class="form-control clase52"
                                                                                     value="{{ entity.f2 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales5()"
                                                                                     oninput="calculaTotales5()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio5(this)" />
+                                                                                    onblur="datoVacio5(this)" />
                                                                             </td>
 
                                                                             <td class="warning" id="cf{{ key + 1 }}c4">
@@ -1432,9 +1510,10 @@
                                                                                     name="form[{{entity.idm3}}]"
                                                                                     class="form-control clase53"
                                                                                     value="{{ entity.m3 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales5()"
                                                                                     oninput="calculaTotales5()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio5(this)" />
+                                                                                    onblur="datoVacio5(this)" />
                                                                             </td>
                                                                             <td class="warning" id="cf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -1442,9 +1521,10 @@
                                                                                     name="form[{{entity.idf3}}]"
                                                                                     class="form-control clase54"
                                                                                     value="{{ entity.f3 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales5()"
                                                                                     oninput="calculaTotales5()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio5(this)" />
+                                                                                    onblur="datoVacio5(this)" />
                                                                             </td>
 
                                                                             {% if data.periodos == 6 %}
@@ -1454,9 +1534,10 @@
                                                                                     name="form[{{entity.idm4}}]"
                                                                                     class="form-control clase55"
                                                                                     value="{{ entity.m4 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales5()"
                                                                                     oninput="calculaTotales5()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio5(this)" />
+                                                                                    onblur="datoVacio5(this)" />
                                                                             </td>
                                                                             <td class="warning" id="cf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -1464,9 +1545,10 @@
                                                                                     name="form[{{entity.idf4}}]"
                                                                                     class="form-control clase56"
                                                                                     value="{{ entity.f4 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales5()"
                                                                                     oninput="calculaTotales5()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio5(this)" />
+                                                                                    onblur="datoVacio5(this)" />
                                                                             </td>
                                                                             <td class="warning" id="cf{{ key + 1 }}c4">
                                                                                 <input type="number" min="0" max="9999"
@@ -1474,9 +1556,10 @@
                                                                                     name="form[{{entity.idm5}}]"
                                                                                     class="form-control clase57"
                                                                                     value="{{ entity.m5 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales5()"
                                                                                     oninput="calculaTotales5()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio5(this)" />
+                                                                                    onblur="datoVacio5(this)" />
                                                                             </td>
                                                                             <td class="warning" id="cf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -1484,9 +1567,10 @@
                                                                                     name="form[{{entity.idf5}}]"
                                                                                     class="form-control clase58"
                                                                                     value="{{ entity.f5 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales5()"
                                                                                     oninput="calculaTotales5()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio5(this)" />
+                                                                                    onblur="datoVacio5(this)" />
                                                                             </td>
                                                                             <td class="warning" id="cf{{ key + 1 }}c4">
                                                                                 <input type="number" min="0" max="9999"
@@ -1494,9 +1578,10 @@
                                                                                     name="form[{{entity.idm6}}]"
                                                                                     class="form-control clase59"
                                                                                     value="{{ entity.m6 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales5()"
                                                                                     oninput="calculaTotales5()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio5(this)" />
+                                                                                    onblur="datoVacio5(this)" />
                                                                             </td>
                                                                             <td class="warning" id="cf{{ key + 1 }}c6">
                                                                                 <input type="number" min="0" max="9999"
@@ -1504,9 +1589,10 @@
                                                                                     name="form[{{entity.idf6}}]"
                                                                                     class="form-control clase60"
                                                                                     value="{{ entity.f6 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales5()"
                                                                                     oninput="calculaTotales5()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio5(this)" />
+                                                                                     onblur="datoVacio5(this)" />
                                                                             </td>
                                                                             {% endif %}
 
@@ -1563,15 +1649,14 @@
                                                         </div>
 
                                                         <hr>
-
+                                                        
+                                                        <div ref="sexto" id="sexto"></div>
                                                         <div class="alert alert-danger fa-2xs">
                                                             <span class="alert-icon"><i class="fa fa-users"></i></span>
                                                             <div class="notification-info">
                                                                 <ul class="clearfix notification-meta">
-                                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE DOCENTES
-                                                                                    POR GENERO EN LA
-                                                                                    GESTION Y
-                                                                                    PERIODO</strong></span></li>
+                                                                    <li class="pull-left notification-sender"><span><strong>REGISTRO DE
+                                                                    DOCENTES ASIGNADOS A LA CARRERA</strong></span></li>
                                                                     <li class="pull-right notification-sender"
                                                                         id="label_gestion_est"><strong>{{ gestion_id
                                                                             }}</strong></li>
@@ -1648,9 +1733,10 @@
                                                                                     name="form[{{entity.idm1}}]"
                                                                                     class="form-control clase61"
                                                                                     value="{{ entity.m1 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales6()"
                                                                                     oninput="calculaTotales6()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio6(this)" />
+                                                                                     onblur="datoVacio6(this)" />
                                                                             </td>
                                                                             <td class="warning" id="bf{{ key + 1 }}c2">
                                                                                 <input type="number" min="0" max="9999"
@@ -1659,9 +1745,10 @@
                                                                                     name="form[{{entity.idf1}}]"
                                                                                     class="form-control clase62"
                                                                                     value="{{ entity.f1 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales6()"
                                                                                     oninput="calculaTotales6()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio6(this)" />
+                                                                                     onblur="datoVacio6(this)" />
                                                                             </td>
 
                                                                             <td class="warning" id="bf{{ key + 1 }}c4">
@@ -1669,10 +1756,11 @@
                                                                                     id="{{ entity.idm2 }}"
                                                                                     name="form[{{entity.idm2}}]"
                                                                                     class="form-control clase63"
-                                                                                    value="{{ entity.m2 }}" 
+                                                                                    value="{{ entity.m2 }}"
+                                                                                    onclick="this.select();" 
                                                                                     onclick="calculaTotales6()"
                                                                                     oninput="calculaTotales6()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio6(this)" />
+                                                                                     onblur="datoVacio6(this)" />
                                                                             </td>
                                                                             <td class="warning" id="bf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -1680,9 +1768,10 @@
                                                                                     name="form[{{entity.idf2}}]"
                                                                                     class="form-control clase64"
                                                                                     value="{{ entity.f2 }}"
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales6()"
                                                                                     oninput="calculaTotales6()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio6(this)" />
+                                                                                     onblur="datoVacio6(this)" />
                                                                             </td>
 
                                                                             <td class="warning" id="bf{{ key + 1 }}c4">
@@ -1691,9 +1780,10 @@
                                                                                     name="form[{{entity.idm3}}]"
                                                                                     class="form-control clase65"
                                                                                     value="{{ entity.m3 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales6()"
                                                                                     oninput="calculaTotales6()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio6(this)" />
+                                                                                     onblur="datoVacio6(this)" />
                                                                             </td>
                                                                             <td class="warning" id="bf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -1701,9 +1791,10 @@
                                                                                     name="form[{{entity.idf3}}]"
                                                                                     class="form-control clase66"
                                                                                     value="{{ entity.f3 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales6()"
                                                                                     oninput="calculaTotales6()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio6(this)" />
+                                                                                     onblur="datoVacio6(this)" />
                                                                             </td>
 
 
@@ -1715,9 +1806,10 @@
                                                                                     name="form[{{entity.idm4}}]"
                                                                                     class="form-control clase67"
                                                                                     value="{{ entity.m4 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales6()"
                                                                                     oninput="calculaTotales6()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio6(this)" />
+                                                                                     onblur="datoVacio6(this)" />
                                                                             </td>
                                                                             <td class="warning" id="bf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -1725,9 +1817,10 @@
                                                                                     name="form[{{entity.idf4}}]"
                                                                                     class="form-control clase68"
                                                                                     value="{{ entity.f4 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales6()"
                                                                                     oninput="calculaTotales6()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio6(this)" />
+                                                                                     onblur="datoVacio6(this)" />
                                                                             </td>
                                                                             <td class="warning" id="bf{{ key + 1 }}c4">
                                                                                 <input type="number" min="0" max="9999"
@@ -1735,9 +1828,10 @@
                                                                                     name="form[{{entity.idm5}}]"
                                                                                     class="form-control clase69"
                                                                                     value="{{ entity.m5 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales6()"
                                                                                     oninput="calculaTotales6()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio6(this)" />
+                                                                                     onblur="datoVacio6(this)" />
                                                                             </td>
                                                                             <td class="warning" id="bf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -1745,9 +1839,10 @@
                                                                                     name="form[{{entity.idf5}}]"
                                                                                     class="form-control clase70"
                                                                                     value="{{ entity.f5 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales6()"
                                                                                     oninput="calculaTotales6()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio6(this)" />
+                                                                                     onblur="datoVacio6(this)" />
                                                                             </td>
                                                                             <td class="warning" id="bf{{ key + 1 }}c4">
                                                                                 <input type="number" min="0" max="9999"
@@ -1755,9 +1850,10 @@
                                                                                     name="form[{{entity.idm6}}]"
                                                                                     class="form-control clase71"
                                                                                     value="{{ entity.m6 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales6()"
                                                                                     oninput="calculaTotales6()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio6(this)" />
+                                                                                     onblur="datoVacio6(this)" />
                                                                             </td>
                                                                             <td class="warning" id="bf{{ key + 1 }}c5">
                                                                                 <input type="number" min="0" max="9999"
@@ -1765,9 +1861,10 @@
                                                                                     name="form[{{entity.idf6}}]"
                                                                                     class="form-control clase72"
                                                                                     value="{{ entity.f6 }}" 
+                                                                                    onclick="this.select();"
                                                                                     onclick="calculaTotales6()"
                                                                                     oninput="calculaTotales6()"                                                                                  
-                                                                                    onclick="this.select();" onblur="datoVacio6(this)" />
+                                                                                     onblur="datoVacio6(this)" />
                                                                             </td>
 
 
@@ -1808,6 +1905,8 @@
                                                                 </table>
                                                             </form>
                                                         </div>
+                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -1859,6 +1958,38 @@
 
 <!-- /.row -->
 
+<div id="modal-sin-info" class="modal modal-success fade bs-example-modal-lg" tabindex="-1" role="dialog"
+    aria-hidden="true">
+    <div class="modal-dialog modal-m">
+        <div class="modal-content">          
+            <div class="modal-body">               
+
+                <div class="alert alert-danger">
+                    <strong> SIN INFORMACION EN LA GESTION ? </strong>
+                </div>
+
+                <div class="callout callout-warning">
+                    <strong>Atencion!</strong> Para indicar que NO se tienen datos disponibles de esta <strong>carrera</strong> en esta <strong>gestion</strong>, debe colocar una justificacion documentada para consideracion del Ministerio de Educación</a>.
+                </div>
+
+                <br>
+
+                <form name="form" method="post" role="form" id="formJustifica" class="formatyearsform">               
+                    <div>
+                    <input type="hidden" name="carrera_id" id="carrera_id" value={{carrera_id}}>
+                    <input type="hidden" name="gestion_id" id="gestion_id" value={{gestion_id}}>
+                    <textarea name="justifica" id="justifica" class="form-control" maxlength="250" rows="5" placeholder="Introduzca la justificacion para esta accion "></textarea> 
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <button class="btn btn-theme" onclick="updateSinInfo();">Proceder</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
 
 
 {% endblock %}
@@ -2725,6 +2856,7 @@
                         success: function (data) {
                             $('#messagematriculas').empty();
                             if (data.estado) {
+                                document.getElementById("tercero").scrollIntoView();
                                 $("#messagematriculas").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
                             } else {
                                 $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
@@ -2792,6 +2924,7 @@
                             success: function (data) {
                                 $('#messagematriculasp2').empty();
                                 if (data.estado) {
+                                    document.getElementById("quinto").scrollIntoView();
                                     $("#messagematriculasp2").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
                                 } else {
                                     $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
@@ -2858,6 +2991,7 @@
                         success: function (data) {
                             $('#messagecargos').empty();
                             if (data.estado) {
+                                document.getElementById("cuarto").scrollIntoView();
                                 $("#messagecargos").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
                             } else {
                                 $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
@@ -2923,6 +3057,7 @@
                             success: function (data) {
                                 $('#messagecargosp2').empty();
                                 if (data.estado) {
+                                    document.getElementById("sexto").scrollIntoView();
                                     $("#messagecargosp2").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
                                 } else {
                                     $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> ' + data.msg + '</div>');
@@ -2966,15 +3101,15 @@
                             return false;
                         }*/
     
-                        var formulario = document.getElementById("formCargos"); //$('#formBecas');
+                        var formulario = document.getElementById("formegresadostitulados");
                         var formData = new FormData(formulario);
     
                         formData.append('key1', 'value1');
                         console.log(formData);
-                        /*
+                        
                         $.ajax({
                             type: 'post',
-                            url: Routing.generate('tecest_carrera_estadistica_cargos_save'),
+                            url: Routing.generate('tecest_carrera_estadistica_titulados_save'),
                             data: formData,
                             processData: false,
                             contentType: false,
@@ -3008,7 +3143,7 @@
                                 //boton.show();
                             },
                         });
-                        */
+                        
     
                     }
     
@@ -3033,15 +3168,15 @@
                             return false;
                         }*/
     
-                        var formulario = document.getElementById("formCargos"); //$('#formBecas');
+                        var formulario = document.getElementById("formegresadostituladosp2"); //$('#formBecas');
                         var formData = new FormData(formulario);
     
                         formData.append('key1', 'value1');
                         console.log(formData);
-                        /*
+                        
                         $.ajax({
                             type: 'post',
-                            url: Routing.generate('tecest_carrera_estadistica_cargos_save'),
+                            url: Routing.generate('tecest_carrera_estadistica_titulados_save'),
                             data: formData,
                             processData: false,
                             contentType: false,
@@ -3075,14 +3210,56 @@
                                 //boton.show();
                             },
                         });
-                        */
+                        
     
                     }
     
                 })
         });
     
+    function calculaTotales0() {
 
+        console.log('here');
+
+        var tm1 = 0;
+        var tf1 = 0;
+        
+
+        $('.clase00').each(function (i, obj) {
+            tm1 = parseInt(tm1) + parseInt(obj.value);
+        });
+
+        $('.clase01').each(function (i, obj) {
+            tf1 = parseInt(tf1) + parseInt(obj.value);
+        });            
+
+        $('#total00').html(tm1);
+        $('#total01').html(tf1);
+        
+        
+    }
+
+    function calculaTotales0p2() {
+
+        console.log('here');
+
+        var tm1 = 0;
+        var tf1 = 0;
+        
+
+        $('.clase02').each(function (i, obj) {
+            tm1 = parseInt(tm1) + parseInt(obj.value);
+        });
+
+        $('.clase03').each(function (i, obj) {
+            tf1 = parseInt(tf1) + parseInt(obj.value);
+        });            
+
+        $('#total02').html(tm1);
+        $('#total03').html(tf1);
+        
+        
+    }
 
     var datoVacio = function (control) {
        if (control.value == "") { control.value = 0; }
@@ -3124,6 +3301,72 @@
        if (control.value > 9999) { control.value = 0; }
        if (control.value < 0) { control.value = 0; }
         calculaTotales6(control);
+    }
+
+    $('#btn_sin_dato').click(function () {
+        showModalSinInfo();
+    });
+
+    function showModalSinInfo(){
+        $("#modal-sin-info").modal('show');
+    }
+
+    function  updateSinInfo(){
+
+        if(document.getElementById("justifica").value == ""  ||  document.getElementById("justifica").value.length  < 50){
+            //no hay justificacion
+            alert("DEBE ESPECIFICAR LA JUSTIFICACION DE ESTA ACCION (MINIMO 50 CARACTERES) !");
+            document.getElementById("justifica").focus();
+
+        }else{
+
+            //procede
+
+            swal({
+                title: "¿Grabar Justificacion ?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+                buttons: ["Cancelar", "Grabar"],
+            })
+            .then(function(respuesta)  {
+                if (respuesta) {              
+    
+                    var formulario = document.getElementById("formJustifica"); //$('#formBecas');
+                    var formData = new FormData(formulario);
+    
+                    formData.append('key1', 'value1');
+                    console.log(formData);
+                    $.ajax({
+                        type: 'post',
+                        url: Routing.generate('tecest_carrera_sin_info_save'),
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function () {
+                            $("#messagejustifica").append('<div class="text-center" id="message"><img src="{{asset('img / loading.gif')}}" class="loading img-responsive" /></div>');
+                        },
+                        success: function (data) {
+                            $('#messagejustifica').empty();
+                            $("#modal-sin-info").modal('hide');
+                            $("#messagejustifica").html('<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Correcto:</strong> ' + data.msg + '</div>');
+                            document.getElementById("btn_sin_dato").style.display="none";
+                            
+                        },
+                        error: function (error) {
+                            $('#message').empty();
+                            $("#message").append('<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><strong>Error:</strong> no fue posible realizar en registro, intente nuevamente</div>');
+                            //boton.show();
+                        },
+                    });
+    
+                }
+    
+            });
+
+
+        }
+
     }
 
 

@@ -1775,7 +1775,7 @@ class InboxController extends Controller {
       if($inconsistencia){
         $observation = true;
       }
-
+      if(($this->session->get('ue_modular')!==NULL) && $this->session->get('ue_modular')){$observation=false;}
       if($observation){ 
         $this->session->set('donwloadLibreta', false);              
         return $this->render($this->session->get('pathSystem') . ':Tramite:list_inconsistencia.html.twig', array(

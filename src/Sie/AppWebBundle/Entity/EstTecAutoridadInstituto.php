@@ -444,4 +444,32 @@ class EstTecAutoridadInstituto
     {
         return $this->estTecSede;
     }
+    /**
+     * @var string
+     */
+    private $documentosFirma;
+
+
+    /**
+     * Set documentosFirma
+     *
+     * @param string $documentosFirma
+     * @return EstTecAutoridadInstituto
+     */
+    public function setDocumentosFirma($documentosFirma)
+    {
+        $this->documentosFirma = $documentosFirma;
+    
+        return $this;
+    }
+
+    /**
+     * Get documentosFirma
+     *
+     * @return string 
+     */
+    public function getDocumentosFirma()
+    {
+        return $this->documentosFirma;
+    }
 }

@@ -40,7 +40,7 @@ class Tecestfunctions {
   public function getAllStaff($arrData){
 
     $query =       "
-        select aut.id, per.paterno, per.materno, per.nombre, per.carnet, per.complemento,carg.cargo, form.cargo as formacion, aut.gestion_tipo_id, aut.documentos_acad, aut.est_tec_sede_id
+        select aut.id, per.paterno, per.materno, per.nombre, per.carnet, per.complemento,carg.cargo, form.cargo as formacion, aut.gestion_tipo_id, aut.documentos_acad,aut.documentos_firma, aut.est_tec_sede_id
         from est_tec_sede as sede
         inner join est_tec_autoridad_instituto as aut on (sede.id = aut.est_tec_sede_id )
         inner join persona as per on (aut.persona_id = per.id)

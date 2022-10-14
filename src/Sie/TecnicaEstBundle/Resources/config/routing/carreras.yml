@@ -47,3 +47,9 @@ tecest_carrera_estadistica_titulados_save:
     defaults: { _controller: SieTecnicaEstBundle:Carreras:statsTituladosSave }
     options:
         expose: true
+
+tecest_carrera_sin_info_save:
+    path:     /estats/sininfo/save
+    defaults: { _controller: SieTecnicaEstBundle:Carreras:statsSinInfoSave }
+    options:
+        expose: true
