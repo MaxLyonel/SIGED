@@ -490,7 +490,7 @@ class StudentsInscriptionsController extends Controller {
         $arridsexcepcional = array(6);
       }
       if( $sinfoUeducativa['ueducativaInfoId']['nivelId'] ==15 && $sinfoUeducativa['ueducativaInfoId']['cicloId']==2 ){
-        $arridsexcepcional = array(1,2,3,4,5);
+        $arridsexcepcional = array(1,2,3,4,5,7,8);
       }
       $entity = $em->getRepository('SieAppWebBundle:EstudianteInscripcionAlternativaExcepcionalTipo');
       $query = $entity->createQueryBuilder('eiaet')
@@ -830,6 +830,7 @@ class StudentsInscriptionsController extends Controller {
                     $dataInscriptionE[$key] = $inscription;
                     break;
                 case '5':
+                $bloquep = array();
                 if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 14)$bloquep ='Segundo';
                 if(($inscription['bloque_p'] == 1 && $inscription['parte_p'] == 2) || $inscription['parte_p'] == 15)$bloquep = 'Tercero';
                 if(($inscription['bloque_p'] == 2 && $inscription['parte_p'] == 1) || $inscription['parte_p'] == 16)$bloquep = 'Quinto';
