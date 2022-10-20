@@ -95,8 +95,8 @@ class ReportsController extends Controller{
         $response->headers->set('Content-type', 'application/pdf');
         $response->headers->set('Content-Disposition', sprintf('attachment; filename="%s"', 'reporteGeneral'.$id_sede.'_'.$this->session->get('currentyear'). '.pdf'));
 
-        $nameReport = ($statusope)?'est_tec_reporte_estadistico_ejea_v1_borrador':'est_tec_reporte_estadistico_ejea_v1';
-        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .$nameReport.'.rptdesign&gestion='.$gestion.'&id_sede='.$id_sede.'&&__format=pdf&'));
+        $nameReport = (!$statusope)?'est_tec_reporte_estadistico_ejea_v1_borrador':'est_tec_reporte_estadistico_ejea_v1';
+        $response->setContent(file_get_contents($this->container->getParameter('urlreportweb') .$nameReport.'.rptdesign&gestion='.$gestion.'&est_tec_sede_id='.$id_sede.'&&__format=pdf&'));
 
         $response->setStatusCode(200);
         $response->headers->set('Content-Transfer-Encoding', 'binary');
