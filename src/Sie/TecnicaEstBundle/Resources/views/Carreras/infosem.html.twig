@@ -158,10 +158,12 @@
 
                                                 <table width="30%" padding="20" border="0">
                                                     <th>
-                                                        <td  >
-                                                            <a href="#"
-                                                            class="btn btn-teal btn-block" style="border-radius: 2px;"
-                                                            id="btn_sin_dato">Reportar sin información en la gestión</a> 
+                                                        <td>
+                                                            {% if opestatus == true %}
+                                                                <a href="#"
+                                                                class="btn btn-teal btn-block" style="border-radius: 2px;"
+                                                                id="btn_sin_dato">Reportar sin información en la gestión</a> 
+                                                            {% endif %} 
                                                         </td>                                                   
                                                     </th>
                                                 </table>
@@ -260,7 +262,15 @@
                 
                                                                     <tr>
                                                                         <td> </td>                                                       
-                                                                        <td colspan="2"> <a href="#" class="btn btn-success btn-block" id="form_save_gral">Grabar Estadisticas</a> </td>
+                                                                        <td colspan="2"> 
+                                                                            {% if opestatus == true %}
+                                                                                <a href="#" class="btn btn-success btn-block" id="form_save_gral">Grabar Estadisticas</a> 
+                                                                            {% else %}   
+                                                                            <div class="alert alert-danger">
+                                                                                <strong>OPERATIVO CERRADO<strong> no se puede modificar la información.
+                                                                            </div>
+                                                                            {% endif %} 
+                                                                        </td>
                                                                     
                                                                     </tr>
                 
@@ -514,7 +524,13 @@
 
                                                                         <tr>
                                                                             <td> 
-                                                                                <a href="#" class="btn btn-success btn-block" id="form_save_becas">Registrar Estadisticas</a>
+                                                                                {% if opestatus == true %}
+                                                                                    <a href="#" class="btn btn-success btn-block" id="form_save_becas">Registrar Estadisticas</a>
+                                                                                {% else %}   
+                                                                                <div class="alert alert-danger" style="text-align: center;">
+                                                                                    <strong>OPERATIVO CERRADO<strong>
+                                                                                </div>
+                                                                                {% endif %} 
                                                                             </td>
                                                                            
                                                                             <td colspan="12"> 
@@ -776,9 +792,17 @@
                                                                         #}
 
                                                                         <tr>
-                                                                            <td> <a href="#"
-                                                                                    class="btn btn-success btn-block"
-                                                                                    id="form_save_matriculas">Registrar Estadísticas</a>
+                                                                            <td> 
+                                                                                {% if opestatus == true %}
+                                                                                    <a href="#"
+                                                                                        class="btn btn-success btn-block"
+                                                                                        id="form_save_matriculas">Registrar Estadísticas</a>
+                                                                                {% else %}   
+                                                                                <div class="alert alert-danger" style="text-align: center;">
+                                                                                    <strong>OPERATIVO CERRADO<strong>
+                                                                                </div>
+                                                                                {% endif %}  
+
                                                                             </td>                                                                           
                                                                             <td colspan="12"> 
                                                                             </td>                                                                            
@@ -1036,9 +1060,16 @@
 
                                                                         <tr>
                                                                             <td>
-                                                                                <a href="#"
-                                                                                    class="btn btn-success btn-block"
-                                                                                    id="form_save_cargos">Registrar Estadísticas</a>
+                                                                                {% if opestatus == true %}
+                                                                                    <a href="#"
+                                                                                        class="btn btn-success btn-block"
+                                                                                        id="form_save_cargos">Registrar Estadísticas</a>
+                                                                                {% else %}   
+                                                                                <div class="alert alert-danger" style="text-align: center;">
+                                                                                    <strong>OPERATIVO CERRADO<strong>
+                                                                                </div>
+                                                                                {% endif %}     
+
                                                                              </td>                                                                                                                                                        
                                                                             <td colspan="12"> 
                                                                             </td>
@@ -1113,8 +1144,15 @@
             
                                                                 <tr>
                                                                     <td> </td>                                                       
-                                                                    <td colspan="2"> <a href="#" class="btn btn-info btn-block" id="form_save_gralp2">Grabar Estadisticas</a> </td>
-                                                                
+                                                                    <td colspan="2"> 
+                                                                        {% if opestatus == true %}
+                                                                            <a href="#" class="btn btn-info btn-block" id="form_save_gralp2">Grabar Estadisticas</a> 
+                                                                        {% else %}   
+                                                                        <div class="alert alert-danger">
+                                                                            <strong>OPERATIVO CERRADO<strong> no se puede modificar la información.
+                                                                        </div>
+                                                                        {% endif %}
+                                                                    </td>                                                                
                                                                 </tr>
             
             
@@ -1368,9 +1406,15 @@
 
                                                                         <tr>
                                                                             <td> 
-                                                                            <a href="#"
+                                                                                {% if opestatus == true %}
+                                                                                    <a href="#"
                                                                                     class="btn btn-info btn-block"
                                                                                     id="form_save_becasp2">Registrar Estadísticas</a>
+                                                                                {% else %}   
+                                                                                <div class="alert alert-danger" style="text-align: center;">
+                                                                                    <strong>OPERATIVO CERRADO<strong>
+                                                                                </div>
+                                                                                {% endif %} 
                                                                             </td>
                                                                            
                                                                             <td colspan="12"> 
@@ -1634,9 +1678,15 @@
 
                                                                         <tr>
                                                                             <td>
-                                                                                <a href="#"
-                                                                                    class="btn btn-info btn-block"
-                                                                                    id="form_save_matriculasp2">Registrar Estadísticas</a>
+                                                                                {% if opestatus == true %}
+                                                                                    <a href="#"
+                                                                                        class="btn btn-info btn-block"
+                                                                                        id="form_save_matriculasp2">Registrar Estadísticas</a>
+                                                                                {% else %}   
+                                                                                    <div class="alert alert-danger" style="text-align: center;">
+                                                                                        <strong>OPERATIVO CERRADO<strong>
+                                                                                    </div>
+                                                                                {% endif %}  
                                                                             </td>
                                                                             <td colspan="12"> 
                                                                             </td>
@@ -1906,9 +1956,17 @@
                                                                         #}
 
                                                                         <tr>
-                                                                            <td>   <a href="#"
-                                                                                    class="btn btn-info btn-block"
-                                                                                    id="form_save_cargosp2">Registrar Estadisticas</a>
+                                                                            <td>   
+                                                                                {% if opestatus == true %}
+                                                                                    <a href="#"
+                                                                                        class="btn btn-info btn-block"
+                                                                                        id="form_save_cargosp2">Registrar Estadisticas</a>
+                                                                                {% else %}   
+                                                                                <div class="alert alert-danger" style="text-align: center;">
+                                                                                    <strong>OPERATIVO CERRADO<strong>
+                                                                                </div>
+                                                                                {% endif %}
+
                                                                             </td>                                                                          
                                                                             <td colspan="12"> 
                                                                             </td>                                                                            

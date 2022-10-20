@@ -643,6 +643,17 @@ class CarrerasController extends Controller
         $estado = $po[0]['est_tec_estadocarrera_tipo_id'];
         //dump($estado);die;
         if($estado == 2){$sindatoenlagestion = true;}
+
+        //$sedeId = $this->session->get('sedeId');
+        // para saber si el operatico esta abierto(true) o cerrado (false)
+        $sql = "select activo from est_tec_registro_consolidacion
+        where est_tec_sede_id = ".$sedeId." and gestion_tipo_id = ". $gestion;
+        $stmt = $db->prepare($sql);
+        $params = array();
+        $stmt->execute($params);
+        $po = $stmt->fetchAll();
+        $opestatus = $po[0]['activo'];
+        //dump($opestatus); die; 
         
         if($nro_periodos == 3){  //anual
             return $this->render('SieTecnicaEstBundle:Carreras:info.html.twig', array(
@@ -667,6 +678,8 @@ class CarrerasController extends Controller
                 'filas_egresados' => $filas_egresados,
                 'totales0' => $totales0,
                 'sindatoenlagestion' => $sindatoenlagestion,
+                'opestatus' => $opestatus,
+
     
             ));
         }else{ //semestral
@@ -695,6 +708,7 @@ class CarrerasController extends Controller
                 'totales0' => $totales0,
                 'totales0p2' => $totales0p2,
                 'sindatoenlagestion' => $sindatoenlagestion,
+                'opestatus' => $opestatus,
     
             ));
         }
