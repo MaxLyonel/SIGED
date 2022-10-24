@@ -220,11 +220,13 @@ class ExecutiveStaffController extends Controller{
     }
 
     public function savestaffAction(Request $request){
-        $em = $this->getDoctrine()->getManager();
-        $db = $em->getConnection(); 
+     
+       
         
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection(); 
+
         $jsonData = $request->get('datos');
         $arrData = json_decode($jsonData,true);
 
@@ -318,16 +320,18 @@ class ExecutiveStaffController extends Controller{
         }
 
 
-            $sql = "select count(*) as existe from persona
+      
+            $sql_aux = "select count(*) as existe from persona
             where carnet = '".$arrData['carnet'] ."'" ;
-            $stmt = $db->prepare($sql);
+            //dump($sql_aux);
+            $stmt = $db->prepare($sql_aux);
             $params = array();
             $stmt->execute($params);
             $po = $stmt->fetchAll();
-            $total_filas = $po[0]['existe'];
+            $total_filas_aux = $po[0]['existe'];
 
-            //dump($total_filas); die;
-            if($total_filas == 0){
+           
+            if($total_filas_aux == 0){
             //if($arrData['newperson'] == true){
                 $newPerson = $this->saveNewPerson($arrData);
                 //dump($newPerson); die;
@@ -381,9 +385,9 @@ class ExecutiveStaffController extends Controller{
         $arrData["email"] = $arrData["email"];
         // $arrData["descripcion"] = $arrData["descripcion"];
         $arrData["formaciondescripcion"] = $arrData["formaciondescripcion"];
-        // $arrData["gestion_nombramiento_id"] = $arrData["gestion_nombramiento_id"];
-        // $arrData["ratificacion_anio_ini"] = $arrData["ratificacion_anio_ini"];
-        // $arrData["ratificacion_anio_fin"] = $arrData["ratificacion_anio_fin"];
+        $arrData["gestion_nombramiento_id"] = $arrData["gestion_nombramiento_id"];
+        $arrData["ratificacion_anio_ini"] = $arrData["ratificacion_anio_ini"];
+        $arrData["ratificacion_anio_fin"] = $arrData["ratificacion_anio_fin"];
         $arrData["fecha_registro_firma"] = $arrData["fecha_registro_firma"];
         $arrData["yearchoose"] = $arrData["yearchoose"];
 
