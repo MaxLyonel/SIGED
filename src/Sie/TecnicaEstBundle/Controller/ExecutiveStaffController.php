@@ -220,12 +220,16 @@ class ExecutiveStaffController extends Controller{
     }
 
     public function savestaffAction(Request $request){
-
-               
+        $em = $this->getDoctrine()->getManager();
+        $db = $em->getConnection(); 
+        
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
         $jsonData = $request->get('datos');
         $arrData = json_decode($jsonData,true);
+
+        //dump($arrData); die;
+        
         $arrData['pathDirectory'] = '';
         $arrData['pathDirectoryFirma'] = '';  //para la firma
         // check if the file exists
@@ -313,8 +317,18 @@ class ExecutiveStaffController extends Controller{
                 $archivador = 'empty';
         }
 
-        
-            if($arrData['newperson'] == true){
+
+            $sql = "select count(*) as existe from persona
+            where carnet = '".$arrData['carnet'] ."'" ;
+            $stmt = $db->prepare($sql);
+            $params = array();
+            $stmt->execute($params);
+            $po = $stmt->fetchAll();
+            $total_filas = $po[0]['existe'];
+
+            //dump($total_filas); die;
+            if($total_filas == 0){
+            //if($arrData['newperson'] == true){
                 $newPerson = $this->saveNewPerson($arrData);
                 //dump($newPerson); die;
                 $arrData['personId'] = $newPerson->getId();
