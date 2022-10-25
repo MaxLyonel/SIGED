@@ -332,6 +332,8 @@ class ExecutiveStaffController extends Controller{
                 $newPerson = $this->saveNewPerson($arrData);
                 //dump($newPerson); die;
                 $arrData['personId'] = $newPerson->getId();
+            }else{
+                $arrData['personId'] = $id_persona_aux;
             }
 
             $registerProcess = $this->saveUpdatePersonalInfo($arrData, 0);
