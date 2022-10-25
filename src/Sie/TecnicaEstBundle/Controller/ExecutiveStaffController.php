@@ -321,14 +321,15 @@ class ExecutiveStaffController extends Controller{
 
 
       
-            $sql_aux = "select count(*) as existe from persona
-            where carnet = '".$arrData['carnet'] ."'" ;
+            $sql_aux = "select id, count(*) as existe from persona
+            where carnet = '".$arrData['carnet'] ."'  group by id" ;
             //dump($sql_aux);
             $stmt = $db->prepare($sql_aux);
             $params = array();
             $stmt->execute($params);
             $po = $stmt->fetchAll();
             $total_filas_aux = $po[0]['existe'];
+            $id_persona_aux = $po[0]['id'];
 
            
             if($total_filas_aux == 0){
@@ -336,8 +337,10 @@ class ExecutiveStaffController extends Controller{
                 $newPerson = $this->saveNewPerson($arrData);
                 //dump($newPerson); die;
                 $arrData['personId'] = $newPerson->getId();
+            }else{
+                $arrData['personId'] = $id_persona_aux;
             }
-
+            
             $registerProcess = $this->saveUpdatePersonalInfo($arrData, 0);
 
 
@@ -366,6 +369,7 @@ class ExecutiveStaffController extends Controller{
 
     private function saveUpdatePersonalInfo($arrData,$flag){
 
+        
         $em = $this->getDoctrine()->getManager();
         $arrData["personId"] = $arrData["personId"];
         $arrData["cargo"] = $arrData["cargo"];
@@ -386,8 +390,9 @@ class ExecutiveStaffController extends Controller{
         // $arrData["descripcion"] = $arrData["descripcion"];
         $arrData["formaciondescripcion"] = $arrData["formaciondescripcion"];
         $arrData["gestion_nombramiento_id"] = $arrData["gestion_nombramiento_id"];
-        $arrData["ratificacion_anio_ini"] = $arrData["ratificacion_anio_ini"];
-        $arrData["ratificacion_anio_fin"] = $arrData["ratificacion_anio_fin"];
+        
+       /* $arrData["ratificacion_anio_ini"] = $arrData["ratificacion_anio_ini"];
+        $arrData["ratificacion_anio_fin"] = $arrData["ratificacion_anio_fin"];*/
         $arrData["fecha_registro_firma"] = $arrData["fecha_registro_firma"];
         $arrData["yearchoose"] = $arrData["yearchoose"];
 
@@ -411,6 +416,7 @@ class ExecutiveStaffController extends Controller{
             $entity = new EstTecAutoridadInstituto();
             $arrData["sedeId"]     = $arrData["sedeId"];
             $entity->setEstTecSede($em->getRepository('SieAppWebBundle:EstTecSede')->find($arrData["sedeId"]));
+            
             $entity->setPersona($em->getRepository('SieAppWebBundle:Persona')->find($arrData["personId"]));
             $entity->setDocumentosAcad($arrData['pathDirectory']);
             $entity->setDocumentosFirma($arrData['pathDirectoryFirma']);
@@ -435,7 +441,9 @@ class ExecutiveStaffController extends Controller{
         
 
         $em->persist($entity);
-        $em->flush();        
+        $em->flush(); 
+        
+       //dump('here'); die;
 
         return $entity;
 
