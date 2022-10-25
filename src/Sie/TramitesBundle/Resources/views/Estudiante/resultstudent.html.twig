@@ -90,7 +90,15 @@
                                             <tr>
                                                 <td data-title="No.">{{loop.index}}</td>
                                                 <td data-title="Rude"><strong>{{ entity.codigoRude }}</strong></td>
-                                                <td data-title="CI">{{ entity.carnetIdentidad }} </td>
+                                                <td data-title="CI">
+                                                    {% set extranjero = "" %}
+                                                    {% if entity.cedulaTipo %}
+                                                        {% if entity.cedulaTipo.id == 2 %}
+                                                            {% set extranjero = "E-" %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                    {{extranjero~entity.carnetIdentidad}} 
+                                                </td>
                                                 <td data-title="Complemento" class="text-center"> {{entity.complemento}}</td>
                                                 <td data-title="Paterno">{{ entity.paterno }}</td>
                                                 <td data-title="Materno">{{ entity.materno }}</td>

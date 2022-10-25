@@ -1,0 +1,22 @@
+
+reports_index:
+    path:     /
+    defaults: { _controller: SieUniversityBundle:Reports:index }
+
+
+reports_getAllReports:
+    path:     /getAllReports
+    defaults: { _controller: SieUniversityBundle:Reports:getAllReports }
+    options:
+        expose: true
+
+reports_downloadreportgeneral:
+    path:     /downloadreportgeneral/{gestion}/{id_sede}/{statusope}
+    defaults: { _controller: SieUniversityBundle:Reports:downloadreportgeneral }
+
+
+reports_getAllOperative:
+    path:     /getAllOperative
+    defaults: { _controller: SieUniversityBundle:Reports:getAllOperative }
+    options:
+        expose: true  

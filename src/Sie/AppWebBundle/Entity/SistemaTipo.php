@@ -29,7 +29,9 @@ class SistemaTipo
      */
     private $abreviatura;
 
-
+    public function __toString(){
+        return $this->sistema;
+    }
     /**
      * Get id
      *

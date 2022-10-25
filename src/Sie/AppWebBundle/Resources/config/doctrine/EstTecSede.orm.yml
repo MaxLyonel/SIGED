@@ -1,0 +1,101 @@
+Sie\AppWebBundle\Entity\EstTecSede:
+    type: entity
+    table: est_tec_sede
+    indexes:
+        IDX_30C5A6CB3EDC05A5:
+            columns:
+                - est_tec_sede_tipo_id
+        IDX_30C5A6CBDB38439E:
+            columns:
+                - usuario_id
+        IDX_30C5A6CB5FDD255:
+            columns:
+                - est_tec_naturalezajuridica_tipo_id
+        IDX_30C5A6CB472D7505:
+            columns:
+                - est_tec_instituto_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        sede:
+            type: string
+            nullable: false
+            length: 150
+            fixed: false
+            comment: ''
+        resolucionSuprema:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: resolucion_suprema
+        resolucionMinisterial:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: resolucion_ministerial
+        naturalezaJuridica:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+            column: naturaleza_juridica
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    manyToOne:
+        estTecSedeTipo:
+            targetEntity: EstTecSedeTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_sede_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        usuario:
+            targetEntity: Usuario
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                usuario_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecNaturalezajuridicaTipo:
+            targetEntity: EstTecNaturalezajuridicaTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_naturalezajuridica_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecInstituto:
+            targetEntity: EstTecInstituto
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_instituto_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

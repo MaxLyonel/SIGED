@@ -308,6 +308,7 @@ var m_buscarMadre = function(){
 
 // cargar los campos con los datos devueltos por el servicio
 var m_cargarDatos = function(data){
+    
     $('#m_idPersona').val(data.id);
     $('#m_carnet').val(data.carnet);
     $('#m_complemento').val(data.complemento);
@@ -315,6 +316,7 @@ var m_cargarDatos = function(data){
     $('#m_materno').val(data.materno);
     $('#m_nombre').val(data.nombre);
     $('#m_fechaNacimiento').val(data.fecha_nacimiento);
+    $('#m_cedulaTipoId').val(data.cedula_tipo_id);
 }
 
 // borrar los datos si el servicio no devuelve datos
@@ -376,6 +378,8 @@ function m_limpiarBuscador(){
 
 function saveFormMadre(){
     var data = $('#formMadre').serialize();
+    var subsistema = $('#subsistema').val();
+    
     // data['actualizar'] = recargar;
     $.ajax({
         url: Routing.generate('info_estudiante_rude_nuevo_save_formApoderado'),
@@ -402,6 +406,13 @@ function saveFormMadre(){
                 //     $('#paso5').click();
                 // }
                 $('#tabTutor').click();
+                if(subsistema=='especial'){
+                    $('#cortina').css('display','none');
+                    $('#paso7').parent('li').removeClass('disabled');
+                    $('#paso7').attr('data-toggle','tab');
+                    $('#paso7').click();
+                    $('#tabPadre').click();
+                }
             }else{
                 alert(data.msg);
             }

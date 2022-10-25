@@ -913,7 +913,8 @@ class InfoPersonalAdmController extends Controller {
             'tipo_persona' => 1,  //tiene que venir del form
 
         ];*/
-
+        $data['extranjero']=($request->get('nacionalidad')=='EX')?'E':null;
+        
         $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
         //$resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet('11609954', $data, $form['entorno'], 'academico');
         $persona = array();
@@ -925,7 +926,9 @@ class InfoPersonalAdmController extends Controller {
                 'primer_apellido' => $form['primer_apellido'],
                 'segundo_apellido' => $form['segundo_apellido'],
                 'nombre' => $form['nombre'],
-                'fecha_nacimiento' => $form['fecha_nacimiento']
+                'fecha_nacimiento' => $form['fecha_nacimiento'],
+                'extranjero' =>  $data['extranjero'],
+
             ];
         }
 
@@ -958,6 +961,8 @@ class InfoPersonalAdmController extends Controller {
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucion']);
         $gestion = $form['gestion'];
 
+        
+
         $fecha = str_replace('-','/',$persona['fecha_nacimiento']);
         $complemento = $persona['complemento'] == '0'? '':$persona['complemento'];
         $arrayDatosPersona = array(
@@ -966,9 +971,10 @@ class InfoPersonalAdmController extends Controller {
             'paterno'=>$persona['primer_apellido'],
             'materno'=>$persona['segundo_apellido'],
             'nombre'=>$persona['nombre'],
-            'fecha_nacimiento' => $fecha
+            'fecha_nacimiento' => $fecha,
+            'extranjero'=> $persona['extranjero']
         );
-
+        
         $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['carnet'], $arrayDatosPersona, 'prod', 'academico');
 
         if( $personaValida )
@@ -999,6 +1005,8 @@ class InfoPersonalAdmController extends Controller {
                 $newPersona->setRda('0');
                 $newPersona->setEsvigente('t');
                 $newPersona->setActivo('t');
+
+                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(isset($persona['extranjero'])?2:1));
 
                 $em->persist($newPersona);
                 $em->flush();

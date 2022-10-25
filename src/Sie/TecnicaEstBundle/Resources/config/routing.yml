@@ -1,0 +1,31 @@
+sie_tecnicaest_homepage:
+    path:     /tecest/homepage
+    defaults: { _controller: SieTecnicaEstBundle:Default:index }
+
+sie_tecnica_est_menu:
+    path:     /tecest/menu
+    defaults: { _controller: SieTecnicaEstBundle:Default:menu }
+
+tecest_staff:
+    resource: "@SieTecnicaEstBundle/Resources/config/routing/executivestaff.yml"
+    prefix:   /tecest/staff
+
+tecest_tecnica_est_sede:
+    resource: "@SieTecnicaEstBundle/Resources/config/routing/sede.yml"
+    prefix:   /tecest/sede
+
+tecest_tecnica_est_sede_docenteadministrativo:
+    resource: "@SieTecnicaEstBundle/Resources/config/routing/sededocenteadministrativo.yml"
+    prefix:   /tecest/sede/docenteadministrativo
+
+tecest_maininfotecest:
+    resource: "@SieTecnicaEstBundle/Resources/config/routing/maininfotecest.yml"
+    prefix:   /tecest/maininfotecest
+
+tecest_carreras:
+    resource: "@SieTecnicaEstBundle/Resources/config/routing/carreras.yml"
+    prefix:   /tecest/carreras
+
+tecest_reports:
+    resource: "@SieTecnicaEstBundle/Resources/config/routing/reports.yml"
+    prefix:   /tecest/reports    

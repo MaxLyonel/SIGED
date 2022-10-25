@@ -1550,6 +1550,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         p.celular,
                         p.segipId,
                         p.apellidoEsposo,
+                        ct.id as cedulaTipoId,
                         IDENTITY(p.estadocivilTipo) as estado_civil, 
                         dt.id as expedido,
                         gt.id as genero, 
@@ -1569,6 +1570,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                     ->leftJoin('SieAppWebBundle:InstruccionTipo','it','with','aid.instruccionTipo = it.id')
                     ->leftJoin('SieAppWebBundle:ApoderadoOcupacionTipo','aot','with','aid.ocupacionTipo = aot.id')
                     ->leftJoin('SieAppWebBundle:DepartamentoTipo','dt','with','p.expedido = dt.id')
+                    ->leftJoin('SieAppWebBundle:CedulaTipo','ct','with','p.cedulaTipo = ct.id')
                     ->where('ai.estudianteInscripcion = :idInscripcion')
                     ->andWhere('at.id in (:tipoApoderado)')
                     ->setParameter('idInscripcion',$idInscripcion)
@@ -1769,7 +1771,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
                             'required'=>true,
                             'data'=>($datos['instruccionTipo'] != null)?$em->getReference('SieAppWebBundle:InstruccionTipo', $datos['instruccionTipo']):''
                         ))
-
+                    ->add('cedulaTipoId', 'hidden', array('required' => true))
                     ->getForm();
 
         return $form;
@@ -1795,7 +1797,7 @@ class InfoEstudianteRudeNuevoController extends Controller {
             $esExtranjero=filter_var($request->get('esExtranjero'),FILTER_SANITIZE_NUMBER_INT);
             $documentoNro=$request->get('documentoNro');
             $extranjero_segip=$request->get('extranjero_segip');
-
+            //dump($extranjero_segip); die;
             $data=array();
             if($esExtranjero==0)//es nacional
             {
@@ -1838,7 +1840,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         'paterno'=> $persona['PrimerApellido'],
                         'materno'=> $persona['SegundoApellido'],
                         'nombre'=> $persona['Nombres'],
-                        'fecha_nacimiento'=> $persona['FechaNacimiento']
+                        'fecha_nacimiento'=> $persona['FechaNacimiento'],
+                        'cedula_tipo_id'=> 1, //si es nacional
                     );
                 }
                 else
@@ -1872,7 +1875,8 @@ class InfoEstudianteRudeNuevoController extends Controller {
                         'materno'=> $personaExtranjera->getMaterno(),
                         'nombre'=> $personaExtranjera->getNombre(),
                         ///'fecha_nacimiento'=> $personaExtranjera->getFechaNacimiento()
-                        'fecha_nacimiento'=> $personaExtranjera->getFechaNacimiento()->format('d-m-Y')
+                        'fecha_nacimiento'=> $personaExtranjera->getFechaNacimiento()->format('d-m-Y'),
+                        'cedula_tipo_id'=> 2 // si es extranjero
                     );
                 }
                 else
@@ -1883,10 +1887,12 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
             $response = new JsonResponse();
             $response->setData($data);
+            
             return $response;
         } catch (Exception $e) {
             
         }
+
     }
 
     private function buscarPersonaExtranjero($documentoNro)
@@ -2105,7 +2111,9 @@ class InfoEstudianteRudeNuevoController extends Controller {
 
                     if(isset($form['apellido_esposo']))
                         $persona->setApellidoEsposo(mb_strtoupper($form['apellido_esposo'],'utf-8'));
-
+                    if(isset($form['cedulaTipoId']))
+                        $persona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($form['cedulaTipoId']));
+                     
                     $persona->setCorreo($form['correo']);
                     $em->flush();
                     $idPersona = $persona->getId();

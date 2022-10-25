@@ -319,11 +319,17 @@
 
                                                            <form>
                                                               <div class="form-row">
+                                                                <div class="form-group col-md-2">
+                                                                  <label for="idarrCedula">¿Extranjero?</label>
+                                                                  <select name="arrCedula" id="idarrCedula" v-model="dataStudentModif.cedulaTipoId" class="custom-select form-control" v-on:change="setCedula();">  
+                                                                    <option v-for="item in DBCedula"  :value="item.cedulaTipoId">${ item.cedulaTipo }</option>       
+                                                                  </select>
+                                                                </div>
                                                                 <div class="form-group col-md-4">
                                                                   <label for="inputEmail4">Carnet Identidad</label>
                                                                   <input type="input" class="form-control" id="" placeholder="Carnet Identidad" v-model="dataStudentModif.carnetIdentidad">
                                                                 </div>
-                                                                <div class="form-group col-md-4">
+                                                                <div class="form-group col-md-2">
                                                                   <label for="complemento">Complemento</label>
                                                                   <input type="input" class="form-control" id="Complemento" placeholder="Complemento" v-model="dataStudentModif.complemento">
                                                                 </div>
@@ -501,7 +507,8 @@
                 respuesta:'',
                 dataStudent: {},
                 dataStudentModif: {},                            
-                DBGenero: {},
+                DBGenero: {},                          
+                DBCedula: {},
                 DBPais: {},
                 DBDepto: {},
                 DBProvincia: {},
@@ -560,6 +567,7 @@
                                 this.dataStudent = response.data.student;
                                 this.dataStudentModif = response.data.studentModif;
                                 this.DBGenero = response.data.arrGenero;
+                                this.DBCedula = response.data.arrCedula;
                                 this.DBPais = response.data.arrPais;
                                 this.DBDepto = response.data.arrDepto;
                                 this.DBProvincia = response.data.arrProvincia;
@@ -575,6 +583,7 @@
                                 this.dataStudent = '';
                                 this.dataStudentModif = '';
                                 this.DBGenero = '';
+                                this.DBCedula = '';
                                 this.DBPais = '';
                                 this.DBDepto = '';
                                 this.DBProvincia = '';
@@ -602,6 +611,14 @@
                     $.each(this.DBGenero, function (i, value) {
                         if(me.dataStudentModif.generoTipoId == value.generoId) {
                             me.dataStudentModif.generoTipo = value.genero;
+                        }
+                    });                    
+                },
+                setCedula: function(){
+                    var me = this;
+                    $.each(this.DBCedula, function (i, value) {
+                        if(me.dataStudentModif.cedulaTipoId == value.cedulaTipoId) {
+                            me.dataStudentModif.cedulaTipo = value.cedulaTipo;
                         }
                     });                    
                 },
@@ -699,6 +716,7 @@
                     if(this.dataStudentModif.paterno != this.dataStudent.paterno)sw = true;
                     if(this.dataStudentModif.materno != this.dataStudent.materno)sw = true;
                     if(this.dataStudentModif.nombre != this.dataStudent.nombre)sw = true;
+                    if(this.dataStudentModif.cedulaTipoId != this.dataStudent.cedulaTipoId)sw = true;
                         
                     if(sw){
 
@@ -708,7 +726,8 @@
                             fechaNacimiento: this.dataStudentModif.fechaNacimiento,                        
                             paterno: this.dataStudentModif.paterno,                        
                             materno: this.dataStudentModif.materno,                        
-                            nombre: this.dataStudentModif.nombre
+                            nombre: this.dataStudentModif.nombre,                        
+                            cedulaTipo: this.dataStudentModif.cedulaTipoId
                         }))
                         .then(response => {
                             if (response.status == 200) {

@@ -1,0 +1,20 @@
+Sie\AppWebBundle\Entity\EstTecEstadomatriculaTipo:
+    type: entity
+    table: est_tec_estadomatricula_tipo
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        estadomatricula:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+    lifecycleCallbacks: {  }

@@ -100,10 +100,18 @@ class NewInscriptionExtranjeroController extends Controller{
 	      foreach ($objExpedido as $value) {
 	        $arrExpedido[$value->getId()] = $value->getSigla();
 	      }
+          // get CedulaTipo
+        $objCedula = $em->getRepository('SieAppWebBundle:CedulaTipo')->findAll();
+        $arrCedula = array();
+        $arrCedula[0] = array('cedulaTipoId' => 1,'cedulaTipo' => 'Nacional'); 
+        $arrCedula[1] = array('cedulaTipoId' => 2,'cedulaTipo' => 'Extranjero'); 
+	   
 	    $userAllowedOnwithoutCI = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
       //HerramientaBundle/NewInscriptionEstranjero:index.html.twig
+      
        	return $this->render($this->session->get('pathSystem') .':NewInscriptionExtranjero:index.html.twig', array(
        		'arrExpedido'=>$objExpedido,
+          'arrCedula' => $arrCedula,
        		'allowwithoutci' => $userAllowedOnwithoutCI,
        		'enableoption' => $enableoption,
        		'message' => $message,
@@ -126,6 +134,7 @@ class NewInscriptionExtranjeroController extends Controller{
     	$nombre = trim($request->get('nombre'));
     	$withoutcifind = ($request->get('withoutcifind')=='false')?false:true;
     	$expedidoIdfind = $request->get('expedidoIdfind');
+      $cedulaTipoId = $request->get('cedulaTipoId');
 
       //dcastillo 2402
       // para validacion segip
@@ -182,7 +191,9 @@ class NewInscriptionExtranjeroController extends Controller{
 			        'fecha_nacimiento'=>$fecNac,
               'tipo_persona' => $tipo_persona
 		      	);
-		      	
+		      if($cedulaTipoId == 2){
+              $arrParametros['extranjero'] = 'E';
+          }
 				$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
 			}
       if($answerSegip && sizeof($objStudent)>0){
@@ -848,6 +859,7 @@ class NewInscriptionExtranjeroController extends Controller{
         $paterno = mb_strtoupper($arrDatos['paterno'], 'utf-8') ;
         $materno = mb_strtoupper($arrDatos['materno'], 'utf-8');
         $nombre = mb_strtoupper($arrDatos['nombre'], 'utf-8');
+        $cedulaTipoId =$arrDatos['cedulaTipoId'];
 
         $carnet = isset($arrDatos['cifind'])?$arrDatos['cifind']:'';
         $complemento = isset($arrDatos['complementofind'])?$arrDatos['complementofind']:'';
@@ -925,11 +937,11 @@ class NewInscriptionExtranjeroController extends Controller{
 				        $localidad = mb_strtoupper($arrDatos['localidad'], 'utf-8');
 				        $lugarNacTipoId = isset($arrDatos['lugarNacTipoId'])?$arrDatos['lugarNacTipoId']:'';
 				        $lugarProvNacTipoId = isset($arrDatos['lugarProvNacTipoId'])?$arrDatos['lugarProvNacTipoId']:'';						
- 						$fecNac = $arrDatos['fecnacfind'];
- 						$genero = $arrDatos['generoId'];
- 						$expedidoId = $arrDatos['expedidoIdfind'];
- 						$institucionEducativaDe = $arrDatos['institucionEducativaDe'];
- 						$cursoVencido = $arrDatos['cursoVencido'];
+                $fecNac = $arrDatos['fecnacfind'];
+                $genero = $arrDatos['generoId'];
+                $expedidoId = $arrDatos['expedidoIdfind'];
+                $institucionEducativaDe = $arrDatos['institucionEducativaDe'];
+                $cursoVencido = $arrDatos['cursoVencido'];
 						// create rude code to the student              
 		                $query = $em->getConnection()->prepare('SELECT get_estudiante_nuevo_rude(:sie::VARCHAR,:gestion::VARCHAR)');
 		                $query->bindValue(':sie', $sie);            
@@ -965,10 +977,15 @@ class NewInscriptionExtranjeroController extends Controller{
 			                $estudiante->setComplemento(mb_strtoupper($complemento, 'utf-8'));
 			                $estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
 			                $estudiante->setSegipId(1);
+                      if($cedulaTipoId>0)
+                        $estudiante->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId));
 		                }else{
+                      			$estudiante->setCarnetIdentidad('');
 		                	$estudiante->setComplemento('');
 		                	$estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));
 		                }
+
+                    
 		                
 		                $em->persist($estudiante);
 		                $foreignStudentId = $estudiante->getId();

@@ -202,6 +202,68 @@ Sie\AppWebBundle\Entity\Rude:
             unsigned: false
             comment: ''
             column: registro_finalizado
+        direccionProcedencia:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: direccion_procedencia
+        tieneParientesDiscapacidad:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: tiene_parientes_discapacidad
+        tieneMedicacionEnCee:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: tiene_medicacion_en_cee
+        esEducacionEnCasa:
+            type: boolean
+            nullable: true
+            comment: ''
+            column: es_educacion_en_casa
+        tipoTalentoTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: tipo_talento_tipo_id
+        talentoEspecificoEn:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: talento_especifico_en
+        talentoOtro:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: talento_otro
+        coeficienteIntelectualEspecial:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: coeficiente_intelectual_especial
+        promedioCalificacionesEspecial:
+            type: string
+            nullable: true
+            length: 255
+            fixed: false
+            comment: ''
+            column: promedio_calificaciones_especial
+        discapacidadTipoId:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: discapacidad_tipo_id
     manyToOne:
         nacionOriginariaTipo:
             targetEntity: NacionOriginariaTipo

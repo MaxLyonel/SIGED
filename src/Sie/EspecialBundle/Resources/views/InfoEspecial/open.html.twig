@@ -93,7 +93,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12" >
                 <div class="thumbnail">
                     <img src="{{asset('img/estudiantes300Alter.jpg')}}" alt="Estudiantes">
                     <div class="caption text-center">
@@ -106,17 +106,44 @@
                     </div>
                 </div>
             </div>
-            {% if false %}
-            {# se oculta hasta aviso  {% if onlyview == false %} #}
+            
+            {# se oculta hasta aviso  #}
+            {% if onlyview == false %} 
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
                         <div class="caption text-center">
-                            <h4>Cerrar Operativo</h4>
+                            <h4>Cerrar Operativo Inscripción</h4>
                             <div class="thumbnail-action">
                                 {{form_start(closeOperativoform, { 'attr':{'id':'formCloseOperativo' }} )}}
                                     {{form_widget(closeOperativoform.next)}}
                                 {{form_end(closeOperativoform)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="thumbnail">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Rudees">
+                        <div class="caption text-center">
+                            <h4>Cerrar Operativo Rudees</h4>
+                            <div class="thumbnail-action">
+                                {{form_start(closeOperativoRudeesform, { 'attr':{'id':'formCloseOperativoRudees' }} )}}
+                                    {{form_widget(closeOperativoRudeesform.next)}}
+                                {{form_end(closeOperativoRudeesform)}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                    <div class="thumbnail">
+                        <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo 1er Trimestre">
+                        <div class="caption text-center">
+                            <h4>Cerrar Operativo 1er Trimestre</h4>
+                            <div class="thumbnail-action">
+                                {{form_start(closeOperativoNotasform, { 'attr':{'id':'formCloseOperativoNotas' }} )}}
+                                    {{form_widget(closeOperativoNotasform.next)}}
+                                {{form_end(closeOperativoNotasform)}}
                             </div>
                         </div>
                     </div>
@@ -138,7 +165,8 @@
                 </div>
             </div>
             #}
-            {# Operativo Bono JP
+             {# Operativo Bono JP #}
+
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
                     <img src="{{asset('images/juancito.jpg')}}" alt="Operativo Bono Juancito Pinto">
@@ -156,7 +184,8 @@
                     </div>
                 </div>
             </div>
-        #}
+
+        <input type="hidden" name="op" id="op" value="{{operativo}}">
         </div>
         <div class="row">
             <div id="answerClose" style="overflow: scroll; width: 100%; height:300px" class="col-lg-3 col-md-6 col-sm-12 col-xs-12"></div>
@@ -168,11 +197,72 @@
     {{parent()}}
     <script>
         var closeOperativo = function(){
+            
             if(confirm('¿Está segura/o de cerrar el operativo?')){
                 formData = $('#formCloseOperativo').serialize();
                 $.ajax({
                     type: 'post',
                     url: Routing.generate('info_especial_close_operativo'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerClose").empty();
+                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data) {
+                        $("#answerClose").empty();
+                        $("#answerClose").append(data);
+                        //location.reload(true);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            }else{
+                return false;
+            }
+        };
+        var closeOperativoRudees = function(){
+            
+            if(confirm('¿Está segura/o de cerrar el operativo?')){
+                formData = $('#formCloseOperativo').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('info_especial_close_operativo_rudees'),
+                    data: formData,
+                    beforeSend: function () {
+                        $("#answerClose").empty();
+                        $("#answerClose").append('<div class="text-center"><img src="{{asset('img/loading.gif')}}" class="loading" style="width:70px;" /></div>');
+                    },
+                    success: function (data) {
+                        $("#answerClose").empty();
+                        $("#answerClose").append(data);
+                        //location.reload(true);
+                    },
+                    statusCode: {
+                        500: function () {
+
+                        },
+                        404: function () {
+
+                        }
+                    }
+                });
+            }else{
+                return false;
+            }
+        };
+        var closeOperativoNotas = function(){
+            
+            if(confirm('¿Está segura/o de cerrar el operativo?')){
+                formData = $('#formCloseOperativo').serialize();
+                $.ajax({
+                    type: 'post',
+                    url: Routing.generate('info_especial_close_operativo_notas'),
                     data: formData,
                     beforeSend: function () {
                         $("#answerClose").empty();

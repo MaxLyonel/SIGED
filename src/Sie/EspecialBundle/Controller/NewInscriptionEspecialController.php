@@ -59,10 +59,16 @@ class NewInscriptionEspecialController extends Controller
 	      foreach ($objExpedido as $value) {
 	        $arrExpedido[$value->getId()] = $value->getSigla();
 	      }
-		
+		 // get CedulaTipo
+		 $objCedula = $em->getRepository('SieAppWebBundle:CedulaTipo')->findAll();
+		 $arrCedula = array();
+		 $arrCedula[0] = array('cedulaTipoId' => 1,'cedulaTipo' => 'Nacional'); 
+		 $arrCedula[1] = array('cedulaTipoId' => 2,'cedulaTipo' => 'Extranjero'); 
+	   
 	    $userAllowedOnwithoutCI = in_array($this->session->get('roluser'), array(7,8,10))?true:false;
        	return $this->render($this->session->get('pathSystem') .':NewInscriptionEspecial:index.html.twig', array(
        		'arrExpedido'=>$objExpedido,
+			'arrCedula' => $arrCedula,
        		'allowwithoutci' => $userAllowedOnwithoutCI,
        		'enableoption' => $enableoption,
        		'message' => $message,
@@ -73,6 +79,7 @@ class NewInscriptionEspecialController extends Controller
     public function checksegipstudentAction(Request $request){
 		
     	//ini vars
+		
     	$response = new JsonResponse();
     	$em = $this->getDoctrine()->getManager();
     	//get send values
@@ -84,6 +91,7 @@ class NewInscriptionEspecialController extends Controller
     	$nombre = trim($request->get('nombre'));
     	$withoutcifind = ($request->get('withoutcifind')=='false')?false:true;
     	$expedidoIdfind = $request->get('expedidoIdfind');
+    	$cedulaTipoId = $request->get('cedulaTipoId');
     	$arrGenero = array();
     	$arrPais = array();
     	$arrSangreTipo = array();
@@ -127,6 +135,8 @@ class NewInscriptionEspecialController extends Controller
 			}
 			
 			if(!$existStudent){
+
+				
 				// to do the segip validation
 		    	$arrParametros = array(
 			        'complemento'=>$complemento,
@@ -135,7 +145,10 @@ class NewInscriptionEspecialController extends Controller
 			        'nombre'=>$nombre,
 			        'fecha_nacimiento'=>$fecNac
 		      	);
-		      	
+		      	if($cedulaTipoId == 2){
+					$arrParametros['extranjero'] = 'E';
+				}
+
 				$answerSegip = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet( $carnet,$arrParametros,'prod', 'academico');
 			}
 			if($answerSegip && sizeof($objStudent)>0){
@@ -769,7 +782,7 @@ class NewInscriptionEspecialController extends Controller
     public function doInscriptionEspecialAction(Request $request) {
     	
     	$arrDatos = json_decode($request->get('datos'), true);
-  	 	//dump($arrDatos['idiomaMaternoId']);die;
+  	 	
     	 // ini vars
         $response = new JsonResponse();
         $em = $this->getDoctrine()->getManager();
@@ -803,6 +816,9 @@ class NewInscriptionEspecialController extends Controller
 		$carnet = isset($arrDatos['cifind'])?$arrDatos['cifind']:'';
 		$complemento = isset($arrDatos['complementofind'])?$arrDatos['complementofind']:'';
 		$expedidoId = $arrDatos['expedidoIdfind'];
+		$cedulaTipoId =$arrDatos['cedulaTipoId'];
+
+		
 
 				  // create rude code to the student
 
@@ -837,6 +853,7 @@ class NewInscriptionEspecialController extends Controller
 		$estudiante->setFechaModificacion(new \DateTime('now'));     
 		$estudiante->setObservacion("REGISTRO ESPECIAL SIN RUDE");                        
 		// check if the country is Bolivia
+		
 		if ($paisId == '1'){                    
 			$estudiante->setLugarNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarNacTipoId));
 			$estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find($lugarProvNacTipoId));
@@ -846,12 +863,13 @@ class NewInscriptionEspecialController extends Controller
 			$estudiante->setLugarProvNacTipo($em->getRepository('SieAppWebBundle:LugarTipo')->find('11'));
 			$estudiante->setLocalidadNac('');
 		}
-
+		$estudiante->setCarnetIdentidad($carnet); //para que ingrese con carnet = ''
 		if(!$withoutcifind){
-			$estudiante->setCarnetIdentidad($carnet);
 			$estudiante->setComplemento(mb_strtoupper($complemento, 'utf-8'));
 			$estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find($expedidoId));
 			$estudiante->setSegipId(1);
+			if($cedulaTipoId>0)
+				$estudiante->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId));
 		}else{
 			$estudiante->setComplemento('');
 			$estudiante->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find(0));

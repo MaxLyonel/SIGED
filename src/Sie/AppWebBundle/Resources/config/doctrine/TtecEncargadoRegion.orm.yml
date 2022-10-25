@@ -1,0 +1,52 @@
+Sie\AppWebBundle\Entity\TtecEncargadoRegion:
+    type: entity
+    table: ttec_encargado_region
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        usuarioId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: usuario_id
+        rolId:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            column: rol_id
+        region:
+            type: string
+            nullable: false
+            length: null
+            fixed: false
+            comment: ''
+        estado:
+            type: boolean
+            nullable: true
+            comment: ''
+        usuarioRegistro:
+            type: integer
+            nullable: true
+            unsigned: false
+            comment: ''
+            column: usuario_registro
+        fechaRegistro:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_registro
+        fechaModificacion:
+            type: datetime
+            nullable: true
+            comment: ''
+            column: fecha_modificacion
+    lifecycleCallbacks: {  }

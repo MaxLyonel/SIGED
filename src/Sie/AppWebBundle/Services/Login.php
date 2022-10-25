@@ -28,8 +28,10 @@ class Login {
          * TODO
          * modificar gestion y semestre alternativa
          */
-        $gestion = '2022';
-        $semestre = '2';
+        // $gestion = '2022';
+        // $semestre = '2';
+        $gestion = date('Y');
+        $semestre = (date('m')>=7)?3:'2';        
 
 
         $db = $this->em->getConnection();

@@ -106,18 +106,20 @@
                                     <td>{{data.estadomatricula}}</td>
                                 {% endif %}
                                 <td>
-                                    {# {% if 1==1 %} #}
-                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.calificaciones == true and operativo > 0 %}
+                                
+                                    {# {% if 1==1 %} #} {# onlyview == false  para que se vea el modulo de calificaciones #}
+                                    {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and arrDataLibreta.calificaciones == true and operativo >0 %}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Calificaciones">
                                         <button type="button" class="btn btn-circle btn-danger " data-toggle="modal" data-target=".bs-example-modal-table" onclick="getNotas({{data.estInsEspId}},'{{infoUe}}');" >
-                                            <i class="fa fa-list"></i>
+                                           <i class="fa fa-list"></i>
                                         </button>
                                     </div>
+                                    {% else %}.
                                     {% endif %}
 
                                     {% if onlyview == false and gestion >= app.session.get('currentyear') - 1 and operativo > 0 and arrDataLibreta.libreta == true %}
                                     {# HASTA QUE APRUEBN LAS LIBRETAS CON RESOLUCION #}
-                                        {#  
+                                         
                                         {% if arrDataLibreta.areaEspecialId == 2 %}
                                         
                                             <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Imprimir Libreta">
@@ -132,14 +134,21 @@
                                                 </button>
                                             </form>
                                         {% endif %}    
-                                        #}    
+                                        
                                     {% endif %}
                                           <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="RUDE ES">
                                             <button type="button" class="btn btn-circle btn-primary" data-toggle="modal" data-target=".bs-example-modal-table" onclick="rudeNuevo('{{infoUe}}','{{jsnInfoStudent}}',0);" >
                                                 <i class="fa fa-user"></i>
                                             </button>
                                         </div> 
-                                        
+
+                                         {% if arrDataLibreta.bono %}  {#Solo hasta el 24 de enero 2022 #}
+                                       <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Registre Apoderado">
+                                                    <button type="button" class="btn btn-circle btn-facebook" data-toggle="modal" data-target=".bs-example-modal-table" onclick="RegisterParents({{data.eInsId}});" >
+                                                        <i class="fa fa-user"></i>
+                                                    </button>
+                                                </div>    
+                                        {% endif  %}  
                                     {% if onlyview == false and (gestion == app.session.get('currentyear') ) %}  {#Solo hasta el 24 de enero 2022 #}
                                     <div class="btn-group tooltips" data-toggle="tooltip" data-container="body" title="" data-original-title="Eliminar Inscripción">
                                         <button type="button" class="btn btn-circle btn-warning " data-toggle="" data-target="" onclick="removeInscriptionSpecial('{{infoUe}}',{{data.estInsEspId}},{{data.estInsId}});" >
@@ -171,6 +180,10 @@
         </div>
     </div>
 {% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.15.2/axios.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
 
 <script>
     var getNotas = function (idInscripcionEspecial,infoUe) {

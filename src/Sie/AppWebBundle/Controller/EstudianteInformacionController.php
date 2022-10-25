@@ -125,7 +125,7 @@ class EstudianteInformacionController extends Controller {
             if ($inscription) {
                 $idEstudiante = $student->getId();
 
-                $repository = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion');
+/*                $repository = $em->getRepository('SieAppWebBundle:ApoderadoInscripcion');
 
                 $query = $repository->createQueryBuilder('ai')
                         ->select('p.id perId, ai.id aiId, aid.id aidId, p.carnet, p.paterno, p.materno, p.nombre, at.apoderado apoTipo, aid.empleo')
@@ -136,7 +136,23 @@ class EstudianteInformacionController extends Controller {
                         ->setParameter('inscripcion', $inscription['insId'])
                         ->getQuery();
 
-                $apoderados = $query->getResult();
+                $apoderados = $query->getResult();*/
+
+                $repository = $em->getRepository('SieAppWebBundle:Estudiante');
+
+                $query = $repository->createQueryBuilder('e')
+                        ->select('p.id perId, ai.id aiId, aid.id aidId, p.carnet, p.paterno, p.materno, p.nombre, at.apoderado apoTipo, aid.empleo')
+                        ->innerJoin('SieAppWebBundle:EstudianteInscripcion', 'ei', 'WITH', 'e.id = ei.estudiante')
+                        ->innerJoin('SieAppWebBundle:ApoderadoInscripcion', 'ai', 'WITH', 'ei.id = ai.estudianteInscripcion')
+                        ->innerJoin('SieAppWebBundle:InstitucioneducativaCurso', 'ic', 'WITH', 'ei.institucioneducativaCurso = ic.id')
+                        ->innerJoin('SieAppWebBundle:Persona', 'p', 'WITH', 'ai.persona = p.id')
+                        ->innerJoin('SieAppWebBundle:ApoderadoInscripcionDatos', 'aid', 'WITH', 'ai.id = aid.apoderadoInscripcion')
+                        ->innerJoin('SieAppWebBundle:ApoderadoTipo', 'at', 'WITH', 'ai.apoderadoTipo = at.id')
+                        ->where('e.codigoRude = :rude')
+                        ->setParameter('rude', $rude)
+                        ->getQuery();
+
+                $apoderados = $query->getResult();                
 
                 //Información de la institución educativa
                 $repository = $em->getRepository('SieAppWebBundle:Institucioneducativa');

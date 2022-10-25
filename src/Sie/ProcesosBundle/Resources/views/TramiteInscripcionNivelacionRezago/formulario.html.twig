@@ -1,0 +1,552 @@
+ {% if alert['estado'] %}
+    <div class="col-lg-4 col-md-4 col-sm-12 col-sx-12">    
+        <div class="panel panel-teal">
+            <div class="panel-heading">
+                <h3 class="panel-title"> <i class="fa fa-user"></i> Datos personales y académicos </h3>
+            </div>
+            <div class="panel-subheading">                
+                <div class="alert" style="margin-bottom: 0px;">
+                    {% if historial[0] is defined %}
+                        <h4 style="margin-top: 5px;">{{ historial[0].nombre_raep }} {{ historial[0].paterno_raep }} {{ historial[0].materno_raep }}</h4>
+                        <h5><strong>R.U.D.E.</strong>  {{ historial[0].codigo_rude_raep }}</h5>
+                        <p><i class="fa fa-building-o fa-muted fa-fw"></i> <strong>C.I.</strong> {{ historial[0].carnet_identidad_raep}}{{ historial[0].complemento_raep }}</p>
+                        <p><i class="fa fa-flag-o fa-muted fa-fw"></i> <strong>Fech. Nac.</strong> {{ historial[0].fecha_nacimiento_raep|date("d-m-Y") }}</p>
+                    {% endif %} 
+                </div>   
+            </div>
+            <div class="panel-body">      
+                {% set num = 0 %}
+                    <table class="table table-responsive table-hover">
+                        <thead>
+                            <tr>
+                                <th>Gestión</th>
+                                <th>Nivel</th>                                
+                                <th>Grado</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>                        
+                        {% for registro in historial %}  
+                            {% set num = num + 1 %}
+                                <tr>
+                                    <td>{{registro.gestion_tipo_id_raep}}</td>
+                                    <td>{{registro.nivel_r}}</td>                                
+                                    <td>{{registro.grado_r}}</td>
+                                    <td>{{registro.estadomatricula_fin_r}}</td>
+                                </tr>
+                            </tbody>
+                        {% endfor %}    
+                    </table>
+            </div>
+        </div>  
+    </div>  
+    <div class="col-lg-8 col-md-8 col-sm-12 col-sx-12">  
+        <div class="panel panel-lilac">
+            <div class="panel-heading">
+                <h3 class="panel-title"> <i class="fa fa-form"></i> Fomulario de nivelación </h3>
+            </div>
+            <div class="panel-body" id="formInscripcionBody">  
+                {% set c = 0 %}
+                {% for key1, inscripcion in info %}
+                    {% set c = c + 1 %}
+                    {% set color = random(['warning', 'info', 'success']) %}
+                    <form role="form" method="post" enctype"multipart/form-data" id="formInscripcion{{c}}" name="formIns[]">
+                        <input type="hidden" value="{{data}}" id="form_data_{{c}}" name="form[data]">
+                        <div class="alert alert-{{color}}">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-sx-12">    
+                                    <div class="form-group bg-{{color}}" style="padding-left:10px;">
+                                        <div class="ckbox ckbox-danger ckbox-lg">
+                                            <input class="form-control-lg" type="checkbox" id="form_habilita_{{c}}" name="form[habilita]" value="{{inscripcion.data}}" onclick="habilitaForm({{c}},this,event)">
+                                            <label for="form_habilita_{{c}}"><strong>Habilitar</strong></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label><strong>Nivel:</strong></label>
+                                        <p><small class="form-text">{{ inscripcion.nivel }}</small></p>
+                                    </div>
+                                    <div class="form-group">
+                                        <label><strong>Año de escolaridad:</strong></label>
+                                        <p><small class="form-text">{{ inscripcion.grado }}</small></p>
+                                    </div>
+                                    <div class="form-group">
+                                        {% if inscripcion.nivelAutorizado %}                                            
+                                            <label><strong>Unidad Educativa:</strong></label>
+                                            <p><small class="form-text">{{ inscripcion.ue }}</small></p>
+                                        {% else %}  
+                                            <label><strong>Código S.I.E.</strong></label>
+                                            <input type="text" id="form_sie_{{c}}" name="form[sie]" class="form-control sie" maxlength="8"  placeholder="Ingrese el Código SIE">
+                                            <p><small class="form-text" id="lbl_sie_{{c}}"></small></p>
+                                        {% endif %} 
+                                    </div>
+                                    <div class="form-group">
+                                        <label><strong>Turno</strong></label>
+                                        {% if c == 1 %}
+                                            <p><small class="form-text">{{ inscripcion.turno }}</small></p>
+                                        {% else %} 
+                                            <select class="form-control" id="form_turno_{{c}}" name="form[turno]" onchange="cargarParalelo({{c}});" disabled="true">
+                                                <option value="" selected>Seleccionar turno</option>
+                                                {% for key3, turno in inscripcion.turno %} 
+                                                    <option value="{{ key3 }}">{{ turno }}</option>
+                                                {% endfor %}  
+                                            </select>
+                                            <p><small class="form-text" id="lbl_turno_{{c}}"></small></p>
+                                        {% endif %} 
+                                    </div>
+                                    <div class="form-group">
+                                        <label><strong>Paralelo</strong></label>
+                                        {% if c == 1 %}
+                                            <p><small class="form-text">{{ inscripcion.paralelo }}</small></p>
+                                        {% else %} 
+                                            <select class="form-control" id="form_paralelo_{{c}}" name="form[paralelo]" disabled="true">
+                                                <option value="" selected>Seleccionar paralelo</option>
+                                            </select>
+                                        {% endif %} 
+                                    </div>
+                                    <div class="form-group">
+                                        <label><strong>Adjunto:</strong></label>
+                                        <div class="fileinput fileinput-new" style="min-width: 100%;" data-provides="fileinput">
+                                            <div class="fileinput-preview thumbnail col-md-12 col-sm-12 col-sx-12" style="min-height: 200px; display:block;"  data-trigger="fileinput"></div>
+                                            <div>
+                                                <span class="btn btn-{{color}} btn-file">
+                                                    <span class="fileinput-new col-sm-6 col-sx-6">Seleccionar</span>
+                                                    <span class="fileinput-exists col-sm-6 col-sx-6">Cambiar</span>
+                                                    <input type="file" id="form_evaluacion_{{c}}" name="form[evaluacion]" class="col-sm-12 col-sx-12" onchange="cargarArchivo(event);" disabled="true"> 
+                                                </span>
+                                                <a href="#" class="btn btn-danger fileinput-exists" style="color:#FFFFFF;" data-dismiss="fileinput">Quitar</a>
+                                            </div>
+                                        </div> 
+                                    </div>                                             
+                                </div> 
+                                <div class="col-lg-8 col-md-8 col-sm-12 col-sx-12">   
+                                    <div class="form-group row">
+                                        <label for="form_asignatura_tit" class="col-sm-8 col-form-label btn btn-{{color}}">Áreas curriculares</label>
+                                        <div class="col-sm-4">
+                                        <label id="form_asignatura_tit" class="btn btn-{{color}} col-sm-12">Calificaciones</label>
+                                        </div>
+                                    </div>   
+                                    {% for key2, asignatura in inscripcion.asignatura %}                                     
+                                        <div class="form-group row">
+                                            <label for="form_asignatura_{{key2}}" class="col-sm-8 col-form-label">{{asignatura}}</label>
+                                            <div class="col-sm-4">
+                                            <input type="number" class="form-control calificaciones" id="form_asignatura_{{key2}}" min="20" max="100" name="form[{{key2}}]" placeholder="" readonly required>
+                                            </div>
+                                        </div>   
+                                    {% endfor %}    
+                                </div>                          
+                            </div>                              
+                        </div>                                                    
+                    </form>                        
+                {% endfor %} 
+            </div>
+            <div class="panel-foot">
+                <button onclick="registraNivelacion()" type="button" class="btn btn-lilac btn-lg btn-block"> Registrar </button>
+            </div>
+        </div>
+    </div>  
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script>          
+        
+        var habilitaForm = function(id,chk,evt){
+            var habilitado = false;
+            if(chk.checked === true){
+                habilitado = true;              
+
+                for (var i=1; i <= (id-1); i++){
+                    var fomularioCheck = document.getElementById('form_habilita_'+i);
+                    if(fomularioCheck.checked === false){
+                        evt.preventDefault();
+                        // alert("La habilitacion de año de escolaridad debe ser secuencial, habilite los años de escolaridad anteriores e intente nuevamente");
+                        Swal.fire({
+                            title: 'Error al activar',
+                            text: 'La habilitacion de año de escolaridad debe ser secuencial, habilite los años de escolaridad anteriores e intente nuevamente',
+                            type: 'warning'
+                        }); 
+                        return false;
+                    }              
+                }
+            } 
+
+            var formulario = document.getElementById('formInscripcion'+id);            
+            formDat = new FormData(form);
+
+            for (var i = 0, element; element = formulario[i++];) {
+                if (element.type === "number"){
+                    if(habilitado){
+                        element.removeAttribute('readonly');
+                    } else {
+                        element.setAttribute('readonly',true);
+                    }                    
+                }   
+                if (element.type === "select-one"){
+                    if(habilitado){
+                        element.removeAttribute('disabled');
+                    } else {
+                        element.setAttribute('disabled', true);
+                    }
+                }  
+                if (element.type === "file"){
+                    if(habilitado){
+                        element.removeAttribute('disabled');
+                    } else {
+                        element.setAttribute('disabled',true);
+                    }                    
+                }                                             
+            }
+        }
+
+        var registraNivelacion = function(){
+            boton = $(this);
+            //formlario = $('#formInscripcion')[0];
+            // var formData = new FormData(formulario)u;
+          
+            labels = document.getElementsByTagName('label');
+            
+
+            var formularios = document.getElementsByName('formIns[]');
+            var formData = new FormData();
+            var cantidadFomulariosActivados = 0;
+            for (var i=1; i <= (formularios.length); i++){
+                if(document.getElementById('form_habilita_'+i).checked === true){
+                    cantidadFomulariosActivados++;
+                }              
+            }            
+
+            if (cantidadFomulariosActivados <= 0) {
+                //alert("No cuenta con años de escolaridad activados, active un año de escolaridad e ingrese las calificaciones");
+                Swal.fire({
+                    title: 'Sin registros',
+                    text: 'No cuenta con años de escolaridad activados, active un año de escolaridad e ingrese las calificaciones',
+                    type: 'warning'
+                }); 
+                return false;
+            }
+
+
+            var area = "";
+            var form;
+            var fomularioCheck;
+            var habilitado = false;
+            var formsHabilitados = 0;
+            
+            for (var i=0; i < formularios.length; i++){
+                form = formularios[i];
+                formDat = new FormData(form);
+                for (let [key, value] of formDat.entries()) {
+                    formData.append(key+'['+i+']', value);
+                }
+                area = "";
+                habilitado = false;
+                
+                for (var j = 0, element; element = form[j++];) {
+                    
+                    if(element.type === "checkbox"){
+                        if(element.checked === true){
+                            habilitado = true;
+                            formsHabilitados = formsHabilitados + 1;
+                        }
+                    }
+                    if(habilitado === true){
+
+
+                        if(element.type === "file" && element.value === ""){           
+                            element.focus();    
+                            Swal.fire({
+                                title: 'Sin evaluación',
+                                text: 'La evaluación pedagógica no fue incluida',
+                                type: 'warning'
+                            });             
+                            return false;
+                        }    
+
+                        if(element.type === "text" && element.value === ""){           
+                            element.focus();    
+                            Swal.fire({
+                                title: 'Sin Código SIE',
+                                text: 'Debe registrar el código SIE en el cual se realizo la evaluación pedagógica',
+                                type: 'warning'
+                            });             
+                            return false;
+                        }                        
+
+                        if(element.type === "select-one" && element.value === ""){     
+                            var selNom = ((element.id).split('_'))[1];      
+                            element.focus();    
+                            Swal.fire({
+                                title: 'Sin selección',
+                                text: 'Debe seleccionar el '+selNom,
+                                type: 'warning'
+                            });             
+                            return false;
+                        }
+
+                        if (element.type === "number" && element.value === ""){
+                            var idVal = element.id;
+                            
+                            for( var k = 0; k < labels.length; k++ ) {
+                                if (labels[k].htmlFor == idVal)
+                                    area = labels[k].innerText;
+                            }     
+                            element.focus();
+                            Swal.fire({
+                                title: 'Sin calificación',
+                                text: "Debe registrar la calificacion de: "+area,
+                                type: 'warning'
+                            }); 
+                            // alert("Debe registrar la calificacion de: "+area);
+                            return false;
+                        }      
+                        
+                        if(element.type === "number" && (element.value < 51 || element.value > 100)){ 
+                            if ((cantidadFomulariosActivados-1) === i){
+                                if(element.value <= 0){                                    
+                                    element.focus();    
+                                    Swal.fire({
+                                        title: 'Calificación incorrecta',
+                                        text: 'La calificación del primer trimestre debe estar en el rango establecido segun normativa (1 a 100)',
+                                        type: 'warning'
+                                    }); 
+                                    return false;
+                                }
+                            } else {           
+                                element.focus();    
+                                Swal.fire({
+                                    title: 'Calificación incorrecta',
+                                    text: 'La calificación de nivelación debe estar en el rango establecido segun normativa (51 a 100)',
+                                    type: 'warning'
+                                });             
+                                return false;
+                            }
+                        }            
+                    }
+                }
+            }
+
+            
+            var r = confirm("¿ Desea registrar los "+cantidadFomulariosActivados+" años de escolaridad seleccionados ?");
+
+            if (r == false) {
+                return false;
+            }
+            
+            if (formsHabilitados > 0){
+                peticion = $.ajax({
+                    type: 'post',
+                    url: "{{ path('tramite_inscripcion_nivelacion_rezago_ue_recepcion_guarda') }}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        boton.hide();
+                        $("#alert").remove();
+                        $('#loading').remove();
+                        $("#datosEstudiante").prepend('<div style="text-align:center" id="loading"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $('#loading').remove();
+                        if (data.estado) {
+                            $("#datosEstudiante").empty();
+                            $("#alert").remove();
+                            $("#datosEstudiante").html('<div class="alert alert-success" role="alert" id="alert"><h4>¡ Correcto !</h4><hr><p>'+data.msg+'</p></div>');
+                            $("#form_rude").focus();
+                            return true;
+                        } else {
+                            $("#datosEstudiante").prepend('<div class="alert alert-danger" role="alert" id="alert"><h4>¡ Error !</h4><hr><p>'+data.msg+'</p></div>');
+                            $("#form_rude").focus();
+                            return false;
+                        }
+                    },
+                    error: function(xhr) {
+                        boton.show();
+                        $('#loading').remove();
+                        $('#alert').remove();
+                        $("#datosEstudiante").prepend('<div class="alert alert-danger" role="alert" id="alert"><h4>¡ Error !</h4><hr><p>No fue posible procesar el formulario, intente nuevamente</p></div>');
+                        $("#form_rude").focus();
+                    },
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    boton.show();
+                    $('#loading').remove();
+                    $('#alert').remove();
+                    $("#datosEstudiante").prepend('<div class="alert alert-danger" role="alert" id="alert"><h4>¡ Error !</h4><hr><p>No fue posible procesar su solicitud, intente nuevamente</p></div>');
+                    $("#form_rude").focus();
+                });
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+
+        $(".sie").keyup(function(event) {
+           if(event.shiftKey)
+           {
+                event.preventDefault();
+           }
+
+           if (event.keyCode == 46 || event.keyCode == 8)    {
+           }
+           else
+           {
+                if (event.keyCode < 95) {
+                  if ((event.keyCode < 48 && event.keyCode != 9 && event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40 && event.keyCode != 13) || event.keyCode > 57) {
+                        event.preventDefault();
+                  }
+                }
+                else {
+
+                      if (event.keyCode < 96 || event.keyCode > 105) {
+                          event.preventDefault();
+                      }
+                }
+            }
+            
+
+            if($(this).val().length>=8){
+                var pos = (($(this).attr('id')).split('_'))[2];
+                var info = $('#form_habilita_'+pos).val();
+                var formData = new FormData();
+                formData.append('form[data]', info);
+                formData.append('form[sie]', $(this).val());
+
+                peticion = $.ajax({
+                    type: 'post',
+                    url: "{{ path('tramite_inscripcion_nivelacion_rezago_ue_recepcion_valida_sie') }}",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function () {
+                        $("#alert").remove();
+                        $('#loading').remove();
+                        $("#lbl_sie_"+pos).html('<div style="text-align:center" id="loading"><img src="{{asset('img/loading.gif')}}" /></div>');
+                    },
+                    success: function (data) {
+                        $('#loading').remove();
+                        if (data.estado) {
+                            $("#lbl_sie_"+pos).empty();
+                            $("#alert").remove();
+                            $("#lbl_sie_"+pos).html('<div class="alert alert-lilac" role="alert" id="alert"><p><i class="fa fa-check-square-o fa-success" aria-hidden="true"></i> '+data.msg+'</p></div>');
+                            return true;
+                        } else {
+                            $("#form_sie_"+pos).val('');
+                            $("#lbl_sie_"+pos).html('<div class="alert alert-danger" role="alert" id="alert"><p>'+data.msg+'</p></div>');
+                            return false;
+                        }
+                    },
+                    error: function(xhr) {
+                        $('#loading').remove();
+                        $('#alert').remove();
+                        $("#form_sie_"+pos).val('');
+                        $("#lbl_sie_"+pos).html('<div class="alert alert-danger" role="alert" id="alert"><p>No fue posible procesar el formulario, intente nuevamente</p></div>');
+                        return false;
+                    },
+                })
+                .fail(function( jqXHR, textStatus, errorThrown ) {
+                    $('#loading').remove();
+                    $('#alert').remove();
+                    $("#form_sie_"+pos).val('');
+                    $("#lbl_sie_"+pos).html('<div class="alert alert-danger" role="alert" id="alert"><p>No fue posible procesar su solicitud, intente nuevamente</p></div>');
+                    return false;
+                });
+            } else {
+                false;
+            }
+        });
+
+
+        function cargarArchivo(event){
+            var informe = event.target.files[0];
+            var allowedExtensions = /(.jpg|.jpeg|.png|.gif|.pdf)$/i;
+            if(!allowedExtensions.exec(event.target.value)){
+                event.target.value = '';
+                Swal.fire(
+                      'Archivo incorrecto!',
+                      'El archivo adjunto debe ser una imagen o un archivo pdf',
+                      'warning'
+                    );
+                return false;
+            }else{
+                var megas = (informe.size / 1024)/1024;
+                if (megas > 2) {
+                    event.target.value = '';
+                    Swal.fire(
+                      'Tamaño no permitido!',
+                      'El archivo debe tener un peso menor a 2 mg',
+                      'warning'
+                    );
+                    return false;
+                }
+            }
+            this.informe = event.target.files[0];
+        }
+
+        function cargarParalelo(pos){
+            var turno = $('#form_turno_'+pos).val();
+            var info = $('#form_habilita_'+pos).val();
+            var formData = new FormData();
+            formData.append('form[data]', info);
+            formData.append('form[turno]', turno);
+            var contentParalelo = $('#form_paralelo_'+pos).html();
+
+            if($('#form_turno_'+pos).val() == ""){
+                $("#alert").remove();
+                $("#form_paralelo_"+pos).empty();
+                $("#form_paralelo_"+pos).append('<option value="">Seleccionar paralelo</option>');
+                return false;
+            }
+
+            peticion = $.ajax({
+                type: 'post',
+                url: "{{ path('tramite_inscripcion_nivelacion_rezago_ue_recepcion_carga_paralelo') }}",
+                data: formData,
+                processData: false,
+                contentType: false,
+                beforeSend: function () {
+                    $("#alert").remove();
+                    $('#loading').remove();
+                    $("#form_paralelo_"+pos).empty();
+                    $("#form_paralelo_"+pos).append('<option value="">Cargando...</option>');
+                },
+                success: function (data) {
+                    $('#loading').remove();
+                    if (data.estado) {
+                        $("#lbl_turno_"+pos).empty();
+                        $("#alert").remove();
+                        $("#form_paralelo_"+pos).empty();
+                        $("#form_paralelo_"+pos).append('<option value="">Seleccionar paralelo</option>');
+                        for (var i in data.paralelo) {
+                            $("#form_paralelo_"+pos).append('<option value="' + data.paralelo[i].id + '">' + data.paralelo[i].nombre + '</option>');
+                        }
+                        return true;
+                    } else {
+                        $("#lbl_turno_"+pos).html('<div class="alert alert-danger" role="alert" id="alert"><p>'+data.msg+'</p></div>');
+                        return false;
+                    }
+                },
+                error: function(xhr) {
+                    $('#loading').remove();
+                    $('#alert').remove();
+                    $("#lbl_turno_"+pos).html('<div class="alert alert-danger" role="alert" id="alert"><p>No fue posible procesar el formulario, intente nuevamente</p></div>');
+                    $("#form_paralelo_"+pos).html(contentParalelo);
+                    return false;
+                },
+            })
+            .fail(function( jqXHR, textStatus, errorThrown ) {
+                $('#loading').remove();
+                $('#alert').remove();
+                $("#lbl_turno_"+pos).html('<div class="alert alert-danger" role="alert" id="alert"><p>No fue posible procesar su solicitud, intente nuevamente</p></div>');
+                $("#form_paralelo_"+pos).html(contentParalelo);
+                return false;
+            });
+        }
+
+    </script>
+{% else %}  
+    <div class="col-lg-12 col-md-12 col-sm-12 col-sx-12"> 
+        <div class="alert alert-warning" role="alert">
+            <h4>¡ Alerta !</h4>
+            <hr>
+            <p>{{alert['msg']}} </p>
+        </div>  
+    </div>  
+{% endif %}   

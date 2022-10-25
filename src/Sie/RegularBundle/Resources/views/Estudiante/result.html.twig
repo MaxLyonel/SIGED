@@ -246,7 +246,7 @@
                                     </div>
                                     <div class="col-sm-2">
                                         {{form_label(form_mode1.ci)}}
-                                        {{form_widget(form_mode1.ci)}}
+                                        {{form_widget(form_mode1.ci,{'attr':{'onkeypress':'return solonumeros(event)'} })}}
                                     </div>
                                     <div class="col-sm-1">
                                         {{form_label(form_mode1.complemento)}}
@@ -375,7 +375,7 @@
                                     </div>
                                     <div class="col-sm-2">
                                         {{form_label(form_mode2.ci)}}
-                                        {{form_widget(form_mode2.ci)}}
+                                        {{form_widget(form_mode2.ci,{'attr':{'onkeypress':'return solonumeros(event)'} })}}
                                     </div>
                                     <div class="col-sm-1">
                                         {{form_label(form_mode2.complemento)}}
@@ -462,7 +462,7 @@
                                 </div>
                                 <div class="col-sm-2">
                                     {{form_label(form_mode3.ci)}}
-                                    {{form_widget(form_mode3.ci)}}
+                                    {{form_widget(form_mode3.ci,{'attr':{'onkeypress':'return solonumeros(event)'} })}}
                                 </div>
                                 <div class="col-sm-1">
                                     {{form_label(form_mode3.complemento)}}
@@ -597,7 +597,10 @@
         });*/
 
 
-
+        function solonumeros(evt){
+            var key = (evt.which) ? evt.which : evt.keyCode;
+            return ((key >= 48 && key <= 57) || key == 8)
+        }
 
 
         function dep(es) {
@@ -653,25 +656,27 @@
                   data: formData,
                   url: Routing.generate('sie_estudiantes_updatestudentmodeoneA'),
                   beforeSend: function () {
+                      $('#form_save').attr("disabled", true);
                       $("#resutlUpdateId").empty();
                       $("#resutlUpdateId").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
                   },
                   success: function (data) {
+                      $('#form_save').removeAttr('disabled');
                       $("#resutlUpdateId").empty();
                       $("#resutlUpdateId").append(data);
                       $('.tooltips').tooltip();
                   },
                   statusCode: {
                       500: function () {
-
+                          $('#form_save').removeAttr('disabled');
                       },
                       404: function () {
-
+                          $('#form_save').removeAttr('disabled');
                       }
                   }
                 }); 
 
-                $('#form_save').attr("disabled", true);
+                
 
             }else{
                 return false;
@@ -679,6 +684,10 @@
             
         };
        var updateStudentFormD = function () {
+            if (isNaN(Number($('#form_ci').val()))) {
+                alert("El campo C.I. debe ser solo números");
+                return false;
+            }
             if(confirm('¿Está seguro de Realizar estos cambios?')){
                     // body...
                     formData = $('#formMode1Id').serialize();
@@ -687,25 +696,27 @@
                       data: formData,
                       url: Routing.generate('sie_estudiantes_updatestudentmodeoneD'),
                       beforeSend: function () {
+                          $('#form_save').attr("disabled", true);
                           $("#resutlUpdateId").empty();
                           $("#resutlUpdateId").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
                       },
                       success: function (data) {
+                          $('#form_save').removeAttr('disabled');
                           $("#resutlUpdateId").empty();
                           $("#resutlUpdateId").append(data);
                           $('.tooltips').tooltip();
                       },
                       statusCode: {
                           500: function () {
-
+                              $('#form_save').removeAttr('disabled');
                           },
                           404: function () {
-
+                              $('#form_save').removeAttr('disabled');
                           }
                       }
                   }); 
 
-                    $('#form_save').attr("disabled", true);
+                    
 
                 }else{
                     return false;
@@ -716,6 +727,10 @@
 
 
          var updateStudentFormB = function () {
+             if (isNaN(Number($('#form_ci').val()))) {
+                alert("El campo C.I. debe ser solo números");
+                return false;
+            }
             if(confirm('¿Está seguro de Realizar estos cambios?')){
                     // body...
                     formData = $('#formMode1Id').serialize();
@@ -724,25 +739,27 @@
                       data: formData,
                       url: Routing.generate('sie_estudiantes_updatestudentmodeoneB'),
                       beforeSend: function () {
+                          $('#form_save').attr("disabled", true);
                           $("#resutlUpdateId").empty();
                           $("#resutlUpdateId").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
                       },
                       success: function (data) {
+                          $('#form_save').removeAttr('disabled');
                           $("#resutlUpdateId").empty();
                           $("#resutlUpdateId").append(data);
                           $('.tooltips').tooltip();
                       },
                       statusCode: {
                           500: function () {
-
+                              $('#form_save').removeAttr('disabled');
                           },
                           404: function () {
-
+                              $('#form_save').removeAttr('disabled');
                           }
                       }
                   }); 
 
-                $('#form_save').attr("disabled", true);
+                
 
             }else{
                 return false;
@@ -751,6 +768,10 @@
 
 
          var updateStudentFormE = function () {
+            if (isNaN(Number($('#form_ci').val()))) {
+                alert("El campo C.I. debe ser solo números");
+                return false;
+            }
             if(confirm('¿Está seguro de Realizar estos cambios?')){    
                 // body...
                 formData = $('#formMode1Id').serialize();
@@ -759,24 +780,26 @@
                   data: formData,
                   url: Routing.generate('sie_estudiantes_updatestudentmodeoneE'),
                   beforeSend: function () {
+                      $('#form_save').attr("disabled", true);
                       $("#resutlUpdateId").empty();
                       $("#resutlUpdateId").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
                   },
                   success: function (data) {
+                      $('#form_save').removeAttr('disabled');
                       $("#resutlUpdateId").empty();
                       $("#resutlUpdateId").append(data);
                       $('.tooltips').tooltip();
                   },
                   statusCode: {
                       500: function () {
-
+                        $('#form_save').removeAttr('disabled');
                       },
                       404: function () {
-
+                        $('#form_save').removeAttr('disabled');
                       }
                   }
               }); 
-                         $('#form_save').attr("disabled", true);
+                         
 
             }else{
                 return false;
@@ -784,6 +807,10 @@
         };
 
          var updateStudentFormC = function () {
+             if (isNaN(Number($('#form_ci').val()))) {
+                alert("El campo C.I. debe ser solo números");
+                return false;
+            }
             if(confirm('¿Está seguro de Realizar estos cambios?')){
                 // body...
                 formData = $('#formMode1Id').serialize();
@@ -792,24 +819,26 @@
                   data: formData,
                   url: Routing.generate('sie_estudiantes_updatestudentmodeoneC'),
                   beforeSend: function () {
+                      $('#form_save').attr("disabled", true);
                       $("#resutlUpdateId").empty();
                       $("#resutlUpdateId").append('<div style="text-align:center"><img src="{{asset('img/loading.gif')}}"  /></div>');
                   },
                   success: function (data) {
+                      $('#form_save').removeAttr('disabled');
                       $("#resutlUpdateId").empty();
                       $("#resutlUpdateId").append(data);
                       $('.tooltips').tooltip();
                   },
                   statusCode: {
                       500: function () {
-
+                        $('#form_save').removeAttr('disabled');
                       },
                       404: function () {
-
+                        $('#form_save').removeAttr('disabled');
                       }
                   }
               }); 
-                        $('#form_save').attr("disabled", true);
+                        
 
             }else{
                 return false;

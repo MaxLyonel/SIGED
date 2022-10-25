@@ -111,7 +111,8 @@
 	            {% if notas.estadoMatricula in notas.estadosPermitidos and notas.cuantitativas|length > 0 and onlyview == false %}
 		            <button type="submit" class="btn btn-success">Guardar Cambios</button>
 		        {% endif %}
-				{% if (notas.estadoMatricula in notas.estadosPermitidos and notas.gestion > 2019 and seguimiento == true) %}
+				{# notas.estadoMatricula in notas.estadosPermitidos and notas.gestion > 2019 and seguimiento == true #}
+				{% if (notas.gestion > 2019 and seguimiento == true) %}
 					<button type="submit" class="btn btn-success">Guardar</button>
 				{% endif %}		        
 	        </div>

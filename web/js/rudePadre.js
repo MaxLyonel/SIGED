@@ -207,7 +207,7 @@ var p_buscarPadre = function(){
     }
     /////////
     //esta seccion de añadio para el caso de extranjeros
-    var p_es_extranjero = $('#pb_es_extranjero').is(':checked')?1:0;
+    var p_es_extranjero = $('#pb_es_extranjero').is(':checked')?1:0; //diplomatico
     var p_nro_identidad = $('#pb_nro_identidad').val();
 
     if($('#pb_sinCarnet').is(':checked'))
@@ -263,7 +263,8 @@ var p_buscarPadre = function(){
                     $('#p_idPersona').val('nuevo');
 
                     if(data.status == 200){
-                        console.log('Encontrado');
+                        console.log('Encontrado...');
+                        
                         // Cargamos los datos devueltos por el servicio
                         p_cargarDatos(data.persona);
 
@@ -318,13 +319,15 @@ var p_buscarPadre = function(){
 
 // cargar los campos con los datos devueltos por el servicio
 var p_cargarDatos = function(data){
-    $('#p_idPersona').val(data.id);
+    
+    $('#p_idPersona').val(data.id); //id
     $('#p_carnet').val(data.carnet);
     $('#p_complemento').val(data.complemento);
     $('#p_paterno').val(data.paterno);
     $('#p_materno').val(data.materno);
     $('#p_nombre').val(data.nombre);
     $('#p_fechaNacimiento').val(data.fecha_nacimiento);
+    $('#p_cedulaTipoId').val(data.cedula_tipo_id);
 }
 
 // borrar los datos si el servicio no devuelve datos
@@ -386,6 +389,7 @@ function p_limpiarBuscador(){
 
 function saveFormPadre(){
     var data = $('#formPadre').serialize();
+    var subsistema = $('#subsistema').val();
     // data['actualizar'] = recargar;
     $.ajax({
         url: Routing.generate('info_estudiante_rude_nuevo_save_formApoderado'),
@@ -411,6 +415,13 @@ function saveFormPadre(){
                 //     $('#paso5').attr('data-toggle','tab');
                 //     $('#paso5').click();
                 // }
+                if(subsistema=='especial'){
+                    $('#cortina').css('display','none');
+                    $('#paso7').parent('li').removeClass('disabled');
+                    $('#paso7').attr('data-toggle','tab');
+                    $('#paso7').click();
+                    $('#tabPadre').click();
+                }
             }else{
                 alert(data.msg);
             }

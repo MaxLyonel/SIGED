@@ -1,0 +1,49 @@
+carreras_index:
+    path:     /
+    defaults: { _controller: "SieUniversityBundle:Carreras:index" }
+
+carreras_info:
+    path:     /info
+    defaults: { _controller: "SieUniversityBundle:Carreras:info" }
+
+carreras_new:
+    path:     /new
+    defaults: { _controller: "SieUniversityBundle:Carreras:new" }
+    options:
+        expose: true
+
+carreras_edit:
+    path:     /edit
+    defaults: { _controller: "SieUniversityBundle:Carreras:edit" }
+    options:
+        expose: true
+
+carreras_delete:
+    path:     /delete
+    defaults: { _controller: "SieUniversityBundle:Carreras:delete" }
+    options:
+        expose: true
+
+carrera_estadistica_becas_save:
+    path:     /estats/becas/save
+    defaults: { _controller: SieUniversityBundle:Carreras:statsBecasSave }
+    options:
+        expose: true
+
+carrera_estadistica_matriculas_save:
+    path:     /estats/matriculas/save
+    defaults: { _controller: SieUniversityBundle:Carreras:statsMatriculasSave }
+    options:
+        expose: true
+
+carrera_estadistica_cargos_save:
+    path:     /estats/cargos/save
+    defaults: { _controller: SieUniversityBundle:Carreras:statsCargosSave }
+    options:
+        expose: true
+
+carrera_sin_info_save:
+    path:     /estats/sininfo/save
+    defaults: { _controller: SieUniversityBundle:Carreras:statsSinInfoSave }
+    options:
+        expose: true

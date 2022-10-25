@@ -72,3 +72,36 @@ sie_procesos_tramite_modificacion_calificaciones:
 sie_procesos_tramite_certificaciones_permanente:
     resource: "@SieProcesosBundle/Resources/config/routing/tramiteCertificacionesPermanente.yml"
     prefix:   /sie/tramite/tramiteCertificacionesPermanente
+
+sie_procesos_tramite_inscripcion_nivelacion_rezago:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteInscripcionNivelacionRezago.yml"
+    prefix:   /sie/tramite/inscripcion/nivelacion/rezago
+
+sie_procesos_tramite_previmmediatemodi:
+    resource: "@SieProcesosBundle/Resources/config/routing/previmmediatemodi.yml"
+    prefix:   /sie/tramite/previmmediatemodi
+
+sie_procesos_tramite_regularizacion_historial:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteRegularizacionHistorial.yml"
+    prefix:   /sie/tramite/regularizacionhistorial
+
+sie_procesos_tramite_inclusion_calificacion:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteInclusionCalificacion.yml"
+    prefix:   /sie/tramite/inclusioncalificacion
+
+sie_procesos_tramite_modificacion_calificacion_gestion_pasada:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteModificacionCalificacionGestionPasada.yml"
+    prefix:   /sie/tramite/modificacion/calificacion/gestion/pasada
+
+sie_procesos_tramite_previmmediatemodiver2:
+    resource: "@SieProcesosBundle/Resources/config/routing/previmmediatemodiver2.yml"
+    prefix:   /sie/tramite/previmmediatemodiver2
+
+sie_procesos_tramite_mod_cal_vigente:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteModCalVigente.yml"
+    prefix:   /sie/tramite/tramiteModCalVigente
+
+sie_procesos_tramite_reg_doble_promocion:
+    resource: "@SieProcesosBundle/Resources/config/routing/tramiteRegDobleProm.yml"
+    prefix:   /sie/tramite/tramiteRegDobleProm
+

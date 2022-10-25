@@ -39,6 +39,7 @@ class ControlCalidadController extends Controller {
             return $this->redirect($this->generateUrl('principal_web'));
         }
 
+
         $currentyear = $this->session->get('currentyear');
         $roluserlugarid = $this->session->get('roluserlugarid');
         $em = $this->getDoctrine()->getManager();
@@ -155,14 +156,12 @@ class ControlCalidadController extends Controller {
                 break;
         }
 
-        //$gestiones = $query->getResult();
-        $gestiones = array(0=>array('id'=>2021));
+        $gestiones = $query->getResult();
 
-        return $this->render('SieRegularBundle:ControlCalidad:index.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':ControlCalidad:index.html.twig', array(
                     'entidades' => $entidades,
                     'gestiones' => $gestiones,
-                    // 'currentyear' => $currentyear,
-                    'currentyear' => '2021',
+                    'currentyear' => $currentyear,
                     'lugar_tipo_id' => $usuario_lugar->getId()
         ));
     }
@@ -269,7 +268,7 @@ class ControlCalidadController extends Controller {
         
         $lista_inconsistencias = $query->getResult();
 
-        return $this->render('SieRegularBundle:ControlCalidad:list.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':ControlCalidad:list.html.twig', array(
                     'lista_inconsistencias' => $lista_inconsistencias,
                     'entidad' => $entidad,
                     'gestion' => $gestion
@@ -385,7 +384,7 @@ class ControlCalidadController extends Controller {
         $query->execute();
         $lista_estado = $query->fetchAll();
         // dump($lista_estado);die;
-        return $this->render('SieRegularBundle:ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla,'idiomas'=>$idiomas,'lista_estado'=>$lista_estado));
+        return $this->render($this->session->get('pathSystem').':ControlCalidad:lista_detalle.html.twig', array('lista_detalle' => $lista_detalle, 'regla' => $regla,'idiomas'=>$idiomas,'lista_estado'=>$lista_estado));
     }
 
     public function omitirAction(Request $request) {
@@ -648,6 +647,14 @@ class ControlCalidadController extends Controller {
                 $resultado = $query->fetchAll();
                 break;
 
+            case 26:
+                $query = $em->getConnection()->prepare('SELECT sp_sist_calidad_similitud_nombres_certf_nac (:tipo, :rude)');
+                $query->bindValue(':tipo', '2');
+                $query->bindValue(':rude', $form['llave']);
+                $query->execute();
+                $resultado = $query->fetchAll();
+                break;
+
             case 27://PROMEDIOS
                 $llave = $form['llave'];
                 $parametros = explode('|', $llave);
@@ -760,7 +767,7 @@ class ControlCalidadController extends Controller {
                 break;
         }
 
-        return $this->render('SieRegularBundle:ControlCalidad:grafico.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':ControlCalidad:grafico.html.twig', array(
             'gestion' => $gestion,
             'datosGrafico' => $datosGrafico,
             'regla' => $regla,
@@ -786,7 +793,7 @@ class ControlCalidadController extends Controller {
         $query->execute();
         $inconsistencias = $query->fetchAll();
         
-        return $this->render('SieRegularBundle:ControlCalidad:solucion_historico.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':ControlCalidad:solucion_historico.html.twig', array(
             'inconsistencias' => $inconsistencias,
             'vp_id' => $vp_id,
             'llave' => $llave,
@@ -871,7 +878,7 @@ class ControlCalidadController extends Controller {
         $query->execute();
         $inconsistencias = $query->fetchAll();
         
-        return $this->render('SieRegularBundle:ControlCalidad:solucion_historico.html.twig', array(
+        return $this->render($this->session->get('pathSystem').':ControlCalidad:solucion_historico.html.twig', array(
             'inconsistencias' => $inconsistencias,
             'vp_id' => $vp_id,
             'llave' => $llave,
@@ -891,6 +898,11 @@ class ControlCalidadController extends Controller {
         $vregla = $em->getRepository('SieAppWebBundle:ValidacionReglaTipo')->findOneById($vproceso->getValidacionReglaTipo());
         $vreglaentidad = $em->getRepository('SieAppWebBundle:ValidacionReglaEntidadTipo')->findOneById($vregla->getValidacionReglaEntidadTipo());
 
+        // if ($vproceso->getValidacionReglaTipo()->getId() == 37 ){
+        //     $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude'=>$vproceso->getLlave()));
+        // } else {
+        //     $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($vproceso->getLlave());
+        // }
         $estudiante = $em->getRepository('SieAppWebBundle:Estudiante')->findOneById($vproceso->getLlave());
 
         $datos = array(
@@ -900,6 +912,14 @@ class ControlCalidadController extends Controller {
             'nombre'=>$estudiante->getNombre(),
             'fecha_nacimiento'=>$estudiante->getFechaNacimiento()->format('d-m-Y')
         );
+
+        $cedulaTipoId = 1;
+        if($estudiante->getCedulaTipo()){
+            $cedulaTipoId = $estudiante->getCedulaTipo()->getId();
+        }
+        if($cedulaTipoId == 2){
+            $datos['extranjero'] = 'E';
+        } 
         
         if($estudiante){
             if($estudiante->getCarnetIdentidad()){
@@ -908,6 +928,7 @@ class ControlCalidadController extends Controller {
                 if($resultadoEstudiante){
                     $mensaje = "Se realizó el proceso satisfactoriamente. Los datos de la/el estudiante:".$estudiante->getCodigoRude().", se validaron correctamente con SEGIP.";
                     $estudiante->setSegipId(1);
+                    $estudiante->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipoId) );
                     $em->persist($estudiante);
                     $em->flush();
                     $this->ratificar($vproceso);

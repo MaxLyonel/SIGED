@@ -65,9 +65,10 @@ class ModCiLocalidadController extends Controller {
      * @param Request $request
      */
     public function resultAction(Request $request) {
-
+        
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('form');
+        // dump($form); die;
         $esGuanawek = false;
         // $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude'], 'segipId' => 0));
         $student = $em->getRepository('SieAppWebBundle:Estudiante')->findOneBy(array('codigoRude' => $form['codigoRude']));
@@ -129,12 +130,12 @@ class ModCiLocalidadController extends Controller {
                 return $this->render('SieRegularBundle:UnificacionRude:resulterror.html.twig' );
             }
             //*******VERIFICANDO QUE LA/EL ESTUDIANTE NO TENGA PARTICIPACIÓN EN OLIMPIADAS
-            $olimpiadas=$this->get('seguimiento')->getOlimpiadasGestion($student->getCodigoRude(), $this->session->get('currentyear'));
-            if ($olimpiadas) {
-                $message = "La/El estudiante con código RUDE: " . $student->getCodigoRude() . ", cuenta con participación en la Olimpiada Científica Plurinacinal, por lo que la modificación de datos no se realizará.";
-                $this->addFlash('noticilocalidad', $message);
-                return $this->redirectToRoute('modificar_ci_localidad_index');
-            }           
+            // $olimpiadas=$this->get('seguimiento')->getOlimpiadasGestion($student->getCodigoRude(), $this->session->get('currentyear'));
+            // if ($olimpiadas) {
+            //     $message = "La/El estudiante con código RUDE: " . $student->getCodigoRude() . ", cuenta con participación en la Olimpiada Científica Plurinacinal, por lo que la modificación de datos no se realizará.";
+            //     $this->addFlash('noticilocalidad', $message);
+            //     return $this->redirectToRoute('modificar_ci_localidad_index');
+            // }           
             //*******VERIFICANDO QUE LA/EL ESTUDIANTE NO TENGA PARTICIPACIÓN EN JUEGOS
             $juegos=$this->get('seguimiento')->getJuegosGestion($student->getCodigoRude(), $this->session->get('currentyear'));
             if ($juegos){
@@ -145,7 +146,7 @@ class ModCiLocalidadController extends Controller {
 
             $objstudent = $em->getRepository('SieAppWebBundle:Estudiante');
             $query = $objstudent->createQueryBuilder('e')
-                ->select('e.id as idStudent, e.paterno, e.materno,e.nombre, e.fechaNacimiento, g.genero, e.carnetIdentidad', 'e.complemento', 'e.segipId', 'e.oficialia', 'e.libro', 'e.partida', 'e.folio', 'IDENTITY(e.generoTipo) as generoId', 'ptp.pais', '(ltd.lugar) as departamento', 'ltp.lugar as provincia', 'e.localidadNac')
+                ->select('e.id as idStudent, e.paterno, e.materno,e.nombre, e.fechaNacimiento, g.genero, e.carnetIdentidad', 'e.complemento', 'e.segipId', 'e.oficialia', 'e.libro', 'e.partida', 'e.folio', 'IDENTITY(e.generoTipo) as generoId', 'ptp.pais', '(ltd.lugar) as departamento', 'ltp.lugar as provincia', 'e.localidadNac', 'IDENTITY(e.cedulaTipo) as cedulaTipo')
                 ->leftjoin('SieAppWebBundle:PaisTipo', 'ptp', 'WITH', 'e.paisTipo = ptp.id')
                 ->leftjoin('SieAppWebBundle:LugarTipo', 'ltd', 'WITH', 'e.lugarNacTipo = ltd.id')
                 ->leftjoin('SieAppWebBundle:LugarTipo', 'ltp', 'WITH', 'e.lugarProvNacTipo = ltp.id')
@@ -162,7 +163,7 @@ class ModCiLocalidadController extends Controller {
             $form=$this->createFormStudent($infoStudent[0])->createView();
             if($esGuanawek)
                 $form=$this->createFormStudentGuanawek($infoStudent[0])->createView();
-
+            // dump($this->session->get('pathSystem'));die;
             return $this->render($this->session->get('pathSystem') . ':ModCiLocalidad:result.html.twig', array(
                 //'form' => $this->createFormStudent($infoStudent[0])->createView(),
                 'form' => $form,
@@ -199,14 +200,37 @@ class ModCiLocalidadController extends Controller {
             } else {
                 $formStudent->add('nombre', 'text', array('label' => 'Nombre', 'data' => $data['nombre'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)));
             }*/
+            if ($data['cedulaTipo']==null) {
+                $cedulaTipo = 1;
+            } else {
+                $cedulaTipo = $data['cedulaTipo'];
+            }
             
             if ($data['segipId']==0) {
-                $formStudent->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{3,10}', 'maxlength' => 10, 'style' => 'text-transform:uppercase', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Si el Carnet de Identidad es extranjero, debe omitir la parte 'E-', pero debe escribir los ceros que contenga el C.I.")));
+                $formStudent->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{3,10}', 'maxlength' => 10, 'style' => 'text-transform:uppercase', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Si el Carnet de Identidad es extranjero, debe omitir la parte 'E-' y marcar en Tipo de Cedula como 'EXTRANJERO', pero debe escribir los ceros que contenga el C.I.")));
                 $formStudent->add('complemento', 'text', array('label' => 'Complemento', 'data' => $data['complemento'], 'required' => false, 'attr' => array('maxlength' => 2, 'pattern' => '[0-9a-zA-Z]{2}', 'style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedición del C.I. Por favor NO coloque abreviaturas de Departamentos")));
+                $formStudent->add('localidad', 'text', array('label' => 'Localidad', 'data' => strtoupper($data['localidadNac']), 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase', 'maxlength' => 50)));
+                $formStudent->add('cedulatipo', 'choice', array(
+                    'choices'   => array(1 => 'Nacional', 2 => 'Extranjero'),
+                    'data' => $cedulaTipo,
+                    'expanded'  => true,
+                    'multiple'  => false,
+                    'attr' => ['class' => 'form-check form-check-inline'],
+                    'label' => "Tipo de Cedula de Identidad"
+                ));
             } else {
                 $formStudent->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)));
                 $formStudent->add('complemento', 'text', array('label' => 'Complemento', 'data' => $data['complemento'], 'required' => false, 'attr' => array('maxlength' => 2, 'pattern' => '[0-9a-zA-Z]{2}', 'style' => 'text-transform:uppercase', 'class' => 'form-control', 'disabled' => true)));
-                //$formStudent->add('nombre', 'text', array('label' => 'Nombre', 'data' => $data['nombre'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)));
+                $formStudent->add('localidad', 'text', array('label' => 'Localidad', 'data' => strtoupper($data['localidadNac']), 'attr' => array('class' => 'form-control', 'disabled' => true)));
+                $formStudent->add('cedulatipo', 'choice', array(
+                    'choices'   => array(1 => 'Nacional', 2 => 'Extranjero'),
+                    'data' => $cedulaTipo,
+                    'expanded'  => true,
+                    'multiple'  => false,
+                    'attr' => ['class' => 'form-check form-check-inline'],
+                    'label' => "Tipo de Cedula de Identidad",
+                    'disabled' => true
+                ));
             }
 
             $formStudent->add('paterno', 'text', array('label' => 'Paterno', 'data' => $data['paterno'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
@@ -216,9 +240,8 @@ class ModCiLocalidadController extends Controller {
             ->add('pais', 'text', array('label' => 'Pais', 'data' => strtoupper($data['pais']), 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
             ->add('departamento', 'text', array('label' => 'Departamento', 'data' => strtoupper($data['departamento']), 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
             ->add('provincia', 'text', array('label' => 'Provincia', 'data' => strtoupper($data['provincia']), 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
-            ->add('localidad', 'text', array('label' => 'Localidad', 'data' => strtoupper($data['localidadNac']), 'attr' => array('class' => 'form-control', 'style' => 'text-transform:uppercase', 'maxlength' => 50)))
-            //->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{3,10}', 'maxlength' => 10, 'style' => 'text-transform:uppercase', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Si el Carnet de Identidad es extranjero, debe omitir la parte 'E-', pero debe escribir los ceros que contenga el C.I.")))
-            //->add('complemento', 'text', array('label' => 'Complemento', 'data' => $data['complemento'], 'required' => false, 'attr' => array('maxlength' => 2, 'pattern' => '[0-9a-zA-Z]{2}', 'style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedición del C.I. Por favor NO coloque abreviaturas de Departamentos")))
+            // ->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{3,10}', 'maxlength' => 10, 'style' => 'text-transform:uppercase', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Si el Carnet de Identidad es extranjero, debe omitir la parte 'E-' y marcar en Tipo de Cedula como 'EXTRANJERO', pero debe escribir los ceros que contenga el C.I.")))
+            // ->add('complemento', 'text', array('label' => 'Complemento', 'data' => $data['complemento'], 'required' => false, 'attr' => array('maxlength' => 2, 'pattern' => '[0-9a-zA-Z]{2}', 'style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedición del C.I. Por favor NO coloque abreviaturas de Departamentos")))
             ->add('fechaNacimiento', 'date', array('widget' => 'single_text', 'format' => 'dd-MM-yyyy', 'label' => 'Fecha de Nacimiento', 'data' => $data['fechaNacimiento'], 'required' => true, 'attr' => array('class' => 'form-control calendario', 'disabled' => true)));
         
         $formStudent->add('save', 'submit', array('label' => 'Guardar cambios'));
@@ -252,7 +275,7 @@ class ModCiLocalidadController extends Controller {
             }
 
             if ($data['segipId']==0) {
-                $formStudent->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{3,10}', 'maxlength' => 10, 'style' => 'text-transform:uppercase', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Si el Carnet de Identidad es extranjero, debe omitir la parte 'E-', pero debe escribir los ceros que contenga el C.I.")));
+                $formStudent->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => true, 'attr' => array('class' => 'form-control', 'pattern' => '[0-9]{3,10}', 'maxlength' => 10, 'style' => 'text-transform:uppercase', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Si el Carnet de Identidad es extranjero, debe omitir la parte 'E-' y marcar en Tipo de Cedula como 'EXTRANJERO', pero debe escribir los ceros que contenga el C.I.")));
                 $formStudent->add('complemento', 'text', array('label' => 'Complemento', 'data' => $data['complemento'], 'required' => false, 'attr' => array('maxlength' => 2, 'pattern' => '[0-9a-zA-Z]{2}', 'style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedición del C.I. Por favor NO coloque abreviaturas de Departamentos")));
             } else {
                 $formStudent->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)));
@@ -280,8 +303,16 @@ class ModCiLocalidadController extends Controller {
             ->add('departamento', 'text', array('label' => 'Departamento', 'data' => strtoupper($data['departamento']), 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
             ->add('provincia', 'text', array('label' => 'Provincia', 'data' => strtoupper($data['provincia']), 'required' => false, 'attr' => array('class' => 'form-control', 'disabled' => true)))
             ->add('localidad', 'text', array('label' => 'Localidad', 'data' => strtoupper($data['localidadNac']), 'attr' => array('class' => 'form-control', 'disabled' => true ,'style' => 'text-transform:uppercase', 'maxlength' => 50)))
-            //->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => true, 'attr' => array('class' => 'form-control', 'disabled' => true , 'pattern' => '[0-9]{3,10}', 'maxlength' => 10, 'style' => 'text-transform:uppercase', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Si el Carnet de Identidad es extranjero, debe omitir la parte 'E-', pero debe escribir los ceros que contenga el C.I.")))
-            //->add('complemento', 'text', array('label' => 'Complemento', 'data' => $data['complemento'], 'required' => false, 'attr' => array('maxlength' => 2, 'disabled' => true, 'pattern' => '[0-9a-zA-Z]{2}', 'style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedición del C.I. Por favor NO coloque abreviaturas de Departamentos")))
+            ->add('ci', 'text', array('label' => 'CI', 'data' => $data['carnetIdentidad'], 'required' => true, 'attr' => array('class' => 'form-control', 'disabled' => true , 'pattern' => '[0-9]{3,10}', 'maxlength' => 10, 'style' => 'text-transform:uppercase', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Si el Carnet de Identidad es extranjero, debe omitir la parte 'E-' y marcar en Tipo de Cedula como 'EXTRANJERO', pero debe escribir los ceros que contenga el C.I.")))
+            ->add('complemento', 'text', array('label' => 'Complemento', 'data' => $data['complemento'], 'required' => false, 'attr' => array('maxlength' => 2, 'disabled' => true, 'pattern' => '[0-9a-zA-Z]{2}', 'style' => 'text-transform:uppercase', 'class' => 'form-control', 'data-toggle' => "tooltip", 'data-placement' => "right", 'data-original-title' => "Complemento no es lo mismo que la expedición del C.I. Por favor NO coloque abreviaturas de Departamentos")))
+            ->add('cedulatipo', 'choice', array(
+                'choices'   => array(1 => 'Nacional', 2 => 'Extranjero'),
+                'data' => 1,
+                'expanded'  => true,
+                'multiple'  => false,
+                'attr' => ['class' => 'form-check form-check-inline'],
+                'label' => "Tipo de Cedula de Identidad"
+                ))
             ->add('fechaNacimiento', 'date', array('widget' => 'single_text', 'format' => 'dd-MM-yyyy', 'label' => 'Fecha de Nacimiento', 'data' => $data['fechaNacimiento'], 'required' => false, 'attr' => array('class' => 'form-control calendario','disabled' => true)));
         
         $formStudent->add('save', 'submit', array('label' => 'Guardar cambios'));
@@ -308,6 +339,7 @@ class ModCiLocalidadController extends Controller {
             $localidad = "";
 
             $student = $em->getRepository('SieAppWebBundle:Estudiante')->find($form['idStudent']);
+            // dump($student);die;
             $oldDataStudent = clone $student;
             $oldDataStudent = (array)$oldDataStudent;
 
@@ -347,6 +379,15 @@ class ModCiLocalidadController extends Controller {
                 } else {
                     $fechaNacimiento =  $student->getFechaNacimiento()->format('d-m-Y'); 
                 }
+                
+                if(isset($form['cedulatipo'])){
+                    $cedulaTipo = $form['cedulatipo'];
+                } else {
+                    $cedulaTipo =  $student->getCedulaTipo(); 
+                }
+
+                // dump($student->getCedulaTipo());
+                // dump($cedulaTipo);die;
 
                 //$fechaNacimiento = date('dd-MM-yyyy',$student->getFechaNacimiento()); 
 
@@ -361,10 +402,11 @@ class ModCiLocalidadController extends Controller {
                     'primer_apellido' => $paterno,
                     'segundo_apellido' => $materno,
                     'nombre' => $nombre,
-                    'fecha_nacimiento' => $fechaNacimiento
+                    'fecha_nacimiento' => $fechaNacimiento,
+                    'tipo_persona' => $cedulaTipo
                 ];
                 
-                //dump($fechaNacimiento);die;
+                // dump($cedulaTipo);
                 $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($carnetIdentidad, $data, 'prod', 'academico');
                 //quitamos la validacion solo para guanawek
                 
@@ -397,7 +439,9 @@ class ModCiLocalidadController extends Controller {
                     if(isset($form['fechaNacimiento'])){
                         $student->setFechaNacimiento(new \DateTime($fechaNacimiento));
                     }
-                    
+
+                    $student->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipo));
+                                        
                     $student->setSegipId(1);
                     $em->persist($student);
                     $em->flush();
