@@ -213,6 +213,7 @@ class TramiteRegularizacionHistorialController extends Controller{
        
         $response->setStatusCode(200);
         $response->setData(array(
+            'estudianteId'=>$estudiante->getId(),
             'codigoRude'=>$estudiante->getCodigoRude(),
             'estudiante'=> $estudiante->getNombre().' '.$estudiante->getPaterno().' '.$estudiante->getMaterno(),
             'carnet'=>($estudiante->getSegipId() == 1)?$estudiante->getCarnetIdentidad():'',
@@ -229,51 +230,79 @@ class TramiteRegularizacionHistorialController extends Controller{
         $em = $this->getDoctrine()->getManager();
         $sieActual = $request->get('sieActual');
         $gestionSelected = $request->get('gestionSelected');
-
-        $dato_ue = $em->createQueryBuilder()
-        ->select(' ie.institucioneducativa, dep.departamento, dt.distrito')
-        ->from('SieAppWebBundle:Institucioneducativa','ie')
-        ->innerJoin('SieAppWebBundle:JurisdiccionGeografica','jg','with','ie.leJuridicciongeografica = jg.id')
-        ->innerJoin('SieAppWebBundle:DistritoTipo','dt','with','jg.distritoTipo = dt.id')
-        ->innerJoin('SieAppWebBundle:DepartamentoTipo','dep','with','dt.departamentoTipo = dep.id')
-        ->where('ie.id = :sie')
-        ->setParameter('sie', $sieActual)
+        $rude = $request->get('rude');
+        $estudianteId = $request->get('estudianteId');
+        
+       
+        //BUSCAMOS SI EL ESTUDIANTE TIENE INSCRIPCION EN ESA GESTION Y UnidadEducativa
+        $dato_insc = $em->createQueryBuilder()
+        ->select('iec.id')
+        ->from('SieAppWebBundle:InstitucioneducativaCurso','iec')
+        ->innerJoin('SieAppWebBundle:EstudianteInscripcion','ei','with','iec.id = ei.institucioneducativaCurso')
+        ->innerJoin('SieAppWebBundle:Estudiante','e','with','e.id = ei.estudiante')
+        ->where('e.id = :estudianteId')
+        ->andwhere('iec.gestionTipo = :gestion')
+        ->setParameter('estudianteId', $estudianteId)
+        ->setParameter('gestion', $gestionSelected)
         ->getQuery()
         ->getResult();
+           // dump($dato_insc);die;
+        if(!$dato_insc){
+            $dato_ue = $em->createQueryBuilder()
+                ->select(' ie.institucioneducativa, dep.departamento, dt.distrito')
+                ->from('SieAppWebBundle:Institucioneducativa','ie')
+                ->innerJoin('SieAppWebBundle:JurisdiccionGeografica','jg','with','ie.leJuridicciongeografica = jg.id')
+                ->innerJoin('SieAppWebBundle:DistritoTipo','dt','with','jg.distritoTipo = dt.id')
+                ->innerJoin('SieAppWebBundle:DepartamentoTipo','dep','with','dt.departamentoTipo = dep.id')
+                ->where('ie.id = :sie')
+                ->setParameter('sie', $sieActual)
+                ->getQuery()
+                ->getResult();
 
-       // dump($dato_ue);die;
-        //TODO verificar tuicion
-        //get level
-        $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
-        $query = $entity->createQueryBuilder('iec')
-                ->select('(iec.nivelTipo)')
-                ->where('iec.institucioneducativa = :sie')
-                ->andwhere('iec.gestionTipo = :gestion')
-                ->setParameter('sie', $sieActual)                
-                ->setParameter('gestion', $gestionSelected)
-                ->distinct()
-                ->orderBy('iec.nivelTipo', 'ASC')
-                ->getQuery();
+            // dump($dato_ue);die;
+                //TODO verificar tuicion
+                //get level
+                $entity = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+                $query = $entity->createQueryBuilder('iec')
+                        ->select('(iec.nivelTipo)')
+                        ->where('iec.institucioneducativa = :sie')
+                        ->andwhere('iec.gestionTipo = :gestion')
+                        ->setParameter('sie', $sieActual)                
+                        ->setParameter('gestion', $gestionSelected)
+                        ->distinct()
+                        ->orderBy('iec.nivelTipo', 'ASC')
+                        ->getQuery();
+                    
+                $aqLevel = $query->getResult();
+
+                //TODO mensaje si no hya resultados
+                $arrLevel = array();
+                foreach ($aqLevel as $level) {
+                    if($level[1] != 11){
+                        $arrLevel[$level[1]] = array('id'=>$level[1], 'level'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($level[1])->getNivel() );    
+                    }           
+                }
+
+            $arrResponse = array(
+                'arrLevel' => $arrLevel,
+                'nombreUe' => $dato_ue[0]["institucioneducativa"],
+                'departamento' => $dato_ue[0]["departamento"],
+                'distrito' => $dato_ue[0]["distrito"],
+            );
+
+            $response->setStatusCode(200);
             
-        $aqLevel = $query->getResult();
+        }else{
+            $arrResponse = array(
+                'mensaje' => 'El/la estudiante ya cuenta con inscripción en la gestión '.$gestionSelected.', no puede aplicar este trámite',
+            );
 
-        //TODO mensaje si no hya resultados
-        $arrLevel = array();
-        foreach ($aqLevel as $level) {
-            if($level[1] != 11){
-                $arrLevel[$level[1]] = array('id'=>$level[1], 'level'=>$em->getRepository('SieAppWebBundle:NivelTipo')->find($level[1])->getNivel() );    
-            }           
+            $response->setStatusCode(202);
         }
 
-      $arrResponse = array(
-        'arrLevel' => $arrLevel,
-        'nombreUe' => $dato_ue[0]["institucioneducativa"],
-        'departamento' => $dato_ue[0]["departamento"],
-        'distrito' => $dato_ue[0]["distrito"],
-      );
 
-      $response->setStatusCode(200);
-      $response->setData($arrResponse);
+        $response->setData($arrResponse);
+        
 
       return $response;
     }
@@ -1479,6 +1508,7 @@ class TramiteRegularizacionHistorialController extends Controller{
 
 
     public function derivaDepartamentoAction(Request $request){
+        
         try {
             $em = $this->getDoctrine()->getManager();
             $em->getConnection()->beginTransaction();
@@ -1521,15 +1551,15 @@ class TramiteRegularizacionHistorialController extends Controller{
             $tarea = $this->get('wftramite')->obtieneTarea($idTramite, 'idtramite');
             $tareaActual = '';
             $tareaSiguiente = '';
-            foreach ($tarea as $t) {
-                $tareaActual = $t['tarea_actual'];
-                if ($t['condicion'] == 'SI') {
-                    $tareaSiguiente = $t['tarea_siguiente'];
+                foreach ($tarea as $t) {
+                    $tareaActual = $t['tarea_actual'];
+                    if ($t['condicion'] == 'SI') {
+                        $tareaSiguiente = $t['tarea_siguiente'];
+                    }
+                    if ($t['condicion'] == 'NO') {
+                        $tareaSiguienteNo = $t['tarea_siguiente'];
+                    }
                 }
-                if ($t['condicion'] == 'NO') {
-                    $tareaSiguienteNo = $t['tarea_siguiente'];
-                }
-            }
                 $datos = json_encode(array(
                     'sie'=>$sie,
                     'aprueba'=>$aprueba,

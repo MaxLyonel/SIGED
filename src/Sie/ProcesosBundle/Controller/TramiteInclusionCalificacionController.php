@@ -1132,8 +1132,8 @@ class TramiteInclusionCalificacionController extends Controller {
             /*----------  VERIFICACION  ----------*/
             // VERIFICAMOS SI EL NUEVO ESTADO ES PROMOVIDO Y POSTERIORMENTE VERIFICAMOS SI EXISTE OTRA INSCRIPCION SIMILAR DEL MISMO NIVEL Y GRADO
             // PARA EVITAR DOBLE PROMOCION
-            
             $respuesta = $this->calcularNuevoEstado($idTramite);
+            /*********** se deshabilito temporalmente 
             if ($respuesta['nuevoEstado'] == 5) {
                 $inscripcionSimilar = $this->get('funciones')->existeInscripcionSimilarAprobado($respuesta['idInscripcion']);
                 if ($inscripcionSimilar) {
@@ -1143,7 +1143,7 @@ class TramiteInclusionCalificacionController extends Controller {
                     return $this->redirectToRoute('tramite_inclusion_calificacion_verifica_departamento', array('id'=>$idTramite, 'tipo'=>'idtramite'));
                 }
             }
-
+            */
             $inscripcion = $em->getRepository('SieAppWebBundle:EstudianteInscripcion')->find($respuesta['idInscripcion']);            
             /*=====  End of VERIFICACION  ======*/
             
@@ -1175,15 +1175,8 @@ class TramiteInclusionCalificacionController extends Controller {
                     $tareaSiguienteNo = $t['tarea_siguiente'];
                 }
             }
-
-           
                 $resAdm = null;
                 $informe = null;
-           
-
-          
-
-           
                 $datos = json_encode(array(
                     'sie'=>$sie,
                     'aprueba'=>$aprueba,
