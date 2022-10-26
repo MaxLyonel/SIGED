@@ -224,7 +224,7 @@ class InfoMaestroController extends Controller {
             'fecha_nacimiento' => $fecha
         );
         if($persona['nacionalidad'] == 'EX'){
-            $data['extranjero'] = 'E';
+            $arrayDatosPersona['extranjero'] = 'E';
         }        
 
         $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['carnet'], $arrayDatosPersona, 'prod', 'academico');
