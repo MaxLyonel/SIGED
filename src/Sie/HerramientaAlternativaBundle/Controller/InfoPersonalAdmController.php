@@ -620,7 +620,9 @@ class InfoPersonalAdmController extends Controller {
             'nombre' => $form['nombre'],
             'fecha_nacimiento' => $form['fecha_nacimiento']
         ];
-
+        if($request->get('nacionalidad') == 'EX'){
+            $data['extranjero'] = 'E';
+        }
         $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
         $persona = array();
 
@@ -631,7 +633,8 @@ class InfoPersonalAdmController extends Controller {
                 'primer_apellido' => $form['primer_apellido'],
                 'segundo_apellido' => $form['segundo_apellido'],
                 'nombre' => $form['nombre'],
-                'fecha_nacimiento' => $form['fecha_nacimiento']
+                'fecha_nacimiento' => $form['fecha_nacimiento'],
+                'nacionalidad' => $request->get('nacionalidad')
             ];
         }
 
@@ -681,6 +684,9 @@ class InfoPersonalAdmController extends Controller {
             $arrayDatosPersona['carnet']=$persona['carnet'];
             unset($arrayDatosPersona['fecha_nacimiento']);
             $arrayDatosPersona['fechaNacimiento']=$persona['fecha_nacimiento'];
+            if($persona['nacionalidad'] == 'EX'){
+                $arrayDatosPersona['extranjero'] = 'E';
+            }            
             $personaEncontrada = $this->get('buscarpersonautils')->buscarPersonav2($arrayDatosPersona,$conCI=true, $segipId=1);
 
             if($personaEncontrada == null)
@@ -704,6 +710,8 @@ class InfoPersonalAdmController extends Controller {
                 $newPersona->setRda('0');
                 $newPersona->setEsvigente('t');
                 $newPersona->setActivo('t');
+
+                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(($persona['nacionalidad'] == 'EX')?2:1));
 
                 $em->persist($newPersona);
                 $em->flush();
