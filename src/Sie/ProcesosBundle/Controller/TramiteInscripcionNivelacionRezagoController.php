@@ -406,7 +406,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                     $arrayInfoCurso = array('institucioneducativa'=>$codigoSie, 'nivelTipo'=>$registro['nivelId'], 'gradoTipo'=>$registro['gradoId'], 'gestionTipo'=>$fechaActual->format("Y"));
                     $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findBy($arrayInfoCurso, array('turnoTipo'=>'ASC'));
                     
-                    if (count($objCurso)>0){
+                    //if (count($objCurso)>0){
 
                         $registro['edad'] = $key;
                         $nivelGradoPermitido[$key]['data'] = bin2hex(serialize($registro));
@@ -427,16 +427,18 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                             $nivelGradoPermitido[$key]['ue'] = "";
                         }
 
-                    
-                    
-                        foreach ($objCurso as $key3 => $curso) {
-                            $turnoId = hexdec(decoct(ord($curso->getTurnoTipo()->getId())+($registro['gradoId']+$registro['nivelId'])));
-                            // $turnoId = chr(octdec(dechex($turnoId)-6));
-                            $turnoNombre = $curso->getTurnoTipo()->getTurno();
-                            $nivelGradoPermitido[$key]['turno'][$turnoId] = $turnoNombre;
+                        if (count($objCurso)>0){
+                        
+                            foreach ($objCurso as $key3 => $curso) {
+                                $turnoId = hexdec(decoct(ord($curso->getTurnoTipo()->getId())+($registro['gradoId']+$registro['nivelId'])));
+                                // $turnoId = chr(octdec(dechex($turnoId)-6));
+                                $turnoNombre = $curso->getTurnoTipo()->getTurno();
+                                $nivelGradoPermitido[$key]['turno'][$turnoId] = $turnoNombre;
+                            }
+                        
+                        } else {
+                            $nivelGradoPermitido[$key]['turno'] = array();
                         }
-                    
-                     
 
                         if($key == ($keyUltimaInscripcion-1)){
                             $nivelGradoPermitido[$key]['ue'] = $actualInstitucionEducativaR;
@@ -456,7 +458,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
                             $nivelGradoPermitido[$key]['asignatura'][$idenficadorAsignatura] = $asignatura['asignatura'];
                         }
 
-                    }
+                    //}
 
                     //$nivelesPermitido = $nivelesPermitido.",";                
                 }            
@@ -510,7 +512,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
     }
 
     public function ueRecepcionValidaSieAction(Request $request){
-
+        $fechaActual = new \DateTime("Y");
         $response = new JsonResponse();
 
         $em = $this->getDoctrine()->getManager();
@@ -541,7 +543,34 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
             return $response->setData(array('estado'=>false, 'msg'=>"No cuenta con nivel ".$em->getRepository('SieAppWebBundle:NivelTipo')->findOneById($data['nivelId'])->getNivel()." autorizado."));
         }
 
-        return $response->setdata(array('estado'=>true, 'msg'=>$intitucionEducativaEntity->getInstitucioneducativa()));
+        // $arrayInfoCurso = array('institucioneducativa'=>$sie, 'gestionTipo'=>$fechaActual->format("Y"));
+        // $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findBy($arrayInfoCurso, array('turnoTipo'=>'ASC'));
+        $entidad = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso');
+        $objCurso = $entidad->createQueryBuilder('iec')
+                            ->select('tt')
+                            ->innerJoin('SieAppWebBundle:TurnoTipo','tt','with','tt.id = iec.turnoTipo')
+                            ->where('iec.institucioneducativa = :sie')
+                            ->andWhere('iec.gestionTipo = :gestion')
+                            ->orderBy('tt.id','ASC')
+                            ->distinct(true)
+                            ->setParameter('sie', $sie)
+                            ->setParameter('gestion', $fechaActual->format("Y"))
+                            ->getQuery()
+                            ->getResult();
+                            
+        $turnos = array();
+        
+        if(count($objCurso)>0){
+            foreach ($objCurso as $key => $curso){
+                $turnoId = hexdec(decoct(ord($curso->getId())+($data['gradoId']+$data['nivelId'])));
+                $turnoNombre = $curso->getTurno();
+                $turnos[] = array('id'=>$turnoId,'nombre'=>$turnoNombre); 
+            }
+        } else {
+            return $response->setdata(array('estado'=>false, 'msg'=>'No cuenta con paralelos, intente nuevamente o comuniquese con su técnico SIE', 'paralelo'=>$paralelos));
+        }        
+
+        return $response->setdata(array('estado'=>true, 'msg'=>$intitucionEducativaEntity->getInstitucioneducativa(), 'turno'=>$turnos));
 
     }
 
@@ -564,6 +593,7 @@ class TramiteInscripcionNivelacionRezagoController extends Controller{
         $turnoId = chr(octdec(dechex($turno))-($data['gradoId']+$data['nivelId']));
 
         $arrayInfoCurso = array('institucioneducativa'=>$institucionEducativaId, 'nivelTipo'=>$data['nivelId'], 'gradoTipo'=>$data['gradoId'], 'gestionTipo'=>$fechaActual->format("Y"), 'turnoTipo'=>$turnoId);
+        
         $objCurso = $em->getRepository('SieAppWebBundle:InstitucioneducativaCurso')->findBy($arrayInfoCurso, array('turnoTipo'=>'ASC'));
         $paralelos = array();
         if(count($objCurso)>0){
