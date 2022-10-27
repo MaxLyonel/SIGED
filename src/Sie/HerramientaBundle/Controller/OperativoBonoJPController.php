@@ -727,6 +727,9 @@ class OperativoBonoJPController extends Controller
 	        	$newPersona->setFechaNacimiento(new \DateTime($form_idfecnac));
 	        	$newPersona->setSegipId('1');
 	        	$newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find('0'));
+
+            		$newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(($extranjero)?2:1));
+
 	        	$em->persist($newPersona);
 	        	// $newPersona->setMaterno($carnet);
 	        	$idpersona = $newPersona->getId();
