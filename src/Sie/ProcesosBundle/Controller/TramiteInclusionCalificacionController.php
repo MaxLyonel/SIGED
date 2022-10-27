@@ -1132,8 +1132,8 @@ class TramiteInclusionCalificacionController extends Controller {
             /*----------  VERIFICACION  ----------*/
             // VERIFICAMOS SI EL NUEVO ESTADO ES PROMOVIDO Y POSTERIORMENTE VERIFICAMOS SI EXISTE OTRA INSCRIPCION SIMILAR DEL MISMO NIVEL Y GRADO
             // PARA EVITAR DOBLE PROMOCION
-            /*********** se deshabilito temporalmente 
             $respuesta = $this->calcularNuevoEstado($idTramite);
+            /*********** se deshabilito temporalmente 
             if ($respuesta['nuevoEstado'] == 5) {
                 $inscripcionSimilar = $this->get('funciones')->existeInscripcionSimilarAprobado($respuesta['idInscripcion']);
                 if ($inscripcionSimilar) {
