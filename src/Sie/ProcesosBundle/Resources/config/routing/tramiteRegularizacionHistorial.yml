@@ -28,6 +28,11 @@ tramite_regularizacion_historial_certificado:
   defaults:
     { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:rptCertificadoNotas }
 
+tramite_regularizacion_historial_solicitud:
+  path: /certificadoSolImprimirone
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:rptSolicitudRegularizacionHistorial }
+
 tramite_regularizacion_historial_formulario_vista_imprimir_libreta:
   path: /formularioVistaImprimirLibretaone
   defaults:
@@ -101,6 +106,11 @@ tramite_regularizacion_historial_certificado:
   path: /certificadoImprimirone
   defaults:
     { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:actaImprimir }
+
+tramite_regularizacion_historial_formulario_imprimir:
+  path: /certificadoImprimirone/{idTramite}
+  defaults:
+    { _controller: SieProcesosBundle:TramiteRegularizacionHistorial:formularioImprimir }
 
 tramite_modificacion_calificaciones_acta_imprimir:
   path: /actaImprimirone
