@@ -1097,7 +1097,7 @@ class StudentsInscriptionsController extends Controller {
         $query = $em->getConnection()->prepare("select * from sp_genera_estudiante_historial('" . $rude . "') order by gestion_tipo_id_raep desc, estudiante_inscripcion_id_raep desc;");
         $query->execute();
         $dataInscription = $query->fetchAll();
-        dump($dataInscription);die;
+        // dump($dataInscription);die;
         foreach ($dataInscription as $key => $inscription) {
             switch ($inscription['institucioneducativa_tipo_id_raep']) {
                 case '1':

@@ -1,0 +1,21 @@
+Sie\AppWebBundle\Entity\EstTecTipoInstituto:
+    type: entity
+    table: est_tec_tipo_instituto
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        tipoInstituto:
+            type: string
+            nullable: true
+            length: 145
+            fixed: false
+            comment: ''
+            column: tipo_instituto
+    lifecycleCallbacks: {  }

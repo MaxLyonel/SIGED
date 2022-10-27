@@ -156,6 +156,7 @@ class InfoMaestroController extends Controller {
     }
 
     public function verificarPersonaAction(Request $request){
+        
         $form = $request->get('sie_verificar_persona_segip');
 
         $data = [
@@ -166,7 +167,9 @@ class InfoMaestroController extends Controller {
             'nombre' => $form['nombre'],
             'fecha_nacimiento' => $form['fecha_nacimiento']
         ];
-
+        if($request->get('nacionalidad') == 'EX'){
+            $data['extranjero'] = 'E';
+        }
         $resultado = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($form['carnet'], $data, $form['entorno'], 'academico');
         $persona = array();
 
@@ -177,7 +180,8 @@ class InfoMaestroController extends Controller {
                 'primer_apellido' => $form['primer_apellido'],
                 'segundo_apellido' => $form['segundo_apellido'],
                 'nombre' => $form['nombre'],
-                'fecha_nacimiento' => $form['fecha_nacimiento']
+                'fecha_nacimiento' => $form['fecha_nacimiento'],
+                'nacionalidad' => $request->get('nacionalidad')
             ];
         }
 
@@ -201,10 +205,10 @@ class InfoMaestroController extends Controller {
     {
         //NO PERMITIR REGISTRO DE PERSONAS
         //return $this->redirect($this->generateUrl('login'));
-        
         $em = $this->getDoctrine()->getManager();
         $form = $request->get('sie_persona_datos');
         $persona = unserialize($form['persona']);
+        
         $persona_validada = null;
         $institucion = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['institucion']);
         $gestion = $form['gestion'];
@@ -219,6 +223,9 @@ class InfoMaestroController extends Controller {
             'nombre'=>$persona['nombre'],
             'fecha_nacimiento' => $fecha
         );
+        if($persona['nacionalidad'] == 'EX'){
+            $arrayDatosPersona['extranjero'] = 'E';
+        }        
 
         $personaValida = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona['carnet'], $arrayDatosPersona, 'prod', 'academico');
 
@@ -250,6 +257,8 @@ class InfoMaestroController extends Controller {
                 $newPersona->setRda('0');
                 $newPersona->setEsvigente('t');
                 $newPersona->setActivo('t');
+
+                $newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(($persona['nacionalidad'] == 'EX')?2:1));
 
                 $em->persist($newPersona);
                 $em->flush();

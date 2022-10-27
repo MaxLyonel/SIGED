@@ -1,0 +1,86 @@
+Sie\AppWebBundle\Entity\EstTecRegistroConsolidacion:
+    type: entity
+    table: est_tec_registro_consolidacion
+    indexes:
+        IDX_D7E741BA179FF95:
+            columns:
+                - gestion_tipo_id
+        IDX_D7E741BA615FFBB0:
+            columns:
+                - est_tec_operativo_tipo_id
+        IDX_D7E741BAE8E891F1:
+            columns:
+                - est_tec_sede_id
+    uniqueConstraints:
+        est_tec_re_gistro_consolidacionunique_key:
+            columns:
+                - gestion_tipo_id
+                - est_tec_sede_id
+                - est_tec_operativo_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcionError:
+            type: string
+            nullable: true
+            length: 250
+            fixed: false
+            comment: ''
+            column: descripcion_error
+        fecha:
+            type: date
+            nullable: true
+            comment: ''
+        usuario:
+            type: string
+            nullable: true
+            length: 100
+            fixed: false
+            comment: ''
+        consulta:
+            type: text
+            nullable: true
+            length: null
+            fixed: false
+            comment: ''
+        activo:
+            type: boolean
+            nullable: true
+            comment: ''
+            default: false
+    manyToOne:
+        gestionTipo:
+            targetEntity: GestionTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                gestion_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecOperativoTipo:
+            targetEntity: EstTecOperativoTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_operativo_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+        estTecSede:
+            targetEntity: EstTecSede
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_sede_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

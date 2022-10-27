@@ -65,8 +65,8 @@ class InfoEstudianteController extends Controller {
 //        }
 //        return $this->render($this->session->get('pathSystem') . ':InfoEstudiante:index.html.twig', array());
         //get the value to send
-        $form = $request->get('form');
-
+        $formResponse = $request->get('form');
+// dump($formResponse);die;
         $em = $this->getDoctrine()->getManager();
         //find the levels from UE
         //levels gestion -1
@@ -74,8 +74,9 @@ class InfoEstudianteController extends Controller {
         
         // get the QA observactions
         $form['reglas'] = '2,3,6,8,10,12,13,15,16,20,24,25,26';
-        $form['gestion'] = $form['gestion'];
-        $form['sie'] = $form['sie'];
+        $form['sie'] = hex2bin($formResponse['sie']);
+        $form['gestion'] = hex2bin($formResponse['gestion']);                    
+        
         if ($form['gestion'] == $this->session->get('currentyear')) {
             $objObsQA = $this->getObservationQA($form);        
         } else {
@@ -2113,12 +2114,11 @@ class InfoEstudianteController extends Controller {
         $mensaje = "";
         $cedulaTipo = "";
 
-        if ($persona->getCedulaTipo() == null){
+        if ($persona->getCedulaTipo() === null){
             $cedulaTipo = 1;
         }else{
-            $cedulTipo = $persona->getCedulaTipo();
+            $cedulaTipo = $persona->getCedulaTipo()->getId();
         }
-
         
         if($persona){
             $datos = array(
@@ -2129,9 +2129,10 @@ class InfoEstudianteController extends Controller {
                 'fecha_nacimiento'=>$persona->getFechaNacimiento()->format('d-m-Y'),
                 'tipo_persona' => $cedulaTipo
             );
+            
             if($persona->getCarnetIdentidad()){
                 $resultadoPersona = $this->get('sie_app_web.segip')->verificarPersonaPorCarnet($persona->getCarnetIdentidad(),$datos,'prod','academico');
-
+                
                 if($resultadoPersona){
                     $persona->setSegipId(1);
                     $persona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find($cedulaTipo));

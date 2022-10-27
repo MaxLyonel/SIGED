@@ -70,9 +70,9 @@ class InstitucioneducativaController extends Controller {
 
         if ($request->getMethod() == 'POST') {
             $form = $request->get('form');
-
-            $institucion = $form['sie'];
-            $gestion = $form['gestion'];
+            $institucion = hex2bin($form['sie']) ;
+            $gestion = hex2bin($form['gestion']) ;
+            
             // creamos variables de sesion de la institucion educativa y gestion
             $request->getSession()->set('idInstitucion', $institucion);
             $request->getSession()->set('idGestion', $gestion);

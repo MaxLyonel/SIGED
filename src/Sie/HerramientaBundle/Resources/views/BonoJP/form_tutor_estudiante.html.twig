@@ -165,8 +165,9 @@ function buscar_validar_persona_ci_segip(){
 			$('#ci1').val(ci);
             $("#ci1").attr('readonly', 'readonly');
 
-            $('#complemento1').val('');
-            $("#complemento1").removeAttr("readonly");
+            $('#complemento1').val(complemento.toUpperCase());
+            $("#complemento1").attr('readonly', 'readonly');
+            // $("#complemento1").removeAttr("readonly");
 
             $('#form_idfecnac').val('');
             $("#form_idfecnac").removeAttr("readonly");
@@ -196,7 +197,7 @@ function buscar_validar_persona_ci_segip(){
 				    $('#ci1').val(valores[0]);
 		            $("#ci1").attr('readonly', 'readonly');
 
-		            $('#complemento1').val('');
+		            $('#complemento1').val(valores[6]);
 		            $("#complemento1").attr('readonly', 'readonly');
 
 		            $('#form_idfecnac').val(valores[4]);
@@ -222,7 +223,7 @@ function buscar_validar_persona_ci_segip(){
 $("#guardar_datos_tutor").submit(function(event) {
     event.preventDefault();
 
-    alertify.confirm("<p><h3> ESTA SEGURO DE MODIFICAR EL TUTOR?</h3><br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
+    alertify.confirm("<p><h3> ESTA SEGURO DE MODIFICAR EL TITULAR?</h3><br><br><b>ENTER</b> y <b>ESC</b> corresponden a <b>Aceptar</b> o <b>Cancelar</b></p>", function (e) {
         if (e) {    
             document.getElementById('boton').disabled=true;
             $.ajax({

@@ -59,6 +59,14 @@ class DefaultController extends Controller {
                 $layout = 'layoutAlternativa.html.twig';
                 $this->session->set('pathSystem', "SieAlternativaBundle");
                 break;
+            case '172.20.196.8:8025':
+            case 'sieitt.sie.gob.bo':
+                $sysname = 'DGESTTLA ESTADISTICO';
+                $sysporlet = 'blue';
+                $sysbutton = false;
+                $layout = 'layoutTecnicaEst.html.twig';
+                $this->session->set('pathSystem', "SieTecnicaEstBundle");
+                break;
             case '172.20.196.8:8022':
             case 'sieuni.sie.gob.bo':
                 $sysname = 'UNIVERSIDADES';
@@ -664,6 +672,10 @@ class DefaultController extends Controller {
                 
                 if($this->session->get('pathSystem')=='SieUniversityBundle'){
                     return $this->redirect($this->generateUrl('sie_university_homepage'));
+                }
+
+                if($this->session->get('pathSystem')=='SieTecnicaEstBundle'){
+                    return $this->redirect($this->generateUrl('sie_tecnicaest_homepage'));
                 }
                 //*************************
                 //*************************

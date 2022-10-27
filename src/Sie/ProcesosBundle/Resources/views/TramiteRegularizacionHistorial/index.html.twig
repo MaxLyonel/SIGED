@@ -356,7 +356,10 @@
                     <div class="panel-body">
                         <div class="alert alert-success">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            Trámite Nro. <b class="text-success">${respuestaIdTramite}</b> enviado exitosamente para revisión de la Dirección Departamental.
+                            Trámite de Regularización de Historial Académico Nro. <b class="text-success">${respuestaIdTramite}</b> enviado exitosamente para revisión de la Dirección Departamental.
+                             <div class="text-center">
+                            <a v-bind:href="urlreporte"><b> <i class="fa fa-file-pdf-o fa-2x"></i> Descargar formulario</b></a>
+                        </div>
                         </div>
                        
                     </div>
@@ -434,12 +437,17 @@
                                                     </div>                                  
                                                    
                                                 </div>
+                                                <div class="row" v-if="mensajeExiste != ''">
+                                                    <div class="col-md-12">
+                                                        <p class="p-12 mb-8 bg-danger"> <strong>${mensajeExiste}</strong></p>
+                                                    </div>
+                                                </div>
                                                 <div class="row" v-if="nombreUe != ''">
                                                     <div class="col-md-12">
                                                         <p class="p-6 mb-5 bg-success"> <strong>${nombreUe} ${departamento} ${distrito}</strong> </p>
                                                     </div>
-                                                <div>
-                                                    <div class="row"  v-if="cargandoNiveles">
+                                                </div>
+                                                <div class="row"  v-if="cargandoNiveles">
                                                         <div class="col-sm-3">
                                                             <label for="nivel">Nivel<span class="formRequired">*</span></label>                                  
                                                             <select name="arrLevel" id="idpais" v-model="DBinfoInscription.nivelId" class="custom-select form-control" v-on:change="loadGrado">
@@ -627,6 +635,7 @@
                 cargandoNiveles: false,
                 verModificaciones: true,
                 nombreUe:'',
+                mensajeExiste:'',
 
                 gestionSelected:'',
                 DBinfoInscription:{
@@ -652,6 +661,7 @@
                 DBCatalogoAsignatura2:[],                               
 
                 
+                estudianteId: '',
                 codigoRude: '',
                 estudiante: '',
                 carnet: '',
@@ -770,11 +780,11 @@
                     .then(response => { 
                         if (response.status == 200) {
                             this.codigoRude = response.data.codigoRude;
+                            this.estudianteId = response.data.estudianteId;
                             this.estudiante = response.data.estudiante;
                             this.carnet = response.data.carnet;
                             this.complemento = response.data.complemento;
                             this.inscripciones = response.data.inscripciones;
-                            
 
                             $('[data-toggle="tooltip"]').tooltip();
                         }
@@ -811,18 +821,24 @@
                     this.DBTruno = [];
                     this.DBinfoInscription.turnoId = '';
                     this.DBinfoInscription.rude = this.codigoRude;
-                    
+                    this.DBinfoInscription.estudianteId = this.estudianteId;
+                    console.log(this.DBinfoInscription);
                    // this.DBinfoInscription.sieActual = this.codigoRue;
                     axios.post(Routing.generate('tramite_regularizacion_historial_loadLevel', this.DBinfoInscription))
                     .then(response => {
+                        
                         if(response.status == 200){                         
+                            this.mensajeExiste = '';
                             this.cargandoNiveles = true;
                             this.DBLevel = response.data.arrLevel;
                             this.nombreUe = response.data.nombreUe;
                             this.departamento = response.data.departamento;
                             this.distrito = response.data.distrito;
-                        }
 
+                        }
+                        if(response.status == 202){                         
+                            this.mensajeExiste = response.data.mensaje;
+                        }
                     })
                     .catch(e => {
                         console.log(e);

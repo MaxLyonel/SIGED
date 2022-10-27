@@ -114,3 +114,9 @@ services:
         arguments:
             entityManager: "@doctrine.orm.entity_manager"
             router: "@router"
+
+    tecestfunctions:
+        class: Sie\TecnicaEstBundle\Services\Tecestfunctions
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"
+            router: "@router"

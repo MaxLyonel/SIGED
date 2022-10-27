@@ -1,0 +1,55 @@
+tecest_carreras_index:
+    path:     /
+    defaults: { _controller: "SieTecnicaEstBundle:Carreras:index" }
+
+tecest_carreras_info:
+    path:     /info
+    defaults: { _controller: "SieTecnicaEstBundle:Carreras:info" }
+
+tecest_carreras_new:
+    path:     /new
+    defaults: { _controller: "SieTecnicaEstBundle:Carreras:new" }
+    options:
+        expose: true
+
+tecest_carreras_edit:
+    path:     /edit
+    defaults: { _controller: "SieTecnicaEstBundle:Carreras:edit" }
+    options:
+        expose: true
+
+tecest_carreras_delete:
+    path:     /delete
+    defaults: { _controller: "SieTecnicaEstBundle:Carreras:delete" }
+    options:
+        expose: true
+
+tecest_carrera_estadistica_becas_save:
+    path:     /estats/becas/save
+    defaults: { _controller: SieTecnicaEstBundle:Carreras:statsBecasSave }
+    options:
+        expose: true
+
+tecest_carrera_estadistica_matriculas_save:
+    path:     /estats/matriculas/save
+    defaults: { _controller: SieTecnicaEstBundle:Carreras:statsMatriculasSave }
+    options:
+        expose: true
+
+tecest_carrera_estadistica_cargos_save:
+    path:     /estats/cargos/save
+    defaults: { _controller: SieTecnicaEstBundle:Carreras:statsCargosSave }
+    options:
+        expose: true
+
+tecest_carrera_estadistica_titulados_save:
+    path:     /estats/titulados/save
+    defaults: { _controller: SieTecnicaEstBundle:Carreras:statsTituladosSave }
+    options:
+        expose: true
+
+tecest_carrera_sin_info_save:
+    path:     /estats/sininfo/save
+    defaults: { _controller: SieTecnicaEstBundle:Carreras:statsSinInfoSave }
+    options:
+        expose: true

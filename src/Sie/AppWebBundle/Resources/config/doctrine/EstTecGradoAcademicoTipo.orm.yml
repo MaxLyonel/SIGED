@@ -1,0 +1,34 @@
+Sie\AppWebBundle\Entity\EstTecGradoAcademicoTipo:
+    type: entity
+    table: est_tec_grado_academico_tipo
+    indexes:
+        IDX_947B1318770F2CDF:
+            columns:
+                - est_tec_regimen_estudio_tipo_id
+    id:
+        id:
+            type: integer
+            nullable: false
+            unsigned: false
+            comment: ''
+            id: true
+            generator:
+                strategy: SEQUENCE
+    fields:
+        descripcion:
+            type: string
+            nullable: true
+            length: 150
+            fixed: false
+            comment: ''
+    manyToOne:
+        estTecRegimenEstudioTipo:
+            targetEntity: EstTecRegimenEstudioTipo
+            cascade: {  }
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                est_tec_regimen_estudio_tipo_id:
+                    referencedColumnName: id
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

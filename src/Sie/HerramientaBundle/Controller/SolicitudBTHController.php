@@ -188,15 +188,14 @@ class SolicitudBTHController extends Controller {
         $datosForm = $this->datosFormulario($institucion_id, $gestion_sucursal);
         
         /**********teporal para regulariza ues 2022 ***/
-        $ue = array(31920031,
-                    70420099,
-                    80830104);
-        if (in_array($institucion_id, $ue)){
-            $verificarinicioTramite = 0; 
-        }else{
-            $verificarinicioTramite = 1;
-        }
-    
+        // $ue = array(31920031,
+        //             70420099,
+        //             80830104);
+        // if (in_array($institucion_id, $ue)){
+        //     $verificarinicioTramite = 0; 
+        // }else{
+        //     $verificarinicioTramite = 1;
+        // }
         return $this->render('SieHerramientaBundle:SolicitudBTH:SolicitudBTHDirector.html.twig',
             array('institucion' => $datosForm[0],
                 'ubicacion' => $datosForm[1],
@@ -737,15 +736,30 @@ class SolicitudBTHController extends Controller {
             return array($infoUe, $localizacion);
     }
 
-    public function verificatramite($id_Institucion, $gestion, $flujotipo) {// dump($id_Institucion, $gestion, $flujotipo);die;
+    public function verificatramite($id_Institucion, $gestion, $flujotipo) {//dump($id_Institucion, $gestion, $flujotipo);die;
         // Verifica si la UE inicio tramite de BHT
         $em = $this->getDoctrine()->getManager();
-        $query = $em->getConnection()->prepare("SELECT COUNT(tr.id) AS  cantidad_tramite_bth FROM tramite tr  
-            WHERE tr.flujo_tipo_id = $flujotipo AND tr.institucioneducativa_id = $id_Institucion
-            AND tr.tramite_tipo <> 31");
+        $query = $em->getConnection()->prepare("SELECT COUNT(*) AS  cantidad_tramite_bth
+                    from
+                    (  SELECT tr.id id_tramite
+                       FROM tramite tr 
+                       WHERE tr.flujo_tipo_id = $flujotipo 
+                       AND tr.institucioneducativa_id = $id_Institucion
+                       and tr.fecha_fin is null
+                       AND tr.tramite_tipo <> 31
+                       union 
+                       SELECT t.id id_tramite
+                       FROM tramite t
+                       INNER JOIN tramite_detalle td ON t.id = td.tramite_id
+                       INNER JOIN flujo_proceso fp ON td.flujo_proceso_id = fp.id
+                       INNER JOIN proceso_tipo pt ON fp.proceso_id = pt.id
+                       WHERE t.institucioneducativa_id = $id_Institucion
+                       AND t.flujo_tipo_id in (6,31)
+                       AND fp.id = 29 
+                       AND pt.id = 20) a ");
             //AND tr.gestion_id = $gestion"); en caso de verificar si INICIO EL TRAMITE EN UNA GESTION DETERMINADA
         $query->execute();
-        $tramite_ue = $query->fetch(); //dump($tramite_ue);die;
+        $tramite_ue = $query->fetch();
         $tramite_iniciado=$tramite_ue['cantidad_tramite_bth'];
         if($tramite_iniciado==0){
             // Verifica si la unidad educativa que inicio el tramite tenga estudiantes para el nivel SECUNDARIA

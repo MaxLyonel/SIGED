@@ -1590,9 +1590,9 @@
                                                 reforzamiento = valor;
                                             }
                                             me.datos.cuantitativas[index].notas[index2].notaNueva = reforzamiento;
-                                        }else{
+                                        }else{ 
                                             if (val2['idNotaTipo'] == 11 && reforzamiento != 0 && reforzamiento != '') {
-                                                promedioFinal = promedioAnual + reforzamiento;
+                                                promedioFinal = Math.round((promedioAnual + reforzamiento)/2); //promedioAnual + reforzamiento
                                                 me.datos.cuantitativas[index].notas[index2].notaNueva = promedioFinal;
 
                                                 arrayPromedios.push({
