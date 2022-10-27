@@ -1007,7 +1007,7 @@ class OperativoBonoJPController extends Controller
 			if(is_dir($directorioRaiz))
 			{
 				chdir($directorioRaiz);
-				$ruta = '../web/empfiles/bono_bjp_2021';
+				$ruta = '../web/empfiles/bono_bjp';
 				if(chdir($ruta))
 				{
 					$arrayArchivos = glob("*$nombreArchivo.csv");
@@ -1042,7 +1042,7 @@ class OperativoBonoJPController extends Controller
 			if(is_dir($directorioRaiz))
 			{
 				chdir($directorioRaiz);
-				$ruta = '../web/empfiles/bono_bjp_2021';
+				$ruta = '../web/empfiles/bono_bjp';
 				if(chdir($ruta))
 				{
 					$zip = new ZipArchive;
