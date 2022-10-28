@@ -53,8 +53,8 @@ class InfoMaestroController extends Controller {
 
         if ($request->getMethod() == 'POST') {
             $form = $request->get('form');
-            $form['sie'] = hex2bin($form['sie']);
-            $form['gestion'] = hex2bin($form['gestion']);            
+            $form['sie'] = ($form['sie']);
+            $form['gestion'] = ($form['gestion']);            
             
 
             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['sie']);
