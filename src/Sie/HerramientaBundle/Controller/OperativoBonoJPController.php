@@ -318,10 +318,10 @@ class OperativoBonoJPController extends Controller
 
 
 
-	/*public function formularioCambiarTutorAction()
+	public function formularioCambiarTutorAction()
 	{
 		return $this->render($this->session->get('pathSystem') .':BonoJP:fomularioCambiarTutor.html.twig');
-	}*/
+	}
 
 	public function buscarInscripcionesAction(Request $request)
 	{
@@ -586,7 +586,8 @@ class OperativoBonoJPController extends Controller
 		$complemento = $request->get('complemento');
 		// echo ">".$inscripcion.">".$ci;exit();
 		$em = $this->getDoctrine()->getManager();
-        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet' => $ci, 'complemento' => $complemento));
+        $persona = $em->getRepository('SieAppWebBundle:Persona')->findOneBy(array('carnet' => $ci, 'complemento' => strtoupper($complemento)));
+
         $estado = false;
         $mensaje = "";
         // dump($persona); exit();
@@ -615,7 +616,8 @@ class OperativoBonoJPController extends Controller
 				    2 => $persona->getMaterno(),
 				    3 => $persona->getNombre(),
 				    4 => $persona->getFechaNacimiento()->format('d-m-Y'),
-				    5 => $persona->getId()
+				    5 => $persona->getId(),
+				    6 => $persona->getComplemento()
 				);
 				/*$datos = array(
 	                'complemento'=>$persona->getComplemento(),
@@ -643,6 +645,7 @@ class OperativoBonoJPController extends Controller
         }else{
         	$data = array(0=>0,1=>$mensaje);
         }
+        
    		return new JsonResponse($data);
 	}
 	public function operativo_bono_jp_cambiarEstadoTutoreAction(Request $request){ 
@@ -727,6 +730,9 @@ class OperativoBonoJPController extends Controller
 	        	$newPersona->setFechaNacimiento(new \DateTime($form_idfecnac));
 	        	$newPersona->setSegipId('1');
 	        	$newPersona->setExpedido($em->getRepository('SieAppWebBundle:DepartamentoTipo')->find('0'));
+
+            		$newPersona->setCedulaTipo($em->getRepository('SieAppWebBundle:CedulaTipo')->find(($extranjero)?2:1));
+
 	        	$em->persist($newPersona);
 	        	// $newPersona->setMaterno($carnet);
 	        	$idpersona = $newPersona->getId();
@@ -1004,7 +1010,7 @@ class OperativoBonoJPController extends Controller
 			if(is_dir($directorioRaiz))
 			{
 				chdir($directorioRaiz);
-				$ruta = '../web/empfiles/bono_bjp_2021';
+				$ruta = '../web/empfiles/bono_bjp';
 				if(chdir($ruta))
 				{
 					$arrayArchivos = glob("*$nombreArchivo.csv");
@@ -1039,7 +1045,7 @@ class OperativoBonoJPController extends Controller
 			if(is_dir($directorioRaiz))
 			{
 				chdir($directorioRaiz);
-				$ruta = '../web/empfiles/bono_bjp_2021';
+				$ruta = '../web/empfiles/bono_bjp';
 				if(chdir($ruta))
 				{
 					$zip = new ZipArchive;
@@ -1078,7 +1084,7 @@ class OperativoBonoJPController extends Controller
 	public function _generarArchivoZipBonoJP2021($identificador)
 	{
 		// la carpeta donde se descargarel archivo comprimido
-		//$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir() . '/../web/empfiles/bono_bjp_2021/';
+		//$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir() . '/../web/empfiles/bono_bjp/';
 		$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir();
 		$msj = '';
 		$estado = false;
@@ -1121,7 +1127,7 @@ class OperativoBonoJPController extends Controller
 
 	public function boton_generar_file_bonoJPAction(Request $request, $identificador)
 	{
-		$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir() . '/../web/empfiles/bono_bjp_2021/';
+		$directorioArchivosBonoJP2021 = $this->get('kernel')->getRootDir() . '/../web/empfiles/bono_bjp/';
 		//list($msj, $estado, $nombreArchivo,$nombreFinalArchivo) = $this->_generarArchivoZipBonoJP2021();
 		list($msj, $estado, $nombreArchivo,$nombreFinalArchivo) = $this->_generarArchivoZipBonoJP2021($identificador);
 		if($estado)
