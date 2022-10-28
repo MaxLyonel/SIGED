@@ -557,14 +557,36 @@ class OfertaAcademicaController extends Controller {
      public function buscarcarreraAction($idArea) {
         $em = $this->getDoctrine()->getManager();
         
-        $query = $em->createQuery('SELECT a
+       /* $query = $em->createQuery('SELECT a
                                     FROM SieAppWebBundle:TtecCarreraTipo a 
                                    WHERE a.ttecAreaFormacionTipo = :idArea
                                 ORDER BY a.nombre ASC');                       
         $query->setParameter('idArea', $idArea);
-        $datos = $query->getResult();         
+        $datos = $query->getResult();      */   
  
 
+        $query = $em->createQuery('SELECT ct
+                FROM SieAppWebBundle:TtecAreaFormacionCarreraTipo afca
+                JOIN SieAppWebBundle:TtecCarreraTipo ct
+                WHERE afca.ttecCarreraTipo = ct.id
+               AND afca.ttecAreaFormacionTipo = :idArea')
+                ->setParameter('idArea', $idArea);        
+                $datos = $query->getResult(); 
+
+
+/*
+$query = $em->createQuery('SELECT ct
+FROM SieAppWebBundle:TtecInstitucioneducativaSede se
+JOIN se.institucioneducativa ie 
+WHERE ie.institucioneducativaTipo in (:idTipo)
+ AND ie.estadoinstitucionTipo in (:idEstado)
+ AND se.estado = :estadoSede
+ORDER BY ie.id ')
+->setParameter('idTipo', array(7, 8, 9, 11,12,13))
+->setParameter('idEstado', 10)
+->setParameter('estadoSede', TRUE);        
+$entities = $query->getResult(); 
+*/
     	$carreraArray = array();
     	foreach($datos as $dato) {
             $carreraArray[] = array('id' => $dato->getId(), 'nombre' => $dato->getNombre());
@@ -641,7 +663,8 @@ class OfertaAcademicaController extends Controller {
                     INNER JOIN ttec_carrera_tipo AS carrera ON autorizado.ttec_carrera_tipo_id = carrera.id 
                     INNER JOIN institucioneducativa AS instituto ON autorizado.institucioneducativa_id = instituto.id 
                     INNER JOIN ttec_area_formacion_tipo AS area ON carrera.ttec_area_formacion_tipo_id = area.id
-                    WHERE instituto.id = '".$idRie."'  AND area.id <> 200 "; //200 es cursos de capacitacion
+                    INNER JOIN ttec_area_formacion_carrera_tipo AS afct ON afct.ttec_carrera_tipo_id = carrera .id
+                    WHERE instituto.id = '".$idRie."'  and afct.ttec_area_formacion_tipo_id <> 200 "; //200 es cursos de capacitacion
         $stmt = $db->prepare($query);
         $params = array();
         $stmt->execute($params); 
