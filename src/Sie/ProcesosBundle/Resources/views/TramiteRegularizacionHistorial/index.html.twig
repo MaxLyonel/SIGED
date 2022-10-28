@@ -356,7 +356,10 @@
                     <div class="panel-body">
                         <div class="alert alert-success">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                            Trámite Nro. <b class="text-success">${respuestaIdTramite}</b> enviado exitosamente para revisión de la Dirección Departamental.
+                            Trámite de Regularización de Historial Académico Nro. <b class="text-success">${respuestaIdTramite}</b> enviado exitosamente para revisión de la Dirección Departamental.
+                             <div class="text-center">
+                            <a v-bind:href="urlreporte"><b> <i class="fa fa-file-pdf-o fa-2x"></i> Descargar formulario</b></a>
+                        </div>
                         </div>
                        
                     </div>
@@ -825,11 +828,13 @@
                     .then(response => {
                         
                         if(response.status == 200){                         
+                            this.mensajeExiste = '';
                             this.cargandoNiveles = true;
                             this.DBLevel = response.data.arrLevel;
                             this.nombreUe = response.data.nombreUe;
                             this.departamento = response.data.departamento;
                             this.distrito = response.data.distrito;
+
                         }
                         if(response.status == 202){                         
                             this.mensajeExiste = response.data.mensaje;

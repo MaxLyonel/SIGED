@@ -53,6 +53,9 @@ class InfoPersonalAdmController extends Controller {
         if ($request->getMethod() == 'POST') {
             $form = $request->get('form');
 
+            $form['sie'] = ($form['sie']);
+            $form['gestion'] = ($form['gestion']);            
+
             $institucioneducativa = $em->getRepository('SieAppWebBundle:Institucioneducativa')->findOneById($form['sie']);
             
             if (!$institucioneducativa) {
