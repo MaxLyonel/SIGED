@@ -741,7 +741,7 @@ $entities = $query->getResult();
         return $dato;
     }
     public function obtieneTipoTramiteNuevaResolucion(){
-        $dato = array('RATIFICACION' => 'RATIFICACIÓN', 'RECTIFICACION' => 'RECTIFICACIÓN', 'CIERRE'=>'CIERRE');
+        $dato = array('APERTURA'=>'APERTURA','RATIFICACION' => 'RATIFICACIÓN', 'RECTIFICACION' => 'RECTIFICACIÓN', 'CIERRE'=>'CIERRE');
         return $dato;
     }  
 
