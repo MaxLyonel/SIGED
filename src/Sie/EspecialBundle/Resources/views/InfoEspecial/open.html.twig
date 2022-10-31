@@ -109,6 +109,7 @@
             
             {# se oculta hasta aviso  #}
             {% if onlyview == false %} 
+            {#}
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo">
@@ -122,6 +123,8 @@
                         </div>
                     </div>
                 </div>
+
+                
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo Rudees">
@@ -135,11 +138,12 @@
                         </div>
                     </div>
                 </div>
+                #}
                 <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                     <div class="thumbnail">
                         <img src="{{asset('img/closeOperativo.jpg')}}" alt="Cerrar Operativo 1er Trimestre">
                         <div class="caption text-center">
-                            <h4>Cerrar Operativo 1er Trimestre</h4>
+                            <h4>Cerrar Operativo 1ro/2do/3er Trimestre</h4>
                             <div class="thumbnail-action">
                                 {{form_start(closeOperativoNotasform, { 'attr':{'id':'formCloseOperativoNotas' }} )}}
                                     {{form_widget(closeOperativoNotasform.next)}}
@@ -165,7 +169,7 @@
                 </div>
             </div>
             #}
-             {# Operativo Bono JP #}
+             {# Operativo Bono JP 
 
             <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                 <div class="thumbnail">
@@ -183,7 +187,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> #}
 
         <input type="hidden" name="op" id="op" value="{{operativo}}">
         </div>
