@@ -37,8 +37,17 @@ class EstadisticaController extends Controller
         }        
 
         $estudiantes = $this->cantidadEstudiantes($gestionActual);
-        $dataArray = $this->convertirDatosJson($estudiantes);
+        $dataArrayEstudiantes = $this->convertirDatosJson($estudiantes);
+
+        $institutos = $this->cantidadInstitutos($gestionActual);
+        $dataArrayInstitutos = $this->convertirDatosJson($institutos);
+
+        $personas = $this->cantidadPersonal($gestionActual);
+        $dataArrayPersonas = $this->convertirDatosJson($personas);
         //$dataArray = $this->asignarTotalesDatosJson($dataArray);
+
+        $dataArray = array_merge($dataArrayEstudiantes,$dataArrayInstitutos,$dataArrayPersonas);
+
 
         $tbl_titulados_egresados = $this->tbl_titulados_egresados($gestionActual);
         
@@ -100,6 +109,30 @@ class EstadisticaController extends Controller
             order by 1,2,3
         "); 
         $query->bindValue(':gestionId', $gestion);
+        $query->execute();
+        $objEntidad = $query->fetchAll(); 
+
+        if (count($objEntidad)>0){
+            return $objEntidad;
+        } else {
+            return array();
+        }
+    }
+
+
+    private function cantidadInstitutos($gestion){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("            
+            with tabla as (
+                select categoriainstituto as nombre, count(categoriainstituto) as cantidad
+                from est_tec_instituto as i
+                inner join est_tec_categoria_tipo as ct on ct.id = i.est_tec_categoria_tipo_id
+                group by ct.categoriainstituto
+            )
+              
+            select 1 as tipo_id, 'categoria' as tipo_nombre, nombre as detalle, cantidad from tabla
+            order by 1,2,3
+        "); 
         $query->execute();
         $objEntidad = $query->fetchAll(); 
 
@@ -283,6 +316,32 @@ class EstadisticaController extends Controller
             
             ) as data
             group by gestion_tipo_id, nacionalidad_beca
+        "); 
+        $query->bindValue(':gestionId', $gestion);
+        $query->execute();
+        $objEntidad = $query->fetchAll(); 
+
+        if (count($objEntidad)>0){
+            return $objEntidad;
+        } else {
+            return array();
+        }
+    }
+
+
+    private function cantidadPersonal($gestion){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("            
+            with tabla as (
+                select case ct.es_docente when true then 'DOCENTE' else 'ADMINISTRATIVO' end as nombre, sum(cantidad) as cantidad
+                from est_tec_instituto_sede_docente_adm as isda
+                inner join est_tec_cargo_tipo as ct on ct.id = isda.est_tec_cargo_tipo_id
+                where isda.gestion_tipo_id = :gestionId
+                group by ct.es_docente
+            )
+            
+            select 1 as tipo_id, 'cargo' as tipo_nombre, nombre as detalle, cantidad from tabla
+            order by 1,2,3
         "); 
         $query->bindValue(':gestionId', $gestion);
         $query->execute();

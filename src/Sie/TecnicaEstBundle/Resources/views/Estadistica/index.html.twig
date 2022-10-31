@@ -37,16 +37,16 @@
 <body class="card-no-border">
 
 
-            {% block stylesheets %}
-            <style>
-            
-                .highcharts-figure {
-                    min-width: 280px;
-                    max-width: 800px;
-                    margin: 1em auto;
-                }
-            </style>
-            {% endblock %}
+                {% block stylesheets %}
+                <style>
+                
+                    .highcharts-figure {
+                        min-width: 100%;
+                        max-width: 800px;
+                        margin: 1em auto;
+                    }
+                </style>
+                {% endblock %}
         
                 {% block contentoption %}
                    
@@ -57,12 +57,6 @@
             
 
 
-        {% block javascripts %}
-
-            
-           
-
-        {% endblock %}
 
 
     <!-- ============================================================== -->
@@ -234,7 +228,7 @@
                                 <h3 class="card-title">Estudiantes </h3>
                                 <h6 class="card-subtitle">por tipo de inscripción</h6>
                                 <figure class="highcharts-figure">
-                                    <div id="chart1" style="height:400px; width:100%;"></div>
+                                    <div id="chart1" style="height:480px; width:100%;"></div>
                                 </figure>
                             </div>
                             <div>
@@ -250,9 +244,9 @@
                             <div class="col-lg-6 col-md-6">
                                 <div class="card">
                                     <div class="card-block">
-                                        <h4 class="card-title mb-0">Estudiantes <span class="card-subtitle">por sexo</span></h4>
-                                        <figure class="highcharts-figure mb-0 mt-0">
-                                            <div id="chart2" style="height:300px; width:100%;"></div>
+                                        <h4 class="card-title">Estudiantes <span class="card-subtitle">por sexo</span></h4>
+                                        <figure class="highcharts-figure mb-0">
+                                            <div id="chart2" style="height:250px; width:100%;"></div>
                                         </figure>
                                     </div>                                    
                                 </div>
@@ -260,11 +254,11 @@
                             <div class="col-lg-6 col-md-6">
                                 <div class="card">
                                     <div class="card-block">
-                                        <h4 class="card-title mb-0">Estudiantes <span class="card-subtitle">por tipo de matrícula</span></h4>                                     
-                                        <figure class="highcharts-figure mb-0 mt-0">
+                                        <h4 class="card-title">Estudiantes <span class="card-subtitle">por tipo de matrícula</span></h4>                                     
+                                        <figure class="highcharts-figure mb-0">
                                         <div class="row">
                                             <div class="col-12">
-                                                <div id="chart3" style="height:300px; width:100%;"></div>
+                                                <div id="chart3" style="height:250px; width:100%;"></div>
                                             </div>
                                         </div>
                                         </figure>
@@ -276,10 +270,9 @@
                             <div class="col-lg-6 col-md-6">
                                 <div class="card">
                                     <div class="card-block">
-                                        <h3 class="card-title">Estudiantes </h3>
-                                        <h6 class="card-subtitle">por sexo</h6>
+                                        <h4 class="card-title">Institutos <span class="card-subtitle">por tipo de institución</span></h4>
                                         <figure class="highcharts-figure">
-                                            <div id="chart4" style="height:200px; width:100%;"></div>
+                                            <div id="chart4" style="height:250px; width:100%;"></div>
                                         </figure>
                                     </div>
                                 </div>
@@ -287,22 +280,10 @@
                             <div class="col-lg-6 col-md-6">
                                 <div class="card">
                                     <div class="card-block">
-                                        <h3 class="card-title">Estudiantes </h3>
-                                        <h6 class="card-subtitle">por sexo</h6>
-                                        <div id="visitor" style="height:100px; width:100%;"></div>
-                                    </div>
-                                    <div>
-                                        <hr class="m-t-0 m-b-0">
-                                    </div>
-                                    <div class="card-block text-center ">
-                                        <ul class="list-inline m-b-0">
-                                            <li>
-                                                <h6 class="text-muted text-info"><i class="fa fa-circle font-10 m-r-10 "></i>Mobile</h6> </li>
-                                            <li>
-                                                <h6 class="text-muted  text-primary"><i class="fa fa-circle font-10 m-r-10"></i>Desktop</h6> </li>
-                                            <li>
-                                                <h6 class="text-muted  text-success"><i class="fa fa-circle font-10 m-r-10"></i>Tablet</h6> </li>
-                                        </ul>
+                                        <h4 class="card-title">Personas <span class="card-subtitle">por función</span></h4>                                    
+                                        <figure class="highcharts-figure">
+                                            <div id="chart5" style="height:250px; width:100%;"></div>
+                                        </figure>
                                     </div>
                                 </div>
                             </div>
@@ -310,6 +291,7 @@
                     </div>
                     
                 </div>
+
               
                 <div class="row">
                     <!-- Column -->
@@ -613,6 +595,7 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
@@ -667,6 +650,15 @@
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <script src="https://code.highcharts.com/modules/funnel.js"></script>
+
+
+    {% block javascripts %}
+
+        
+        
+
+    {% endblock %}
 
     <script>
 
@@ -677,9 +669,11 @@
         }
     });
 
-    const colores1 = ['#7460ee','#1e88e5','#21c1d6','#f1effd','#ffb22b','#fc4b6c','#6c757d','#cfecfe'];
-    const colores2 = ['#1e88e5','#21c1d6','#f1effd','#ffb22b','#fc4b6c','#6c757d','#cfecfe','#7460ee'];
-    const colores3 = ['#ffb22b','#fc4b6c','#f1effd','#cfecfe','#7460ee','#1e88e5','#21c1d6','#6c757d'];
+    const colores1 = ['#7460ee','#1e88e5','#21c1d6','#ffb22b','#fc4b6c','#6c757d'];
+    const colores2 = ['#7460ee','#ffb22b','#21c1d6','#ffb22b','#fc4b6c','#6c757d','#cfecfe','#7460ee'];
+    const colores3 = ['#fc4b6c','#21c1d6','#f1effd','#cfecfe','#7460ee','#ffb22b','#21c1d6','#6c757d'];
+    const colores4 = ['#1e88e5','#21c1d6','#ffb22b','#fc4b6c','#6c757d','#7460ee'];
+    const colores5 = ['#21c1d6','#ffb22b','#fc4b6c','#6c757d','#7460ee','#1e88e5'];
     const datos = [['Chrome', 73.86, 10000],['Edge', 11.97, 10000],['Firefox', 5.52, 10000],['Safari', 2.98, 10000],['Internet Explorer', 1.90, 10000],{name: 'Other',y: 3.77, label: 10000, dataLabels: {enabled: true}},{name: 'Other 1',y: 3.77, label: 10000, dataLabels: {enabled: true}}];
     const cars = ["Saab", "Volvo", "BMW"];
 
@@ -697,10 +691,11 @@
         let arrayData = [];
         for (var i in data) {
             if(i > 0){
-                let elementData = {name: '', y: 0.0, label: '', dataLabels: {enabled: true}};
+                let elementData = {name: '', y: 0.0, label: '', data:[], dataLabels: {enabled: true}};
                 elementData.name = data[i].nombre;
                 elementData.y = data[i].cantidad;
                 elementData.label = data[i].cantidad;
+                elementData.data = [data[i].cantidad];
                 arrayData.push(elementData);
             }
         }
@@ -810,7 +805,52 @@
     }
 
     var chart3Load = function(data) {
+        data.series.filter(dat => delete dat.data);
         $('#chart3').highcharts({
+            chart: {
+                type: 'column'
+            },
+            colors: data.colores,
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    useHTML: true,
+                    text: ''
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
+                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.y:,.0f} estudiantes </b> del total<br/>'
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0,
+                    showInLegend: true
+                }
+            },
+            series: [{
+                name: "Estudiantes",
+                colorByPoint: true,
+                data: data.series
+            }]
+        });
+    }
+
+    var chart4Load = function(data) {
+        data.series.filter(dat => delete dat.data);
+        $('#chart4').highcharts({
             chart: {
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
@@ -824,8 +864,7 @@
                 y: 60
             },
             tooltip: {
-                headerFormat: '<span style=&#39;font-size:11px&#39;>{series.name}</span><br>',
-                pointFormat: '<span style=&#39;color:{point.color}&#39;>{point.name}</span>: <b>{point.label:,.0f} estudiantes</b> del total<br/>'
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
             },
             accessibility: {
                 point: {
@@ -834,35 +873,80 @@
             },
             plotOptions: {
                 pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
                     dataLabels: {
-                        enabled: true,
-                        format: '<b>{point.name:,.0f}</b> ({point.percentage:.1f}%)',
-                        style: {
-                            color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                        }
+                        enabled: true
                     },
                     startAngle: -90,
-                    endAngle: 360,
-                    size: '70%',
-                    innerSize: 80,
-                    showInLegend: false,
+                    endAngle: 90,
+                    center: ['50%', '75%'],
+                    size: '110%'
                 }
             },
             series: [{
                 type: 'pie',
-                name: 'Estudiantes según Sexo',
-                innerSize: '80%',
+                name: 'Browser share',
+                innerSize: '50%',
                 data: data.series
             }]
+        });
+    }
+
+    var chart5Load = function(data) {
+        $('#chart5').highcharts({
+            chart: {
+                type: 'pyramid'
+            },
+            title: {
+                text: '',
+                x: -50
+            },
+            colors: data.colores,
+            plotOptions: {
+                series: {
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b> ({point.y:,.0f})',
+                        softConnector: true
+                    },
+                    center: ['40%', '50%'],
+                    width: '80%',
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            series: [{
+                name: 'Unique users',
+                data: data.series
+            }],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    },
+                    chartOptions: {
+                        plotOptions: {
+                            series: {
+                                dataLabels: {
+                                    inside: false
+                                },
+                                center: ['40%', '50%'],
+                                width: '50%'
+                            }
+                        }
+                    }
+                }]
+            }
         });
     }
     
 
     chart1Load({colores: colores2, series: getData(data.inscripcion)});
     chart2Load({colores: colores3, series: getData(data.genero)});
-    chart3Load({colores: colores3, series: getData(data.matricula)});
+    chart3Load({colores: colores1, series: getData(data.matricula)});
+    chart4Load({colores: colores4, series: getData(data.cargo)});
+    chart5Load({colores: colores5, series: getData(data.categoria)});
 
     </script>
 
