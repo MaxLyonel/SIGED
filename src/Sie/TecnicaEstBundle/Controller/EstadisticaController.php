@@ -20,7 +20,16 @@ class EstadisticaController extends Controller
     public function indexAction(Request $request)
     {
         $fechaActual = new \DateTime(date('Y-m-d'));
-        $gestionActual = $fechaActual->format('Y');
+
+        //dump($request->query->get('gestion')); die;
+
+        if ($request->query->get('gestion') == null) {
+            $gestionActual = $fechaActual->format('Y');
+        }else{
+            $gestionActual = $request->query->get('gestion');
+        }
+
+        
         
         $id_usuario = $this->session->get('userId');
         if (!isset($id_usuario)) {
@@ -31,9 +40,25 @@ class EstadisticaController extends Controller
         $dataArray = $this->convertirDatosJson($estudiantes);
         //$dataArray = $this->asignarTotalesDatosJson($dataArray);
 
+        $tbl_titulados_egresados = $this->tbl_titulados_egresados($gestionActual);
+        $tbl_becas = $this->tbl_becas($gestionActual);
+        $tbl_matriculas_publicas = $this->tbl_matriculas_publicas($gestionActual);
+        $tbl_matriculas_privadas = $this->tbl_matriculas_privadas($gestionActual);
+
+        $tbl_personal_publicas = $this->tbl_personal_publicas($gestionActual);
+        $tbl_personal_privadas = $this->tbl_personal_privadas($gestionActual);
+       
         return $this->render('SieTecnicaEstBundle:Estadistica:index.html.twig', array(
             'titulo' => "Estadística",
             "data" => $dataArray,
+            "tbl_titulados_egresados" => $tbl_titulados_egresados,
+            "tbl_becas" => $tbl_becas,
+            "tbl_matriculas_publicas" => $tbl_matriculas_publicas,
+            "tbl_matriculas_privadas" => $tbl_matriculas_privadas,
+            "tbl_personal_publicas" => $tbl_personal_publicas,
+            "tbl_personal_privadas" => $tbl_personal_privadas,
+            "gestionActual" => $gestionActual
+
         ));
     }
 
@@ -69,6 +94,402 @@ class EstadisticaController extends Controller
             union all
             select 3 as tipo_id, 'matricula' as tipo_nombre, estadomatricula as detalle, sum(cantidad) as cantidad from tabla where estadomatricula_id not in (1,2) group by estadomatricula_id, estadomatricula
             order by 1,2,3
+        "); 
+        $query->bindValue(':gestionId', $gestion);
+        $query->execute();
+        $objEntidad = $query->fetchAll(); 
+
+        if (count($objEntidad)>0){
+            return $objEntidad;
+        } else {
+            return array();
+        }
+    }
+
+    private function tbl_titulados_egresados($gestion){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("            
+            select  gestion_tipo_id, estado_final, sum(cantidadm) as total_masculino, sum(cantidadf) as total_femenino
+            FROM
+            (
+            select gestion_tipo_id, estado_final, sum(cantidadm) as cantidadm, 0 as cantidadf
+            from
+            (
+            SELECT
+                est_tec_egresado_titulados_tipo.estado_final, 
+                est_tec_instituto_carrera_estudiante_egresado_titulado.gestion_tipo_id, 	
+                est_tec_instituto_carrera_estudiante_egresado_titulado.cantidad as cantidadm, 
+                0 as cantidadf
+            FROM
+                est_tec_egresado_titulados_tipo
+                INNER JOIN
+                est_tec_instituto_carrera_estudiante_egresado_titulado
+                ON 
+                    est_tec_egresado_titulados_tipo.id = est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_egresado_titulados_tipo_id
+            WHERE
+                gestion_tipo_id = :gestionId and  genero_tipo_id = 1
+            ) as datos
+            group by gestion_tipo_id, estado_final
+            
+            union all
+            
+            select gestion_tipo_id, estado_final, 0 as cantidadm,  sum(cantidadf) as cantidadf
+            from
+            (
+            SELECT
+                est_tec_egresado_titulados_tipo.estado_final, 
+                est_tec_instituto_carrera_estudiante_egresado_titulado.gestion_tipo_id, 	
+                0 as cantidadm,
+                est_tec_instituto_carrera_estudiante_egresado_titulado.cantidad as cantidadf
+                
+            FROM
+                est_tec_egresado_titulados_tipo
+                INNER JOIN
+                est_tec_instituto_carrera_estudiante_egresado_titulado
+                ON 
+                    est_tec_egresado_titulados_tipo.id = est_tec_instituto_carrera_estudiante_egresado_titulado.est_tec_egresado_titulados_tipo_id
+            WHERE
+                gestion_tipo_id = :gestionId  and genero_tipo_id = 2
+            ) as datos
+            group by gestion_tipo_id, estado_final
+            ) as data2 GROUP BY gestion_tipo_id , estado_final
+        "); 
+        $query->bindValue(':gestionId', $gestion);
+        $query->execute();
+        $objEntidad = $query->fetchAll(); 
+
+        if (count($objEntidad)>0){
+            return $objEntidad;
+        } else {
+            return array();
+        }
+    }
+
+    private function tbl_becas($gestion){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("            
+            select gestion_tipo_id,nacionalidad_beca, sum(cantidadm) as total_becas_masculino, sum(cantidadf) as total_becas_femenino 
+            from
+            (
+            SELECT
+                est_tec_matricula_nacionalidad_beca_tipo.nacionalidad_beca, 
+                est_tec_instituto_carrera_estudiante_nacionalidad.gestion_tipo_id, 
+                est_tec_instituto_carrera_estudiante_nacionalidad.genero_tipo_id, 
+                est_tec_instituto_carrera_estudiante_nacionalidad.cantidad as cantidadm,
+                0 as cantidadf
+            FROM
+                est_tec_matricula_nacionalidad_beca_tipo
+                INNER JOIN
+                est_tec_instituto_carrera_estudiante_nacionalidad
+                ON 
+                    est_tec_matricula_nacionalidad_beca_tipo.id = est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_matricula_nacionalidad_beca_tipo_id
+                where genero_tipo_id = 1 and gestion_tipo_id = :gestionId
+                
+                union all
+                
+                SELECT
+                est_tec_matricula_nacionalidad_beca_tipo.nacionalidad_beca, 
+                est_tec_instituto_carrera_estudiante_nacionalidad.gestion_tipo_id, 
+                est_tec_instituto_carrera_estudiante_nacionalidad.genero_tipo_id, 
+                0 as cantidadm,
+                est_tec_instituto_carrera_estudiante_nacionalidad.cantidad  as cantidadf
+            FROM
+                est_tec_matricula_nacionalidad_beca_tipo
+                INNER JOIN
+                est_tec_instituto_carrera_estudiante_nacionalidad
+                ON 
+                    est_tec_matricula_nacionalidad_beca_tipo.id = est_tec_instituto_carrera_estudiante_nacionalidad.est_tec_matricula_nacionalidad_beca_tipo_id
+                where genero_tipo_id = 2 and gestion_tipo_id = :gestionId
+                ) as data
+                group by gestion_tipo_id, nacionalidad_beca
+        "); 
+        $query->bindValue(':gestionId', $gestion);
+        $query->execute();
+        $objEntidad = $query->fetchAll(); 
+
+        if (count($objEntidad)>0){
+            return $objEntidad;
+        } else {
+            return array();
+        }
+    }
+
+    private function tbl_matriculas_publicas($gestion){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("            
+            select gestion_tipo_id, estadomatricula, sum(cantidadm) as totalmasculino, sum(cantidadf) as totalfemenino
+            from
+            (
+            SELECT
+                est_tec_estadomatricula_tipo.estadomatricula, 
+                est_tec_instituto_carrera_estudiante_estado.gestion_tipo_id, 
+                est_tec_instituto_carrera_estudiante_estado.cantidad AS cantidadm, 
+                0 AS cantidadf
+            FROM
+                est_tec_estadomatricula_tipo
+                INNER JOIN
+                est_tec_instituto_carrera_estudiante_estado
+                ON 
+                    est_tec_estadomatricula_tipo.id = est_tec_instituto_carrera_estudiante_estado.est_tec_estadomatricula_tipo_id
+                INNER JOIN
+                est_tec_instituto_carrera
+                ON 
+                    est_tec_instituto_carrera_estudiante_estado.est_tec_instituto_carrera_id = est_tec_instituto_carrera.id
+            WHERE
+                gestion_tipo_id = :gestionId AND
+                genero_tipo_id = 1
+                and est_tec_instituto_carrera.est_tec_sede_id in 
+                ( select id from est_tec_sede where est_tec_naturalezajuridica_tipo_id = 1)
+                
+            union ALL
+            
+            SELECT
+                est_tec_estadomatricula_tipo.estadomatricula, 
+                est_tec_instituto_carrera_estudiante_estado.gestion_tipo_id, 
+                0 AS cantidadm, 
+                est_tec_instituto_carrera_estudiante_estado.cantidad AS cantidadf
+            FROM
+                est_tec_estadomatricula_tipo
+                INNER JOIN
+                est_tec_instituto_carrera_estudiante_estado
+                ON 
+                    est_tec_estadomatricula_tipo.id = est_tec_instituto_carrera_estudiante_estado.est_tec_estadomatricula_tipo_id
+                INNER JOIN
+                est_tec_instituto_carrera
+                ON 
+                    est_tec_instituto_carrera_estudiante_estado.est_tec_instituto_carrera_id = est_tec_instituto_carrera.id
+            WHERE
+                gestion_tipo_id = :gestionId AND
+                genero_tipo_id = 2
+                and est_tec_instituto_carrera.est_tec_sede_id in 
+                ( select id from est_tec_sede where est_tec_naturalezajuridica_tipo_id = 1)
+                ) as datos
+                group by gestion_tipo_id, estadomatricula
+            order by 2
+        "); 
+        $query->bindValue(':gestionId', $gestion);
+        $query->execute();
+        $objEntidad = $query->fetchAll(); 
+
+        if (count($objEntidad)>0){
+            return $objEntidad;
+        } else {
+            return array();
+        }
+    }
+
+    private function tbl_matriculas_privadas($gestion){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare("            
+            select gestion_tipo_id, estadomatricula, sum(cantidadm) as totalmasculino, sum(cantidadf) as totalfemenino
+            from
+            (
+            SELECT
+                est_tec_estadomatricula_tipo.estadomatricula, 
+                est_tec_instituto_carrera_estudiante_estado.gestion_tipo_id, 
+                est_tec_instituto_carrera_estudiante_estado.cantidad AS cantidadm, 
+                0 AS cantidadf
+            FROM
+                est_tec_estadomatricula_tipo
+                INNER JOIN
+                est_tec_instituto_carrera_estudiante_estado
+                ON 
+                    est_tec_estadomatricula_tipo.id = est_tec_instituto_carrera_estudiante_estado.est_tec_estadomatricula_tipo_id
+                INNER JOIN
+                est_tec_instituto_carrera
+                ON 
+                    est_tec_instituto_carrera_estudiante_estado.est_tec_instituto_carrera_id = est_tec_instituto_carrera.id
+            WHERE
+                gestion_tipo_id = :gestionId AND
+                genero_tipo_id = 1
+                and est_tec_instituto_carrera.est_tec_sede_id in 
+                ( select id from est_tec_sede where est_tec_naturalezajuridica_tipo_id = 2)
+                
+            union ALL
+            
+            SELECT
+                est_tec_estadomatricula_tipo.estadomatricula, 
+                est_tec_instituto_carrera_estudiante_estado.gestion_tipo_id, 
+                0 AS cantidadm, 
+                est_tec_instituto_carrera_estudiante_estado.cantidad AS cantidadf
+            FROM
+                est_tec_estadomatricula_tipo
+                INNER JOIN
+                est_tec_instituto_carrera_estudiante_estado
+                ON 
+                    est_tec_estadomatricula_tipo.id = est_tec_instituto_carrera_estudiante_estado.est_tec_estadomatricula_tipo_id
+                INNER JOIN
+                est_tec_instituto_carrera
+                ON 
+                    est_tec_instituto_carrera_estudiante_estado.est_tec_instituto_carrera_id = est_tec_instituto_carrera.id
+            WHERE
+                gestion_tipo_id = :gestionId AND
+                genero_tipo_id = 2
+                and est_tec_instituto_carrera.est_tec_sede_id in 
+                ( select id from est_tec_sede where est_tec_naturalezajuridica_tipo_id = 2)
+                ) as datos
+                group by gestion_tipo_id, estadomatricula
+            order by 2
+        "); 
+        $query->bindValue(':gestionId', $gestion);
+        $query->execute();
+        $objEntidad = $query->fetchAll(); 
+
+        if (count($objEntidad)>0){
+            return $objEntidad;
+        } else {
+            return array();
+        }
+    }
+
+    private function tbl_personal_publicas($gestion){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare(" 
+            select gestion_tipo_id,cargo, sum(cantidadm) as total_masculino, sum(cantidadf) as total_femenino
+            from
+            (
+            select gestion_tipo_id,cargo, sum(cantidad) as cantidadm, sum(cantidadf) as cantidadf
+            from
+            (
+            SELECT
+                est_tec_instituto_sede_docente_adm.id, 
+                est_tec_instituto_sede_docente_adm.est_tec_sede_id, 
+                est_tec_instituto_sede_docente_adm.gestion_tipo_id, 
+                est_tec_instituto_sede_docente_adm.genero_tipo_id, 
+                est_tec_instituto_sede_docente_adm.est_tec_cargo_tipo_id, 
+                est_tec_instituto_sede_docente_adm.cantidad, 
+                0 as cantidadf,
+                est_tec_cargo_tipo.cargo
+            FROM
+                est_tec_instituto_sede_docente_adm
+                INNER JOIN
+                est_tec_sede
+                ON 
+                    est_tec_instituto_sede_docente_adm.est_tec_sede_id = est_tec_sede.id AND
+                    est_tec_sede.est_tec_naturalezajuridica_tipo_id = 1
+                INNER JOIN
+                est_tec_cargo_tipo
+                ON 
+                    est_tec_instituto_sede_docente_adm.est_tec_cargo_tipo_id = est_tec_cargo_tipo.id
+            WHERE
+                est_tec_cargo_tipo_id IN (1,2,4,6,10,8)
+                and gestion_tipo_id = :gestionId	
+                ) as data  where genero_tipo_id = 1
+                GROUP BY gestion_tipo_id,cargo
+                
+                union all
+                
+                select gestion_tipo_id,cargo, sum(cantidad) as cantidadm, sum(cantidadf) as cantidadf
+            from
+            (
+            SELECT
+                est_tec_instituto_sede_docente_adm.id, 
+                est_tec_instituto_sede_docente_adm.est_tec_sede_id, 
+                est_tec_instituto_sede_docente_adm.gestion_tipo_id, 
+                est_tec_instituto_sede_docente_adm.genero_tipo_id, 
+                est_tec_instituto_sede_docente_adm.est_tec_cargo_tipo_id, 
+                est_tec_instituto_sede_docente_adm.cantidad as cantidadf, 
+                0 as cantidad,
+                est_tec_cargo_tipo.cargo
+            FROM
+                est_tec_instituto_sede_docente_adm
+                INNER JOIN
+                est_tec_sede
+                ON 
+                    est_tec_instituto_sede_docente_adm.est_tec_sede_id = est_tec_sede.id AND
+                    est_tec_sede.est_tec_naturalezajuridica_tipo_id = 1
+                INNER JOIN
+                est_tec_cargo_tipo
+                ON 
+                    est_tec_instituto_sede_docente_adm.est_tec_cargo_tipo_id = est_tec_cargo_tipo.id
+            WHERE
+                est_tec_cargo_tipo_id IN (1,2,4,6,10,8)
+                and gestion_tipo_id = :gestionId	
+                ) as data  where genero_tipo_id = 2
+                GROUP BY gestion_tipo_id,cargo
+                ) as data2
+                GROUP BY gestion_tipo_id,cargo
+                order by 2
+        "); 
+        $query->bindValue(':gestionId', $gestion);
+        $query->execute();
+        $objEntidad = $query->fetchAll(); 
+
+        if (count($objEntidad)>0){
+            return $objEntidad;
+        } else {
+            return array();
+        }
+    }
+
+    private function tbl_personal_privadas($gestion){
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->getConnection()->prepare(" 
+            select gestion_tipo_id,cargo, sum(cantidadm) as total_masculino, sum(cantidadf) as total_femenino
+            from
+            (
+            select gestion_tipo_id,cargo, sum(cantidad) as cantidadm, sum(cantidadf) as cantidadf
+            from
+            (
+            SELECT
+                est_tec_instituto_sede_docente_adm.id, 
+                est_tec_instituto_sede_docente_adm.est_tec_sede_id, 
+                est_tec_instituto_sede_docente_adm.gestion_tipo_id, 
+                est_tec_instituto_sede_docente_adm.genero_tipo_id, 
+                est_tec_instituto_sede_docente_adm.est_tec_cargo_tipo_id, 
+                est_tec_instituto_sede_docente_adm.cantidad, 
+                0 as cantidadf,
+                est_tec_cargo_tipo.cargo
+            FROM
+                est_tec_instituto_sede_docente_adm
+                INNER JOIN
+                est_tec_sede
+                ON 
+                    est_tec_instituto_sede_docente_adm.est_tec_sede_id = est_tec_sede.id AND
+                    est_tec_sede.est_tec_naturalezajuridica_tipo_id = 2
+                INNER JOIN
+                est_tec_cargo_tipo
+                ON 
+                    est_tec_instituto_sede_docente_adm.est_tec_cargo_tipo_id = est_tec_cargo_tipo.id
+            WHERE
+                est_tec_cargo_tipo_id IN (1,7,3,5,11,9)
+                and gestion_tipo_id = :gestionId	
+                ) as data  where genero_tipo_id = 1
+                GROUP BY gestion_tipo_id,cargo
+                
+                union all
+                
+                select gestion_tipo_id,cargo, sum(cantidad) as cantidadm, sum(cantidadf) as cantidadf
+            from
+            (
+            SELECT
+                est_tec_instituto_sede_docente_adm.id, 
+                est_tec_instituto_sede_docente_adm.est_tec_sede_id, 
+                est_tec_instituto_sede_docente_adm.gestion_tipo_id, 
+                est_tec_instituto_sede_docente_adm.genero_tipo_id, 
+                est_tec_instituto_sede_docente_adm.est_tec_cargo_tipo_id, 
+                est_tec_instituto_sede_docente_adm.cantidad as cantidadf, 
+                0 as cantidad,
+                est_tec_cargo_tipo.cargo
+            FROM
+                est_tec_instituto_sede_docente_adm
+                INNER JOIN
+                est_tec_sede
+                ON 
+                    est_tec_instituto_sede_docente_adm.est_tec_sede_id = est_tec_sede.id AND
+                    est_tec_sede.est_tec_naturalezajuridica_tipo_id = 2
+                INNER JOIN
+                est_tec_cargo_tipo
+                ON 
+                    est_tec_instituto_sede_docente_adm.est_tec_cargo_tipo_id = est_tec_cargo_tipo.id
+            WHERE
+                est_tec_cargo_tipo_id IN (1,7,3,5,11,9)
+                and gestion_tipo_id = :gestionId	
+                ) as data  where genero_tipo_id = 2
+                GROUP BY gestion_tipo_id,cargo
+                ) as data2
+                GROUP BY gestion_tipo_id,cargo
+                order by 2
         "); 
         $query->bindValue(':gestionId', $gestion);
         $query->execute();
