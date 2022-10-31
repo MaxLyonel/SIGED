@@ -146,9 +146,17 @@
                 <!-- Sidebar navigation-->
                 <nav class="sidebar-nav">
                     <ul id="sidebarnav">
-                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Dashboard</span></a>
+                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard', {'gestion' :  2022})}}" aria-expanded="false"><i class="mdi mdi-poll"></i><span class="hide-menu">GESTION 2022</span></a>
                         </li>
-                        <li> <a class="waves-effect waves-dark" href="pages-profile.html" aria-expanded="false"><i class="mdi mdi-account-check"></i><span class="hide-menu">Profile</span></a>
+                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard', {'gestion' :  2021})}}" aria-expanded="false"><i class="mdi mdi-poll"></i><span class="hide-menu">GESTION 2021</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard', {'gestion' :  2020})}}" aria-expanded="false"><i class="mdi mdi-poll"></i><span class="hide-menu">GESTION 2020</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard', {'gestion' :  2019})}}" aria-expanded="false"><i class="mdi mdi-poll"></i><span class="hide-menu">GESTION 2019</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard', {'gestion' :  2018})}}" aria-expanded="false"><i class="mdi mdi-poll"></i><span class="hide-menu">GESTION 2018</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{path('sie_tecnicaest_dashboard', {'gestion' :  2017})}}" aria-expanded="false"><i class="mdi mdi-poll"></i><span class="hide-menu">GESTION 2017</span></a>
                         </li>
                     </ul>
                 </nav>
@@ -197,6 +205,22 @@
                 <!-- Start Page Content -->
                 <!-- ============================================================== -->
                 <!-- Row -->
+                
+                <div class="card-body">
+                    <h4 class="card-title"></h4>
+                    <h6 class="card-subtitle"></h6>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead class="bg-success text-white">
+                                <tr>
+                                    <th>ESTADISTICAS GESTION: {{gestionActual}}</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                
+
                 <div class="row pt-3">
                     <div class="col-lg-4 col-md-4">
                         <div class="card">
@@ -267,7 +291,268 @@
                     </div>
                     
                 </div>
-                
+
+              
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-4 col-xlg-3 col-md-5">
+                        <!-- Column -->
+                        
+                        <!-- Column -->
+                        
+                    </div>
+                    <div class="col-lg-12 col-xlg-12 col-md-12">
+                        <div class="card">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs profile-tab" role="tablist">
+                                <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Egresados y Titulados</a> </li>
+                                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Becas Sociales</a> </li>
+                                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Tipo de Matricula</a> </li>
+                                <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#list" role="tab">Personal Docente</a> </li>
+                            </ul>
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="home" role="tabpanel">
+                                    <div class="card-block">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Total Egresados y Titulados en la Gestion por Genero</h4>
+                                            <h6 class="card-subtitle"></h6>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead class="bg-info text-white">
+                                                        <tr>
+                                                            <th>Gestion</th>
+                                                            <th>Estado</th>
+                                                            <th>Total Masculino</th>
+                                                            <th>Total Femenino</th>
+                                                            <th>Total General</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="border border-info">
+                                                        {% for row in tbl_titulados_egresados %}
+
+                                                        <tr>
+                                                            <td><strong>{{ row.gestion_tipo_id }}</strong></td>
+                                                            <td>{{ row.estado_final }}</td>
+                                                            <td>{{ row.total_masculino |number_format }}</td>
+                                                            <td>{{ row.total_femenino |number_format }}</td>
+                                                            <td bgcolor="#FCF3CF"> {{ (row.total_masculino + row.total_femenino) |number_format}}</td>
+                                                        </tr>
+
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--second tab-->
+                                <div class="tab-pane" id="profile" role="tabpanel">
+                                    <div class="card-block">
+
+                                        <div class="card-body">
+                                            <h4 class="card-title">Total Becas Sociales y Otras Becas en la Gestion por Genero</h4>
+                                            <h6 class="card-subtitle"></h6>
+                                            <div class="table-responsive">
+                                                <table class="table">
+                                                    <thead class="bg-success text-white">
+                                                        <tr>
+                                                            <th>Gestion</th>
+                                                            <th>Tipo Beca</th>
+                                                            <th>Total Masculino</th>
+                                                            <th>Total Femenino</th>
+                                                            <th>Total General</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="border border-info">
+                                                        {% for row in tbl_becas %}
+
+                                                        <tr>
+                                                            <td><strong>{{ row.gestion_tipo_id }}</strong></td>
+                                                            <td>{{ row.nacionalidad_beca }}</td>
+                                                            <td>{{ row.total_becas_masculino |number_format }}</td>
+                                                            <td>{{ row.total_becas_femenino |number_format }}</td>
+                                                            <td bgcolor="#FCF3CF"> {{ (row.total_becas_masculino + row.total_becas_femenino) |number_format}}</td>
+                                                        </tr>
+
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="settings" role="tabpanel">
+                                    <div class="card-block">
+
+                                        <div class="row">
+                                            <div class="col-lg-6 col-xlg-6 col-md-6">
+
+                                                <div class="card-body">
+                                                    <h4 class="card-title">Total Alumnos Segun Tipo de Matricula en la Gestion por Genero - PUBLICO</h4>
+                                                    <h6 class="card-subtitle"></h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead class="bg-danger text-white">
+                                                                <tr>
+                                                                    <th>Gestion</th>
+                                                                    <th>Matricula</th>
+                                                                    <th>Total Masculino</th>
+                                                                    <th>Total Femenino</th>
+                                                                    <th>Total General</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="border border-info">
+                                                                {% for row in tbl_matriculas_publicas %}
+
+                                                                <tr>
+                                                                    <td><strong>{{ row.gestion_tipo_id }}</strong></td>
+                                                                    <td><strong>{{ row.estadomatricula }}</strong></td>
+                                                                    <td>{{ row.totalmasculino |number_format }}</td>
+                                                                    <td>{{ row.totalfemenino |number_format }}</td>
+                                                                    <td bgcolor="#FCF3CF"> {{ (row.totalmasculino + row.totalfemenino) |number_format}}</td>
+                                                                </tr>
+
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-lg-6 col-xlg-6 col-md-6">
+
+                                                <div class="card-body">
+                                                    <h4 class="card-title">Total Alumnos Segun Tipo de Matricula en la Gestion por Genero - PRIVADAS</h4>
+                                                    <h6 class="card-subtitle"></h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead class="bg-warning text-white">
+                                                                <tr>
+                                                                    <th>Gestion</th>
+                                                                    <th>Matricula</th>
+                                                                    <th>Total Masculino</th>
+                                                                    <th>Total Femenino</th>
+                                                                    <th>Total General</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="border border-info">
+                                                                {% for row in tbl_matriculas_privadas %}
+
+                                                                <tr>
+                                                                    <td><strong>{{ row.gestion_tipo_id }}</strong></td>
+                                                                    <td><strong>{{ row.estadomatricula }}</strong></td>
+                                                                    <td>{{ row.totalmasculino |number_format }}</td>
+                                                                    <td>{{ row.totalfemenino |number_format }}</td>
+                                                                    <td bgcolor="#FCF3CF"> {{ (row.totalmasculino + row.totalfemenino) |number_format}}</td>
+                                                                </tr>
+
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="tab-pane" id="list" role="tabpanel">
+                                    <div class="card-block">
+                                   
+                                    <div class="table-responsive">
+
+                                        <div class="row">
+                                            <div class="col-lg-6 col-xlg-6 col-md-6">
+
+                                                <div class="card-body">
+                                                    <h4 class="card-title">Total Personal Academico en la Gestion por Genero - PUBLICO</h4>
+                                                    <h6 class="card-subtitle"></h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead class="bg-info text-white">
+                                                                <tr>
+                                                                    <th>Gestion</th>
+                                                                    <th>Cargo</th>
+                                                                    <th>Total Masculino</th>
+                                                                    <th>Total Femenino</th>
+                                                                    <th>Total General</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="border border-info">
+                                                                {% for row in tbl_personal_publicas %}
+
+                                                                <tr>
+                                                                    <td><strong>{{ row.gestion_tipo_id }}</strong></td>
+                                                                    <td><strong>{{ row.cargo }}</strong></td>
+                                                                    <td>{{ row.total_masculino |number_format }}</td>
+                                                                    <td>{{ row.total_femenino |number_format }}</td>
+                                                                    <td bgcolor="#FCF3CF"> {{ (row.total_masculino + row.total_femenino) |number_format}}</td>
+                                                                </tr>
+
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="col-lg-6 col-xlg-6 col-md-6">
+
+                                                <div class="card-body">
+                                                    <h4 class="card-title">Total Personal Academico en la Gestion por Genero - PRIVADAS</h4>
+                                                    <h6 class="card-subtitle"></h6>
+                                                    <div class="table-responsive">
+                                                        <table class="table">
+                                                            <thead class="bg-success text-white">
+                                                                <tr>
+                                                                    <th>Gestion</th>
+                                                                    <th>Cargo</th>
+                                                                    <th>Total Masculino</th>
+                                                                    <th>Total Femenino</th>
+                                                                    <th>Total General</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="border border-info">
+                                                                {% for row in tbl_personal_privadas %}
+
+                                                                <tr>
+                                                                    <td><strong>{{ row.gestion_tipo_id }}</strong></td>
+                                                                    <td><strong>{{ row.cargo }}</strong></td>
+                                                                    <td>{{ row.total_masculino |number_format }}</td>
+                                                                    <td>{{ row.total_femenino |number_format }}</td>
+                                                                    <td bgcolor="#FCF3CF"> {{ (row.total_masculino + row.total_femenino) |number_format}}</td>
+                                                                </tr>
+
+                                                                {% endfor %}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- ============================================================== -->
                 <!-- End PAge Content -->
                 <!-- ============================================================== -->
